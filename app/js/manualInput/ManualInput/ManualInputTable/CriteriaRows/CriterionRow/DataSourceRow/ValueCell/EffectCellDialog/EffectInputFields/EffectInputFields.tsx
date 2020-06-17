@@ -18,13 +18,13 @@ export default function EffectInputFields({
   function createInputFields(): JSX.Element {
     switch (inputType) {
       case 'value':
-        return <ValueInput />;
+        return <ValueInput context={EffectCellContext} />;
       case 'valueCI':
         return <ValueCIInput />;
       case 'range':
-        return <RangeInput />;
+        return <RangeInput context={EffectCellContext} />;
       case 'text':
-        return <TextInput />;
+        return <TextInput context={EffectCellContext} />;
     }
   }
 

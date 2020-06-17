@@ -9,9 +9,19 @@ import {
 } from '@material-ui/core';
 import React, {ChangeEvent, useContext} from 'react';
 import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
-import {distributionType} from '../../../../../../../../interface/IDistribution';
+import IDistribution, {
+  distributionType
+} from '../../../../../../../../interface/IDistribution';
 import {DistributionCellContext} from '../DistributionCellContext/DistributionCellContext';
 import DistributionInputFields from './DistributionInputFields/DistributionInputFields';
+import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
+import IValueEffect from '../../../../../../../../interface/IValueEffect';
+import INormalDistribution from '../../../../../../../../interface/INormalDistribution';
+import IRangeEffect from '../../../../../../../../interface/IRangeEffect';
+import ITextEffect from '../../../../../../../../interface/ITextEffect';
+import IEmptyEffect from '../../../../../../../../interface/IEmptyEffect';
+import IBetaDistribution from '../../../../../../../../interface/IBetaDistribution';
+import IGammaDistribution from '../../../../../../../../interface/IGammaDistribution';
 
 export default function DistributionCellDialog({
   isDialogOpen,
@@ -19,15 +29,110 @@ export default function DistributionCellDialog({
   cancel
 }: {
   isDialogOpen: boolean;
-  callback: () => void;
+  callback: (distribution: IDistribution) => void;
   cancel: () => void;
 }) {
-  const {inputType, setInputType} = useContext(DistributionCellContext);
+  const {
+    alternativeId,
+    inputType,
+    setInputType,
+    value,
+    mean,
+    standardError,
+    alpha,
+    beta,
+    isValidValue,
+    lowerBound,
+    isValidLowerBound,
+    upperBound,
+    isValidUpperBound,
+    text,
+    isValidMean,
+    isValidStandardError,
+    isValidAlpha,
+    isValidBeta
+  } = useContext(DistributionCellContext);
+  const {criterion, dataSource} = useContext(DataSourceRowContext);
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void {
     setInputType(event.target.value as distributionType);
+  }
+
+  function isInputInvalid(): boolean {
+    switch (inputType) {
+      case 'value':
+        return !isValidValue;
+      case 'normal':
+        return !isValidMean || !isValidStandardError;
+      case 'beta':
+        return !isValidAlpha || !isValidBeta;
+      case 'gamma':
+        return !isValidAlpha || !isValidBeta;
+      case 'range':
+        return !isValidLowerBound || !isValidUpperBound;
+      case 'text':
+        return false;
+      case 'empty':
+        return false;
+    }
+  }
+
+  function handleEditButtonClick(): void {
+    let newDistribution = {
+      type: inputType,
+      criterionId: criterion.id,
+      dataSourceId: dataSource.id,
+      alternativeId: alternativeId
+    };
+    switch (inputType) {
+      case 'value':
+        callback({
+          ...newDistribution,
+          value: Number.parseFloat(value)
+        } as IValueEffect);
+        break;
+      case 'normal':
+        callback({
+          ...newDistribution,
+          mean: Number.parseFloat(mean),
+          standardError: Number.parseFloat(standardError)
+        } as INormalDistribution);
+        break;
+      case 'beta':
+        callback({
+          ...newDistribution,
+          alpha: Number.parseFloat(alpha),
+          beta: Number.parseFloat(beta)
+        } as IBetaDistribution);
+        break;
+      case 'gamma':
+        callback({
+          ...newDistribution,
+          alpha: Number.parseFloat(alpha),
+          beta: Number.parseFloat(beta)
+        } as IGammaDistribution);
+        break;
+      case 'range':
+        callback({
+          ...newDistribution,
+          lowerBound: Number.parseFloat(lowerBound),
+          upperBound: Number.parseFloat(upperBound)
+        } as IRangeEffect);
+        break;
+      case 'text':
+        callback({
+          ...newDistribution,
+          text: text
+        } as ITextEffect);
+        break;
+      case 'empty':
+        callback(newDistribution as IEmptyEffect);
+        break;
+      default:
+        throw `unknown input type ${inputType}`;
+    }
   }
 
   return (
@@ -56,8 +161,8 @@ export default function DistributionCellDialog({
             </Select>
           </Grid>
           <DistributionInputFields
-            editButtonCallback={() => {}}
-            isInputInvalid={false}
+            editButtonCallback={handleEditButtonClick}
+            isInputInvalid={isInputInvalid}
           />
         </Grid>
       </DialogContent>
@@ -66,9 +171,9 @@ export default function DistributionCellDialog({
           <Grid item>
             <Button
               color="primary"
-              onClick={() => {}}
+              onClick={handleEditButtonClick}
               variant="contained"
-              disabled={false}
+              disabled={isInputInvalid()}
             >
               Edit
             </Button>

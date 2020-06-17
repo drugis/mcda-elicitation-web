@@ -10,7 +10,7 @@ import {EffectCellContextProviderComponent} from './../EffectCellContext/EffectC
 import EffectCellDialog from './../EffectCellDialog/EffectCellDialog';
 
 export default function EffectCell({alternativeId}: {alternativeId: string}) {
-  const {getEffect, setEffect, effects: effectValues} = useContext(
+  const {getEffect, setEffect, effects} = useContext(
     ManualInputContext
   );
   const {dataSource, criterion} = useContext(DataSourceRowContext);
@@ -21,7 +21,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
   useEffect(() => {
     const effect = getEffect(criterion.id, dataSource.id, alternativeId);
     setLabel(createLabel(effect));
-  }, [effectValues, dataSource.unitOfMeasurement]);
+  }, [effects, dataSource.unitOfMeasurement]);
 
   function saveEffect(effect: Effect) {
     setEffect(effect, dataSource.id, alternativeId);
@@ -45,7 +45,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
       case 'range':
         return createRangeLabel(effect);
       case 'text':
-        return effect.value;
+        return effect.text;
       case 'empty':
         return 'Empty';
     }

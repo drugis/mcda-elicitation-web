@@ -252,6 +252,41 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     effectValuesCopy[dataSourceId][alternativeId] = effect;
     setEffects(effectValuesCopy);
   }
+  function getDistribution(
+    criterionId: string,
+    dataSourceId: string,
+    alternativeId: string
+  ): Distribution {
+    if (
+      distributions &&
+      distributions[dataSourceId] &&
+      distributions[dataSourceId][alternativeId]
+    ) {
+      return distributions[dataSourceId][alternativeId];
+    } else {
+      return {
+        alternativeId: alternativeId,
+        dataSourceId: dataSourceId,
+        criterionId: criterionId,
+        type: 'normal',
+        mean: undefined,
+        standardError: undefined
+      };
+    }
+  }
+
+  function setDistribution(
+    distribution: Distribution,
+    dataSourceId: string,
+    alternativeId: string
+  ): void {
+    let distributionValuesCopy = _.cloneDeep(distributions);
+    if (!distributionValuesCopy[dataSourceId]) {
+      distributionValuesCopy[dataSourceId] = {};
+    }
+    distributionValuesCopy[dataSourceId][alternativeId] = distribution;
+    setDistributions(distributionValuesCopy);
+  }
 
   return (
     <ManualInputContext.Provider
@@ -281,7 +316,9 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         deleteCriterion: deleteCriterion,
         deleteAlternative: deleteAlternative,
         getEffect: getEffect,
-        setEffect: setEffect
+        setEffect: setEffect,
+        getDistribution: getDistribution,
+        setDistribution: setDistribution
       }}
     >
       {props.children}

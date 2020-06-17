@@ -19,9 +19,9 @@ export function DistributionCellContextProviderComponent({
   const [upperBound, setUpperBound] = useState<string>('0');
   const [text, setText] = useState<string>('');
   const [mean, setMean] = useState<string>('0');
-  const [standardError, setStandardError] = useState<string>('0');
-  const [alpha, setAlpha] = useState<string>('0');
-  const [beta, setBeta] = useState<string>('0');
+  const [standardError, setStandardError] = useState<string>('0.5');
+  const [alpha, setAlpha] = useState<string>('1');
+  const [beta, setBeta] = useState<string>('1');
   const [isValidValue, setIsValidValue] = useState(false);
   const [isValidLowerBound, setIsValidLowerBound] = useState(false);
   const [isValidUpperBound, setIsValidUpperBound] = useState(false);

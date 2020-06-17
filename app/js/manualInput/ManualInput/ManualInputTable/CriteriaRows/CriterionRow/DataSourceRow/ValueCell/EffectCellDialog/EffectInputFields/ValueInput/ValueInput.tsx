@@ -1,14 +1,10 @@
 import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
-import {ManualInputContext} from '../../../../../../../../../ManualInputContext';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
-import {EffectCellContext} from '../../../EffectCellContext/EffectCellContext';
 
-export default function ValueInput() {
-  const {tableInputMode} = useContext(ManualInputContext);
-
+export default function ValueInput({context}: {context: any}) {
   const {dataSource} = useContext(DataSourceRowContext);
-  const {value, setValue, setIsValidValue} = useContext(EffectCellContext);
+  const {value, setValue, setIsValidValue} = useContext(context);
   const [inputError, setInputError] = useState<string>('');
 
   useEffect(validateInput, [value]);

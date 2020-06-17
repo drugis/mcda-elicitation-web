@@ -1,14 +1,13 @@
 import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext} from 'react';
-import {EffectCellContext} from '../../../EffectCellContext/EffectCellContext';
 
-export default function TextInput() {
-  const {value, setValue} = useContext(EffectCellContext);
+export default function TextInput({context}: {context: any}) {
+  const {text, setText} = useContext(context);
 
   function handleTextChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
-    setValue(event.target.value);
+    setText(event.target.value);
   }
 
   return (
@@ -17,7 +16,7 @@ export default function TextInput() {
         Text
       </Grid>
       <Grid item xs={6}>
-        <TextField value={value} onChange={handleTextChanged} autoFocus />
+        <TextField value={text} onChange={handleTextChanged} autoFocus />
       </Grid>
     </>
   );

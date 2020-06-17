@@ -1,6 +1,12 @@
 import {Grid} from '@material-ui/core';
 import React, {KeyboardEvent, useContext} from 'react';
 import {DistributionCellContext} from '../../DistributionCellContext/DistributionCellContext';
+import ValueInput from '../../EffectCellDialog/EffectInputFields/ValueInput/ValueInput';
+import RangeInput from '../../EffectCellDialog/EffectInputFields/RangeInput/RangeInput';
+import TextInput from '../../EffectCellDialog/EffectInputFields/TextInput/TextInput';
+import NormalInput from './NormalInput/NormalInput';
+import BetaInput from './BetaInput/BetaInput';
+import GammaInput from './GammaInput/GammaInput';
 
 export default function DistributionInputFields({
   editButtonCallback,
@@ -14,7 +20,17 @@ export default function DistributionInputFields({
   function createInputFields(): JSX.Element {
     switch (inputType) {
       case 'value':
-        return <></>;
+        return <ValueInput context={DistributionCellContext} />;
+      case 'range':
+        return <RangeInput context={DistributionCellContext} />;
+      case 'text':
+        return <TextInput context={DistributionCellContext} />;
+      case 'normal':
+        return <NormalInput />;
+      case 'beta':
+        return <BetaInput />;
+      case 'gamma':
+        return <GammaInput />;
     }
   }
 

@@ -48,4 +48,14 @@ export default interface IManualInputContext {
     dataSourceId: string,
     alternativeId: string
   ) => void;
+  getDistribution: (
+    criterionId: string,
+    dataSourceId: string,
+    alternativeId: string
+  ) => Distribution;
+  setDistribution: (
+    distribution: Distribution,
+    dataSourceId: string,
+    alternativeId: string
+  ) => void;
 }

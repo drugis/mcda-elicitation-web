@@ -37,7 +37,8 @@ export default function EffectCellDialog({
     lowerBound,
     isValidLowerBound,
     upperBound,
-    isValidUpperBound
+    isValidUpperBound,
+    text
   } = useContext(EffectCellContext);
   const {criterion, dataSource} = useContext(DataSourceRowContext);
 
@@ -48,7 +49,7 @@ export default function EffectCellDialog({
   }
 
   function handleEditButtonClick(): void {
-    let newEffectValue = {
+    let newEffect = {
       type: inputType,
       criterionId: criterion.id,
       dataSourceId: dataSource.id,
@@ -57,13 +58,13 @@ export default function EffectCellDialog({
     switch (inputType) {
       case 'value':
         callback({
-          ...newEffectValue,
+          ...newEffect,
           value: Number.parseFloat(value)
         } as IValueEffect);
         break;
       case 'valueCI':
         callback({
-          ...newEffectValue,
+          ...newEffect,
           value: Number.parseFloat(value),
           lowerBound: Number.parseFloat(lowerBound),
           upperBound: Number.parseFloat(upperBound)
@@ -71,19 +72,19 @@ export default function EffectCellDialog({
         break;
       case 'range':
         callback({
-          ...newEffectValue,
+          ...newEffect,
           lowerBound: Number.parseFloat(lowerBound),
           upperBound: Number.parseFloat(upperBound)
         } as IRangeEffect);
         break;
       case 'text':
         callback({
-          ...newEffectValue,
-          value: value
+          ...newEffect,
+          text: text
         } as ITextEffect);
         break;
       case 'empty':
-        callback(newEffectValue as IEmptyEffect);
+        callback(newEffect as IEmptyEffect);
         break;
       default:
         throw `unknown input type ${inputType}`;
