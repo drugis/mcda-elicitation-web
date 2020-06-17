@@ -24,15 +24,16 @@ export default function DistributionCell({
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [label, setLabel] = useState('');
 
-  const NO_VALUE_ENTERED = 'No value entered';
+  const NO_DISTRIBUTION_ENTERED = 'No distribution entered';
   const INVALID_VALUE = 'Invalid value';
 
+  const distribution = getDistribution(
+    criterion.id,
+    dataSource.id,
+    alternativeId
+  );
+
   useEffect(() => {
-    const distribution = getDistribution(
-      criterion.id,
-      dataSource.id,
-      alternativeId
-    );
     setLabel(createLabel(distribution));
   }, [distributions, dataSource.unitOfMeasurement]);
 
@@ -57,7 +58,7 @@ export default function DistributionCell({
 
   function createValueLabel(distribution: IValueEffect): string {
     if (distribution.value === undefined) {
-      return NO_VALUE_ENTERED;
+      return NO_DISTRIBUTION_ENTERED;
     } else if (valueIsOutofBounds(distribution.value)) {
       return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
@@ -69,7 +70,7 @@ export default function DistributionCell({
 
   function createNormalLabel(distribution: INormalDistribution) {
     if (distribution.mean === undefined) {
-      return NO_VALUE_ENTERED;
+      return NO_DISTRIBUTION_ENTERED;
     } else if (
       valueIsOutofBounds(distribution.mean) ||
       valueIsOutofBounds(distribution.standardError)
@@ -127,7 +128,10 @@ export default function DistributionCell({
       <span onClick={openDialog} style={{cursor: 'pointer'}}>
         {label}
       </span>
-      <DistributionCellContextProviderComponent alternativeId={alternativeId}>
+      <DistributionCellContextProviderComponent
+        alternativeId={alternativeId}
+        distribution={distribution}
+      >
         <DistributionCellDialog
           callback={saveDistribution}
           isDialogOpen={isDialogOpen}

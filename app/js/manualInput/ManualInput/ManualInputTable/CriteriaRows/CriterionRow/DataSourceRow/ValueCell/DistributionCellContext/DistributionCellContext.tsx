@@ -1,5 +1,8 @@
-import React, {createContext, useState} from 'react';
-import {distributionType} from '../../../../../../../../interface/IDistribution';
+import React, {createContext, useState, useEffect} from 'react';
+import {
+  distributionType,
+  Distribution
+} from '../../../../../../../../interface/IDistribution';
 import IDistributionCellContext from '../../../../../../../../interface/IDistributionCellContext';
 
 export const DistributionCellContext = createContext<IDistributionCellContext>(
@@ -8,9 +11,11 @@ export const DistributionCellContext = createContext<IDistributionCellContext>(
 
 export function DistributionCellContextProviderComponent({
   alternativeId,
+  distribution,
   children
 }: {
   alternativeId: string;
+  distribution: Distribution;
   children: any;
 }) {
   const [inputType, setInputType] = useState<distributionType>('normal');
@@ -29,6 +34,36 @@ export function DistributionCellContextProviderComponent({
   const [isValidStandardError, setIsValidStandardError] = useState(false);
   const [isValidAlpha, setIsValidAlpha] = useState(false);
   const [isValidBeta, setIsValidBeta] = useState(false);
+
+  useEffect(() => {
+    setInputType(distribution.type);
+    switch (distribution.type) {
+      case 'normal':
+        if (distribution.mean !== undefined) {
+          setMean(`${distribution.mean}`);
+          setStandardError(`${distribution.standardError}`);
+        }
+        break;
+      case 'value':
+        setValue(`${distribution.value}`);
+        break;
+      case 'beta':
+        setAlpha(`${distribution.alpha}`);
+        setBeta(`${distribution.beta}`);
+        break;
+      case 'gamma':
+        setAlpha(`${distribution.alpha}`);
+        setBeta(`${distribution.beta}`);
+        break;
+      case 'range':
+        setLowerBound(`${distribution.lowerBound}`);
+        setUpperBound(`${distribution.upperBound}`);
+        break;
+      case 'text':
+        setText(`${distribution.text}`);
+        break;
+    }
+  }, []);
 
   return (
     <DistributionCellContext.Provider

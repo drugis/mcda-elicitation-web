@@ -17,9 +17,10 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [label, setLabel] = useState('');
-
+  
+  const effect = getEffect(criterion.id, dataSource.id, alternativeId);
+  
   useEffect(() => {
-    const effect = getEffect(criterion.id, dataSource.id, alternativeId);
     setLabel(createLabel(effect));
   }, [effects, dataSource.unitOfMeasurement]);
 
@@ -101,7 +102,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
       <span onClick={openDialog} style={{cursor: 'pointer'}}>
         {label}
       </span>
-      <EffectCellContextProviderComponent alternativeId={alternativeId}>
+      <EffectCellContextProviderComponent alternativeId={alternativeId} effect={effect}>
         <EffectCellDialog
           callback={saveEffect}
           isDialogOpen={isDialogOpen}

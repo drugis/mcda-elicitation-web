@@ -1,5 +1,5 @@
-import React, {createContext, useState} from 'react';
-import {effectType} from '../../../../../../../../interface/IEffect';
+import React, {createContext, useState, useEffect} from 'react';
+import {Effect, effectType} from '../../../../../../../../interface/IEffect';
 import IEffectCellContext from '../../../../../../../../interface/IEffectCellContext';
 
 export const EffectCellContext = createContext<IEffectCellContext>(
@@ -7,9 +7,11 @@ export const EffectCellContext = createContext<IEffectCellContext>(
 );
 export function EffectCellContextProviderComponent({
   alternativeId,
+  effect,
   children
 }: {
   alternativeId: string;
+  effect: Effect;
   children: any;
 }) {
   const [inputType, setInputType] = useState<effectType>('value');
@@ -20,6 +22,29 @@ export function EffectCellContextProviderComponent({
   const [isValidValue, setIsValidValue] = useState(false);
   const [isValidLowerBound, setIsValidLowerBound] = useState(false);
   const [isValidUpperBound, setIsValidUpperBound] = useState(false);
+
+  useEffect(() => {
+    setInputType(effect.type);
+    switch (effect.type) {
+      case 'value':
+        if (effect.value !== undefined) {
+          setValue(`${effect.value}`);
+        }
+        break;
+      case 'valueCI':
+        setValue(`${effect.value}`);
+        setLowerBound(`${effect.lowerBound}`);
+        setUpperBound(`${effect.upperBound}`);
+        break;
+      case 'range':
+        setLowerBound(`${effect.lowerBound}`);
+        setUpperBound(`${effect.upperBound}`);
+        break;
+      case 'text':
+        setText(`${effect.text}`);
+        break;
+    }
+  }, []);
 
   return (
     <EffectCellContext.Provider
