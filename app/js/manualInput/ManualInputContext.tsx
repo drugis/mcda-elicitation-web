@@ -22,14 +22,14 @@ const placeholderCriteria: ICriterion[] = [
     dataSources: [
       {
         id: generateUuid(),
-        title: 'ds1',
+        title: 'reference',
         unitOfMeasurement: defaultUnitOfMeasurement,
         uncertainty: 'unc',
         strengthOfEvidence: 'soe'
       }
     ],
     isFavourable: true,
-    title: 'crit1'
+    title: 'criterion 1'
   },
   {
     id: generateUuid(),
@@ -37,14 +37,14 @@ const placeholderCriteria: ICriterion[] = [
     dataSources: [
       {
         id: generateUuid(),
-        title: 'ds1',
+        title: 'reference',
         unitOfMeasurement: defaultUnitOfMeasurement,
         uncertainty: 'unc',
         strengthOfEvidence: 'soe'
       }
     ],
     isFavourable: false,
-    title: 'crit2'
+    title: 'criterion 2'
   }
 ];
 

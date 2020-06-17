@@ -1,6 +1,9 @@
 import {TableCell} from '@material-ui/core';
 import React, {MouseEvent, useContext, useEffect, useState} from 'react';
 import {Effect} from '../../../../../../../interface/IEffect';
+import IRangeEffect from '../../../../../../../interface/IRangeEffect';
+import IValueCIEffect from '../../../../../../../interface/IValueCIEffect';
+import IValueEffect from '../../../../../../../interface/IValueEffect';
 import {ManualInputContext} from '../../../../../../ManualInputContext';
 import {DataSourceRowContext} from '../../DataSourceRowContext/DataSourceRowContext';
 import {EffectCellContextProviderComponent} from './EffectCellContext/EffectCellContext';
@@ -11,12 +14,12 @@ export default function ValueCell({alternativeId}: {alternativeId: string}) {
   const {dataSource, criterion} = useContext(DataSourceRowContext);
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [label, setLabel] = useState('💀');
+  const [label, setLabel] = useState('');
 
   useEffect(() => {
     const effect = getEffect(criterion.id, dataSource.id, alternativeId);
     setLabel(createLabel(effect));
-  }, [effectValues]);
+  }, [effectValues, dataSource.unitOfMeasurement]);
 
   function saveEffect(effect: Effect) {
     setEffect(effect, dataSource.id, alternativeId);
@@ -34,11 +37,11 @@ export default function ValueCell({alternativeId}: {alternativeId: string}) {
   function createLabel(effect: Effect): string {
     switch (effect.type) {
       case 'value':
-        return `${effect.value}`;
+        return createValueLabel(effect);
       case 'valueCI':
-        return `${effect.value} (${effect.lowerBound}, ${effect.upperBound})`;
+        return createValueCILabel(effect);
       case 'range':
-        return `[${effect.lowerBound}, ${effect.upperBound}]`;
+        return createRangeLabel(effect);
       case 'text':
         return effect.value;
       case 'empty':
@@ -46,9 +49,56 @@ export default function ValueCell({alternativeId}: {alternativeId: string}) {
     }
   }
 
+  function valueIsOutofBounds(value: number): boolean {
+    return (
+      value < dataSource.unitOfMeasurement.lowerBound ||
+      value > dataSource.unitOfMeasurement.upperBound
+    );
+  }
+
+  function createValueLabel(effect: IValueEffect): string {
+    if (effect.value === undefined) {
+      return 'No value entered';
+    } else if (valueIsOutofBounds(effect.value)) {
+      return 'Invalid value';
+    } else if (dataSource.unitOfMeasurement.type === 'percentage') {
+      return `${effect.value}%`;
+    } else {
+      return `${effect.value}`;
+    }
+  }
+
+  function createValueCILabel(effect: IValueCIEffect): string {
+    if (
+      valueIsOutofBounds(effect.lowerBound) ||
+      valueIsOutofBounds(effect.upperBound)
+    ) {
+      return 'Invalid value';
+    } else if (dataSource.unitOfMeasurement.type === 'percentage') {
+      return `${effect.value}% (${effect.lowerBound}%, ${effect.upperBound}%)`;
+    } else {
+      return `${effect.value} (${effect.lowerBound}, ${effect.upperBound})`;
+    }
+  }
+
+  function createRangeLabel(effect: IRangeEffect): string {
+    if (
+      valueIsOutofBounds(effect.lowerBound) ||
+      valueIsOutofBounds(effect.upperBound)
+    ) {
+      return 'Invalid value';
+    } else if (dataSource.unitOfMeasurement.type === 'percentage') {
+      return `[${effect.lowerBound}%, ${effect.upperBound}%]`;
+    } else {
+      return `[${effect.lowerBound}, ${effect.upperBound}]`;
+    }
+  }
+
   return (
-    <TableCell>
-      <span onClick={openDialog}>{label}</span>
+    <TableCell align="center">
+      <span onClick={openDialog} style={{cursor: 'pointer'}}>
+        {label}
+      </span>
       <EffectCellContextProviderComponent alternativeId={alternativeId}>
         <EffectCellDialog
           callback={saveEffect}

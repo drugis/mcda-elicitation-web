@@ -44,8 +44,14 @@ export default function ValueInput() {
         <TextField
           value={value}
           onChange={valueChanged}
+          type="number"
+          inputProps={{
+            min: dataSource.unitOfMeasurement.lowerBound,
+            max: dataSource.unitOfMeasurement.upperBound
+          }}
           error={!!inputError}
           helperText={inputError ? inputError : ''}
+          autoFocus
         />
       </Grid>
     </>

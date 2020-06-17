@@ -25,25 +25,20 @@ export default function LowerBoundInput() {
 
   function validateInput() {
     const parsedValue = Number.parseFloat(lowerBound);
+    const highestPossibleValue =
+      inputType === 'valueCI'
+        ? Number.parseFloat(value)
+        : Number.parseFloat(upperBound);
+
     if (isNaN(parsedValue)) {
       setInputError('Please provide a numeric input');
       setIsValidLowerBound(false);
     } else if (
-      inputType === 'valueCI' &&
-      (parsedValue > Number.parseFloat(value) ||
-        parsedValue < dataSource.unitOfMeasurement.lowerBound)
+      parsedValue > highestPossibleValue ||
+      parsedValue < dataSource.unitOfMeasurement.lowerBound
     ) {
       setInputError(
-        `Input out of bounds (${dataSource.unitOfMeasurement.lowerBound}, ${value})`
-      );
-      setIsValidLowerBound(false);
-    } else if (
-      inputType === 'range' &&
-      (parsedValue > Number.parseFloat(upperBound) ||
-        parsedValue < dataSource.unitOfMeasurement.lowerBound)
-    ) {
-      setInputError(
-        `Input out of bounds (${dataSource.unitOfMeasurement.lowerBound}, ${upperBound})`
+        `Input out of bounds [${dataSource.unitOfMeasurement.lowerBound}, ${highestPossibleValue}]`
       );
       setIsValidLowerBound(false);
     } else {
@@ -61,6 +56,14 @@ export default function LowerBoundInput() {
         <TextField
           value={lowerBound}
           onChange={valueChanged}
+          type="number"
+          inputProps={{
+            min: dataSource.unitOfMeasurement.lowerBound,
+            max:
+              inputType === 'valueCI'
+                ? value
+                : dataSource.unitOfMeasurement.upperBound
+          }}
           error={!!inputError}
           helperText={inputError ? inputError : ''}
         />

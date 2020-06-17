@@ -128,7 +128,10 @@ export default function EffectCellDialog({
               <MenuItem value="text">Text</MenuItem>
             </Select>
           </Grid>
-          <EffectInputFields />
+          <EffectInputFields
+            editButtonCallback={handleEditButtonClick}
+            isInputInvalid={isInputInvalid}
+          />
         </Grid>
       </DialogContent>
       <DialogActions>

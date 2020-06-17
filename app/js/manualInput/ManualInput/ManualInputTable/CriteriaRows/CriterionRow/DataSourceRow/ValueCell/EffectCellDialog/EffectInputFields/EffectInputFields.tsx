@@ -1,12 +1,18 @@
 import {Grid} from '@material-ui/core';
-import React, {useContext} from 'react';
+import React, {KeyboardEvent, useContext} from 'react';
 import {EffectCellContext} from '../../EffectCellContext/EffectCellContext';
 import RangeInput from './RangeInput/RangeInput';
 import TextInput from './TextInput/TextInput';
 import ValueCIInput from './ValueCIInput/ValueCIInput';
 import ValueInput from './ValueInput/ValueInput';
 
-export default function EffectInputFields() {
+export default function EffectInputFields({
+  editButtonCallback,
+  isInputInvalid
+}: {
+  editButtonCallback: () => void;
+  isInputInvalid: () => boolean;
+}) {
   const {inputType} = useContext(EffectCellContext);
 
   function createInputFields() {
@@ -22,8 +28,14 @@ export default function EffectInputFields() {
     }
   }
 
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>): void {
+    if (event.keyCode === 13 && !isInputInvalid()) {
+      editButtonCallback();
+    }
+  }
+
   return (
-    <Grid item container xs={12}>
+    <Grid item container xs={12} onKeyDown={handleKeyDown}>
       {createInputFields()}
     </Grid>
   );
