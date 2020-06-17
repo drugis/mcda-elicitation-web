@@ -1,30 +1,20 @@
 import {Grid} from '@material-ui/core';
 import React, {KeyboardEvent, useContext} from 'react';
-import {EffectCellContext} from '../../EffectCellContext/EffectCellContext';
-import RangeInput from './RangeInput/RangeInput';
-import TextInput from './TextInput/TextInput';
-import ValueCIInput from './ValueCIInput/ValueCIInput';
-import ValueInput from './ValueInput/ValueInput';
+import {DistributionCellContext} from '../../DistributionCellContext/DistributionCellContext';
 
-export default function EffectInputFields({
+export default function DistributionInputFields({
   editButtonCallback,
   isInputInvalid
 }: {
   editButtonCallback: () => void;
   isInputInvalid: () => boolean;
 }) {
-  const {inputType} = useContext(EffectCellContext);
+  const {inputType} = useContext(DistributionCellContext);
 
   function createInputFields(): JSX.Element {
     switch (inputType) {
       case 'value':
-        return <ValueInput />;
-      case 'valueCI':
-        return <ValueCIInput />;
-      case 'range':
-        return <RangeInput />;
-      case 'text':
-        return <TextInput />;
+        return <></>;
     }
   }
 

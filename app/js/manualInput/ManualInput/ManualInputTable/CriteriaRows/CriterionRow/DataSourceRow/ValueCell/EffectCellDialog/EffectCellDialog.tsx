@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select
 } from '@material-ui/core';
-import React, {ChangeEvent, MouseEvent, useContext} from 'react';
+import React, {ChangeEvent, useContext} from 'react';
 import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
 import {Effect, effectType} from '../../../../../../../../interface/IEffect';
 import IEmptyEffect from '../../../../../../../../interface/IEmptyEffect';
@@ -26,7 +26,7 @@ export default function EffectCellDialog({
 }: {
   isDialogOpen: boolean;
   callback: (effectValue: Effect) => void;
-  cancel: (event: MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  cancel: () => void;
 }) {
   const {
     alternativeId,

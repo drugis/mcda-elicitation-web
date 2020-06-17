@@ -3,9 +3,11 @@ import React, {createContext, useState} from 'react';
 import IAlternative from '../interface/IAlternative';
 import ICriterion from '../interface/ICriterion';
 import IDataSource from '../interface/IDataSource';
+import {Distribution} from '../interface/IDistribution';
 import {Effect} from '../interface/IEffect';
 import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
+import {TableInputMode} from '../type/TableInputMode';
 import {generateUuid} from './ManualInput/ManualInputService/ManualInputService';
 
 const defaultUnitOfMeasurement = {
@@ -61,12 +63,18 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   const [title, setTitle] = useState<string>('');
   const [therapeuticContext, setTherapeuticContext] = useState<string>('');
   const [useFavourability, setUseFavourability] = useState<boolean>(true);
+  const [tableInputMode, setTableInputMode] = useState<TableInputMode>(
+    'effect'
+  );
   const [criteria, setCriteria] = useState<ICriterion[]>(placeholderCriteria);
   const [alternatives, setAlternatives] = useState<IAlternative[]>(
     placeholderAlternatives
   );
-  const [effectValues, setEffectValues] = useState<
+  const [effects, setEffects] = useState<
     Record<string, Record<string, Effect>>
+  >({});
+  const [distributions, setDistributions] = useState<
+    Record<string, Record<string, Distribution>>
   >({});
 
   function addCriterion(isFavourable: boolean) {
@@ -216,11 +224,11 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     alternativeId: string
   ): Effect {
     if (
-      effectValues &&
-      effectValues[dataSourceId] &&
-      effectValues[dataSourceId][alternativeId]
+      effects &&
+      effects[dataSourceId] &&
+      effects[dataSourceId][alternativeId]
     ) {
-      return effectValues[dataSourceId][alternativeId];
+      return effects[dataSourceId][alternativeId];
     } else {
       return {
         alternativeId: alternativeId,
@@ -237,12 +245,12 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     dataSourceId: string,
     alternativeId: string
   ): void {
-    let effectValuesCopy = _.cloneDeep(effectValues);
+    let effectValuesCopy = _.cloneDeep(effects);
     if (!effectValuesCopy[dataSourceId]) {
       effectValuesCopy[dataSourceId] = {};
     }
     effectValuesCopy[dataSourceId][alternativeId] = effect;
-    setEffectValues(effectValuesCopy);
+    setEffects(effectValuesCopy);
   }
 
   return (
@@ -251,12 +259,15 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         title: title,
         therapeuticContext: therapeuticContext,
         useFavourability: useFavourability,
+        tableInputMode: tableInputMode,
         criteria: criteria,
         alternatives: alternatives,
-        effectValues: effectValues,
+        effects: effects,
+        distributions: distributions,
         setTitle: setTitle,
         setTherapeuticContext: setTherapeuticContext,
         setUseFavourability: setUseFavourability,
+        setTableInputMode: setTableInputMode,
         addCriterion: addCriterion,
         addAlternative: addAlternative,
         addDefaultDataSource: addDefaultDataSource,

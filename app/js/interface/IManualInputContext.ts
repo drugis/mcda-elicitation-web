@@ -1,18 +1,23 @@
+import {TableInputMode} from '../type/TableInputMode';
 import IAlternative from './IAlternative';
 import ICriterion from './ICriterion';
 import IDataSource from './IDataSource';
+import {Distribution} from './IDistribution';
 import {Effect} from './IEffect';
 
 export default interface IManualInputContext {
   title: string;
   therapeuticContext: string;
   useFavourability: boolean;
+  tableInputMode: TableInputMode;
   criteria: ICriterion[];
   alternatives: IAlternative[];
-  effectValues: Record<string, Record<string, Effect>>;
+  effects: Record<string, Record<string, Effect>>;
+  distributions: Record<string, Record<string, Distribution>>;
   setTitle: (title: string) => void;
   setTherapeuticContext: (therapeuticContext: string) => void;
   setUseFavourability: (useFavourability: boolean) => void;
+  setTableInputMode: (tableInputMode: TableInputMode) => void;
   addCriterion: (isFavourable: boolean) => void;
   addAlternative: () => void;
   addDefaultDataSource: (criterionId: string) => void;

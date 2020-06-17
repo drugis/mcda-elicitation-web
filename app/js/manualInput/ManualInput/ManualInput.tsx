@@ -3,6 +3,7 @@ import _ from 'lodash';
 import React, {useContext, useEffect} from 'react';
 import {ErrorContext} from '../../Error/ErrorContext';
 import {ManualInputContext} from '../ManualInputContext';
+import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
 import Favourability from './Favourability/Favourability';
 import ManualInputTable from './ManualInputTable/ManualInputTable';
 import TherapeuticContext from './TherapeuticContext/TherapeuticContext';
@@ -43,6 +44,9 @@ export default function ManualInput() {
         </Grid>
         <Grid item xs={12}>
           <Favourability />
+        </Grid>
+        <Grid container item xs={12} spacing={2}>
+          <EffectOrDistribution />
         </Grid>
         <Grid item xs={12}>
           <ManualInputTable />
