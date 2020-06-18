@@ -1,4 +1,10 @@
-import {TableBody, TableCell, TableRow} from '@material-ui/core';
+import {
+  Box,
+  TableBody,
+  TableCell,
+  TableRow,
+  Typography
+} from '@material-ui/core';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ICriterion from '../../../../interface/ICriterion';
@@ -63,7 +69,9 @@ export default function CriteriaRows() {
       <TableBody>
         <TableRow>
           <TableCell colSpan={10 + alternatives.length}>
-            Favourable criteria
+            <Box p={1}>
+              <Typography variant="caption">Favourable criteria</Typography>
+            </Box>
           </TableCell>
         </TableRow>
         {createCriteriaRows(favourableCriteria)}
@@ -74,7 +82,9 @@ export default function CriteriaRows() {
         </TableRow>
         <TableRow>
           <TableCell colSpan={10 + alternatives.length}>
-            Unfavourable criteria
+            <Box p={1}>
+              <Typography variant="caption">Unfavourable criteria</Typography>
+            </Box>
           </TableCell>
         </TableRow>
         {createCriteriaRows(unfavourableCriteria)}

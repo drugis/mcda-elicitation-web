@@ -1,4 +1,4 @@
-import {Grid, IconButton, TableCell, Tooltip} from '@material-ui/core';
+import {Box, Grid, IconButton, TableCell, Tooltip} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import React, {useContext} from 'react';
 import IAlternative from '../../../../interface/IAlternative';
@@ -22,23 +22,25 @@ export default function AlternativeHeader({
 
   return (
     <TableCell>
-      <Grid container spacing={1}>
-        <Grid item xs={10}>
-          <InlineEditor
-            value={alternative.title}
-            callback={handleChange}
-            tooltipText={'Edit alternative title'}
-            errorOnEmpty={true}
-          />
+      <Box pl={1} pr={1}>
+        <Grid container>
+          <Grid item xs={10} style={{textAlign: 'center'}}>
+            <InlineEditor
+              value={alternative.title}
+              callback={handleChange}
+              tooltipText={'Edit alternative title'}
+              errorOnEmpty={true}
+            />
+          </Grid>
+          <Grid item xs={2} style={{textAlign: 'right'}}>
+            <Tooltip title="Delete alternative">
+              <IconButton size="small" color="secondary" onClick={handleDelete}>
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </Grid>
         </Grid>
-        <Grid item xs={2} style={{textAlign: 'right'}}>
-          <Tooltip title="Delete alternative">
-            <IconButton size="small" color="secondary" onClick={handleDelete}>
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-      </Grid>
+      </Box>
     </TableCell>
   );
 }

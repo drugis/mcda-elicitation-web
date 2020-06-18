@@ -1,4 +1,4 @@
-import {Grid, TableCell} from '@material-ui/core';
+import {Box, Grid, TableCell} from '@material-ui/core';
 import React, {useContext} from 'react';
 import ICriterion from '../../../../../../../interface/ICriterion';
 import IDataSource from '../../../../../../../interface/IDataSource';
@@ -24,28 +24,30 @@ export default function SoEUncertaintyCell({
 
   return (
     <TableCell>
-      <Grid container>
-        <Grid item xs={2}>
-          <b>SoE: </b>
+      <Box p={1}>
+        <Grid container>
+          <Grid item xs={2}>
+            <b>SoE: </b>
+          </Grid>
+          <Grid item xs={10}>
+            <InlineEditor
+              value={dataSource.strengthOfEvidence}
+              tooltipText={'Edit strength of evidence'}
+              callback={handleSoEChange}
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <b>Unc: </b>
+          </Grid>
+          <Grid item xs={10}>
+            <InlineEditor
+              value={dataSource.uncertainty}
+              tooltipText={'Edit uncertainty'}
+              callback={handleUncertaintyChange}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={10}>
-          <InlineEditor
-            value={dataSource.strengthOfEvidence}
-            tooltipText={'Edit strength of evidence'}
-            callback={handleSoEChange}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <b>Unc: </b>
-        </Grid>
-        <Grid item xs={10}>
-          <InlineEditor
-            value={dataSource.uncertainty}
-            tooltipText={'Edit uncertainty'}
-            callback={handleUncertaintyChange}
-          />
-        </Grid>
-      </Grid>
+      </Box>
     </TableCell>
   );
 }

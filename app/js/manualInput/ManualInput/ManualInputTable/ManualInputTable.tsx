@@ -18,20 +18,24 @@ export default function ManualInputTable() {
   }
 
   return (
-    <Table size="small">
+    <Table size="small" padding="none">
       <TableHead>
         <TableRow>
-          <TableCell colSpan={3}>Criterion</TableCell>
-          <TableCell>Description</TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell>Unit of measurement</TableCell>
+          <TableCell align="center" colSpan={3}>
+            Criterion
+          </TableCell>
+          <TableCell align="center">Description</TableCell>
+          <TableCell align="center"></TableCell>
+          <TableCell align="center"></TableCell>
+          <TableCell align="center">Unit of measurement</TableCell>
           {createAlternativeHeaders()}
           <TableCell align="center">
             <AddAlternativeButton />
           </TableCell>
-          <TableCell>Strength of evidence / Uncertainties</TableCell>
-          <TableCell>Reference</TableCell>
+          <TableCell align="center">
+            Strength of evidence / Uncertainties
+          </TableCell>
+          <TableCell align="center">Reference</TableCell>
         </TableRow>
       </TableHead>
       <CriteriaRows />

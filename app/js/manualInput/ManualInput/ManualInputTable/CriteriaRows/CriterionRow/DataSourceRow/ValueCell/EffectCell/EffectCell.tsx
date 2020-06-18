@@ -44,7 +44,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
       case 'range':
         return createRangeLabel(effect);
       case 'text':
-        return effect.text;
+        return effect.text ? effect.text : 'Empty';
       case 'empty':
         return 'Empty';
     }

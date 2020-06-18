@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {Distribution} from '../../../interface/IDistribution';
 import {Effect} from '../../../interface/IEffect';
 import INormalDistribution from '../../../interface/INormalDistribution';

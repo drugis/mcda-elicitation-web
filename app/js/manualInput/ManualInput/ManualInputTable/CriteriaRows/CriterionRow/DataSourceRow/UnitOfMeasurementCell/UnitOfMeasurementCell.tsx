@@ -1,10 +1,10 @@
-import {Grid, IconButton, TableCell, Tooltip} from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
+import {TableCell, Tooltip} from '@material-ui/core';
 import React, {useContext, useState} from 'react';
 import ICriterion from '../../../../../../../interface/ICriterion';
 import IDataSource from '../../../../../../../interface/IDataSource';
 import IUnitOfMeasurement from '../../../../../../../interface/IUnitOfMeasurement';
 import {ManualInputContext} from '../../../../../../ManualInputContext';
+import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import UnitOfMeasurementDialog from './UnitOfMeasurementDialog/UnitOfMeasurementDialog';
 
 export default function UnitOfMeasurementCell({
@@ -36,20 +36,23 @@ export default function UnitOfMeasurementCell({
     });
   }
 
+  function createLabel(): JSX.Element {
+    if (dataSource.unitOfMeasurement.label) {
+      return (
+        <Tooltip title="Edit unit of measurement">
+          <span>{dataSource.unitOfMeasurement.label}</span>
+        </Tooltip>
+      );
+    } else {
+      return <InlineTooltip />;
+    }
+  }
+
   return (
-    <TableCell>
-      <Grid container>
-        <Grid item xs={10}>
-          {dataSource.unitOfMeasurement.label}
-        </Grid>
-        <Grid item xs={2} style={{textAlign: 'right'}}>
-          <Tooltip title="Edit unit of measurement">
-            <IconButton size="small" color="primary" onClick={openDialog}>
-              <Edit />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-      </Grid>
+    <TableCell align="center">
+      <span onClick={openDialog} style={{cursor: 'pointer'}}>
+        {createLabel()}
+      </span>
 
       <UnitOfMeasurementDialog
         unitOfMeasurement={dataSource.unitOfMeasurement}

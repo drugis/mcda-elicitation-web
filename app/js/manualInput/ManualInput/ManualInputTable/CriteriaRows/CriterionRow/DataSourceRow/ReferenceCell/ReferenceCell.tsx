@@ -19,7 +19,7 @@ export default function ReferenceCell({
   }
 
   return (
-    <TableCell>
+    <TableCell align="center">
       <InlineEditor
         value={dataSource.title}
         tooltipText={'Edit reference'}

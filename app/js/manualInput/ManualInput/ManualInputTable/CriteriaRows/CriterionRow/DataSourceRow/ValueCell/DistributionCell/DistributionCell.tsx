@@ -50,7 +50,7 @@ export default function DistributionCell({
       case 'gamma':
         return createGammaLabel(distribution);
       case 'text':
-        return distribution.text;
+        return distribution.text ? distribution.text : 'Empty';
       case 'empty':
         return 'Empty';
     }

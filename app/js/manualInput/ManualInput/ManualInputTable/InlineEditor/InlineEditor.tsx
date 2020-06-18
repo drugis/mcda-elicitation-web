@@ -1,6 +1,6 @@
-import {Grid, IconButton, TextField, Tooltip} from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
+import {TextField, Tooltip} from '@material-ui/core';
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import InlineTooltip from '../CriteriaRows/CriterionRow/DataSourceRow/InlineTooltip/InlineTooltip';
 
 export default function InlineEditor({
   value,
@@ -45,38 +45,38 @@ export default function InlineEditor({
     setNewValue(event.target.value);
   }
 
-  return areWeEditing ? (
-    <Grid container>
-      <Grid item xs={12}>
-        <TextField
-          value={newValue}
-          onChange={handleChange}
-          autoFocus
-          multiline={multiline}
-          onBlur={handleClick}
-          onKeyDown={handleKey}
-          fullWidth
-          error={errorOnEmpty && !newValue}
-          helperText={errorOnEmpty && !newValue ? 'Please provide a title' : ''}
-        />
-      </Grid>
-    </Grid>
-  ) : (
-    <Grid container>
-      <Grid item xs={10}>
-        {errorOnEmpty && !value ? (
-          <span className="alert">No title entered</span>
-        ) : (
-          value
-        )}
-      </Grid>
-      <Grid item xs={2} style={{textAlign: 'right'}}>
+  function createLabel(): JSX.Element {
+    if (errorOnEmpty && !value) {
+      return (
         <Tooltip title={tooltipText}>
-          <IconButton size="small" color="primary" onClick={toggleEdit}>
-            <Edit />
-          </IconButton>
+          <span className="alert">No title entered</span>
         </Tooltip>
-      </Grid>
-    </Grid>
+      );
+    } else if (value) {
+      return (
+        <Tooltip title={tooltipText}>
+          <span>{value}</span>
+        </Tooltip>
+      );
+    } else {
+      return <InlineTooltip />;
+    }
+  }
+
+  return areWeEditing ? (
+    <TextField
+      value={newValue}
+      onChange={handleChange}
+      autoFocus
+      multiline={multiline}
+      onBlur={handleClick}
+      onKeyDown={handleKey}
+      error={errorOnEmpty && !newValue}
+      helperText={errorOnEmpty && !newValue ? 'Please provide a title' : ''}
+    />
+  ) : (
+    <span onClick={toggleEdit} style={{cursor: 'pointer'}}>
+      {createLabel()}
+    </span>
   );
 }
