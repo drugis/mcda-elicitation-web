@@ -8,7 +8,7 @@ import {
   Select
 } from '@material-ui/core';
 import React, {ChangeEvent, useContext} from 'react';
-import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
+import DialogTitleWithCross from '../../../../../../../../DialogTitleWithCross/DialogTitleWithCross';
 import IBetaDistribution from '../../../../../../../../interface/IBetaDistribution';
 import IDistribution, {
   distributionType
@@ -137,9 +137,9 @@ export default function DistributionCellDialog({
 
   return (
     <Dialog open={isDialogOpen} onClose={cancel} fullWidth maxWidth={'sm'}>
-      <DialogTitle id="dialog-title" onClose={cancel}>
+      <DialogTitleWithCross id="dialog-title" onClose={cancel}>
         Set value
-      </DialogTitle>
+      </DialogTitleWithCross>
       <DialogContent>
         <Grid container>
           <Grid item xs={6}>
@@ -167,18 +167,14 @@ export default function DistributionCellDialog({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Grid container justify="flex-start">
-          <Grid item>
-            <Button
-              color="primary"
-              onClick={handleEditButtonClick}
-              variant="contained"
-              disabled={isInputInvalid()}
-            >
-              Edit
-            </Button>
-          </Grid>
-        </Grid>
+        <Button
+          color="primary"
+          onClick={handleEditButtonClick}
+          variant="contained"
+          disabled={isInputInvalid()}
+        >
+          Edit
+        </Button>
       </DialogActions>
     </Dialog>
   );

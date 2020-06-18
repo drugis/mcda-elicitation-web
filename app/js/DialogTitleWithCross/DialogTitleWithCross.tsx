@@ -26,7 +26,7 @@ export interface DialogTitleProps extends WithStyles<typeof styles> {
   onClose: () => void;
 }
 
-const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
+const DialogTitleWithCross = withStyles(styles)((props: DialogTitleProps) => {
   const {children, classes, onClose, ...other} = props;
   return (
     <MuiDialogTitle disableTypography {...other}>
@@ -44,4 +44,4 @@ const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
   );
 });
 
-export default DialogTitle;
+export default DialogTitleWithCross;

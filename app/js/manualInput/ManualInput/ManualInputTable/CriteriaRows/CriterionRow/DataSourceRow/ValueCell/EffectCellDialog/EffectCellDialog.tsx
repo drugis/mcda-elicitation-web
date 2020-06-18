@@ -8,7 +8,7 @@ import {
   Select
 } from '@material-ui/core';
 import React, {ChangeEvent, useContext} from 'react';
-import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
+import DialogTitleWithCross from '../../../../../../../../DialogTitleWithCross/DialogTitleWithCross';
 import {Effect, effectType} from '../../../../../../../../interface/IEffect';
 import IEmptyEffect from '../../../../../../../../interface/IEmptyEffect';
 import IRangeEffect from '../../../../../../../../interface/IRangeEffect';
@@ -108,9 +108,9 @@ export default function EffectCellDialog({
 
   return (
     <Dialog open={isDialogOpen} onClose={cancel} fullWidth maxWidth={'sm'}>
-      <DialogTitle id="dialog-title" onClose={cancel}>
+      <DialogTitleWithCross id="dialog-title" onClose={cancel}>
         Set value
-      </DialogTitle>
+      </DialogTitleWithCross>
       <DialogContent>
         <Grid container>
           <Grid item xs={6}>
@@ -136,18 +136,14 @@ export default function EffectCellDialog({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Grid container justify="flex-start">
-          <Grid item>
-            <Button
-              color="primary"
-              onClick={handleEditButtonClick}
-              variant="contained"
-              disabled={isInputInvalid()}
-            >
-              Edit
-            </Button>
-          </Grid>
-        </Grid>
+        <Button
+          color="primary"
+          onClick={handleEditButtonClick}
+          variant="contained"
+          disabled={isInputInvalid()}
+        >
+          Edit
+        </Button>
       </DialogActions>
     </Dialog>
   );

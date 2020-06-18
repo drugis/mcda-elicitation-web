@@ -288,6 +288,8 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setDistributions(distributionValuesCopy);
   }
 
+  function generateDistributions() {}
+
   return (
     <ManualInputContext.Provider
       value={{
@@ -318,7 +320,8 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         getEffect: getEffect,
         setEffect: setEffect,
         getDistribution: getDistribution,
-        setDistribution: setDistribution
+        setDistribution: setDistribution,
+        generateDistributions: generateDistributions
       }}
     >
       {props.children}

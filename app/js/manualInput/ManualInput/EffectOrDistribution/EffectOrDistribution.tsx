@@ -17,7 +17,7 @@ export default function EffectOrDistribution() {
 
   return (
     <>
-      <Grid item>Table input mode: </Grid>
+      <Grid item>Table input mode</Grid>
       <Grid item>
         <Select
           value={tableInputMode}

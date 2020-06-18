@@ -5,6 +5,7 @@ import {ErrorContext} from '../../Error/ErrorContext';
 import {ManualInputContext} from '../ManualInputContext';
 import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
 import Favourability from './Favourability/Favourability';
+import GenerateDistributionsButton from './GenerateDistributionsButton/GenerateDistributionsButton';
 import ManualInputTable from './ManualInputTable/ManualInputTable';
 import TherapeuticContext from './TherapeuticContext/TherapeuticContext';
 import Title from './Title/Title';
@@ -50,6 +51,9 @@ export default function ManualInput() {
         </Grid>
         <Grid item xs={12}>
           <ManualInputTable />
+        </Grid>
+        <Grid item xs={12}>
+          <GenerateDistributionsButton />
         </Grid>
       </Grid>
     </Grid>

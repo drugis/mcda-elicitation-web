@@ -13,6 +13,7 @@ export default function Favourability() {
 
   return (
     <FormControlLabel
+      style={{marginLeft: '0px'}}
       value="favourability"
       control={
         <Checkbox

@@ -58,4 +58,5 @@ export default interface IManualInputContext {
     dataSourceId: string,
     alternativeId: string
   ) => void;
+  generateDistributions: () => void;
 }

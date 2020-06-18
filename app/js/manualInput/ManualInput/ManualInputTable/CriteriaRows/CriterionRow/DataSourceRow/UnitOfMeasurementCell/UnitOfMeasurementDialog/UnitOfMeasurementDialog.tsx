@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import _ from 'lodash';
 import React, {ChangeEvent, KeyboardEvent, useEffect, useState} from 'react';
-import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
+import DialogTitleWithCross from '../../../../../../../../DialogTitleWithCross/DialogTitleWithCross';
 import IUnitOfMeasurement, {
   UnitOfMeasurementType
 } from '../../../../../../../../interface/IUnitOfMeasurement';
@@ -102,9 +102,9 @@ export default function UnitOfMeasurementDialog({
 
   return (
     <Dialog open={isDialogOpen} onClose={cancel} fullWidth maxWidth={'sm'}>
-      <DialogTitle id="dialog-title" onClose={cancel}>
+      <DialogTitleWithCross id="dialog-title" onClose={cancel}>
         Edit unit of measurement
-      </DialogTitle>
+      </DialogTitleWithCross>
       <DialogContent>
         <Grid container>
           <Grid item xs={6}>
@@ -173,17 +173,13 @@ export default function UnitOfMeasurementDialog({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Grid container justify="flex-start">
-          <Grid item>
-            <Button
-              color="primary"
-              onClick={handleEditButtonClick}
-              variant="contained"
-            >
-              Edit
-            </Button>
-          </Grid>
-        </Grid>
+        <Button
+          color="primary"
+          onClick={handleEditButtonClick}
+          variant="contained"
+        >
+          Edit
+        </Button>
       </DialogActions>
     </Dialog>
   );
