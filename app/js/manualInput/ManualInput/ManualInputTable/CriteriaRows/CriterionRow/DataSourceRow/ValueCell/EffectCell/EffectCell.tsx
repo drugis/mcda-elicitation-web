@@ -6,20 +6,18 @@ import IValueCIEffect from '../../../../../../../../interface/IValueCIEffect';
 import IValueEffect from '../../../../../../../../interface/IValueEffect';
 import {ManualInputContext} from '../../../../../../../ManualInputContext';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
-import {EffectCellContextProviderComponent} from './../EffectCellContext/EffectCellContext';
+import {InputCellContextProviderComponent} from '../InputCellContext/InputCellContext';
 import EffectCellDialog from './../EffectCellDialog/EffectCellDialog';
 
 export default function EffectCell({alternativeId}: {alternativeId: string}) {
-  const {getEffect, setEffect, effects} = useContext(
-    ManualInputContext
-  );
+  const {getEffect, setEffect, effects} = useContext(ManualInputContext);
   const {dataSource, criterion} = useContext(DataSourceRowContext);
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [label, setLabel] = useState('');
-  
+
   const effect = getEffect(criterion.id, dataSource.id, alternativeId);
-  
+
   useEffect(() => {
     setLabel(createLabel(effect));
   }, [effects, dataSource.unitOfMeasurement]);
@@ -102,13 +100,16 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
       <span onClick={openDialog} style={{cursor: 'pointer'}}>
         {label}
       </span>
-      <EffectCellContextProviderComponent alternativeId={alternativeId} effect={effect}>
+      <InputCellContextProviderComponent
+        alternativeId={alternativeId}
+        effectOrDistribution={effect}
+      >
         <EffectCellDialog
           callback={saveEffect}
           isDialogOpen={isDialogOpen}
           cancel={closeDialog}
         />
-      </EffectCellContextProviderComponent>
+      </InputCellContextProviderComponent>
     </TableCell>
   );
 }

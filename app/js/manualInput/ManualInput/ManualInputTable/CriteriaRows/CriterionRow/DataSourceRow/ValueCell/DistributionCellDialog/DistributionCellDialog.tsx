@@ -9,19 +9,19 @@ import {
 } from '@material-ui/core';
 import React, {ChangeEvent, useContext} from 'react';
 import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
+import IBetaDistribution from '../../../../../../../../interface/IBetaDistribution';
 import IDistribution, {
   distributionType
 } from '../../../../../../../../interface/IDistribution';
-import {DistributionCellContext} from '../DistributionCellContext/DistributionCellContext';
-import DistributionInputFields from './DistributionInputFields/DistributionInputFields';
-import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
-import IValueEffect from '../../../../../../../../interface/IValueEffect';
+import IEmptyEffect from '../../../../../../../../interface/IEmptyEffect';
+import IGammaDistribution from '../../../../../../../../interface/IGammaDistribution';
 import INormalDistribution from '../../../../../../../../interface/INormalDistribution';
 import IRangeEffect from '../../../../../../../../interface/IRangeEffect';
 import ITextEffect from '../../../../../../../../interface/ITextEffect';
-import IEmptyEffect from '../../../../../../../../interface/IEmptyEffect';
-import IBetaDistribution from '../../../../../../../../interface/IBetaDistribution';
-import IGammaDistribution from '../../../../../../../../interface/IGammaDistribution';
+import IValueEffect from '../../../../../../../../interface/IValueEffect';
+import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
+import {InputCellContext} from '../InputCellContext/InputCellContext';
+import DistributionInputFields from './DistributionInputFields/DistributionInputFields';
 
 export default function DistributionCellDialog({
   isDialogOpen,
@@ -51,7 +51,7 @@ export default function DistributionCellDialog({
     isValidStandardError,
     isValidAlpha,
     isValidBeta
-  } = useContext(DistributionCellContext);
+  } = useContext(InputCellContext);
   const {criterion, dataSource} = useContext(DataSourceRowContext);
 
   function handleTypeChange(

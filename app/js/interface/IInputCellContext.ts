@@ -1,8 +1,9 @@
 import {distributionType} from './IDistribution';
+import {effectType} from './IEffect';
 
-export default interface IDistributionCellContext {
+export default interface IEffectCellContext {
   alternativeId: string;
-  inputType: distributionType;
+  inputType: effectType | distributionType;
   value: string;
   isValidValue: boolean;
   lowerBound: string;
@@ -18,7 +19,7 @@ export default interface IDistributionCellContext {
   isValidAlpha: boolean;
   beta: string;
   isValidBeta: boolean;
-  setInputType: (inputType: distributionType) => void;
+  setInputType: (inputType: effectType | distributionType) => void;
   setValue: (value: string) => void;
   setIsValidValue: (isValid: boolean) => void;
   setLowerBound: (lowerBound: string) => void;

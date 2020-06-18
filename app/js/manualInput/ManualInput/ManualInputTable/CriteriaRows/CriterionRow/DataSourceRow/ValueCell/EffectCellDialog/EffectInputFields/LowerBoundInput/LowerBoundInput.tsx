@@ -1,8 +1,9 @@
 import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
+import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
-export default function LowerBoundInput({context}: {context: any}) {
+export default function LowerBoundInput() {
   const {dataSource} = useContext(DataSourceRowContext);
   const {
     value,
@@ -11,7 +12,7 @@ export default function LowerBoundInput({context}: {context: any}) {
     setLowerBound,
     setIsValidLowerBound,
     inputType
-  } = useContext(context);
+  } = useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
 
   useEffect(validateInput, [value, lowerBound, upperBound]);

@@ -1,8 +1,9 @@
 import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext} from 'react';
+import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
-export default function TextInput({context}: {context: any}) {
-  const {text, setText} = useContext(context);
+export default function TextInput() {
+  const {text, setText} = useContext(InputCellContext);
 
   function handleTextChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

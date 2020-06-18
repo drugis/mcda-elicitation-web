@@ -1,12 +1,12 @@
 import {Grid} from '@material-ui/core';
 import React, {KeyboardEvent, useContext} from 'react';
-import {DistributionCellContext} from '../../DistributionCellContext/DistributionCellContext';
-import ValueInput from '../../EffectCellDialog/EffectInputFields/ValueInput/ValueInput';
 import RangeInput from '../../EffectCellDialog/EffectInputFields/RangeInput/RangeInput';
 import TextInput from '../../EffectCellDialog/EffectInputFields/TextInput/TextInput';
-import NormalInput from './NormalInput/NormalInput';
+import ValueInput from '../../EffectCellDialog/EffectInputFields/ValueInput/ValueInput';
+import {InputCellContext} from '../../InputCellContext/InputCellContext';
 import BetaInput from './BetaInput/BetaInput';
 import GammaInput from './GammaInput/GammaInput';
+import NormalInput from './NormalInput/NormalInput';
 
 export default function DistributionInputFields({
   editButtonCallback,
@@ -15,16 +15,16 @@ export default function DistributionInputFields({
   editButtonCallback: () => void;
   isInputInvalid: () => boolean;
 }) {
-  const {inputType} = useContext(DistributionCellContext);
+  const {inputType} = useContext(InputCellContext);
 
   function createInputFields(): JSX.Element {
     switch (inputType) {
       case 'value':
-        return <ValueInput context={DistributionCellContext} />;
+        return <ValueInput />;
       case 'range':
-        return <RangeInput context={DistributionCellContext} />;
+        return <RangeInput />;
       case 'text':
-        return <TextInput context={DistributionCellContext} />;
+        return <TextInput />;
       case 'normal':
         return <NormalInput />;
       case 'beta':

@@ -16,7 +16,7 @@ import ITextEffect from '../../../../../../../../interface/ITextEffect';
 import IValueCIEffect from '../../../../../../../../interface/IValueCIEffect';
 import IValueEffect from '../../../../../../../../interface/IValueEffect';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
-import {EffectCellContext} from '../EffectCellContext/EffectCellContext';
+import {InputCellContext} from '../InputCellContext/InputCellContext';
 import EffectInputFields from './EffectInputFields/EffectInputFields';
 
 export default function EffectCellDialog({
@@ -39,7 +39,7 @@ export default function EffectCellDialog({
     upperBound,
     isValidUpperBound,
     text
-  } = useContext(EffectCellContext);
+  } = useContext(InputCellContext);
   const {criterion, dataSource} = useContext(DataSourceRowContext);
 
   function handleTypeChange(

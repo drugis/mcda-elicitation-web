@@ -1,7 +1,7 @@
 import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
-import {DistributionCellContext} from '../../../DistributionCellContext/DistributionCellContext';
+import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function NormalInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -12,7 +12,7 @@ export default function NormalInput() {
     standardError,
     setStandardError,
     setIsValidStandardError
-  } = useContext(DistributionCellContext);
+  } = useContext(InputCellContext);
   const [meanInputError, setMeanInputError] = useState<string>('');
   const [standardErrorInputError, setStandardErrorInputError] = useState<
     string

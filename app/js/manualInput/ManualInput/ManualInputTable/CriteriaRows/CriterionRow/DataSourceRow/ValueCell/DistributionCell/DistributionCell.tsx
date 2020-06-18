@@ -1,15 +1,15 @@
 import {TableCell} from '@material-ui/core';
 import React, {useContext, useEffect, useState} from 'react';
+import IBetaDistribution from '../../../../../../../../interface/IBetaDistribution';
 import {Distribution} from '../../../../../../../../interface/IDistribution';
+import IGammaDistribution from '../../../../../../../../interface/IGammaDistribution';
+import INormalDistribution from '../../../../../../../../interface/INormalDistribution';
+import IRangeEffect from '../../../../../../../../interface/IRangeEffect';
+import IValueEffect from '../../../../../../../../interface/IValueEffect';
 import {ManualInputContext} from '../../../../../../../ManualInputContext';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
-import {DistributionCellContextProviderComponent} from '../DistributionCellContext/DistributionCellContext';
 import DistributionCellDialog from '../DistributionCellDialog/DistributionCellDialog';
-import IBetaDistribution from '../../../../../../../../interface/IBetaDistribution';
-import IGammaDistribution from '../../../../../../../../interface/IGammaDistribution';
-import IRangeEffect from '../../../../../../../../interface/IRangeEffect';
-import INormalDistribution from '../../../../../../../../interface/INormalDistribution';
-import IValueEffect from '../../../../../../../../interface/IValueEffect';
+import {InputCellContextProviderComponent} from '../InputCellContext/InputCellContext';
 
 export default function DistributionCell({
   alternativeId
@@ -128,16 +128,16 @@ export default function DistributionCell({
       <span onClick={openDialog} style={{cursor: 'pointer'}}>
         {label}
       </span>
-      <DistributionCellContextProviderComponent
+      <InputCellContextProviderComponent
         alternativeId={alternativeId}
-        distribution={distribution}
+        effectOrDistribution={distribution}
       >
         <DistributionCellDialog
           callback={saveDistribution}
           isDialogOpen={isDialogOpen}
           cancel={closeDialog}
         />
-      </DistributionCellContextProviderComponent>
+      </InputCellContextProviderComponent>
     </TableCell>
   );
 }

@@ -1,6 +1,6 @@
-import React, {useContext, ChangeEvent, useState, useEffect} from 'react';
 import {Grid, TextField} from '@material-ui/core';
-import {DistributionCellContext} from '../../../DistributionCellContext/DistributionCellContext';
+import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function BetaValueInput({
   isBetaInvalid,
@@ -9,7 +9,7 @@ export default function BetaValueInput({
   isBetaInvalid: (beta: number) => boolean;
   invalidBetaError: string;
 }) {
-  const {beta, setBeta, setIsValidBeta} = useContext(DistributionCellContext);
+  const {beta, setBeta, setIsValidBeta} = useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
 
   useEffect(validateInput, [beta]);

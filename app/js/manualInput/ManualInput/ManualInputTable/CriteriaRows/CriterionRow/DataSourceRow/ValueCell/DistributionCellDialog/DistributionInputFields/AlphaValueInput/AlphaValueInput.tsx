@@ -1,6 +1,6 @@
-import React, {useContext, ChangeEvent, useState, useEffect} from 'react';
 import {Grid, TextField} from '@material-ui/core';
-import {DistributionCellContext} from '../../../DistributionCellContext/DistributionCellContext';
+import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function AlphaValueInput({
   isAlphaInvalid,
@@ -9,9 +9,7 @@ export default function AlphaValueInput({
   isAlphaInvalid: (alpha: number) => boolean;
   invalidAlphaError: string;
 }) {
-  const {alpha, setAlpha, setIsValidAlpha} = useContext(
-    DistributionCellContext
-  );
+  const {alpha, setAlpha, setIsValidAlpha} = useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
 
   useEffect(validateInput, [alpha]);

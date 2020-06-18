@@ -1,24 +1,26 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {
-  distributionType,
-  Distribution
+  Distribution,
+  distributionType
 } from '../../../../../../../../interface/IDistribution';
-import IDistributionCellContext from '../../../../../../../../interface/IDistributionCellContext';
+import {Effect, effectType} from '../../../../../../../../interface/IEffect';
+import IInputCellContext from '../../../../../../../../interface/IInputCellContext';
 
-export const DistributionCellContext = createContext<IDistributionCellContext>(
-  {} as IDistributionCellContext
+export const InputCellContext = createContext<IInputCellContext>(
+  {} as IInputCellContext
 );
-
-export function DistributionCellContextProviderComponent({
+export function InputCellContextProviderComponent({
   alternativeId,
-  distribution,
+  effectOrDistribution: effectOrDistribution,
   children
 }: {
   alternativeId: string;
-  distribution: Distribution;
+  effectOrDistribution: Effect | Distribution;
   children: any;
 }) {
-  const [inputType, setInputType] = useState<distributionType>('normal');
+  const [inputType, setInputType] = useState<effectType | distributionType>(
+    'value'
+  );
   const [value, setValue] = useState<string>('0');
   const [lowerBound, setLowerBound] = useState<string>('0');
   const [upperBound, setUpperBound] = useState<string>('0');
@@ -36,37 +38,44 @@ export function DistributionCellContextProviderComponent({
   const [isValidBeta, setIsValidBeta] = useState(false);
 
   useEffect(() => {
-    setInputType(distribution.type);
-    switch (distribution.type) {
-      case 'normal':
-        if (distribution.mean !== undefined) {
-          setMean(`${distribution.mean}`);
-          setStandardError(`${distribution.standardError}`);
+    setInputType(effectOrDistribution.type);
+    switch (effectOrDistribution.type) {
+      case 'value':
+        if (effectOrDistribution.value !== undefined) {
+          setValue(`${effectOrDistribution.value}`);
         }
         break;
-      case 'value':
-        setValue(`${distribution.value}`);
-        break;
-      case 'beta':
-        setAlpha(`${distribution.alpha}`);
-        setBeta(`${distribution.beta}`);
-        break;
-      case 'gamma':
-        setAlpha(`${distribution.alpha}`);
-        setBeta(`${distribution.beta}`);
+      case 'valueCI':
+        setValue(`${effectOrDistribution.value}`);
+        setLowerBound(`${effectOrDistribution.lowerBound}`);
+        setUpperBound(`${effectOrDistribution.upperBound}`);
         break;
       case 'range':
-        setLowerBound(`${distribution.lowerBound}`);
-        setUpperBound(`${distribution.upperBound}`);
+        setLowerBound(`${effectOrDistribution.lowerBound}`);
+        setUpperBound(`${effectOrDistribution.upperBound}`);
         break;
       case 'text':
-        setText(`${distribution.text}`);
+        setText(`${effectOrDistribution.text}`);
+        break;
+      case 'normal':
+        if (effectOrDistribution.mean !== undefined) {
+          setMean(`${effectOrDistribution.mean}`);
+          setStandardError(`${effectOrDistribution.standardError}`);
+        }
+        break;
+      case 'beta':
+        setAlpha(`${effectOrDistribution.alpha}`);
+        setBeta(`${effectOrDistribution.beta}`);
+        break;
+      case 'gamma':
+        setAlpha(`${effectOrDistribution.alpha}`);
+        setBeta(`${effectOrDistribution.beta}`);
         break;
     }
   }, []);
 
   return (
-    <DistributionCellContext.Provider
+    <InputCellContext.Provider
       value={{
         alternativeId: alternativeId,
         inputType: inputType,
@@ -104,6 +113,6 @@ export function DistributionCellContextProviderComponent({
       }}
     >
       {children}
-    </DistributionCellContext.Provider>
+    </InputCellContext.Provider>
   );
 }
