@@ -23,7 +23,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
   }, [effects, dataSource.unitOfMeasurement]);
 
   function saveEffect(effect: Effect) {
-    setEffect(effect, dataSource.id, alternativeId);
+    setEffect(effect);
     setIsDialogOpen(false);
   }
 

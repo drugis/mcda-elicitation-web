@@ -5,14 +5,15 @@ import {
   DialogContent,
   Tooltip
 } from '@material-ui/core';
-import WarningIcon from '@material-ui/icons/Warning';
 import React, {useContext, useState} from 'react';
 import DialogTitleWithCross from '../../../DialogTitleWithCross/DialogTitleWithCross';
 import {ManualInputContext} from '../../ManualInputContext';
 
 export default function GenerateDistributionsButton() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const {generateDistributions} = useContext(ManualInputContext);
+  const {generateDistributions, setTableInputMode} = useContext(
+    ManualInputContext
+  );
 
   const tooltip = `Generate distribution parameters for SMAA using effect values.
    Any existing distributions will be overwritten.`;
@@ -22,6 +23,12 @@ export default function GenerateDistributionsButton() {
   }
   function closeDialog() {
     setIsDialogOpen(false);
+  }
+
+  function handleClickGenerate() {
+    generateDistributions();
+    closeDialog();
+    setTableInputMode('distribution');
   }
 
   return (
@@ -41,13 +48,12 @@ export default function GenerateDistributionsButton() {
           Generate distributions
         </DialogTitleWithCross>
         <DialogContent>
-          <WarningIcon />
           Generating distributions for SMAA will overwrite any existing ones.
         </DialogContent>
         <DialogActions>
           <Button
             color="primary"
-            onClick={generateDistributions}
+            onClick={handleClickGenerate}
             variant="contained"
           >
             Generate

@@ -43,20 +43,12 @@ export default interface IManualInputContext {
     dataSourceId: string,
     alternativeId: string
   ) => Effect;
-  setEffect: (
-    effect: Effect,
-    dataSourceId: string,
-    alternativeId: string
-  ) => void;
+  setEffect: (effect: Effect) => void;
   getDistribution: (
     criterionId: string,
     dataSourceId: string,
     alternativeId: string
   ) => Distribution;
-  setDistribution: (
-    distribution: Distribution,
-    dataSourceId: string,
-    alternativeId: string
-  ) => void;
+  setDistribution: (distribution: Distribution) => void;
   generateDistributions: () => void;
 }

@@ -119,7 +119,7 @@ export default function DistributionCell({
   }
 
   function saveDistribution(newDistribution: Distribution) {
-    setDistribution(newDistribution, dataSource.id, alternativeId);
+    setDistribution(newDistribution);
     setIsDialogOpen(false);
   }
 

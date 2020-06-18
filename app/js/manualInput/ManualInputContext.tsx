@@ -8,7 +8,10 @@ import {Effect} from '../interface/IEffect';
 import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
 import {TableInputMode} from '../type/TableInputMode';
-import {generateUuid} from './ManualInput/ManualInputService/ManualInputService';
+import {
+  generateDistribution,
+  generateUuid
+} from './ManualInput/ManualInputService/ManualInputService';
 
 const defaultUnitOfMeasurement = {
   label: '',
@@ -240,18 +243,15 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     }
   }
 
-  function setEffect(
-    effect: Effect,
-    dataSourceId: string,
-    alternativeId: string
-  ): void {
-    let effectValuesCopy = _.cloneDeep(effects);
-    if (!effectValuesCopy[dataSourceId]) {
-      effectValuesCopy[dataSourceId] = {};
+  function setEffect(effect: Effect): void {
+    let effectsCopy = _.cloneDeep(effects);
+    if (!effectsCopy[effect.dataSourceId]) {
+      effectsCopy[effect.dataSourceId] = {};
     }
-    effectValuesCopy[dataSourceId][alternativeId] = effect;
-    setEffects(effectValuesCopy);
+    effectsCopy[effect.dataSourceId][effect.alternativeId] = effect;
+    setEffects(effectsCopy);
   }
+
   function getDistribution(
     criterionId: string,
     dataSourceId: string,
@@ -275,20 +275,30 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     }
   }
 
-  function setDistribution(
-    distribution: Distribution,
-    dataSourceId: string,
-    alternativeId: string
-  ): void {
-    let distributionValuesCopy = _.cloneDeep(distributions);
-    if (!distributionValuesCopy[dataSourceId]) {
-      distributionValuesCopy[dataSourceId] = {};
+  function setDistribution(distribution: Distribution): void {
+    let distributionsCopy = _.cloneDeep(distributions);
+    if (!distributionsCopy[distribution.dataSourceId]) {
+      distributionsCopy[distribution.dataSourceId] = {};
     }
-    distributionValuesCopy[dataSourceId][alternativeId] = distribution;
-    setDistributions(distributionValuesCopy);
+    distributionsCopy[distribution.dataSourceId][
+      distribution.alternativeId
+    ] = distribution;
+    setDistributions(distributionsCopy);
   }
 
-  function generateDistributions() {}
+  function generateDistributions() {
+    let distributionsCopy = _.cloneDeep(distributions);
+    _.forEach(effects, (row: Record<string, Effect>, dataSourceId: string) => {
+      _.forEach(row, (effect: Effect, alternativeId: string) => {
+        const newDistribution = generateDistribution(effect);
+        if (!distributionsCopy[dataSourceId]) {
+          distributionsCopy[dataSourceId] = {};
+        }
+        distributionsCopy[dataSourceId][alternativeId] = newDistribution;
+      });
+    });
+    setDistributions(distributionsCopy);
+  }
 
   return (
     <ManualInputContext.Provider
