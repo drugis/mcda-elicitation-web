@@ -51,4 +51,6 @@ export default interface IManualInputContext {
   ) => Distribution;
   setDistribution: (distribution: Distribution) => void;
   generateDistributions: () => void;
+  isDoneDisabled: boolean;
+  warnings: string[];
 }

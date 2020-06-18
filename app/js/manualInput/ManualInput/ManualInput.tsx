@@ -3,12 +3,14 @@ import _ from 'lodash';
 import React, {useContext, useEffect} from 'react';
 import {ErrorContext} from '../../Error/ErrorContext';
 import {ManualInputContext} from '../ManualInputContext';
+import DoneButton from './DoneButton/DoneButton';
 import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
 import Favourability from './Favourability/Favourability';
 import GenerateDistributionsButton from './GenerateDistributionsButton/GenerateDistributionsButton';
 import ManualInputTable from './ManualInputTable/ManualInputTable';
 import TherapeuticContext from './TherapeuticContext/TherapeuticContext';
 import Title from './Title/Title';
+import Warnings from './Warnings/Warnings';
 
 export default function ManualInput() {
   const {criteria} = useContext(ManualInputContext);
@@ -52,8 +54,14 @@ export default function ManualInput() {
         <Grid item xs={12}>
           <ManualInputTable />
         </Grid>
+        <Grid container item xs={12}>
+          <Warnings />
+        </Grid>
         <Grid item xs={12}>
           <GenerateDistributionsButton />
+        </Grid>
+        <Grid item xs={12}>
+          <DoneButton />
         </Grid>
       </Grid>
     </Grid>

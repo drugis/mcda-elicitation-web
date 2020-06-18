@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, {createContext, useState} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import IAlternative from '../interface/IAlternative';
 import ICriterion from '../interface/ICriterion';
 import IDataSource from '../interface/IDataSource';
@@ -79,6 +79,15 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   const [distributions, setDistributions] = useState<
     Record<string, Record<string, Distribution>>
   >({});
+  const [warnings, setWarnings] = useState<string[]>([]);
+
+  useEffect(updateWarnings, [
+    title,
+    criteria,
+    alternatives,
+    effects,
+    distributions
+  ]);
 
   function addCriterion(isFavourable: boolean) {
     const newCriterion = {
@@ -139,6 +148,15 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   }
 
   function deleteCriterion(criterionId: string) {
+    const criterion = _.find(criteria, ['id', criterionId]);
+    let effectsCopy = _.cloneDeep(effects);
+    let distributionsCopy = _.cloneDeep(distributions);
+    _.forEach(criterion.dataSources, (dataSource: IDataSource) => {
+      delete effectsCopy[dataSource.id];
+      delete distributionsCopy[dataSource.id];
+    });
+    setEffects(effectsCopy);
+    setDistributions(distributionsCopy);
     setCriteria(_.reject([...criteria], ['id', criterionId]));
   }
 
@@ -162,6 +180,18 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
       'id',
       alternativeId
     ]);
+    let effectsCopy = _.cloneDeep(effects);
+    let distributionsCopy = _.cloneDeep(distributions);
+    _.forEach(effects, (row: Record<string, Effect>, dataSourceId: string) => {
+      if (effectsCopy[dataSourceId]) {
+        delete effectsCopy[dataSourceId][alternativeId];
+      }
+      if (distributionsCopy[dataSourceId]) {
+        delete distributionsCopy[dataSourceId][alternativeId];
+      }
+    });
+    setEffects(effectsCopy);
+    setDistributions(distributionsCopy);
     setAlternatives(alternativesCopy);
   }
 
@@ -185,6 +215,12 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
       'id',
       dataSourceId
     ]);
+    let effectsCopy = _.cloneDeep(effects);
+    let distributionsCopy = _.cloneDeep(distributions);
+    delete effectsCopy[dataSourceId];
+    delete distributionsCopy[dataSourceId];
+    setEffects(effectsCopy);
+    setDistributions(distributionsCopy);
     setCriteria(criteriaCopy);
   }
 
@@ -300,6 +336,25 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setDistributions(distributionsCopy);
   }
 
+  function updateWarnings(): void {
+    let newWarnings: string[] = [];
+    if (!title) {
+      newWarnings.push('No title entered');
+    }
+    if (criteria.length < 2) {
+      newWarnings.push('At least two criteria are required');
+    }
+    if (alternatives.length < 2) {
+      newWarnings.push('At least two alternatives are required');
+    }
+    setWarnings(newWarnings);
+  }
+
+  // at least one datasource per criterion
+  // each datasource/alternative pair should have at least an effect or a distribution ? Douwe
+  // criteria titles are unique
+  // alternative titles are unique
+
   return (
     <ManualInputContext.Provider
       value={{
@@ -331,7 +386,9 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         setEffect: setEffect,
         getDistribution: getDistribution,
         setDistribution: setDistribution,
-        generateDistributions: generateDistributions
+        generateDistributions: generateDistributions,
+        isDoneDisabled: warnings.length > 0,
+        warnings: warnings
       }}
     >
       {props.children}
