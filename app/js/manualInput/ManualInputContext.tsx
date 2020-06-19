@@ -29,7 +29,7 @@ const placeholderCriteria: ICriterion[] = [
     dataSources: [
       {
         id: generateUuid(),
-        title: 'reference',
+        reference: 'reference',
         unitOfMeasurement: defaultUnitOfMeasurement,
         uncertainty: 'unc',
         strengthOfEvidence: 'soe'
@@ -44,7 +44,7 @@ const placeholderCriteria: ICriterion[] = [
     dataSources: [
       {
         id: generateUuid(),
-        title: 'reference',
+        reference: 'reference',
         unitOfMeasurement: defaultUnitOfMeasurement,
         uncertainty: 'unc',
         strengthOfEvidence: 'soe'
@@ -100,7 +100,7 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
       dataSources: [
         {
           id: generateUuid(),
-          title: 'new reference',
+          reference: 'new reference',
           uncertainty: '',
           unitOfMeasurement: defaultUnitOfMeasurement,
           strengthOfEvidence: 'soe'
@@ -201,7 +201,7 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     let criterion = _.find(criteriaCopy, ['id', criterionId]);
     criterion.dataSources.push({
       id: generateUuid(),
-      title: 'new reference',
+      reference: 'new reference',
       unitOfMeasurement: defaultUnitOfMeasurement,
       uncertainty: 'unc',
       strengthOfEvidence: 'soe'

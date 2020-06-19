@@ -271,3 +271,76 @@ ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) RE
 --rollback ALTER TABLE inprogressworkspace ADD CONSTRAINT inprogressworkspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
 --rollback ALTER TABLE workspace DROP CONSTRAINT workspace_owner_fkey;
 --rollback ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
+
+--changeset reidd:24
+ALTER TABLE inProgressWorkspace ADD COLUMN title VARCHAR;
+ALTER TABLE inProgressWorkspace ADD COLUMN therapeuticContext VARCHAR;
+ALTER TABLE inProgressWorkspace ADD COLUMN useFavourability BOOLEAN;
+--rollback ALTER TABLE inProgressWorkspace DROP COLUMN title
+--rollback ALTER TABLE inProgressWorkspace DROP COLUMN therapeuticContext
+--rollback ALTER TABLE inProgressWorkspace DROP COLUMN useFavourability
+
+CREATE TABLE inProgressCriterion (
+  id VARCHAR NOT NULL,
+  inProgressWorkspaceId INT NOT NULL,
+  title VARCHAR NOT NULL DEFAULT '',
+  description VARCHAR NOT NULL DEFAULT '',
+  isFavourable BOOLEAN,
+  PRIMARY KEY (id),
+  FOREIGN KEY (inProgressWorkspaceId) REFERENCES inprogressworkspace(id) ON DELETE CASCADE
+);
+--rollback DROP TABLE inProgressCriterion
+
+CREATE TYPE unitType as enum('custom', 'percentage', 'decimal');
+--rollback DROP TYPE unitType
+
+CREATE TABLE inProgressDataSource (
+  id VARCHAR NOT NULL,
+  criterionId VARCHAR NOT NULL,
+  description VARCHAR NOT NULL DEFAULT '',
+  unitLabel VARCHAR NOT NULL DEFAULT '',
+  unitType unitType NOT NULL DEFAULT 'custom',
+  unitLowerBound INT,
+  unitUpperBound INT,
+  uncertainty VARCHAR NOT NULL DEFAULT '',
+  strengthOfEvidence VARCHAR NOT NULL DEFAULT '',
+  PRIMARY KEY(id),
+  FOREIGN KEY (criterionId) REFERENCES inProgressCriterion(id) ON DELETE CASCADE
+);
+--rollback DROP TABLE inProgressDataSource
+
+CREATE TABLE inProgressAlternative (
+  id VARCHAR NOT NULL,
+  inProgressWorkspaceId INT NOT NULL,
+  title VARCHAR NOT NULL DEFAULT '',
+  PRIMARY KEY (id),
+  FOREIGN KEY (inProgressWorkspaceId) REFERENCES inprogressworkspace(id) ON DELETE CASCADE
+);
+--rollback DROP TABLE inProgressAlternative
+
+CREATE TYPE effectOrDistributionType as enum('effect', 'distribution');
+--rollback DROP TYPE effectOrDistributionType
+CREATE TYPE inputTypeType as enum('value', 'valueCI', 'range', 'empty', 'text',
+ 'normal', 'beta', 'gamma');
+--rollback DROP TYPE inputTypeType
+
+CREATE TABLE inProgressWorkspaceCell(
+  alternativeId VARCHAR NOT NULL,
+  dataSourceId VARCHAR NOT NULL,
+  criterionId VARCHAR NOT NULL,
+  val float,
+  lowerbound float,
+  upperbound float,
+  txt varchar,
+  mean float,
+  standardError float,
+  alpha float,
+  beta float,
+  cellType effectOrDistributionType NOT NULL,
+  inputType inputTypeType,
+  PRIMARY KEY (alternativeId, dataSourceId, criterionId, cellType),
+  FOREIGN KEY (alternativeId) REFERENCES inProgressAlternative(id) ON DELETE CASCADE,
+  FOREIGN KEY (dataSourceId) REFERENCES inProgressDataSource(id) ON DELETE CASCADE,
+  FOREIGN KEY (criterionId) REFERENCES inProgressCriterion(id) ON DELETE CASCADE
+);
+--rollback DROP TABLE inProgressWorkspaceCell

@@ -14,14 +14,14 @@ export default function ReferenceCell({
 }) {
   const {setDataSource} = useContext(ManualInputContext);
 
-  function handleChange(newTitle: string) {
-    setDataSource(criterion.id, {...dataSource, title: newTitle});
+  function handleChange(newReference: string) {
+    setDataSource(criterion.id, {...dataSource, reference: newReference});
   }
 
   return (
     <TableCell align="center">
       <InlineEditor
-        value={dataSource.title}
+        value={dataSource.reference}
         tooltipText={'Edit reference'}
         callback={handleChange}
       />
