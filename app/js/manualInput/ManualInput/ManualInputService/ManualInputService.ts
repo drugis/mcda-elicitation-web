@@ -5,6 +5,8 @@ import INormalDistribution from '../../../interface/INormalDistribution';
 import IValueCIEffect from '../../../interface/IValueCIEffect';
 import IValueEffect from '../../../interface/IValueEffect';
 import significantDigits from '../Util/significantDigits';
+import ICriterion from '../../../interface/ICriterion';
+import IAlternative from '../../../interface/IAlternative';
 
 export function generateUuid(): string {
   let pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
@@ -15,7 +17,24 @@ export function generateUuid(): string {
   });
 }
 
-export function generateDistribution(effect: Effect): Distribution {
+export function createDistributions(
+  distributions: Record<string, Record<string, Distribution>>,
+  effects: Record<string, Record<string, Effect>>
+) {
+  let distributionsCopy = _.cloneDeep(distributions);
+  _.forEach(effects, (row: Record<string, Effect>, dataSourceId: string) => {
+    _.forEach(row, (effect: Effect, alternativeId: string) => {
+      const newDistribution = generateDistribution(effect);
+      if (!distributionsCopy[dataSourceId]) {
+        distributionsCopy[dataSourceId] = {};
+      }
+      distributionsCopy[dataSourceId][alternativeId] = newDistribution;
+    });
+  });
+  return distributionsCopy;
+}
+
+function generateDistribution(effect: Effect): Distribution {
   switch (effect.type) {
     case 'valueCI':
       return generateValueCIDistribution(effect);
@@ -68,4 +87,42 @@ export function createValueDistribution(effect: IValueCIEffect): IValueEffect {
     value: effect.value,
     type: 'value'
   };
+}
+
+export function createWarnings(
+  title: string,
+  criteria: ICriterion[],
+  alternatives: IAlternative[]
+) {
+  let newWarnings: string[] = [];
+  if (!title) {
+    newWarnings.push('No title entered');
+  }
+  if (criteria.length < 2) {
+    newWarnings.push('At least two criteria are required');
+  }
+  if (alternatives.length < 2) {
+    newWarnings.push('At least two alternatives are required');
+  }
+  if (isDataSourceMissing(criteria)) {
+    newWarnings.push('All criteria require at least one reference');
+  }
+  if (hasDuplicateTitle(criteria)) {
+    newWarnings.push('Criteria must have unique titles');
+  }
+  if (hasDuplicateTitle(alternatives)) {
+    newWarnings.push('Alternatives must have unique titles');
+  }
+  return newWarnings;
+}
+// each datasource/alternative pair should have at least an effect or a distribution ? Douwe
+
+function isDataSourceMissing(criteria: ICriterion[]): boolean {
+  return _.some(criteria, (criterion: ICriterion) => {
+    return !criterion.dataSources.length;
+  });
+}
+
+function hasDuplicateTitle(list: ICriterion[] | IAlternative[]): boolean {
+  return _.uniqBy(list, 'title').length !== list.length;
 }

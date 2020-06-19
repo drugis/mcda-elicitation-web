@@ -54,11 +54,11 @@ export default function ManualInput() {
         <Grid item xs={12}>
           <ManualInputTable />
         </Grid>
-        <Grid container item xs={12}>
-          <Warnings />
-        </Grid>
         <Grid item xs={12}>
           <GenerateDistributionsButton />
+        </Grid>
+        <Grid container item xs={12}>
+          <Warnings />
         </Grid>
         <Grid item xs={12}>
           <DoneButton />

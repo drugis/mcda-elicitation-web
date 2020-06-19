@@ -1,4 +1,4 @@
-import {TableCell} from '@material-ui/core';
+import {TableCell, Tooltip} from '@material-ui/core';
 import React, {useContext, useEffect, useState} from 'react';
 import {Effect} from '../../../../../../../../interface/IEffect';
 import IRangeEffect from '../../../../../../../../interface/IRangeEffect';
@@ -97,9 +97,11 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
 
   return (
     <TableCell align="center">
-      <span onClick={openDialog} style={{cursor: 'pointer'}}>
-        {label}
-      </span>
+      <Tooltip title="Edit effect">
+        <span onClick={openDialog} style={{cursor: 'pointer'}}>
+          {label}
+        </span>
+      </Tooltip>
       <InputCellContextProviderComponent
         alternativeId={alternativeId}
         effectOrDistribution={effect}

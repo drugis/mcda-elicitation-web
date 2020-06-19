@@ -1,4 +1,4 @@
-import {TableCell} from '@material-ui/core';
+import {TableCell, Tooltip} from '@material-ui/core';
 import React, {useContext, useEffect, useState} from 'react';
 import IBetaDistribution from '../../../../../../../../interface/IBetaDistribution';
 import {Distribution} from '../../../../../../../../interface/IDistribution';
@@ -125,9 +125,11 @@ export default function DistributionCell({
 
   return (
     <TableCell align="center">
-      <span onClick={openDialog} style={{cursor: 'pointer'}}>
-        {label}
-      </span>
+      <Tooltip title="Edit distribution">
+        <span onClick={openDialog} style={{cursor: 'pointer'}}>
+          {label}
+        </span>
+      </Tooltip>
       <InputCellContextProviderComponent
         alternativeId={alternativeId}
         effectOrDistribution={distribution}

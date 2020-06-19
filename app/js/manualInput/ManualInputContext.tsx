@@ -9,7 +9,8 @@ import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
 import {TableInputMode} from '../type/TableInputMode';
 import {
-  generateDistribution,
+  createDistributions,
+  createWarnings,
   generateUuid
 } from './ManualInput/ManualInputService/ManualInputService';
 
@@ -323,37 +324,12 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   }
 
   function generateDistributions() {
-    let distributionsCopy = _.cloneDeep(distributions);
-    _.forEach(effects, (row: Record<string, Effect>, dataSourceId: string) => {
-      _.forEach(row, (effect: Effect, alternativeId: string) => {
-        const newDistribution = generateDistribution(effect);
-        if (!distributionsCopy[dataSourceId]) {
-          distributionsCopy[dataSourceId] = {};
-        }
-        distributionsCopy[dataSourceId][alternativeId] = newDistribution;
-      });
-    });
-    setDistributions(distributionsCopy);
+    setDistributions(createDistributions(distributions, effects));
   }
 
   function updateWarnings(): void {
-    let newWarnings: string[] = [];
-    if (!title) {
-      newWarnings.push('No title entered');
-    }
-    if (criteria.length < 2) {
-      newWarnings.push('At least two criteria are required');
-    }
-    if (alternatives.length < 2) {
-      newWarnings.push('At least two alternatives are required');
-    }
-    setWarnings(newWarnings);
+    setWarnings(createWarnings(title, criteria, alternatives));
   }
-
-  // at least one datasource per criterion
-  // each datasource/alternative pair should have at least an effect or a distribution ? Douwe
-  // criteria titles are unique
-  // alternative titles are unique
 
   return (
     <ManualInputContext.Provider
