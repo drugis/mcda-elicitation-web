@@ -29,6 +29,7 @@ export default interface IManualInputContext {
     value: string
   ) => void;
   swapCriteria: (criterion1Id: string, criterion2Id: string) => void;
+  swapAlternatives: (alternative1Id: string, alternative2Id: string) => void;
   setAlternative: (alternative: IAlternative) => void;
   setDataSource: (criterionId: string, dataSource: IDataSource) => void;
   swapDataSources: (

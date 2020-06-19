@@ -10,9 +10,16 @@ export default function ManualInputTable() {
   const {alternatives} = useContext(ManualInputContext);
 
   function createAlternativeHeaders() {
-    return _.map(alternatives, (alternative) => {
+    return _.map(alternatives, (alternative, index) => {
+      const previous = alternatives[index - 1];
+      const next = alternatives[index + 1];
       return (
-        <AlternativeHeader key={alternative.id} alternative={alternative} />
+        <AlternativeHeader
+          key={alternative.id}
+          alternative={alternative}
+          nextAlternative={next}
+          previousAlternative={previous}
+        />
       );
     });
   }

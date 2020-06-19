@@ -113,9 +113,20 @@ export function createWarnings(
   if (hasDuplicateTitle(alternatives)) {
     newWarnings.push('Alternatives must have unique titles');
   }
+  if (hasEmptyTitle(criteria)) {
+    newWarnings.push('Criteria must have a title');
+  }
+  if (hasEmptyTitle(alternatives)) {
+    newWarnings.push('Alternatives must have a title');
+  }
+  // each datasource/alternative pair should have at least an effect or a distribution ? Douwe
+
   return newWarnings;
 }
-// each datasource/alternative pair should have at least an effect or a distribution ? Douwe
+
+function hasEmptyTitle<T>(items: T[]): boolean {
+  return _.some(items, {title: ''});
+}
 
 function isDataSourceMissing(criteria: ICriterion[]): boolean {
   return _.some(criteria, (criterion: ICriterion) => {
@@ -125,4 +136,16 @@ function isDataSourceMissing(criteria: ICriterion[]): boolean {
 
 function hasDuplicateTitle(list: ICriterion[] | IAlternative[]): boolean {
   return _.uniqBy(list, 'title').length !== list.length;
+}
+
+export function swapItems<T>(id1: string, id2: string, items: T[]): T[] {
+  const index1 = _.findIndex(items, ['id', id1]);
+  const index2 = _.findIndex(items, ['id', id2]);
+  let itemsCopy = _.cloneDeep(items);
+  // ES6 swap trick below, don't even worry about it
+  [itemsCopy[index1], itemsCopy[index2]] = [
+    itemsCopy[index2],
+    itemsCopy[index1]
+  ];
+  return itemsCopy;
 }

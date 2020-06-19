@@ -11,7 +11,8 @@ import {TableInputMode} from '../type/TableInputMode';
 import {
   createDistributions,
   createWarnings,
-  generateUuid
+  generateUuid,
+  swapItems
 } from './ManualInput/ManualInputService/ManualInputService';
 
 const defaultUnitOfMeasurement = {
@@ -130,15 +131,14 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   }
 
   function swapCriteria(criterion1Id: string, criterion2Id: string): void {
-    const index1 = _.findIndex(criteria, ['id', criterion1Id]);
-    const index2 = _.findIndex(criteria, ['id', criterion2Id]);
-    let criteriaCopy = _.cloneDeep(criteria);
-    // ES6 swap trick below, don't even worry about it
-    [criteriaCopy[index1], criteriaCopy[index2]] = [
-      criteriaCopy[index2],
-      criteriaCopy[index1]
-    ];
-    setCriteria(criteriaCopy);
+    setCriteria(swapItems(criterion1Id, criterion2Id, criteria));
+  }
+
+  function swapAlternatives(
+    alternative1Id: string,
+    alternative2Id: string
+  ): void {
+    setAlternatives(swapItems(alternative1Id, alternative2Id, alternatives));
   }
 
   function setCriterion(criterion: ICriterion) {
@@ -352,6 +352,7 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         deleteDataSource: deleteDataSource,
         setCriterion: setCriterion,
         swapCriteria: swapCriteria,
+        swapAlternatives: swapAlternatives,
         setCriterionProperty: setCriterionProperty,
         setAlternative: setAlternative,
         setDataSource: setDataSource,
