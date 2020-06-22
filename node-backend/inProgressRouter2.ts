@@ -2,7 +2,10 @@ import express from 'express';
 import InProgressHandler from './inProgressWorkspaceHandler2';
 export default function InProgressRouter(db: any) {
   const inProgressHandler = InProgressHandler(db);
-  return express.Router().post('/', inProgressHandler.create);
+  return express
+    .Router()
+    .post('/', inProgressHandler.create)
+    .get('/:id', inProgressHandler.get);
 
   // .put('/:id', inProgressHandler.updateWorkspace)
 

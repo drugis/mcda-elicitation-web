@@ -43,7 +43,7 @@ define(['lodash'], function (_) {
             return function (workspaceType, workspaceOrManualInputId) {
               if (workspaceType === 'manual') {
                 $state.go('manualInput', {
-                  manualInputId: workspaceOrManualInputId
+                  inProgressId: workspaceOrManualInputId
                 });
               } else {
                 $state.go('evidence', {

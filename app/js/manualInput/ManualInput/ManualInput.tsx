@@ -1,8 +1,5 @@
 import {Grid, Paper} from '@material-ui/core';
-import _ from 'lodash';
-import React, {useContext, useEffect} from 'react';
-import {ErrorContext} from '../../Error/ErrorContext';
-import {ManualInputContext} from '../ManualInputContext';
+import React from 'react';
 import DoneButton from './DoneButton/DoneButton';
 import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
 import Favourability from './Favourability/Favourability';

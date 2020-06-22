@@ -10,6 +10,9 @@ define(['angular'], function () {
       {
         put: {
           method: 'PUT'
+        },
+        create: {
+          method: 'POST'
         }
       }
     );

@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {CREATED} from 'http-status-codes';
+import {CREATED, OK} from 'http-status-codes';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
 import {getUser, handleError} from './util';
 
@@ -15,13 +15,28 @@ export default function InProgressHandler(db: any) {
           handleError(error, next);
         } else {
           response.status(CREATED);
-          response.json(createdId);
+          response.json({id: createdId});
+        }
+      }
+    );
+  }
+
+  function get(request: Request, response: Response, next: () => {}): void {
+    inProgressWorkspaceRepository.get(
+      request.params.inProgressId,
+      (error: any, inProgressWorkspace: any) => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.status(OK);
+          response.json(inProgressWorkspace);
         }
       }
     );
   }
 
   return {
-    create: create
+    create: create,
+    get: get
   };
 }

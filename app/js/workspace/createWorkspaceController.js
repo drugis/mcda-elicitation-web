@@ -89,15 +89,15 @@ define(['angular', 'lodash'], function (angular, _) {
     }
 
     function createWorkspaceFromFile() {
-      WorkspaceResource.save($scope.updatedProblem, function (workspace) {
+      WorkspaceResource.create($scope.updatedProblem, function (workspace) {
         callback($scope.model.choice, workspace);
         $modalInstance.close();
       });
     }
 
     function createWorkspaceManually() {
-      InProgressResource2.save({}, function (response) {
-        callback($scope.model.choice, response);
+      InProgressResource2.create({}, function (response) {
+        callback($scope.model.choice, response.id);
         $modalInstance.close();
       });
     }
