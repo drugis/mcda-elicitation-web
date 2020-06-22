@@ -1,7 +1,15 @@
-import {waterfall} from 'async';
+import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
 import {generateUuid} from '../app/js/manualInput/ManualInput/ManualInputService/ManualInputService';
+import IWorkspaceQueryResult from '../app/js/interface/IWorkspaceQueryResult';
+import ICriterion from '../app/js/interface/ICriterion';
+import ICriterionQueryResult from '../app/js/interface/ICriterionQueryResult';
+import IAlternative from '../app/js/interface/IAlternative';
+import IAlternativeQueryResult from '../app/js/interface/IAlternativeQueryResult';
+import IDataSource from '../app/js/interface/IDataSource';
+import IDataSourceQueryResult from '../app/js/interface/IDataSourceQueryResult';
+import IUnitOfMeasurement from '../app/js/interface/IUnitOfMeasurement';
 
 export default function InProgressWorkspaceRepository(db: any) {
   const pgp: IMain = pgPromise();
@@ -162,11 +170,171 @@ export default function InProgressWorkspaceRepository(db: any) {
       }
     });
   }
-
   function get(
     inProgressId: string,
+    callback: (error: any, result: any) => void
+  ): void {
+    db.runInTransaction(
+      _.partial(getTransaction, inProgressId),
+      (error: any, results: any[]) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          combineResults(results);
+        }
+      }
+    );
+  }
+  function combineResults(bla: any[]) {
+    return {};
+  }
+
+  function getTransaction(
+    inProgressId: string,
+    client: any,
+    transactionCallback: (error: any, results: any[]) => void
+  ) {
+    parallel(
+      [
+        _.partial(getWorkspace, inProgressId, client),
+        _.partial(getCriteria, inProgressId, client),
+        _.partial(getAlternatives, inProgressId, client),
+
+        _.partial(getDataSources, inProgressId, client)
+        // _.partial(getInprogressValues, inProgressId, client)
+      ],
+      transactionCallback
+    );
+  }
+  function getWorkspace(
+    inProgressId: string,
+    client: any,
     callback: (error: any, inProgressWorkspace: any) => void
-  ) {}
+  ): void {
+    const query = 'SELECT * FROM inProgressWorkspaces WHERE id=$1';
+    client.query(
+      query,
+      [inProgressId],
+      (error: any, result: {rows: [IWorkspaceQueryResult]}) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, mapWorkspace(result.rows[0]));
+        }
+      }
+    );
+  }
+
+  function mapWorkspace(queryResult: IWorkspaceQueryResult) {
+    return {
+      id: queryResult.id,
+      title: queryResult.title,
+      therapeuticContext: queryResult.therapeuticcontext,
+      useFavourability: queryResult.usefavourability
+    };
+  }
+
+  function getCriteria(
+    inProgressId: string,
+    client: any,
+    callback: (error: any, criteria: any) => void
+  ): void {
+    const query = 'SELECT * FROM inProgressCriteria WHERE id=$1';
+    client.query(
+      query,
+      [inProgressId],
+      (error: any, result: {rows: ICriterionQueryResult[]}) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, mapCriteria(result.rows));
+        }
+      }
+    );
+  }
+
+  function mapCriteria(criteria: ICriterionQueryResult[]): ICriterion[] {
+    return _.map(criteria, (queryCriterion) => {
+      return {
+        id: queryCriterion.id,
+        orderIndex: queryCriterion.orderindex,
+        title: queryCriterion.title,
+        description: queryCriterion.description,
+        isFavourable: queryCriterion.isfavourable,
+        dataSources: []
+      };
+    });
+  }
+
+  function getAlternatives(
+    inProgressId: string,
+    client: any,
+    callback: (error: any, alternatives: any) => void
+  ): void {
+    const query = 'SELECT * FROM inProgressAlternatives WHERE id=$1';
+    client.query(
+      query,
+      [inProgressId],
+      (error: any, result: {rows: IAlternativeQueryResult[]}) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, mapAlternatives(result.rows));
+        }
+      }
+    );
+  }
+
+  function mapAlternatives(
+    alternatives: IAlternativeQueryResult[]
+  ): IAlternative[] {
+    return _.map(alternatives, (queryAlternative) => {
+      return {
+        id: queryAlternative.id,
+        title: queryAlternative.title,
+        orderIndex: queryAlternative.orderindex
+      };
+    });
+  }
+
+  function getDataSources(
+    inProgressId: string,
+    client: any,
+    callback: (error: any, dataSources: any) => void
+  ) {
+    const query = 'SELECT * FROM inProgressDataSources WHERE id=$1';
+    client.query(
+      query,
+      [inProgressId],
+      (error: any, result: {rows: IDataSourceQueryResult[]}) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, mapDataSources(result.rows));
+        }
+      }
+    );
+  }
+
+  function mapDataSources(
+    dataSources: IDataSourceQueryResult[]
+  ): IDataSource[] {
+    return _.map(dataSources, (queryDataSource) => {
+      return {
+        id: queryDataSource.id,
+        orderIndex: queryDataSource.orderindex,
+        reference: queryDataSource.reference,
+        uncertainty: queryDataSource.uncertainty,
+        strengthOfEvidence: queryDataSource.strengthofevidence,
+        unitOfMeasurement: {
+          label: queryDataSource.unitlabel,
+          type: queryDataSource.unittype,
+          lowerBound: queryDataSource.unitlowerbound,
+          upperBound: queryDataSource.unitupperbound
+        }
+      };
+    });
+  }
 
   return {
     create: create,

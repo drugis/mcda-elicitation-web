@@ -364,8 +364,8 @@ ALTER TABLE workspace
 --rollback ALTER TABLE inprogressworkspace ADD CONSTRAINT inprogressworkspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
 --rollback ALTER TABLE workspace DROP CONSTRAINT workspace_owner_fkey;
 --rollback ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
---changeset reidd:24
 
+--changeset reidd:24
 ALTER TABLE inProgressWorkspace
   ADD COLUMN title varchar;
 
@@ -397,7 +397,7 @@ CREATE TABLE inProgressDataSource (
   inProgressWorkspaceId int NOT NULL,
   orderIndex int NOT NULL,
   criterionId varchar NOT NULL,
-  description varchar NOT NULL DEFAULT '',
+  reference varchar NOT NULL DEFAULT '',
   unitLabel varchar NOT NULL DEFAULT '',
   unitType unitType NOT NULL DEFAULT 'custom',
   unitLowerBound int,

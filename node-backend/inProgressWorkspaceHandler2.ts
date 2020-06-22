@@ -2,6 +2,9 @@ import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
 import {getUser, handleError} from './util';
+import _ from 'lodash';
+import {parallel} from 'async';
+import IInProgressWorkspace from '../app/js/interface/IInProgressWorkspace';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
@@ -21,7 +24,7 @@ export default function InProgressHandler(db: any) {
     );
   }
 
-  function get(request: Request, response: Response, next: () => {}): void {
+  function get(request: Request, response: Response, next: () => void): void {
     inProgressWorkspaceRepository.get(
       request.params.inProgressId,
       (error: any, inProgressWorkspace: any) => {
