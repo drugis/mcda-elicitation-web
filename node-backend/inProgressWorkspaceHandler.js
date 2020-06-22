@@ -2,35 +2,45 @@
 var util = require('./util');
 var httpStatus = require('http-status-codes');
 
-module.exports = function(db) {
-  var inProgressWorkspaceRepository = require('./inProgressWorkspaceRepository')(db);
+module.exports = function (db) {
+  var inProgressWorkspaceRepository = require('./inProgressWorkspaceRepository')(
+    db
+  );
 
   function create(request, response, next) {
     inProgressWorkspaceRepository.create(
       util.getUser(request).id,
       request.body,
-      function(error, result) {
+      function (error, result) {
         if (error) {
           util.handleError(error, next);
         } else {
           response.status(httpStatus.CREATED);
           response.json(result);
         }
-      });
+      }
+    );
   }
 
   function update(request, response, next) {
-    inProgressWorkspaceRepository.update(request.body, request.params.id, function(error) {
-      if (error) {
-        util.handleError(error, next);
-      } else {
-        response.sendStatus(httpStatus.OK);
+    inProgressWorkspaceRepository.update(
+      request.body,
+      request.params.id,
+      function (error) {
+        if (error) {
+          util.handleError(error, next);
+        } else {
+          response.sendStatus(httpStatus.OK);
+        }
       }
-    });
+    );
   }
 
   function get(request, response, next) {
-    inProgressWorkspaceRepository.get(request.params.id, function(error, result) {
+    inProgressWorkspaceRepository.get(request.params.id, function (
+      error,
+      result
+    ) {
       if (error) {
         util.handleError(error, next);
       } else {
@@ -40,7 +50,10 @@ module.exports = function(db) {
   }
 
   function query(request, response, next) {
-    inProgressWorkspaceRepository.query(util.getUser(request).id, function(error, result) {
+    inProgressWorkspaceRepository.query(util.getUser(request).id, function (
+      error,
+      result
+    ) {
       if (error) {
         util.handleError(error, next);
       } else {
@@ -50,7 +63,7 @@ module.exports = function(db) {
   }
 
   function del(request, response, next) {
-    inProgressWorkspaceRepository.delete(request.params.id, function(error) {
+    inProgressWorkspaceRepository.delete(request.params.id, function (error) {
       if (error) {
         util.handleError(error, next);
       } else {
@@ -64,6 +77,6 @@ module.exports = function(db) {
     update: update,
     get: get,
     query: query,
-    delete: del,
+    delete: del
   };
 };

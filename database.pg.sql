@@ -276,26 +276,22 @@ ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) RE
 ALTER TABLE inProgressWorkspace ADD COLUMN title VARCHAR;
 ALTER TABLE inProgressWorkspace ADD COLUMN therapeuticContext VARCHAR;
 ALTER TABLE inProgressWorkspace ADD COLUMN useFavourability BOOLEAN;
---rollback ALTER TABLE inProgressWorkspace DROP COLUMN title
---rollback ALTER TABLE inProgressWorkspace DROP COLUMN therapeuticContext
---rollback ALTER TABLE inProgressWorkspace DROP COLUMN useFavourability
-
 CREATE TABLE inProgressCriterion (
   id VARCHAR NOT NULL,
   inProgressWorkspaceId INT NOT NULL,
+  orderIndex INT NOT NULL,
   title VARCHAR NOT NULL DEFAULT '',
   description VARCHAR NOT NULL DEFAULT '',
   isFavourable BOOLEAN,
   PRIMARY KEY (id),
   FOREIGN KEY (inProgressWorkspaceId) REFERENCES inprogressworkspace(id) ON DELETE CASCADE
 );
---rollback DROP TABLE inProgressCriterion
 
 CREATE TYPE unitType as enum('custom', 'percentage', 'decimal');
---rollback DROP TYPE unitType
 
 CREATE TABLE inProgressDataSource (
   id VARCHAR NOT NULL,
+  orderIndex INT NOT NULL,
   criterionId VARCHAR NOT NULL,
   description VARCHAR NOT NULL DEFAULT '',
   unitLabel VARCHAR NOT NULL DEFAULT '',
@@ -307,22 +303,19 @@ CREATE TABLE inProgressDataSource (
   PRIMARY KEY(id),
   FOREIGN KEY (criterionId) REFERENCES inProgressCriterion(id) ON DELETE CASCADE
 );
---rollback DROP TABLE inProgressDataSource
 
 CREATE TABLE inProgressAlternative (
   id VARCHAR NOT NULL,
+  orderIndex INT NOT NULL,
   inProgressWorkspaceId INT NOT NULL,
   title VARCHAR NOT NULL DEFAULT '',
   PRIMARY KEY (id),
   FOREIGN KEY (inProgressWorkspaceId) REFERENCES inprogressworkspace(id) ON DELETE CASCADE
 );
---rollback DROP TABLE inProgressAlternative
 
 CREATE TYPE effectOrDistributionType as enum('effect', 'distribution');
---rollback DROP TYPE effectOrDistributionType
 CREATE TYPE inputTypeType as enum('value', 'valueCI', 'range', 'empty', 'text',
  'normal', 'beta', 'gamma');
---rollback DROP TYPE inputTypeType
 
 CREATE TABLE inProgressWorkspaceCell(
   alternativeId VARCHAR NOT NULL,
@@ -343,4 +336,13 @@ CREATE TABLE inProgressWorkspaceCell(
   FOREIGN KEY (dataSourceId) REFERENCES inProgressDataSource(id) ON DELETE CASCADE,
   FOREIGN KEY (criterionId) REFERENCES inProgressCriterion(id) ON DELETE CASCADE
 );
---rollback DROP TABLE inProgressWorkspaceCell
+--rollback ALTER TABLE inProgressWorkspace DROP COLUMN title;
+--rollback ALTER TABLE inProgressWorkspace DROP COLUMN therapeuticContext;
+--rollback ALTER TABLE inProgressWorkspace DROP COLUMN useFavourability;
+--rollback DROP TABLE inProgressWorkspaceCell;
+--rollback DROP TABLE inProgressDataSource;
+--rollback DROP TABLE inProgressAlternative;
+--rollback DROP TABLE inProgressCriterion;
+--rollback DROP TYPE unitType;
+--rollback DROP TYPE effectOrDistributionType;
+--rollback DROP TYPE inputTypeType;

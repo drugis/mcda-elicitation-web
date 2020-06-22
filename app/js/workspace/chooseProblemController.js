@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash'], function (_) {
   var dependencies = [
     '$scope',
     '$state',
@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
     'PageTitleService'
   ];
 
-  var ChooseProblemController = function(
+  var ChooseProblemController = function (
     $scope,
     $state,
     $modal,
@@ -26,7 +26,7 @@ define(['lodash'], function(_) {
     $scope.workspacesList = WorkspaceResource.query();
     $scope.inProgressWorkspaces = InProgressResource.query();
 
-    $scope.$watch('local.contents', function(newVal) {
+    $scope.$watch('local.contents', function (newVal) {
       if (!_.isEmpty(newVal)) {
         $scope.model.choice = 'local';
       }
@@ -39,15 +39,17 @@ define(['lodash'], function(_) {
         templateUrl: './createWorkspace.html',
         controller: 'CreateWorkspaceController',
         resolve: {
-          callback: function() {
-            return function(workspaceType, workspace) {
+          callback: function () {
+            return function (workspaceType, workspaceOrManualInputId) {
               if (workspaceType === 'manual') {
-                $state.go('manualInput');
+                $state.go('manualInput', {
+                  manualInputId: workspaceOrManualInputId
+                });
               } else {
                 $state.go('evidence', {
-                  workspaceId: workspace.id,
-                  problemId: workspace.defaultSubProblemId,
-                  id: workspace.defaultScenarioId
+                  workspaceId: workspaceOrManualInputId.id,
+                  problemId: workspaceOrManualInputId.defaultSubProblemId,
+                  id: workspaceOrManualInputId.defaultScenarioId
                 });
               }
             };

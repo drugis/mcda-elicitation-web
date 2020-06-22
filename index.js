@@ -17,6 +17,7 @@ var InProgressWorkspaceRepository = require('./node-backend/inProgressWorkspaceR
 var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
 var InProgressRouter = require('./node-backend/inProgressRouter')(db);
+var InProgressRouter2 = require('./node-backend/inProgressRouter2').default(db);
 var OrderingRouter = require('./node-backend/orderingRouter')(db);
 var patavi = require('./node-backend/patavi');
 var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
@@ -128,6 +129,7 @@ function initApp() {
   app.use(rightsManagement.expressMiddleware);
 
   app.use('/inProgress', InProgressRouter);
+  app.use('/api/v2/inProgress', InProgressRouter2);
   app.use('/workspaces', WorkspaceRouter);
   app.use('/workspaces', OrderingRouter);
   app.use('/workspaces', SubProblemRouter);
@@ -253,6 +255,13 @@ function setRequiredRights() {
     makeRights(
       '/inProgress/:workspaceId',
       'DELETE',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
+
+    makeRights(
+      '/api/v2/inProgress',
+      'POST',
       'none',
       inProgressOwnerRightsNeeded
     ),
