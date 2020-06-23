@@ -1,17 +1,13 @@
+import Axios from 'axios';
 import _ from 'lodash';
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  useContext,
-  useRef,
-  useCallback
-} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {ErrorContext} from '../Error/ErrorContext';
 import IAlternative from '../interface/IAlternative';
 import ICriterion from '../interface/ICriterion';
 import IDataSource from '../interface/IDataSource';
 import {Distribution} from '../interface/IDistribution';
 import {Effect} from '../interface/IEffect';
+import IError from '../interface/IError';
 import IInProgressMessage from '../interface/IInProgressMessage';
 import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
@@ -22,9 +18,6 @@ import {
   generateUuid,
   swapItems
 } from './ManualInput/ManualInputService/ManualInputService';
-import Axios from 'axios';
-import IError from '../interface/IError';
-import {ErrorContext} from '../Error/ErrorContext';
 
 const defaultUnitOfMeasurement = {
   label: '',
@@ -320,47 +313,18 @@ export function ManualInputContextProviderComponent({
 
   function updateTitle(newTitle: string): void {
     setTitle(newTitle);
-    debouncedUpdateWorkspace(newTitle, therapeuticContext, useFavourability);
+    updateWorkspace(newTitle, therapeuticContext, useFavourability);
   }
 
   function updateTherapeuticContext(newContext: string): void {
     setTherapeuticContext(newContext);
-    debouncedUpdateWorkspace(title, newContext, useFavourability);
+    updateWorkspace(title, newContext, useFavourability);
   }
 
   function updateUseFavourability(newFavourability: boolean): void {
     setUseFavourability(newFavourability);
-    debouncedUpdateWorkspace(title, therapeuticContext, newFavourability);
+    updateWorkspace(title, therapeuticContext, newFavourability);
   }
-
-  const debouncedUpdateWorkspace = useCallback(
-    _.debounce(
-      (
-        newTitle: string,
-        newTherapeuticContext: string,
-        newUseFavourability: boolean
-      ) =>
-        debouncedFunctionRef.current(
-          newTitle,
-          newTherapeuticContext,
-          newUseFavourability
-        ),
-      500
-    ),
-    []
-  );
-
-  const debouncedFunctionRef: React.MutableRefObject<(
-    newTitle: string,
-    newTherapeuticContext: string,
-    newUseFavourability: boolean
-  ) => void> = useRef(
-    (
-      newTitle: string,
-      newTherapeuticContext: string,
-      newUseFavourability: boolean
-    ) => updateWorkspace(newTitle, newTherapeuticContext, newUseFavourability)
-  );
 
   function updateWorkspace(
     title: string,
