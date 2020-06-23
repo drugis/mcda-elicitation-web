@@ -1,5 +1,5 @@
 export default interface IWorkspaceQueryResult {
-  id: string;
+  id: number;
   title: string;
   therapeuticcontext: string;
   usefavourability: boolean;

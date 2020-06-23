@@ -364,13 +364,13 @@ ALTER TABLE workspace
 --rollback ALTER TABLE inprogressworkspace ADD CONSTRAINT inprogressworkspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
 --rollback ALTER TABLE workspace DROP CONSTRAINT workspace_owner_fkey;
 --rollback ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
-
 --changeset reidd:24
-ALTER TABLE inProgressWorkspace
-  ADD COLUMN title varchar;
 
 ALTER TABLE inProgressWorkspace
-  ADD COLUMN therapeuticContext varchar;
+  ADD COLUMN title varchar NOT NULL DEFAULT '';
+
+ALTER TABLE inProgressWorkspace
+  ADD COLUMN therapeuticContext varchar DEFAULT '';
 
 ALTER TABLE inProgressWorkspace
   ADD COLUMN useFavourability boolean;

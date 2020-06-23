@@ -5,6 +5,7 @@ import ICriterion from '../interface/ICriterion';
 import IDataSource from '../interface/IDataSource';
 import {Distribution} from '../interface/IDistribution';
 import {Effect} from '../interface/IEffect';
+import IInProgressMessage from '../interface/IInProgressMessage';
 import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
 import {TableInputMode} from '../type/TableInputMode';
@@ -22,65 +23,37 @@ const defaultUnitOfMeasurement = {
   upperBound: Infinity
 };
 
-const placeholderCriteria: ICriterion[] = [
-  {
-    id: generateUuid(),
-    description: 'desc',
-    dataSources: [
-      {
-        id: generateUuid(),
-        reference: 'reference',
-        unitOfMeasurement: defaultUnitOfMeasurement,
-        uncertainty: 'unc',
-        strengthOfEvidence: 'soe'
-      }
-    ],
-    isFavourable: true,
-    title: 'criterion 1'
-  },
-  {
-    id: generateUuid(),
-    description: 'desc',
-    dataSources: [
-      {
-        id: generateUuid(),
-        reference: 'reference',
-        unitOfMeasurement: defaultUnitOfMeasurement,
-        uncertainty: 'unc',
-        strengthOfEvidence: 'soe'
-      }
-    ],
-    isFavourable: false,
-    title: 'criterion 2'
-  }
-];
-
-const placeholderAlternatives: IAlternative[] = [
-  {id: generateUuid(), title: 'alt1'},
-  {id: generateUuid(), title: 'alt2'}
-];
-
 export const ManualInputContext = createContext<IManualInputContext>(
   {} as IManualInputContext
 );
 
-export function ManualInputContextProviderComponent(props: {children: any}) {
-  const [title, setTitle] = useState<string>('');
-  const [therapeuticContext, setTherapeuticContext] = useState<string>('');
-  const [useFavourability, setUseFavourability] = useState<boolean>(true);
+export function ManualInputContextProviderComponent({
+  children,
+  message
+}: {
+  children: any;
+  message: IInProgressMessage;
+}) {
+  const [title, setTitle] = useState<string>(message.workspace.title);
+  const [therapeuticContext, setTherapeuticContext] = useState<string>(
+    message.workspace.therapeuticContext
+  );
+  const [useFavourability, setUseFavourability] = useState<boolean>(
+    message.workspace.useFavourability
+  );
   const [tableInputMode, setTableInputMode] = useState<TableInputMode>(
     'effect'
   );
-  const [criteria, setCriteria] = useState<ICriterion[]>(placeholderCriteria);
+  const [criteria, setCriteria] = useState<ICriterion[]>(message.criteria);
   const [alternatives, setAlternatives] = useState<IAlternative[]>(
-    placeholderAlternatives
+    message.alternatives
   );
   const [effects, setEffects] = useState<
     Record<string, Record<string, Effect>>
-  >({});
+  >(message.effects);
   const [distributions, setDistributions] = useState<
     Record<string, Record<string, Distribution>>
-  >({});
+  >(message.distributions);
   const [warnings, setWarnings] = useState<string[]>([]);
 
   useEffect(updateWarnings, [
@@ -368,7 +341,7 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         warnings: warnings
       }}
     >
-      {props.children}
+      {children}
     </ManualInputContext.Provider>
   );
 }

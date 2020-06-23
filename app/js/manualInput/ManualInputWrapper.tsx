@@ -1,30 +1,40 @@
-import Axios, { AxiosResponse } from 'axios';
-import React from 'react';
+import Axios, {AxiosResponse} from 'axios';
+import React, {useEffect, useState} from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
+import IInProgressMessage from '../interface/IInProgressMessage';
 import ManualInput from './ManualInput/ManualInput';
 import {ManualInputContextProviderComponent} from './ManualInputContext';
-import IInProgressWorkspace from '../interface/IInProgressWorkspace';
 
 export default function ManualInputWrapper() {
-  function getManualInputContext() {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [message, setMessage] = useState<IInProgressMessage>();
+
+  useEffect(getInProgressWorkspace, []);
+
+  function getInProgressWorkspace() {
     const inProgressId: string = window.location
       .toString()
       .split('manual-input/')[1];
-    Axios.get(`api/v2/${inProgressId}`).then(
+    Axios.get(`api/v2/inProgress/${inProgressId}`).then(
       (response: AxiosResponse) => {
-        return (
-          <ManualInputContextProviderComponent {...response.data}>
-            <ManualInput />
-          </ManualInputContextProviderComponent>
-        );
+        setMessage(response.data);
+        setIsLoaded(true);
       }
     );
   }
 
   return (
     <ErrorContextProviderComponent>
-      <ErrorHandler>{getManualInputContext()}</ErrorHandler>
+      <ErrorHandler>
+        {isLoaded ? (
+          <ManualInputContextProviderComponent message={message}>
+            <ManualInput />
+          </ManualInputContextProviderComponent>
+        ) : (
+          <span>...loading</span>
+        )}
+      </ErrorHandler>
     </ErrorContextProviderComponent>
   );
 }

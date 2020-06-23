@@ -1,15 +1,27 @@
 import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
-import {generateUuid} from '../app/js/manualInput/ManualInput/ManualInputService/ManualInputService';
-import IWorkspaceQueryResult from '../app/js/interface/IWorkspaceQueryResult';
-import ICriterion from '../app/js/interface/ICriterion';
-import ICriterionQueryResult from '../app/js/interface/ICriterionQueryResult';
 import IAlternative from '../app/js/interface/IAlternative';
 import IAlternativeQueryResult from '../app/js/interface/IAlternativeQueryResult';
+import ICriterion from '../app/js/interface/ICriterion';
+import ICriterionQueryResult from '../app/js/interface/ICriterionQueryResult';
 import IDataSource from '../app/js/interface/IDataSource';
 import IDataSourceQueryResult from '../app/js/interface/IDataSourceQueryResult';
-import IUnitOfMeasurement from '../app/js/interface/IUnitOfMeasurement';
+import {Distribution} from '../app/js/interface/IDistribution';
+import {Effect} from '../app/js/interface/IEffect';
+import IInProgressMessage from '../app/js/interface/IInProgressMessage';
+import IInProgressWorkspace from '../app/js/interface/IInProgressWorkspace';
+import IValueCellQueryResult from '../app/js/interface/IValueCellQueryResult';
+import IWorkspaceQueryResult from '../app/js/interface/IWorkspaceQueryResult';
+import {generateUuid} from '../app/js/manualInput/ManualInput/ManualInputService/ManualInputService';
+import {
+  mapAlternatives,
+  mapCellValues,
+  mapCombinedResults,
+  mapCriteria,
+  mapDataSources,
+  mapWorkspace
+} from './inProgressRepositoryService';
 
 export default function InProgressWorkspaceRepository(db: any) {
   const pgp: IMain = pgPromise();
@@ -45,10 +57,10 @@ export default function InProgressWorkspaceRepository(db: any) {
     ownerId: string,
     callback: (error: any, createdId: string) => {}
   ) {
-    const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability) 
-         VALUES ($1, $2, true) 
+    const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, title, therapeuticContext) 
+         VALUES ($1, $2, true, $3, $3) 
        RETURNING id`;
-    client.query(query, [ownerId, {}], function (
+    client.query(query, [ownerId, {}, ''], function (
       error: any,
       result: {rows: any[]}
     ) {
@@ -70,7 +82,7 @@ export default function InProgressWorkspaceRepository(db: any) {
         id: generateUuid(),
         orderindex: 0,
         isfavourable: true,
-        title: 'crit 1',
+        title: 'criterion 1',
         description: '',
         inprogressworkspaceid: inProgressworkspaceId
       },
@@ -78,7 +90,7 @@ export default function InProgressWorkspaceRepository(db: any) {
         id: generateUuid(),
         orderindex: 1,
         isfavourable: false,
-        title: 'crit 2',
+        title: 'criterion 2',
         description: '',
         inprogressworkspaceid: inProgressworkspaceId
       }
@@ -95,7 +107,7 @@ export default function InProgressWorkspaceRepository(db: any) {
       {table: 'inprogresscriterion'}
     );
     const query = pgp.helpers.insert(toCreate, columns) + ' RETURNING id';
-    client.query(query, [], (error: any, result: any) => {
+    client.query(query, [], (error: any, result: {rows: [{id: string}]}) => {
       if (error) {
         callback(error, null, null);
       } else {
@@ -129,7 +141,7 @@ export default function InProgressWorkspaceRepository(db: any) {
       {table: 'inprogressdatasource'}
     );
     const query = pgp.helpers.insert(toCreate, columns);
-    client.query(query, [], (error: any, result: any) => {
+    client.query(query, [], (error: any) => {
       if (error) {
         callback(error, null);
       } else {
@@ -162,7 +174,7 @@ export default function InProgressWorkspaceRepository(db: any) {
       {table: 'inprogressalternative'}
     );
     const query = pgp.helpers.insert(toCreate, columns);
-    client.query(query, [], (error: any, result: any) => {
+    client.query(query, [], (error: any) => {
       if (error) {
         callback(error, null);
       } else {
@@ -170,48 +182,70 @@ export default function InProgressWorkspaceRepository(db: any) {
       }
     });
   }
+
   function get(
-    inProgressId: string,
-    callback: (error: any, result: any) => void
+    inProgressId: number,
+    callback: (error: any, result: IInProgressMessage) => void
   ): void {
     db.runInTransaction(
       _.partial(getTransaction, inProgressId),
-      (error: any, results: any[]) => {
+      (
+        error: any,
+        results: [
+          IInProgressWorkspace,
+          ICriterion[],
+          IAlternative[],
+          IDataSource[],
+          [
+            Record<string, Record<string, Effect>>,
+            Record<string, Record<string, Distribution>>
+          ]
+        ]
+      ) => {
         if (error) {
           callback(error, null);
         } else {
-          combineResults(results);
+          callback(null, mapCombinedResults(results));
         }
       }
     );
   }
-  function combineResults(bla: any[]) {
-    return {};
-  }
 
   function getTransaction(
-    inProgressId: string,
+    inProgressId: number,
     client: any,
-    transactionCallback: (error: any, results: any[]) => void
+    transactionCallback: (
+      error: any,
+      results: [
+        IInProgressWorkspace,
+        ICriterion[],
+        IAlternative[],
+        IDataSource[],
+        [
+          Record<string, Record<string, Effect>>,
+          Record<string, Record<string, Distribution>>
+        ]
+      ]
+    ) => void
   ) {
     parallel(
       [
         _.partial(getWorkspace, inProgressId, client),
         _.partial(getCriteria, inProgressId, client),
         _.partial(getAlternatives, inProgressId, client),
-
-        _.partial(getDataSources, inProgressId, client)
-        // _.partial(getInprogressValues, inProgressId, client)
+        _.partial(getDataSources, inProgressId, client),
+        _.partial(getInProgressValues, inProgressId, client)
       ],
       transactionCallback
     );
   }
+
   function getWorkspace(
-    inProgressId: string,
+    inProgressId: number,
     client: any,
-    callback: (error: any, inProgressWorkspace: any) => void
+    callback: (error: any, inProgressWorkspace: IInProgressWorkspace) => void
   ): void {
-    const query = 'SELECT * FROM inProgressWorkspaces WHERE id=$1';
+    const query = 'SELECT * FROM inProgressWorkspace WHERE id=$1';
     client.query(
       query,
       [inProgressId],
@@ -225,21 +259,13 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
-  function mapWorkspace(queryResult: IWorkspaceQueryResult) {
-    return {
-      id: queryResult.id,
-      title: queryResult.title,
-      therapeuticContext: queryResult.therapeuticcontext,
-      useFavourability: queryResult.usefavourability
-    };
-  }
-
   function getCriteria(
-    inProgressId: string,
+    inProgressId: number,
     client: any,
-    callback: (error: any, criteria: any) => void
+    callback: (error: any, criteria: ICriterion[]) => void
   ): void {
-    const query = 'SELECT * FROM inProgressCriteria WHERE id=$1';
+    const query =
+      'SELECT * FROM inProgressCriterion WHERE inProgressWorkspaceId=$1';
     client.query(
       query,
       [inProgressId],
@@ -253,25 +279,13 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
-  function mapCriteria(criteria: ICriterionQueryResult[]): ICriterion[] {
-    return _.map(criteria, (queryCriterion) => {
-      return {
-        id: queryCriterion.id,
-        orderIndex: queryCriterion.orderindex,
-        title: queryCriterion.title,
-        description: queryCriterion.description,
-        isFavourable: queryCriterion.isfavourable,
-        dataSources: []
-      };
-    });
-  }
-
   function getAlternatives(
-    inProgressId: string,
+    inProgressId: number,
     client: any,
-    callback: (error: any, alternatives: any) => void
+    callback: (error: any, alternatives: IAlternative[]) => void
   ): void {
-    const query = 'SELECT * FROM inProgressAlternatives WHERE id=$1';
+    const query =
+      'SELECT * FROM inProgressAlternative WHERE inProgressWorkspaceId=$1';
     client.query(
       query,
       [inProgressId],
@@ -285,24 +299,13 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
-  function mapAlternatives(
-    alternatives: IAlternativeQueryResult[]
-  ): IAlternative[] {
-    return _.map(alternatives, (queryAlternative) => {
-      return {
-        id: queryAlternative.id,
-        title: queryAlternative.title,
-        orderIndex: queryAlternative.orderindex
-      };
-    });
-  }
-
   function getDataSources(
-    inProgressId: string,
+    inProgressId: number,
     client: any,
-    callback: (error: any, dataSources: any) => void
+    callback: (error: any, dataSources: IDataSource[]) => void
   ) {
-    const query = 'SELECT * FROM inProgressDataSources WHERE id=$1';
+    const query =
+      'SELECT * FROM inProgressDataSource WHERE inProgressWorkspaceId=$1';
     client.query(
       query,
       [inProgressId],
@@ -316,24 +319,30 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
-  function mapDataSources(
-    dataSources: IDataSourceQueryResult[]
-  ): IDataSource[] {
-    return _.map(dataSources, (queryDataSource) => {
-      return {
-        id: queryDataSource.id,
-        orderIndex: queryDataSource.orderindex,
-        reference: queryDataSource.reference,
-        uncertainty: queryDataSource.uncertainty,
-        strengthOfEvidence: queryDataSource.strengthofevidence,
-        unitOfMeasurement: {
-          label: queryDataSource.unitlabel,
-          type: queryDataSource.unittype,
-          lowerBound: queryDataSource.unitlowerbound,
-          upperBound: queryDataSource.unitupperbound
+  function getInProgressValues(
+    inProgressId: number,
+    client: any,
+    callback: (
+      error: any,
+      values: [
+        Record<string, Record<string, Effect>>,
+        Record<string, Record<string, Distribution>>
+      ]
+    ) => void
+  ): void {
+    const query =
+      'SELECT * FROM inProgressWorkspaceCell WHERE inProgressWorkspaceId=$1';
+    client.query(
+      query,
+      [inProgressId],
+      (error: any, result: {rows: IValueCellQueryResult[]}) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, mapCellValues(result.rows));
         }
-      };
-    });
+      }
+    );
   }
 
   return {
