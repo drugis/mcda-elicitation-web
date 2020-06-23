@@ -17,9 +17,6 @@ export default function ManualInput() {
           <h3 id="manual-input-header-step1">Create workspace manually</h3>
         </Grid>
         <Grid item xs={12}>
-          Here you can enter the data for an analysis manually. ..
-        </Grid>
-        <Grid item xs={12}>
           <Title />
         </Grid>
         <Grid item xs={12}>

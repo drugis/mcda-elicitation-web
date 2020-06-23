@@ -12,10 +12,11 @@ export default function ManualInputWrapper() {
 
   useEffect(getInProgressWorkspace, []);
 
+  const inProgressId: string = window.location
+    .toString()
+    .split('manual-input/')[1];
+
   function getInProgressWorkspace() {
-    const inProgressId: string = window.location
-      .toString()
-      .split('manual-input/')[1];
     Axios.get(`api/v2/inProgress/${inProgressId}`).then(
       (response: AxiosResponse) => {
         setMessage(response.data);
@@ -28,7 +29,10 @@ export default function ManualInputWrapper() {
     <ErrorContextProviderComponent>
       <ErrorHandler>
         {isLoaded ? (
-          <ManualInputContextProviderComponent message={message}>
+          <ManualInputContextProviderComponent
+            inProgressId={inProgressId}
+            message={message}
+          >
             <ManualInput />
           </ManualInputContextProviderComponent>
         ) : (

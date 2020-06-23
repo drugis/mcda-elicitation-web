@@ -3,10 +3,10 @@ import React, {useContext} from 'react';
 import {ManualInputContext} from '../../ManualInputContext';
 
 export default function Title() {
-  const {title, setTitle} = useContext(ManualInputContext);
+  const {title, updateTitle} = useContext(ManualInputContext);
 
   function handleTitleChange(event: {target: {value: string}}) {
-    setTitle(event.target.value);
+    updateTitle(event.target.value);
   }
 
   return (

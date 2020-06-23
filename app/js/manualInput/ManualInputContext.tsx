@@ -1,5 +1,12 @@
 import _ from 'lodash';
-import React, {createContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  useCallback
+} from 'react';
 import IAlternative from '../interface/IAlternative';
 import ICriterion from '../interface/ICriterion';
 import IDataSource from '../interface/IDataSource';
@@ -15,6 +22,9 @@ import {
   generateUuid,
   swapItems
 } from './ManualInput/ManualInputService/ManualInputService';
+import Axios from 'axios';
+import IError from '../interface/IError';
+import {ErrorContext} from '../Error/ErrorContext';
 
 const defaultUnitOfMeasurement = {
   label: '',
@@ -29,11 +39,15 @@ export const ManualInputContext = createContext<IManualInputContext>(
 
 export function ManualInputContextProviderComponent({
   children,
-  message
+  message,
+  inProgressId
 }: {
   children: any;
   message: IInProgressMessage;
+  inProgressId: string;
 }) {
+  const {setError} = useContext(ErrorContext);
+
   const [title, setTitle] = useState<string>(message.workspace.title);
   const [therapeuticContext, setTherapeuticContext] = useState<string>(
     message.workspace.therapeuticContext
@@ -304,9 +318,72 @@ export function ManualInputContextProviderComponent({
     setWarnings(createWarnings(title, criteria, alternatives));
   }
 
+  function updateTitle(newTitle: string): void {
+    setTitle(newTitle);
+    debouncedUpdateWorkspace(newTitle, therapeuticContext, useFavourability);
+  }
+
+  function updateTherapeuticContext(newContext: string): void {
+    setTherapeuticContext(newContext);
+    debouncedUpdateWorkspace(title, newContext, useFavourability);
+  }
+
+  function updateUseFavourability(newFavourability: boolean): void {
+    setUseFavourability(newFavourability);
+    debouncedUpdateWorkspace(title, therapeuticContext, newFavourability);
+  }
+
+  const debouncedUpdateWorkspace = useCallback(
+    _.debounce(
+      (
+        newTitle: string,
+        newTherapeuticContext: string,
+        newUseFavourability: boolean
+      ) =>
+        debouncedFunctionRef.current(
+          newTitle,
+          newTherapeuticContext,
+          newUseFavourability
+        ),
+      500
+    ),
+    []
+  );
+
+  const debouncedFunctionRef: React.MutableRefObject<(
+    newTitle: string,
+    newTherapeuticContext: string,
+    newUseFavourability: boolean
+  ) => void> = useRef(
+    (
+      newTitle: string,
+      newTherapeuticContext: string,
+      newUseFavourability: boolean
+    ) => updateWorkspace(newTitle, newTherapeuticContext, newUseFavourability)
+  );
+
+  function updateWorkspace(
+    title: string,
+    therapeuticContext: string,
+    useFavourability: boolean
+  ) {
+    const workspace = {
+      id: inProgressId,
+      title: title,
+      therapeuticContext: therapeuticContext,
+      useFavourability: useFavourability
+    };
+    Axios.put(`/api/v2/inProgress/${inProgressId}`, workspace).catch(
+      (error: IError) => {
+        setError(error.message + ', ' + error.response.data);
+      }
+    );
+  }
+
   return (
     <ManualInputContext.Provider
       value={{
+        id: inProgressId,
         title: title,
         therapeuticContext: therapeuticContext,
         useFavourability: useFavourability,
@@ -315,9 +392,6 @@ export function ManualInputContextProviderComponent({
         alternatives: alternatives,
         effects: effects,
         distributions: distributions,
-        setTitle: setTitle,
-        setTherapeuticContext: setTherapeuticContext,
-        setUseFavourability: setUseFavourability,
         setTableInputMode: setTableInputMode,
         addCriterion: addCriterion,
         addAlternative: addAlternative,
@@ -338,7 +412,10 @@ export function ManualInputContextProviderComponent({
         setDistribution: setDistribution,
         generateDistributions: generateDistributions,
         isDoneDisabled: warnings.length > 0,
-        warnings: warnings
+        warnings: warnings,
+        updateTitle: updateTitle,
+        updateTherapeuticContext: updateTherapeuticContext,
+        updateUseFavourability: updateUseFavourability
       }}
     >
       {children}

@@ -345,8 +345,23 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
+  function updateWorkspace(
+    {title, therapeuticContext, useFavourability, id}: IInProgressWorkspace,
+    callback: (error: any) => void
+  ): void {
+    const query = `UPDATE inProgressWorkspace
+                   SET (title, therapeuticContext, useFavourability) = ($1,$2,$3) 
+                   WHERE id=$4`;
+    db.query(
+      query,
+      [title, therapeuticContext, useFavourability, id],
+      callback
+    );
+  }
+
   return {
     create: create,
-    get: get
+    get: get,
+    updateWorkspace: updateWorkspace
   };
 }

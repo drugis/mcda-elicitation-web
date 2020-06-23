@@ -3,12 +3,12 @@ import React, {useContext} from 'react';
 import {ManualInputContext} from '../../ManualInputContext';
 
 export default function TherapeuticContext() {
-  const {therapeuticContext, setTherapeuticContext} = useContext(
+  const {therapeuticContext, updateTherapeuticContext} = useContext(
     ManualInputContext
   );
 
   function handleContextChange(event: {target: {value: string}}) {
-    setTherapeuticContext(event.target.value);
+    updateTherapeuticContext(event.target.value);
   }
 
   return (
