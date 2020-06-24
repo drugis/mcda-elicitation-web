@@ -80,14 +80,48 @@ export function ManualInputContextProviderComponent({
       dataSources: [
         {
           id: generateUuid(),
-          reference: 'new reference',
+          reference: '',
           uncertainty: '',
           unitOfMeasurement: defaultUnitOfMeasurement,
-          strengthOfEvidence: 'soe'
+          strengthOfEvidence: ''
         }
       ]
     };
+    updateCriterion(newCriterion, criteria.length).then((response: any) => {
+      updateDataSource(newCriterion.dataSources[0], 0, newCriterion.id);
+    });
     setCriteria([...criteria, newCriterion]);
+  }
+
+  async function updateCriterion(criterion: ICriterion, orderIndex: number) {
+    return Axios.put(
+      `/api/v2/inProgress/${inProgressId}/criteria/${criterion.id}`,
+      {
+        ..._.omit(criterion, 'dataSources'),
+        inProgressWorkspaceId: inProgressId,
+        orderIndex: orderIndex
+      }
+    ).catch((error: IError) => {
+      setError(error.message + ', ' + error.response.data);
+    });
+  }
+
+  function updateDataSource(
+    dataSource: IDataSource,
+    orderIndex: number,
+    criterionId: string
+  ): void {
+    Axios.put(
+      `/api/v2/inProgress/${inProgressId}/criteria/${criterionId}/dataSources/${dataSource.id}`,
+      {
+        ...dataSource,
+        criterionId: criterionId,
+        inProgressWorkspaceId: inProgressId,
+        orderIndex: orderIndex
+      }
+    ).catch((error: IError) => {
+      setError(error.message + ', ' + error.response.data);
+    });
   }
 
   function setCriterionProperty(
@@ -107,25 +141,21 @@ export function ManualInputContextProviderComponent({
       default:
         throw 'unknown criterion property being updated: ' + propertyName;
     }
+    updateCriterion(criterion, _.findIndex(criteriaCopy, ['id', criterionId]));
     setCriteria(criteriaCopy);
   }
 
   function swapCriteria(criterion1Id: string, criterion2Id: string): void {
-    setCriteria(swapItems(criterion1Id, criterion2Id, criteria));
-  }
-
-  function swapAlternatives(
-    alternative1Id: string,
-    alternative2Id: string
-  ): void {
-    setAlternatives(swapItems(alternative1Id, alternative2Id, alternatives));
-  }
-
-  function setCriterion(criterion: ICriterion) {
-    const index = _.findIndex(criteria, ['id', criterion.id]);
-    let criteriaCopy = _.cloneDeep(criteria);
-    criteriaCopy[index] = criterion;
-    setCriteria(criteriaCopy);
+    const newCriteria = swapItems(criterion1Id, criterion2Id, criteria);
+    updateCriterion(
+      _.find(newCriteria, ['id', criterion1Id]),
+      _.findIndex(newCriteria, ['id', criterion1Id])
+    );
+    updateCriterion(
+      _.find(newCriteria, ['id', criterion2Id]),
+      _.findIndex(newCriteria, ['id', criterion2Id])
+    );
+    setCriteria(newCriteria);
   }
 
   function deleteCriterion(criterionId: string) {
@@ -138,7 +168,16 @@ export function ManualInputContextProviderComponent({
     });
     setEffects(effectsCopy);
     setDistributions(distributionsCopy);
+    deleteCriterionFromDatabase(criterionId);
     setCriteria(_.reject([...criteria], ['id', criterionId]));
+  }
+
+  function deleteCriterionFromDatabase(criterionId: string) {
+    Axios.delete(
+      `/api/v2/inProgress/${inProgressId}/criteria/${criterionId}`
+    ).catch((error: IError) => {
+      setError(error.message + ', ' + error.response.data);
+    });
   }
 
   function addAlternative() {
@@ -176,16 +215,25 @@ export function ManualInputContextProviderComponent({
     setAlternatives(alternativesCopy);
   }
 
+  function swapAlternatives(
+    alternative1Id: string,
+    alternative2Id: string
+  ): void {
+    setAlternatives(swapItems(alternative1Id, alternative2Id, alternatives));
+  }
+
   function addDefaultDataSource(criterionId: string) {
     let criteriaCopy = _.cloneDeep(criteria);
     let criterion = _.find(criteriaCopy, ['id', criterionId]);
-    criterion.dataSources.push({
+    const newDataSource = {
       id: generateUuid(),
       reference: 'new reference',
       unitOfMeasurement: defaultUnitOfMeasurement,
       uncertainty: 'unc',
       strengthOfEvidence: 'soe'
-    });
+    };
+    criterion.dataSources.push(newDataSource);
+    updateDataSource(newDataSource, criterion.dataSources.length, criterionId);
     setCriteria(criteriaCopy);
   }
 
@@ -203,6 +251,18 @@ export function ManualInputContextProviderComponent({
     setEffects(effectsCopy);
     setDistributions(distributionsCopy);
     setCriteria(criteriaCopy);
+    deleteDataSourceFromDatabase(dataSourceId, criterionId);
+  }
+
+  function deleteDataSourceFromDatabase(
+    dataSourceId: string,
+    criterionId: string
+  ) {
+    Axios.delete(
+      `/api/v2/inProgress/${inProgressId}/criteria/${criterionId}/dataSources/${dataSourceId}`
+    ).catch((error: IError) => {
+      setError(error.message + ', ' + error.response.data);
+    });
   }
 
   function setDataSource(criterionId: string, dataSource: IDataSource) {
@@ -210,6 +270,7 @@ export function ManualInputContextProviderComponent({
     let criterion = _.find(criteriaCopy, ['id', criterionId]);
     const index = _.findIndex(criterion.dataSources, ['id', dataSource.id]);
     criterion.dataSources[index] = dataSource;
+    updateDataSource(dataSource, index, criterion.id);
     setCriteria(criteriaCopy);
   }
 
@@ -220,21 +281,22 @@ export function ManualInputContextProviderComponent({
   ): void {
     let criteriaCopy = _.cloneDeep(criteria);
     const criterion = _.find(criteriaCopy, ['id', criterionId]);
-    const dataSource1Index = _.findIndex(criterion.dataSources, [
-      'id',
-      dataSource1Id
-    ]);
-    const dataSource2Index = _.findIndex(criterion.dataSources, [
-      'id',
-      dataSource2Id
-    ]);
-    [
-      criterion.dataSources[dataSource1Index],
-      criterion.dataSources[dataSource2Index]
-    ] = [
-      criterion.dataSources[dataSource2Index],
-      criterion.dataSources[dataSource1Index]
-    ];
+    const newDataSources = swapItems(
+      dataSource1Id,
+      dataSource2Id,
+      criterion.dataSources
+    );
+    criterion.dataSources = newDataSources;
+    updateDataSource(
+      _.find(criterion.dataSources, ['id', dataSource1Id]),
+      _.findIndex(newDataSources, ['id', dataSource1Id]),
+      criterionId
+    );
+    updateDataSource(
+      _.find(criterion.dataSources, ['id', dataSource2Id]),
+      _.findIndex(newDataSources, ['id', dataSource2Id]),
+      criterionId
+    );
     setCriteria(criteriaCopy);
   }
 
@@ -361,7 +423,6 @@ export function ManualInputContextProviderComponent({
         addAlternative: addAlternative,
         addDefaultDataSource: addDefaultDataSource,
         deleteDataSource: deleteDataSource,
-        setCriterion: setCriterion,
         swapCriteria: swapCriteria,
         swapAlternatives: swapAlternatives,
         setCriterionProperty: setCriterionProperty,

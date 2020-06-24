@@ -277,6 +277,30 @@ function setRequiredRights() {
       'none',
       inProgressOwnerRightsNeeded
     ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/criteria/:criterionId',
+      'PUT',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/criteria/:criterionId',
+      'DELETE',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/criteria/:criterionId/dataSources/:dataSourceId',
+      'PUT',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/criteria/:criterionId/dataSources/:dataSourceId',
+      'DELETE',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
 
     makeRights(
       '/workspaces/:workspaceId/ordering',

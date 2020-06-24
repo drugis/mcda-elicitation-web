@@ -195,10 +195,44 @@ function InProgressWorkspaceRepository(db) {
         var query = "UPDATE inProgressWorkspace\n                   SET (title, therapeuticContext, useFavourability) = ($1,$2,$3) \n                   WHERE id=$4";
         db.query(query, [title, therapeuticContext, useFavourability, id], callback);
     }
+    function upsertCriterion(_a, callback) {
+        var id = _a.id, inProgressWorkspaceId = _a.inProgressWorkspaceId, orderIndex = _a.orderIndex, title = _a.title, description = _a.description, isFavourable = _a.isFavourable;
+        var query = "INSERT INTO inProgressCriterion \n                  (id, inProgressWorkspaceId, orderIndex, title , description, isFavourable) \n                  VALUES ($1, $2, $3, $4, $5, $6)\n                  ON CONFLICT (id)\n                  DO UPDATE\n                  SET (orderIndex, title , description, isFavourable) = ($3, $4, $5, $6)";
+        db.query(query, [id, inProgressWorkspaceId, orderIndex, title, description, isFavourable], callback);
+    }
+    function deleteCriterion(criterionId, callback) {
+        var query = "DELETE FROM inProgressCriterion WHERE id=$1";
+        db.query(query, [criterionId], callback);
+    }
+    function upsertDataSource(_a, callback) {
+        var id = _a.id, inProgressWorkspaceId = _a.inProgressWorkspaceId, criterionId = _a.criterionId, orderIndex = _a.orderIndex, reference = _a.reference, strengthOfEvidence = _a.strengthOfEvidence, uncertainty = _a.uncertainty, unitOfMeasurement = _a.unitOfMeasurement;
+        var query = "INSERT INTO inProgressDataSource \n                  (id, inProgressWorkspaceId, criterionId, orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) \n                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)\n                  ON CONFLICT (id)\n                  DO UPDATE\n                  SET (orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) = ($4, $5, $6, $7, $8, $9, $10, $11)";
+        db.query(query, [
+            id,
+            inProgressWorkspaceId,
+            criterionId,
+            orderIndex,
+            reference,
+            strengthOfEvidence,
+            uncertainty,
+            unitOfMeasurement.label,
+            unitOfMeasurement.type,
+            unitOfMeasurement.lowerBound,
+            unitOfMeasurement.upperBound
+        ], callback);
+    }
+    function deleteDataSource(dataSourceId, callback) {
+        var query = "DELETE FROM inProgressDataSource WHERE id=$1";
+        db.query(query, [dataSourceId], callback);
+    }
     return {
         create: create,
         get: get,
-        updateWorkspace: updateWorkspace
+        updateWorkspace: updateWorkspace,
+        upsertCriterion: upsertCriterion,
+        deleteCriterion: deleteCriterion,
+        upsertDataSource: upsertDataSource,
+        deleteDataSource: deleteDataSource
     };
 }
 exports["default"] = InProgressWorkspaceRepository;

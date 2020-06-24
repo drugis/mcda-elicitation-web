@@ -1,12 +1,12 @@
 import _ from 'lodash';
+import IAlternative from '../../../interface/IAlternative';
+import ICriterion from '../../../interface/ICriterion';
 import {Distribution} from '../../../interface/IDistribution';
 import {Effect} from '../../../interface/IEffect';
 import INormalDistribution from '../../../interface/INormalDistribution';
 import IValueCIEffect from '../../../interface/IValueCIEffect';
 import IValueEffect from '../../../interface/IValueEffect';
 import significantDigits from '../Util/significantDigits';
-import ICriterion from '../../../interface/ICriterion';
-import IAlternative from '../../../interface/IAlternative';
 
 export function generateUuid(): string {
   let pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';

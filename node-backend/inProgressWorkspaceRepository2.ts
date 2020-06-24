@@ -4,8 +4,10 @@ import pgPromise, {IMain} from 'pg-promise';
 import IAlternative from '../app/js/interface/IAlternative';
 import IAlternativeQueryResult from '../app/js/interface/IAlternativeQueryResult';
 import ICriterion from '../app/js/interface/ICriterion';
+import ICriterionCommand from '../app/js/interface/ICriterionCommand';
 import ICriterionQueryResult from '../app/js/interface/ICriterionQueryResult';
 import IDataSource from '../app/js/interface/IDataSource';
+import IDataSourceCommand from '../app/js/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '../app/js/interface/IDataSourceQueryResult';
 import {Distribution} from '../app/js/interface/IDistribution';
 import {Effect} from '../app/js/interface/IEffect';
@@ -359,9 +361,91 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
+  function upsertCriterion(
+    {
+      id,
+      inProgressWorkspaceId,
+      orderIndex,
+      title,
+      description,
+      isFavourable
+    }: ICriterionCommand,
+    callback: (error: any) => void
+  ): void {
+    const query = `INSERT INTO inProgressCriterion 
+                  (id, inProgressWorkspaceId, orderIndex, title , description, isFavourable) 
+                  VALUES ($1, $2, $3, $4, $5, $6)
+                  ON CONFLICT (id)
+                  DO UPDATE
+                  SET (orderIndex, title , description, isFavourable) = ($3, $4, $5, $6)`;
+    db.query(
+      query,
+      [id, inProgressWorkspaceId, orderIndex, title, description, isFavourable],
+      callback
+    );
+  }
+
+  function deleteCriterion(
+    criterionId: string,
+    callback: (error: any) => void
+  ): void {
+    const query = `DELETE FROM inProgressCriterion WHERE id=$1`;
+    db.query(query, [criterionId], callback);
+  }
+
+  function upsertDataSource(
+    {
+      id,
+      inProgressWorkspaceId,
+      criterionId,
+      orderIndex,
+      reference,
+      strengthOfEvidence,
+      uncertainty,
+      unitOfMeasurement
+    }: IDataSourceCommand,
+    callback: (error: any) => void
+  ): void {
+    const query = `INSERT INTO inProgressDataSource 
+                  (id, inProgressWorkspaceId, criterionId, orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                  ON CONFLICT (id)
+                  DO UPDATE
+                  SET (orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) = ($4, $5, $6, $7, $8, $9, $10, $11)`;
+    db.query(
+      query,
+      [
+        id,
+        inProgressWorkspaceId,
+        criterionId,
+        orderIndex,
+        reference,
+        strengthOfEvidence,
+        uncertainty,
+        unitOfMeasurement.label,
+        unitOfMeasurement.type,
+        unitOfMeasurement.lowerBound,
+        unitOfMeasurement.upperBound
+      ],
+      callback
+    );
+  }
+
+  function deleteDataSource(
+    dataSourceId: string,
+    callback: (error: any) => void
+  ): void {
+    const query = `DELETE FROM inProgressDataSource WHERE id=$1`;
+    db.query(query, [dataSourceId], callback);
+  }
+
   return {
     create: create,
     get: get,
-    updateWorkspace: updateWorkspace
+    updateWorkspace: updateWorkspace,
+    upsertCriterion: upsertCriterion,
+    deleteCriterion: deleteCriterion,
+    upsertDataSource: upsertDataSource,
+    deleteDataSource: deleteDataSource
   };
 }

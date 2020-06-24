@@ -20,7 +20,6 @@ export default interface IManualInputContext {
   addAlternative: () => void;
   addDefaultDataSource: (criterionId: string) => void;
   deleteDataSource: (criteriondId: string, dataSourceId: string) => void;
-  setCriterion: (criterion: ICriterion) => void;
   setCriterionProperty: (
     criterionId: string,
     propertyName: string,

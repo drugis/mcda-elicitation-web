@@ -6,12 +6,20 @@ export default function InProgressRouter(db: any) {
     .Router()
     .post('/', inProgressHandler.create)
     .get('/:id', inProgressHandler.get)
-    .put('/:id', inProgressHandler.updateWorkspace);
+    .put('/:id', inProgressHandler.updateWorkspace)
 
+    .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)
+    .delete('/:id/criteria/:criterionId', inProgressHandler.deleteCriterion)
 
+    .put(
+      '/:id/criteria/:criterionId/dataSources/:dataSourceId',
+      inProgressHandler.updateDataSource
+    )
+    .delete(
+      '/:id/criteria/:criterionId/dataSources/:dataSourceId',
+      inProgressHandler.deleteDataSource
+    );
   // .post('/:id/criteria', inProgressHandler.addCriterion)
-  // .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)
-  // .delete('/:id/criteria/:criterionId', inProgressHandler.deleteCriterion)
 
   // .post('/:id/alternatives', inProgressHandler.addAlternative)
   // .put(
@@ -26,14 +34,6 @@ export default function InProgressRouter(db: any) {
   // .post(
   //   '/:id/criteria/:criterionId/dataSources',
   //   inProgressHandler.addDataSource
-  // )
-  // .put(
-  //   '/:id/criteria/:criterionId/dataSources/:dataSourceId',
-  //   inProgressHandler.updateDataSource
-  // )
-  // .delete(
-  //   '/:id/criteria/:criterionId/dataSources/:dataSourceId',
-  //   inProgressHandler.deleteDataSource
   // )
 
   // .put('/:id/effects', inProgressHandler.setEffect)
