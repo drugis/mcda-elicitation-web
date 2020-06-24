@@ -13,17 +13,10 @@ function InProgressRouter(db) {
         .get('/:id', inProgressHandler.get)
         .put('/:id', inProgressHandler.updateWorkspace)
         .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)["delete"]('/:id/criteria/:criterionId', inProgressHandler.deleteCriterion)
-        .put('/:id/criteria/:criterionId/dataSources/:dataSourceId', inProgressHandler.updateDataSource)["delete"]('/:id/criteria/:criterionId/dataSources/:dataSourceId', inProgressHandler.deleteDataSource);
+        .put('/:id/criteria/:criterionId/dataSources/:dataSourceId', inProgressHandler.updateDataSource)["delete"]('/:id/criteria/:criterionId/dataSources/:dataSourceId', inProgressHandler.deleteDataSource)
+        .put('/:id/alternatives/:alternativeId', inProgressHandler.updateAlternative)["delete"]('/:id/alternatives/:alternativeId', inProgressHandler.deleteAlternative);
     // .post('/:id/criteria', inProgressHandler.addCriterion)
     // .post('/:id/alternatives', inProgressHandler.addAlternative)
-    // .put(
-    //   '/:id/alternatives/:alternativeId',
-    //   inProgressHandler.updateAlternative
-    // )
-    // .delete(
-    //   '/:id/alternatives/:alternativeId',
-    //   inProgressHandler.deleteAlternative
-    // )
     // .post(
     //   '/:id/criteria/:criterionId/dataSources',
     //   inProgressHandler.addDataSource

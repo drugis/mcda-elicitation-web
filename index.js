@@ -301,6 +301,18 @@ function setRequiredRights() {
       'none',
       inProgressOwnerRightsNeeded
     ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/alternatives/:alternativeId',
+      'PUT',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/alternatives/:alternativeId',
+      'DELETE',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
 
     makeRights(
       '/workspaces/:workspaceId/ordering',

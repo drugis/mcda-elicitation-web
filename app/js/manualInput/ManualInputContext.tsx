@@ -185,13 +185,31 @@ export function ManualInputContextProviderComponent({
       id: generateUuid(),
       title: 'new alternative'
     };
+    updateAlternative(newAlternative, alternatives.length);
     setAlternatives([...alternatives, newAlternative]);
+  }
+
+  function updateAlternative(
+    alternative: IAlternative,
+    orderIndex: number
+  ): void {
+    Axios.put(
+      `/api/v2/inProgress/${inProgressId}/alternatives/${alternative.id}`,
+      {
+        ...alternative,
+        inProgressWorkspaceId: inProgressId,
+        orderIndex: orderIndex
+      }
+    ).catch((error: IError) => {
+      setError(error.message + ', ' + error.response.data);
+    });
   }
 
   function setAlternative(alternative: IAlternative) {
     const index = _.findIndex(alternatives, ['id', alternative.id]);
     let alternativesCopy = _.cloneDeep(alternatives);
     alternativesCopy[index] = alternative;
+    updateAlternative(alternative, index);
     setAlternatives(alternativesCopy);
   }
 
@@ -213,13 +231,35 @@ export function ManualInputContextProviderComponent({
     setEffects(effectsCopy);
     setDistributions(distributionsCopy);
     setAlternatives(alternativesCopy);
+    deleteAlternativeFromDatabase(alternativeId);
+  }
+
+  function deleteAlternativeFromDatabase(alternativeId: string) {
+    Axios.delete(
+      `/api/v2/inProgress/${inProgressId}/alternatives/${alternativeId}`
+    ).catch((error: IError) => {
+      setError(error.message + ', ' + error.response.data);
+    });
   }
 
   function swapAlternatives(
     alternative1Id: string,
     alternative2Id: string
   ): void {
-    setAlternatives(swapItems(alternative1Id, alternative2Id, alternatives));
+    const newAlternatives = swapItems(
+      alternative1Id,
+      alternative2Id,
+      alternatives
+    );
+    updateAlternative(
+      _.find(alternatives, ['id', alternative1Id]),
+      _.findIndex(alternatives, ['id', alternative1Id])
+    );
+    updateAlternative(
+      _.find(alternatives, ['id', alternative2Id]),
+      _.findIndex(alternatives, ['id', alternative2Id])
+    );
+    setAlternatives(newAlternatives);
   }
 
   function addDefaultDataSource(criterionId: string) {

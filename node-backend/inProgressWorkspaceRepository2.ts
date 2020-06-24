@@ -2,6 +2,7 @@ import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
 import IAlternative from '../app/js/interface/IAlternative';
+import IAlternativeCommand from '../app/js/interface/IAlternativeCommand';
 import IAlternativeQueryResult from '../app/js/interface/IAlternativeQueryResult';
 import ICriterion from '../app/js/interface/ICriterion';
 import ICriterionCommand from '../app/js/interface/ICriterionCommand';
@@ -439,6 +440,27 @@ export default function InProgressWorkspaceRepository(db: any) {
     db.query(query, [dataSourceId], callback);
   }
 
+  function upsertAlternative(
+    {id, inProgressWorkspaceId, orderIndex, title}: IAlternativeCommand,
+    callback: (error: any) => void
+  ): void {
+    const query = `INSERT INTO inProgressAlternative 
+                  (id, inProgressWorkspaceId, orderIndex, title) 
+                  VALUES ($1, $2, $3, $4)
+                  ON CONFLICT (id)
+                  DO UPDATE
+                  SET (orderIndex, title) = ($3, $4)`;
+    db.query(query, [id, inProgressWorkspaceId, orderIndex, title], callback);
+  }
+
+  function deleteAlternative(
+    alternativeId: string,
+    callback: (error: any) => void
+  ): void {
+    const query = `DELETE FROM inProgressAlternative WHERE id=$1`;
+    db.query(query, [alternativeId], callback);
+  }
+
   return {
     create: create,
     get: get,
@@ -446,6 +468,8 @@ export default function InProgressWorkspaceRepository(db: any) {
     upsertCriterion: upsertCriterion,
     deleteCriterion: deleteCriterion,
     upsertDataSource: upsertDataSource,
-    deleteDataSource: deleteDataSource
+    deleteDataSource: deleteDataSource,
+    upsertAlternative: upsertAlternative,
+    deleteAlternative: deleteAlternative
   };
 }

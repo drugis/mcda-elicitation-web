@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
+import IAlternativeCommand from '../app/js/interface/IAlternativeCommand';
 import ICriterionCommand from '../app/js/interface/ICriterionCommand';
 import IDataSourceCommand from '../app/js/interface/IDataSourceCommand';
 import IInProgressMessage from '../app/js/interface/IInProgressMessage';
@@ -119,6 +120,38 @@ export default function InProgressHandler(db: any) {
     );
   }
 
+  function updateAlternative(
+    request: Request,
+    response: Response,
+    next: () => void
+  ): void {
+    const command: IAlternativeCommand = request.body;
+    inProgressWorkspaceRepository.upsertAlternative(command, (error: any) => {
+      if (error) {
+        handleError(error, next);
+      } else {
+        response.sendStatus(OK);
+      }
+    });
+  }
+
+  function deleteAlternative(
+    request: Request,
+    response: Response,
+    next: () => void
+  ): void {
+    inProgressWorkspaceRepository.deleteAlternative(
+      request.params.alternativeId,
+      (error: any) => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.sendStatus(OK);
+        }
+      }
+    );
+  }
+
   return {
     create: create,
     get: get,
@@ -126,6 +159,8 @@ export default function InProgressHandler(db: any) {
     updateCriterion: updateCriterion,
     deleteCriterion: deleteCriterion,
     updateDataSource: updateDataSource,
-    deleteDataSource: deleteDataSource
+    deleteDataSource: deleteDataSource,
+    updateAlternative: updateAlternative,
+    deleteAlternative: deleteAlternative
   };
 }

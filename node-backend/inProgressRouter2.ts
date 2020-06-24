@@ -18,18 +18,19 @@ export default function InProgressRouter(db: any) {
     .delete(
       '/:id/criteria/:criterionId/dataSources/:dataSourceId',
       inProgressHandler.deleteDataSource
+    )
+
+    .put(
+      '/:id/alternatives/:alternativeId',
+      inProgressHandler.updateAlternative
+    )
+    .delete(
+      '/:id/alternatives/:alternativeId',
+      inProgressHandler.deleteAlternative
     );
   // .post('/:id/criteria', inProgressHandler.addCriterion)
 
   // .post('/:id/alternatives', inProgressHandler.addAlternative)
-  // .put(
-  //   '/:id/alternatives/:alternativeId',
-  //   inProgressHandler.updateAlternative
-  // )
-  // .delete(
-  //   '/:id/alternatives/:alternativeId',
-  //   inProgressHandler.deleteAlternative
-  // )
 
   // .post(
   //   '/:id/criteria/:criterionId/dataSources',

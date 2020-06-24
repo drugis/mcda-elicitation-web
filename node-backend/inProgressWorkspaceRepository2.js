@@ -225,6 +225,15 @@ function InProgressWorkspaceRepository(db) {
         var query = "DELETE FROM inProgressDataSource WHERE id=$1";
         db.query(query, [dataSourceId], callback);
     }
+    function upsertAlternative(_a, callback) {
+        var id = _a.id, inProgressWorkspaceId = _a.inProgressWorkspaceId, orderIndex = _a.orderIndex, title = _a.title;
+        var query = "INSERT INTO inProgressAlternative \n                  (id, inProgressWorkspaceId, orderIndex, title) \n                  VALUES ($1, $2, $3, $4)\n                  ON CONFLICT (id)\n                  DO UPDATE\n                  SET (orderIndex, title) = ($3, $4)";
+        db.query(query, [id, inProgressWorkspaceId, orderIndex, title], callback);
+    }
+    function deleteAlternative(alternativeId, callback) {
+        var query = "DELETE FROM inProgressAlternative WHERE id=$1";
+        db.query(query, [alternativeId], callback);
+    }
     return {
         create: create,
         get: get,
@@ -232,7 +241,9 @@ function InProgressWorkspaceRepository(db) {
         upsertCriterion: upsertCriterion,
         deleteCriterion: deleteCriterion,
         upsertDataSource: upsertDataSource,
-        deleteDataSource: deleteDataSource
+        deleteDataSource: deleteDataSource,
+        upsertAlternative: upsertAlternative,
+        deleteAlternative: deleteAlternative
     };
 }
 exports["default"] = InProgressWorkspaceRepository;

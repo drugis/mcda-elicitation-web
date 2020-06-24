@@ -83,6 +83,27 @@ function InProgressHandler(db) {
             }
         });
     }
+    function updateAlternative(request, response, next) {
+        var command = request.body;
+        inProgressWorkspaceRepository.upsertAlternative(command, function (error) {
+            if (error) {
+                util_1.handleError(error, next);
+            }
+            else {
+                response.sendStatus(http_status_codes_1.OK);
+            }
+        });
+    }
+    function deleteAlternative(request, response, next) {
+        inProgressWorkspaceRepository.deleteAlternative(request.params.alternativeId, function (error) {
+            if (error) {
+                util_1.handleError(error, next);
+            }
+            else {
+                response.sendStatus(http_status_codes_1.OK);
+            }
+        });
+    }
     return {
         create: create,
         get: get,
@@ -90,7 +111,9 @@ function InProgressHandler(db) {
         updateCriterion: updateCriterion,
         deleteCriterion: deleteCriterion,
         updateDataSource: updateDataSource,
-        deleteDataSource: deleteDataSource
+        deleteDataSource: deleteDataSource,
+        updateAlternative: updateAlternative,
+        deleteAlternative: deleteAlternative
     };
 }
 exports["default"] = InProgressHandler;
