@@ -252,12 +252,12 @@ export function ManualInputContextProviderComponent({
       alternatives
     );
     updateAlternative(
-      _.find(alternatives, ['id', alternative1Id]),
-      _.findIndex(alternatives, ['id', alternative1Id])
+      _.find(newAlternatives, ['id', alternative1Id]),
+      _.findIndex(newAlternatives, ['id', alternative1Id])
     );
     updateAlternative(
-      _.find(alternatives, ['id', alternative2Id]),
-      _.findIndex(alternatives, ['id', alternative2Id])
+      _.find(newAlternatives, ['id', alternative2Id]),
+      _.findIndex(newAlternatives, ['id', alternative2Id])
     );
     setAlternatives(newAlternatives);
   }
