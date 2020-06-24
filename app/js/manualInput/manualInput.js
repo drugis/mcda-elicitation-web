@@ -2,7 +2,7 @@
 define([
   './inProgressResource',
   './inProgressResource2',
-  './ManualInputWrapper',
+  '../../ts/ManualInput/ManualInputWrapper',
   './manualInputController',
   'angular',
   'react2angular'

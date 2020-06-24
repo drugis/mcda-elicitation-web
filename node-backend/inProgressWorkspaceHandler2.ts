@@ -1,9 +1,9 @@
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
-import IAlternativeCommand from '../app/js/interface/IAlternativeCommand';
-import ICriterionCommand from '../app/js/interface/ICriterionCommand';
-import IDataSourceCommand from '../app/js/interface/IDataSourceCommand';
-import IInProgressMessage from '../app/js/interface/IInProgressMessage';
+import IAlternativeCommand from '../app/ts/interface/IAlternativeCommand';
+import ICriterionCommand from '../app/ts/interface/ICriterionCommand';
+import IDataSourceCommand from '../app/ts/interface/IDataSourceCommand';
+import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
 import {getUser, handleError} from './util';
 

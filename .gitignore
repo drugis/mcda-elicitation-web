@@ -15,6 +15,7 @@ node_modules
 dist
 coverage
 ssl
+/tscomp
 
 # Numerous always-ignore extensions
 *.diff

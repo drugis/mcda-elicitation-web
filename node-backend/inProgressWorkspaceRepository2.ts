@@ -1,22 +1,22 @@
 import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
-import IAlternative from '../app/js/interface/IAlternative';
-import IAlternativeCommand from '../app/js/interface/IAlternativeCommand';
-import IAlternativeQueryResult from '../app/js/interface/IAlternativeQueryResult';
-import ICriterion from '../app/js/interface/ICriterion';
-import ICriterionCommand from '../app/js/interface/ICriterionCommand';
-import ICriterionQueryResult from '../app/js/interface/ICriterionQueryResult';
-import IDataSource from '../app/js/interface/IDataSource';
-import IDataSourceCommand from '../app/js/interface/IDataSourceCommand';
-import IDataSourceQueryResult from '../app/js/interface/IDataSourceQueryResult';
-import {Distribution} from '../app/js/interface/IDistribution';
-import {Effect} from '../app/js/interface/IEffect';
-import IInProgressMessage from '../app/js/interface/IInProgressMessage';
-import IInProgressWorkspace from '../app/js/interface/IInProgressWorkspace';
-import IValueCellQueryResult from '../app/js/interface/IValueCellQueryResult';
-import IWorkspaceQueryResult from '../app/js/interface/IWorkspaceQueryResult';
-import {generateUuid} from '../app/js/manualInput/ManualInput/ManualInputService/ManualInputService';
+import IAlternative from '../app/ts/interface/IAlternative';
+import IAlternativeCommand from '../app/ts/interface/IAlternativeCommand';
+import IAlternativeQueryResult from '../app/ts/interface/IAlternativeQueryResult';
+import ICriterion from '../app/ts/interface/ICriterion';
+import ICriterionCommand from '../app/ts/interface/ICriterionCommand';
+import ICriterionQueryResult from '../app/ts/interface/ICriterionQueryResult';
+import IDataSource from '../app/ts/interface/IDataSource';
+import IDataSourceCommand from '../app/ts/interface/IDataSourceCommand';
+import IDataSourceQueryResult from '../app/ts/interface/IDataSourceQueryResult';
+import {Distribution} from '../app/ts/interface/IDistribution';
+import {Effect} from '../app/ts/interface/IEffect';
+import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
+import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
+import IValueCellQueryResult from '../app/ts/interface/IValueCellQueryResult';
+import IWorkspaceQueryResult from '../app/ts/interface/IWorkspaceQueryResult';
+import {generateUuid} from '../app/ts/ManualInput/ManualInputService/ManualInputService';
 import {
   mapAlternatives,
   mapCellValues,

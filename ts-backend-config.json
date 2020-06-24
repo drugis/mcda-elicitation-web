@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./tscomp",
     "esModuleInterop": true,
     "module": "commonjs",
     "sourceMap": true
