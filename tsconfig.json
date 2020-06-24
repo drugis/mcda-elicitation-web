@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
@@ -8,5 +9,6 @@
     "jsx": "react",
     "allowJs": true,
     "esModuleInterop": true
-  }
+  },
+  "exclude": ["./node-backend/*", "*.js"]
 }

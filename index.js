@@ -17,7 +17,9 @@ var InProgressWorkspaceRepository = require('./node-backend/inProgressWorkspaceR
 var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
 var InProgressRouter = require('./node-backend/inProgressRouter')(db);
-var InProgressRouter2 = require('./node-backend/inProgressRouter2').default(db);
+var InProgressRouter2 = require('./tscomp/node-backend/inProgressRouter2').default(
+  db
+);
 var OrderingRouter = require('./node-backend/orderingRouter')(db);
 var patavi = require('./node-backend/patavi');
 var SubProblemRouter = require('./node-backend/subProblemRouter')(db);

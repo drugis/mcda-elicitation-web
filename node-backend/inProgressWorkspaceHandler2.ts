@@ -1,8 +1,8 @@
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
-import IInProgressMessage from '../app/js/interface/IInProgressMessage';
+import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
+import {getUser, handleError} from '../node-backend/util';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
-import {getUser, handleError} from './util';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);

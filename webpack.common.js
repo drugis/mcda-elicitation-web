@@ -13,7 +13,7 @@ let config = {
     main: basePath + '/app/js/main.js',
     signin: basePath + 'app/js/signin.js',
     manual: basePath + '/app/js/manual.js',
-    error: basePath + 'app/js/error.js'
+    error: basePath + '/app/js/error.js'
   },
 
   output: {
@@ -28,12 +28,18 @@ let config = {
       {
         test: /\.js$/,
         use: ['babel-loader', 'angular1-templateurl-loader'],
-        exclude: [/.*angular-foundation-6.*/, /node_modules/] // uses $templatecache so dont replace
+        exclude: [
+          /.*\/app\/ts.*/,
+          /.*angular-foundation-6.*/, // uses $templatecache so dont replace
+          /node_modules/,
+          /node-backend/,
+          /.*interface.*/
+        ]
       },
       {
         test: /\.ts(x?)$/,
         use: 'ts-loader',
-        exclude: [/frontend-test/, /node_modules/]
+        exclude: [/frontend-test/, /node_modules/, /node-backend/]
       },
       {
         test: /\.html$/,

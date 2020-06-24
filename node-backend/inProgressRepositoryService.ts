@@ -1,16 +1,16 @@
 import _ from 'lodash';
-import IAlternative from '../app/js/interface/IAlternative';
-import IAlternativeQueryResult from '../app/js/interface/IAlternativeQueryResult';
-import ICriterion from '../app/js/interface/ICriterion';
-import ICriterionQueryResult from '../app/js/interface/ICriterionQueryResult';
-import IDataSource from '../app/js/interface/IDataSource';
-import IDataSourceQueryResult from '../app/js/interface/IDataSourceQueryResult';
-import {Distribution} from '../app/js/interface/IDistribution';
-import {Effect} from '../app/js/interface/IEffect';
-import IInProgressMessage from '../app/js/interface/IInProgressMessage';
-import IInProgressWorkspace from '../app/js/interface/IInProgressWorkspace';
-import IValueCellQueryResult from '../app/js/interface/IValueCellQueryResult';
-import IWorkspaceQueryResult from '../app/js/interface/IWorkspaceQueryResult';
+import IAlternative from '../app/ts/interface/IAlternative';
+import IAlternativeQueryResult from '../app/ts/interface/IAlternativeQueryResult';
+import ICriterion from '../app/ts/interface/ICriterion';
+import ICriterionQueryResult from '../app/ts/interface/ICriterionQueryResult';
+import IDataSource from '../app/ts/interface/IDataSource';
+import IDataSourceQueryResult from '../app/ts/interface/IDataSourceQueryResult';
+import {Distribution} from '../app/ts/interface/IDistribution';
+import {Effect} from '../app/ts/interface/IEffect';
+import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
+import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
+import IValueCellQueryResult from '../app/ts/interface/IValueCellQueryResult';
+import IWorkspaceQueryResult from '../app/ts/interface/IWorkspaceQueryResult';
 
 export function mapWorkspace(queryResult: IWorkspaceQueryResult) {
   return {
