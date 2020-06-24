@@ -6,6 +6,7 @@ import {Effect} from '../../interface/IEffect';
 import INormalDistribution from '../../interface/INormalDistribution';
 import IValueCIEffect from '../../interface/IValueCIEffect';
 import IValueEffect from '../../interface/IValueEffect';
+import {hasInvalidCell} from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
 
 export function generateUuid(): string {
@@ -92,8 +93,10 @@ export function createValueDistribution(effect: IValueCIEffect): IValueEffect {
 export function createWarnings(
   title: string,
   criteria: ICriterion[],
-  alternatives: IAlternative[]
-) {
+  alternatives: IAlternative[],
+  effects: Record<string, Record<string, Effect>>,
+  distributions: Record<string, Record<string, Distribution>>
+): string[] {
   let newWarnings: string[] = [];
   if (!title) {
     newWarnings.push('No title entered');
@@ -119,8 +122,14 @@ export function createWarnings(
   if (hasEmptyTitle(alternatives)) {
     newWarnings.push('Alternatives must have a title');
   }
-  // each datasource/alternative pair should have at least an effect or a distribution ? Douwe
-
+  if (
+    hasInvalidCell(effects, criteria, alternatives) &&
+    hasInvalidCell(distributions, criteria, alternatives)
+  ) {
+    newWarnings.push(
+      'Either effects or distributions must be fully filled out'
+    );
+  }
   return newWarnings;
 }
 

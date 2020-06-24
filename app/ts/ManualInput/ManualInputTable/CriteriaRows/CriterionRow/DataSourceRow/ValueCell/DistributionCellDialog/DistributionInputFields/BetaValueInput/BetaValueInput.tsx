@@ -3,11 +3,9 @@ import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function BetaValueInput({
-  isBetaInvalid,
-  invalidBetaError
+  getBetaError
 }: {
-  isBetaInvalid: (beta: number) => boolean;
-  invalidBetaError: string;
+  getBetaError: (beta: number) => string;
 }) {
   const {beta, setBeta, setIsValidBeta} = useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
@@ -22,16 +20,9 @@ export default function BetaValueInput({
 
   function validateInput() {
     const parsedValue = Number.parseFloat(beta);
-    if (isNaN(parsedValue)) {
-      setInputError('Please provide a numeric input');
-      setIsValidBeta(false);
-    } else if (isBetaInvalid(parsedValue)) {
-      setInputError(invalidBetaError);
-      setIsValidBeta(false);
-    } else {
-      setInputError('');
-      setIsValidBeta(true);
-    }
+    const errorMessage = getBetaError(parsedValue);
+    setInputError(errorMessage);
+    setIsValidBeta(!errorMessage);
   }
 
   return (

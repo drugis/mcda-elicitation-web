@@ -2,6 +2,7 @@ import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
+import {getNormalError} from '../../../../../../../../CellValidityService/CellValidityService';
 
 export default function NormalInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -54,21 +55,12 @@ export default function NormalInput() {
     setValueInputError: (error: string) => void
   ) {
     const parsedValue = Number.parseFloat(value);
-    if (isNaN(parsedValue)) {
-      setValueInputError('Please provide a numeric input');
-      setIsValid(false);
-    } else if (
-      parsedValue < dataSource.unitOfMeasurement.lowerBound ||
-      parsedValue > dataSource.unitOfMeasurement.upperBound
-    ) {
-      setValueInputError(
-        `Input out of bounds [${dataSource.unitOfMeasurement.lowerBound}, ${dataSource.unitOfMeasurement.upperBound}]`
-      );
-      setIsValid(false);
-    } else {
-      setValueInputError('');
-      setIsValid(true);
-    }
+    const errorMessage = getNormalError(
+      parsedValue,
+      dataSource.unitOfMeasurement
+    );
+    setValueInputError(errorMessage);
+    setIsValid(!errorMessage);
   }
 
   return (

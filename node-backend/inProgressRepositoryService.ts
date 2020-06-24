@@ -65,8 +65,14 @@ export function mapDataSources(
         unitOfMeasurement: {
           label: queryDataSource.unitlabel,
           type: queryDataSource.unittype,
-          lowerBound: queryDataSource.unitlowerbound,
-          upperBound: queryDataSource.unitupperbound
+          lowerBound:
+            queryDataSource.unitlowerbound === null
+              ? undefined
+              : queryDataSource.unitlowerbound,
+          upperBound:
+            queryDataSource.unitupperbound === null
+              ? undefined
+              : queryDataSource.unitupperbound
         }
       };
     })

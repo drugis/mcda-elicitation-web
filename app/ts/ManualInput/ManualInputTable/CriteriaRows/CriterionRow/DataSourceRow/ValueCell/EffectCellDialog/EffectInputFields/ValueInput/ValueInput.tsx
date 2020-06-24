@@ -2,6 +2,7 @@ import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
+import {getValueError} from '../../../../../../../../CellValidityService/CellValidityService';
 
 export default function ValueInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -18,21 +19,12 @@ export default function ValueInput() {
 
   function validateInput() {
     const parsedValue = Number.parseFloat(value);
-    if (isNaN(parsedValue)) {
-      setInputError('Please provide a numeric input');
-      setIsValidValue(false);
-    } else if (
-      parsedValue < dataSource.unitOfMeasurement.lowerBound ||
-      parsedValue > dataSource.unitOfMeasurement.upperBound
-    ) {
-      setInputError(
-        `Input out of bounds [${dataSource.unitOfMeasurement.lowerBound}, ${dataSource.unitOfMeasurement.upperBound}]`
-      );
-      setIsValidValue(false);
-    } else {
-      setInputError('');
-      setIsValidValue(true);
-    }
+    const errorMessage = getValueError(
+      parsedValue,
+      dataSource.unitOfMeasurement
+    );
+    setInputError(errorMessage);
+    setIsValidValue(!errorMessage);
   }
 
   return (

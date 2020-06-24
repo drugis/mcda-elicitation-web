@@ -2,6 +2,7 @@ import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
+import {getUpperBoundError} from '../../../../../../../../CellValidityService/CellValidityService';
 
 export default function UpperBoundInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -30,21 +31,13 @@ export default function UpperBoundInput() {
         ? Number.parseFloat(value)
         : Number.parseFloat(lowerBound);
 
-    if (isNaN(parsedValue)) {
-      setInputError('Please provide a numeric input');
-      setIsValidUpperBound(false);
-    } else if (
-      parsedValue < lowestPossibleValue ||
-      parsedValue > dataSource.unitOfMeasurement.upperBound
-    ) {
-      setInputError(
-        `Input out of bounds [${lowestPossibleValue}, ${dataSource.unitOfMeasurement.upperBound}]`
-      );
-      setIsValidUpperBound(false);
-    } else {
-      setInputError('');
-      setIsValidUpperBound(true);
-    }
+    const errorMessage = getUpperBoundError(
+      parsedValue,
+      lowestPossibleValue,
+      dataSource.unitOfMeasurement
+    );
+    setInputError(errorMessage);
+    setIsValidUpperBound(!errorMessage);
   }
 
   return (

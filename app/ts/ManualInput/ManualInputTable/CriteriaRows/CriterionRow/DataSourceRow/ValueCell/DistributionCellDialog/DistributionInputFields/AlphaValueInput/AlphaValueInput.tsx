@@ -3,11 +3,9 @@ import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function AlphaValueInput({
-  isAlphaInvalid,
-  invalidAlphaError
+  getAlphaError
 }: {
-  isAlphaInvalid: (alpha: number) => boolean;
-  invalidAlphaError: string;
+  getAlphaError: (alpha: number) => string;
 }) {
   const {alpha, setAlpha, setIsValidAlpha} = useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
@@ -22,16 +20,9 @@ export default function AlphaValueInput({
 
   function validateInput() {
     const parsedValue = Number.parseFloat(alpha);
-    if (isNaN(parsedValue)) {
-      setInputError('Please provide a numeric input');
-      setIsValidAlpha(false);
-    } else if (isAlphaInvalid(parsedValue)) {
-      setInputError(invalidAlphaError);
-      setIsValidAlpha(false);
-    } else {
-      setInputError('');
-      setIsValidAlpha(true);
-    }
+    const errorMessage = getAlphaError(parsedValue);
+    setInputError(errorMessage);
+    setIsValidAlpha(!errorMessage);
   }
 
   return (

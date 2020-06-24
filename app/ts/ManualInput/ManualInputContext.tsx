@@ -433,7 +433,9 @@ export function ManualInputContextProviderComponent({
   }
 
   function updateWarnings(): void {
-    setWarnings(createWarnings(title, criteria, alternatives));
+    setWarnings(
+      createWarnings(title, criteria, alternatives, effects, distributions)
+    );
   }
 
   function updateTitle(newTitle: string): void {
