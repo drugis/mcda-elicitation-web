@@ -3,12 +3,12 @@ import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function Favourability() {
-  const {useFavourability, setUseFavourability} = useContext(
+  const {useFavourability, updateUseFavourability} = useContext(
     ManualInputContext
   );
 
   function handleChangeFavourability() {
-    setUseFavourability(!useFavourability);
+    updateUseFavourability(!useFavourability);
   }
 
   return (

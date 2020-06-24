@@ -1,10 +1,13 @@
+import Axios from 'axios';
 import _ from 'lodash';
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {ErrorContext} from '../Error/ErrorContext';
 import IAlternative from '../interface/IAlternative';
 import ICriterion from '../interface/ICriterion';
 import IDataSource from '../interface/IDataSource';
 import {Distribution} from '../interface/IDistribution';
 import {Effect} from '../interface/IEffect';
+import IError from '../interface/IError';
 import IInProgressMessage from '../interface/IInProgressMessage';
 import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
@@ -31,11 +34,15 @@ const foo: TestExport = {};
 
 export function ManualInputContextProviderComponent({
   children,
-  message
+  message,
+  inProgressId
 }: {
   children: any;
   message: IInProgressMessage;
+  inProgressId: string;
 }) {
+  const {setError} = useContext(ErrorContext);
+
   const [title, setTitle] = useState<string>(message.workspace.title);
   const [therapeuticContext, setTherapeuticContext] = useState<string>(
     message.workspace.therapeuticContext
@@ -306,9 +313,43 @@ export function ManualInputContextProviderComponent({
     setWarnings(createWarnings(title, criteria, alternatives));
   }
 
+  function updateTitle(newTitle: string): void {
+    setTitle(newTitle);
+    updateWorkspace(newTitle, therapeuticContext, useFavourability);
+  }
+
+  function updateTherapeuticContext(newContext: string): void {
+    setTherapeuticContext(newContext);
+    updateWorkspace(title, newContext, useFavourability);
+  }
+
+  function updateUseFavourability(newFavourability: boolean): void {
+    setUseFavourability(newFavourability);
+    updateWorkspace(title, therapeuticContext, newFavourability);
+  }
+
+  function updateWorkspace(
+    title: string,
+    therapeuticContext: string,
+    useFavourability: boolean
+  ) {
+    const workspace = {
+      id: inProgressId,
+      title: title,
+      therapeuticContext: therapeuticContext,
+      useFavourability: useFavourability
+    };
+    Axios.put(`/api/v2/inProgress/${inProgressId}`, workspace).catch(
+      (error: IError) => {
+        setError(error.message + ', ' + error.response.data);
+      }
+    );
+  }
+
   return (
     <ManualInputContext.Provider
       value={{
+        id: inProgressId,
         title: title,
         therapeuticContext: therapeuticContext,
         useFavourability: useFavourability,
@@ -317,9 +358,6 @@ export function ManualInputContextProviderComponent({
         alternatives: alternatives,
         effects: effects,
         distributions: distributions,
-        setTitle: setTitle,
-        setTherapeuticContext: setTherapeuticContext,
-        setUseFavourability: setUseFavourability,
         setTableInputMode: setTableInputMode,
         addCriterion: addCriterion,
         addAlternative: addAlternative,
@@ -340,7 +378,10 @@ export function ManualInputContextProviderComponent({
         setDistribution: setDistribution,
         generateDistributions: generateDistributions,
         isDoneDisabled: warnings.length > 0,
-        warnings: warnings
+        warnings: warnings,
+        updateTitle: updateTitle,
+        updateTherapeuticContext: updateTherapeuticContext,
+        updateUseFavourability: updateUseFavourability
       }}
     >
       {children}

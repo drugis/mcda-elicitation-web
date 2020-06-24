@@ -6,6 +6,7 @@ import {Distribution} from './IDistribution';
 import {Effect} from './IEffect';
 
 export default interface IManualInputContext {
+  id: string;
   title: string;
   therapeuticContext: string;
   useFavourability: boolean;
@@ -14,9 +15,6 @@ export default interface IManualInputContext {
   alternatives: IAlternative[];
   effects: Record<string, Record<string, Effect>>;
   distributions: Record<string, Record<string, Distribution>>;
-  setTitle: (title: string) => void;
-  setTherapeuticContext: (therapeuticContext: string) => void;
-  setUseFavourability: (useFavourability: boolean) => void;
   setTableInputMode: (tableInputMode: TableInputMode) => void;
   addCriterion: (isFavourable: boolean) => void;
   addAlternative: () => void;
@@ -54,4 +52,7 @@ export default interface IManualInputContext {
   generateDistributions: () => void;
   isDoneDisabled: boolean;
   warnings: string[];
+  updateTitle: (newTitle: string) => void;
+  updateTherapeuticContext: (newTherapeuticContext: string) => void;
+  updateUseFavourability: (newFavourability: boolean) => void;
 }

@@ -5,9 +5,9 @@ export default function InProgressRouter(db: any) {
   return express
     .Router()
     .post('/', inProgressHandler.create)
-    .get('/:id', inProgressHandler.get);
+    .get('/:id', inProgressHandler.get)
+    .put('/:id', inProgressHandler.updateWorkspace);
 
-  // .put('/:id', inProgressHandler.updateWorkspace)
 
   // .post('/:id/criteria', inProgressHandler.addCriterion)
   // .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)

@@ -36,8 +36,26 @@ export default function InProgressHandler(db: any) {
     );
   }
 
+  function updateWorkspace(
+    request: Request,
+    response: Response,
+    next: () => void
+  ): void {
+    inProgressWorkspaceRepository.updateWorkspace(
+      request.body,
+      (error: any) => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.sendStatus(OK);
+        }
+      }
+    );
+  }
+
   return {
     create: create,
-    get: get
+    get: get,
+    updateWorkspace: updateWorkspace
   };
 }
