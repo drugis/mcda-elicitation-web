@@ -370,7 +370,21 @@ export function ManualInputContextProviderComponent({
       effectsCopy[effect.dataSourceId] = {};
     }
     effectsCopy[effect.dataSourceId][effect.alternativeId] = effect;
+    updateCell(effect, 'effect');
     setEffects(effectsCopy);
+  }
+
+  function updateCell(
+    cell: Effect | Distribution,
+    cellType: TableInputMode
+  ): void {
+    Axios.put(`/api/v2/inProgress/${inProgressId}/cells`, {
+      ...cell,
+      inProgressWorkspaceId: inProgressId,
+      cellType: cellType
+    }).catch((error: IError) => {
+      setError(error.message + ', ' + error.response.data);
+    });
   }
 
   function getDistribution(
@@ -404,11 +418,18 @@ export function ManualInputContextProviderComponent({
     distributionsCopy[distribution.dataSourceId][
       distribution.alternativeId
     ] = distribution;
+    updateCell(distribution, 'distribution');
     setDistributions(distributionsCopy);
   }
 
-  function generateDistributions() {
-    setDistributions(createDistributions(distributions, effects));
+  function generateDistributions(): void {
+    const newDistributions = createDistributions(distributions, effects);
+    _.forEach(newDistributions, (row) => {
+      _.forEach(row, (distribution: Distribution) => {
+        updateCell(distribution, 'distribution');
+      });
+    });
+    setDistributions(newDistributions);
   }
 
   function updateWarnings(): void {

@@ -315,6 +315,12 @@ function setRequiredRights() {
       'none',
       inProgressOwnerRightsNeeded
     ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/cells',
+      'PUT',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
 
     makeRights(
       '/workspaces/:workspaceId/ordering',

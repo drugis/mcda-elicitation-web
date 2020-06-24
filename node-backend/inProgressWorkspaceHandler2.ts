@@ -152,6 +152,20 @@ export default function InProgressHandler(db: any) {
     );
   }
 
+  function updateCell(
+    request: Request,
+    response: Response,
+    next: () => void
+  ): void {
+    inProgressWorkspaceRepository.upsertCell(request.body, (error: any) => {
+      if (error) {
+        handleError(error, next);
+      } else {
+        response.sendStatus(OK);
+      }
+    });
+  }
+
   return {
     create: create,
     get: get,
@@ -161,6 +175,7 @@ export default function InProgressHandler(db: any) {
     updateDataSource: updateDataSource,
     deleteDataSource: deleteDataSource,
     updateAlternative: updateAlternative,
-    deleteAlternative: deleteAlternative
+    deleteAlternative: deleteAlternative,
+    updateCell: updateCell
   };
 }

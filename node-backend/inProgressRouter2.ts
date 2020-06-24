@@ -27,20 +27,6 @@ export default function InProgressRouter(db: any) {
     .delete(
       '/:id/alternatives/:alternativeId',
       inProgressHandler.deleteAlternative
-    );
-  // .post('/:id/criteria', inProgressHandler.addCriterion)
-
-  // .post('/:id/alternatives', inProgressHandler.addAlternative)
-
-  // .post(
-  //   '/:id/criteria/:criterionId/dataSources',
-  //   inProgressHandler.addDataSource
-  // )
-
-  // .put('/:id/effects', inProgressHandler.setEffect)
-
-  // .get('/:id', inProgressHandler.get)
-  // .get('/', inProgressHandler.query)
-
-  // .delete('/:id', inProgressHandler.delete);
+    )
+    .put('/:id/cells', inProgressHandler.updateCell);
 }

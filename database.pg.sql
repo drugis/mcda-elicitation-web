@@ -364,8 +364,8 @@ ALTER TABLE workspace
 --rollback ALTER TABLE inprogressworkspace ADD CONSTRAINT inprogressworkspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
 --rollback ALTER TABLE workspace DROP CONSTRAINT workspace_owner_fkey;
 --rollback ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
-
 --changeset reidd:24
+
 ALTER TABLE inProgressWorkspace
   ADD COLUMN title varchar NOT NULL DEFAULT '';
 
@@ -448,13 +448,15 @@ CREATE TABLE inProgressWorkspaceCell (
   alpha float,
   beta float,
   cellType effectOrDistributionType NOT NULL,
-  inputType inputTypeType,
+  inputType inputTypeType NOT NULL,
   PRIMARY KEY (alternativeId, dataSourceId, criterionId, cellType),
   FOREIGN KEY (alternativeId) REFERENCES inProgressAlternative (id) ON DELETE CASCADE,
   FOREIGN KEY (dataSourceId) REFERENCES inProgressDataSource (id) ON DELETE CASCADE,
   FOREIGN KEY (criterionId) REFERENCES inProgressCriterion (id) ON DELETE CASCADE,
   FOREIGN KEY (inProgressWorkspaceId) REFERENCES inprogressworkspace (id) ON DELETE CASCADE
 );
+
+CREATE UNIQUE INDEX inProgressWorkspaceCell_index ON inProgressWorkspaceCell (alternativeId, dataSourceId, criterionId, cellType);
 
 --rollback ALTER TABLE inProgressWorkspace DROP COLUMN title;
 --rollback ALTER TABLE inProgressWorkspace DROP COLUMN therapeuticContext;
@@ -466,3 +468,4 @@ CREATE TABLE inProgressWorkspaceCell (
 --rollback DROP TYPE unitType;
 --rollback DROP TYPE effectOrDistributionType;
 --rollback DROP TYPE inputTypeType;
+--rollback DROP INDEX inProgressWorkspaceCell_index;

@@ -80,7 +80,7 @@ export function mapCellValues(
   Record<string, Record<string, Distribution>>
 ] {
   const [effectCellValues, distributionCellValues] = _.partition(cellValues, [
-    'cellType',
+    'celltype',
     'effect'
   ]);
   return [

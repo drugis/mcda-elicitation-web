@@ -20,7 +20,7 @@ export function generateUuid(): string {
 export function createDistributions(
   distributions: Record<string, Record<string, Distribution>>,
   effects: Record<string, Record<string, Effect>>
-) {
+): Record<string, Record<string, Distribution>> {
   let distributionsCopy = _.cloneDeep(distributions);
   _.forEach(effects, (row: Record<string, Effect>, dataSourceId: string) => {
     _.forEach(row, (effect: Effect, alternativeId: string) => {

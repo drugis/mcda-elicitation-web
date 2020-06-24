@@ -4,6 +4,7 @@ import pgPromise, {IMain} from 'pg-promise';
 import IAlternative from '../app/ts/interface/IAlternative';
 import IAlternativeCommand from '../app/ts/interface/IAlternativeCommand';
 import IAlternativeQueryResult from '../app/ts/interface/IAlternativeQueryResult';
+import ICellMessage from '../app/ts/interface/ICellMessage';
 import ICriterion from '../app/ts/interface/ICriterion';
 import ICriterionCommand from '../app/ts/interface/ICriterionCommand';
 import ICriterionQueryResult from '../app/ts/interface/ICriterionQueryResult';
@@ -61,9 +62,9 @@ export default function InProgressWorkspaceRepository(db: any) {
     callback: (error: any, createdId: string) => {}
   ) {
     const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, title, therapeuticContext) 
-         VALUES ($1, $2, true, $3, $3) 
+         VALUES ($1, $2, true, $3, $4) 
        RETURNING id`;
-    client.query(query, [ownerId, {}, ''], function (
+    client.query(query, [ownerId, {}, 'new workspace', ''], function (
       error: any,
       result: {rows: any[]}
     ) {
@@ -461,6 +462,60 @@ export default function InProgressWorkspaceRepository(db: any) {
     db.query(query, [alternativeId], callback);
   }
 
+  function upsertCell(
+    {
+      inProgressWorkspaceId,
+      alternativeId,
+      dataSourceId,
+      criterionId,
+      value,
+      lowerBound,
+      upperBound,
+      text,
+      mean,
+      standardError,
+      alpha,
+      beta,
+      cellType,
+      type
+    }: ICellMessage,
+    callback: (error: any) => void
+  ): void {
+    const query = `INSERT INTO inProgressWorkspaceCell 
+                    (inProgressWorkspaceId, alternativeId, 
+                    dataSourceId, criterionId, val, 
+                    lowerbound, upperbound, txt, 
+                    mean, standardError, alpha, beta, 
+                    cellType, inputType) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                  ON CONFLICT (alternativeId, 
+                    dataSourceId, criterionId, cellType)
+                  DO UPDATE
+                  SET (val, lowerbound, upperbound, txt, 
+                    mean, standardError, alpha, beta, inputType) = 
+                    ($5, $6, $7, $8, $9, $10, $11, $12, $14)`;
+    db.query(
+      query,
+      [
+        inProgressWorkspaceId,
+        alternativeId,
+        dataSourceId,
+        criterionId,
+        value,
+        lowerBound,
+        upperBound,
+        text,
+        mean,
+        standardError,
+        alpha,
+        beta,
+        cellType,
+        type
+      ],
+      callback
+    );
+  }
+
   return {
     create: create,
     get: get,
@@ -470,6 +525,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     upsertDataSource: upsertDataSource,
     deleteDataSource: deleteDataSource,
     upsertAlternative: upsertAlternative,
-    deleteAlternative: deleteAlternative
+    deleteAlternative: deleteAlternative,
+    upsertCell: upsertCell
   };
 }
