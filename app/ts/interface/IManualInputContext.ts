@@ -23,7 +23,7 @@ export default interface IManualInputContext {
   setCriterionProperty: (
     criterionId: string,
     propertyName: string,
-    value: string
+    value: string | boolean
   ) => void;
   swapCriteria: (criterion1Id: string, criterion2Id: string) => void;
   swapAlternatives: (alternative1Id: string, alternative2Id: string) => void;

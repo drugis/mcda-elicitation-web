@@ -129,16 +129,19 @@ export function ManualInputContextProviderComponent({
   function setCriterionProperty(
     criterionId: string,
     propertyName: string,
-    value: string
+    value: string | boolean
   ) {
     let criteriaCopy = _.cloneDeep(criteria);
     let criterion = _.find(criteriaCopy, ['id', criterionId]);
     switch (propertyName) {
       case 'title':
-        criterion.title = value;
+        criterion.title = value as string;
         break;
       case 'description':
-        criterion.description = value;
+        criterion.description = value as string;
+        break;
+      case 'isFavourable':
+        criterion.isFavourable = value as boolean;
         break;
       default:
         throw 'unknown criterion property being updated: ' + propertyName;

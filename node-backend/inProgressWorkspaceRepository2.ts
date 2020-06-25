@@ -64,12 +64,13 @@ export default function InProgressWorkspaceRepository(db: any) {
     const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, title, therapeuticContext) 
          VALUES ($1, $2, true, $3, $4) 
        RETURNING id`;
-    client.query(query, [ownerId, {}, 'new workspace', ''], function (
-      error: any,
-      result: {rows: any[]}
-    ) {
-      callback(error, error || result.rows[0].id);
-    });
+    client.query(
+      query,
+      [ownerId, {title: 'new workspace'}, 'new workspace', ''],
+      function (error: any, result: {rows: any[]}) {
+        callback(error, error || result.rows[0].id);
+      }
+    );
   }
 
   function createInProgressCriteria(

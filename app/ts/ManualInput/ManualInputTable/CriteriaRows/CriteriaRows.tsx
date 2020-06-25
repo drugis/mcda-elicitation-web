@@ -23,10 +23,10 @@ export default function CriteriaRows() {
   const favourableCriteria = _.filter(criteria, ['isFavourable', true]);
   const unfavourableCriteria = _.filter(criteria, ['isFavourable', false]);
 
-  function createCriteriaRows(crits: ICriterion[]): JSX.Element[][] {
-    return _(crits)
+  function createCriteriaRows(localCriteria: ICriterion[]): JSX.Element[][] {
+    return _(localCriteria)
       .map(addDummyDataSource)
-      .map(_.partial(buildDataSourceRows, crits))
+      .map(_.partial(buildDataSourceRows, localCriteria))
       .value();
   }
 
@@ -40,7 +40,7 @@ export default function CriteriaRows() {
   }
 
   function buildDataSourceRows(
-    crits: ICriterion[],
+    localCriteria: ICriterion[],
     criterion: ICriterion,
     criterionIndex: number
   ): JSX.Element[] {
@@ -50,8 +50,8 @@ export default function CriteriaRows() {
           key={dataSource.id}
           criterion={criterion}
           dataSource={dataSource}
-          nextCriterion={crits[criterionIndex + 1]}
-          previousCriterion={crits[criterionIndex - 1]}
+          nextCriterion={localCriteria[criterionIndex + 1]}
+          previousCriterion={localCriteria[criterionIndex - 1]}
           previousDataSource={criterion.dataSources[dataSourceIndex - 1]}
           nextDataSource={criterion.dataSources[dataSourceIndex + 1]}
         >

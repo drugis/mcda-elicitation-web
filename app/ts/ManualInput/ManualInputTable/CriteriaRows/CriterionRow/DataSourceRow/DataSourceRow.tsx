@@ -1,5 +1,4 @@
-import {IconButton, TableCell, TableRow, Tooltip} from '@material-ui/core';
-import Delete from '@material-ui/icons/Delete';
+import {Grid, TableCell, TableRow} from '@material-ui/core';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import IDataSource from '../../../../../interface/IDataSource';
@@ -8,14 +7,16 @@ import {ManualInputContext} from '../../../../ManualInputContext';
 import AddDataSourceButton from '../AddDataSourceButton/AddDataSourceButton';
 import {DataSourceRowContext} from '../DataSourceRowContext/DataSourceRowContext';
 import MoveCriterionButtons from '../MoveCriterionButtons/MoveCriterionButtons';
+import ChangeFavourabilityButton from './ChangeFavourabilityButton/ChangeFavourabilityButton';
 import CriterionDescriptionCell from './CriterionDescriptionCell/CriterionDescriptionCell';
 import CriterionTitleCell from './CriterionTitleCell/CriterionTitleCell';
+import DeleteCriterionButton from './DeleteCriterionButton/DeleteCriterionButton';
 import DeleteDataSourceButton from './DeleteDataSourceButton/DeleteDataSourceButton';
+import InputCell from './InputCell/InputCell';
 import MoveDataSourceButtons from './MoveDataSourceButtons/MoveDataSourceButtons';
 import ReferenceCell from './ReferenceCell/ReferenceCell';
 import SoEUncertaintyCell from './SoEUncertaintyCell/SoEUncertaintyCell';
 import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
-import InputCell from './InputCell/InputCell';
 
 export default function DataSourceRow({
   dataSource,
@@ -25,7 +26,7 @@ export default function DataSourceRow({
   isFirstRowForCriterion: boolean;
 }) {
   const {criterion} = useContext(DataSourceRowContext);
-  const {alternatives, deleteCriterion} = useContext(ManualInputContext);
+  const {alternatives} = useContext(ManualInputContext);
   const numberOfColumns = alternatives.length + 6;
   const numberOfDataSourceRows = criterion.dataSources.length;
 
@@ -41,10 +42,6 @@ export default function DataSourceRow({
     return _.map(alternatives, (alternative) => {
       return <InputCell key={alternative.id} alternativeId={alternative.id} />;
     });
-  }
-
-  function handleDeleteCriterion() {
-    deleteCriterion(criterion.id);
   }
 
   function createDataSourceCells() {
@@ -73,15 +70,14 @@ export default function DataSourceRow({
       {isFirstRowForCriterion ? (
         <>
           <TableCell rowSpan={numberOfDataSourceRows} align={'center'}>
-            <Tooltip title="Delete criterion">
-              <IconButton
-                size="small"
-                color="secondary"
-                onClick={handleDeleteCriterion}
-              >
-                <Delete />
-              </IconButton>
-            </Tooltip>
+            <Grid container>
+              <Grid item xs={12}>
+                <DeleteCriterionButton />
+              </Grid>
+              <Grid item xs={12}>
+                <ChangeFavourabilityButton />
+              </Grid>
+            </Grid>
           </TableCell>
           <TableCell rowSpan={numberOfDataSourceRows} align="center">
             <MoveCriterionButtons />
