@@ -11,6 +11,10 @@ import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
 import IInputCellQueryResult from '../app/ts/interface/IInputCellQueryResult';
 import IWorkspaceQueryResult from '../app/ts/interface/IWorkspaceQueryResult';
+import {IPerformanceTableEntry} from '../app/ts/interface/Problem/IPerformanceTableEntry';
+import IProblem from '../app/ts/interface/Problem/IProblem';
+import IProblemCriterion from '../app/ts/interface/Problem/IProblemCriterion';
+import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 
 export function mapWorkspace(queryResult: IWorkspaceQueryResult) {
   return {
@@ -266,4 +270,33 @@ function mapDataSourcesOntoCriteria(
         : []
     };
   });
+}
+
+export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
+  return {
+    schemaVersion: CURRENT_SCHEMA_VERSION,
+    title: inProgressMessage.workspace.title,
+    description: inProgressMessage.workspace.therapeuticContext,
+    criteria: buildCriteria(inProgressMessage.criteria),
+    alternatives: buildAlternatives(inProgressMessage.alternatives),
+    performanceTable: buildPerformanceTable(inProgressMessage)
+  };
+}
+
+function buildCriteria(
+  criteria: ICriterion[]
+): Record<string, IProblemCriterion> {
+  return {};
+}
+
+function buildAlternatives(
+  alternatives: IAlternative[]
+): Record<string, {title: string}> {
+  return {};
+}
+
+function buildPerformanceTable(
+  inProgressMessage: IInProgressMessage
+): IPerformanceTableEntry[] {
+  return [];
 }

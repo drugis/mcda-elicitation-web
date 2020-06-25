@@ -28,5 +28,7 @@ export default function InProgressRouter(db: any) {
       '/:id/alternatives/:alternativeId',
       inProgressHandler.deleteAlternative
     )
-    .put('/:id/cells', inProgressHandler.updateCell);
+    .put('/:id/cells', inProgressHandler.updateCell)
+
+    .post('/:id/doCreateWorkspace', inProgressHandler.createWorkspace);
 }

@@ -166,6 +166,32 @@ export default function InProgressHandler(db: any) {
     });
   }
 
+  function createWorkspace(
+    request: Request,
+    response: Response,
+    next: () => void
+  ): void {
+    const user: {id: string} = getUser(request);
+    inProgressWorkspaceRepository.get(
+      Number.parseInt(request.params.id),
+      (error: any, inProgressMessage: IInProgressMessage) => {
+        inProgressWorkspaceRepository.createWorkspace(
+          user.id,
+          Number.parseInt(request.params.id),
+          inProgressMessage,
+          (error: any, createdId: string) => {
+            if (error) {
+              handleError(error, next);
+            } else {
+              response.status(CREATED);
+              response.json({id: createdId});
+            }
+          }
+        );
+      }
+    );
+  }
+
   return {
     create: create,
     get: get,
@@ -176,6 +202,7 @@ export default function InProgressHandler(db: any) {
     deleteDataSource: deleteDataSource,
     updateAlternative: updateAlternative,
     deleteAlternative: deleteAlternative,
-    updateCell: updateCell
+    updateCell: updateCell,
+    createWorkspace: createWorkspace
   };
 }

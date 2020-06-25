@@ -321,6 +321,12 @@ function setRequiredRights() {
       'none',
       inProgressOwnerRightsNeeded
     ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId/doCreateWorkspace',
+      'POST',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
 
     makeRights(
       '/workspaces/:workspaceId/ordering',

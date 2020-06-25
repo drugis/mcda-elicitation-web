@@ -17,8 +17,10 @@ import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
 import IValueCellQueryResult from '../app/ts/interface/IInputCellQueryResult';
 import IWorkspaceQueryResult from '../app/ts/interface/IWorkspaceQueryResult';
+import IProblem from '../app/ts/interface/Problem/IProblem';
 import {generateUuid} from '../app/ts/ManualInput/ManualInputService/ManualInputService';
 import {
+  createProblem as buildProblem,
   mapAlternatives,
   mapCellValues,
   mapCombinedResults,
@@ -542,6 +544,72 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
+  function createWorkspace(
+    userId: string,
+    inProgressId: number,
+    inProgressMessage: IInProgressMessage,
+    callback: (error: any, createdId: string) => void
+  ) {
+    db.runInTransaction(
+      _.partial(
+        createWorkspaceTransaction,
+        userId,
+        inProgressId,
+        inProgressMessage
+      ),
+      callback
+    );
+  }
+
+  function createWorkspaceTransaction(
+    userId: string,
+    inProgressId: number,
+    inProgressMessage: IInProgressMessage,
+    client: any,
+    transactionCallback: (error: any, createdId: string) => void
+  ) {
+    const problem = buildProblem(inProgressMessage);
+    waterfall(
+      [
+        _.partial(createProblem, client, userId, problem),
+        // create default subproblem
+        // create default scenario
+        _.partial(deleteInProgressWorkspace, client, inProgressId)
+      ],
+      transactionCallback
+    );
+  }
+
+  function createProblem(
+    client: any,
+    userId: string,
+    problem: IProblem,
+    callback: (error: any | null, workspaceId: number) => void
+  ) {
+    const query = `INSERT INTO workspace (owner, title, problem) 
+                   VALUES ($1, $2, $3) 
+                   RETURNING id`;
+    client.query(
+      query,
+      [userId, problem.title, problem],
+      (error: any, result: {rows: any[]}) => {
+        callback(error, error || result.rows[0].id);
+      }
+    );
+  }
+
+  function deleteInProgressWorkspace(
+    client: any,
+    inProgressId: number,
+    workspaceId: number,
+    callback: (error: any | null, workspaceId: number) => void
+  ) {
+    const query = 'DELETE FROM inprogressworkspace WHERE id=$1';
+    client.query(query, [inProgressId], (error: any) => {
+      callback(error, error || workspaceId);
+    });
+  }
+
   return {
     create: create,
     get: get,
@@ -552,6 +620,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     deleteDataSource: deleteDataSource,
     upsertAlternative: upsertAlternative,
     deleteAlternative: deleteAlternative,
-    upsertCell: upsertCell
+    upsertCell: upsertCell,
+    createWorkspace: createWorkspace
   };
 }
