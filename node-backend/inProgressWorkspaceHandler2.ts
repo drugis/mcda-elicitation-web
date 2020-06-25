@@ -6,6 +6,9 @@ import IDataSourceCommand from '../app/ts/interface/IDataSourceCommand';
 import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
 import {getUser, handleError} from './util';
+import _ from 'lodash';
+import workspaceHandler from './workspaceHandler';
+import {createProblem} from './inProgressRepositoryService';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
@@ -169,27 +172,63 @@ export default function InProgressHandler(db: any) {
   function createWorkspace(
     request: Request,
     response: Response,
-    next: () => void
+    next: (error: any) => void
   ): void {
-    const user: {id: string} = getUser(request);
     inProgressWorkspaceRepository.get(
       Number.parseInt(request.params.id),
-      (error: any, inProgressMessage: IInProgressMessage) => {
-        inProgressWorkspaceRepository.createWorkspace(
-          user.id,
-          Number.parseInt(request.params.id),
-          inProgressMessage,
-          (error: any, createdId: string) => {
-            if (error) {
-              handleError(error, next);
-            } else {
-              response.status(CREATED);
-              response.json({id: createdId});
-            }
-          }
-        );
-      }
+      _.partial(getInProgressCallback, request, response, next)
     );
+  }
+
+  function getInProgressCallback(
+    request: Request,
+    response: Response,
+    next: (error: any) => void,
+    error: any,
+    inProgressMessage: IInProgressMessage
+  ) {
+    if (error) {
+      next(error);
+    } else {
+      const newRequest = {
+        ...request,
+        body: {
+          title: inProgressMessage.workspace.title,
+          problem: createProblem(inProgressMessage)
+        }
+      };
+      workspaceHandler(db).create(newRequest, response, next);
+      // createNewWorkspace(request, response, next, inProgressMessage);
+    }
+  }
+
+  function createNewWorkspace(
+    request: Request,
+    response: Response,
+    next: (error: any) => void,
+    inProgressMessage: IInProgressMessage
+  ) {
+    const user: {id: string} = getUser(request);
+    inProgressWorkspaceRepository.createWorkspace(
+      user.id,
+      Number.parseInt(request.params.id),
+      inProgressMessage,
+      _.partial(createWorkspaceCallback, response, next)
+    );
+  }
+
+  function createWorkspaceCallback(
+    response: Response,
+    next: (error: any) => void,
+    error: any,
+    createdId: string
+  ) {
+    if (error) {
+      handleError(error, next);
+    } else {
+      response.status(CREATED);
+      response.json({id: createdId});
+    }
   }
 
   return {

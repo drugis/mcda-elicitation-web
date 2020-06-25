@@ -572,6 +572,8 @@ export default function InProgressWorkspaceRepository(db: any) {
     waterfall(
       [
         _.partial(createProblem, client, userId, problem),
+        // create ordering
+
         // create default subproblem
         // create default scenario
         _.partial(deleteInProgressWorkspace, client, inProgressId)
