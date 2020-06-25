@@ -47,7 +47,11 @@ function generateDistribution(effect: Effect): Distribution {
 export function generateValueCIDistribution(
   effect: IValueCIEffect
 ): INormalDistribution | IValueEffect {
-  if (areBoundsSymmetric(effect)) {
+  if (
+    !effect.isNotEstimableLowerBound &&
+    !effect.isNotEstimableUpperBound &&
+    areBoundsSymmetric(effect)
+  ) {
     return createNormalDistribution(effect);
   } else {
     return createValueDistribution(effect);

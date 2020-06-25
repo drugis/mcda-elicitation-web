@@ -15,7 +15,7 @@ import {Distribution} from '../app/ts/interface/IDistribution';
 import {Effect} from '../app/ts/interface/IEffect';
 import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
-import IValueCellQueryResult from '../app/ts/interface/IValueCellQueryResult';
+import IValueCellQueryResult from '../app/ts/interface/IInputCellQueryResult';
 import IWorkspaceQueryResult from '../app/ts/interface/IWorkspaceQueryResult';
 import {generateUuid} from '../app/ts/ManualInput/ManualInputService/ManualInputService';
 import {
@@ -471,6 +471,8 @@ export default function InProgressWorkspaceRepository(db: any) {
       value,
       lowerBound,
       upperBound,
+      isNotEstimableLowerBound,
+      isNotEstimableUpperBound,
       text,
       mean,
       standardError,
@@ -481,19 +483,41 @@ export default function InProgressWorkspaceRepository(db: any) {
     }: ICellMessage,
     callback: (error: any) => void
   ): void {
-    const query = `INSERT INTO inProgressWorkspaceCell 
-                    (inProgressWorkspaceId, alternativeId, 
-                    dataSourceId, criterionId, val, 
-                    lowerbound, upperbound, txt, 
-                    mean, standardError, alpha, beta, 
-                    cellType, inputType) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+    const query = `INSERT INTO inProgressWorkspaceCell(
+                    inProgressWorkspaceId, 
+                    alternativeId, 
+                    dataSourceId, 
+                    criterionId, 
+                    cellType, 
+                    val, 
+                    lowerbound, 
+                    upperbound, 
+                    isnotestimablelowerbound,
+                    isnotestimableupperbound,
+                    txt, 
+                    mean, 
+                    standardError, 
+                    alpha, 
+                    beta, 
+                    inputType
+                  ) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
                   ON CONFLICT (alternativeId, 
                     dataSourceId, criterionId, cellType)
                   DO UPDATE
-                  SET (val, lowerbound, upperbound, txt, 
-                    mean, standardError, alpha, beta, inputType) = 
-                    ($5, $6, $7, $8, $9, $10, $11, $12, $14)`;
+                  SET (
+                    val, 
+                    lowerbound, 
+                    upperbound, 
+                    isnotestimablelowerbound,
+                    isnotestimableupperbound,
+                    txt, 
+                    mean, 
+                    standardError, 
+                    alpha, 
+                    beta, 
+                    inputType
+                  ) = ($6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
     db.query(
       query,
       [
@@ -501,15 +525,17 @@ export default function InProgressWorkspaceRepository(db: any) {
         alternativeId,
         dataSourceId,
         criterionId,
+        cellType,
         value,
         lowerBound,
         upperBound,
+        isNotEstimableLowerBound,
+        isNotEstimableUpperBound,
         text,
         mean,
         standardError,
         alpha,
         beta,
-        cellType,
         type
       ],
       callback

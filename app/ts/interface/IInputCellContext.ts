@@ -19,6 +19,8 @@ export default interface IEffectCellContext {
   isValidAlpha: boolean;
   beta: string;
   isValidBeta: boolean;
+  isNotEstimableLowerBound: boolean;
+  isNotEstimableUpperBound: boolean;
   setInputType: (inputType: effectType | distributionType) => void;
   setValue: (value: string) => void;
   setIsValidValue: (isValid: boolean) => void;
@@ -35,4 +37,6 @@ export default interface IEffectCellContext {
   setIsValidAlpha: (isValid: boolean) => void;
   setBeta: (beta: string) => void;
   setIsValidBeta: (isValid: boolean) => void;
+  setIsNotEstimableLowerBound: (newNotEstimableLowerBound: boolean) => void;
+  setIsNotEstimableUpperBound: (newNotEstimableUpperBound: boolean) => void;
 }

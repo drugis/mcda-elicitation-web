@@ -12,6 +12,8 @@ export default interface ICellMessage {
   value?: number;
   lowerBound?: number;
   upperBound?: number;
+  isNotEstimableLowerBound?: boolean;
+  isNotEstimableUpperBound?: boolean;
   text?: string;
   mean?: number;
   standardError?: number;

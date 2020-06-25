@@ -38,7 +38,9 @@ export default function EffectCellDialog({
     isValidLowerBound,
     upperBound,
     isValidUpperBound,
-    text
+    text,
+    isNotEstimableLowerBound,
+    isNotEstimableUpperBound
   } = useContext(InputCellContext);
   const {criterion, dataSource} = useContext(DataSourceRowContext);
 
@@ -67,7 +69,9 @@ export default function EffectCellDialog({
           ...newEffect,
           value: Number.parseFloat(value),
           lowerBound: Number.parseFloat(lowerBound),
-          upperBound: Number.parseFloat(upperBound)
+          upperBound: Number.parseFloat(upperBound),
+          isNotEstimableLowerBound: isNotEstimableLowerBound,
+          isNotEstimableUpperBound: isNotEstimableUpperBound
         } as IValueCIEffect);
         break;
       case 'range':

@@ -18,6 +18,8 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
 
   const effect = getEffect(criterion.id, dataSource.id, alternativeId);
 
+  const INVALID_VALUE = 'Invalid value';
+
   useEffect(() => {
     setLabel(createLabel(effect));
   }, [effects, dataSource.unitOfMeasurement]);
@@ -61,7 +63,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
     if (effect.value === undefined) {
       return 'No value entered';
     } else if (valueIsOutofBounds(effect.value)) {
-      return 'Invalid value';
+      return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
       return `${effect.value}%`;
     } else {
@@ -70,16 +72,34 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
   }
 
   function createValueCILabel(effect: IValueCIEffect): string {
-    if (
-      valueIsOutofBounds(effect.lowerBound) ||
-      valueIsOutofBounds(effect.upperBound)
-    ) {
-      return 'Invalid value';
+    if (hasOutOfBoundValue(effect)) {
+      return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `${effect.value}% (${effect.lowerBound}%, ${effect.upperBound}%)`;
+      const lowerBound = effect.isNotEstimableLowerBound
+        ? 'NE'
+        : `${effect.lowerBound}%`;
+      const upperBound = effect.isNotEstimableUpperBound
+        ? 'NE'
+        : `${effect.upperBound}%`;
+      return `${effect.value}% (${lowerBound}, ${upperBound}%)`;
     } else {
-      return `${effect.value} (${effect.lowerBound}, ${effect.upperBound})`;
+      const lowerBound = effect.isNotEstimableLowerBound
+        ? 'NE'
+        : `${effect.lowerBound}`;
+      const upperBound = effect.isNotEstimableUpperBound
+        ? 'NE'
+        : `${effect.upperBound}`;
+      return `${effect.value} (${lowerBound}, ${upperBound})`;
     }
+  }
+
+  function hasOutOfBoundValue(effect: IValueCIEffect): boolean {
+    return (
+      (!effect.isNotEstimableLowerBound &&
+        valueIsOutofBounds(effect.lowerBound)) ||
+      (!effect.isNotEstimableUpperBound &&
+        valueIsOutofBounds(effect.upperBound))
+    );
   }
 
   function createRangeLabel(effect: IRangeEffect): string {
@@ -87,7 +107,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
       valueIsOutofBounds(effect.lowerBound) ||
       valueIsOutofBounds(effect.upperBound)
     ) {
-      return 'Invalid value';
+      return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
       return `[${effect.lowerBound}%, ${effect.upperBound}%]`;
     } else {

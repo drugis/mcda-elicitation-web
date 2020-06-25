@@ -1,4 +1,4 @@
-import {Grid, TextField} from '@material-ui/core';
+import {Grid, TextField, FormControlLabel, Checkbox} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
@@ -10,6 +10,8 @@ export default function UpperBoundInput() {
     value,
     upperBound,
     lowerBound,
+    isNotEstimableUpperBound,
+    setIsNotEstimableUpperBound,
     setUpperBound,
     setIsValidUpperBound,
     inputType
@@ -40,10 +42,28 @@ export default function UpperBoundInput() {
     setIsValidUpperBound(!errorMessage);
   }
 
+  function handleIsNotEstimableChanged() {
+    setIsNotEstimableUpperBound(!isNotEstimableUpperBound);
+  }
   return (
     <>
       <Grid item xs={6}>
-        Upper bound
+        Upper bound (
+        <FormControlLabel
+          style={{marginLeft: '0px'}}
+          value="isNotEstimable"
+          control={
+            <Checkbox
+              id="not-estimable-checkbox"
+              checked={isNotEstimableUpperBound}
+              onChange={handleIsNotEstimableChanged}
+              color="primary"
+            />
+          }
+          label="not estimable"
+          labelPlacement="start"
+        />
+        )
       </Grid>
       <Grid item xs={6}>
         <TextField
@@ -59,6 +79,7 @@ export default function UpperBoundInput() {
           }}
           error={!!inputError}
           helperText={inputError ? inputError : ''}
+          disabled={isNotEstimableUpperBound}
         />
       </Grid>
     </>

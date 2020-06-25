@@ -442,6 +442,8 @@ CREATE TABLE inProgressWorkspaceCell (
   val float,
   lowerbound float,
   upperbound float,
+  isNotEstimableLowerBound boolean,
+  isNotEstimableUpperBound boolean,
   txt varchar,
   mean float,
   standardError float,

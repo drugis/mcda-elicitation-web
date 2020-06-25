@@ -3,7 +3,7 @@ import {ManualInputContext} from '../../../../../ManualInputContext';
 import DistributionCell from './DistributionCell/DistributionCell';
 import EffectCell from './EffectCell/EffectCell';
 
-export default function ValueCell({alternativeId}: {alternativeId: string}) {
+export default function InputCell({alternativeId}: {alternativeId: string}) {
   const {tableInputMode} = useContext(ManualInputContext);
 
   return tableInputMode === 'effect' ? (

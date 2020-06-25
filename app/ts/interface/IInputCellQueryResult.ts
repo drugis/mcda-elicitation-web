@@ -2,7 +2,7 @@ import {TableInputMode} from '../type/TableInputMode';
 import {distributionType} from './IDistribution';
 import {effectType} from './IEffect';
 
-export default interface IValueCellQueryResult {
+export default interface IInputCellQueryResult {
   inprogressworkspaceid: number;
   alternativeid: string;
   datasourceid: string;
@@ -10,6 +10,8 @@ export default interface IValueCellQueryResult {
   val: number;
   lowerbound: number;
   upperbound: number;
+  isnotestimablelowerbound: boolean;
+  isnotestimableupperbound: boolean;
   txt: string;
   mean: number;
   standarderror: number;

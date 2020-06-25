@@ -9,7 +9,7 @@ import {Distribution} from '../app/ts/interface/IDistribution';
 import {Effect} from '../app/ts/interface/IEffect';
 import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
-import IValueCellQueryResult from '../app/ts/interface/IValueCellQueryResult';
+import IInputCellQueryResult from '../app/ts/interface/IInputCellQueryResult';
 import IWorkspaceQueryResult from '../app/ts/interface/IWorkspaceQueryResult';
 
 export function mapWorkspace(queryResult: IWorkspaceQueryResult) {
@@ -80,7 +80,7 @@ export function mapDataSources(
 }
 
 export function mapCellValues(
-  cellValues: IValueCellQueryResult[]
+  cellValues: IInputCellQueryResult[]
 ): [
   Record<string, Record<string, Effect>>,
   Record<string, Record<string, Distribution>>
@@ -96,7 +96,7 @@ export function mapCellValues(
 }
 
 function createEffectRecords(
-  effectQueryResults: IValueCellQueryResult[]
+  effectQueryResults: IInputCellQueryResult[]
 ): Record<string, Record<string, Effect>> {
   return _.reduce(
     effectQueryResults,
@@ -113,7 +113,7 @@ function createEffectRecords(
   );
 }
 
-function mapEffect(effectQueryResult: IValueCellQueryResult): Effect {
+function mapEffect(effectQueryResult: IInputCellQueryResult): Effect {
   const sharedProperties = {
     alternativeId: effectQueryResult.alternativeid,
     dataSourceId: effectQueryResult.datasourceid,
@@ -132,6 +132,8 @@ function mapEffect(effectQueryResult: IValueCellQueryResult): Effect {
         lowerBound: effectQueryResult.lowerbound,
         upperBound: effectQueryResult.upperbound,
         type: effectQueryResult.inputtype,
+        isNotEstimableLowerBound: effectQueryResult.isnotestimablelowerbound,
+        isNotEstimableUpperBound: effectQueryResult.isnotestimableupperbound,
         ...sharedProperties
       };
     case 'range':
@@ -156,7 +158,7 @@ function mapEffect(effectQueryResult: IValueCellQueryResult): Effect {
 }
 
 function createDistributionRecords(
-  distributionQueryResults: IValueCellQueryResult[]
+  distributionQueryResults: IInputCellQueryResult[]
 ): Record<string, Record<string, Distribution>> {
   return _.reduce(
     distributionQueryResults,
@@ -174,7 +176,7 @@ function createDistributionRecords(
 }
 
 function mapDistribution(
-  distributionQueryResult: IValueCellQueryResult
+  distributionQueryResult: IInputCellQueryResult
 ): Distribution {
   const sharedProperties = {
     alternativeId: distributionQueryResult.alternativeid,

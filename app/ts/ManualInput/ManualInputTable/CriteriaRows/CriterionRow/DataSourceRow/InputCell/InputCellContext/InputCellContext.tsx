@@ -36,6 +36,12 @@ export function InputCellContextProviderComponent({
   const [isValidStandardError, setIsValidStandardError] = useState(false);
   const [isValidAlpha, setIsValidAlpha] = useState(false);
   const [isValidBeta, setIsValidBeta] = useState(false);
+  const [isNotEstimableLowerBound, setIsNotEstimableLowerBound] = useState(
+    false
+  );
+  const [isNotEstimableUpperBound, setIsNotEstimableUpperBound] = useState(
+    false
+  );
 
   useEffect(() => {
     setInputType(effectOrDistribution.type);
@@ -49,6 +55,12 @@ export function InputCellContextProviderComponent({
         setValue(`${effectOrDistribution.value}`);
         setLowerBound(`${effectOrDistribution.lowerBound}`);
         setUpperBound(`${effectOrDistribution.upperBound}`);
+        setIsNotEstimableLowerBound(
+          !!effectOrDistribution.isNotEstimableLowerBound
+        );
+        setIsNotEstimableUpperBound(
+          !!effectOrDistribution.isNotEstimableUpperBound
+        );
         break;
       case 'range':
         setLowerBound(`${effectOrDistribution.lowerBound}`);
@@ -94,6 +106,8 @@ export function InputCellContextProviderComponent({
         isValidAlpha: isValidAlpha,
         beta: beta,
         isValidBeta: isValidBeta,
+        isNotEstimableLowerBound: isNotEstimableLowerBound,
+        isNotEstimableUpperBound: isNotEstimableUpperBound,
         setInputType: setInputType,
         setValue: setValue,
         setIsValidValue: setIsValidValue,
@@ -109,7 +123,9 @@ export function InputCellContextProviderComponent({
         setAlpha: setAlpha,
         setIsValidAlpha: setIsValidAlpha,
         setBeta: setBeta,
-        setIsValidBeta: setIsValidBeta
+        setIsValidBeta: setIsValidBeta,
+        setIsNotEstimableLowerBound: setIsNotEstimableLowerBound,
+        setIsNotEstimableUpperBound: setIsNotEstimableUpperBound
       }}
     >
       {children}
