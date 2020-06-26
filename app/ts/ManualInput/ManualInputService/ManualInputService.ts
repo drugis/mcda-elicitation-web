@@ -35,7 +35,7 @@ export function createDistributions(
   return distributionsCopy;
 }
 
-function generateDistribution(effect: Effect): Distribution {
+export function generateDistribution(effect: Effect): Distribution {
   switch (effect.type) {
     case 'valueCI':
       return generateValueCIDistribution(effect);

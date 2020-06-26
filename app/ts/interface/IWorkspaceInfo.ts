@@ -4,6 +4,6 @@ export default interface IWorkspaceInfo {
   id: number;
   owner: number;
   problem: IProblem;
-  defaultSubproblemId: number;
+  defaultSubProblemId: number;
   defaultScenarioId: number;
 }

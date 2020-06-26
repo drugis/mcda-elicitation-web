@@ -3,6 +3,7 @@ import Axios, {AxiosResponse} from 'axios';
 import React, {useContext} from 'react';
 import {ErrorContext} from '../../Error/ErrorContext';
 import IError from '../../interface/IError';
+import IWorkspaceInfo from '../../interface/IWorkspaceInfo';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function DoneButton() {
@@ -12,7 +13,9 @@ export default function DoneButton() {
   function handleDoneClick() {
     Axios.post(`api/v2/inProgress/${id}/doCreateWorkspace`)
       .then((response: AxiosResponse) => {
-        console.log(response.data.id);
+        const workspaceInfo: IWorkspaceInfo = response.data;
+        const url = `/#!/workspaces/${workspaceInfo.id}/problems/${workspaceInfo.defaultSubProblemId}/scenarios/${workspaceInfo.defaultScenarioId}/evidence`;
+        window.location.assign(url);
       })
       .catch((error: IError) => {
         setError(error.message + ', ' + error.response.data);

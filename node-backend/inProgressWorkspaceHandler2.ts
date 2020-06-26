@@ -223,7 +223,6 @@ export default function InProgressHandler(db: any) {
         title: problem.title
       }
     };
-    logger.debug('yo');
     db.runInTransaction(
       (
         client: any,
