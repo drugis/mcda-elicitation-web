@@ -576,7 +576,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
         // create default subproblem
         // create default scenario
-        _.partial(deleteInProgressWorkspace, client, inProgressId)
+        _.partial(del, client, inProgressId)
       ],
       transactionCallback
     );
@@ -600,21 +600,19 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
-  function deleteInProgressWorkspace(
+  function del(
     client: any,
     inProgressId: number,
-    workspaceId: number,
-    callback: (error: any | null, workspaceId: number) => void
+    callback: (error: any) => void
   ) {
     const query = 'DELETE FROM inprogressworkspace WHERE id=$1';
-    client.query(query, [inProgressId], (error: any) => {
-      callback(error, error || workspaceId);
-    });
+    client.query(query, [inProgressId], callback);
   }
 
   return {
     create: create,
     get: get,
+    delete: del,
     updateWorkspace: updateWorkspace,
     upsertCriterion: upsertCriterion,
     deleteCriterion: deleteCriterion,

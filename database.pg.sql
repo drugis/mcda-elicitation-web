@@ -219,8 +219,8 @@ COMMIT;
 --rollback ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
 --rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
 --rollback COMMIT;
---changeset keijserj:20
 
+--changeset keijserj:20
 START TRANSACTION;
 
 ALTER TABLE scenario
@@ -235,8 +235,8 @@ COMMIT;
 --rollback ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
 --rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
 --rollback COMMIT;
---changeset keijserj:21
 
+--changeset keijserj:21
 START TRANSACTION;
 
 WITH effectsDisplay AS (
@@ -329,8 +329,8 @@ COMMIT;
 --rollback UPDATE workspacesettings
 --rollback SET settings = settings #-'{settings, displayMode}';
 --rollback COMMIT;
---changeset keijserj:22
 
+--changeset keijserj:22
 ALTER TABLE workspace
   DROP CONSTRAINT workspace_defaultsubproblemid_fkey;
 
@@ -339,8 +339,8 @@ ALTER TABLE workspace
 
 --rollback ALTER TABLE workspace DROP CONSTRAINT workspace_defaultsubproblemid_fkey;
 --rollback ALTER TABLE workspace ADD CONSTRAINT workspace_defaultsubproblemid_fkey FOREIGN KEY (defaultSubproblemId) REFERENCES subproblem(id) ON DELETE CASCADE;
---changeset zalitek:23
 
+--changeset zalitek:23
 DROP TABLE accountroles;
 
 ALTER TABLE inprogressworkspace
@@ -364,8 +364,8 @@ ALTER TABLE workspace
 --rollback ALTER TABLE inprogressworkspace ADD CONSTRAINT inprogressworkspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
 --rollback ALTER TABLE workspace DROP CONSTRAINT workspace_owner_fkey;
 --rollback ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
---changeset reidd:24
 
+--changeset reidd:24
 ALTER TABLE inProgressWorkspace
   ADD COLUMN title varchar NOT NULL DEFAULT '';
 

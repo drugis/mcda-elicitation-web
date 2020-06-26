@@ -1,17 +1,23 @@
+import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
+import _ from 'lodash';
 import IAlternativeCommand from '../app/ts/interface/IAlternativeCommand';
 import ICriterionCommand from '../app/ts/interface/ICriterionCommand';
 import IDataSourceCommand from '../app/ts/interface/IDataSourceCommand';
+import IError from '../app/ts/interface/IError';
 import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
-import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
-import {getUser, handleError} from './util';
-import _ from 'lodash';
-import workspaceHandler from './workspaceHandler';
+import IWorkspaceInfo from '../app/ts/interface/IWorkspaceInfo';
+import IProblem from '../app/ts/interface/Problem/IProblem';
 import {createProblem} from './inProgressRepositoryService';
+import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
+import {logger} from './loggerTS';
+import {getUser, handleError} from './util';
+import WorkspaceHandler from './workspaceHandler';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
+  const workspaceHandler = WorkspaceHandler(db);
 
   function create(request: Request, response: Response, next: () => {}): void {
     const user: {id: string} = getUser(request);
@@ -174,61 +180,92 @@ export default function InProgressHandler(db: any) {
     response: Response,
     next: (error: any) => void
   ): void {
-    inProgressWorkspaceRepository.get(
-      Number.parseInt(request.params.id),
-      _.partial(getInProgressCallback, request, response, next)
-    );
-  }
-
-  function getInProgressCallback(
-    request: Request,
-    response: Response,
-    next: (error: any) => void,
-    error: any,
-    inProgressMessage: IInProgressMessage
-  ) {
-    if (error) {
-      next(error);
-    } else {
-      const newRequest = {
-        ...request,
-        body: {
-          title: inProgressMessage.workspace.title,
-          problem: createProblem(inProgressMessage)
+    const inProgressId = Number.parseInt(request.params.id);
+    waterfall(
+      [
+        _.partial(inProgressWorkspaceRepository.get, inProgressId),
+        createProblemFromInProgress,
+        _.partial(
+          createWorkspaceAndDeleteInProgress,
+          request.user,
+          inProgressId
+        )
+      ],
+      (error: IError | null, createdWorkspaceInfo: IWorkspaceInfo): void => {
+        if (error) {
+          logger.debug('error creating workspace from in progress ' + error);
+          next(error);
+        } else {
+          response.status(CREATED);
+          response.json(createdWorkspaceInfo);
         }
-      };
-      workspaceHandler(db).create(newRequest, response, next);
-      // createNewWorkspace(request, response, next, inProgressMessage);
-    }
-  }
-
-  function createNewWorkspace(
-    request: Request,
-    response: Response,
-    next: (error: any) => void,
-    inProgressMessage: IInProgressMessage
-  ) {
-    const user: {id: string} = getUser(request);
-    inProgressWorkspaceRepository.createWorkspace(
-      user.id,
-      Number.parseInt(request.params.id),
-      inProgressMessage,
-      _.partial(createWorkspaceCallback, response, next)
+      }
     );
   }
 
-  function createWorkspaceCallback(
-    response: Response,
-    next: (error: any) => void,
-    error: any,
-    createdId: string
+  function createProblemFromInProgress(
+    inProgressMessage: IInProgressMessage,
+    callback: (error: any, problem?: IProblem) => void
   ) {
-    if (error) {
-      handleError(error, next);
-    } else {
-      response.status(CREATED);
-      response.json({id: createdId});
-    }
+    callback(null, createProblem(inProgressMessage));
+  }
+
+  function createWorkspaceAndDeleteInProgress(
+    user: any,
+    inProgressId: number,
+    problem: IProblem,
+    overallCallback: (error: IError | null, createdWorkspaceInfo?: any) => void
+  ): void {
+    const fakeRequest = {
+      user: user,
+      body: {
+        problem: problem,
+        title: problem.title
+      }
+    };
+    logger.debug('yo');
+    db.runInTransaction(
+      (
+        client: any,
+        transactionCallback: (
+          error: IError | null,
+          createdWorkspaceInfo?: IWorkspaceInfo
+        ) => void
+      ) => {
+        waterfall(
+          [
+            _.partial(
+              workspaceHandler.createWorkspaceTransaction,
+              fakeRequest,
+              client
+            ),
+            _.partial(deleteinprogress, client, inProgressId)
+          ],
+          transactionCallback
+        );
+      },
+      (error: IError | null, createdWorkspaceInfo?: IWorkspaceInfo): void => {
+        overallCallback(error, error || createdWorkspaceInfo);
+      }
+    );
+  }
+
+  function deleteinprogress(
+    client: any,
+    inProgressId: number,
+    createdWorkspaceInfo: IWorkspaceInfo,
+    callback: (
+      error: IError | null,
+      createWorkspaceInfo?: IWorkspaceInfo
+    ) => void
+  ): void {
+    inProgressWorkspaceRepository.delete(
+      client,
+      inProgressId,
+      (error: IError | null) => {
+        callback(error, error ? null : createdWorkspaceInfo);
+      }
+    );
   }
 
   return {

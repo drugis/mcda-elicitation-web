@@ -2,13 +2,37 @@
 var logger = require('./logger');
 const _ = require('lodash');
 
-module.exports = function(db) {
-  function create(workspaceId, subproblemId, title, state, callback) {
+module.exports = function (db) {
+  function createInTransaction(
+    client,
+    workspaceId,
+    subproblemId,
+    title,
+    state,
+    callback
+  ) {
+    create(client, workspaceId, subproblemId, title, state, callback);
+  }
+
+  function createDirectly(workspaceId, subproblemId, title, state, callback) {
+    create(db, workspaceId, subproblemId, title, state, callback);
+  }
+
+  function create(
+    clientOrDB,
+    workspaceId,
+    subproblemId,
+    title,
+    state,
+    callback
+  ) {
     logger.debug('Creating scenario');
-    const query = 'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
-    db.query(query,
+    const query =
+      'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
+    clientOrDB.query(
+      query,
       [workspaceId, subproblemId, title, state],
-      function(error, result) {
+      function (error, result) {
         callback(error, error || result.rows[0]);
       }
     );
@@ -16,45 +40,44 @@ module.exports = function(db) {
 
   function query(workspaceId, callback) {
     logger.debug('Getting scenarios for workspace: ' + workspaceId);
-    const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
-    db.query(
-      query,
-      [workspaceId],
-      function(error, result) {
-        callback(error, error || result.rows);
-      });
+    const query =
+      'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
+    db.query(query, [workspaceId], function (error, result) {
+      callback(error, error || result.rows);
+    });
   }
 
   function queryForSubProblem(workspaceId, subproblemId, callback) {
-    logger.debug('getting /workspaces/' + workspaceId + '/subProblem/' + subproblemId + '/scenarios');
-    const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2';
-    db.query(
-      query,
-      [workspaceId, subproblemId],
-      function(error, result) {
-        callback(error, error || result.rows);
-      });
+    logger.debug(
+      'getting /workspaces/' +
+        workspaceId +
+        '/subProblem/' +
+        subproblemId +
+        '/scenarios'
+    );
+    const query =
+      'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2';
+    db.query(query, [workspaceId, subproblemId], function (error, result) {
+      callback(error, error || result.rows);
+    });
   }
 
   function get(scenarioId, callback) {
     logger.debug('Getting scenario: ' + scenarioId);
-    const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
-    db.query(
-      query,
-      [scenarioId],
-      function(error, result) {
-        if (error) {
-          callback(error);
-        } else if (!result.rows.length) {
-          callback({
-            message: 'No scenario with ID ' + scenarioId + ' found.',
-            statusCode: 404
-          });
-        } else {
-          callback(null, result.rows[0]);
-        }
+    const query =
+      'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
+    db.query(query, [scenarioId], function (error, result) {
+      if (error) {
+        callback(error);
+      } else if (!result.rows.length) {
+        callback({
+          message: 'No scenario with ID ' + scenarioId + ' found.',
+          statusCode: 404
+        });
+      } else {
+        callback(null, result.rows[0]);
       }
-    );
+    });
   }
 
   function update(state, title, scenarioId, callback) {
@@ -62,12 +85,13 @@ module.exports = function(db) {
     const query = 'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
     db.query(
       query,
-      [{
-        problem: state.problem,
-        prefs: state.prefs,
-        legend: state.legend,
-        uncertaintyOptions: state.uncertaintyOptions
-      },
+      [
+        {
+          problem: state.problem,
+          prefs: state.prefs,
+          legend: state.legend,
+          uncertaintyOptions: state.uncertaintyOptions
+        },
         title,
         scenarioId
       ],
@@ -75,29 +99,22 @@ module.exports = function(db) {
     );
   }
 
-  function deleteScenario(subproblemId, callback) {
+  function deleteScenario(client, subproblemId, callback) {
     const query = 'DELETE FROM scenario WHERE id = $1';
-    db.query(
-      query,
-      [subproblemId],
-      callback
-    );
+    client.query(query, [subproblemId], callback);
   }
 
   function getScenarioIdsForSubproblem(subproblemId, callback) {
     logger.debug('Getting scenario ids for: ' + subproblemId);
     const query = 'SELECT id FROM scenario WHERE subproblemId = $1';
-    db.query(
-      query,
-      [subproblemId],
-      function(error, result) {
-        callback(error, error || _.map(result.rows, 'id'));
-      }
-    );
+    db.query(query, [subproblemId], function (error, result) {
+      callback(error, error || _.map(result.rows, 'id'));
+    });
   }
 
   return {
-    create: create,
+    createDirectly: createDirectly,
+    createInTransaction: createInTransaction,
     query: query,
     queryForSubProblem: queryForSubProblem,
     get: get,

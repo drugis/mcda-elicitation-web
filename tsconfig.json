@@ -10,5 +10,5 @@
     "allowJs": true,
     "esModuleInterop": true
   },
-  "exclude": ["./node-backend/*", "*.js","./node_modules"]
+  "exclude": ["./node-backend/*", "*.js", "./node_modules"]
 }

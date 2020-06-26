@@ -5,45 +5,45 @@ const async = require('async');
 const util = require('./util');
 const _ = require('lodash');
 
-module.exports = function(db) {
+module.exports = function (db) {
   const ScenarioRepository = require('./scenarioRepository')(db);
   const WorkspaceRepository = require('./workspaceRepository')(db);
 
   function query(request, response, next) {
-    ScenarioRepository.query(
-      request.params.workspaceId,
-      function(error, result) {
-        if (error) {
-          next(error);
-        } else {
-          response.json(result);
-        }
-      });
+    ScenarioRepository.query(request.params.workspaceId, function (
+      error,
+      result
+    ) {
+      if (error) {
+        next(error);
+      } else {
+        response.json(result);
+      }
+    });
   }
 
   function queryForSubProblem(request, response, next) {
     ScenarioRepository.queryForSubProblem(
       request.params.workspaceId,
       request.params.subProblemId,
-      function(error, result) {
+      function (error, result) {
         if (error) {
           next(error);
         } else {
           response.json(result);
         }
-      });
+      }
+    );
   }
 
   function get(request, response, next) {
-    ScenarioRepository.get(
-      request.params.id,
-      function(error, result) {
-        if (error) {
-          next(error);
-        } else {
-          response.json(result);
-        }
-      });
+    ScenarioRepository.get(request.params.id, function (error, result) {
+      if (error) {
+        next(error);
+      } else {
+        response.json(result);
+      }
+    });
   }
 
   function create(request, response, next) {
@@ -55,7 +55,7 @@ module.exports = function(db) {
         problem: request.body.state.problem,
         prefs: request.body.state.prefs
       },
-      function(error, result) {
+      function (error, result) {
         if (error) {
           next(error);
         } else {
@@ -71,63 +71,98 @@ module.exports = function(db) {
       request.body.state,
       request.body.title,
       request.body.id,
-      function(error) {
+      function (error) {
         if (error) {
           next(error);
         } else {
           response.json(request.body);
         }
-      });
+      }
+    );
   }
 
   function deleteScenario(request, response, next) {
     const subproblemId = request.params.subproblemId;
     const scenarioId = request.params.id;
     const workspaceId = request.params.workspaceId;
-    logger.debug('Deleting workspace/' + workspaceId + '/problem/' + subproblemId + '/scenario/' + scenarioId);
-    db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, scenarioId), function(error) {
-      if (error) {
-        util.handleError(error, next);
-      } else {
-        logger.debug('Done deleting scenario: ' + scenarioId);
-        response.sendStatus(httpStatus.OK);
+    logger.debug(
+      'Deleting workspace/' +
+        workspaceId +
+        '/problem/' +
+        subproblemId +
+        '/scenario/' +
+        scenarioId
+    );
+    db.runInTransaction(
+      _.partial(deleteTransaction, workspaceId, subproblemId, scenarioId),
+      function (error) {
+        if (error) {
+          util.handleError(error, next);
+        } else {
+          logger.debug('Done deleting scenario: ' + scenarioId);
+          response.sendStatus(httpStatus.OK);
+        }
       }
-    });
+    );
   }
 
-  function deleteTransaction(workspaceId, subproblemId, scenarioId, client, transactionCallback) {
-    async.waterfall([
-      _.partial(ScenarioRepository.getScenarioIdsForSubproblem, subproblemId),
-      _.partial(getDefaultScenario, workspaceId),
-      _.partial(setDefaultScenario, workspaceId, scenarioId),
-      _.partial(ScenarioRepository.delete, scenarioId)
-    ], transactionCallback);
+  function deleteTransaction(
+    workspaceId,
+    subproblemId,
+    scenarioId,
+    client,
+    transactionCallback
+  ) {
+    async.waterfall(
+      [
+        _.partial(ScenarioRepository.getScenarioIdsForSubproblem, subproblemId),
+        _.partial(getDefaultScenario, workspaceId),
+        _.partial(setDefaultScenario, client, workspaceId, scenarioId),
+        _.partial(ScenarioRepository.delete, client, scenarioId)
+      ],
+      transactionCallback
+    );
   }
 
   function getDefaultScenario(workspaceId, scenarioIds, callback) {
     if (scenarioIds.length === 1) {
       callback('Cannot delete the only scenario for subproblem');
     } else {
-      WorkspaceRepository.getDefaultScenarioId(workspaceId, function(error, result) {
+      WorkspaceRepository.getDefaultScenarioId(workspaceId, function (
+        error,
+        result
+      ) {
         callback(error, result, scenarioIds);
       });
     }
   }
 
-  function setDefaultScenario(workspaceId, scenarioId, defaultScenarioId, scenarioIds, callback) {
+  function setDefaultScenario(
+    client,
+    workspaceId,
+    scenarioId,
+    defaultScenarioId,
+    scenarioIds,
+    callback
+  ) {
     if (defaultScenarioId + '' === scenarioId) {
       const newDefaultScenario = getNewDefaultScenario(scenarioIds, scenarioId);
-      WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, (error) => {
-        // discarding extra result arguments to make waterfall cleaner
-        callback(error);
-      });
+      WorkspaceRepository.setDefaultScenario(
+        client,
+        workspaceId,
+        newDefaultScenario,
+        (error) => {
+          // discarding extra result arguments to make waterfall cleaner
+          callback(error);
+        }
+      );
     } else {
       callback();
     }
   }
 
   function getNewDefaultScenario(scenarioIds, currentDefaultScenarioId) {
-    return _.reject(scenarioIds, function(id) {
+    return _.reject(scenarioIds, function (id) {
       return id + '' === currentDefaultScenarioId;
     })[0];
   }
