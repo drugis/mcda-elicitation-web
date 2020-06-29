@@ -1,17 +1,16 @@
 import React from 'react';
-import './style.css';
 
 export default function InlineTooltip() {
   return (
-    <div
-      className="inline-tooltip-container"
+    <span
       style={{
         width: 'inherit',
         height: 15,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: 'grey'
       }}
     >
-      <span className="inline-tooltip">click to edit</span>
-    </div>
+      click to edit
+    </span>
   );
 }

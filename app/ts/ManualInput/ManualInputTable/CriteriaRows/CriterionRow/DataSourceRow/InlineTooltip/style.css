@@ -1,8 +1,0 @@
-.inline-tooltip {
-  display: none;
-  color: gray;
-}
-
-.inline-tooltip-container:hover .inline-tooltip {
-  display: block;
-}

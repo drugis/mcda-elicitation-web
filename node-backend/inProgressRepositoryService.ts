@@ -553,3 +553,20 @@ function buildDistributionPerformance(
       return emptyPermormace;
   }
 }
+
+export function createOrdering(
+  criteria: Record<string, IProblemCriterion>,
+  alternatives: Record<string, {title: string}>
+) {
+  return {
+    criteria: _.keys(criteria),
+    alternatives: _.keys(alternatives),
+    dataSources: _.reduce(
+      criteria,
+      function (accum, criterion) {
+        return accum.concat(_.map(criterion.dataSources, 'id'));
+      },
+      []
+    )
+  };
+}

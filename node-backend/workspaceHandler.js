@@ -3,6 +3,7 @@ var util = require('./util');
 var logger = require('./logger');
 var async = require('async');
 var httpStatus = require('http-status-codes');
+var _ = require('lodash');
 
 module.exports = function (db) {
   var WorkspaceRepository = require('./workspaceRepository')(db);

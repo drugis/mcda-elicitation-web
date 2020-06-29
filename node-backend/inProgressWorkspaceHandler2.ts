@@ -9,15 +9,17 @@ import IError from '../app/ts/interface/IError';
 import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import IWorkspaceInfo from '../app/ts/interface/IWorkspaceInfo';
 import IProblem from '../app/ts/interface/Problem/IProblem';
-import {createProblem} from './inProgressRepositoryService';
+import {createOrdering, createProblem} from './inProgressRepositoryService';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
 import {logger} from './loggerTS';
+import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
   const workspaceHandler = WorkspaceHandler(db);
+  const orderingRepository = OrderingRepository(db);
 
   function create(request: Request, response: Response, next: () => {}): void {
     const user: {id: string} = getUser(request);
@@ -189,7 +191,8 @@ export default function InProgressHandler(db: any) {
           createWorkspaceAndDeleteInProgress,
           request.user,
           inProgressId
-        )
+        ),
+        _.partial(insertOrdering)
       ],
       (error: IError | null, createdWorkspaceInfo: IWorkspaceInfo): void => {
         if (error) {
@@ -198,6 +201,30 @@ export default function InProgressHandler(db: any) {
         } else {
           response.status(CREATED);
           response.json(createdWorkspaceInfo);
+        }
+      }
+    );
+  }
+
+  function insertOrdering(
+    createdWorkspaceInfo: IWorkspaceInfo,
+    callback: (
+      error: IError | null,
+      createdWorkspaceInfo?: IWorkspaceInfo
+    ) => void
+  ) {
+    const ordering = createOrdering(
+      createdWorkspaceInfo.problem.criteria,
+      createdWorkspaceInfo.problem.alternatives
+    );
+    orderingRepository.update(
+      createdWorkspaceInfo.id,
+      ordering,
+      (error: IError) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, createdWorkspaceInfo);
         }
       }
     );
@@ -214,7 +241,10 @@ export default function InProgressHandler(db: any) {
     user: any,
     inProgressId: number,
     problem: IProblem,
-    overallCallback: (error: IError | null, createdWorkspaceInfo?: any) => void
+    overallCallback: (
+      error: IError | null,
+      createdWorkspaceInfo?: IWorkspaceInfo
+    ) => void
   ): void {
     const fakeRequest = {
       user: user,
@@ -244,7 +274,7 @@ export default function InProgressHandler(db: any) {
         );
       },
       (error: IError | null, createdWorkspaceInfo?: IWorkspaceInfo): void => {
-        overallCallback(error, error || createdWorkspaceInfo);
+        overallCallback(error, error ? null : createdWorkspaceInfo);
       }
     );
   }
