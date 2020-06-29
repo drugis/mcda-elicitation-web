@@ -8,11 +8,11 @@ chai.use(spies);
 const expect = chai.expect;
 
 var repoStub = {
-  create: () => { },
-  update: () => { },
-  get: () => { },
-  query: () => { },
-  delete: () => { }
+  create: () => {},
+  update: () => {},
+  get: () => {},
+  query: () => {},
+  delete: () => {}
 };
 const dbArgumement = {
   './inProgressWorkspaceRepository': () => {
@@ -20,9 +20,9 @@ const dbArgumement = {
   }
 };
 const inProgressWorkspaceHandler = proxyquire(
-  '../node-backend/inProgressWorkspaceHandler',
-  dbArgumement)({});
-
+  '../tscomp/node-backend/inProgressWorkspaceHandler',
+  dbArgumement
+)({});
 
 describe('the in progress workspace handler', () => {
   const error = 'error';
@@ -42,7 +42,7 @@ describe('the in progress workspace handler', () => {
     });
 
     const userId = 132;
-    const problem = { prop: 'val' };
+    const problem = {prop: 'val'};
     const request = {
       user: {
         id: userId
@@ -61,11 +61,11 @@ describe('the in progress workspace handler', () => {
       inProgressWorkspaceHandler.create(request, response, next);
 
       sinon.assert.calledWith(create, userId, problem);
-      expect(response.json).to.have.been.called.with({ id: createdId });
+      expect(response.json).to.have.been.called.with({id: createdId});
       expect(response.status).to.have.been.called.with(201);
     });
 
-    it('should not call reponse.json if there\'s an error', function() {
+    it("should not call reponse.json if there's an error", function () {
       create.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.create(request, response, next);
       sinon.assert.calledWith(create, userId, problem);
@@ -82,7 +82,6 @@ describe('the in progress workspace handler', () => {
     var update;
     var response = {};
 
-
     beforeEach(() => {
       response.sendStatus = chai.spy();
       update = sinon.stub(repoStub, 'update');
@@ -92,7 +91,7 @@ describe('the in progress workspace handler', () => {
       update.restore();
     });
 
-    const problem = { prop: 'val' };
+    const problem = {prop: 'val'};
     const problemId = 1;
     const request = {
       body: problem,
@@ -111,7 +110,7 @@ describe('the in progress workspace handler', () => {
       expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.sendStatus if there\'s an error', function() {
+    it("should not call reponse.sendStatus if there's an error", function () {
       update.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.update(request, response, next);
       sinon.assert.calledWith(update, problem, problemId);
@@ -126,7 +125,6 @@ describe('the in progress workspace handler', () => {
   describe('delete', () => {
     var del;
     var response = {};
-
 
     beforeEach(() => {
       response.sendStatus = chai.spy();
@@ -154,7 +152,7 @@ describe('the in progress workspace handler', () => {
       expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.sendStatus if there\'s an error', function() {
+    it("should not call reponse.sendStatus if there's an error", function () {
       del.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.delete(request, response, next);
       sinon.assert.calledWith(del, problemId);
@@ -190,7 +188,7 @@ describe('the in progress workspace handler', () => {
     it('should call the in progress workspace repository with the correct arguments', () => {
       const workspaceId = 321;
       const result = {
-          id: workspaceId
+        id: workspaceId
       };
       get.onCall(0).yields(null, result);
 
@@ -200,7 +198,7 @@ describe('the in progress workspace handler', () => {
       expect(response.json).to.have.been.called.with(result);
     });
 
-    it('should not call reponse.json if there\'s an error', function() {
+    it("should not call reponse.json if there's an error", function () {
       get.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.get(request, response, next);
       sinon.assert.calledWith(get, problemId);
@@ -235,9 +233,11 @@ describe('the in progress workspace handler', () => {
 
     it('should call the in progress workspace repository with the correct arguments', () => {
       const workspaceId = 321;
-      const result = [{
+      const result = [
+        {
           id: workspaceId
-        }];
+        }
+      ];
       query.onCall(0).yields(null, result);
 
       inProgressWorkspaceHandler.query(request, response, next);
@@ -246,7 +246,7 @@ describe('the in progress workspace handler', () => {
       expect(response.json).to.have.been.called.with(result);
     });
 
-    it('should not call reponse.json if there\'s an error', function() {
+    it("should not call reponse.json if there's an error", function () {
       query.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.query(request, response, next);
       sinon.assert.calledWith(query, userId);

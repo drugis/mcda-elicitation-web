@@ -43,6 +43,7 @@
     "signin": "drugis/signin#0.1.6",
     "sinon": "^7.5.0",
     "startup-diagnostics": "drugis/startup-diagnostics#1.1.1",
+    "ts-mock-imports": "^1.3.0",
     "tsc": "^1.20150623.0",
     "winston": "~3.2.1"
   },
