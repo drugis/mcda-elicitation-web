@@ -1,22 +1,13 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import INormalDistribution from '@shared/interface/INormalDistribution';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import IValueEffect from '@shared/interface/IValueEffect';
 import _ from 'lodash';
-import IAlternative from '../../interface/IAlternative';
-import ICriterion from '../../interface/ICriterion';
-import {Distribution} from '../../interface/IDistribution';
-import {Effect} from '../../interface/IEffect';
-import INormalDistribution from '../../interface/INormalDistribution';
-import IValueCIEffect from '../../interface/IValueCIEffect';
-import IValueEffect from '../../interface/IValueEffect';
 import {hasInvalidCell} from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
-
-export function generateUuid(): string {
-  let pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-  return pattern.replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
 
 export function createDistributions(
   distributions: Record<string, Record<string, Distribution>>,

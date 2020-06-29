@@ -1,7 +1,7 @@
 import {IconButton, Tooltip} from '@material-ui/core';
 import AddBox from '@material-ui/icons/AddBox';
+import ICriterion from '@shared/interface/ICriterion';
 import React, {useContext} from 'react';
-import ICriterion from '../../../../../interface/ICriterion';
 import {ManualInputContext} from '../../../../ManualInputContext';
 
 export default function AddDataSourceButton({

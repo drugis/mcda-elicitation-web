@@ -2,6 +2,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+
 let basePath = path.join(__dirname, '/');
 let fs = require('fs');
 const MATOMO_VERSION = process.env.MATOMO_VERSION
@@ -18,13 +20,18 @@ let config = {
 
   output: {
     // Output directory
-    path: basePath + '/dist/',
+    path: basePath + '/tscomp/dist/',
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js'
   },
 
   module: {
     rules: [
+      {
+        test: /\.ts(x?)$/,
+        use: 'ts-loader',
+        exclude: [/frontend-test/, /node_modules/, /node-backend/, /tscomp/]
+      },
       {
         test: /\.js$/,
         use: ['babel-loader', 'angular1-templateurl-loader'],
@@ -35,11 +42,6 @@ let config = {
           /node-backend/,
           /.*interface.*/
         ]
-      },
-      {
-        test: /\.ts(x?)$/,
-        use: 'ts-loader',
-        exclude: [/frontend-test/, /node_modules/, /node-backend/]
       },
       {
         test: /\.html$/,
@@ -74,6 +76,11 @@ let config = {
   },
 
   resolve: {
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: './tsconfig.json'
+      })
+    ],
     alias: {
       'schema-basePath': basePath + '/schema/',
       mcda: basePath + '/app/js',

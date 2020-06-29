@@ -1,4 +1,4 @@
-import {TableInputMode} from '../type/TableInputMode';
+import {TableInputMode} from '../../app/ts/type/TableInputMode';
 import IAlternative from './IAlternative';
 import ICriterion from './ICriterion';
 import IDataSource from './IDataSource';

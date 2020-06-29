@@ -1,7 +1,7 @@
 import {Grid, TableCell, TableRow} from '@material-ui/core';
+import IDataSource from '@shared/interface/IDataSource';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import IDataSource from '../../../../../interface/IDataSource';
 import {DUMMY_ID} from '../../../../constants';
 import {ManualInputContext} from '../../../../ManualInputContext';
 import AddDataSourceButton from '../AddDataSourceButton/AddDataSourceButton';

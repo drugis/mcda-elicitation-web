@@ -2,8 +2,8 @@ import {Button, IconButton, TableCell, Tooltip} from '@material-ui/core';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import Delete from '@material-ui/icons/Delete';
+import IAlternative from '@shared/interface/IAlternative';
 import React, {useContext} from 'react';
-import IAlternative from '../../../interface/IAlternative';
 import {ManualInputContext} from '../../ManualInputContext';
 import InlineEditor from '../InlineEditor/InlineEditor';
 

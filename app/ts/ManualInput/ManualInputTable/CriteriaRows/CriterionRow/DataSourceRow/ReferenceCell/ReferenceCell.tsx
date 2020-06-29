@@ -1,8 +1,8 @@
 import {TableCell} from '@material-ui/core';
+import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
+import {ManualInputContext} from 'app/ts//ManualInput/ManualInputContext';
 import React, {useContext} from 'react';
-import ICriterion from '../../../../../../interface/ICriterion';
-import IDataSource from '../../../../../../interface/IDataSource';
-import {ManualInputContext} from '../../../../../ManualInputContext';
 import InlineEditor from '../../../../InlineEditor/InlineEditor';
 
 export default function ReferenceCell({

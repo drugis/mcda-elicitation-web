@@ -1,41 +1,53 @@
-'use strict';
-var dbUtil = require('./node-backend/dbUtil');
-var _ = require('lodash');
-var db = require('./node-backend/db')(dbUtil.connectionConfig);
-var logger = require('./node-backend/logger');
+import bodyParser from 'body-parser';
+import csurf from 'csurf';
+import express, {Request} from 'express';
+import session from 'express-session';
+import helmet from 'helmet';
+import http from 'http';
+import httpStatus from 'http-status-codes';
+import _ from 'lodash';
+import 'module-alias/register';
+import RightsManagement from 'rights-management';
+import Signin from 'signin';
+import StartupDiagnostics from 'startup-diagnostics';
+import DB from './node-backend/db';
+import dbUtil from './node-backend/dbUtil';
+import InProgressRouter from './node-backend/inProgressRouter';
+import InProgressWorkspaceRepository from './node-backend/inProgressWorkspaceRepository';
+import {logger} from './node-backend/loggerTS';
+import OrderingRouter from './node-backend/orderingRouter';
+import patavi from './node-backend/patavi';
+import ScenarioRouter from './node-backend/scenarioRouter';
+import SubProblemRouter from './node-backend/subProblemRouter';
+import WorkspaceRepository from './node-backend/workspaceRepository';
+import WorkspaceRouter from './node-backend/workspaceRouter';
+import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
+
+const db = DB(dbUtil.connectionConfig);
+
 logger.info(dbUtil.mcdaDBUrl);
-var httpStatus = require('http-status-codes');
+
 var appEnvironmentSettings = {
   googleKey: process.env.MCDAWEB_GOOGLE_KEY,
   googleSecret: process.env.MCDAWEB_GOOGLE_SECRET,
   host: process.env.MCDA_HOST
 };
-var signin = require('signin')(db, appEnvironmentSettings);
-var InProgressWorkspaceRepository = require('./tscomp/node-backend/inProgressWorkspaceRepository').default(
-  db
-);
-var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
-var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
-var InProgressRouter = require('./tscomp/node-backend/inProgressRouter').default(
-  db
-);
-var OrderingRouter = require('./node-backend/orderingRouter')(db);
-var patavi = require('./node-backend/patavi');
-var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
-var ScenarioRouter = require('./node-backend/scenarioRouter')(db);
-var WorkspaceSettingsRouter = require('./node-backend/workspaceSettingsRouter')(
-  db
-);
+const signin = Signin(db, appEnvironmentSettings);
+const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
+const workspaceRepository = WorkspaceRepository(db);
+const workspaceRouter = WorkspaceRouter(db);
+const inProgressRouter = InProgressRouter(db);
+const orderingRouter = OrderingRouter(db);
 
-var StartupDiagnostics = require('startup-diagnostics')(db, logger, 'MCDA');
-var rightsManagement = require('rights-management')();
-var express = require('express');
-var http = require('http');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var helmet = require('helmet');
-var csurf = require('csurf');
-var server;
+const subProblemRouter = SubProblemRouter(db);
+const scenarioRouter = ScenarioRouter(db);
+
+const workspaceSettingsRouter = WorkspaceSettingsRouter(db);
+
+const startupDiagnostics = StartupDiagnostics(db, logger, 'MCDA');
+
+const rightsManagement = RightsManagement();
+let server;
 
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 
@@ -49,7 +61,7 @@ app.use(
 );
 server = http.createServer(app);
 
-StartupDiagnostics.runStartupDiagnostics((errorBody) => {
+startupDiagnostics.runStartupDiagnostics((errorBody) => {
   if (errorBody) {
     initError(errorBody);
   } else {
@@ -96,7 +108,7 @@ function initApp() {
     });
   });
   app.use(csurf());
-  app.use(function (request, response, next) {
+  app.use(function (request: Request, response, next) {
     response.cookie('XSRF-TOKEN', request.csrfToken());
     if (request.user) {
       response.cookie(
@@ -113,28 +125,19 @@ function initApp() {
       response.sendFile(__dirname + '/dist/signin.html');
     }
   });
-  app.get('/lexicon.json', function (req, res) {
-    res.sendFile(__dirname + '/app/lexicon.json');
-  });
-  app.get('/mcda-page-titles.json', function (req, res) {
-    res.sendFile(__dirname + '/app/mcda-page-titles.json');
-  });
-  app.use(express.static('dist'));
+  app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
-  app.use('/examples', express.static(__dirname + '/examples'));
-  app.use(
-    '/tutorials',
-    express.static(__dirname + '/examples/tutorial-examples')
-  );
-  app.use('/css/fonts', express.static('./dist/fonts'));
+  app.use('/examples', express.static('examples'));
+  app.use('/tutorials', express.static('examples/tutorial-examples'));
+  app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
   app.use(rightsManagement.expressMiddleware);
 
-  app.use('/api/v2/inProgress', InProgressRouter);
-  app.use('/workspaces', WorkspaceRouter);
-  app.use('/workspaces', OrderingRouter);
-  app.use('/workspaces', SubProblemRouter);
-  app.use('/workspaces', ScenarioRouter);
-  app.use('/workspaces', WorkspaceSettingsRouter);
+  app.use('/api/v2/inProgress', inProgressRouter);
+  app.use('/workspaces', workspaceRouter);
+  app.use('/workspaces', orderingRouter);
+  app.use('/workspaces', subProblemRouter);
+  app.use('/workspaces', scenarioRouter);
+  app.use('/workspaces', workspaceSettingsRouter);
 
   app.post('/patavi', pataviHandler);
 
@@ -197,14 +200,14 @@ function initError(errorBody) {
 }
 
 function startListening(listenFunction) {
-  var port = 3002;
+  let port = 3002;
   if (process.argv[2] === 'port' && process.argv[3]) {
-    port = process.argv[3];
+    port = Number.parseFloat(process.argv[3]);
   }
   server.listen(port, _.partial(listenFunction, port));
 }
 
-function makeRights(path, method, requiredRight, checkRights) {
+function makeRights(path, method, requiredRight, checkRights?) {
   return {
     path: path,
     method: method,
@@ -414,14 +417,14 @@ function setRequiredRights() {
 }
 
 function workspaceOwnerRightsNeeded(response, next, workspaceId, userId) {
-  WorkspaceRepository.get(
+  workspaceRepository.get(
     workspaceId,
     _.partial(rightsCallback, response, next, userId)
   );
 }
 
 function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
-  InProgressWorkspaceRepository.get(
+  inProgressWorkspaceRepository.get(
     workspaceId,
     _.partial(rightsCallback, response, next, userId)
   );
@@ -453,8 +456,9 @@ function useSSLLogin() {
           logger.error(error);
         } else {
           request.session.user = result;
-          request.session.save();
-          response.redirect('/');
+          request.session.save(() => {
+            response.redirect('/');
+          });
         }
       });
     }

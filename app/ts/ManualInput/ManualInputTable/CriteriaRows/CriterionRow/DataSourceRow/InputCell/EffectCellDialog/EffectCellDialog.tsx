@@ -7,14 +7,14 @@ import {
   MenuItem,
   Select
 } from '@material-ui/core';
+import {Effect, effectType} from '@shared/interface/IEffect';
+import IEmptyEffect from '@shared/interface/IEmptyEffect';
+import IRangeEffect from '@shared/interface/IRangeEffect';
+import ITextEffect from '@shared/interface/ITextEffect';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import IValueEffect from '@shared/interface/IValueEffect';
+import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import React, {ChangeEvent, useContext} from 'react';
-import DialogTitleWithCross from '../../../../../../../DialogTitleWithCross/DialogTitleWithCross';
-import {Effect, effectType} from '../../../../../../../interface/IEffect';
-import IEmptyEffect from '../../../../../../../interface/IEmptyEffect';
-import IRangeEffect from '../../../../../../../interface/IRangeEffect';
-import ITextEffect from '../../../../../../../interface/ITextEffect';
-import IValueCIEffect from '../../../../../../../interface/IValueCIEffect';
-import IValueEffect from '../../../../../../../interface/IValueEffect';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../InputCellContext/InputCellContext';
 import EffectInputFields from './EffectInputFields/EffectInputFields';

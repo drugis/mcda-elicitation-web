@@ -1,6 +1,6 @@
 import {TableCell} from '@material-ui/core';
+import ICriterion from '@shared/interface/ICriterion';
 import React, {useContext} from 'react';
-import ICriterion from '../../../../../../interface/ICriterion';
 import {ManualInputContext} from '../../../../../ManualInputContext';
 import InlineEditor from '../../../../InlineEditor/InlineEditor';
 

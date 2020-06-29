@@ -1,10 +1,10 @@
 import {TableCell, Tooltip} from '@material-ui/core';
+import {Effect} from '@shared/interface/IEffect';
+import IRangeEffect from '@shared/interface/IRangeEffect';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import IValueEffect from '@shared/interface/IValueEffect';
+import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
 import React, {useContext, useEffect, useState} from 'react';
-import {Effect} from '../../../../../../../interface/IEffect';
-import IRangeEffect from '../../../../../../../interface/IRangeEffect';
-import IValueCIEffect from '../../../../../../../interface/IValueCIEffect';
-import IValueEffect from '../../../../../../../interface/IValueEffect';
-import {ManualInputContext} from '../../../../../../ManualInputContext';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import EffectCellDialog from '../EffectCellDialog/EffectCellDialog';
 import {InputCellContextProviderComponent} from '../InputCellContext/InputCellContext';

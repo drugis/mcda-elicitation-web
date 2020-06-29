@@ -8,4 +8,5 @@ export default interface IProblem {
   criteria: Record<string, IProblemCriterion>;
   alternatives: Record<string, {title: string}>;
   performanceTable: IPerformanceTableEntry[];
+  prefs?: {};
 }

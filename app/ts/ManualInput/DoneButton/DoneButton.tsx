@@ -1,9 +1,9 @@
 import {Button} from '@material-ui/core';
+import IError from '@shared/interface/IError';
+import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import Axios, {AxiosResponse} from 'axios';
 import React, {useContext} from 'react';
 import {ErrorContext} from '../../Error/ErrorContext';
-import IError from '../../interface/IError';
-import IWorkspaceInfo from '../../interface/IWorkspaceInfo';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function DoneButton() {

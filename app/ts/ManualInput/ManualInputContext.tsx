@@ -1,21 +1,21 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import IError from '@shared/interface/IError';
+import IInProgressMessage from '@shared/interface/IInProgressMessage';
+import IManualInputContext from '@shared/interface/IManualInputContext';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import Axios from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
+import {generateUuid} from 'shared/util';
 import {ErrorContext} from '../Error/ErrorContext';
-import IAlternative from '../interface/IAlternative';
-import ICriterion from '../interface/ICriterion';
-import IDataSource from '../interface/IDataSource';
-import {Distribution} from '../interface/IDistribution';
-import {Effect} from '../interface/IEffect';
-import IError from '../interface/IError';
-import IInProgressMessage from '../interface/IInProgressMessage';
-import IManualInputContext from '../interface/IManualInputContext';
-import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
 import TestExport, {TableInputMode} from '../type/TableInputMode';
 import {
   createDistributions,
   createWarnings,
-  generateUuid,
   swapItems
 } from './ManualInputService/ManualInputService';
 

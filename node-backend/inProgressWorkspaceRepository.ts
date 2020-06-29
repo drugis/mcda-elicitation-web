@@ -1,25 +1,25 @@
+import IAlternative from '@shared/interface/IAlternative';
+import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
+import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
+import ICellMessage from '@shared/interface/ICellMessage';
+import ICriterion from '@shared/interface/ICriterion';
+import ICriterionCommand from '@shared/interface/ICriterionCommand';
+import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
+import IDataSource from '@shared/interface/IDataSource';
+import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
+import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import IError from '@shared/interface/IError';
+import IInProgressMessage from '@shared/interface/IInProgressMessage';
+import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
+import IValueCellQueryResult from '@shared/interface/IInputCellQueryResult';
+import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
+import IProblem from '@shared/interface/Problem/IProblem';
+import {generateUuid} from '@shared/util';
 import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
-import IAlternative from '../app/ts/interface/IAlternative';
-import IAlternativeCommand from '../app/ts/interface/IAlternativeCommand';
-import IAlternativeQueryResult from '../app/ts/interface/IAlternativeQueryResult';
-import ICellMessage from '../app/ts/interface/ICellMessage';
-import ICriterion from '../app/ts/interface/ICriterion';
-import ICriterionCommand from '../app/ts/interface/ICriterionCommand';
-import ICriterionQueryResult from '../app/ts/interface/ICriterionQueryResult';
-import IDataSource from '../app/ts/interface/IDataSource';
-import IDataSourceCommand from '../app/ts/interface/IDataSourceCommand';
-import IDataSourceQueryResult from '../app/ts/interface/IDataSourceQueryResult';
-import {Distribution} from '../app/ts/interface/IDistribution';
-import {Effect} from '../app/ts/interface/IEffect';
-import IError from '../app/ts/interface/IError';
-import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
-import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
-import IValueCellQueryResult from '../app/ts/interface/IInputCellQueryResult';
-import IWorkspaceQueryResult from '../app/ts/interface/IWorkspaceQueryResult';
-import IProblem from '../app/ts/interface/Problem/IProblem';
-import {generateUuid} from '../app/ts/ManualInput/ManualInputService/ManualInputService';
 import {
   createProblem as buildProblem,
   mapAlternatives,

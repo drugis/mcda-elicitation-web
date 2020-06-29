@@ -1,14 +1,14 @@
+import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
+import ICriterionCommand from '@shared/interface/ICriterionCommand';
+import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
+import IError from '@shared/interface/IError';
+import IInProgressMessage from '@shared/interface/IInProgressMessage';
+import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
+import IProblem from '@shared/interface/Problem/IProblem';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
-import IAlternativeCommand from '../app/ts/interface/IAlternativeCommand';
-import ICriterionCommand from '../app/ts/interface/ICriterionCommand';
-import IDataSourceCommand from '../app/ts/interface/IDataSourceCommand';
-import IError from '../app/ts/interface/IError';
-import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
-import IWorkspaceInfo from '../app/ts/interface/IWorkspaceInfo';
-import IProblem from '../app/ts/interface/Problem/IProblem';
 import {createOrdering, createProblem} from './inProgressRepositoryService';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository';
 import {logger} from './loggerTS';
@@ -186,13 +186,8 @@ export default function InProgressHandler(db: any) {
     waterfall(
       [
         _.partial(inProgressWorkspaceRepository.get, inProgressId),
-        createProblemFromInProgress,
-        _.partial(
-          createWorkspaceAndDeleteInProgress,
-          request.user,
-          inProgressId
-        ),
-        _.partial(insertOrdering)
+        buildProblemFromInProgress,
+        _.partial(createInTransaction, request.user, inProgressId)
       ],
       (error: IError | null, createdWorkspaceInfo: IWorkspaceInfo): void => {
         if (error) {
@@ -206,38 +201,14 @@ export default function InProgressHandler(db: any) {
     );
   }
 
-  function insertOrdering(
-    createdWorkspaceInfo: IWorkspaceInfo,
-    callback: (
-      error: IError | null,
-      createdWorkspaceInfo?: IWorkspaceInfo
-    ) => void
-  ) {
-    const ordering = createOrdering(
-      createdWorkspaceInfo.problem.criteria,
-      createdWorkspaceInfo.problem.alternatives
-    );
-    orderingRepository.update(
-      createdWorkspaceInfo.id,
-      ordering,
-      (error: IError) => {
-        if (error) {
-          callback(error);
-        } else {
-          callback(null, createdWorkspaceInfo);
-        }
-      }
-    );
-  }
-
-  function createProblemFromInProgress(
+  function buildProblemFromInProgress(
     inProgressMessage: IInProgressMessage,
     callback: (error: any, problem?: IProblem) => void
   ) {
     callback(null, createProblem(inProgressMessage));
   }
 
-  function createWorkspaceAndDeleteInProgress(
+  function createInTransaction(
     user: any,
     inProgressId: number,
     problem: IProblem,
@@ -268,7 +239,8 @@ export default function InProgressHandler(db: any) {
               fakeRequest,
               client
             ),
-            _.partial(deleteInprogress, client, inProgressId)
+            _.partial(deleteInprogress, client, inProgressId),
+            _.partial(insertOrdering, client)
           ],
           transactionCallback
         );
@@ -293,6 +265,32 @@ export default function InProgressHandler(db: any) {
       inProgressId,
       (error: IError | null) => {
         callback(error, error ? null : createdWorkspaceInfo);
+      }
+    );
+  }
+
+  function insertOrdering(
+    client: any,
+    createdWorkspaceInfo: IWorkspaceInfo,
+    callback: (
+      error: IError | null,
+      createdWorkspaceInfo?: IWorkspaceInfo
+    ) => void
+  ) {
+    const ordering = createOrdering(
+      createdWorkspaceInfo.problem.criteria,
+      createdWorkspaceInfo.problem.alternatives
+    );
+    orderingRepository.updateInTransaction(
+      client,
+      createdWorkspaceInfo.id,
+      ordering,
+      (error: IError) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, createdWorkspaceInfo);
+        }
       }
     );
   }

@@ -5,10 +5,10 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
+import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import ICriterion from '../../../interface/ICriterion';
-import IDataSource from '../../../interface/IDataSource';
 import {DUMMY_ID} from '../../constants';
 import {ManualInputContext} from '../../ManualInputContext';
 import AddCriterionButton from './AddCriterionButton/AddCriterionButton';

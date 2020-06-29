@@ -1,10 +1,7 @@
+import {Distribution, distributionType} from '@shared/interface/IDistribution';
+import {Effect, effectType} from '@shared/interface/IEffect';
+import IInputCellContext from '@shared/interface/IInputCellContext';
 import React, {createContext, useEffect, useState} from 'react';
-import {
-  Distribution,
-  distributionType
-} from '../../../../../../../interface/IDistribution';
-import {Effect, effectType} from '../../../../../../../interface/IEffect';
-import IInputCellContext from '../../../../../../../interface/IInputCellContext';
 
 export const InputCellContext = createContext<IInputCellContext>(
   {} as IInputCellContext

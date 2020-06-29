@@ -1,8 +1,8 @@
+import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import Axios, {AxiosResponse} from 'axios';
 import React, {useEffect, useState} from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
-import IInProgressMessage from '../interface/IInProgressMessage';
 import ManualInput from './ManualInput';
 import {ManualInputContextProviderComponent} from './ManualInputContext';
 

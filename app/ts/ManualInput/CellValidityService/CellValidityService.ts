@@ -1,10 +1,10 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import _ from 'lodash';
-import IAlternative from '../../interface/IAlternative';
-import ICriterion from '../../interface/ICriterion';
-import IDataSource from '../../interface/IDataSource';
-import {Distribution} from '../../interface/IDistribution';
-import {Effect} from '../../interface/IEffect';
-import IUnitOfMeasurement from '../../interface/IUnitOfMeasurement';
 
 const NUMERIC_INPUT_ERROR = 'Please provide a numeric input';
 

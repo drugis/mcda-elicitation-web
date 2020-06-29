@@ -8,12 +8,12 @@ import {
   Select,
   TextField
 } from '@material-ui/core';
-import _ from 'lodash';
-import React, {ChangeEvent, KeyboardEvent, useEffect, useState} from 'react';
-import DialogTitleWithCross from '../../../../../../../DialogTitleWithCross/DialogTitleWithCross';
 import IUnitOfMeasurement, {
   UnitOfMeasurementType
-} from '../../../../../../../interface/IUnitOfMeasurement';
+} from '@shared/interface/IUnitOfMeasurement';
+import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import _ from 'lodash';
+import React, {ChangeEvent, KeyboardEvent, useEffect, useState} from 'react';
 
 export default function UnitOfMeasurementDialog({
   unitOfMeasurement,

@@ -7,18 +7,16 @@ import {
   MenuItem,
   Select
 } from '@material-ui/core';
+import IBetaDistribution from '@shared/interface/IBetaDistribution';
+import IDistribution, {distributionType} from '@shared/interface/IDistribution';
+import IEmptyEffect from '@shared/interface/IEmptyEffect';
+import IGammaDistribution from '@shared/interface/IGammaDistribution';
+import INormalDistribution from '@shared/interface/INormalDistribution';
+import IRangeEffect from '@shared/interface/IRangeEffect';
+import ITextEffect from '@shared/interface/ITextEffect';
+import IValueEffect from '@shared/interface/IValueEffect';
+import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import React, {ChangeEvent, useContext} from 'react';
-import DialogTitleWithCross from '../../../../../../../DialogTitleWithCross/DialogTitleWithCross';
-import IBetaDistribution from '../../../../../../../interface/IBetaDistribution';
-import IDistribution, {
-  distributionType
-} from '../../../../../../../interface/IDistribution';
-import IEmptyEffect from '../../../../../../../interface/IEmptyEffect';
-import IGammaDistribution from '../../../../../../../interface/IGammaDistribution';
-import INormalDistribution from '../../../../../../../interface/INormalDistribution';
-import IRangeEffect from '../../../../../../../interface/IRangeEffect';
-import ITextEffect from '../../../../../../../interface/ITextEffect';
-import IValueEffect from '../../../../../../../interface/IValueEffect';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../InputCellContext/InputCellContext';
 import DistributionInputFields from './DistributionInputFields/DistributionInputFields';

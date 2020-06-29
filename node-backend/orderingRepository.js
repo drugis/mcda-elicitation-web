@@ -1,12 +1,13 @@
 'use strict';
 var logger = require('./logger');
 
-module.exports = function(db) {
+module.exports = function (db) {
   function get(workspaceId, callback) {
     logger.debug('getting /workspaces/' + workspaceId + '/ordering');
-    db.query('SELECT workspaceId AS "workspaceId", ordering FROM ordering WHERE workspaceId = $1',
+    db.query(
+      'SELECT workspaceId AS "workspaceId", ordering FROM ordering WHERE workspaceId = $1',
       [workspaceId],
-      function(error, result) {
+      function (error, result) {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {
@@ -14,18 +15,30 @@ module.exports = function(db) {
         } else {
           callback(null, result.rows[0].ordering);
         }
-      });
+      }
+    );
   }
 
-  function update(workspaceId, ordering, callback) {
+  function updateDirect(workspaceId, ordering, callback) {
+    update(db, workspaceId, ordering, callback);
+  }
+
+  function updateInTransaction(client, workspaceId, ordering, callback) {
+    update(client, workspaceId, ordering, callback);
+  }
+
+  function update(dbOrClient, workspaceId, ordering, callback) {
     logger.debug('setting /workspaces/' + workspaceId + '/ordering/');
-    db.query('INSERT INTO ordering(workspaceId, ordering) values($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET ordering=$2',
+    dbOrClient.query(
+      'INSERT INTO ordering(workspaceId, ordering) values($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET ordering=$2',
       [workspaceId, ordering],
-      callback);
+      callback
+    );
   }
 
   return {
     get: get,
-    update: update
+    updateDirect: updateDirect,
+    updateInTransaction: updateInTransaction
   };
 };

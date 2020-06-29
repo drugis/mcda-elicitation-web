@@ -1,9 +1,9 @@
 import {TableCell, Tooltip} from '@material-ui/core';
+import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
 import React, {useContext, useState} from 'react';
-import ICriterion from '../../../../../../interface/ICriterion';
-import IDataSource from '../../../../../../interface/IDataSource';
-import IUnitOfMeasurement from '../../../../../../interface/IUnitOfMeasurement';
-import {ManualInputContext} from '../../../../../ManualInputContext';
 import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import UnitOfMeasurementDialog from './UnitOfMeasurementDialog/UnitOfMeasurementDialog';
 

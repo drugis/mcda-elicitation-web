@@ -1,7 +1,7 @@
+import IProblem from '@shared/interface/Problem/IProblem';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
-import {logger} from './logger';
 import _ from 'lodash';
-import IProblem from '../app/ts/interface/Problem/IProblem';
+import {logger} from './loggerTS';
 
 export function getUser(req: any) {
   if (req.user) {
@@ -23,18 +23,18 @@ export function handleError(error: any, next: any) {
 export function getRanges(problem: IProblem) {
   return _.reduce(
     problem.criteria,
-    function (accum, criterion, key) {
+    function (accum: Record<string, any>, criterion, key) {
       accum[key] = _.pick(criterion, ['pvf.range']);
       return accum;
     },
-    {}
+    {} as IProblem
   );
 }
 
-export function reduceProblem(problem) {
+export function reduceProblem(problem: IProblem) {
   var criteria = _.reduce(
     problem.criteria,
-    function (accum, criterion, key) {
+    function (accum: Record<string, any>, criterion, key) {
       accum[key] = _.pick(criterion, ['scale', 'pvf', 'title']);
       return accum;
     },
