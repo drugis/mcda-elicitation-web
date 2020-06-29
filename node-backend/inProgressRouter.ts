@@ -1,11 +1,13 @@
 import express from 'express';
-import InProgressHandler from './inProgressWorkspaceHandler2';
+import InProgressHandler from './inProgressWorkspaceHandler';
 export default function InProgressRouter(db: any) {
   const inProgressHandler = InProgressHandler(db);
   return express
     .Router()
     .post('/', inProgressHandler.create)
+    .get('/', inProgressHandler.query)
     .get('/:id', inProgressHandler.get)
+    .delete('/:id', inProgressHandler.delete)
     .put('/:id', inProgressHandler.updateWorkspace)
 
     .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)

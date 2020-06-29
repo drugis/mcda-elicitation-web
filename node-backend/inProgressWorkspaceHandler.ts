@@ -10,7 +10,7 @@ import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import IWorkspaceInfo from '../app/ts/interface/IWorkspaceInfo';
 import IProblem from '../app/ts/interface/Problem/IProblem';
 import {createOrdering, createProblem} from './inProgressRepositoryService';
-import InProgressWorkspaceRepository from './inProgressWorkspaceRepository2';
+import InProgressWorkspaceRepository from './inProgressWorkspaceRepository';
 import {logger} from './loggerTS';
 import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
@@ -268,7 +268,7 @@ export default function InProgressHandler(db: any) {
               fakeRequest,
               client
             ),
-            _.partial(deleteinprogress, client, inProgressId)
+            _.partial(deleteInprogress, client, inProgressId)
           ],
           transactionCallback
         );
@@ -279,7 +279,7 @@ export default function InProgressHandler(db: any) {
     );
   }
 
-  function deleteinprogress(
+  function deleteInprogress(
     client: any,
     inProgressId: number,
     createdWorkspaceInfo: IWorkspaceInfo,
@@ -288,11 +288,38 @@ export default function InProgressHandler(db: any) {
       createWorkspaceInfo?: IWorkspaceInfo
     ) => void
   ): void {
-    inProgressWorkspaceRepository.delete(
+    inProgressWorkspaceRepository.deleteInTransaction(
       client,
       inProgressId,
       (error: IError | null) => {
         callback(error, error ? null : createdWorkspaceInfo);
+      }
+    );
+  }
+
+  function query(request: Request, response: Response, next: () => {}): void {
+    const user: {id: number} = getUser(request);
+    inProgressWorkspaceRepository.query(
+      user.id,
+      (error: IError, results: any[]) => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.json(results);
+        }
+      }
+    );
+  }
+
+  function del(request: Request, response: Response, next: () => {}): void {
+    inProgressWorkspaceRepository.deleteDirectly(
+      Number.parseInt(request.params.id),
+      (error: IError) => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.json(OK);
+        }
       }
     );
   }
@@ -308,6 +335,8 @@ export default function InProgressHandler(db: any) {
     updateAlternative: updateAlternative,
     deleteAlternative: deleteAlternative,
     updateCell: updateCell,
-    createWorkspace: createWorkspace
+    createWorkspace: createWorkspace,
+    query: query,
+    delete: del
   };
 }

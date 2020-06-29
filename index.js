@@ -11,13 +11,12 @@ var appEnvironmentSettings = {
   host: process.env.MCDA_HOST
 };
 var signin = require('signin')(db, appEnvironmentSettings);
-var InProgressWorkspaceRepository = require('./node-backend/inProgressWorkspaceRepository')(
+var InProgressWorkspaceRepository = require('./tscomp/node-backend/inProgressWorkspaceRepository').default(
   db
 );
 var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
-var InProgressRouter = require('./node-backend/inProgressRouter')(db);
-var InProgressRouter2 = require('./tscomp/node-backend/inProgressRouter2').default(
+var InProgressRouter = require('./tscomp/node-backend/inProgressRouter').default(
   db
 );
 var OrderingRouter = require('./node-backend/orderingRouter')(db);
@@ -130,8 +129,7 @@ function initApp() {
   app.use('/css/fonts', express.static('./dist/fonts'));
   app.use(rightsManagement.expressMiddleware);
 
-  app.use('/inProgress', InProgressRouter);
-  app.use('/api/v2/inProgress', InProgressRouter2);
+  app.use('/api/v2/inProgress', InProgressRouter);
   app.use('/workspaces', WorkspaceRouter);
   app.use('/workspaces', OrderingRouter);
   app.use('/workspaces', SubProblemRouter);
@@ -240,27 +238,12 @@ function setRequiredRights() {
       workspaceOwnerRightsNeeded
     ),
 
-    makeRights('/inProgress', 'GET', 'none', inProgressOwnerRightsNeeded),
-    makeRights('/inProgress', 'POST', 'none', inProgressOwnerRightsNeeded),
     makeRights(
-      '/inProgress/:workspaceId',
+      '/api/v2/inProgress',
       'GET',
       'none',
       inProgressOwnerRightsNeeded
     ),
-    makeRights(
-      '/inProgress/:workspaceId',
-      'PUT',
-      'none',
-      inProgressOwnerRightsNeeded
-    ),
-    makeRights(
-      '/inProgress/:workspaceId',
-      'DELETE',
-      'none',
-      inProgressOwnerRightsNeeded
-    ),
-
     makeRights(
       '/api/v2/inProgress',
       'POST',
@@ -270,6 +253,12 @@ function setRequiredRights() {
     makeRights(
       '/api/v2/inProgress/:inProgressId',
       'GET',
+      'none',
+      inProgressOwnerRightsNeeded
+    ),
+    makeRights(
+      '/api/v2/inProgress/:inProgressId',
+      'DELETE',
       'none',
       inProgressOwnerRightsNeeded
     ),

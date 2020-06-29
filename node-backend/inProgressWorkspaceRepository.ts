@@ -13,6 +13,7 @@ import IDataSourceCommand from '../app/ts/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '../app/ts/interface/IDataSourceQueryResult';
 import {Distribution} from '../app/ts/interface/IDistribution';
 import {Effect} from '../app/ts/interface/IEffect';
+import IError from '../app/ts/interface/IError';
 import IInProgressMessage from '../app/ts/interface/IInProgressMessage';
 import IInProgressWorkspace from '../app/ts/interface/IInProgressWorkspace';
 import IValueCellQueryResult from '../app/ts/interface/IInputCellQueryResult';
@@ -572,7 +573,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     waterfall(
       [
         _.partial(createProblem, client, userId, problem),
-        _.partial(del, client, inProgressId)
+        _.partial(deleteInTransaction, client, inProgressId)
       ],
       transactionCallback
     );
@@ -596,6 +597,21 @@ export default function InProgressWorkspaceRepository(db: any) {
     );
   }
 
+  function deleteInTransaction(
+    client: any,
+    inProgressId: number,
+    callback: (error: any) => void
+  ) {
+    del(client, inProgressId, callback);
+  }
+
+  function deleteDirectly(
+    inProgressId: number,
+    callback: (error: any) => void
+  ) {
+    del(db, inProgressId, callback);
+  }
+
   function del(
     client: any,
     inProgressId: number,
@@ -605,10 +621,21 @@ export default function InProgressWorkspaceRepository(db: any) {
     client.query(query, [inProgressId], callback);
   }
 
+  function query(
+    ownerId: number,
+    callback: (error: IError | null, result: any[]) => void
+  ) {
+    const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
+    db.query(query, [ownerId], (error: IError, result: {rows: any[]}) => {
+      callback(error, error ? null : result.rows);
+    });
+  }
+
   return {
     create: create,
     get: get,
-    delete: del,
+    deleteInTransaction: deleteInTransaction,
+    deleteDirectly: deleteDirectly,
     updateWorkspace: updateWorkspace,
     upsertCriterion: upsertCriterion,
     deleteCriterion: deleteCriterion,
@@ -617,6 +644,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     upsertAlternative: upsertAlternative,
     deleteAlternative: deleteAlternative,
     upsertCell: upsertCell,
-    createWorkspace: createWorkspace
+    createWorkspace: createWorkspace,
+    query: query
   };
 }

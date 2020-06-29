@@ -36,9 +36,7 @@ define(['lodash'], function (_) {
         }
 
         function getTitle(inProgressWorkspace) {
-          if (inProgressWorkspace.state.title) {
-            return inProgressWorkspace.state.title;
-          } else if (inProgressWorkspace.title) {
+          if (inProgressWorkspace.title) {
             return inProgressWorkspace.title;
           } else {
             return 'Empty title';

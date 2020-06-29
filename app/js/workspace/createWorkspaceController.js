@@ -7,7 +7,7 @@ define(['angular', 'lodash'], function (angular, _) {
     'TutorialResource',
     'WorkspaceResource',
     'WorkspaceService',
-    'InProgressResource2',
+    'InProgressResource',
     'SchemaService',
     'callback'
   ];
@@ -19,7 +19,7 @@ define(['angular', 'lodash'], function (angular, _) {
     TutorialResource,
     WorkspaceResource,
     WorkspaceService,
-    InProgressResource2,
+    InProgressResource,
     SchemaService,
     callback
   ) {
@@ -96,7 +96,7 @@ define(['angular', 'lodash'], function (angular, _) {
     }
 
     function createWorkspaceManually() {
-      InProgressResource2.create({}, function (response) {
+      InProgressResource.create({}, function (response) {
         callback($scope.model.choice, response.id);
         $modalInstance.close();
       });
