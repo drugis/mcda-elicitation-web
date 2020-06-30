@@ -35,6 +35,7 @@ export function getGammaAlphaError(alpha: number): string {
 function isGammaValueValid(value: number): boolean {
   return value <= 0;
 }
+
 export function getBetaBetaError(alpha: number): string {
   if (isNaN(alpha)) {
     return NUMERIC_INPUT_ERROR;
@@ -114,6 +115,7 @@ export function hasInvalidCell(
         !values[dataSource.id] ||
         _.some(alternatives, (alternative: IAlternative) => {
           const cell = values[dataSource.id][alternative.id];
+
           return !cell || !isValidCell(cell, dataSource.unitOfMeasurement);
         })
       );
