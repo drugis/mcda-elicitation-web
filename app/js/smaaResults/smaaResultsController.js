@@ -1,5 +1,5 @@
 'use strict';
-define(['clipboard', 'lodash'], function(Clipboard, _) {
+define(['clipboard', 'lodash'], function (Clipboard, _) {
   var dependencies = [
     '$scope',
     '$stateParams',
@@ -10,7 +10,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'PageTitleService'
   ];
 
-  var SmaaResultsController = function(
+  var SmaaResultsController = function (
     $scope,
     $stateParams,
     currentScenario,
@@ -27,15 +27,23 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       dirty: false
     };
     $scope.warnings = [];
-    var deterministicWarning = 'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
+    var deterministicWarning =
+      'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
     var hasNoStochasticMeasurementsWarning = 'Measurements are not stochastic';
     var hasNoStochasticWeightsWarning = 'Weights are not stochastic';
 
     new Clipboard('.clipboard-button');
 
-    $scope.scalesPromise.then(function() {
-      PageTitleService.setPageTitle('SmaaResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s SMAA results');
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
+    $scope.scalesPromise.then(function () {
+      PageTitleService.setPageTitle(
+        'SmaaResultsController',
+        ($scope.aggregateState.problem.title || $scope.workspace.title) +
+          "'s SMAA results"
+      );
+      OrderingService.getOrderedCriteriaAndAlternatives(
+        $scope.aggregateState.problem,
+        $stateParams
+      ).then(function (ordering) {
         $scope.criteria = ordering.criteria;
         $scope.alternatives = ordering.alternatives;
         initUncertaintyOptions();
@@ -46,16 +54,26 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.$on('elicit.legendChanged', loadState);
 
     function loadState() {
-      $scope.state = LegendService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState.dePercentified);
-      $scope.state = SmaaResultsService.getResults($scope.scenario.state.uncertaintyOptions, $scope.state);
-      $scope.state.resultsPromise.then(function() {
+      $scope.state = LegendService.replaceAlternativeNames(
+        $scope.scenario.state.legend,
+        $scope.aggregateState.dePercentified
+      );
+      $scope.state = SmaaResultsService.getResults(
+        $scope.scenario.state.uncertaintyOptions,
+        $scope.state
+      );
+      $scope.state.resultsPromise.then(function () {
         $scope.state = SmaaResultsService.addSmaaResults($scope.state);
       });
     }
 
     function initUncertaintyOptions() {
-      $scope.noStochasticMeasurements = SmaaResultsService.hasNoStochasticMeasurements($scope.aggregateState);
-      $scope.noStochasticWeights = SmaaResultsService.hasNoStochasticWeights($scope.aggregateState);
+      $scope.noStochasticMeasurements = SmaaResultsService.hasNoStochasticMeasurements(
+        $scope.aggregateState
+      );
+      $scope.noStochasticWeights = SmaaResultsService.hasNoStochasticWeights(
+        $scope.aggregateState
+      );
 
       if (!$scope.scenario.state.uncertaintyOptions) {
         $scope.scenario.state.uncertaintyOptions = {
@@ -76,10 +94,13 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function uncertaintyOptionsChanged() {
       $scope.uncertaintyOptions.dirty = true;
-      if ($scope.scenario.state.uncertaintyOptions.weights === false && $scope.scenario.state.uncertaintyOptions.measurements === false) {
+      if (
+        $scope.scenario.state.uncertaintyOptions.weights === false &&
+        $scope.scenario.state.uncertaintyOptions.measurements === false
+      ) {
         $scope.warnings.push(deterministicWarning);
       } else {
-        $scope.warnings = _.reject($scope.warnings, function(warning) {
+        $scope.warnings = _.reject($scope.warnings, function (warning) {
           return warning === deterministicWarning;
         });
       }

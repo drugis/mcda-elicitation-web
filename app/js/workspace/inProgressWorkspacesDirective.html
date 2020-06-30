@@ -1,7 +1,8 @@
 <div class="grid-x">
   <div class="cell" ng-show="inProgressWorkspaces.length">
     <h3>
-      Unfinished workspaces <inline-help help-key="incomplete-workspaces"></inline-help>
+      Unfinished workspaces
+      <inline-help help-key="incomplete-workspaces"></inline-help>
     </h3>
   </div>
   <div class="cell large-6 medium-8" ng-show="inProgressWorkspaces.length">
@@ -13,14 +14,21 @@
       <tbody>
         <tr ng-repeat="inProgressWorkspace in inProgressWorkspaces">
           <td>
-            <a id="in-progress-workspace-{{ $index }}"
-              ui-sref="manualInputInProgress({inProgressId: inProgressWorkspace.id})">
-              {{inProgressWorkspace.state.title}}</a>
+            <a
+              id="in-progress-workspace-{{ $index }}"
+              ui-sref="manualInput({inProgressId: inProgressWorkspace.id})"
+            >
+              {{getTitle(inProgressWorkspace)}}</a
+            >
           </td>
           <td class="text-center">
-            <a id="delete-in-progress-workspace-{{ $index }}" class="fa fa-trash"
-              style="color : red" ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.state.title)"
-              tooltip="Delete workspace">
+            <a
+              id="delete-in-progress-workspace-{{ $index }}"
+              class="fa fa-trash"
+              style="color: red;"
+              ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.title)"
+              tooltip="Delete workspace"
+            >
             </a>
           </td>
         </tr>
