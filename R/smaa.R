@@ -11,7 +11,7 @@ run_smaa <- function(params) {
 getSmaaResults <- function(params) {
   criteriaNames <- names(params$criteria)
   weights <- getSmaaWeights(params, criteriaNames)
-  measurements <- getSmaaMeasurements(params, criteriaNames)
+  measurements <- getSmaaMeasurements(params, criteriaNames, hitAndRunSamples)
   ranks <- getRanks(measurements, weights)
   rankAcceptability <- smaa.ra(ranks)
   confidenceFactors <- getConfidenceFactors(ranks, weights, measurements)
@@ -37,8 +37,8 @@ isOldScenario <- function(params) {
   return(!is.null(params$uncertaintyOptions))
 }
 
-getSmaaMeasurements <- function(params, criteria) {
-  measurements <- sample.partialValues(params, hitAndRunSamples)
+getSmaaMeasurements <- function(params, criteria, numberOfSamples) {
+  measurements <- sample.partialValues(params, numberOfSamples)
   if (isOldScenario(params)) {
     if (!params$uncertaintyOptions["measurements"]) {
       measurements <- applyMeasurementUncertainty(params, criteria, measurements)
