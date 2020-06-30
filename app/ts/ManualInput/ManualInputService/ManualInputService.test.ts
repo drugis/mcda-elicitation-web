@@ -35,6 +35,22 @@ describe('areBoundsSymmetric', () => {
     expect(result).toBeTruthy();
   });
 
+  test('should return true if bounds are not symmetric but within the permissable interval', () => {
+    const effectWithSymmetricBounds: IValueCIEffect = {
+      type: 'valueCI',
+      alternativeId: 'altId',
+      criterionId: 'critId',
+      dataSourceId: 'dsId',
+      value: 1,
+      lowerBound: 0,
+      upperBound: 2.05,
+      isNotEstimableLowerBound: false,
+      isNotEstimableUpperBound: false
+    };
+    const result = areBoundsSymmetric(effectWithSymmetricBounds);
+    expect(result).toBeTruthy();
+  });
+
   test('should return false if bounds are not symmetric', () => {
     const effectWithSymmetricBounds: IValueCIEffect = {
       type: 'valueCI',
