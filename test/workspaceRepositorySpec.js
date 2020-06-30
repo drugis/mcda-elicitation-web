@@ -103,7 +103,13 @@ describe('the workspace repository', function () {
         expectedResult,
         done
       );
-      workspaceRepository.create(ownerId, title, problem, callback);
+      workspaceRepository.create(
+        {query: query},
+        ownerId,
+        title,
+        problem,
+        callback
+      );
     });
 
     it('should call the callback with only an error', function (done) {
@@ -115,7 +121,13 @@ describe('the workspace repository', function () {
         expectedError,
         done
       );
-      workspaceRepository.create(ownerId, title, problem, callback);
+      workspaceRepository.create(
+        {query: query},
+        ownerId,
+        title,
+        problem,
+        callback
+      );
     });
   });
 
@@ -135,7 +147,8 @@ describe('the workspace repository', function () {
         queryInputValues,
         done
       );
-      workspaceRepository.setDefaultSubProblemDirectly(
+      workspaceRepository.setDefaultSubProblem(
+        {query: query},
         workspaceId,
         subProblemId,
         callback
@@ -151,7 +164,8 @@ describe('the workspace repository', function () {
         expectedError,
         done
       );
-      workspaceRepository.setDefaultSubProblemDirectly(
+      workspaceRepository.setDefaultSubProblem(
+        {query: query},
         workspaceId,
         subProblemId,
         callback
@@ -215,7 +229,12 @@ describe('the workspace repository', function () {
         queryInputValues,
         done
       );
-      workspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
+      workspaceRepository.setDefaultScenario(
+        {query: query},
+        workspaceId,
+        scenarioId,
+        callback
+      );
     });
 
     it('should call the callback with only an error', function (done) {
@@ -227,7 +246,12 @@ describe('the workspace repository', function () {
         expectedError,
         done
       );
-      workspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
+      workspaceRepository.setDefaultScenario(
+        {query: query},
+        workspaceId,
+        scenarioId,
+        callback
+      );
     });
   });
 
@@ -291,7 +315,11 @@ describe('the workspace repository', function () {
         expectedResult,
         done
       );
-      workspaceRepository.getWorkspaceInfo(workspaceId, callback);
+      workspaceRepository.getWorkspaceInfo(
+        {query: query},
+        workspaceId,
+        callback
+      );
     });
 
     it('should call the callback with an error if result is empty', function (done) {
@@ -308,7 +336,11 @@ describe('the workspace repository', function () {
         expectedEmptyResultError,
         done
       );
-      workspaceRepository.getWorkspaceInfo(workspaceId, callback);
+      workspaceRepository.getWorkspaceInfo(
+        {query: query},
+        workspaceId,
+        callback
+      );
     });
 
     it('should call the callback with only an error', function (done) {
@@ -320,7 +352,11 @@ describe('the workspace repository', function () {
         expectedError,
         done
       );
-      workspaceRepository.getWorkspaceInfo(workspaceId, callback);
+      workspaceRepository.getWorkspaceInfo(
+        {query: query},
+        workspaceId,
+        callback
+      );
     });
   });
 

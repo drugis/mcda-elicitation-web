@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node tscomp/index",
-    "test": "mocha && karma start --singleRun && npm run test-R",
+    "test": "mocha && karma start --singleRun && jest && npm run test-R",
     "test-end-to-end": "nightwatch -c nightwatch.local.conf.js",
     "build-backend": "rm -rf tscomp/*  && tsc -p ts-backend-config.json",
     "build-dev": "webpack --config webpack.dev.js",

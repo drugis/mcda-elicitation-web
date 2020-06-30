@@ -8,26 +8,26 @@ chai.use(spies);
 const expect = chai.expect;
 
 var subproblemRepoStub = {
-  create: () => { }
+  create: () => {}
 };
 var scenarioRepoStub = {
-  create: () => { }
+  createInTransaction: () => {}
 };
 var workspaceRepoStub = {
-  create: () => { },
-  query: () => { },
-  setDefaultScenario: () => { },
-  setDefaultSubProblem: () => { },
-  getWorkspaceInfo: () => { },
-  get: () => { },
-  update: () => { },
-  delete: () => { }
+  create: () => {},
+  query: () => {},
+  setDefaultScenario: () => {},
+  setDefaultSubProblem: () => {},
+  getWorkspaceInfo: () => {},
+  get: () => {},
+  update: () => {},
+  delete: () => {}
 };
 var utilStub = {
-  handleError: () => { },
-  getUser: () => { },
-  reduceProblem: () => { },
-  getRanges: () => { }
+  handleError: () => {},
+  getUser: () => {},
+  reduceProblem: () => {},
+  getRanges: () => {}
 };
 
 const dbArgumement = {
@@ -50,7 +50,8 @@ var db = {
 };
 const workspaceHandler = proxyquire(
   '../node-backend/workspaceHandler',
-  dbArgumement)(db);
+  dbArgumement
+)(db);
 
 describe('the workspace handler', () => {
   const userId = 37;
@@ -91,7 +92,7 @@ describe('the workspace handler', () => {
       expect(response.json).to.have.been.called.with(result);
     });
 
-    it('should not call reponse.json if there\'s an error', function() {
+    it("should not call reponse.json if there's an error", function () {
       query.onCall(0).yields(error, null);
 
       workspaceHandler.query(request, response, next);
@@ -118,7 +119,7 @@ describe('the workspace handler', () => {
     const title = 'title';
     const request = {
       params: {
-        workspaceId: workspaceId,
+        workspaceId: workspaceId
       },
       body: {
         title: title,
@@ -136,8 +137,11 @@ describe('the workspace handler', () => {
     beforeEach(() => {
       workspaceCreate = sinon.stub(workspaceRepoStub, 'create');
       subProblemCreate = sinon.stub(subproblemRepoStub, 'create');
-      setDefaultSubProblem = sinon.stub(workspaceRepoStub, 'setDefaultSubProblem');
-      scenarioCreate = sinon.stub(scenarioRepoStub, 'create');
+      setDefaultSubProblem = sinon.stub(
+        workspaceRepoStub,
+        'setDefaultSubProblem'
+      );
+      scenarioCreate = sinon.stub(scenarioRepoStub, 'createInTransaction');
       setDefaultScenario = sinon.stub(workspaceRepoStub, 'setDefaultScenario');
       getWorkspaceInfo = sinon.stub(workspaceRepoStub, 'getWorkspaceInfo');
 
@@ -165,7 +169,7 @@ describe('the workspace handler', () => {
     });
 
     it('should call response.json with the created workspace', (done) => {
-      var expectations = function(workspace) {
+      var expectations = function (workspace) {
         expect(workspace).to.equal(result);
         expect(next).to.have.not.been.called();
         done();
@@ -266,7 +270,6 @@ describe('the workspace handler', () => {
       expect(utilStub.handleError).to.have.been.called.with(error);
       expect(response.status).to.have.not.been.called();
     });
-
   });
 
   describe('get', () => {
@@ -300,7 +303,7 @@ describe('the workspace handler', () => {
       expect(response.json).to.have.been.called.with(result);
     });
 
-    it('should not call reponse.json if there\'s an error', function() {
+    it("should not call reponse.json if there's an error", function () {
       get.onCall(0).yields(error, null);
 
       workspaceHandler.get(request, response, next);
@@ -347,7 +350,7 @@ describe('the workspace handler', () => {
       expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.sendStatus if there\'s an error', function() {
+    it("should not call reponse.sendStatus if there's an error", function () {
       update.onCall(0).yields(error);
 
       workspaceHandler.update(request, response, next);
@@ -391,7 +394,7 @@ describe('the workspace handler', () => {
       expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.sendStatus if there\'s an error', function() {
+    it("should not call reponse.sendStatus if there's an error", function () {
       del.onCall(0).yields(error, null);
 
       workspaceHandler.delete(request, response, next);
