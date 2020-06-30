@@ -9,6 +9,7 @@ import {Effect} from '@shared/interface/IEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IInputCellQueryResult from '@shared/interface/IInputCellQueryResult';
+import IOrdering from '@shared/interface/IOrdering';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
@@ -32,7 +33,9 @@ import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import {generateDistribution} from '../app/ts/ManualInput/ManualInputService/ManualInputService';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
 
-export function mapWorkspace(queryResult: IWorkspaceQueryResult) {
+export function mapWorkspace(
+  queryResult: IWorkspaceQueryResult
+): IInProgressWorkspace {
   return {
     id: queryResult.id,
     title: queryResult.title,
@@ -557,7 +560,7 @@ function buildDistributionPerformance(
 export function createOrdering(
   criteria: Record<string, IProblemCriterion>,
   alternatives: Record<string, {title: string}>
-) {
+): IOrdering {
   return {
     criteria: _.keys(criteria),
     alternatives: _.keys(alternatives),

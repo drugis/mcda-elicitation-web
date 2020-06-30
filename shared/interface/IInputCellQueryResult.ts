@@ -7,16 +7,16 @@ export default interface IInputCellQueryResult {
   alternativeid: string;
   datasourceid: string;
   criterionid: string;
-  val: number;
-  lowerbound: number;
-  upperbound: number;
-  isnotestimablelowerbound: boolean;
-  isnotestimableupperbound: boolean;
-  txt: string;
-  mean: number;
-  standarderror: number;
-  alpha: number;
-  beta: number;
+  val: number | null;
+  lowerbound: number | null;
+  upperbound: number | null;
+  isnotestimablelowerbound: boolean | null;
+  isnotestimableupperbound: boolean | null;
+  txt: string | null;
+  mean: number | null;
+  standarderror: number | null;
+  alpha: number | null;
+  beta: number | null;
   celltype: TableInputMode;
   inputtype: effectType | distributionType;
 }
