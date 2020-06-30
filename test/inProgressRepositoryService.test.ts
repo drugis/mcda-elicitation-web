@@ -857,20 +857,12 @@ describe('createProblem', () => {
       alternatives: alternatives,
       effects: {
         ds1Id: {
-          alt1Id: {
-            alternativeId: alternative1Id,
-            dataSourceId: dataSource1Id,
-            criterionId: criterion1Id
-          } as Effect
+          alt1Id: {} as Effect
         }
       },
       distributions: {
         ds1Id: {
-          alt1Id: {
-            alternativeId: alternative1Id,
-            dataSourceId: dataSource1Id,
-            criterionId: criterion1Id
-          } as Distribution
+          alt1Id: {} as Distribution
         }
       }
     };
