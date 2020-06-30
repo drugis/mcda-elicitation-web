@@ -25,6 +25,7 @@ WORKDIR /var/lib/mcda
 ENV HOME /var/lib/mcda
 
 RUN yarn
+RUN yarn build-backend
 ARG WEBPACK_COMMAND
 ARG MATOMO_VERSION
 RUN if [ "$MATOMO_VERSION" != "" ] ; then export MATOMO_VERSION=$MATOMO_VERSION ; else export MATOMO_VERSION='Test' ; fi
@@ -32,4 +33,4 @@ RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm 
 
 EXPOSE 3002
 
-CMD ["forever", "index.js"]
+CMD ["forever", "tscomp/index.js"]
