@@ -18,7 +18,7 @@ import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import IPerformance from '@shared/interface/Problem/IPerformance';
+import {Performance} from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -292,11 +292,6 @@ function mapDataSourcesOntoCriteria(
 }
 
 export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
-  const newDistributions = createMissingDistributions(
-    inProgressMessage.effects,
-    inProgressMessage.distributions
-  );
-  inProgressMessage.distributions = newDistributions;
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     title: inProgressMessage.workspace.title,
@@ -305,28 +300,6 @@ export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
     alternatives: buildAlternatives(inProgressMessage.alternatives),
     performanceTable: buildPerformanceTable(inProgressMessage)
   };
-}
-
-function createMissingDistributions(
-  effects: Record<string, Record<string, Effect>>,
-  distributions: Record<string, Record<string, Distribution>>
-): Record<string, Record<string, Distribution>> {
-  let distributionsCopy = _.cloneDeep(distributions);
-  _.forEach(effects, (row: Record<string, Effect>, dataSourceId: string) => {
-    _.forEach(row, (effect: Effect, alternativeId: string) => {
-      if (!distributionsCopy[dataSourceId]) {
-        distributionsCopy[dataSourceId] = {};
-      }
-      if (!distributionsCopy[dataSourceId][alternativeId]) {
-        const newDistribution = generateDistribution(effect);
-        distributionsCopy[dataSourceId][alternativeId] = newDistribution;
-      } else {
-        distributionsCopy[dataSourceId][alternativeId] =
-          distributions[dataSourceId][alternativeId];
-      }
-    });
-  });
-  return distributionsCopy;
 }
 
 function buildCriteria(
@@ -438,12 +411,23 @@ function buildPerformance(
   effectCell: Effect,
   distributionCell: Distribution,
   unitOfMeasurementType: UnitOfMeasurementType
-): IPerformance {
+): Performance {
   const isPercentage = unitOfMeasurementType === 'percentage';
-  return {
-    effect: buildEffectPerformance(effectCell, isPercentage),
-    distribution: buildDistributionPerformance(distributionCell, isPercentage)
-  };
+  let performance;
+  if (effectCell) {
+    performance = {effect: buildEffectPerformance(effectCell, isPercentage)};
+  }
+  if (distributionCell) {
+    performance = {
+      ...performance,
+      distribution: buildDistributionPerformance(distributionCell, isPercentage)
+    };
+  }
+  if (!performance) {
+    throw 'Cell without effect and distribution found';
+  } else {
+    return performance;
+  }
 }
 
 function buildEffectPerformance(
