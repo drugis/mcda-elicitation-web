@@ -3,29 +3,44 @@ import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
-import {createOrdering, createProblem} from './inProgressRepositoryService';
+import {
+  buildEmptyInProgress,
+  buildInProgressCopy,
+  createOrdering,
+  createProblem
+} from './inProgressRepositoryService';
 import InProgressWorkspaceRepository from './inProgressWorkspaceRepository';
 import {logger} from './loggerTS';
 import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
+import WorkspaceRepository from './workspaceRepository';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
+  const workspaceRepository = WorkspaceRepository(db);
+
   const workspaceHandler = WorkspaceHandler(db);
   const orderingRepository = OrderingRepository(db);
 
-  function create(request: Request, response: Response, next: () => {}): void {
+  function createEmpty(
+    request: Request,
+    response: Response,
+    next: () => {}
+  ): void {
     const user: {id: string} = getUser(request);
+    const emptyInProgress = buildEmptyInProgress();
     inProgressWorkspaceRepository.create(
       user.id,
-      (error: any, createdId: string) => {
+      emptyInProgress,
+      (error: IError | null, createdId: string) => {
         if (error) {
           handleError(error, next);
         } else {
@@ -35,6 +50,43 @@ export default function InProgressHandler(db: any) {
       }
     );
   }
+
+  function createCopy(
+    request: Request,
+    response: Response,
+    next: () => void
+  ): void {
+    const user: {id: string} = getUser(request);
+    const sourceWorkspaceId = Number.parseInt(request.params.id);
+
+    waterfall(
+      [
+        _.partial(workspaceRepository.get, sourceWorkspaceId),
+        buildInProgress,
+        createNew
+      ],
+      (error: IError | null, createdId: string) => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.status(CREATED);
+          response.json({id: createdId});
+        }
+      }
+    );
+  }
+
+  function buildInProgress(
+    workspace: IWorkspace,
+    callback: (error: IError | null, inProgressCopy: IInProgressMessage) => void
+  ) {
+    callback(null, buildInProgressCopy(workspace));
+  }
+
+  function createNew(
+    inProgressCopy: IInProgressMessage,
+    callback: (error: IError | null, newCreated: IWorkspaceInfo) => void
+  ) {}
 
   function get(request: Request, response: Response, next: () => void): void {
     inProgressWorkspaceRepository.get(
@@ -323,7 +375,8 @@ export default function InProgressHandler(db: any) {
   }
 
   return {
-    create: create,
+    createEmpty: createEmpty,
+    createCopy: createCopy,
     get: get,
     updateWorkspace: updateWorkspace,
     updateCriterion: updateCriterion,

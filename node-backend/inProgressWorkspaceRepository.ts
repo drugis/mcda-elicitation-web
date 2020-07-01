@@ -16,7 +16,6 @@ import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IValueCellQueryResult from '@shared/interface/IInputCellQueryResult';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
-import {generateUuid} from '@shared/util';
 import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
@@ -35,25 +34,36 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function create(
     userId: string,
+    toCreate: IInProgressMessage,
     callback: (error: any, createdId: string) => void
   ) {
     db.runInTransaction(
-      _.partial(createInProgressWorkspaceTransaction, userId),
+      _.partial(createInProgressWorkspaceTransaction, userId, toCreate),
       callback
     );
   }
 
   function createInProgressWorkspaceTransaction(
     ownerId: string,
+    toCreate: IInProgressMessage,
     client: any,
     transactionCallback: (error: any, createdId: string) => void
   ) {
+    const dataSources: IDataSource[] = _.flatMap(
+      toCreate.criteria,
+      'dataSources'
+    );
     waterfall(
       [
-        _.partial(createInProgressWorkspace, client, ownerId),
-        _.partial(createInProgressCriteria, client),
-        _.partial(createInProgressDataSources, client),
-        _.partial(createInProgressAlternatives, client)
+        _.partial(
+          createInProgressWorkspace,
+          client,
+          ownerId,
+          toCreate.workspace
+        ),
+        _.partial(createInProgressCriteria, client, toCreate.criteria),
+        _.partial(createInProgressDataSources, client, dataSources),
+        _.partial(createInProgressAlternatives, client, toCreate.alternatives)
       ],
       transactionCallback
     );
@@ -62,46 +72,42 @@ export default function InProgressWorkspaceRepository(db: any) {
   function createInProgressWorkspace(
     client: any,
     ownerId: string,
+    toCreate: IInProgressWorkspace,
     callback: (error: any, createdId: string) => {}
   ) {
-    const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, title, therapeuticContext) 
-         VALUES ($1, $2, true, $3, $4) 
-       RETURNING id`;
-    client.query(query, [ownerId, {}, 'new workspace', ''], function (
-      error: any,
-      result: {rows: any[]}
-    ) {
-      callback(error, error || result.rows[0].id);
-    });
+    const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, 
+        title, therapeuticContext) 
+          VALUES ($1, $2, $3, $4, $5) 
+        RETURNING id`;
+    client.query(
+      query,
+      [
+        ownerId,
+        {},
+        toCreate.useFavourability,
+        toCreate.title,
+        toCreate.therapeuticContext
+      ],
+      function (error: any, result: {rows: any[]}) {
+        callback(error, error || result.rows[0].id);
+      }
+    );
   }
 
   function createInProgressCriteria(
     client: any,
+    toCreate: ICriterion[],
     inProgressworkspaceId: string,
-    callback: (
-      error: any | null,
-      inProgressworkspaceId: string,
-      createdCriteriaIds: string[]
-    ) => {}
+    callback: (error: any | null, inProgressworkspaceId: string) => {}
   ) {
-    const toCreate = [
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        isfavourable: true,
-        title: 'criterion 1',
-        description: '',
+    const toInsert = _.map(toCreate, (criterion: ICriterion, index: number) => {
+      return {
+        ...criterion,
+        isfavourable: criterion.isFavourable,
+        orderindex: index,
         inprogressworkspaceid: inProgressworkspaceId
-      },
-      {
-        id: generateUuid(),
-        orderindex: 1,
-        isfavourable: false,
-        title: 'criterion 2',
-        description: '',
-        inprogressworkspaceid: inProgressworkspaceId
-      }
-    ];
+      };
+    });
     const columns = new pgp.helpers.ColumnSet(
       [
         'id',
@@ -113,41 +119,35 @@ export default function InProgressWorkspaceRepository(db: any) {
       ],
       {table: 'inprogresscriterion'}
     );
-    const query = pgp.helpers.insert(toCreate, columns) + ' RETURNING id';
+    const query = pgp.helpers.insert(toInsert, columns) + ' RETURNING id';
     client.query(query, [], (error: any, result: {rows: [{id: string}]}) => {
       if (error) {
-        callback(error, null, null);
+        callback(error, null);
       } else {
-        callback(null, inProgressworkspaceId, _.map(result.rows, 'id'));
+        callback(null, inProgressworkspaceId);
       }
     });
   }
 
   function createInProgressDataSources(
     client: any,
+    toCreate: IDataSource[],
     inProgressworkspaceId: string,
-    criterionIds: string[],
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ) {
-    const toCreate = [
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        criterionid: criterionIds[0],
+    const toInsert = _.map(toCreate, (item: IDataSource, index: number) => {
+      return {
+        id: item.id,
+        orderindex: index,
+        criterionid: item.criterionId,
         inprogressworkspaceid: inProgressworkspaceId
-      },
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        criterionid: criterionIds[1],
-        inprogressworkspaceid: inProgressworkspaceId
-      }
-    ];
+      };
+    });
     const columns = new pgp.helpers.ColumnSet(
       ['id', 'orderindex', 'criterionid', 'inprogressworkspaceid'],
       {table: 'inprogressdatasource'}
     );
-    const query = pgp.helpers.insert(toCreate, columns);
+    const query = pgp.helpers.insert(toInsert, columns);
     client.query(query, [], (error: any) => {
       if (error) {
         callback(error, null);
@@ -159,28 +159,26 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function createInProgressAlternatives(
     client: any,
+    toCreate: IAlternative[],
     inProgressworkspaceId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ) {
-    const toCreate = [
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        inprogressworkspaceid: inProgressworkspaceId,
-        title: 'alternative 1'
-      },
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        inprogressworkspaceid: inProgressworkspaceId,
-        title: 'alternative 2'
+    const toInsert = _.map(
+      toCreate,
+      (alternative: IAlternative, index: number) => {
+        return {
+          id: alternative.id,
+          orderindex: index,
+          inprogressworkspaceid: inProgressworkspaceId,
+          title: alternative.title
+        };
       }
-    ];
+    );
     const columns = new pgp.helpers.ColumnSet(
       ['id', 'orderindex', 'inprogressworkspaceid', 'title'],
       {table: 'inprogressalternative'}
     );
-    const query = pgp.helpers.insert(toCreate, columns);
+    const query = pgp.helpers.insert(toInsert, columns);
     client.query(query, [], (error: any) => {
       if (error) {
         callback(error, null);

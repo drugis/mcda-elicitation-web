@@ -4,11 +4,13 @@ export default function InProgressRouter(db: any) {
   const inProgressHandler = InProgressHandler(db);
   return express
     .Router()
-    .post('/', inProgressHandler.create)
+    .post('/', inProgressHandler.createEmpty)
     .get('/', inProgressHandler.query)
     .get('/:id', inProgressHandler.get)
     .delete('/:id', inProgressHandler.delete)
     .put('/:id', inProgressHandler.updateWorkspace)
+
+    .post('/createCopy/:sourceWorkspaceId', inProgressHandler.createCopy)
 
     .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)
     .delete('/:id/criteria/:criterionId', inProgressHandler.deleteCriterion)

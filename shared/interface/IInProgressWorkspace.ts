@@ -1,5 +1,5 @@
 export default interface IInProgressWorkspace {
-  id: number;
+  id?: number;
   title: string;
   therapeuticContext: string;
   useFavourability: boolean;

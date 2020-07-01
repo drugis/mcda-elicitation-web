@@ -1,5 +1,11 @@
 export default interface IError {
-  message: String;
+  type?: string;
+  message: string;
+  status?: number;
+  statusCode?: number;
+  err?: {
+    message: string;
+  };
   response: {
     data: string;
   };

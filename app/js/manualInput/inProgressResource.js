@@ -13,6 +13,10 @@ define(['angular'], function () {
         },
         create: {
           method: 'POST'
+        },
+        createCopy: {
+          url: '/api/v2/inProgress/createCopy/:sourceWorkspaceId',
+          method: 'POST'
         }
       }
     );

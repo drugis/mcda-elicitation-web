@@ -29,6 +29,7 @@
     "@types/csurf": "^1.9.36",
     "@types/express": "^4.17.6",
     "@types/express-session": "^1.17.0",
+    "@types/helmet": "^0.0.47",
     "@types/passport": "^1.0.3",
     "async": "~3.1.0",
     "body-parser": "~1.19.0",
@@ -56,6 +57,7 @@
     "@babel/preset-env": "^7.10.0",
     "@babel/preset-react": "^7.8.3",
     "@types/axios": "^0.14.0",
+    "@types/chai": "^4.2.11",
     "@types/jest": "^26.0.3",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
@@ -83,7 +85,7 @@
     "css-loader": "^3.2.0",
     "d3": "^5.12.0",
     "error-reporting": "drugis/error-reporting#1.3.2",
-    "export-directive": "drugis/export-directive#1.3.1",
+    "export-directive": "drugis/export-directive#1.3.2",
     "file-loader": "^4.2.0",
     "font-awesome": "~4.7.0",
     "foundation-sites": "~6.5.3",
@@ -93,8 +95,8 @@
     "html-webpack-plugin": "^4.0.0-alpha",
     "jasmine-core": "^3.5.0",
     "jest": "^26.1.0",
-    "jquery": "~3.4.1",
-    "karma": "4.4.1",
+    "jquery": "~3.5.0",
+    "karma": "5.1.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-firefox-launcher": "~1.2.0",
     "karma-jasmine": "~2.0.1",
@@ -118,17 +120,18 @@
     "ts-jest": "^26.1.1",
     "ts-loader": "^6.2.1",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.5",
     "url-loader": "^2.2.0",
     "vanilla-back-to-top": "^7.2.1",
-    "webpack": "^4.41.3",
+    "webpack": "^4.43.0",
     "webpack-cli": "^3.3.9",
     "webpack-merge": "^4.2.2"
   },
   "resolutions": {
     "js-yaml": "3.13.1",
-    "https-proxy-agent": "2.2.3",
-    "d3": "5.12.0"
+    "yargs": "15.3.1",
+    "yargs-parser": "18.1.3",
+    "minimist": "1.2.5"
   },
   "engines": {
     "yarn": ">= 1.0.0"

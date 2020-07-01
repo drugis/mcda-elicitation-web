@@ -7,6 +7,6 @@ export enum UnitOfMeasurementType {
 export default interface IUnitOfMeasurement {
   label: string;
   type: UnitOfMeasurementType;
-  lowerBound: number;
-  upperBound: number;
+  lowerBound?: number;
+  upperBound?: number;
 }

@@ -11,6 +11,7 @@ import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IInputCellQueryResult from '@shared/interface/IInputCellQueryResult';
 import IOrdering from '@shared/interface/IOrdering';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
 import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
@@ -28,6 +29,7 @@ import IRangeEffectPerformance from '@shared/interface/Problem/IRangeEffectPerfo
 import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
 import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
+import {generateUuid} from '@shared/util';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
@@ -557,4 +559,57 @@ export function createOrdering(
       []
     )
   };
+}
+
+export function buildEmptyInProgress(): IInProgressMessage {
+  const criterionIds = [generateUuid(), generateUuid()];
+  const criteria: ICriterion[] = _.map(criterionIds, buildInprogressCriterion);
+
+  const alternatives: IAlternative[] = [
+    {
+      id: generateUuid(),
+      title: 'alternative 1'
+    },
+    {
+      id: generateUuid(),
+      title: 'alternative 1'
+    }
+  ];
+  return {
+    workspace: {
+      title: 'new workspace',
+      therapeuticContext: '',
+      useFavourability: true
+    },
+    criteria: criteria,
+    alternatives: alternatives,
+    effects: {},
+    distributions: {}
+  };
+}
+
+function buildInprogressCriterion(criterionId: string, index: number) {
+  return {
+    id: criterionId,
+    isFavourable: true,
+    title: 'criterion ' + index,
+    description: '',
+    dataSources: [
+      {
+        id: generateUuid(),
+        criterionId: criterionId,
+        reference: '',
+        uncertainty: '',
+        strengthOfEvidence: '',
+        unitOfMeasurement: {
+          label: '',
+          type: UnitOfMeasurementType.custom
+        }
+      }
+    ]
+  };
+}
+
+export function buildInProgressCopy(workspace: IWorkspace): IInProgressMessage {
+  return {} as IInProgressMessage;
 }

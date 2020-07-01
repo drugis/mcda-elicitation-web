@@ -14,5 +14,5 @@
     "allowJs": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", "dist", "tscomp", "node-backend", "index.ts"]
+  "exclude": ["node_modules", "dist", "tscomp"]
 }
