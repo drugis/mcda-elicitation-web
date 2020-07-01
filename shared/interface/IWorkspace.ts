@@ -1,7 +1,9 @@
+import IProblem from './Problem/IProblem';
+
 export default interface IWorkspace {
   id: number;
   owner: number;
-  problem: object;
+  problem: IProblem;
   defaultSubproblemId: number;
   defaultScenarioId: number;
 }

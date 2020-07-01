@@ -297,23 +297,33 @@ export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     title: inProgressMessage.workspace.title,
     description: inProgressMessage.workspace.therapeuticContext,
-    criteria: buildCriteria(inProgressMessage.criteria),
+    criteria: buildCriteria(
+      inProgressMessage.criteria,
+      inProgressMessage.workspace.useFavourability
+    ),
     alternatives: buildAlternatives(inProgressMessage.alternatives),
     performanceTable: buildPerformanceTable(inProgressMessage)
   };
 }
 
 function buildCriteria(
-  criteria: ICriterion[]
+  criteria: ICriterion[],
+  useFavourability: boolean
 ): Record<string, IProblemCriterion> {
   const newCriteria = _.map(criteria, function (criterion) {
     const newCriterion = {
       title: criterion.title,
       description: criterion.description,
-      isFavorable: criterion.isFavourable,
       dataSources: _.map(criterion.dataSources, buildDataSource)
     };
-    return [criterion.id, newCriterion];
+    if (useFavourability) {
+      return [
+        criterion.id,
+        {...newCriterion, isFavorable: criterion.isFavourable}
+      ];
+    } else {
+      return [criterion.id, newCriterion];
+    }
   });
   return _.fromPairs(newCriteria);
 }
@@ -572,7 +582,7 @@ export function buildEmptyInProgress(): IInProgressMessage {
     },
     {
       id: generateUuid(),
-      title: 'alternative 1'
+      title: 'alternative 2'
     }
   ];
   return {
@@ -592,7 +602,7 @@ function buildInprogressCriterion(criterionId: string, index: number) {
   return {
     id: criterionId,
     isFavourable: true,
-    title: 'criterion ' + index,
+    title: `criterion ${index + 1}`,
     description: '',
     dataSources: [
       {
@@ -611,5 +621,95 @@ function buildInprogressCriterion(criterionId: string, index: number) {
 }
 
 export function buildInProgressCopy(workspace: IWorkspace): IInProgressMessage {
-  return {} as IInProgressMessage;
+  return {
+    workspace: buildInProgressWorkspace(workspace),
+    criteria: buildInProgressCriteria(workspace.problem.criteria),
+    alternatives: buildInProgressAlternatives(workspace.problem.alternatives),
+    effects: buildInProgressEffects(),
+    distributions: buildInProgressDistributions()
+  };
+}
+
+function buildInProgressWorkspace(workspace: IWorkspace): IInProgressWorkspace {
+  return {
+    id: -1, //placeholder
+    title: `Copy of ${workspace.problem.title}`,
+    therapeuticContext: workspace.problem.description,
+    useFavourability: _.some(workspace.problem.criteria, (criterion) => {
+      return criterion.hasOwnProperty('isFavorable');
+    })
+  };
+}
+
+function buildInProgressCriteria(
+  criteria: Record<string, IProblemCriterion>
+): ICriterion[] {
+  return _.map(criteria, (criterion: IProblemCriterion) => {
+    const newId = generateUuid();
+    return {
+      id: newId,
+      title: criterion.title,
+      description: criterion.description,
+      isFavourable: !!criterion.isFavorable,
+      dataSources: buildInProgressDataSources(criterion, newId)
+    };
+  });
+}
+
+function buildInProgressDataSources(
+  criterion: IProblemCriterion,
+  criterionId: string
+): IDataSource[] {
+  return _.map(criterion.dataSources, (dataSource) => {
+    return {
+      id: generateUuid(),
+      reference: dataSource.source,
+      unitOfMeasurement: {
+        label: dataSource.unitOfMeasurement.label,
+        type: dataSource.unitOfMeasurement.type,
+        lowerBound: dataSource.scale[0],
+        upperBound: dataSource.scale[1]
+      },
+      uncertainty: dataSource.uncertainties,
+      strengthOfEvidence: dataSource.strengthOfEvidence,
+      criterionId: criterionId
+    };
+  });
+}
+
+function buildInProgressAlternatives(
+  alternatives: Record<string, {title: string}>
+): IAlternative[] {
+  return _.map(alternatives, (alternative: {title: string}) => {
+    return {
+      id: generateUuid(),
+      title: alternative.title
+    };
+  });
+}
+
+function buildInProgressEffects(
+  performanceTable: IPerformanceTableEntry[]
+): Record<string, Record<string, Effect>> {
+  const effects: Record<string, Record<string, Effect>> = _.reduce(
+    performanceTable,
+    (
+      accum: Record<string, Record<string, Effect>>,
+      performanceTableEntry: IPerformanceTableEntry
+    ) => {
+      if (!accum[performanceTableEntry.dataSource]) {
+        accum[performanceTableEntry.dataSource] = {};
+      }
+      accum[performanceTableEntry.dataSource][
+        performanceTableEntry.alternative
+      ] = buildEffect(performanceTableEntry);
+      return accum;
+    },
+    {}
+  );
+  return effects;
+}
+
+function buildEffect(performanceTableEntry: IPerformanceTableEntry): Effect {
+  return {} as Effect;
 }
