@@ -731,11 +731,11 @@ describe('createProblem', () => {
         performance: {
           effect: {
             type: 'exact',
-            value: 1
+            value: 0.01
           },
           distribution: {
             type: 'exact',
-            value: 1
+            value: 0.01
           }
         }
       },
@@ -754,7 +754,7 @@ describe('createProblem', () => {
         performance: {
           effect: {
             type: 'exact',
-            value: 1,
+            value: 0.01,
             input: {
               value: 1,
               lowerBound: 0,
@@ -785,8 +785,8 @@ describe('createProblem', () => {
           distribution: {
             type: 'dnorm',
             parameters: {
-              mu: 1,
-              sigma: 0.5
+              mu: 0.01,
+              sigma: 0.005
             }
           }
         }

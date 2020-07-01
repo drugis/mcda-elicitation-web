@@ -26,21 +26,32 @@ export default function UnitOfMeasurementDialog({
   callback: (unit: IUnitOfMeasurement) => void;
   cancel: () => void;
 }) {
+  const lowerBoundOptions = [-Infinity, 0];
+  const upperBoundOptions = [1, 100, Infinity];
   const {custom, decimal, percentage} = UnitOfMeasurementType;
   const [label, setLabel] = useState(unitOfMeasurement.label);
   const [unitType, setUnitType] = useState(unitOfMeasurement.type);
-  const [lowerBound, setLowerBound] = useState(unitOfMeasurement.lowerBound);
-  const [upperBound, setUpperBound] = useState(unitOfMeasurement.upperBound);
-
-  const lowerBoundOptions = [-Infinity, 0];
-  const upperBoundOptions = [1, 100, Infinity];
+  const [lowerBound, setLowerBound] = useState<number>(
+    getBound(unitOfMeasurement.lowerBound, -Infinity)
+  );
+  const [upperBound, setUpperBound] = useState<number>(
+    getBound(unitOfMeasurement.upperBound, Infinity)
+  );
 
   useEffect(() => {
     setLabel(unitOfMeasurement.label);
     setUnitType(unitOfMeasurement.type);
-    setLowerBound(unitOfMeasurement.lowerBound);
-    setUpperBound(unitOfMeasurement.upperBound);
+    setLowerBound(getBound(unitOfMeasurement.lowerBound, -Infinity));
+    setUpperBound(getBound(unitOfMeasurement.upperBound, Infinity));
   }, [isDialogOpen, unitOfMeasurement]);
+
+  function getBound(bound: number, defaultBound: number) {
+    if (bound === undefined) {
+      return defaultBound;
+    } else {
+      return bound;
+    }
+  }
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
