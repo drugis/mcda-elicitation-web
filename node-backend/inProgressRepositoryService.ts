@@ -30,7 +30,6 @@ import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
-import {generateDistribution} from '../app/ts/ManualInput/ManualInputService/ManualInputService';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
 
 export function mapWorkspace(
@@ -392,7 +391,9 @@ function buildPerformanceEntries(
 ): IPerformanceTableEntry[] {
   return _.map(alternatives, function (alternative) {
     const effectCell = effects[dataSource.id][alternative.id];
-    const distributionCell = distributions[dataSource.id][alternative.id];
+    const distributionCell = distributions[dataSource.id]
+      ? distributions[dataSource.id][alternative.id]
+      : undefined;
 
     return {
       alternative: alternative.id,
@@ -434,17 +435,18 @@ function buildEffectPerformance(
   cell: Effect,
   isPercentage: boolean
 ): EffectPerformance {
+  const percentageModifier = isPercentage ? 100 : 1;
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: cell.value
+        value: significantDigits(cell.value / percentageModifier)
       };
       return valuePerformance;
     case 'valueCI':
       const valueCIPerformance: IValueCIPerformance = {
         type: 'exact',
-        value: cell.value,
+        value: significantDigits(cell.value / percentageModifier),
         input: {
           value: cell.value,
           lowerBound: cell.lowerBound,
@@ -453,7 +455,6 @@ function buildEffectPerformance(
       };
       return valueCIPerformance;
     case 'range':
-      const percentageModifier = isPercentage ? 100 : 1;
       const rangePerformance: IRangeEffectPerformance = {
         type: 'exact',
         value: significantDigits(
@@ -483,15 +484,15 @@ function buildDistributionPerformance(
   cell: Distribution,
   isPercentage: boolean
 ): DistributionPerformance {
+  const percentageModifier = isPercentage ? 100 : 1;
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: cell.value
+        value: significantDigits(cell.value / percentageModifier)
       };
       return valuePerformance;
     case 'range':
-      const percentageModifier = isPercentage ? 100 : 1;
       const rangePerformance: IRangeDistributionPerformance = {
         type: 'range',
         parameters: {
@@ -504,8 +505,8 @@ function buildDistributionPerformance(
       const normalPerformace: INormalPerformance = {
         type: 'dnorm',
         parameters: {
-          mu: cell.mean,
-          sigma: cell.standardError
+          mu: significantDigits(cell.mean / percentageModifier),
+          sigma: significantDigits(cell.standardError / percentageModifier)
         }
       };
       return normalPerformace;
