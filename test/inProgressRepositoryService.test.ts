@@ -27,8 +27,12 @@ import {
   mapWorkspace
 } from '../node-backend/inProgressRepositoryService';
 
+const criterion1Id = 'crit1Id';
+const dataSource1Id = 'ds1Id';
+const alternative1Id = 'alt1Id';
+
 describe('mapWorkspace', () => {
-  test('should map query results', () => {
+  it('should map query results', () => {
     const inProgressWorkspace: IWorkspaceQueryResult = {
       id: 1,
       title: 'title',
@@ -49,7 +53,7 @@ describe('mapWorkspace', () => {
 });
 
 describe('mapCriteria', () => {
-  test('should map and order criteria', () => {
+  it('should map and order criteria', () => {
     const criteria: ICriterionQueryResult[] = [
       {
         id: 'crit1Id',
@@ -90,7 +94,7 @@ describe('mapCriteria', () => {
 });
 
 describe('mapAlternatives', () => {
-  test('should map and order alternatives', () => {
+  it('should map and order alternatives', () => {
     const alternatives: IAlternativeQueryResult[] = [
       {
         id: 'altId1',
@@ -121,13 +125,13 @@ describe('mapAlternatives', () => {
 });
 
 describe('mapDataSources', () => {
-  test('should map and order data sources', () => {
+  it('should map and order data sources', () => {
     const dataSources: IDataSourceQueryResult[] = [
       {
-        id: 'dsId1',
+        id: dataSource1Id,
         inprogressworkspaceid: 1,
         orderindex: 2,
-        criterionid: 'critId1',
+        criterionid: criterion1Id,
         reference: 'reference',
         strengthofevidence: 'strengths',
         uncertainty: 'uncertainties',
@@ -140,7 +144,7 @@ describe('mapDataSources', () => {
         id: 'dsId2',
         inprogressworkspaceid: 1,
         orderindex: 1,
-        criterionid: 'critId1',
+        criterionid: criterion1Id,
         reference: 'reference',
         strengthofevidence: 'strengths',
         uncertainty: 'uncertainties',
@@ -184,13 +188,11 @@ describe('mapDataSources', () => {
 });
 
 describe('mapCellValues', () => {
-  test('should map effects and distributions', () => {
-    const dataSourceId = 'dsId';
-    const criterionId = 'critId';
+  it('should map effects and distributions', () => {
     const basicProperties: IInputCellQueryResult = {
-      alternativeid: 'altId',
-      datasourceid: dataSourceId,
-      criterionid: criterionId,
+      alternativeid: alternative1Id,
+      datasourceid: dataSource1Id,
+      criterionid: criterion1Id,
       inprogressworkspaceid: 1,
       val: null,
       lowerbound: null,
@@ -208,7 +210,7 @@ describe('mapCellValues', () => {
     const effects: IInputCellQueryResult[] = [
       {
         ...basicProperties,
-        alternativeid: 'alt1Id',
+        alternativeid: alternative1Id,
         val: 1,
         celltype: 'effect',
         inputtype: 'value'
@@ -249,7 +251,7 @@ describe('mapCellValues', () => {
     const distributions: IInputCellQueryResult[] = [
       {
         ...basicProperties,
-        alternativeid: 'alt1Id',
+        alternativeid: alternative1Id,
         val: 1,
         celltype: 'distribution',
         inputtype: 'value'
@@ -303,11 +305,11 @@ describe('mapCellValues', () => {
     const cellValues: IInputCellQueryResult[] = [...effects, ...distributions];
     const result = mapCellValues(cellValues);
     const sharedProperties = {
-      dataSourceId: dataSourceId,
-      criterionId: criterionId
+      dataSourceId: dataSource1Id,
+      criterionId: criterion1Id
     };
     const expectedEffects: Record<string, Record<string, Effect>> = {
-      dsId: {
+      ds1Id: {
         alt1Id: {
           ...sharedProperties,
           alternativeId: effects[0].alternativeid,
@@ -348,7 +350,7 @@ describe('mapCellValues', () => {
       string,
       Record<string, Distribution>
     > = {
-      dsId: {
+      ds1Id: {
         alt1Id: {
           ...sharedProperties,
           alternativeId: distributions[0].alternativeid,
@@ -407,10 +409,7 @@ describe('mapCellValues', () => {
 });
 
 describe('mapCombinedResults', () => {
-  test('should build the workspace message and map datasources on criteria', () => {
-    const criterionId = 'critId';
-    const alternativeId = 'altId';
-    const dataSourceId = 'dsId';
+  it('should build the workspace message and map datasources on criteria', () => {
     const inProgressWorkspace: IInProgressWorkspace = {
       id: 1,
       title: 'title',
@@ -419,7 +418,7 @@ describe('mapCombinedResults', () => {
     };
     const criteria: ICriterion[] = [
       {
-        id: criterionId,
+        id: criterion1Id,
         description: 'description',
         title: 'criterion 1',
         dataSources: [],
@@ -428,14 +427,14 @@ describe('mapCombinedResults', () => {
     ];
     const alternatives: IAlternative[] = [
       {
-        id: alternativeId,
+        id: alternative1Id,
         title: 'alternative 1'
       }
     ];
     const dataSources: IDataSource[] = [
       {
-        id: dataSourceId,
-        criterionId: criterionId,
+        id: dataSource1Id,
+        criterionId: criterion1Id,
         reference: 'reference',
         strengthOfEvidence: 'strengths',
         uncertainty: 'uncertainties',
@@ -448,12 +447,12 @@ describe('mapCombinedResults', () => {
       }
     ];
     const sharedProperties = {
-      criterionId: criterionId,
-      dataSourceId: dataSourceId,
-      alternativeId: alternativeId
+      criterionId: criterion1Id,
+      dataSourceId: dataSource1Id,
+      alternativeId: alternative1Id
     };
     const effects: Record<string, Record<string, Effect>> = {
-      dsId: {
+      ds1Id: {
         altId: {
           ...sharedProperties,
           type: 'value',
@@ -462,7 +461,7 @@ describe('mapCombinedResults', () => {
       }
     };
     const distributions: Record<string, Record<string, Distribution>> = {
-      dsId: {
+      ds1Id: {
         altId: {
           ...sharedProperties,
           type: 'value',
@@ -507,164 +506,163 @@ describe('mapCombinedResults', () => {
 });
 
 describe('createProblem', () => {
-  test('should create a problem from in-progress workspace', () => {
-    const criterionId = 'critId';
-    const dataSourceId = 'dsId';
-    const inProgressWorkspace: IInProgressWorkspace = {
-      id: 1,
-      title: 'title',
-      therapeuticContext: 'context',
-      useFavourability: false
-    };
-    const criteria: ICriterion[] = [
-      {
-        id: criterionId,
-        description: 'description',
-        title: 'criterion 1',
-        dataSources: [
-          {
-            id: dataSourceId,
-            criterionId: criterionId,
-            reference: 'reference',
-            strengthOfEvidence: 'strengths',
-            uncertainty: 'uncertainties',
-            unitOfMeasurement: {
-              label: '%',
-              lowerBound: 0,
-              upperBound: 100,
-              type: UnitOfMeasurementType.percentage
-            }
+  const inProgressWorkspace: IInProgressWorkspace = {
+    id: 1,
+    title: 'title',
+    therapeuticContext: 'context',
+    useFavourability: false
+  };
+  const criteria: ICriterion[] = [
+    {
+      id: criterion1Id,
+      description: 'description',
+      title: 'criterion 1',
+      dataSources: [
+        {
+          id: dataSource1Id,
+          criterionId: criterion1Id,
+          reference: 'reference',
+          strengthOfEvidence: 'strengths',
+          uncertainty: 'uncertainties',
+          unitOfMeasurement: {
+            label: '%',
+            lowerBound: 0,
+            upperBound: 100,
+            type: UnitOfMeasurementType.percentage
           }
-        ],
-        isFavourable: true
-      }
-    ];
-    const alternatives: IAlternative[] = [
-      {
-        id: 'alt1Id',
-        title: 'alternative 1'
-      },
-      {
-        id: 'alt2Id',
-        title: 'alternative 2'
-      },
-      {
-        id: 'alt3Id',
-        title: 'alternative 3'
-      },
-      {
-        id: 'alt4Id',
-        title: 'alternative 4'
-      },
-      {
-        id: 'alt5Id',
-        title: 'alternative 5'
-      },
-      {
-        id: 'alt6Id',
-        title: 'alternative 6'
-      },
-      {
-        id: 'alt7Id',
-        title: 'alternative 7'
-      }
-    ];
-    const criterionAndDataSourceIds = {
-      criterionId: criterionId,
-      dataSourceId: dataSourceId
-    };
-    const effects: Record<string, Record<string, Effect>> = {
-      dsId: {
-        alt1Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt1Id',
-          type: 'value',
-          value: 1
-        },
-        alt2Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt2Id',
-          type: 'empty'
-        },
-        alt3Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt3Id',
-          type: 'valueCI',
-          value: 1,
-          lowerBound: 0,
-          upperBound: 2,
-          isNotEstimableLowerBound: false,
-          isNotEstimableUpperBound: false
-        },
-        alt4Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt4Id',
-          type: 'range',
-          lowerBound: 0,
-          upperBound: 2
-        },
-        alt5Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt5Id',
-          type: 'text',
-          text: 'foo'
-        },
-        alt6Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt6Id',
-          type: 'empty'
-        },
-        alt7Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt7Id',
-          type: 'empty'
         }
+      ],
+      isFavourable: true
+    }
+  ];
+  const alternatives: IAlternative[] = [
+    {
+      id: alternative1Id,
+      title: 'alternative 1'
+    },
+    {
+      id: 'alt2Id',
+      title: 'alternative 2'
+    },
+    {
+      id: 'alt3Id',
+      title: 'alternative 3'
+    },
+    {
+      id: 'alt4Id',
+      title: 'alternative 4'
+    },
+    {
+      id: 'alt5Id',
+      title: 'alternative 5'
+    },
+    {
+      id: 'alt6Id',
+      title: 'alternative 6'
+    },
+    {
+      id: 'alt7Id',
+      title: 'alternative 7'
+    }
+  ];
+  const criterionAndDataSourceIds = {
+    criterionId: criterion1Id,
+    dataSourceId: dataSource1Id
+  };
+  const effects: Record<string, Record<string, Effect>> = {
+    ds1Id: {
+      alt1Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: alternative1Id,
+        type: 'value',
+        value: 1
+      },
+      alt2Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt2Id',
+        type: 'empty'
+      },
+      alt3Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt3Id',
+        type: 'valueCI',
+        value: 1,
+        lowerBound: 0,
+        upperBound: 2,
+        isNotEstimableLowerBound: false,
+        isNotEstimableUpperBound: false
+      },
+      alt4Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt4Id',
+        type: 'range',
+        lowerBound: 0,
+        upperBound: 2
+      },
+      alt5Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt5Id',
+        type: 'text',
+        text: 'foo'
+      },
+      alt6Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt6Id',
+        type: 'empty'
+      },
+      alt7Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt7Id',
+        type: 'empty'
       }
-    };
-    const distributions: Record<string, Record<string, Distribution>> = {
-      dsId: {
-        alt1Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt1Id',
-          type: 'value',
-          value: 1
-        },
-        alt3Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt3Id',
-          type: 'range',
-          lowerBound: 0,
-          upperBound: 2
-        },
-        alt4Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt4Id',
-          type: 'normal',
-          mean: 1,
-          standardError: 0.5
-        },
-        alt5Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt5Id',
-          type: 'beta',
-          alpha: 1,
-          beta: 2
-        },
-        alt6Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt6Id',
-          type: 'gamma',
-          alpha: 1,
-          beta: 2
-        },
-        alt7Id: {
-          ...criterionAndDataSourceIds,
-          alternativeId: 'alt7Id',
-          type: 'text',
-          text: 'foo'
-        }
+    }
+  };
+  const distributions: Record<string, Record<string, Distribution>> = {
+    ds1Id: {
+      alt1Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: alternative1Id,
+        type: 'value',
+        value: 1
+      },
+      alt3Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt3Id',
+        type: 'range',
+        lowerBound: 0,
+        upperBound: 2
+      },
+      alt4Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt4Id',
+        type: 'normal',
+        mean: 1,
+        standardError: 0.5
+      },
+      alt5Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt5Id',
+        type: 'beta',
+        alpha: 1,
+        beta: 2
+      },
+      alt6Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt6Id',
+        type: 'gamma',
+        alpha: 1,
+        beta: 2
+      },
+      alt7Id: {
+        ...criterionAndDataSourceIds,
+        alternativeId: 'alt7Id',
+        type: 'text',
+        text: 'foo'
       }
-    };
+    }
+  };
+
+  it('should create a problem from in-progress workspace', () => {
     const inProgressMessage: IInProgressMessage = {
       workspace: inProgressWorkspace,
       criteria: criteria,
@@ -676,13 +674,13 @@ describe('createProblem', () => {
     const result = createProblem(inProgressMessage);
 
     const expectedCriteria: Record<string, IProblemCriterion> = {
-      critId: {
+      crit1Id: {
         title: criteria[0].title,
         description: criteria[0].description,
         isFavorable: criteria[0].isFavourable,
         dataSources: [
           {
-            id: dataSourceId,
+            id: dataSource1Id,
             source: criteria[0].dataSources[0].reference,
             unitOfMeasurement: {
               type: criteria[0].dataSources[0].unitOfMeasurement.type,
@@ -723,21 +721,21 @@ describe('createProblem', () => {
     };
 
     const criterionAndDataSource = {
-      criterion: criterionId,
-      dataSource: dataSourceId
+      criterion: criterion1Id,
+      dataSource: dataSource1Id
     };
     const expectedPerformanceTable: IPerformanceTableEntry[] = [
       {
         ...criterionAndDataSource,
-        alternative: 'alt1Id',
+        alternative: alternative1Id,
         performance: {
           effect: {
             type: 'exact',
-            value: 1
+            value: 0.01
           },
           distribution: {
             type: 'exact',
-            value: 1
+            value: 0.01
           }
         }
       },
@@ -746,9 +744,6 @@ describe('createProblem', () => {
         alternative: 'alt2Id',
         performance: {
           effect: {
-            type: 'empty'
-          },
-          distribution: {
             type: 'empty'
           }
         }
@@ -759,7 +754,7 @@ describe('createProblem', () => {
         performance: {
           effect: {
             type: 'exact',
-            value: 1,
+            value: 0.01,
             input: {
               value: 1,
               lowerBound: 0,
@@ -790,8 +785,8 @@ describe('createProblem', () => {
           distribution: {
             type: 'dnorm',
             parameters: {
-              mu: 1,
-              sigma: 0.5
+              mu: 0.01,
+              sigma: 0.005
             }
           }
         }
@@ -854,10 +849,33 @@ describe('createProblem', () => {
 
     expect(result).toEqual(expectedResult);
   });
+
+  it('should throw an error if a cell has neither an effect or a distribution', () => {
+    const inProgressMessage: IInProgressMessage = {
+      workspace: inProgressWorkspace,
+      criteria: criteria,
+      alternatives: alternatives,
+      effects: {
+        ds1Id: {
+          alt1Id: {} as Effect
+        }
+      },
+      distributions: {
+        ds1Id: {
+          alt1Id: {} as Distribution
+        }
+      }
+    };
+    try {
+      createProblem(inProgressMessage);
+    } catch (error) {
+      expect(error).toBe('Cell without effect and distribution found');
+    }
+  });
 });
 
 describe('createOrdering', () => {
-  test('should create ordering', () => {
+  it('should create ordering', () => {
     const criteria: Record<string, IProblemCriterion> = {
       crit1Id: {
         title: 'title',
@@ -865,7 +883,7 @@ describe('createOrdering', () => {
         isFavorable: false,
         dataSources: [
           {
-            id: 'ds1Id',
+            id: dataSource1Id,
             source: 'reference',
             unitOfMeasurement: {
               type: UnitOfMeasurementType.percentage,
@@ -906,8 +924,8 @@ describe('createOrdering', () => {
 
     const expectedResult: IOrdering = {
       criteria: ['crit1Id', 'crit2Id'],
-      alternatives: ['alt1Id'],
-      dataSources: ['ds1Id', 'ds2Id']
+      alternatives: [alternative1Id],
+      dataSources: [dataSource1Id, 'ds2Id']
     };
 
     expect(result).toEqual(expectedResult);

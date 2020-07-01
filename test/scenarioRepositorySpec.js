@@ -3,18 +3,19 @@ var sinon = require('sinon');
 var testUtil = require('./testUtil');
 
 var dbStub = {
-  query: function() {
+  query: function () {
     console.log('query being called');
   }
 };
 var scenarioRepository = require('../node-backend/scenarioRepository')(dbStub);
 
-describe('the scenario repository', function() {
+describe('the scenario repository', function () {
   var expectedError = 'some expected error';
 
-  describe('create', function() {
+  describe('createDirectly', function () {
     var query;
-    const expectedQuery = 'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
+    const expectedQuery =
+      'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
     const workspaceId = 10;
     const subproblemId = 20;
     const title = 'title';
@@ -23,154 +24,238 @@ describe('the scenario repository', function() {
     };
     const queryInputValues = [workspaceId, subproblemId, title, state];
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = sinon.stub(dbStub, 'query');
     });
 
-    afterEach(function() {
+    afterEach(function () {
       query.restore();
     });
 
-    it('should create a scenario and call the callback with results', function(done) {
+    it('should create a scenario and call the callback with results', function (done) {
       const createdId = 32;
       const queryResult = {
-        rows: [{ id: createdId }]
+        rows: [{id: createdId}]
       };
       const expectedResult = queryResult.rows[0];
       query.onCall(0).yields(null, queryResult);
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
-      scenarioRepository.create(workspaceId, subproblemId, title, state, callback);
+      const callback = testUtil.createQueryCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedResult,
+        done
+      );
+      scenarioRepository.createDirectly(
+        workspaceId,
+        subproblemId,
+        title,
+        state,
+        callback
+      );
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       query.onCall(0).yields(expectedError);
-      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
-      scenarioRepository.create(workspaceId, subproblemId, title, state, callback);
+      const callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedError,
+        done
+      );
+      scenarioRepository.createDirectly(
+        workspaceId,
+        subproblemId,
+        title,
+        state,
+        callback
+      );
     });
   });
 
-  describe('query', function() {
+  describe('query', function () {
     var query;
-    const expectedQuery = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
+    const expectedQuery =
+      'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
     const workspaceId = 10;
     const queryInputValues = [workspaceId];
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = sinon.stub(dbStub, 'query');
     });
 
-    afterEach(function() {
+    afterEach(function () {
       query.restore();
     });
 
-    it('should get all scenarios for the workspace and call the callback with results', function(done) {
+    it('should get all scenarios for the workspace and call the callback with results', function (done) {
       const queryResult = {
-        rows: [{
-          id: 10,
-          title: 'title',
-          state: {},
-          subProblemId: 11,
-          workspaceId: workspaceId
-        }]
+        rows: [
+          {
+            id: 10,
+            title: 'title',
+            state: {},
+            subProblemId: 11,
+            workspaceId: workspaceId
+          }
+        ]
       };
       query.onCall(0).yields(null, queryResult);
       const expectedResult = queryResult.rows;
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedResult,
+        done
+      );
       scenarioRepository.query(workspaceId, callback);
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       query.onCall(0).yields(expectedError);
-      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedError,
+        done
+      );
       scenarioRepository.query(workspaceId, callback);
     });
   });
 
-  describe('queryForSubProblem', function() {
+  describe('queryForSubProblem', function () {
     var query;
-    const expectedQuery = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2';
+    const expectedQuery =
+      'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2';
     const workspaceId = 10;
     const subproblemId = 123;
     const queryInputValues = [workspaceId, subproblemId];
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = sinon.stub(dbStub, 'query');
     });
 
-    afterEach(function() {
+    afterEach(function () {
       query.restore();
     });
 
-    it('should get all scenarios for a certain subproblem and call the callback with results', function(done) {
+    it('should get all scenarios for a certain subproblem and call the callback with results', function (done) {
       const queryResult = {
-        rows: [{
-          id: 10,
-          title: 'title',
-          state: {},
-          subProblemId: 11,
-          workspaceId: workspaceId
-        }]
+        rows: [
+          {
+            id: 10,
+            title: 'title',
+            state: {},
+            subProblemId: 11,
+            workspaceId: workspaceId
+          }
+        ]
       };
       query.onCall(0).yields(null, queryResult);
       const expectedResult = queryResult.rows;
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
-      scenarioRepository.queryForSubProblem(workspaceId, subproblemId, callback);
+      const callback = testUtil.createQueryCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedResult,
+        done
+      );
+      scenarioRepository.queryForSubProblem(
+        workspaceId,
+        subproblemId,
+        callback
+      );
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       query.onCall(0).yields(expectedError);
-      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
-      scenarioRepository.queryForSubProblem(workspaceId, subproblemId, callback);
+      const callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedError,
+        done
+      );
+      scenarioRepository.queryForSubProblem(
+        workspaceId,
+        subproblemId,
+        callback
+      );
     });
   });
 
-  describe('get', function() {
+  describe('get', function () {
     var query;
-    const expectedQuery = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
+    const expectedQuery =
+      'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
     const scenarioId = 10;
     const queryInputValues = [scenarioId];
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = sinon.stub(dbStub, 'query');
     });
 
-    afterEach(function() {
+    afterEach(function () {
       query.restore();
     });
 
-    it('should get a scenario and call the callback with results', function(done) {
+    it('should get a scenario and call the callback with results', function (done) {
       const queryResult = {
-        rows: [{
-          id: 10,
-          title: 'title',
-          state: {},
-          subProblemId: 11,
-          workspaceId: 1233
-        }]
+        rows: [
+          {
+            id: 10,
+            title: 'title',
+            state: {},
+            subProblemId: 11,
+            workspaceId: 1233
+          }
+        ]
       };
       query.onCall(0).yields(null, queryResult);
       const expectedResult = queryResult.rows[0];
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedResult,
+        done
+      );
       scenarioRepository.get(scenarioId, callback);
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       const expectedEmptyResultError = 'No scenario with ID 10 found.';
       query.onCall(0).yields(expectedEmptyResultError);
-      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedEmptyResultError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedEmptyResultError,
+        done
+      );
       scenarioRepository.get(scenarioId, callback);
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       query.onCall(0).yields(expectedError);
-      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedError,
+        done
+      );
       scenarioRepository.get(scenarioId, callback);
     });
   });
 
-  describe('update', function() {
+  describe('update', function () {
     var query;
-    const expectedQuery = 'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
+    const expectedQuery =
+      'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
     const scenarioId = 10;
     const title = 'title';
     const state = {
@@ -181,83 +266,119 @@ describe('the scenario repository', function() {
     };
     const queryInputValues = [state, title, scenarioId];
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = sinon.stub(dbStub, 'query');
     });
 
-    afterEach(function() {
+    afterEach(function () {
       query.restore();
     });
 
-    it('should update the scenario and call the callback with results', function(done) {
+    it('should update the scenario and call the callback with results', function (done) {
       query.onCall(0).yields(null);
-      const callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
+      const callback = testUtil.createQueryNoArgumentCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        done
+      );
       scenarioRepository.update(state, title, scenarioId, callback);
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       query.onCall(0).yields(expectedError);
-      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedError,
+        done
+      );
       scenarioRepository.update(state, title, scenarioId, callback);
     });
   });
 
-  describe('delete', function() {
+  describe('delete', function () {
     var query;
     const expectedQuery = 'DELETE FROM scenario WHERE id = $1';
     const scenarioId = 37;
     const queryInputValues = [scenarioId];
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = sinon.stub(dbStub, 'query');
     });
 
-    afterEach(function() {
+    afterEach(function () {
       query.restore();
     });
 
-    it('should delete the subproblem', function(done) {
+    it('should delete the subproblem', function (done) {
       query.onCall(0).yields(null);
-      var callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
-      scenarioRepository.delete(scenarioId, callback);
+      var callback = testUtil.createQueryNoArgumentCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        done
+      );
+      scenarioRepository.delete({query: query}, scenarioId, callback);
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       query.onCall(0).yields(expectedError);
-      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
-      scenarioRepository.delete(scenarioId, callback);
+      var callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedError,
+        done
+      );
+      scenarioRepository.delete({query: query}, scenarioId, callback);
     });
   });
 
-  describe('getScenarioIdsForSubproblem', function(){
+  describe('getScenarioIdsForSubproblem', function () {
     var query;
     const expectedQuery = 'SELECT id FROM scenario WHERE subproblemId = $1';
     const subproblemId = 10;
     const queryInputValues = [subproblemId];
 
-    beforeEach(function() {
+    beforeEach(function () {
       query = sinon.stub(dbStub, 'query');
     });
 
-    afterEach(function() {
+    afterEach(function () {
       query.restore();
     });
 
-    it('should get the scenario ids for a subproblem and call the callback with results', function(done) {
+    it('should get the scenario ids for a subproblem and call the callback with results', function (done) {
       const queryResult = {
-        rows: [{
-          id: 10
-        }]
+        rows: [
+          {
+            id: 10
+          }
+        ]
       };
       query.onCall(0).yields(null, queryResult);
       const expectedResult = [queryResult.rows[0].id];
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedResult,
+        done
+      );
       scenarioRepository.getScenarioIdsForSubproblem(subproblemId, callback);
     });
 
-    it('should call the callback with only an error', function(done) {
+    it('should call the callback with only an error', function (done) {
       query.onCall(0).yields(expectedError);
-      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(
+        query,
+        expectedQuery,
+        queryInputValues,
+        expectedError,
+        done
+      );
       scenarioRepository.getScenarioIdsForSubproblem(subproblemId, callback);
     });
   });

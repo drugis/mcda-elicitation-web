@@ -1,8 +1,8 @@
-import IPerformance from './IPerformance';
+import {Performance} from './IPerformance';
 
 export interface IPerformanceTableEntry {
   alternative: string;
   criterion: string;
   dataSource: string;
-  performance: IPerformance;
+  performance: Performance;
 }

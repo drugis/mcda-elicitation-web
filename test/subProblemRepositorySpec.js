@@ -46,7 +46,8 @@ describe('the subproblem repository', function () {
         expectedResult,
         done
       );
-      subProblemRepository.createDirectly(
+      subProblemRepository.create(
+        {query: query},
         workspaceId,
         title,
         definition,
@@ -63,7 +64,8 @@ describe('the subproblem repository', function () {
         expectedError,
         done
       );
-      subProblemRepository.createDirectly(
+      subProblemRepository.create(
+        {query: query},
         workspaceId,
         title,
         definition,
@@ -218,7 +220,7 @@ describe('the subproblem repository', function () {
         queryInputValues,
         done
       );
-      subProblemRepository.delete(subproblemId, callback);
+      subProblemRepository.delete({query: query}, subproblemId, callback);
     });
 
     it('should call the callback with only an error', function (done) {
@@ -230,7 +232,7 @@ describe('the subproblem repository', function () {
         expectedError,
         done
       );
-      subProblemRepository.delete(subproblemId, callback);
+      subProblemRepository.delete({query: query}, subproblemId, callback);
     });
   });
 

@@ -18,7 +18,7 @@ import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import IPerformance from '@shared/interface/Problem/IPerformance';
+import {Performance} from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -30,7 +30,6 @@ import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
-import {generateDistribution} from '../app/ts/ManualInput/ManualInputService/ManualInputService';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
 
 export function mapWorkspace(
@@ -292,11 +291,6 @@ function mapDataSourcesOntoCriteria(
 }
 
 export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
-  const newDistributions = createMissingDistributions(
-    inProgressMessage.effects,
-    inProgressMessage.distributions
-  );
-  inProgressMessage.distributions = newDistributions;
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     title: inProgressMessage.workspace.title,
@@ -305,28 +299,6 @@ export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
     alternatives: buildAlternatives(inProgressMessage.alternatives),
     performanceTable: buildPerformanceTable(inProgressMessage)
   };
-}
-
-function createMissingDistributions(
-  effects: Record<string, Record<string, Effect>>,
-  distributions: Record<string, Record<string, Distribution>>
-): Record<string, Record<string, Distribution>> {
-  let distributionsCopy = _.cloneDeep(distributions);
-  _.forEach(effects, (row: Record<string, Effect>, dataSourceId: string) => {
-    _.forEach(row, (effect: Effect, alternativeId: string) => {
-      if (!distributionsCopy[dataSourceId]) {
-        distributionsCopy[dataSourceId] = {};
-      }
-      if (!distributionsCopy[dataSourceId][alternativeId]) {
-        const newDistribution = generateDistribution(effect);
-        distributionsCopy[dataSourceId][alternativeId] = newDistribution;
-      } else {
-        distributionsCopy[dataSourceId][alternativeId] =
-          distributions[dataSourceId][alternativeId];
-      }
-    });
-  });
-  return distributionsCopy;
 }
 
 function buildCriteria(
@@ -419,7 +391,9 @@ function buildPerformanceEntries(
 ): IPerformanceTableEntry[] {
   return _.map(alternatives, function (alternative) {
     const effectCell = effects[dataSource.id][alternative.id];
-    const distributionCell = distributions[dataSource.id][alternative.id];
+    const distributionCell = distributions[dataSource.id]
+      ? distributions[dataSource.id][alternative.id]
+      : undefined;
 
     return {
       alternative: alternative.id,
@@ -438,29 +412,41 @@ function buildPerformance(
   effectCell: Effect,
   distributionCell: Distribution,
   unitOfMeasurementType: UnitOfMeasurementType
-): IPerformance {
+): Performance {
   const isPercentage = unitOfMeasurementType === 'percentage';
-  return {
-    effect: buildEffectPerformance(effectCell, isPercentage),
-    distribution: buildDistributionPerformance(distributionCell, isPercentage)
-  };
+  let performance;
+  if (effectCell) {
+    performance = {effect: buildEffectPerformance(effectCell, isPercentage)};
+  }
+  if (distributionCell) {
+    performance = {
+      ...performance,
+      distribution: buildDistributionPerformance(distributionCell, isPercentage)
+    };
+  }
+  if (!performance) {
+    throw 'Cell without effect and distribution found';
+  } else {
+    return performance;
+  }
 }
 
 function buildEffectPerformance(
   cell: Effect,
   isPercentage: boolean
 ): EffectPerformance {
+  const percentageModifier = isPercentage ? 100 : 1;
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: cell.value
+        value: significantDigits(cell.value / percentageModifier)
       };
       return valuePerformance;
     case 'valueCI':
       const valueCIPerformance: IValueCIPerformance = {
         type: 'exact',
-        value: cell.value,
+        value: significantDigits(cell.value / percentageModifier),
         input: {
           value: cell.value,
           lowerBound: cell.lowerBound,
@@ -469,7 +455,6 @@ function buildEffectPerformance(
       };
       return valueCIPerformance;
     case 'range':
-      const percentageModifier = isPercentage ? 100 : 1;
       const rangePerformance: IRangeEffectPerformance = {
         type: 'exact',
         value: significantDigits(
@@ -499,15 +484,15 @@ function buildDistributionPerformance(
   cell: Distribution,
   isPercentage: boolean
 ): DistributionPerformance {
+  const percentageModifier = isPercentage ? 100 : 1;
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: cell.value
+        value: significantDigits(cell.value / percentageModifier)
       };
       return valuePerformance;
     case 'range':
-      const percentageModifier = isPercentage ? 100 : 1;
       const rangePerformance: IRangeDistributionPerformance = {
         type: 'range',
         parameters: {
@@ -520,8 +505,8 @@ function buildDistributionPerformance(
       const normalPerformace: INormalPerformance = {
         type: 'dnorm',
         parameters: {
-          mu: cell.mean,
-          sigma: cell.standardError
+          mu: significantDigits(cell.mean / percentageModifier),
+          sigma: significantDigits(cell.standardError / percentageModifier)
         }
       };
       return normalPerformace;
