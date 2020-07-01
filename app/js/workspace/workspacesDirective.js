@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function (_) {
-  var dependencies = ['$modal', '$state'];
-  var WorkspacesDirective = function ($modal, $state) {
+  var dependencies = ['$modal', '$state', 'InProgressResource'];
+  var WorkspacesDirective = function ($modal, $state, InProgressResource) {
     return {
       restrict: 'E',
       scope: {

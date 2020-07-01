@@ -33,6 +33,14 @@ import {generateUuid} from '@shared/util';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
+import IValueEffect from '@shared/interface/IValueEffect';
+import ITextEffect from '@shared/interface/ITextEffect';
+import IEmptyEffect from '@shared/interface/IEmptyEffect';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import IRangeEffect from '@shared/interface/IRangeEffect';
+import INormalDistribution from '@shared/interface/INormalDistribution';
+import IBetaDistribution from '@shared/interface/IBetaDistribution';
+import IGammaDistribution from '@shared/interface/IGammaDistribution';
 
 export function mapWorkspace(
   queryResult: IWorkspaceQueryResult
@@ -625,8 +633,10 @@ export function buildInProgressCopy(workspace: IWorkspace): IInProgressMessage {
     workspace: buildInProgressWorkspace(workspace),
     criteria: buildInProgressCriteria(workspace.problem.criteria),
     alternatives: buildInProgressAlternatives(workspace.problem.alternatives),
-    effects: buildInProgressEffects(),
-    distributions: buildInProgressDistributions()
+    effects: buildInProgressEffects(workspace.problem.performanceTable),
+    distributions: buildInProgressDistributions(
+      workspace.problem.performanceTable
+    )
   };
 }
 
@@ -695,14 +705,12 @@ function buildInProgressEffects(
     performanceTable,
     (
       accum: Record<string, Record<string, Effect>>,
-      performanceTableEntry: IPerformanceTableEntry
+      entry: IPerformanceTableEntry
     ) => {
-      if (!accum[performanceTableEntry.dataSource]) {
-        accum[performanceTableEntry.dataSource] = {};
+      if (!accum[entry.dataSource]) {
+        accum[entry.dataSource] = {};
       }
-      accum[performanceTableEntry.dataSource][
-        performanceTableEntry.alternative
-      ] = buildEffect(performanceTableEntry);
+      accum[entry.dataSource][entry.alternative] = buildEffect(entry);
       return accum;
     },
     {}
@@ -710,6 +718,148 @@ function buildInProgressEffects(
   return effects;
 }
 
-function buildEffect(performanceTableEntry: IPerformanceTableEntry): Effect {
-  return {} as Effect;
+function buildEffect(entry: IPerformanceTableEntry): Effect {
+  if ('effect' in entry.performance) {
+    const effectPerformance = entry.performance.effect;
+    const effectBase = {
+      alternativeId: entry.alternative,
+      dataSourceId: entry.dataSource,
+      criterionId: entry.criterion
+    };
+    if (effectPerformance.type === 'empty') {
+      return createEmptyOrTextEffect(effectPerformance, effectBase);
+    } else if (effectPerformance.type === 'exact') {
+      return createExactEffect(effectPerformance, effectBase);
+    } else {
+      throw 'unknown effect type';
+    }
+  } else {
+    return undefined;
+  }
+}
+
+function createEmptyOrTextEffect(
+  effectPerformance: IEmptyPerformance | ITextPerformance,
+  effectBase: any
+): ITextEffect | IEmptyEffect {
+  if ('value' in effectPerformance) {
+    return {...effectBase, type: 'text', text: effectPerformance.value};
+  } else {
+    return {...effectBase, type: 'empty'};
+  }
+}
+
+function createExactEffect(
+  performance:
+    | IValuePerformance
+    | IValueCIPerformance
+    | IRangeEffectPerformance,
+  effectBase: any
+): IValueEffect | IValueCIEffect | IRangeEffect {
+  if ('input' in performance) {
+    const input = performance.input;
+    return createBoundEffect(input, effectBase);
+  } else {
+    return {...effectBase, type: 'value', value: performance.value};
+  }
+}
+
+function createBoundEffect(
+  input: {
+    value?: number;
+    lowerBound: number | 'NE';
+    upperBound: number | 'NE';
+  },
+  effectBase: any
+) {
+  if ('value' in input) {
+    return {
+      ...effectBase,
+      type: 'valueCI',
+      value: input.value,
+      lowerBound: input.lowerBound,
+      upperBound: input.upperBound
+    };
+  } else {
+    return {
+      ...effectBase,
+      type: 'range',
+      lowerBound: input.lowerBound,
+      upperBound: input.upperBound
+    };
+  }
+}
+
+function buildInProgressDistributions(
+  performanceTable: IPerformanceTableEntry[]
+): Record<string, Record<string, Distribution>> {
+  const distributions: Record<string, Record<string, Distribution>> = _.reduce(
+    performanceTable,
+    (
+      accum: Record<string, Record<string, Distribution>>,
+      entry: IPerformanceTableEntry
+    ) => {
+      if (!accum[entry.dataSource]) {
+        accum[entry.dataSource] = {};
+      }
+      accum[entry.dataSource][entry.alternative] = buildDistribution(entry);
+      return accum;
+    },
+    {}
+  );
+  return distributions;
+}
+
+function buildDistribution(entry: IPerformanceTableEntry): Distribution {
+  if ('distribution' in entry.performance) {
+    const performance = entry.performance.distribution;
+    const distributionBase = {
+      alternativeId: entry.alternative,
+      dataSourceId: entry.dataSource,
+      criterionId: entry.criterion
+    };
+    return createDistribution(performance, distributionBase);
+  } else {
+    return undefined;
+  }
+}
+
+function createDistribution(
+  performance: DistributionPerformance,
+  distributionBase: any
+): Distribution {
+  switch (performance.type) {
+    case 'exact':
+      return {...distributionBase, type: 'value', value: performance.value};
+    case 'dbeta':
+      return {
+        ...distributionBase,
+        type: 'beta',
+        alpha: performance.parameters.alpha,
+        beta: performance.parameters.beta
+      };
+    case 'dgamma':
+      return {
+        ...distributionBase,
+        type: 'gamma',
+        alpha: performance.parameters.alpha,
+        beta: performance.parameters.beta
+      };
+    case 'dnorm':
+      return {
+        ...distributionBase,
+        type: 'normal',
+        mean: performance.parameters.mu,
+        standardError: performance.parameters.sigma
+      };
+    case 'range':
+      return {
+        ...distributionBase,
+        type: 'range',
+        lowerBound: performance.parameters.lowerBound,
+        upperBound: performance.parameters.upperBound
+      };
+    case 'empty':
+      return createEmptyOrTextEffect(performance, distributionBase);
+  }
 }

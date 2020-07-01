@@ -10,7 +10,7 @@ export default function InProgressRouter(db: any) {
     .delete('/:id', inProgressHandler.delete)
     .put('/:id', inProgressHandler.updateWorkspace)
 
-    .post('/createCopy/:sourceWorkspaceId', inProgressHandler.createCopy)
+    .post('/createCopy', inProgressHandler.createCopy)
 
     .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)
     .delete('/:id/criteria/:criterionId', inProgressHandler.deleteCriterion)

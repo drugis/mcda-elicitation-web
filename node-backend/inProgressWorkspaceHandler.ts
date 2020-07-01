@@ -40,14 +40,7 @@ export default function InProgressHandler(db: any) {
     inProgressWorkspaceRepository.create(
       user.id,
       emptyInProgress,
-      (error: IError | null, createdId: string) => {
-        if (error) {
-          handleError(error, next);
-        } else {
-          response.status(CREATED);
-          response.json({id: createdId});
-        }
-      }
+      _.partial(createCallback, response, next)
     );
   }
 
@@ -57,23 +50,30 @@ export default function InProgressHandler(db: any) {
     next: () => void
   ): void {
     const user: {id: string} = getUser(request);
-    const sourceWorkspaceId = Number.parseInt(request.params.id);
+    const sourceWorkspaceId = Number.parseInt(request.body.sourceWorkspaceId);
 
     waterfall(
       [
         _.partial(workspaceRepository.get, sourceWorkspaceId),
         buildInProgress,
-        createNew
+        _.partial(createNew, user.id)
       ],
-      (error: IError | null, createdId: string) => {
-        if (error) {
-          handleError(error, next);
-        } else {
-          response.status(CREATED);
-          response.json({id: createdId});
-        }
-      }
+      _.partial(createCallback, response, next)
     );
+  }
+
+  function createCallback(
+    response: Response,
+    next: () => void,
+    error: IError | null,
+    createdId: string
+  ) {
+    if (error) {
+      handleError(error, next);
+    } else {
+      response.status(CREATED);
+      response.json({id: createdId});
+    }
   }
 
   function buildInProgress(
@@ -84,9 +84,12 @@ export default function InProgressHandler(db: any) {
   }
 
   function createNew(
+    userId: string,
     inProgressCopy: IInProgressMessage,
-    callback: (error: IError | null, newCreated: IWorkspaceInfo) => void
-  ) {}
+    callback: (error: IError | null, createdId: string) => void
+  ) {
+    inProgressWorkspaceRepository.create(userId, inProgressCopy, callback);
+  }
 
   function get(request: Request, response: Response, next: () => void): void {
     inProgressWorkspaceRepository.get(

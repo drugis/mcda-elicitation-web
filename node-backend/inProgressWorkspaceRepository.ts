@@ -34,23 +34,23 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function create(
     userId: string,
-    toCreate: IInProgressMessage,
+    newInProgress: IInProgressMessage,
     callback: (error: any, createdId: string) => void
   ) {
     db.runInTransaction(
-      _.partial(createInProgressWorkspaceTransaction, userId, toCreate),
+      _.partial(createInProgressWorkspaceTransaction, userId, newInProgress),
       callback
     );
   }
 
   function createInProgressWorkspaceTransaction(
     ownerId: string,
-    toCreate: IInProgressMessage,
+    newInProgress: IInProgressMessage,
     client: any,
     transactionCallback: (error: any, createdId: string) => void
   ) {
     const dataSources: IDataSource[] = _.flatMap(
-      toCreate.criteria,
+      newInProgress.criteria,
       'dataSources'
     );
     waterfall(
@@ -59,21 +59,39 @@ export default function InProgressWorkspaceRepository(db: any) {
           createInProgressWorkspace,
           client,
           ownerId,
-          toCreate.workspace
+          newInProgress.workspace
         ),
-        _.partial(createInProgressCriteria, client, toCreate.criteria),
+        _.partial(createInProgressCriteria, client, newInProgress.criteria),
         _.partial(createInProgressDataSources, client, dataSources),
-        _.partial(createInProgressAlternatives, client, toCreate.alternatives)
+        _.partial(
+          createInProgressAlternatives,
+          client,
+          newInProgress.alternatives
+        ),
+        _.partial(createInProgressEffects, client, newInProgress.effects),
+        _.partial(
+          createInProgressDistributions,
+          client,
+          newInProgress.distributions
+        )
       ],
       transactionCallback
     );
+  }
+
+  function createInProgressEffects(
+    client: any,
+    effects: Record<string, Record<string, Effect>>,
+    callback:(error: IError)=>void
+  ) {
+    //sth sth pgp query stuff TODO
   }
 
   function createInProgressWorkspace(
     client: any,
     ownerId: string,
     toCreate: IInProgressWorkspace,
-    callback: (error: any, createdId: string) => {}
+    callback: (error: IError, createdId: string) => void
   ) {
     const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, 
         title, therapeuticContext) 
@@ -140,11 +158,30 @@ export default function InProgressWorkspaceRepository(db: any) {
         id: item.id,
         orderindex: index,
         criterionid: item.criterionId,
-        inprogressworkspaceid: inProgressworkspaceId
+        inprogressworkspaceid: inProgressworkspaceId,
+        unitlabel: item.unitOfMeasurement.label,
+        unittype: item.unitOfMeasurement.type,
+        unitlowerbound: item.unitOfMeasurement.lowerBound,
+        unitupperbound: item.unitOfMeasurement.upperBound,
+        reference: item.reference,
+        strengthofevidence: item.strengthOfEvidence,
+        uncertainty: item.uncertainty
       };
     });
     const columns = new pgp.helpers.ColumnSet(
-      ['id', 'orderindex', 'criterionid', 'inprogressworkspaceid'],
+      [
+        'id',
+        'orderindex',
+        'criterionid',
+        'inprogressworkspaceid',
+        'unitlabel',
+        'unittype',
+        'unitlowerbound',
+        'unitupperbound',
+        'reference',
+        'strengthofevidence',
+        'uncertainty'
+      ],
       {table: 'inprogressdatasource'}
     );
     const query = pgp.helpers.insert(toInsert, columns);
