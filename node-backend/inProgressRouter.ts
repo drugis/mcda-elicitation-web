@@ -1,5 +1,5 @@
 import express from 'express';
-import InProgressHandler from './inProgressWorkspaceHandler';
+import InProgressHandler from './inProgressHandler';
 export default function InProgressRouter(db: any) {
   const inProgressHandler = InProgressHandler(db);
   return express

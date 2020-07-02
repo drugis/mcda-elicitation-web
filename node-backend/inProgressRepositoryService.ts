@@ -1,16 +1,23 @@
 import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
+import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterion from '@shared/interface/ICriterion';
 import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
+import IEmptyEffect from '@shared/interface/IEmptyEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IInputCellQueryResult from '@shared/interface/IInputCellQueryResult';
+import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IOrdering from '@shared/interface/IOrdering';
+import IRangeEffect from '@shared/interface/IRangeEffect';
+import ITextEffect from '@shared/interface/ITextEffect';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import IValueEffect from '@shared/interface/IValueEffect';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
@@ -19,7 +26,11 @@ import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import {Performance} from '@shared/interface/Problem/IPerformance';
+import {
+  IDistributionPerformance,
+  IEffectPerformance,
+  Performance
+} from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -33,14 +44,6 @@ import {generateUuid} from '@shared/util';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
-import IValueEffect from '@shared/interface/IValueEffect';
-import ITextEffect from '@shared/interface/ITextEffect';
-import IEmptyEffect from '@shared/interface/IEmptyEffect';
-import IValueCIEffect from '@shared/interface/IValueCIEffect';
-import IRangeEffect from '@shared/interface/IRangeEffect';
-import INormalDistribution from '@shared/interface/INormalDistribution';
-import IBetaDistribution from '@shared/interface/IBetaDistribution';
-import IGammaDistribution from '@shared/interface/IGammaDistribution';
 
 export function mapWorkspace(
   queryResult: IWorkspaceQueryResult
@@ -132,7 +135,7 @@ function createEffectRecords(
 ): Record<string, Record<string, Effect>> {
   return _.reduce(
     effectQueryResults,
-    (accum, effectQueryResult) => {
+    (accum: Record<string, Record<string, Effect>>, effectQueryResult) => {
       if (!accum[effectQueryResult.datasourceid]) {
         accum[effectQueryResult.datasourceid] = {};
       }
@@ -141,7 +144,7 @@ function createEffectRecords(
       ] = mapEffect(effectQueryResult);
       return accum;
     },
-    {} as Record<string, Record<string, Effect>>
+    {}
   );
 }
 
@@ -194,7 +197,10 @@ function createDistributionRecords(
 ): Record<string, Record<string, Distribution>> {
   return _.reduce(
     distributionQueryResults,
-    (accum, distributionQueryResult) => {
+    (
+      accum: Record<string, Record<string, Distribution>>,
+      distributionQueryResult
+    ) => {
       if (!accum[distributionQueryResult.datasourceid]) {
         accum[distributionQueryResult.datasourceid] = {};
       }
@@ -203,7 +209,7 @@ function createDistributionRecords(
       ] = mapDistribution(distributionQueryResult);
       return accum;
     },
-    {} as Record<string, Record<string, Distribution>>
+    {}
   );
 }
 
@@ -264,24 +270,28 @@ function mapDistribution(
   }
 }
 
-export function mapCombinedResults(
-  results: [
-    IInProgressWorkspace,
-    ICriterion[],
-    IAlternative[],
-    IDataSource[],
-    [
-      Record<string, Record<string, Effect>>,
-      Record<string, Record<string, Distribution>>
-    ]
+export function mapCombinedResults([
+  workspace,
+  criteria,
+  alternatives,
+  dataSources,
+  [effects, distributions]
+]: [
+  IInProgressWorkspace,
+  ICriterion[],
+  IAlternative[],
+  IDataSource[],
+  [
+    Record<string, Record<string, Effect>>,
+    Record<string, Record<string, Distribution>>
   ]
-): IInProgressMessage {
+]): IInProgressMessage {
   return {
-    workspace: results[0],
-    criteria: mapDataSourcesOntoCriteria(results[1], results[3]),
-    alternatives: results[2],
-    effects: results[4][0],
-    distributions: results[4][1]
+    workspace: workspace,
+    criteria: mapDataSourcesOntoCriteria(criteria, dataSources),
+    alternatives: alternatives,
+    effects: effects,
+    distributions: distributions
   };
 }
 
@@ -298,6 +308,10 @@ function mapDataSourcesOntoCriteria(
         : []
     };
   });
+}
+
+export function mapCellMessages(cellMessages: ICellCommand[]): any[] {
+  return [];
 }
 
 export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
@@ -579,7 +593,7 @@ export function createOrdering(
   };
 }
 
-export function buildEmptyInProgress(): IInProgressMessage {
+export function buildEmptyInProgress(): IWorkspace {
   const criterionIds = [generateUuid(), generateUuid()];
   const criteria: ICriterion[] = _.map(criterionIds, buildInprogressCriterion);
 
@@ -601,8 +615,8 @@ export function buildEmptyInProgress(): IInProgressMessage {
     },
     criteria: criteria,
     alternatives: alternatives,
-    effects: {},
-    distributions: {}
+    effects: [],
+    distributions: []
   };
 }
 
@@ -628,7 +642,7 @@ function buildInprogressCriterion(criterionId: string, index: number) {
   };
 }
 
-export function buildInProgressCopy(workspace: IWorkspace): IInProgressMessage {
+export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
   return {
     workspace: buildInProgressWorkspace(workspace),
     criteria: buildInProgressCriteria(workspace.problem.criteria),
@@ -640,9 +654,10 @@ export function buildInProgressCopy(workspace: IWorkspace): IInProgressMessage {
   };
 }
 
-function buildInProgressWorkspace(workspace: IWorkspace): IInProgressWorkspace {
+function buildInProgressWorkspace(
+  workspace: IOldWorkspace
+): IInProgressWorkspace {
   return {
-    id: -1, //placeholder
     title: `Copy of ${workspace.problem.title}`,
     therapeuticContext: workspace.problem.description,
     useFavourability: _.some(workspace.problem.criteria, (criterion) => {
@@ -700,41 +715,27 @@ function buildInProgressAlternatives(
 
 function buildInProgressEffects(
   performanceTable: IPerformanceTableEntry[]
-): Record<string, Record<string, Effect>> {
-  const effects: Record<string, Record<string, Effect>> = _.reduce(
-    performanceTable,
-    (
-      accum: Record<string, Record<string, Effect>>,
-      entry: IPerformanceTableEntry
-    ) => {
-      if (!accum[entry.dataSource]) {
-        accum[entry.dataSource] = {};
-      }
-      accum[entry.dataSource][entry.alternative] = buildEffect(entry);
-      return accum;
-    },
-    {}
-  );
-  return effects;
+): Effect[] {
+  return _(performanceTable)
+    .filter(['performance', 'effect'])
+    .map(buildEffect)
+    .value();
 }
 
 function buildEffect(entry: IPerformanceTableEntry): Effect {
-  if ('effect' in entry.performance) {
-    const effectPerformance = entry.performance.effect;
-    const effectBase = {
-      alternativeId: entry.alternative,
-      dataSourceId: entry.dataSource,
-      criterionId: entry.criterion
-    };
-    if (effectPerformance.type === 'empty') {
-      return createEmptyOrTextEffect(effectPerformance, effectBase);
-    } else if (effectPerformance.type === 'exact') {
-      return createExactEffect(effectPerformance, effectBase);
-    } else {
-      throw 'unknown effect type';
-    }
+  const performance = entry.performance as IEffectPerformance;
+  const effectPerformance = performance.effect;
+  const effectBase = {
+    alternativeId: entry.alternative,
+    dataSourceId: entry.dataSource,
+    criterionId: entry.criterion
+  };
+  if (effectPerformance.type === 'empty') {
+    return createEmptyOrTextEffect(effectPerformance, effectBase);
+  } else if (effectPerformance.type === 'exact') {
+    return createExactEffect(effectPerformance, effectBase);
   } else {
-    return undefined;
+    throw 'unknown effect type';
   }
 }
 
@@ -792,39 +793,24 @@ function createBoundEffect(
 
 function buildInProgressDistributions(
   performanceTable: IPerformanceTableEntry[]
-): Record<string, Record<string, Distribution>> {
-  const distributions: Record<string, Record<string, Distribution>> = _.reduce(
-    performanceTable,
-    (
-      accum: Record<string, Record<string, Distribution>>,
-      entry: IPerformanceTableEntry
-    ) => {
-      if (!accum[entry.dataSource]) {
-        accum[entry.dataSource] = {};
-      }
-      accum[entry.dataSource][entry.alternative] = buildDistribution(entry);
-      return accum;
-    },
-    {}
-  );
-  return distributions;
+): Distribution[] {
+  return _(performanceTable)
+    .filter(['performance', 'distribution'])
+    .map(buildDistribution)
+    .value();
 }
 
 function buildDistribution(entry: IPerformanceTableEntry): Distribution {
-  if ('distribution' in entry.performance) {
-    const performance = entry.performance.distribution;
-    const distributionBase = {
-      alternativeId: entry.alternative,
-      dataSourceId: entry.dataSource,
-      criterionId: entry.criterion
-    };
-    return createDistribution(performance, distributionBase);
-  } else {
-    return undefined;
-  }
+  const performance = entry.performance as IDistributionPerformance;
+  const distributionBase = {
+    alternativeId: entry.alternative,
+    dataSourceId: entry.dataSource,
+    criterionId: entry.criterion
+  };
+  return finishDistributionCreation(performance.distribution, distributionBase);
 }
 
-function createDistribution(
+function finishDistributionCreation(
   performance: DistributionPerformance,
   distributionBase: any
 ): Distribution {

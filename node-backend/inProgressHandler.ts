@@ -1,8 +1,10 @@
 import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
+import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
+import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
@@ -10,13 +12,13 @@ import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
+import InProgressWorkspaceRepository from './inProgressRepository';
 import {
   buildEmptyInProgress,
   buildInProgressCopy,
   createOrdering,
   createProblem
 } from './inProgressRepositoryService';
-import InProgressWorkspaceRepository from './inProgressWorkspaceRepository';
 import {logger} from './loggerTS';
 import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
@@ -77,15 +79,15 @@ export default function InProgressHandler(db: any) {
   }
 
   function buildInProgress(
-    workspace: IWorkspace,
-    callback: (error: IError | null, inProgressCopy: IInProgressMessage) => void
+    workspace: IOldWorkspace,
+    callback: (error: IError | null, inProgressCopy: IWorkspace) => void
   ) {
     callback(null, buildInProgressCopy(workspace));
   }
 
   function createNew(
     userId: string,
-    inProgressCopy: IInProgressMessage,
+    inProgressCopy: IWorkspace,
     callback: (error: IError | null, createdId: string) => void
   ) {
     inProgressWorkspaceRepository.create(userId, inProgressCopy, callback);
@@ -223,7 +225,8 @@ export default function InProgressHandler(db: any) {
     response: Response,
     next: () => void
   ): void {
-    inProgressWorkspaceRepository.upsertCell(request.body, (error: any) => {
+    const cells: ICellCommand[] = [request.body];
+    inProgressWorkspaceRepository.upsertCells(cells, (error: any) => {
       if (error) {
         handleError(error, next);
       } else {

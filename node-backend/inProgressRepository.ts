@@ -1,7 +1,7 @@
 import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
-import ICellMessage from '@shared/interface/ICellMessage';
+import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterion from '@shared/interface/ICriterion';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
@@ -14,6 +14,7 @@ import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IValueCellQueryResult from '@shared/interface/IInputCellQueryResult';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {parallel, waterfall} from 'async';
@@ -22,6 +23,7 @@ import pgPromise, {IMain} from 'pg-promise';
 import {
   createProblem as buildProblem,
   mapAlternatives,
+  mapCellMessages,
   mapCellValues,
   mapCombinedResults,
   mapCriteria,
@@ -34,7 +36,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function create(
     userId: string,
-    newInProgress: IInProgressMessage,
+    newInProgress: IWorkspace,
     callback: (error: any, createdId: string) => void
   ) {
     db.runInTransaction(
@@ -45,7 +47,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function createInProgressWorkspaceTransaction(
     ownerId: string,
-    newInProgress: IInProgressMessage,
+    newInProgress: IWorkspace,
     client: any,
     transactionCallback: (error: any, createdId: string) => void
   ) {
@@ -81,8 +83,16 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function createInProgressEffects(
     client: any,
-    effects: Record<string, Record<string, Effect>>,
-    callback:(error: IError)=>void
+    effects: Effect[],
+    callback: (error: IError) => void
+  ) {
+    //sth sth pgp query stuff TODO
+  }
+
+  function createInProgressDistributions(
+    client: any,
+    effects: Distribution[],
+    callback: (error: IError) => void
   ) {
     //sth sth pgp query stuff TODO
   }
@@ -500,84 +510,47 @@ export default function InProgressWorkspaceRepository(db: any) {
     db.query(query, [alternativeId], callback);
   }
 
-  function upsertCell(
-    {
-      inProgressWorkspaceId,
-      alternativeId,
-      dataSourceId,
-      criterionId,
-      value,
-      lowerBound,
-      upperBound,
-      isNotEstimableLowerBound,
-      isNotEstimableUpperBound,
-      text,
-      mean,
-      standardError,
-      alpha,
-      beta,
-      cellType,
-      type
-    }: ICellMessage,
+  function upsertCells(
+    cellMessages: ICellCommand[],
     callback: (error: any) => void
   ): void {
-    const query = `INSERT INTO inProgressWorkspaceCell(
-                    inProgressWorkspaceId, 
-                    alternativeId, 
-                    dataSourceId, 
-                    criterionId, 
-                    cellType, 
-                    val, 
-                    lowerbound, 
-                    upperbound, 
-                    isnotestimablelowerbound,
-                    isnotestimableupperbound,
-                    txt, 
-                    mean, 
-                    standardError, 
-                    alpha, 
-                    beta, 
-                    inputType
-                  ) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-                  ON CONFLICT (alternativeId, 
-                    dataSourceId, criterionId, cellType)
-                  DO UPDATE
-                  SET (
-                    val, 
-                    lowerbound, 
-                    upperbound, 
-                    isnotestimablelowerbound,
-                    isnotestimableupperbound,
-                    txt, 
-                    mean, 
-                    standardError, 
-                    alpha, 
-                    beta, 
-                    inputType
-                  ) = ($6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
-    db.query(
-      query,
+    const toInsert = mapCellMessages(cellMessages);
+    const columns = new pgp.helpers.ColumnSet(
       [
-        inProgressWorkspaceId,
-        alternativeId,
-        dataSourceId,
-        criterionId,
-        cellType,
-        value,
-        lowerBound,
-        upperBound,
-        isNotEstimableLowerBound,
-        isNotEstimableUpperBound,
-        text,
-        mean,
-        standardError,
-        alpha,
-        beta,
-        type
+        'inProgressWorkspaceid',
+        'alternativeid',
+        'dataSourceid',
+        'criterionid',
+        'celltype',
+        'inputtype',
+        {name: 'value', def: null},
+        {name: 'lowerbound', def: null},
+        {name: 'upperbound', def: null},
+        {name: 'isnotestimablelowerBound', def: null},
+        {name: 'isnotestimableupperbound', def: null},
+        {name: 'text', def: null},
+        {name: 'mean', def: null},
+        {name: 'standarderror', def: null},
+        {name: 'alpha', def: null},
+        {name: 'beta', def: null}
       ],
-      callback
+      {table: 'inprogressworkspacecell'}
     );
+    const query =
+      pgp.helpers.insert(toInsert, columns) +
+      `ON CONFLICT (alternativeId, dataSourceId, criterionId, cellType)
+     DO UPDATE SET ` +
+      columns.assignColumns({
+        from: 'EXCLUDED',
+        skip: [
+          'inProgressWorkspaceId',
+          'alternativeId',
+          'dataSourceId',
+          'criterionId'
+        ]
+      });
+
+    db.query(query, [], callback);
   }
 
   function createWorkspace(
@@ -678,7 +651,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     deleteDataSource: deleteDataSource,
     upsertAlternative: upsertAlternative,
     deleteAlternative: deleteAlternative,
-    upsertCell: upsertCell,
+    upsertCells: upsertCells,
     createWorkspace: createWorkspace,
     query: query
   };
