@@ -665,13 +665,32 @@ function buildInprogressCriterion(criterionId: string, index: number) {
 }
 
 export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
+  const {
+    criteria,
+    criteriaAndDataSourceIdMap
+  }: {
+    criteria: ICriterion[];
+    criteriaAndDataSourceIdMap: Record<string, string>;
+  } = buildInProgressCriteria(workspace.problem.criteria);
+
+  const {
+    alternatives,
+    alternativesIdMap
+  }: {
+    alternatives: IAlternative[];
+    alternativesIdMap: Record<string, string>;
+  } = buildInProgressAlternatives(workspace.problem.alternatives);
+
+  const idMap = {...criteriaAndDataSourceIdMap, ...alternativesIdMap};
+
   return {
     workspace: buildInProgressWorkspace(workspace),
-    criteria: buildInProgressCriteria(workspace.problem.criteria),
-    alternatives: buildInProgressAlternatives(workspace.problem.alternatives),
-    effects: buildInProgressEffects(workspace.problem.performanceTable),
+    criteria: criteria,
+    alternatives: alternatives,
+    effects: buildInProgressEffects(workspace.problem.performanceTable, idMap),
     distributions: buildInProgressDistributions(
-      workspace.problem.performanceTable
+      workspace.problem.performanceTable,
+      idMap
     )
   };
 }
@@ -690,69 +709,107 @@ function buildInProgressWorkspace(
 
 function buildInProgressCriteria(
   criteria: Record<string, IProblemCriterion>
-): ICriterion[] {
-  return _.map(criteria, (criterion: IProblemCriterion) => {
-    const newId = generateUuid();
-    return {
-      id: newId,
-      title: criterion.title,
-      description: criterion.description,
-      isFavourable: !!criterion.isFavorable,
-      dataSources: buildInProgressDataSources(criterion, newId)
-    };
-  });
+): {
+  criteria: ICriterion[];
+  criteriaAndDataSourceIdMap: Record<string, string>;
+} {
+  let idMap: Record<string, string> = {};
+  return {
+    criteria: _.map(criteria, (criterion: IProblemCriterion, oldId: string) => {
+      const newId = generateUuid();
+      idMap[oldId] = newId;
+      const {
+        dataSources,
+        dataSourcesIdMap
+      }: {
+        dataSources: IDataSource[];
+        dataSourcesIdMap: Record<string, string>;
+      } = buildInProgressDataSources(criterion, newId);
+      idMap = {...idMap, ...dataSourcesIdMap};
+      return {
+        id: newId,
+        title: criterion.title,
+        description: criterion.description,
+        isFavourable: !!criterion.isFavorable,
+        dataSources: dataSources
+      };
+    }),
+    criteriaAndDataSourceIdMap: idMap
+  };
 }
 
 function buildInProgressDataSources(
   criterion: IProblemCriterion,
   criterionId: string
-): IDataSource[] {
-  return _.map(criterion.dataSources, (dataSource) => {
-    return {
-      id: generateUuid(),
-      reference: dataSource.source,
-      unitOfMeasurement: {
-        label: dataSource.unitOfMeasurement.label,
-        type: dataSource.unitOfMeasurement.type,
-        lowerBound: dataSource.scale[0],
-        upperBound: dataSource.scale[1]
-      },
-      uncertainty: dataSource.uncertainties,
-      strengthOfEvidence: dataSource.strengthOfEvidence,
-      criterionId: criterionId
-    };
-  });
+): {dataSources: IDataSource[]; dataSourcesIdMap: Record<string, string>} {
+  let idMap: Record<string, string> = {};
+  return {
+    dataSources: _.map(criterion.dataSources, (dataSource) => {
+      const newId = generateUuid();
+      idMap[dataSource.id] = newId;
+      return {
+        id: newId,
+        reference: dataSource.source,
+        unitOfMeasurement: {
+          label: dataSource.unitOfMeasurement.label,
+          type: dataSource.unitOfMeasurement.type,
+          lowerBound: dataSource.scale[0],
+          upperBound: dataSource.scale[1]
+        },
+        uncertainty: dataSource.uncertainties,
+        strengthOfEvidence: dataSource.strengthOfEvidence,
+        criterionId: criterionId
+      };
+    }),
+    dataSourcesIdMap: idMap
+  };
 }
 
 function buildInProgressAlternatives(
   alternatives: Record<string, {title: string}>
-): IAlternative[] {
-  return _.map(alternatives, (alternative: {title: string}) => {
-    return {
-      id: generateUuid(),
-      title: alternative.title
-    };
-  });
+): {
+  alternatives: IAlternative[];
+  alternativesIdMap: Record<string, string>;
+} {
+  let idMap: Record<string, string> = {};
+  return {
+    alternatives: _.map(
+      alternatives,
+      (alternative: {title: string}, oldId: string) => {
+        const newId = generateUuid();
+        idMap[oldId] = newId;
+        return {
+          id: newId,
+          title: alternative.title
+        };
+      }
+    ),
+    alternativesIdMap: idMap
+  };
 }
 
 function buildInProgressEffects(
-  performanceTable: IPerformanceTableEntry[]
+  performanceTable: IPerformanceTableEntry[],
+  idMap: Record<string, string>
 ): Effect[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry) => {
       return 'effect' in entry.performance;
     })
-    .map(buildEffect)
+    .map(_.partial(buildEffect, idMap))
     .value();
 }
 
-function buildEffect(entry: IPerformanceTableEntry): Effect {
+function buildEffect(
+  idMap: Record<string, string>,
+  entry: IPerformanceTableEntry
+): Effect {
   const performance = entry.performance as IEffectPerformance;
   const effectPerformance = performance.effect;
   const effectBase = {
-    alternativeId: entry.alternative,
-    dataSourceId: entry.dataSource,
-    criterionId: entry.criterion
+    alternativeId: idMap[entry.alternative],
+    dataSourceId: idMap[entry.dataSource],
+    criterionId: idMap[entry.criterion]
   };
   if (effectPerformance.type === 'empty') {
     return createEmptyOrTextEffect(effectPerformance, effectBase);
@@ -816,22 +873,26 @@ function createBoundEffect(
 }
 
 function buildInProgressDistributions(
-  performanceTable: IPerformanceTableEntry[]
+  performanceTable: IPerformanceTableEntry[],
+  idMap: Record<string, string>
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry) => {
       return 'distribution' in entry.performance;
     })
-    .map(buildDistribution)
+    .map(_.partial(buildDistribution, idMap))
     .value();
 }
 
-function buildDistribution(entry: IPerformanceTableEntry): Distribution {
+function buildDistribution(
+  idMap: Record<string, string>,
+  entry: IPerformanceTableEntry
+): Distribution {
   const performance = entry.performance as IDistributionPerformance;
   const distributionBase = {
-    alternativeId: entry.alternative,
-    dataSourceId: entry.dataSource,
-    criterionId: entry.criterion
+    alternativeId: idMap[entry.alternative],
+    dataSourceId: idMap[entry.dataSource],
+    criterionId: idMap[entry.criterion]
   };
   return finishDistributionCreation(performance.distribution, distributionBase);
 }

@@ -23,7 +23,7 @@ import pgPromise, {IMain} from 'pg-promise';
 import {
   createProblem as buildProblem,
   mapAlternatives,
-  mapCellMessages,
+  mapCellMessages as mapCellCommands,
   mapCellValues,
   mapCombinedResults,
   mapCriteria,
@@ -545,9 +545,10 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function upsertCellsDirectly(
     cellCommands: ICellCommand[],
-    callback: (error: IError | null) => void
+    callback: (error: IError) => void
   ): void {
-    upsertCells(db, cellCommands, callback);
+    const query = buildUpsertCellsQuery(cellCommands);
+    db.query(query, [], callback);
   }
 
   function upsertCellsInTransaction(
@@ -556,19 +557,14 @@ export default function InProgressWorkspaceRepository(db: any) {
     inProgressworkspaceId: number,
     callback: (error: IError, inProgressworkspaceId: number) => void
   ) {
-    upsertCells(
-      client,
-      cellCommands,
-      _.partialRight(callback, inProgressworkspaceId)
-    );
+    const query = buildUpsertCellsQuery(cellCommands);
+    client.query(query, [], (error: IError) => {
+      callback(error, error ? null : inProgressworkspaceId);
+    });
   }
 
-  function upsertCells(
-    dbOrClient: any,
-    cellMessages: ICellCommand[],
-    callback: (error: IError) => void
-  ): void {
-    const toInsert = mapCellMessages(cellMessages);
+  function buildUpsertCellsQuery(cellCommands: ICellCommand[]): string {
+    const toInsert = mapCellCommands(cellCommands);
     const columns = new pgp.helpers.ColumnSet(
       [
         'inprogressworkspaceid',
@@ -604,8 +600,7 @@ export default function InProgressWorkspaceRepository(db: any) {
           'celltype'
         ]
       });
-
-    dbOrClient.query(query, [], callback);
+    return query;
   }
 
   function createWorkspace(
