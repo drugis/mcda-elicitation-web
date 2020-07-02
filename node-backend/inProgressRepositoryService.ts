@@ -683,14 +683,21 @@ export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
 
   const idMap = {...criteriaAndDataSourceIdMap, ...alternativesIdMap};
 
+  const isPercentageMap = buildPercentageMap(workspace.problem.criteria);
+
   return {
     workspace: buildInProgressWorkspace(workspace),
     criteria: criteria,
     alternatives: alternatives,
-    effects: buildInProgressEffects(workspace.problem.performanceTable, idMap),
+    effects: buildInProgressEffects(
+      workspace.problem.performanceTable,
+      idMap,
+      isPercentageMap
+    ),
     distributions: buildInProgressDistributions(
       workspace.problem.performanceTable,
-      idMap
+      idMap,
+      isPercentageMap
     )
   };
 }
@@ -790,22 +797,25 @@ function buildInProgressAlternatives(
 
 function buildInProgressEffects(
   performanceTable: IPerformanceTableEntry[],
-  idMap: Record<string, string>
+  idMap: Record<string, string>,
+  isPercentageMap: Record<string, boolean>
 ): Effect[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry) => {
       return 'effect' in entry.performance;
     })
-    .map(_.partial(buildEffect, idMap))
+    .map(_.partial(buildEffect, idMap, isPercentageMap))
     .value();
 }
 
 function buildEffect(
   idMap: Record<string, string>,
+  isPercentageMap: Record<string, boolean>,
   entry: IPerformanceTableEntry
 ): Effect {
   const performance = entry.performance as IEffectPerformance;
   const effectPerformance = performance.effect;
+  const modifier = isPercentageMap[entry.dataSource] ? 100 : 1;
   const effectBase = {
     alternativeId: idMap[entry.alternative],
     dataSourceId: idMap[entry.dataSource],
@@ -814,7 +824,7 @@ function buildEffect(
   if (effectPerformance.type === 'empty') {
     return createEmptyOrTextEffect(effectPerformance, effectBase);
   } else if (effectPerformance.type === 'exact') {
-    return createExactEffect(effectPerformance, effectBase);
+    return createExactEffect(effectPerformance, effectBase, modifier);
   } else {
     throw 'unknown effect type';
   }
@@ -836,13 +846,18 @@ function createExactEffect(
     | IValuePerformance
     | IValueCIPerformance
     | IRangeEffectPerformance,
-  effectBase: any
+  effectBase: any,
+  modifier: number
 ): IValueEffect | IValueCIEffect | IRangeEffect {
-  if ('input' in performance) {
+  if ('input' in performance && 'lowerBound' in performance.input) {
     const input = performance.input;
-    return createBoundEffect(input, effectBase);
+    return createBoundEffect(input, effectBase, modifier);
   } else {
-    return {...effectBase, type: 'value', value: performance.value};
+    return {
+      ...effectBase,
+      type: 'value',
+      value: significantDigits(performance.value * modifier)
+    };
   }
 }
 
@@ -852,54 +867,70 @@ function createBoundEffect(
     lowerBound: number | 'NE';
     upperBound: number | 'NE';
   },
-  effectBase: any
+  effectBase: any,
+  modifier: number
 ) {
+  const lowerBound = getBound(input.lowerBound, modifier);
+  const upperBound = getBound(input.upperBound, modifier);
+
   if ('value' in input) {
     return {
       ...effectBase,
       type: 'valueCI',
-      value: input.value,
-      lowerBound: input.lowerBound,
-      upperBound: input.upperBound
+      value: significantDigits(input.value * modifier),
+      lowerBound: lowerBound,
+      upperBound: upperBound
     };
   } else {
     return {
       ...effectBase,
       type: 'range',
-      lowerBound: input.lowerBound,
-      upperBound: input.upperBound
+      lowerBound: lowerBound,
+      upperBound: upperBound
     };
   }
 }
 
+function getBound(bound: number | 'NE', modifier: number): number | 'NE' {
+  return bound === 'NE' ? bound : significantDigits(bound * modifier);
+}
+
 function buildInProgressDistributions(
   performanceTable: IPerformanceTableEntry[],
-  idMap: Record<string, string>
+  idMap: Record<string, string>,
+  isPercentageMap: Record<string, boolean>
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry) => {
       return 'distribution' in entry.performance;
     })
-    .map(_.partial(buildDistribution, idMap))
+    .map(_.partial(buildDistribution, idMap, isPercentageMap))
     .value();
 }
 
 function buildDistribution(
   idMap: Record<string, string>,
+  isPercentageMap: Record<string, boolean>,
   entry: IPerformanceTableEntry
 ): Distribution {
   const performance = entry.performance as IDistributionPerformance;
+  const modifier = isPercentageMap[entry.dataSource] ? 100 : 1;
   const distributionBase = {
     alternativeId: idMap[entry.alternative],
     dataSourceId: idMap[entry.dataSource],
     criterionId: idMap[entry.criterion]
   };
-  return finishDistributionCreation(performance.distribution, distributionBase);
+  return finishDistributionCreation(
+    performance.distribution,
+    distributionBase,
+    modifier
+  );
 }
 
 function finishDistributionCreation(
   performance: DistributionPerformance,
-  distributionBase: any
+  distributionBase: any,
+  modifier: number
 ): Distribution {
   switch (performance.type) {
     case 'exact':
@@ -922,15 +953,21 @@ function finishDistributionCreation(
       return {
         ...distributionBase,
         type: 'normal',
-        mean: performance.parameters.mu,
-        standardError: performance.parameters.sigma
+        mean: significantDigits(performance.parameters.mu * modifier),
+        standardError: significantDigits(
+          performance.parameters.sigma * modifier
+        )
       };
     case 'range':
       return {
         ...distributionBase,
         type: 'range',
-        lowerBound: performance.parameters.lowerBound,
-        upperBound: performance.parameters.upperBound
+        lowerBound: significantDigits(
+          performance.parameters.lowerBound * modifier
+        ),
+        upperBound: significantDigits(
+          performance.parameters.upperBound * modifier
+        )
       };
     case 'empty':
       return createEmptyOrTextEffect(performance, distributionBase);
@@ -949,4 +986,18 @@ export function mapToCellCommands(
       inProgressWorkspaceId: inProgressWorkspaceId
     };
   });
+}
+
+export function buildPercentageMap(
+  criteria: Record<string, IProblemCriterion>
+): Record<string, boolean> {
+  const values = _.flatMap(criteria, (criterion) => {
+    return _.map(criterion.dataSources, (dataSource) => {
+      return [
+        dataSource.id,
+        dataSource.unitOfMeasurement.type === 'percentage'
+      ];
+    });
+  });
+  return _.fromPairs(values);
 }
