@@ -702,7 +702,7 @@ export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
   };
 }
 
-function buildInProgressWorkspace(
+export function buildInProgressWorkspace(
   workspace: IOldWorkspace
 ): IInProgressWorkspace {
   return {
@@ -714,7 +714,7 @@ function buildInProgressWorkspace(
   };
 }
 
-function buildInProgressCriteria(
+export function buildInProgressCriteria(
   criteria: Record<string, IProblemCriterion>
 ): {
   criteria: ICriterion[];
@@ -745,7 +745,7 @@ function buildInProgressCriteria(
   };
 }
 
-function buildInProgressDataSources(
+export function buildInProgressDataSources(
   criterion: IProblemCriterion,
   criterionId: string
 ): {dataSources: IDataSource[]; dataSourcesIdMap: Record<string, string>} {
@@ -772,7 +772,7 @@ function buildInProgressDataSources(
   };
 }
 
-function buildInProgressAlternatives(
+export function buildInProgressAlternatives(
   alternatives: Record<string, {title: string}>
 ): {
   alternatives: IAlternative[];
@@ -795,7 +795,7 @@ function buildInProgressAlternatives(
   };
 }
 
-function buildInProgressEffects(
+export function buildInProgressEffects(
   performanceTable: IPerformanceTableEntry[],
   idMap: Record<string, string>,
   isPercentageMap: Record<string, boolean>
@@ -808,11 +808,11 @@ function buildInProgressEffects(
     .value();
 }
 
-function isNotNMAEntry(entry: IPerformanceTableEntry) {
+export function isNotNMAEntry(entry: IPerformanceTableEntry) {
   return 'alternative' in entry;
 }
 
-function buildEffect(
+export function buildEffect(
   idMap: Record<string, string>,
   isPercentageMap: Record<string, boolean>,
   entry: IPerformanceTableEntry
@@ -834,7 +834,7 @@ function buildEffect(
   }
 }
 
-function createEmptyOrTextEffect(
+export function createEmptyOrTextEffect(
   effectPerformance: IEmptyPerformance | ITextPerformance,
   effectBase: any
 ): ITextEffect | IEmptyEffect {
@@ -845,7 +845,7 @@ function createEmptyOrTextEffect(
   }
 }
 
-function createExactEffect(
+export function createExactEffect(
   performance:
     | IValuePerformance
     | IValueCIPerformance
@@ -865,7 +865,7 @@ function createExactEffect(
   }
 }
 
-function createBoundEffect(
+export function createBoundEffect(
   input: {
     value?: number;
     lowerBound: number | 'NE';
@@ -895,11 +895,11 @@ function createBoundEffect(
   }
 }
 
-function getBound(bound: number | 'NE', modifier: number): number | 'NE' {
+export function getBound(bound: number | 'NE', modifier: number): number | 'NE' {
   return bound === 'NE' ? bound : significantDigits(bound * modifier);
 }
 
-function buildInProgressDistributions(
+export function buildInProgressDistributions(
   performanceTable: IPerformanceTableEntry[],
   idMap: Record<string, string>,
   isPercentageMap: Record<string, boolean>
@@ -912,7 +912,7 @@ function buildInProgressDistributions(
     .value();
 }
 
-function buildDistribution(
+export function buildDistribution(
   idMap: Record<string, string>,
   isPercentageMap: Record<string, boolean>,
   entry: IPerformanceTableEntry
@@ -931,7 +931,7 @@ function buildDistribution(
   );
 }
 
-function finishDistributionCreation(
+export function finishDistributionCreation(
   performance: DistributionPerformance,
   distributionBase: any,
   modifier: number
@@ -980,14 +980,14 @@ function finishDistributionCreation(
 
 export function mapToCellCommands(
   tableCells: (Effect | Distribution)[],
-  inProgressWorkspaceId: number,
+  inProgressId: number,
   cellType: TableInputMode
 ): ICellCommand[] {
   return _.map(tableCells, (cell) => {
     return {
       ...cell,
       cellType: cellType,
-      inProgressWorkspaceId: inProgressWorkspaceId
+      inProgressWorkspaceId: inProgressId
     };
   });
 }
