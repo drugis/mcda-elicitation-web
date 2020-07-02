@@ -161,7 +161,9 @@ export default function InProgressWorkspaceRepository(db: any) {
   ) {
     const toInsert = _.map(toCreate, (criterion: ICriterion, index: number) => {
       return {
-        ...criterion,
+        id: criterion.id,
+        title: criterion.title,
+        description: criterion.description || '',
         isfavourable: criterion.isFavourable,
         orderindex: index,
         inprogressworkspaceid: inProgressworkspaceId
@@ -178,8 +180,8 @@ export default function InProgressWorkspaceRepository(db: any) {
       ],
       {table: 'inprogresscriterion'}
     );
-    const query = pgp.helpers.insert(toInsert, columns) + ' RETURNING id';
-    client.query(query, [], (error: any, result: {rows: [{id: string}]}) => {
+    const query = pgp.helpers.insert(toInsert, columns);
+    client.query(query, [], (error: any) => {
       if (error) {
         callback(error, null);
       } else {
@@ -204,11 +206,9 @@ export default function InProgressWorkspaceRepository(db: any) {
         unittype: item.unitOfMeasurement.type,
         unitlowerbound: item.unitOfMeasurement.lowerBound,
         unitupperbound: item.unitOfMeasurement.upperBound,
-        reference: item.reference ? item.reference : '',
-        strengthofevidence: item.strengthOfEvidence
-          ? item.strengthOfEvidence
-          : '',
-        uncertainty: item.uncertainty ? item.uncertainty : ''
+        reference: item.reference || '',
+        strengthofevidence: item.strengthOfEvidence || '',
+        uncertainty: item.uncertainty || ''
       };
     });
     const columns = new pgp.helpers.ColumnSet(

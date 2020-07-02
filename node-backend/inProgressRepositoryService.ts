@@ -802,10 +802,14 @@ function buildInProgressEffects(
 ): Effect[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry) => {
-      return 'effect' in entry.performance;
+      return isNotNMAEntry(entry) && 'effect' in entry.performance;
     })
     .map(_.partial(buildEffect, idMap, isPercentageMap))
     .value();
+}
+
+function isNotNMAEntry(entry: IPerformanceTableEntry) {
+  return 'alternative' in entry;
 }
 
 function buildEffect(
@@ -902,7 +906,7 @@ function buildInProgressDistributions(
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry) => {
-      return 'distribution' in entry.performance;
+      return isNotNMAEntry(entry) && 'distribution' in entry.performance;
     })
     .map(_.partial(buildDistribution, idMap, isPercentageMap))
     .value();

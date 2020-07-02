@@ -677,7 +677,6 @@ describe('createProblem', () => {
       crit1Id: {
         title: criteria[0].title,
         description: criteria[0].description,
-        isFavorable: criteria[0].isFavourable,
         dataSources: [
           {
             id: dataSource1Id,
@@ -931,3 +930,8 @@ describe('createOrdering', () => {
     expect(result).toEqual(expectedResult);
   });
 });
+
+describe('buildEmptyInProgress', () => {});
+describe('buildInProgressCopy', () => {});
+describe('mapToCellCommands', () => {});
+describe('buildPercentageMap', () => {});
