@@ -2,13 +2,13 @@ import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
 import ICriterion from '@shared/interface/ICriterion';
 import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
+import IDatabaseInputCell from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
-import IInputCellQueryResult from '@shared/interface/IInputCellQueryResult';
 import IOrdering from '@shared/interface/IOrdering';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
@@ -189,7 +189,7 @@ describe('mapDataSources', () => {
 
 describe('mapCellValues', () => {
   it('should map effects and distributions', () => {
-    const basicProperties: IInputCellQueryResult = {
+    const basicProperties: IDatabaseInputCell = {
       alternativeid: alternative1Id,
       datasourceid: dataSource1Id,
       criterionid: criterion1Id,
@@ -207,7 +207,7 @@ describe('mapCellValues', () => {
       celltype: 'effect',
       inputtype: 'value'
     };
-    const effects: IInputCellQueryResult[] = [
+    const effects: IDatabaseInputCell[] = [
       {
         ...basicProperties,
         alternativeid: alternative1Id,
@@ -248,7 +248,7 @@ describe('mapCellValues', () => {
         txt: 'foo'
       }
     ];
-    const distributions: IInputCellQueryResult[] = [
+    const distributions: IDatabaseInputCell[] = [
       {
         ...basicProperties,
         alternativeid: alternative1Id,
@@ -302,7 +302,7 @@ describe('mapCellValues', () => {
         beta: 2
       }
     ];
-    const cellValues: IInputCellQueryResult[] = [...effects, ...distributions];
+    const cellValues: IDatabaseInputCell[] = [...effects, ...distributions];
     const result = mapCellValues(cellValues);
     const sharedProperties = {
       dataSourceId: dataSource1Id,

@@ -2,7 +2,7 @@ import {TableInputMode} from '../../app/ts/type/TableInputMode';
 import {distributionType} from './IDistribution';
 import {effectType} from './IEffect';
 
-export default interface IInputCellQueryResult {
+export default interface IDatabaseInputCell {
   inprogressworkspaceid: number;
   alternativeid: string;
   datasourceid: string;

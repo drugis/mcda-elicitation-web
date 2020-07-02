@@ -5,6 +5,7 @@ import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterion from '@shared/interface/ICriterion';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
+import IValueCellQueryResult from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
@@ -13,7 +14,6 @@ import {Effect} from '@shared/interface/IEffect';
 import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
-import IValueCellQueryResult from '@shared/interface/IInputCellQueryResult';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
@@ -28,6 +28,7 @@ import {
   mapCombinedResults,
   mapCriteria,
   mapDataSources,
+  mapToCellCommands,
   mapWorkspace
 } from './inProgressRepositoryService';
 
@@ -84,17 +85,47 @@ export default function InProgressWorkspaceRepository(db: any) {
   function createInProgressEffects(
     client: any,
     effects: Effect[],
-    callback: (error: IError) => void
+    inProgressworkspaceId: number,
+    callback: (error: IError, inProgressworkspaceId: number) => void
   ) {
-    //sth sth pgp query stuff TODO
+    if (effects.length) {
+      const cellCommands = mapToCellCommands(
+        effects,
+        inProgressworkspaceId,
+        'effect'
+      );
+      upsertCellsInTransaction(
+        client,
+        cellCommands,
+        inProgressworkspaceId,
+        callback
+      );
+    } else {
+      callback(null, inProgressworkspaceId);
+    }
   }
 
   function createInProgressDistributions(
     client: any,
-    effects: Distribution[],
-    callback: (error: IError) => void
+    distributions: Distribution[],
+    inProgressworkspaceId: number,
+    callback: (error: IError, inProgressworkspaceId: number) => void
   ) {
-    //sth sth pgp query stuff TODO
+    if (distributions.length) {
+      const cellCommands = mapToCellCommands(
+        distributions,
+        inProgressworkspaceId,
+        'distribution'
+      );
+      upsertCellsInTransaction(
+        client,
+        cellCommands,
+        inProgressworkspaceId,
+        callback
+      );
+    } else {
+      callback(null, inProgressworkspaceId);
+    }
   }
 
   function createInProgressWorkspace(
@@ -173,9 +204,11 @@ export default function InProgressWorkspaceRepository(db: any) {
         unittype: item.unitOfMeasurement.type,
         unitlowerbound: item.unitOfMeasurement.lowerBound,
         unitupperbound: item.unitOfMeasurement.upperBound,
-        reference: item.reference,
-        strengthofevidence: item.strengthOfEvidence,
-        uncertainty: item.uncertainty
+        reference: item.reference ? item.reference : '',
+        strengthofevidence: item.strengthOfEvidence
+          ? item.strengthOfEvidence
+          : '',
+        uncertainty: item.uncertainty ? item.uncertainty : ''
       };
     });
     const columns = new pgp.helpers.ColumnSet(
@@ -510,47 +543,69 @@ export default function InProgressWorkspaceRepository(db: any) {
     db.query(query, [alternativeId], callback);
   }
 
+  function upsertCellsDirectly(
+    cellCommands: ICellCommand[],
+    callback: (error: IError | null) => void
+  ): void {
+    upsertCells(db, cellCommands, callback);
+  }
+
+  function upsertCellsInTransaction(
+    client: any,
+    cellCommands: ICellCommand[],
+    inProgressworkspaceId: number,
+    callback: (error: IError, inProgressworkspaceId: number) => void
+  ) {
+    upsertCells(
+      client,
+      cellCommands,
+      _.partialRight(callback, inProgressworkspaceId)
+    );
+  }
+
   function upsertCells(
+    dbOrClient: any,
     cellMessages: ICellCommand[],
-    callback: (error: any) => void
+    callback: (error: IError) => void
   ): void {
     const toInsert = mapCellMessages(cellMessages);
     const columns = new pgp.helpers.ColumnSet(
       [
-        'inProgressWorkspaceid',
+        'inprogressworkspaceid',
         'alternativeid',
-        'dataSourceid',
+        'datasourceid',
         'criterionid',
         'celltype',
         'inputtype',
-        {name: 'value', def: null},
-        {name: 'lowerbound', def: null},
-        {name: 'upperbound', def: null},
-        {name: 'isnotestimablelowerBound', def: null},
-        {name: 'isnotestimableupperbound', def: null},
-        {name: 'text', def: null},
-        {name: 'mean', def: null},
-        {name: 'standarderror', def: null},
-        {name: 'alpha', def: null},
-        {name: 'beta', def: null}
+        'val',
+        'lowerbound',
+        'upperbound',
+        'isnotestimablelowerbound',
+        'isnotestimableupperbound',
+        'txt',
+        'mean',
+        'standarderror',
+        'alpha',
+        'beta'
       ],
       {table: 'inprogressworkspacecell'}
     );
     const query =
       pgp.helpers.insert(toInsert, columns) +
-      `ON CONFLICT (alternativeId, dataSourceId, criterionId, cellType)
+      `ON CONFLICT (alternativeid, datasourceid, criterionid, celltype)
      DO UPDATE SET ` +
       columns.assignColumns({
         from: 'EXCLUDED',
         skip: [
-          'inProgressWorkspaceId',
-          'alternativeId',
-          'dataSourceId',
-          'criterionId'
+          'inprogressworkspaceid',
+          'alternativeid',
+          'datasourceid',
+          'criterionid',
+          'celltype'
         ]
       });
 
-    db.query(query, [], callback);
+    dbOrClient.query(query, [], callback);
   }
 
   function createWorkspace(
@@ -651,7 +706,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     deleteDataSource: deleteDataSource,
     upsertAlternative: upsertAlternative,
     deleteAlternative: deleteAlternative,
-    upsertCells: upsertCells,
+    upsertCellsDirectly: upsertCellsDirectly,
     createWorkspace: createWorkspace,
     query: query
   };

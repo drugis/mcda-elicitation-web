@@ -3,6 +3,7 @@ import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
 import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterion from '@shared/interface/ICriterion';
 import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
+import IDatabaseInputCell from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
@@ -10,7 +11,6 @@ import {Effect} from '@shared/interface/IEffect';
 import IEmptyEffect from '@shared/interface/IEmptyEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
-import IInputCellQueryResult from '@shared/interface/IInputCellQueryResult';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IOrdering from '@shared/interface/IOrdering';
 import IRangeEffect from '@shared/interface/IRangeEffect';
@@ -41,6 +41,7 @@ import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
 import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
 import {generateUuid} from '@shared/util';
+import {TableInputMode} from 'app/ts/type/TableInputMode';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
@@ -115,7 +116,7 @@ export function mapDataSources(
 }
 
 export function mapCellValues(
-  cellValues: IInputCellQueryResult[]
+  cellValues: IDatabaseInputCell[]
 ): [
   Record<string, Record<string, Effect>>,
   Record<string, Record<string, Distribution>>
@@ -131,7 +132,7 @@ export function mapCellValues(
 }
 
 function createEffectRecords(
-  effectQueryResults: IInputCellQueryResult[]
+  effectQueryResults: IDatabaseInputCell[]
 ): Record<string, Record<string, Effect>> {
   return _.reduce(
     effectQueryResults,
@@ -148,7 +149,7 @@ function createEffectRecords(
   );
 }
 
-function mapEffect(effectQueryResult: IInputCellQueryResult): Effect {
+function mapEffect(effectQueryResult: IDatabaseInputCell): Effect {
   const sharedProperties = {
     alternativeId: effectQueryResult.alternativeid,
     dataSourceId: effectQueryResult.datasourceid,
@@ -193,7 +194,7 @@ function mapEffect(effectQueryResult: IInputCellQueryResult): Effect {
 }
 
 function createDistributionRecords(
-  distributionQueryResults: IInputCellQueryResult[]
+  distributionQueryResults: IDatabaseInputCell[]
 ): Record<string, Record<string, Distribution>> {
   return _.reduce(
     distributionQueryResults,
@@ -214,7 +215,7 @@ function createDistributionRecords(
 }
 
 function mapDistribution(
-  distributionQueryResult: IInputCellQueryResult
+  distributionQueryResult: IDatabaseInputCell
 ): Distribution {
   const sharedProperties = {
     alternativeId: distributionQueryResult.alternativeid,
@@ -310,8 +311,29 @@ function mapDataSourcesOntoCriteria(
   });
 }
 
-export function mapCellMessages(cellMessages: ICellCommand[]): any[] {
-  return [];
+export function mapCellMessages(
+  cellCommands: ICellCommand[]
+): IDatabaseInputCell[] {
+  return _.map(cellCommands, (command) => {
+    return {
+      inprogressworkspaceid: command.inProgressWorkspaceId,
+      alternativeid: command.alternativeId,
+      datasourceid: command.dataSourceId,
+      criterionid: command.criterionId,
+      val: command.value,
+      lowerbound: command.lowerBound,
+      upperbound: command.upperBound,
+      isnotestimablelowerbound: command.isNotEstimableLowerBound,
+      isnotestimableupperbound: command.isNotEstimableUpperBound,
+      txt: command.text,
+      mean: command.mean,
+      standarderror: command.standardError,
+      alpha: command.alpha,
+      beta: command.beta,
+      celltype: command.cellType,
+      inputtype: command.type
+    };
+  });
 }
 
 export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
@@ -717,7 +739,9 @@ function buildInProgressEffects(
   performanceTable: IPerformanceTableEntry[]
 ): Effect[] {
   return _(performanceTable)
-    .filter(['performance', 'effect'])
+    .filter((entry: IPerformanceTableEntry) => {
+      return 'effect' in entry.performance;
+    })
     .map(buildEffect)
     .value();
 }
@@ -795,7 +819,9 @@ function buildInProgressDistributions(
   performanceTable: IPerformanceTableEntry[]
 ): Distribution[] {
   return _(performanceTable)
-    .filter(['performance', 'distribution'])
+    .filter((entry: IPerformanceTableEntry) => {
+      return 'distribution' in entry.performance;
+    })
     .map(buildDistribution)
     .value();
 }
@@ -848,4 +874,18 @@ function finishDistributionCreation(
     case 'empty':
       return createEmptyOrTextEffect(performance, distributionBase);
   }
+}
+
+export function mapToCellCommands(
+  tableCells: (Effect | Distribution)[],
+  inProgressWorkspaceId: number,
+  cellType: TableInputMode
+): ICellCommand[] {
+  return _.map(tableCells, (cell) => {
+    return {
+      ...cell,
+      cellType: cellType,
+      inProgressWorkspaceId: inProgressWorkspaceId
+    };
+  });
 }

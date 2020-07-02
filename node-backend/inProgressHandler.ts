@@ -226,7 +226,7 @@ export default function InProgressHandler(db: any) {
     next: () => void
   ): void {
     const cells: ICellCommand[] = [request.body];
-    inProgressWorkspaceRepository.upsertCells(cells, (error: any) => {
+    inProgressWorkspaceRepository.upsertCellsDirectly(cells, (error: any) => {
       if (error) {
         handleError(error, next);
       } else {
