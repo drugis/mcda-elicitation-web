@@ -1,5 +1,18 @@
+const mockGenerateUuid = jest.fn().mockImplementation(() => {
+  return 'unique_uuid';
+});
+
+jest.mock('../shared/util', () => {
+  return {
+    __esModule: true,
+    generateUuid: mockGenerateUuid
+  };
+});
+
 import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
+import IBetaDistribution from '@shared/interface/IBetaDistribution';
+import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterion from '@shared/interface/ICriterion';
 import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
 import IDatabaseInputCell from '@shared/interface/IDatabaseInputCell';
@@ -8,30 +21,37 @@ import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IEmptyEffect from '@shared/interface/IEmptyEffect';
+import IGammaDistribution from '@shared/interface/IGammaDistribution';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
+import INormalDistribution from '@shared/interface/INormalDistribution';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IOrdering from '@shared/interface/IOrdering';
+import IRangeEffect from '@shared/interface/IRangeEffect';
 import ITextEffect from '@shared/interface/ITextEffect';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
+import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
 import {effectPerformanceType} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
+import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
+import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IRangeDistributionPerformance from '@shared/interface/Problem/IRangeDistributionPerformance';
 import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
 import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
 import {CURRENT_SCHEMA_VERSION} from 'app/ts/ManualInput/constants';
-import _ from 'lodash';
 import {
   buildDistribution,
   buildEffect,
   buildEmptyInProgress,
+  buildIdMap,
   buildInProgressAlternatives,
   buildInProgressCopy,
   buildInProgressCriteria,
@@ -40,11 +60,12 @@ import {
   buildInProgressEffects,
   buildInProgressWorkspace,
   buildPercentageMap,
+  buildProblem,
   createBoundEffect,
   createEmptyOrTextEffect,
   createExactEffect,
   createOrdering,
-  createProblem,
+  finishDistributionCreation,
   isNotNMAEntry,
   mapAlternatives,
   mapCellValues,
@@ -52,17 +73,8 @@ import {
   mapCriteria,
   mapDataSources,
   mapToCellCommands,
-  mapWorkspace,
-  finishDistributionCreation
+  mapWorkspace
 } from '../node-backend/inProgressRepositoryService';
-import IRangeDistributionPerformance from '@shared/interface/Problem/IRangeDistributionPerformance';
-import IRangeEffect from '@shared/interface/IRangeEffect';
-import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
-import IBetaDistribution from '@shared/interface/IBetaDistribution';
-import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
-import IGammaDistribution from '@shared/interface/IGammaDistribution';
-import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import INormalDistribution from '@shared/interface/INormalDistribution';
 
 const criterion1Id = 'crit1Id';
 const dataSource1Id = 'ds1Id';
@@ -729,7 +741,7 @@ describe('inProgressRepositoryService', () => {
         distributions: distributions
       };
 
-      const result = createProblem(inProgressMessage);
+      const result = buildProblem(inProgressMessage);
 
       const expectedCriteria: Record<string, IProblemCriterion> = {
         crit1Id: {
@@ -924,7 +936,7 @@ describe('inProgressRepositoryService', () => {
         }
       };
       try {
-        createProblem(inProgressMessage);
+        buildProblem(inProgressMessage);
       } catch (error) {
         expect(error).toBe('Cell without effect and distribution found');
       }
@@ -992,44 +1004,65 @@ describe('inProgressRepositoryService', () => {
   describe('buildEmptyInProgress', () => {
     it('should return a new workspace ready to insert into the database', () => {
       const result = buildEmptyInProgress();
-      const expectedWorkspace = {
-        title: 'new workspace',
-        therapeuticContext: '',
-        useFavourability: true
+      const expectedResult: IWorkspace = {
+        workspace: {
+          title: 'new workspace',
+          therapeuticContext: '',
+          useFavourability: true
+        },
+        criteria: [
+          {
+            id: 'unique_uuid',
+            isFavourable: true,
+            title: 'criterion 1',
+            description: '',
+            dataSources: [
+              {
+                id: 'unique_uuid',
+                criterionId: 'unique_uuid',
+                reference: '',
+                uncertainty: '',
+                strengthOfEvidence: '',
+                unitOfMeasurement: {
+                  label: '',
+                  type: UnitOfMeasurementType.custom
+                }
+              }
+            ]
+          },
+          {
+            id: 'unique_uuid',
+            isFavourable: true,
+            title: 'criterion 2',
+            description: '',
+            dataSources: [
+              {
+                id: 'unique_uuid',
+                criterionId: 'unique_uuid',
+                reference: '',
+                uncertainty: '',
+                strengthOfEvidence: '',
+                unitOfMeasurement: {
+                  label: '',
+                  type: UnitOfMeasurementType.custom
+                }
+              }
+            ]
+          }
+        ],
+        alternatives: [
+          {id: 'unique_uuid', title: 'alternative 1'},
+          {id: 'unique_uuid', title: 'alternative 2'}
+        ],
+        effects: [],
+        distributions: []
       };
-      expect(result.workspace).toEqual(expectedWorkspace);
-
-      const expectedCriterion = {
-        isFavourable: true,
-        title: `criterion 1`,
-        description: ''
-      };
-      expect(_.omit(result.criteria[0], ['id', 'dataSources'])).toEqual(
-        expectedCriterion
-      );
-
-      const expectedDataSource = {
-        reference: '',
-        uncertainty: '',
-        strengthOfEvidence: '',
-        unitOfMeasurement: {
-          label: '',
-          type: UnitOfMeasurementType.custom
-        }
-      };
-      expect(
-        _.omit(result.criteria[0].dataSources[0], ['id', 'criterionId'])
-      ).toEqual(expectedDataSource);
-
-      expect(result.criteria[1].title).toEqual('criterion 2');
-      expect(result.alternatives[0].title).toEqual('alternative 1');
-      expect(result.alternatives[1].title).toEqual('alternative 2');
-      expect(result.effects).toEqual([]);
-      expect(result.distributions).toEqual([]);
+      expect(result).toEqual(expectedResult);
     });
   });
 
   describe('buildInProgressCopy', () => {
+    // building of alternatives and criteria is tested further below
     const problem: IProblem = {
       schemaVersion: 'some version',
       performanceTable: [],
@@ -1076,7 +1109,7 @@ describe('inProgressRepositoryService', () => {
           ...oldWorkspace,
           problem: {...oldWorkspace.problem, criteria: criteria}
         });
-        const expectedWorkspace = {
+        const expectedWorkspace: IInProgressWorkspace = {
           title: 'Copy of my workspace',
           therapeuticContext: '',
           useFavourability: true
@@ -1086,7 +1119,7 @@ describe('inProgressRepositoryService', () => {
     });
 
     describe('buildInProgressCriteria', () => {
-      it('should return the transformed criteria and a map of the old to the new ids', () => {
+      it('should return the transformed criteria', () => {
         const criteria: Record<string, IProblemCriterion> = {
           crit1Id: {
             dataSources: [],
@@ -1095,23 +1128,23 @@ describe('inProgressRepositoryService', () => {
             title: 'criterion 1'
           }
         };
-        const result = buildInProgressCriteria(criteria);
+        const result = buildInProgressCriteria(criteria, idMap);
+        const expectedCriterion: ICriterion[] = [
+          {
+            id: 'newCrit1',
+            title: 'criterion 1',
+            isFavourable: true,
+            dataSources: [] as any[],
+            description: 'hello'
+          }
+        ];
 
-        expect(_.keys(result.criteriaAndDataSourceIdMap).length).toBe(1);
-        expect(result.criteriaAndDataSourceIdMap[criterion1Id]).toBeTruthy();
-
-        const expectedCriterion = {
-          title: 'criterion 1',
-          isFavourable: true,
-          dataSources: [] as any[],
-          description: 'hello'
-        };
-        expect(_.omit(result.criteria[0], ['id'])).toEqual(expectedCriterion);
+        expect(result).toEqual(expectedCriterion);
       });
     });
 
     describe('buildInProgressDataSources', () => {
-      it('should return all the transformed data sources and a map of the old to the new ids', () => {
+      it('should return all the transformed data sources', () => {
         const criterion: IProblemCriterion = {
           title: 'criterion 1',
           description: '',
@@ -1129,49 +1162,46 @@ describe('inProgressRepositoryService', () => {
             }
           ]
         };
-        const result = buildInProgressDataSources(criterion, criterion1Id);
-
-        expect(_.keys(result.dataSourcesIdMap).length).toBe(1);
-        expect(result.dataSourcesIdMap[dataSource1Id]).toBeTruthy();
-
-        const expectedDataSource = {
-          reference: 'ref',
-          strengthOfEvidence: 'str',
-          uncertainty: 'unc',
-          unitOfMeasurement: {
-            label: '%',
-            type: UnitOfMeasurementType.percentage,
-            lowerBound: 0,
-            upperBound: 100
-          },
-          criterionId: criterion1Id
-        };
-        expect(_.omit(result.dataSources[0], ['id'])).toEqual(
-          expectedDataSource
+        const result = buildInProgressDataSources(
+          criterion,
+          idMap[criterion1Id],
+          idMap
         );
+        const expectedDataSource: IDataSource[] = [
+          {
+            id: 'newDs1',
+            reference: 'ref',
+            strengthOfEvidence: 'str',
+            uncertainty: 'unc',
+            unitOfMeasurement: {
+              label: '%',
+              type: UnitOfMeasurementType.percentage,
+              lowerBound: 0,
+              upperBound: 100
+            },
+            criterionId: 'newCrit1'
+          }
+        ];
+
+        expect(result).toEqual(expectedDataSource);
       });
     });
 
     describe('buildInProgressAlternatives', () => {
-      it('should return the transformed alternatives and a map from the old to the new ids', () => {
+      it('should return the transformed alternatives', () => {
         const alternatives: Record<string, {title: string}> = {
           alt1Id: {title: 'alternative 1'}
         };
-        const result = buildInProgressAlternatives(alternatives);
-
-        expect(_.keys(result.alternativesIdMap).length).toBe(1);
-        expect(result.alternativesIdMap[alternative1Id]).toBeTruthy();
-
-        const expectedAlternative = {title: 'alternative 1'};
-        expect(_.omit(result.alternatives[0], ['id'])).toEqual(
-          expectedAlternative
-        );
+        const result = buildInProgressAlternatives(alternatives, idMap);
+        const expectedAlternatives: IAlternative[] = [
+          {id: 'newAlt1', title: 'alternative 1'}
+        ];
+        expect(result).toEqual(expectedAlternatives);
       });
     });
 
     describe('buildInProgressEffects', () => {
       it('should filter out non effect entries', () => {
-        const idMap: Record<string, string> = {};
         const isPercentageMap: Record<string, boolean> = {};
         const performanceTable: IPerformanceTableEntry[] = [
           {
@@ -1532,7 +1562,7 @@ describe('inProgressRepositoryService', () => {
       const inprogressId = 37;
       const cellType = 'distribution';
       const result = mapToCellCommands(tableCells, inprogressId, cellType);
-      const expectedResult = [
+      const expectedResult: ICellCommand[] = [
         {
           alternativeId: 'alt1',
           criterionId: 'crit1',
@@ -1586,7 +1616,45 @@ describe('inProgressRepositoryService', () => {
         }
       };
       const result = buildPercentageMap(criteria);
-      const expectedResult = {ds1Id: true, ds2Id: false};
+      const expectedResult: Record<string, boolean> = {
+        ds1Id: true,
+        ds2Id: false
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('buildIdMap', () => {
+    it('should return a map from old to new ids', () => {
+      const criteria: Record<string, IProblemCriterion> = {
+        crit1Id: {
+          title: 'criterion 1',
+          description: '',
+          isFavorable: false,
+          dataSources: [
+            {
+              id: dataSource1Id,
+              scale: [0, 100],
+              source: 'ref',
+              strengthOfEvidence: 'str',
+              uncertainties: 'unc',
+              unitOfMeasurement: {
+                label: '%',
+                type: UnitOfMeasurementType.percentage
+              }
+            }
+          ]
+        }
+      };
+      const alternatives: Record<string, {title: string}> = {
+        alt1Id: {title: 'alternative 1'}
+      };
+      const result = buildIdMap(criteria, alternatives);
+      const expectedResult: Record<string, string> = {
+        crit1Id: 'unique_uuid',
+        ds1Id: 'unique_uuid',
+        alt1Id: 'unique_uuid'
+      };
       expect(result).toEqual(expectedResult);
     });
   });

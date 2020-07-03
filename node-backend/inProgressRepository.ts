@@ -21,9 +21,9 @@ import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
 import {
-  createProblem as buildProblem,
+  buildProblem,
   mapAlternatives,
-  mapCellMessages as mapCellCommands,
+  mapCellCommands,
   mapCellValues,
   mapCombinedResults,
   mapCriteria,

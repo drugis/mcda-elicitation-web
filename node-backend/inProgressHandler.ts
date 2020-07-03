@@ -16,8 +16,8 @@ import InProgressWorkspaceRepository from './inProgressRepository';
 import {
   buildEmptyInProgress,
   buildInProgressCopy,
-  createOrdering,
-  createProblem
+  buildProblem,
+  createOrdering
 } from './inProgressRepositoryService';
 import {logger} from './loggerTS';
 import OrderingRepository from './orderingRepository';
@@ -263,7 +263,7 @@ export default function InProgressHandler(db: any) {
     inProgressMessage: IInProgressMessage,
     callback: (error: any, problem?: IProblem) => void
   ) {
-    callback(null, createProblem(inProgressMessage));
+    callback(null, buildProblem(inProgressMessage));
   }
 
   function createInTransaction(

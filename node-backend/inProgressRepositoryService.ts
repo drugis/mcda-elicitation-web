@@ -311,7 +311,7 @@ function mapDataSourcesOntoCriteria(
   });
 }
 
-export function mapCellMessages(
+export function mapCellCommands(
   cellCommands: ICellCommand[]
 ): IDatabaseInputCell[] {
   return _.map(cellCommands, (command) => {
@@ -336,7 +336,7 @@ export function mapCellMessages(
   });
 }
 
-export function createProblem(inProgressMessage: IInProgressMessage): IProblem {
+export function buildProblem(inProgressMessage: IInProgressMessage): IProblem {
   return {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     title: inProgressMessage.workspace.title,
@@ -665,30 +665,19 @@ function buildInprogressCriterion(criterionId: string, index: number) {
 }
 
 export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
-  const {
-    criteria,
-    criteriaAndDataSourceIdMap
-  }: {
-    criteria: ICriterion[];
-    criteriaAndDataSourceIdMap: Record<string, string>;
-  } = buildInProgressCriteria(workspace.problem.criteria);
-
-  const {
-    alternatives,
-    alternativesIdMap
-  }: {
-    alternatives: IAlternative[];
-    alternativesIdMap: Record<string, string>;
-  } = buildInProgressAlternatives(workspace.problem.alternatives);
-
-  const idMap = {...criteriaAndDataSourceIdMap, ...alternativesIdMap};
-
+  const idMap = buildIdMap(
+    workspace.problem.criteria,
+    workspace.problem.alternatives
+  );
   const isPercentageMap = buildPercentageMap(workspace.problem.criteria);
 
   return {
     workspace: buildInProgressWorkspace(workspace),
-    criteria: criteria,
-    alternatives: alternatives,
+    criteria: buildInProgressCriteria(workspace.problem.criteria, idMap),
+    alternatives: buildInProgressAlternatives(
+      workspace.problem.alternatives,
+      idMap
+    ),
     effects: buildInProgressEffects(
       workspace.problem.performanceTable,
       idMap,
@@ -700,6 +689,36 @@ export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
       isPercentageMap
     )
   };
+}
+
+export function buildIdMap(
+  criteria: Record<string, IProblemCriterion>,
+  alternatives: Record<string, {title: string}>
+): Record<string, string> {
+  const criteriaIdMap = buildGenericIdMap(criteria);
+  const dataSourcesIdMap = buildDataSourcesIdMap(criteria);
+  const alternativesIdMap = buildGenericIdMap(alternatives);
+  return {...criteriaIdMap, ...dataSourcesIdMap, ...alternativesIdMap};
+}
+
+function buildGenericIdMap<T>(
+  items: Record<string, T>
+): Record<string, string> {
+  const values = _.map(items, (item, oldId: string) => {
+    return [oldId, generateUuid()];
+  });
+  return _.fromPairs(values);
+}
+
+function buildDataSourcesIdMap(
+  criteria: Record<string, IProblemCriterion>
+): Record<string, string> {
+  const values = _.flatMap(criteria, (criterion) => {
+    return _.map(criterion.dataSources, (dataSource) => {
+      return [dataSource.id, generateUuid()];
+    });
+  });
+  return _.fromPairs(values);
 }
 
 export function buildInProgressWorkspace(
@@ -715,84 +734,52 @@ export function buildInProgressWorkspace(
 }
 
 export function buildInProgressCriteria(
-  criteria: Record<string, IProblemCriterion>
-): {
-  criteria: ICriterion[];
-  criteriaAndDataSourceIdMap: Record<string, string>;
-} {
-  let idMap: Record<string, string> = {};
-  return {
-    criteria: _.map(criteria, (criterion: IProblemCriterion, oldId: string) => {
-      const newId = generateUuid();
-      idMap[oldId] = newId;
-      const {
-        dataSources,
-        dataSourcesIdMap
-      }: {
-        dataSources: IDataSource[];
-        dataSourcesIdMap: Record<string, string>;
-      } = buildInProgressDataSources(criterion, newId);
-      idMap = {...idMap, ...dataSourcesIdMap};
-      return {
-        id: newId,
-        title: criterion.title,
-        description: criterion.description,
-        isFavourable: !!criterion.isFavorable,
-        dataSources: dataSources
-      };
-    }),
-    criteriaAndDataSourceIdMap: idMap
-  };
+  criteria: Record<string, IProblemCriterion>,
+  idMap: Record<string, string>
+): ICriterion[] {
+  return _.map(criteria, (criterion: IProblemCriterion, oldId: string) => {
+    return {
+      id: idMap[oldId],
+      title: criterion.title,
+      description: criterion.description,
+      isFavourable: !!criterion.isFavorable,
+      dataSources: buildInProgressDataSources(criterion, idMap[oldId], idMap)
+    };
+  });
 }
 
 export function buildInProgressDataSources(
   criterion: IProblemCriterion,
-  criterionId: string
-): {dataSources: IDataSource[]; dataSourcesIdMap: Record<string, string>} {
-  let idMap: Record<string, string> = {};
-  return {
-    dataSources: _.map(criterion.dataSources, (dataSource) => {
-      const newId = generateUuid();
-      idMap[dataSource.id] = newId;
-      return {
-        id: newId,
-        reference: dataSource.source,
-        unitOfMeasurement: {
-          label: dataSource.unitOfMeasurement.label,
-          type: dataSource.unitOfMeasurement.type,
-          lowerBound: dataSource.scale[0],
-          upperBound: dataSource.scale[1]
-        },
-        uncertainty: dataSource.uncertainties,
-        strengthOfEvidence: dataSource.strengthOfEvidence,
-        criterionId: criterionId
-      };
-    }),
-    dataSourcesIdMap: idMap
-  };
+  criterionId: string,
+  idMap: Record<string, string>
+): IDataSource[] {
+  return _.map(criterion.dataSources, (dataSource) => {
+    return {
+      id: idMap[dataSource.id],
+      reference: dataSource.source,
+      unitOfMeasurement: {
+        label: dataSource.unitOfMeasurement.label,
+        type: dataSource.unitOfMeasurement.type,
+        lowerBound: dataSource.scale[0],
+        upperBound: dataSource.scale[1]
+      },
+      uncertainty: dataSource.uncertainties,
+      strengthOfEvidence: dataSource.strengthOfEvidence,
+      criterionId: criterionId
+    };
+  });
 }
 
 export function buildInProgressAlternatives(
-  alternatives: Record<string, {title: string}>
-): {
-  alternatives: IAlternative[];
-  alternativesIdMap: Record<string, string>;
-} {
-  let idMap: Record<string, string> = {};
-  return {
-    alternatives: _.map(
-      alternatives,
-      (alternative: {title: string}, oldId: string) => {
-        const newId = generateUuid();
-        idMap[oldId] = newId;
-        return {
-          id: newId,
-          title: alternative.title
-        };
-      }
-    ),
-    alternativesIdMap: idMap
-  };
+  alternatives: Record<string, {title: string}>,
+  idMap: Record<string, string>
+): IAlternative[] {
+  return _.map(alternatives, (alternative: {title: string}, oldId: string) => {
+    return {
+      id: idMap[oldId],
+      title: alternative.title
+    };
+  });
 }
 
 export function buildInProgressEffects(
