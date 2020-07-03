@@ -32,26 +32,18 @@ export default function UnitOfMeasurementDialog({
   const [label, setLabel] = useState(unitOfMeasurement.label);
   const [unitType, setUnitType] = useState(unitOfMeasurement.type);
   const [lowerBound, setLowerBound] = useState<number>(
-    getBound(unitOfMeasurement.lowerBound, -Infinity)
+    unitOfMeasurement.lowerBound
   );
   const [upperBound, setUpperBound] = useState<number>(
-    getBound(unitOfMeasurement.upperBound, Infinity)
+    unitOfMeasurement.upperBound
   );
 
   useEffect(() => {
     setLabel(unitOfMeasurement.label);
     setUnitType(unitOfMeasurement.type);
-    setLowerBound(getBound(unitOfMeasurement.lowerBound, -Infinity));
-    setUpperBound(getBound(unitOfMeasurement.upperBound, Infinity));
+    setLowerBound(unitOfMeasurement.lowerBound);
+    setUpperBound(unitOfMeasurement.upperBound);
   }, [isDialogOpen, unitOfMeasurement]);
-
-  function getBound(bound: number, defaultBound: number) {
-    if (bound === undefined) {
-      return defaultBound;
-    } else {
-      return bound;
-    }
-  }
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -1,4 +1,4 @@
-import {TableCell, Tooltip} from '@material-ui/core';
+import {Grid, TableCell, Tooltip} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
@@ -48,11 +48,25 @@ export default function UnitOfMeasurementCell({
     }
   }
 
+  function createScalesLabel(): JSX.Element {
+    return (
+      <span>
+        [{dataSource.unitOfMeasurement.lowerBound},{' '}
+        {dataSource.unitOfMeasurement.upperBound}]
+      </span>
+    );
+  }
+
   return (
     <TableCell align="center">
-      <span onClick={openDialog} style={{cursor: 'pointer'}}>
-        {createLabel()}
-      </span>
+      <Grid container>
+        <Grid item xs={12} onClick={openDialog} style={{cursor: 'pointer'}}>
+          {createLabel()}
+        </Grid>
+        <Grid item xs={12}>
+          {createScalesLabel()}
+        </Grid>
+      </Grid>
 
       <UnitOfMeasurementDialog
         unitOfMeasurement={dataSource.unitOfMeasurement}
