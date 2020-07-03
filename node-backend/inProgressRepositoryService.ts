@@ -855,7 +855,7 @@ export function createExactEffect(
 ): IValueEffect | IValueCIEffect | IRangeEffect {
   if ('input' in performance && 'lowerBound' in performance.input) {
     const input = performance.input;
-    return createBoundEffect(input, effectBase, modifier);
+    return createBoundEffect(input, effectBase);
   } else {
     return {
       ...effectBase,
@@ -871,19 +871,19 @@ export function createBoundEffect(
     lowerBound: number | 'NE';
     upperBound: number | 'NE';
   },
-  effectBase: any,
-  modifier: number
-) {
-  const lowerBound = getBound(input.lowerBound, modifier);
-  const upperBound = getBound(input.upperBound, modifier);
-
+  effectBase: any
+): IValueCIEffect | IRangeEffect {
+  const lowerBound = input.lowerBound;
+  const upperBound = input.upperBound;
   if ('value' in input) {
     return {
       ...effectBase,
       type: 'valueCI',
-      value: significantDigits(input.value * modifier),
-      lowerBound: lowerBound,
-      upperBound: upperBound
+      value: input.value,
+      lowerBound: lowerBound !== 'NE' ? lowerBound : undefined,
+      upperBound: upperBound !== 'NE' ? upperBound : undefined,
+      isNotEstimableUpperBound: lowerBound === 'NE',
+      isNotEstimableLowerBound: upperBound === 'NE'
     };
   } else {
     return {
@@ -893,10 +893,6 @@ export function createBoundEffect(
       upperBound: upperBound
     };
   }
-}
-
-export function getBound(bound: number | 'NE', modifier: number): number | 'NE' {
-  return bound === 'NE' ? bound : significantDigits(bound * modifier);
 }
 
 export function buildInProgressDistributions(

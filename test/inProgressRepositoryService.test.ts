@@ -7,43 +7,86 @@ import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
+import IEmptyEffect from '@shared/interface/IEmptyEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
+import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IOrdering from '@shared/interface/IOrdering';
+import ITextEffect from '@shared/interface/ITextEffect';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import IValueEffect from '@shared/interface/IValueEffect';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
+import {effectPerformanceType} from '@shared/interface/Problem/IEffectPerformance';
+import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
+import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
+import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
 import {CURRENT_SCHEMA_VERSION} from 'app/ts/ManualInput/constants';
+import _ from 'lodash';
 import {
+  buildDistribution,
+  buildEffect,
+  buildEmptyInProgress,
+  buildInProgressAlternatives,
+  buildInProgressCopy,
+  buildInProgressCriteria,
+  buildInProgressDataSources,
+  buildInProgressDistributions,
+  buildInProgressEffects,
+  buildInProgressWorkspace,
+  buildPercentageMap,
+  createBoundEffect,
+  createEmptyOrTextEffect,
+  createExactEffect,
   createOrdering,
   createProblem,
+  isNotNMAEntry,
   mapAlternatives,
   mapCellValues,
   mapCombinedResults,
   mapCriteria,
   mapDataSources,
-  mapWorkspace,
-  buildEmptyInProgress,
-  buildPercentageMap,
   mapToCellCommands,
-  buildInProgressCopy,
-  buildInProgressWorkspace,
-  buildInProgressCriteria,
-  buildInProgressDataSources,
-  buildInProgressAlternatives,
-  buildInProgressEffects,
-  isNotNMAEntry
+  mapWorkspace,
+  finishDistributionCreation
 } from '../node-backend/inProgressRepositoryService';
-import _ from 'lodash';
-import CriteriaRows from 'app/ts/ManualInput/ManualInputTable/CriteriaRows/CriteriaRows';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import IWorkspace from '@shared/interface/IWorkspace';
+import IRangeDistributionPerformance from '@shared/interface/Problem/IRangeDistributionPerformance';
+import IRangeEffect from '@shared/interface/IRangeEffect';
+import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
+import IBetaDistribution from '@shared/interface/IBetaDistribution';
+import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
+import IGammaDistribution from '@shared/interface/IGammaDistribution';
+import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
+import INormalDistribution from '@shared/interface/INormalDistribution';
 
 const criterion1Id = 'crit1Id';
 const dataSource1Id = 'ds1Id';
 const alternative1Id = 'alt1Id';
+
+const emptyEffect: IEmptyEffect = {
+  type: 'empty',
+  alternativeId: 'newAlt1',
+  criterionId: 'newCrit1',
+  dataSourceId: 'newDs1'
+};
+
+const effectBase = {
+  alternativeId: 'newAlt1',
+  criterionId: 'newCrit1',
+  dataSourceId: 'newDs1'
+};
+
+const idMap: Record<string, string> = {
+  crit1Id: 'newCrit1',
+  alt1Id: 'newAlt1',
+  ds1Id: 'newDs1'
+};
+const isPercentageMap: Record<string, boolean> = {ds1Id: true};
 
 describe('inProgressRepositoryService', () => {
   describe('mapWorkspace', () => {
@@ -1159,41 +1202,320 @@ describe('inProgressRepositoryService', () => {
         expect(result).toBe(false);
       });
     });
-    
+
     describe('buildEffect', () => {
-      it('', () => {});
+      it('should build an empty performance', () => {
+        const entry: IPerformanceTableEntry = {
+          alternative: alternative1Id,
+          criterion: criterion1Id,
+          dataSource: dataSource1Id,
+          performance: {
+            effect: {type: 'empty'}
+          }
+        };
+        const result = buildEffect(idMap, isPercentageMap, entry);
+
+        expect(result).toEqual(emptyEffect);
+      });
+
+      it('should build an effect value performance, considering percentage unit', () => {
+        const entry: IPerformanceTableEntry = {
+          alternative: alternative1Id,
+          criterion: criterion1Id,
+          dataSource: dataSource1Id,
+          performance: {
+            effect: {type: 'exact', value: 37}
+          }
+        };
+        const result = buildEffect(idMap, isPercentageMap, entry);
+        const expectedResult: IValueEffect = {
+          type: 'value',
+          value: 3700,
+          alternativeId: 'newAlt1',
+          criterionId: 'newCrit1',
+          dataSourceId: 'newDs1'
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should throw an error for unknown effect types', () => {
+        try {
+          const unknown = 'unknown type' as effectPerformanceType;
+          const entry = {
+            alternative: alternative1Id,
+            criterion: criterion1Id,
+            dataSource: dataSource1Id,
+            performance: {
+              effect: {type: unknown}
+            }
+          } as IPerformanceTableEntry;
+          buildEffect(idMap, isPercentageMap, entry);
+        } catch (error) {
+          expect(error).toBe('unknown effect type');
+        }
+      });
     });
+
     describe('createEmptyOrTextEffect', () => {
-      it('', () => {});
+      it('should create an empty effect', () => {
+        const performance: IEmptyPerformance = {type: 'empty'};
+        const result = createEmptyOrTextEffect(performance, effectBase);
+        expect(result).toEqual(emptyEffect);
+      });
+
+      it('should create an text effect', () => {
+        const performance: ITextPerformance = {
+          type: 'empty',
+          value: 'some text'
+        };
+        const result = createEmptyOrTextEffect(performance, effectBase);
+        const expectedResult: ITextEffect = {
+          type: 'text',
+          alternativeId: 'newAlt1',
+          criterionId: 'newCrit1',
+          dataSourceId: 'newDs1',
+          text: 'some text'
+        };
+        expect(result).toEqual(expectedResult);
+      });
     });
+
     describe('createExactEffect', () => {
-      it('', () => {});
+      it('should build a value effect', () => {
+        const performance: IValuePerformance = {
+          type: 'exact',
+          value: 37.0000001
+        };
+        const modifier = 1;
+        const result = createExactEffect(performance, effectBase, modifier);
+        const expectedResult: IValueEffect = {
+          ...effectBase,
+          type: 'value',
+          value: 37
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build a range or valueCI effect if there are bounds', () => {
+        const performance: IValueCIPerformance = {
+          type: 'exact',
+          value: 37,
+          input: {
+            lowerBound: 20,
+            upperBound: 40,
+            value: 37
+          }
+        };
+        const modifier = 1;
+        const result = createExactEffect(performance, effectBase, modifier);
+        const expectedResult: IValueCIEffect = {
+          ...effectBase,
+          type: 'valueCI',
+          value: 37,
+          isNotEstimableLowerBound: false,
+          isNotEstimableUpperBound: false,
+          lowerBound: 20,
+          upperBound: 40
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build a value effect if there are legacy inputs', () => {
+        const performance = {
+          type: 'exact',
+          value: 37.0000001,
+          input: {events: 20, samplesize: 201}
+        } as IValuePerformance;
+        const modifier = 1;
+        const result = createExactEffect(performance, effectBase, modifier);
+        const expectedResult: IValueEffect = {
+          ...effectBase,
+          type: 'value',
+          value: 37
+        };
+        expect(result).toEqual(expectedResult);
+      });
     });
+
     describe('createBoundEffect', () => {
-      it('', () => {});
+      it('should build a value CI effect', () => {
+        const input = {
+          lowerBound: 20,
+          upperBound: 40,
+          value: 37
+        };
+        const result = createBoundEffect(input, effectBase);
+        const expectedResult: IValueCIEffect = {
+          ...effectBase,
+          type: 'valueCI',
+          value: 37,
+          isNotEstimableLowerBound: false,
+          isNotEstimableUpperBound: false,
+          lowerBound: 20,
+          upperBound: 40
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build a value CI effect with NE bounds', () => {
+        const input = {
+          value: 37,
+          lowerBound: 'NE' as 'NE' | number,
+          upperBound: 'NE' as 'NE' | number
+        };
+        const result = createBoundEffect(input, effectBase);
+        const expectedResult: IValueCIEffect = {
+          ...effectBase,
+          type: 'valueCI',
+          value: 37,
+          isNotEstimableLowerBound: true,
+          isNotEstimableUpperBound: true,
+          lowerBound: undefined,
+          upperBound: undefined
+        };
+        expect(result).toEqual(expectedResult);
+      });
     });
-    describe('getBound', () => {
-      it('', () => {});
-    });
+
     describe('buildInProgressDistributions', () => {
-      it('', () => {});
+      it('should filter out non distribution entries', () => {
+        const idMap: Record<string, string> = {};
+        const isPercentageMap: Record<string, boolean> = {};
+        const performanceTable: IPerformanceTableEntry[] = [
+          {
+            alternative: alternative1Id,
+            dataSource: dataSource1Id,
+            criterion: criterion1Id,
+            performance: {effect: {type: 'empty'}}
+          }
+        ];
+        const result = buildInProgressDistributions(
+          performanceTable,
+          idMap,
+          isPercentageMap
+        );
+        expect(result.length).toBe(0);
+      });
     });
+
     describe('buildDistribution', () => {
-      it('', () => {});
+      it('should create the modifier and distributionbase and use them to finish the distribution', () => {
+        const entry: IPerformanceTableEntry = {
+          alternative: alternative1Id,
+          criterion: criterion1Id,
+          dataSource: dataSource1Id,
+          performance: {distribution: {type: 'empty'}}
+        };
+        const result = buildDistribution(idMap, isPercentageMap, entry);
+        expect(result).toEqual(emptyEffect);
+      });
     });
+
     describe('finishDistributionCreation', () => {
-      it('', () => {});
-    });
+      const modifier = 1;
+      it('should create a value effect', () => {
+        const performance: IValuePerformance = {type: 'exact', value: 37};
+        const result = finishDistributionCreation(
+          performance,
+          effectBase,
+          modifier
+        );
+        const expectedResult: IValueEffect = {
+          ...effectBase,
+          type: 'value',
+          value: 37
+        };
+        expect(result).toEqual(expectedResult);
+      });
 
-    it('should ignore values from nma data', () => {
-      //foo
-    });
+      it('should create a beta distribution', () => {
+        const performance: IBetaPerformance = {
+          type: 'dbeta',
+          parameters: {alpha: 37, beta: 42}
+        };
+        const result = finishDistributionCreation(
+          performance,
+          effectBase,
+          modifier
+        );
+        const expectedResult: IBetaDistribution = {
+          ...effectBase,
+          type: 'beta',
+          beta: 42,
+          alpha: 37
+        };
+        expect(result).toEqual(expectedResult);
+      });
+      it('should create a gamma distribution', () => {
+        const performance: IGammaPerformance = {
+          type: 'dgamma',
+          parameters: {alpha: 37, beta: 42}
+        };
+        const result = finishDistributionCreation(
+          performance,
+          effectBase,
+          modifier
+        );
+        const expectedResult: IGammaDistribution = {
+          ...effectBase,
+          type: 'gamma',
+          beta: 42,
+          alpha: 37
+        };
+        expect(result).toEqual(expectedResult);
+      });
+      it('should create a normal distribution', () => {
+        const performance: INormalPerformance = {
+          type: 'dnorm',
+          parameters: {mu: 37, sigma: 42}
+        };
+        const result = finishDistributionCreation(
+          performance,
+          effectBase,
+          modifier
+        );
+        const expectedResult: INormalDistribution = {
+          ...effectBase,
+          type: 'normal',
+          mean: 37,
+          standardError: 42
+        };
+        expect(result).toEqual(expectedResult);
+      });
 
-    it('should just use the value from legacy inputs like event/samplesize', () => {
-      //foo
-    });
+      it('should create a range effect', () => {
+        const performance: IRangeDistributionPerformance = {
+          type: 'range',
+          parameters: {lowerBound: 37, upperBound: 42}
+        };
+        const result = finishDistributionCreation(
+          performance,
+          effectBase,
+          modifier
+        );
+        const expectedResult: IRangeEffect = {
+          ...effectBase,
+          type: 'range',
+          upperBound: 42,
+          lowerBound: 37
+        };
+        expect(result).toEqual(expectedResult);
+      });
 
-    it('should make sure percentage values are multiplied by 100', () => {});
+      it('should create an empty effect', () => {
+        const performance: IEmptyPerformance = {type: 'empty'};
+        const result = finishDistributionCreation(
+          performance,
+          effectBase,
+          modifier
+        );
+        const expectedResult: IEmptyEffect = {
+          ...effectBase,
+          type: 'empty'
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 
   describe('mapToCellCommands', () => {
