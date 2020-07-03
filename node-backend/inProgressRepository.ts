@@ -1,10 +1,11 @@
 import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
-import ICellMessage from '@shared/interface/ICellMessage';
+import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterion from '@shared/interface/ICriterion';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
+import IValueCellQueryResult from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
@@ -13,20 +14,21 @@ import {Effect} from '@shared/interface/IEffect';
 import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
-import IValueCellQueryResult from '@shared/interface/IInputCellQueryResult';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
-import {generateUuid} from '@shared/util';
 import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import pgPromise, {IMain} from 'pg-promise';
 import {
-  createProblem as buildProblem,
+  buildProblem,
   mapAlternatives,
+  mapCellCommands,
   mapCellValues,
   mapCombinedResults,
   mapCriteria,
   mapDataSources,
+  mapToCellCommands,
   mapWorkspace
 } from './inProgressRepositoryService';
 
@@ -35,73 +37,138 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function create(
     userId: string,
+    newInProgress: IWorkspace,
     callback: (error: any, createdId: string) => void
   ) {
     db.runInTransaction(
-      _.partial(createInProgressWorkspaceTransaction, userId),
+      _.partial(createInProgressWorkspaceTransaction, userId, newInProgress),
       callback
     );
   }
 
   function createInProgressWorkspaceTransaction(
     ownerId: string,
+    newInProgress: IWorkspace,
     client: any,
     transactionCallback: (error: any, createdId: string) => void
   ) {
+    const dataSources: IDataSource[] = _.flatMap(
+      newInProgress.criteria,
+      'dataSources'
+    );
     waterfall(
       [
-        _.partial(createInProgressWorkspace, client, ownerId),
-        _.partial(createInProgressCriteria, client),
-        _.partial(createInProgressDataSources, client),
-        _.partial(createInProgressAlternatives, client)
+        _.partial(
+          createInProgressWorkspace,
+          client,
+          ownerId,
+          newInProgress.workspace
+        ),
+        _.partial(createInProgressCriteria, client, newInProgress.criteria),
+        _.partial(createInProgressDataSources, client, dataSources),
+        _.partial(
+          createInProgressAlternatives,
+          client,
+          newInProgress.alternatives
+        ),
+        _.partial(createInProgressEffects, client, newInProgress.effects),
+        _.partial(
+          createInProgressDistributions,
+          client,
+          newInProgress.distributions
+        )
       ],
       transactionCallback
     );
   }
 
+  function createInProgressEffects(
+    client: any,
+    effects: Effect[],
+    inProgressworkspaceId: number,
+    callback: (error: IError, inProgressworkspaceId: number) => void
+  ) {
+    if (effects.length) {
+      const cellCommands = mapToCellCommands(
+        effects,
+        inProgressworkspaceId,
+        'effect'
+      );
+      upsertCellsInTransaction(
+        client,
+        cellCommands,
+        inProgressworkspaceId,
+        callback
+      );
+    } else {
+      callback(null, inProgressworkspaceId);
+    }
+  }
+
+  function createInProgressDistributions(
+    client: any,
+    distributions: Distribution[],
+    inProgressworkspaceId: number,
+    callback: (error: IError, inProgressworkspaceId: number) => void
+  ) {
+    if (distributions.length) {
+      const cellCommands = mapToCellCommands(
+        distributions,
+        inProgressworkspaceId,
+        'distribution'
+      );
+      upsertCellsInTransaction(
+        client,
+        cellCommands,
+        inProgressworkspaceId,
+        callback
+      );
+    } else {
+      callback(null, inProgressworkspaceId);
+    }
+  }
+
   function createInProgressWorkspace(
     client: any,
     ownerId: string,
-    callback: (error: any, createdId: string) => {}
+    toCreate: IInProgressWorkspace,
+    callback: (error: IError, createdId: string) => void
   ) {
-    const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, title, therapeuticContext) 
-         VALUES ($1, $2, true, $3, $4) 
-       RETURNING id`;
-    client.query(query, [ownerId, {}, 'new workspace', ''], function (
-      error: any,
-      result: {rows: any[]}
-    ) {
-      callback(error, error || result.rows[0].id);
-    });
+    const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, 
+        title, therapeuticContext) 
+          VALUES ($1, $2, $3, $4, $5) 
+        RETURNING id`;
+    client.query(
+      query,
+      [
+        ownerId,
+        {},
+        toCreate.useFavourability,
+        toCreate.title,
+        toCreate.therapeuticContext
+      ],
+      function (error: any, result: {rows: any[]}) {
+        callback(error, error || result.rows[0].id);
+      }
+    );
   }
 
   function createInProgressCriteria(
     client: any,
+    toCreate: ICriterion[],
     inProgressworkspaceId: string,
-    callback: (
-      error: any | null,
-      inProgressworkspaceId: string,
-      createdCriteriaIds: string[]
-    ) => {}
+    callback: (error: any | null, inProgressworkspaceId: string) => {}
   ) {
-    const toCreate = [
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        isfavourable: true,
-        title: 'criterion 1',
-        description: '',
+    const toInsert = _.map(toCreate, (criterion: ICriterion, index: number) => {
+      return {
+        id: criterion.id,
+        title: criterion.title,
+        description: criterion.description || '',
+        isfavourable: criterion.isFavourable,
+        orderindex: index,
         inprogressworkspaceid: inProgressworkspaceId
-      },
-      {
-        id: generateUuid(),
-        orderindex: 1,
-        isfavourable: false,
-        title: 'criterion 2',
-        description: '',
-        inprogressworkspaceid: inProgressworkspaceId
-      }
-    ];
+      };
+    });
     const columns = new pgp.helpers.ColumnSet(
       [
         'id',
@@ -113,41 +180,54 @@ export default function InProgressWorkspaceRepository(db: any) {
       ],
       {table: 'inprogresscriterion'}
     );
-    const query = pgp.helpers.insert(toCreate, columns) + ' RETURNING id';
-    client.query(query, [], (error: any, result: {rows: [{id: string}]}) => {
+    const query = pgp.helpers.insert(toInsert, columns);
+    client.query(query, [], (error: any) => {
       if (error) {
-        callback(error, null, null);
+        callback(error, null);
       } else {
-        callback(null, inProgressworkspaceId, _.map(result.rows, 'id'));
+        callback(null, inProgressworkspaceId);
       }
     });
   }
 
   function createInProgressDataSources(
     client: any,
+    toCreate: IDataSource[],
     inProgressworkspaceId: string,
-    criterionIds: string[],
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ) {
-    const toCreate = [
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        criterionid: criterionIds[0],
-        inprogressworkspaceid: inProgressworkspaceId
-      },
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        criterionid: criterionIds[1],
-        inprogressworkspaceid: inProgressworkspaceId
-      }
-    ];
+    const toInsert = _.map(toCreate, (item: IDataSource, index: number) => {
+      return {
+        id: item.id,
+        orderindex: index,
+        criterionid: item.criterionId,
+        inprogressworkspaceid: inProgressworkspaceId,
+        unitlabel: item.unitOfMeasurement.label,
+        unittype: item.unitOfMeasurement.type,
+        unitlowerbound: item.unitOfMeasurement.lowerBound,
+        unitupperbound: item.unitOfMeasurement.upperBound,
+        reference: item.reference || '',
+        strengthofevidence: item.strengthOfEvidence || '',
+        uncertainty: item.uncertainty || ''
+      };
+    });
     const columns = new pgp.helpers.ColumnSet(
-      ['id', 'orderindex', 'criterionid', 'inprogressworkspaceid'],
+      [
+        'id',
+        'orderindex',
+        'criterionid',
+        'inprogressworkspaceid',
+        'unitlabel',
+        'unittype',
+        'unitlowerbound',
+        'unitupperbound',
+        'reference',
+        'strengthofevidence',
+        'uncertainty'
+      ],
       {table: 'inprogressdatasource'}
     );
-    const query = pgp.helpers.insert(toCreate, columns);
+    const query = pgp.helpers.insert(toInsert, columns);
     client.query(query, [], (error: any) => {
       if (error) {
         callback(error, null);
@@ -159,28 +239,26 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function createInProgressAlternatives(
     client: any,
+    toCreate: IAlternative[],
     inProgressworkspaceId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ) {
-    const toCreate = [
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        inprogressworkspaceid: inProgressworkspaceId,
-        title: 'alternative 1'
-      },
-      {
-        id: generateUuid(),
-        orderindex: 0,
-        inprogressworkspaceid: inProgressworkspaceId,
-        title: 'alternative 2'
+    const toInsert = _.map(
+      toCreate,
+      (alternative: IAlternative, index: number) => {
+        return {
+          id: alternative.id,
+          orderindex: index,
+          inprogressworkspaceid: inProgressworkspaceId,
+          title: alternative.title
+        };
       }
-    ];
+    );
     const columns = new pgp.helpers.ColumnSet(
       ['id', 'orderindex', 'inprogressworkspaceid', 'title'],
       {table: 'inprogressalternative'}
     );
-    const query = pgp.helpers.insert(toCreate, columns);
+    const query = pgp.helpers.insert(toInsert, columns);
     client.query(query, [], (error: any) => {
       if (error) {
         callback(error, null);
@@ -465,84 +543,64 @@ export default function InProgressWorkspaceRepository(db: any) {
     db.query(query, [alternativeId], callback);
   }
 
-  function upsertCell(
-    {
-      inProgressWorkspaceId,
-      alternativeId,
-      dataSourceId,
-      criterionId,
-      value,
-      lowerBound,
-      upperBound,
-      isNotEstimableLowerBound,
-      isNotEstimableUpperBound,
-      text,
-      mean,
-      standardError,
-      alpha,
-      beta,
-      cellType,
-      type
-    }: ICellMessage,
-    callback: (error: any) => void
+  function upsertCellsDirectly(
+    cellCommands: ICellCommand[],
+    callback: (error: IError) => void
   ): void {
-    const query = `INSERT INTO inProgressWorkspaceCell(
-                    inProgressWorkspaceId, 
-                    alternativeId, 
-                    dataSourceId, 
-                    criterionId, 
-                    cellType, 
-                    val, 
-                    lowerbound, 
-                    upperbound, 
-                    isnotestimablelowerbound,
-                    isnotestimableupperbound,
-                    txt, 
-                    mean, 
-                    standardError, 
-                    alpha, 
-                    beta, 
-                    inputType
-                  ) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-                  ON CONFLICT (alternativeId, 
-                    dataSourceId, criterionId, cellType)
-                  DO UPDATE
-                  SET (
-                    val, 
-                    lowerbound, 
-                    upperbound, 
-                    isnotestimablelowerbound,
-                    isnotestimableupperbound,
-                    txt, 
-                    mean, 
-                    standardError, 
-                    alpha, 
-                    beta, 
-                    inputType
-                  ) = ($6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
-    db.query(
-      query,
+    const query = buildUpsertCellsQuery(cellCommands);
+    db.query(query, [], callback);
+  }
+
+  function upsertCellsInTransaction(
+    client: any,
+    cellCommands: ICellCommand[],
+    inProgressworkspaceId: number,
+    callback: (error: IError, inProgressworkspaceId: number) => void
+  ) {
+    const query = buildUpsertCellsQuery(cellCommands);
+    client.query(query, [], (error: IError) => {
+      callback(error, error ? null : inProgressworkspaceId);
+    });
+  }
+
+  function buildUpsertCellsQuery(cellCommands: ICellCommand[]): string {
+    const toInsert = mapCellCommands(cellCommands);
+    const columns = new pgp.helpers.ColumnSet(
       [
-        inProgressWorkspaceId,
-        alternativeId,
-        dataSourceId,
-        criterionId,
-        cellType,
-        value,
-        lowerBound,
-        upperBound,
-        isNotEstimableLowerBound,
-        isNotEstimableUpperBound,
-        text,
-        mean,
-        standardError,
-        alpha,
-        beta,
-        type
+        'inprogressworkspaceid',
+        'alternativeid',
+        'datasourceid',
+        'criterionid',
+        'celltype',
+        'inputtype',
+        'val',
+        'lowerbound',
+        'upperbound',
+        'isnotestimablelowerbound',
+        'isnotestimableupperbound',
+        'txt',
+        'mean',
+        'standarderror',
+        'alpha',
+        'beta'
       ],
-      callback
+      {table: 'inprogressworkspacecell'}
     );
+    const query =
+      pgp.helpers.insert(toInsert, columns) +
+      `ON CONFLICT (alternativeid, datasourceid, criterionid, celltype)
+     DO UPDATE SET ` +
+      columns.assignColumns({
+        from: 'EXCLUDED',
+        skip: [
+          'inprogressworkspaceid',
+          'alternativeid',
+          'datasourceid',
+          'criterionid',
+          'celltype'
+        ]
+      });
+    return query;
   }
 
   function createWorkspace(
@@ -643,7 +701,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     deleteDataSource: deleteDataSource,
     upsertAlternative: upsertAlternative,
     deleteAlternative: deleteAlternative,
-    upsertCell: upsertCell,
+    upsertCellsDirectly: upsertCellsDirectly,
     createWorkspace: createWorkspace,
     query: query
   };

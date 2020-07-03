@@ -6,15 +6,15 @@ export type Performance =
   | IEffectPerformance
   | IDistributionPerformance;
 
-interface IDualPerformance {
+export interface IDualPerformance {
   effect: EffectPerformance;
   distribution: DistributionPerformance;
 }
 
-interface IEffectPerformance {
+export interface IEffectPerformance {
   effect: EffectPerformance;
 }
 
-interface IDistributionPerformance {
+export interface IDistributionPerformance {
   distribution: DistributionPerformance;
 }

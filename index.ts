@@ -1,19 +1,23 @@
+import IError from '@shared/interface/IError';
 import bodyParser from 'body-parser';
 import csurf from 'csurf';
-import express, {Request} from 'express';
+import express, {Request, Response} from 'express';
 import session from 'express-session';
 import helmet from 'helmet';
 import http from 'http';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
 import 'module-alias/register';
+// @ts-ignore
 import RightsManagement from 'rights-management';
+// @ts-ignore
 import Signin from 'signin';
+// @ts-ignore
 import StartupDiagnostics from 'startup-diagnostics';
 import DB from './node-backend/db';
 import dbUtil from './node-backend/dbUtil';
+import InProgressWorkspaceRepository from './node-backend/inProgressRepository';
 import InProgressRouter from './node-backend/inProgressRouter';
-import InProgressWorkspaceRepository from './node-backend/inProgressWorkspaceRepository';
 import {logger} from './node-backend/loggerTS';
 import OrderingRouter from './node-backend/orderingRouter';
 import patavi from './node-backend/patavi';
@@ -47,7 +51,7 @@ const workspaceSettingsRouter = WorkspaceSettingsRouter(db);
 const startupDiagnostics = StartupDiagnostics(db, logger, 'MCDA');
 
 const rightsManagement = RightsManagement();
-let server;
+let server: http.Server;
 
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 
@@ -61,7 +65,7 @@ app.use(
 );
 server = http.createServer(app);
 
-startupDiagnostics.runStartupDiagnostics((errorBody) => {
+startupDiagnostics.runStartupDiagnostics((errorBody: IError | null) => {
   if (errorBody) {
     initError(errorBody);
   } else {
@@ -101,7 +105,7 @@ function initApp() {
   }
   logger.info('Authentication method: ' + authenticationMethod);
 
-  app.get('/logout', function (request, response) {
+  app.get('/logout', function (request: Request, response: Response) {
     request.logout();
     request.session.destroy(function (error) {
       response.redirect('/');
@@ -148,14 +152,14 @@ function initApp() {
     res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
   });
 
-  startListening(function (port) {
+  startListening(function (port: string) {
     logger.info('Listening on http://localhost:' + port);
   });
 }
 
-function pataviHandler(request, response, next) {
+function pataviHandler(request: Request, response: Response, next: any) {
   // FIXME: separate routes for scales and results
-  patavi.create(request.body, function (error, taskUri) {
+  patavi.create(request.body, function (error: IError | null, taskUri: string) {
     if (error) {
       logger.error(error);
       return next({
@@ -171,7 +175,12 @@ function pataviHandler(request, response, next) {
   });
 }
 
-function errorHandler(error, request, response, next) {
+function errorHandler(
+  error: IError | null,
+  request: Request,
+  response: Response,
+  next: any
+) {
   logger.error(JSON.stringify(error.message, null, 2));
   if (error && error.type === signin.SIGNIN_ERROR) {
     response.status(httpStatus.UNAUTHORIZED).send('login failed');
@@ -186,7 +195,7 @@ function errorHandler(error, request, response, next) {
   }
 }
 
-function initError(errorBody) {
+function initError(errorBody: object) {
   app.get('*', function (request, response) {
     response
       .status(httpStatus.INTERNAL_SERVER_ERROR)
@@ -194,20 +203,30 @@ function initError(errorBody) {
       .send(errorBody);
   });
 
-  startListening(function (port) {
+  startListening((port: string) => {
     logger.error('Access the diagnostics summary at http://localhost:' + port);
   });
 }
 
-function startListening(listenFunction) {
-  let port = 3002;
+function startListening(listenFunction: (port: string) => void) {
+  let port = '3002';
   if (process.argv[2] === 'port' && process.argv[3]) {
-    port = Number.parseFloat(process.argv[3]);
+    port = process.argv[3];
   }
   server.listen(port, _.partial(listenFunction, port));
 }
 
-function makeRights(path, method, requiredRight, checkRights?) {
+function makeRights(
+  path: string,
+  method: string,
+  requiredRight: string,
+  checkRights?: (
+    response: Response,
+    next: any,
+    workspaceId: number,
+    userId: number
+  ) => void
+) {
   return {
     path: path,
     method: method,
@@ -319,6 +338,12 @@ function setRequiredRights() {
       'none',
       inProgressOwnerRightsNeeded
     ),
+    makeRights(
+      '/api/v2/inProgress/createCopy',
+      'POST',
+      'none',
+      workspaceOwnerRightsNeeded
+    ),
 
     makeRights(
       '/workspaces/:workspaceId/ordering',
@@ -416,21 +441,37 @@ function setRequiredRights() {
   ]);
 }
 
-function workspaceOwnerRightsNeeded(response, next, workspaceId, userId) {
+function workspaceOwnerRightsNeeded(
+  response: Response,
+  next: any,
+  workspaceId: number,
+  userId: number
+) {
   workspaceRepository.get(
     workspaceId,
     _.partial(rightsCallback, response, next, userId)
   );
 }
 
-function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
+function inProgressOwnerRightsNeeded(
+  response: Response,
+  next: any,
+  workspaceId: number,
+  userId: number
+) {
   inProgressWorkspaceRepository.get(
     workspaceId,
     _.partial(rightsCallback, response, next, userId)
   );
 }
 
-function rightsCallback(response, next, userId, error, result) {
+function rightsCallback(
+  response: Response,
+  next: any,
+  userId: number,
+  error: IError | null,
+  result: any
+) {
   if (error) {
     next(error);
   } else {
@@ -451,7 +492,10 @@ function useSSLLogin() {
     var emailRegex = /emailAddress=([^,]*)/;
     var email = clientString.match(emailRegex)[1];
     if (email) {
-      signin.findUserByEmail(email, function (error, result) {
+      signin.findUserByEmail(email, function (
+        error: IError | null,
+        result: any
+      ) {
         if (error) {
           logger.error(error);
         } else {

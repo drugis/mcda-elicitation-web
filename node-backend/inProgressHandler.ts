@@ -1,39 +1,96 @@
 import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
+import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
+import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
-import {createOrdering, createProblem} from './inProgressRepositoryService';
-import InProgressWorkspaceRepository from './inProgressWorkspaceRepository';
+import InProgressWorkspaceRepository from './inProgressRepository';
+import {
+  buildEmptyInProgress,
+  buildInProgressCopy,
+  buildProblem,
+  createOrdering
+} from './inProgressRepositoryService';
 import {logger} from './loggerTS';
 import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
+import WorkspaceRepository from './workspaceRepository';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
+  const workspaceRepository = WorkspaceRepository(db);
+
   const workspaceHandler = WorkspaceHandler(db);
   const orderingRepository = OrderingRepository(db);
 
-  function create(request: Request, response: Response, next: () => {}): void {
+  function createEmpty(
+    request: Request,
+    response: Response,
+    next: () => {}
+  ): void {
     const user: {id: string} = getUser(request);
+    const emptyInProgress = buildEmptyInProgress();
     inProgressWorkspaceRepository.create(
       user.id,
-      (error: any, createdId: string) => {
-        if (error) {
-          handleError(error, next);
-        } else {
-          response.status(CREATED);
-          response.json({id: createdId});
-        }
-      }
+      emptyInProgress,
+      _.partial(createCallback, response, next)
     );
+  }
+
+  function createCopy(
+    request: Request,
+    response: Response,
+    next: () => void
+  ): void {
+    const user: {id: string} = getUser(request);
+    const sourceWorkspaceId = Number.parseInt(request.body.sourceWorkspaceId);
+
+    waterfall(
+      [
+        _.partial(workspaceRepository.get, sourceWorkspaceId),
+        buildInProgress,
+        _.partial(createNew, user.id)
+      ],
+      _.partial(createCallback, response, next)
+    );
+  }
+
+  function createCallback(
+    response: Response,
+    next: () => void,
+    error: IError | null,
+    createdId: string
+  ) {
+    if (error) {
+      handleError(error, next);
+    } else {
+      response.status(CREATED);
+      response.json({id: createdId});
+    }
+  }
+
+  function buildInProgress(
+    workspace: IOldWorkspace,
+    callback: (error: IError | null, inProgressCopy: IWorkspace) => void
+  ) {
+    callback(null, buildInProgressCopy(workspace));
+  }
+
+  function createNew(
+    userId: string,
+    inProgressCopy: IWorkspace,
+    callback: (error: IError | null, createdId: string) => void
+  ) {
+    inProgressWorkspaceRepository.create(userId, inProgressCopy, callback);
   }
 
   function get(request: Request, response: Response, next: () => void): void {
@@ -168,7 +225,8 @@ export default function InProgressHandler(db: any) {
     response: Response,
     next: () => void
   ): void {
-    inProgressWorkspaceRepository.upsertCell(request.body, (error: any) => {
+    const cells: ICellCommand[] = [request.body];
+    inProgressWorkspaceRepository.upsertCellsDirectly(cells, (error: any) => {
       if (error) {
         handleError(error, next);
       } else {
@@ -205,7 +263,7 @@ export default function InProgressHandler(db: any) {
     inProgressMessage: IInProgressMessage,
     callback: (error: any, problem?: IProblem) => void
   ) {
-    callback(null, createProblem(inProgressMessage));
+    callback(null, buildProblem(inProgressMessage));
   }
 
   function createInTransaction(
@@ -323,7 +381,8 @@ export default function InProgressHandler(db: any) {
   }
 
   return {
-    create: create,
+    createEmpty: createEmpty,
+    createCopy: createCopy,
     get: get,
     updateWorkspace: updateWorkspace,
     updateCriterion: updateCriterion,

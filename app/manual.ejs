@@ -134,15 +134,15 @@
             <p>
               Datasets can be uploaded in <a href="http://www.json.org/">JSON</a> format. The JSON may contain the
               following entries (note that JSON is case-sensitive):
-              <ul>
-                <li>schemaVersion</li>
-                <li>title</li>
-                <li>description</li>
-                <li>criteria</li>
-                <li>alternatives</li>
-                <li>performanceTable</li>
-                <li>preferences</li>
-              </ul>
+            <ul>
+              <li>schemaVersion</li>
+              <li>title</li>
+              <li>description</li>
+              <li>criteria</li>
+              <li>alternatives</li>
+              <li>performanceTable</li>
+              <li>preferences</li>
+            </ul>
             </p>
             <p>
               The `schemaversion` property should indicate which version of our <a
@@ -153,7 +153,7 @@
             <p>
               The `criteria` property should contain a series of properties with the names and details of the different
               criteria in your analysis. The following is an example of JSON describing a single criterion (HAM-D):
-              <pre>
+            <pre>
               "criteria": {
                 "hamd-id": {
                   "title": "HAM-D",
@@ -172,7 +172,7 @@
             </p>
             <p>
               The `alternatives` property should contain the alternatives under investigation. For example:
-              <pre>
+            <pre>
               "alternatives": {
                 "placebo-id": {
                   "title": "Placebo"
@@ -196,7 +196,7 @@
             </p>
             <p>
               An example of exact performance with both effect and distribution specified:
-              <pre>
+            <pre>
                 "performanceTable": [
                 {
                   "alternative": "placebo-id,
@@ -222,8 +222,8 @@
                 }
               ]
             </pre>
-              An example of relative performance:
-              <pre>
+            An example of relative performance:
+            <pre>
               "performanceTable": [{
                 "criterion": "hamd-id",
                 "performance": {
@@ -274,7 +274,7 @@
               the measurement data.
             </p>
             <div class="figure">
-              <img src="img/manualEntry1.jpg" />
+              <img src="img/manualEntry1.png" />
               <div class="caption">Manual entry, first step.</div>
             </div>
             <p>
