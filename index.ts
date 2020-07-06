@@ -1,4 +1,4 @@
-import IError from '@shared/interface/IError';
+import {Error} from '@shared/interface/IError';
 import bodyParser from 'body-parser';
 import csurf from 'csurf';
 import express, {Request, Response} from 'express';
@@ -26,6 +26,7 @@ import SubProblemRouter from './node-backend/subProblemRouter';
 import WorkspaceRepository from './node-backend/workspaceRepository';
 import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
+import IRights, {requiredRightType} from '@shared/interface/IRights';
 
 const db = DB(dbUtil.connectionConfig);
 
@@ -53,9 +54,9 @@ const startupDiagnostics = StartupDiagnostics(db, logger, 'MCDA');
 const rightsManagement = RightsManagement();
 let server: http.Server;
 
-var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
+let authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 
-var app = express();
+const app = express();
 app.use(helmet());
 app.set('trust proxy', 1);
 app.use(
@@ -65,7 +66,7 @@ app.use(
 );
 server = http.createServer(app);
 
-startupDiagnostics.runStartupDiagnostics((errorBody: IError | null) => {
+startupDiagnostics.runStartupDiagnostics((errorBody: Error) => {
   if (errorBody) {
     initError(errorBody);
   } else {
@@ -73,9 +74,9 @@ startupDiagnostics.runStartupDiagnostics((errorBody: IError | null) => {
   }
 });
 
-function initApp() {
+function initApp(): void {
   setRequiredRights();
-  var sessionOptions = {
+  const sessionOptions = {
     store: new (require('connect-pg-simple')(session))({
       conString: dbUtil.mcdaDBUrl
     }),
@@ -105,14 +106,14 @@ function initApp() {
   }
   logger.info('Authentication method: ' + authenticationMethod);
 
-  app.get('/logout', function (request: Request, response: Response) {
+  app.get('/logout', (request: Request, response: Response) => {
     request.logout();
     request.session.destroy(function (error) {
       response.redirect('/');
     });
   });
   app.use(csurf());
-  app.use(function (request: Request, response, next) {
+  app.use((request: Request, response: Response, next: any) => {
     response.cookie('XSRF-TOKEN', request.csrfToken());
     if (request.user) {
       response.cookie(
@@ -122,7 +123,7 @@ function initApp() {
     }
     next();
   });
-  app.get('/', function (request, response) {
+  app.get('/', (request: Request, response: Response) => {
     if (request.user || request.session.user) {
       response.sendFile(__dirname + '/dist/index.html');
     } else {
@@ -148,8 +149,10 @@ function initApp() {
   app.use(errorHandler);
 
   //The 404 Route (ALWAYS Keep this as the last route)
-  app.get('*', function (req, res) {
-    res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
+  app.get('*', (request: Request, response: Response) => {
+    response
+      .status(httpStatus.NOT_FOUND)
+      .sendFile(__dirname + '/dist/error.html');
   });
 
   startListening(function (port: string) {
@@ -157,9 +160,9 @@ function initApp() {
   });
 }
 
-function pataviHandler(request: Request, response: Response, next: any) {
+function pataviHandler(request: Request, response: Response, next: any): void {
   // FIXME: separate routes for scales and results
-  patavi.create(request.body, function (error: IError | null, taskUri: string) {
+  patavi.create(request.body, function (error: Error, taskUri: string) {
     if (error) {
       logger.error(error);
       return next({
@@ -176,11 +179,11 @@ function pataviHandler(request: Request, response: Response, next: any) {
 }
 
 function errorHandler(
-  error: IError | null,
+  error: Error,
   request: Request,
   response: Response,
   next: any
-) {
+): void {
   logger.error(JSON.stringify(error.message, null, 2));
   if (error && error.type === signin.SIGNIN_ERROR) {
     response.status(httpStatus.UNAUTHORIZED).send('login failed');
@@ -195,8 +198,8 @@ function errorHandler(
   }
 }
 
-function initError(errorBody: object) {
-  app.get('*', function (request, response) {
+function initError(errorBody: object): void {
+  app.get('*', (request: Request, response: Response) => {
     response
       .status(httpStatus.INTERNAL_SERVER_ERROR)
       .set('Content-Type', 'text/html')
@@ -208,7 +211,7 @@ function initError(errorBody: object) {
   });
 }
 
-function startListening(listenFunction: (port: string) => void) {
+function startListening(listenFunction: (port: string) => void): void {
   let port = '3002';
   if (process.argv[2] === 'port' && process.argv[3]) {
     port = process.argv[3];
@@ -219,14 +222,14 @@ function startListening(listenFunction: (port: string) => void) {
 function makeRights(
   path: string,
   method: string,
-  requiredRight: string,
+  requiredRight: requiredRightType,
   checkRights?: (
     response: Response,
     next: any,
-    workspaceId: number,
+    workspaceId: string,
     userId: number
   ) => void
-) {
+): IRights {
   return {
     path: path,
     method: method,
@@ -444,9 +447,9 @@ function setRequiredRights() {
 function workspaceOwnerRightsNeeded(
   response: Response,
   next: any,
-  workspaceId: number,
+  workspaceId: string,
   userId: number
-) {
+): void {
   workspaceRepository.get(
     workspaceId,
     _.partial(rightsCallback, response, next, userId)
@@ -456,9 +459,9 @@ function workspaceOwnerRightsNeeded(
 function inProgressOwnerRightsNeeded(
   response: Response,
   next: any,
-  workspaceId: number,
+  workspaceId: string,
   userId: number
-) {
+): void {
   inProgressWorkspaceRepository.get(
     workspaceId,
     _.partial(rightsCallback, response, next, userId)
@@ -469,13 +472,13 @@ function rightsCallback(
   response: Response,
   next: any,
   userId: number,
-  error: IError | null,
+  error: Error,
   result: any
-) {
+): void {
   if (error) {
     next(error);
   } else {
-    var workspace = result;
+    const workspace = result;
     if (!workspace) {
       response.status(httpStatus.NOT_FOUND).send('Workspace not found');
     } else if (workspace.owner !== userId) {
@@ -486,16 +489,13 @@ function rightsCallback(
   }
 }
 
-function useSSLLogin() {
-  app.get('/signin', function (request, response) {
-    var clientString = request.header('X-SSL-CLIENT-DN');
-    var emailRegex = /emailAddress=([^,]*)/;
-    var email = clientString.match(emailRegex)[1];
+function useSSLLogin(): void {
+  app.get('/signin', (request: Request, response: Response) => {
+    const clientString = request.header('X-SSL-CLIENT-DN');
+    const emailRegex = /emailAddress=([^,]*)/;
+    const email = clientString.match(emailRegex)[1];
     if (email) {
-      signin.findUserByEmail(email, function (
-        error: IError | null,
-        result: any
-      ) {
+      signin.findUserByEmail(email, (error: Error, result: any) => {
         if (error) {
           logger.error(error);
         } else {

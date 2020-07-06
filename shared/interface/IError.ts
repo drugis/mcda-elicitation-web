@@ -1,3 +1,5 @@
+export type Error = IError | null;
+
 export default interface IError {
   type?: string;
   message: string;
@@ -6,7 +8,7 @@ export default interface IError {
   err?: {
     message: string;
   };
-  response: {
+  response?: {
     data: string;
   };
 }

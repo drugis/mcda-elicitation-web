@@ -4,11 +4,13 @@ const logger = require('./logger');
 const async = require('async');
 const _ = require('lodash');
 const httpStatus = require('http-status-codes');
+const {default: WorkspaceRepository} = require('./workspaceRepository');
+import ScenarioRepository from './scenarioRepository';
 
 module.exports = function (db) {
   var SubproblemRepository = require('./subProblemRepository')(db);
-  var ScenarioRepository = require('./scenarioRepository')(db);
-  var WorkspaceRepository = require('./workspaceRepository')(db);
+  const scenarioRepository = ScenarioRepository(db);
+  var workspaceRepository = WorkspaceRepository(db);
 
   function query(request, response, next) {
     SubproblemRepository.query(request.params.workspaceId, function (
@@ -117,7 +119,7 @@ module.exports = function (db) {
         subproblemId
     );
     var state = request.body.scenarioState;
-    ScenarioRepository.createInTransaction(
+    scenarioRepository.createInTransaction(
       client,
       workspaceId,
       subproblemId,
@@ -220,7 +222,7 @@ module.exports = function (db) {
   }
 
   function getDefaultSubproblem(workspaceId, subproblemIds, callback) {
-    WorkspaceRepository.getDefaultSubproblem(workspaceId, function (
+    workspaceRepository.getDefaultSubproblem(workspaceId, function (
       error,
       result
     ) {
@@ -263,7 +265,7 @@ module.exports = function (db) {
     const newDefault = _.find(subproblemIds, function (row) {
       return row.id + '' !== subproblemId;
     }).id;
-    WorkspaceRepository.setDefaultSubProblem(
+    workspaceRepository.setDefaultSubProblem(
       client,
       workspaceId,
       newDefault,
@@ -282,7 +284,7 @@ module.exports = function (db) {
     workspaceId,
     callback
   ) {
-    ScenarioRepository.getScenarioIdsForSubproblem(subproblemId, function (
+    scenarioRepository.getScenarioIdsForSubproblem(subproblemId, function (
       error,
       result
     ) {
@@ -296,7 +298,7 @@ module.exports = function (db) {
   }
 
   function setDefaultScenario(workspaceId, newDefaultScenario, callback) {
-    WorkspaceRepository.setDefaultScenario(
+    workspaceRepository.setDefaultScenario(
       workspaceId,
       newDefaultScenario,
       function (error) {

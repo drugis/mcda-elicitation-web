@@ -1,30 +1,37 @@
 'use strict';
-var logger = require('./logger');
-const _ = require('lodash');
+import logger from './logger';
+import _ from 'lodash';
+import {Error} from '@shared/interface/IError';
 
-module.exports = function (db) {
+export default function ScenarioRepository(db: any) {
   function createInTransaction(
-    client,
-    workspaceId,
-    subproblemId,
-    title,
-    state,
-    callback
+    client: any,
+    workspaceId: string,
+    subproblemId: string,
+    title: string,
+    state: any,
+    callback: (error: Error, id?: string) => void
   ) {
     create(client, workspaceId, subproblemId, title, state, callback);
   }
 
-  function createDirectly(workspaceId, subproblemId, title, state, callback) {
+  function createDirectly(
+    workspaceId: string,
+    subproblemId: string,
+    title: string,
+    state: any,
+    callback: (error: Error, id?: string) => void
+  ) {
     create(db, workspaceId, subproblemId, title, state, callback);
   }
 
   function create(
-    clientOrDB,
-    workspaceId,
-    subproblemId,
-    title,
-    state,
-    callback
+    clientOrDB: any,
+    workspaceId: string,
+    subproblemId: string,
+    title: string,
+    state: any,
+    callback: (error: Error, id?: string) => void
   ) {
     logger.debug('Creating scenario');
     const query =
@@ -32,22 +39,31 @@ module.exports = function (db) {
     clientOrDB.query(
       query,
       [workspaceId, subproblemId, title, state],
-      function (error, result) {
-        callback(error, error || result.rows[0]);
+      (error: Error, result: {rows: [{id: string}]}) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, result.rows[0].id);
+        }
       }
     );
   }
 
-  function query(workspaceId, callback) {
+  function query(
+    workspaceId: string,
+    callback: (error: Error, scenarios?: any[]) => void
+  ) {
     logger.debug('Getting scenarios for workspace: ' + workspaceId);
     const query =
       'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
-    db.query(query, [workspaceId], function (error, result) {
-      callback(error, error || result.rows);
-    });
+    db.query(query, [workspaceId], _.partial(resultsCallback, callback));
   }
 
-  function queryForSubProblem(workspaceId, subproblemId, callback) {
+  function queryForSubProblem(
+    workspaceId: string,
+    subproblemId: string,
+    callback: (error: Error, scenarios?: any[]) => void
+  ) {
     logger.debug(
       'getting /workspaces/' +
         workspaceId +
@@ -57,16 +73,32 @@ module.exports = function (db) {
     );
     const query =
       'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2';
-    db.query(query, [workspaceId, subproblemId], function (error, result) {
-      callback(error, error || result.rows);
-    });
+    db.query(
+      query,
+      [workspaceId, subproblemId],
+      _.partial(resultsCallback, callback)
+    );
   }
 
-  function get(scenarioId, callback) {
+  function resultsCallback(
+    callback: (error: Error, result?: any) => void,
+    error: Error,
+    result: {rows: any[]}
+  ) {
+    if (error) {
+      callback(error);
+    } else {
+      callback(null, result.rows);
+    }
+  }
+  function get(
+    scenarioId: string,
+    callback: (error: Error, scenario?: any) => void
+  ) {
     logger.debug('Getting scenario: ' + scenarioId);
     const query =
       'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
-    db.query(query, [scenarioId], function (error, result) {
+    db.query(query, [scenarioId], (error: Error, result: {rows: any[]}) => {
       if (error) {
         callback(error);
       } else if (!result.rows.length) {
@@ -80,7 +112,12 @@ module.exports = function (db) {
     });
   }
 
-  function update(state, title, scenarioId, callback) {
+  function update(
+    state: any,
+    title: string,
+    scenarioId: string,
+    callback: (error: Error) => void
+  ) {
     logger.debug('updating scenario:' + scenarioId);
     const query = 'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
     db.query(
@@ -99,16 +136,27 @@ module.exports = function (db) {
     );
   }
 
-  function deleteScenario(client, subproblemId, callback) {
+  function deleteScenario(
+    client: any,
+    subproblemId: string,
+    callback: (error: Error) => void
+  ) {
     const query = 'DELETE FROM scenario WHERE id = $1';
     client.query(query, [subproblemId], callback);
   }
 
-  function getScenarioIdsForSubproblem(subproblemId, callback) {
+  function getScenarioIdsForSubproblem(
+    subproblemId: string,
+    callback: (error: Error, scenarioIds?: string[]) => void
+  ) {
     logger.debug('Getting scenario ids for: ' + subproblemId);
     const query = 'SELECT id FROM scenario WHERE subproblemId = $1';
-    db.query(query, [subproblemId], function (error, result) {
-      callback(error, error || _.map(result.rows, 'id'));
+    db.query(query, [subproblemId], (error: Error, result: {rows: any[]}) => {
+      if (error) {
+        callback(error);
+      } else {
+        callback(null, _.map(result.rows, 'id'));
+      }
     });
   }
 
@@ -122,4 +170,4 @@ module.exports = function (db) {
     delete: deleteScenario,
     getScenarioIdsForSubproblem: getScenarioIdsForSubproblem
   };
-};
+}
