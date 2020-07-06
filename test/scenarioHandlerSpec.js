@@ -11,7 +11,7 @@ var repoStub = {
   query: () => {},
   queryForSubProblem: () => {},
   get: () => {},
-  create: () => {},
+  createDirectly: () => {},
   update: () => {},
   delete: () => {},
   getScenarioIdsForSubproblem: () => {}
@@ -169,17 +169,17 @@ describe('the in scenario handler', () => {
   });
 
   describe('create', () => {
-    var create;
+    var createDirectly;
     var response = {};
 
     beforeEach(() => {
       response.status = chai.spy();
       response.json = chai.spy();
-      create = sinon.stub(repoStub, 'create');
+      createDirectly = sinon.stub(repoStub, 'createDirectly');
     });
 
     afterEach(() => {
-      create.restore();
+      createDirectly.restore();
     });
 
     const workspaceId = 10;
@@ -205,19 +205,19 @@ describe('the in scenario handler', () => {
       const result = {
         id: 123
       };
-      create.onCall(0).yields(null, result);
+      createDirectly.onCall(0).yields(null, result);
 
       scenarioHandler.create(request, response, next);
-      sinon.assert.calledWith(create, workspaceId, subproblemId, title, state);
+      sinon.assert.calledWith(createDirectly, workspaceId, subproblemId, title, state);
       expect(next).not.to.have.been.called();
       expect(response.json).to.have.been.called.with(result);
       expect(response.status).to.have.been.called.with(201);
     });
 
     it("should not call reponse.json if there's an error", function () {
-      create.onCall(0).yields(error, null);
+      createDirectly.onCall(0).yields(error, null);
       scenarioHandler.create(request, response, next);
-      sinon.assert.calledWith(create, workspaceId, subproblemId, title, state);
+      sinon.assert.calledWith(createDirectly, workspaceId, subproblemId, title, state);
       expect(response.json).not.to.have.been.called();
       expect(response.status).to.not.have.been.called();
       expect(next).to.have.been.called.with(error);
