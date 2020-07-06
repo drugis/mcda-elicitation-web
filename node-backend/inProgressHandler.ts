@@ -18,7 +18,7 @@ import {
   buildProblem,
   createOrdering
 } from './inProgressRepositoryService';
-import {logger} from './loggerTS';
+import logger from './loggerTS';
 import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';

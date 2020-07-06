@@ -1,22 +1,24 @@
 import IProblem from '@shared/interface/Problem/IProblem';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
-import {logger} from './loggerTS';
+import logger from './loggerTS';
+import {Request} from 'express';
+import { Error } from '@shared/interface/IError';
 
-export function getUser(req: any) {
-  if (req.user) {
-    return req.user;
+export function getUser(request: Request) {
+  if (request.user) {
+    return request.user;
   }
-  if (req.session.user) {
-    return req.session.user;
+  if (request.session.user) {
+    return request.session.user;
   }
 }
 
-export function handleError(error: any, next: any) {
+export function handleError(error: Error, next: any): void {
   logger.error(JSON.stringify(error, null, 2));
   next({
     statusCode: error.statusCode || INTERNAL_SERVER_ERROR,
-    message: error.message || error
+    message: error.message
   });
 }
 

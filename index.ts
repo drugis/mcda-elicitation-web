@@ -18,11 +18,11 @@ import DB from './node-backend/db';
 import dbUtil from './node-backend/dbUtil';
 import InProgressWorkspaceRepository from './node-backend/inProgressRepository';
 import InProgressRouter from './node-backend/inProgressRouter';
-import {logger} from './node-backend/loggerTS';
+import logger from './node-backend/loggerTS';
 import OrderingRouter from './node-backend/orderingRouter';
 import patavi from './node-backend/patavi';
 import ScenarioRouter from './node-backend/scenarioRouter';
-import SubProblemRouter from './node-backend/subProblemRouter';
+import SubproblemRouter from './node-backend/subproblemRouter';
 import WorkspaceRepository from './node-backend/workspaceRepository';
 import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
@@ -44,7 +44,7 @@ const workspaceRouter = WorkspaceRouter(db);
 const inProgressRouter = InProgressRouter(db);
 const orderingRouter = OrderingRouter(db);
 
-const subProblemRouter = SubProblemRouter(db);
+const subproblemRouter = SubproblemRouter(db);
 const scenarioRouter = ScenarioRouter(db);
 
 const workspaceSettingsRouter = WorkspaceSettingsRouter(db);
@@ -140,7 +140,7 @@ function initApp(): void {
   app.use('/api/v2/inProgress', inProgressRouter);
   app.use('/workspaces', workspaceRouter);
   app.use('/workspaces', orderingRouter);
-  app.use('/workspaces', subProblemRouter);
+  app.use('/workspaces', subproblemRouter);
   app.use('/workspaces', scenarioRouter);
   app.use('/workspaces', workspaceSettingsRouter);
 
@@ -381,7 +381,7 @@ function setRequiredRights() {
       workspaceOwnerRightsNeeded
     ),
     makeRights(
-      '/workspaces/:workspaceId/problems/:subProblemId',
+      '/workspaces/:workspaceId/problems/:subproblemId',
       'GET',
       'read',
       workspaceOwnerRightsNeeded
@@ -393,13 +393,13 @@ function setRequiredRights() {
       workspaceOwnerRightsNeeded
     ),
     makeRights(
-      '/workspaces/:workspaceId/problems/:subProblemId',
+      '/workspaces/:workspaceId/problems/:subproblemId',
       'POST',
       'write',
       workspaceOwnerRightsNeeded
     ),
     makeRights(
-      '/workspaces/:workspaceId/problems/:subProblemId',
+      '/workspaces/:workspaceId/problems/:subproblemId',
       'DELETE',
       'write',
       workspaceOwnerRightsNeeded
@@ -412,25 +412,25 @@ function setRequiredRights() {
       workspaceOwnerRightsNeeded
     ),
     makeRights(
-      '/workspaces/:workspaceId/problems/:subProblemId/scenarios',
+      '/workspaces/:workspaceId/problems/:subproblemId/scenarios',
       'GET',
       'read',
       workspaceOwnerRightsNeeded
     ),
     makeRights(
-      '/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId',
+      '/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId',
       'GET',
       'read',
       workspaceOwnerRightsNeeded
     ),
     makeRights(
-      '/workspaces/:workspaceId/problems/:subProblemId/scenarios',
+      '/workspaces/:workspaceId/problems/:subproblemId/scenarios',
       'POST',
       'write',
       workspaceOwnerRightsNeeded
     ),
     makeRights(
-      '/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId',
+      '/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId',
       'POST',
       'write',
       workspaceOwnerRightsNeeded

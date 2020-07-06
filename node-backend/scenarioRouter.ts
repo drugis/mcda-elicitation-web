@@ -14,9 +14,9 @@ export default function ScenarioRouter(db: any) {
   return express
     .Router()
     .get('/:workspaceId/scenarios', query)
-    .get('/:workspaceId/problems/:subProblemId/scenarios', queryForSubProblem)
-    .get('/:workspaceId/problems/:subProblemId/scenarios/:id', get)
-    .post('/:workspaceId/problems/:subProblemId/scenarios', create)
-    .post('/:workspaceId/problems/:subProblemId/scenarios/:id', update)
+    .get('/:workspaceId/problems/:subproblemId/scenarios', queryForSubProblem)
+    .get('/:workspaceId/problems/:subproblemId/scenarios/:id', get)
+    .post('/:workspaceId/problems/:subproblemId/scenarios', create)
+    .post('/:workspaceId/problems/:subproblemId/scenarios/:id', update)
     .delete('/:workspaceId/problems/:subproblemId/scenarios/:id', del);
 }

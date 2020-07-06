@@ -57,7 +57,7 @@ export default function WorkspaceRepository(db: any) {
   function setDefaultSubProblem(
     client: any,
     workspaceId: string,
-    subproblemId: string,
+    subproblemId: number,
     callback: (error: Error) => void
   ) {
     logger.debug('setting default subproblem for: ' + workspaceId);
@@ -67,14 +67,14 @@ export default function WorkspaceRepository(db: any) {
 
   function getDefaultSubproblem(
     workspaceId: string,
-    callback: (error: Error, defaultSubproblemId?: number) => void
+    callback: (error: Error, defaultSubproblemId?: string) => void
   ) {
     logger.debug('getting default subproblem id for: ' + workspaceId);
     const query = 'SELECT defaultSubproblemId FROM workspace WHERE id = $1';
     db.query(
       query,
       [workspaceId],
-      (error: Error, result: {rows: [{defaultsubproblemid: number}]}) => {
+      (error: Error, result: {rows: [{defaultsubproblemid: string}]}) => {
         if (error) {
           callback(error);
         } else {
@@ -87,7 +87,7 @@ export default function WorkspaceRepository(db: any) {
   function setDefaultScenario(
     client: any,
     workspaceId: string,
-    scenarioId: string,
+    scenarioId: number,
     callback: (error: Error) => void
   ) {
     logger.debug(

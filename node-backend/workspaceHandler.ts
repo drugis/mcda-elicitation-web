@@ -6,15 +6,15 @@ import async from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
-import logger from './logger';
+import logger from './loggerTS';
 import {getRanges, getUser, handleError, reduceProblem} from './util';
 import WorkspaceRepository from './workspaceRepository';
-import SubProblemRepository from './subProblemRepository';
+import SubproblemRepository from './subproblemRepository';
 import ScenarioRepository from './scenarioRepository';
 
 export default function WorkspaceHandler(db: any) {
   const workspaceRepository = WorkspaceRepository(db);
-  const subProblemRepository = SubProblemRepository(db);
+  const subproblemRepository = SubproblemRepository(db);
   const scenarioRepository = ScenarioRepository(db);
 
   function query(request: Request, response: Response, next: any): void {
@@ -67,18 +67,18 @@ export default function WorkspaceHandler(db: any) {
     ) {
       logger.debug('creating new workspace');
 
-      var owner = getUser(request).id;
-      var title = request.body.title;
-      var problem = request.body.problem;
+      const owner = getUser(request).id;
+      const title = request.body.title;
+      const problem = request.body.problem;
       workspaceRepository.create(client, owner, title, problem, callback);
     }
 
     function createSubProblem(
       client: any,
-      workspaceId: number,
+      workspaceId: string,
       callback: (
         error: Error,
-        workspaceId?: number,
+        workspaceId?: string,
         subproblemId?: number
       ) => void
     ) {
@@ -86,12 +86,12 @@ export default function WorkspaceHandler(db: any) {
       const definition = {
         ranges: getRanges(request.body.problem)
       };
-      subProblemRepository.create(
+      subproblemRepository.create(
         client,
         workspaceId,
         'Default',
         definition,
-        function (error: Error, subproblemId: number) {
+        (error: Error, subproblemId: number) => {
           if (error) {
             callback(error);
           } else {
@@ -104,11 +104,11 @@ export default function WorkspaceHandler(db: any) {
     function setDefaultSubProblem(
       client: any,
       workspaceId: string,
-      subproblemId: string,
+      subproblemId: number,
       callback: (
         error: Error,
         workspaceId?: string,
-        subproblemId?: string
+        subproblemId?: number
       ) => void
     ): void {
       logger.debug('setting default subProblem');
@@ -129,11 +129,11 @@ export default function WorkspaceHandler(db: any) {
     function createScenario(
       client: any,
       workspaceId: string,
-      subproblemId: string,
+      subproblemId: number,
       callback: (
         error: Error,
         workspaceId?: string,
-        scenarioId?: string
+        scenarioId?: number
       ) => void
     ) {
       logger.debug('creating scenario');
@@ -146,7 +146,7 @@ export default function WorkspaceHandler(db: any) {
         subproblemId,
         'Default',
         state,
-        (error: Error, scenarioId: string) => {
+        (error: Error, scenarioId: number) => {
           if (error) {
             callback(error);
           } else {
@@ -159,7 +159,7 @@ export default function WorkspaceHandler(db: any) {
     function setDefaultScenario(
       client: any,
       workspaceId: string,
-      scenarioId: string,
+      scenarioId: number,
       callback: (error: Error, workspaceId?: string) => void
     ) {
       logger.debug('setting default scenario');

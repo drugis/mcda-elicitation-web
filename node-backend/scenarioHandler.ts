@@ -4,7 +4,7 @@ import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
-import logger from './logger';
+import logger from './loggerTS';
 import {handleError} from './util';
 import WorkspaceRepository from './workspaceRepository';
 import ScenarioRepository from './scenarioRepository';
@@ -21,9 +21,10 @@ export default function ScenarioHandler(db: any) {
   }
 
   function queryForSubProblem(request: Request, response: Response, next: any) {
+    const {workspaceId, subproblemId} = request.params;
     scenarioRepository.queryForSubProblem(
-      request.params.workspaceId,
-      request.params.subProblemId,
+      workspaceId,
+      Number.parseInt(subproblemId),
       _.partial(defaultCallback, response, next)
     );
   }
@@ -51,13 +52,13 @@ export default function ScenarioHandler(db: any) {
   function create(request: Request, response: Response, next: any) {
     scenarioRepository.createDirectly(
       request.params.workspaceId,
-      request.params.subProblemId,
+      Number.parseInt(request.params.subproblemId),
       request.body.title,
       {
         problem: request.body.state.problem,
         prefs: request.body.state.prefs
       },
-      function (error: Error, id?: string) {
+      (error: Error, id?: number) => {
         if (error) {
           next(error);
         } else {
@@ -77,7 +78,7 @@ export default function ScenarioHandler(db: any) {
         if (error) {
           next(error);
         } else {
-          response.sendStatus(OK);
+          response.json(request.body);
         }
       }
     );
@@ -94,7 +95,12 @@ export default function ScenarioHandler(db: any) {
         scenarioId
     );
     db.runInTransaction(
-      _.partial(deleteTransaction, workspaceId, subproblemId, scenarioId),
+      _.partial(
+        deleteTransaction,
+        workspaceId,
+        Number.parseInt(subproblemId),
+        Number.parseInt(scenarioId)
+      ),
       (error: Error) => {
         if (error) {
           handleError(error, next);
@@ -108,8 +114,8 @@ export default function ScenarioHandler(db: any) {
 
   function deleteTransaction(
     workspaceId: string,
-    subproblemId: string,
-    scenarioId: string,
+    subproblemId: number,
+    scenarioId: number,
     client: any,
     transactionCallback: (error: Error) => void
   ) {
@@ -148,9 +154,9 @@ export default function ScenarioHandler(db: any) {
   function setDefaultScenario(
     client: any,
     workspaceId: string,
-    scenarioId: string,
-    defaultScenarioId: string,
-    scenarioIds: string[],
+    scenarioId: number,
+    defaultScenarioId: number,
+    scenarioIds: number[],
     callback: (error?: Error) => void
   ): void {
     if (defaultScenarioId === scenarioId) {
@@ -170,10 +176,10 @@ export default function ScenarioHandler(db: any) {
   }
 
   function getNewDefaultScenario(
-    scenarioIds: string[],
-    currentDefaultScenarioId: string
-  ): string {
-    return _.reject(scenarioIds, (id: string) => {
+    scenarioIds: number[],
+    currentDefaultScenarioId: number
+  ): number {
+    return _.reject(scenarioIds, (id: number) => {
       return id === currentDefaultScenarioId;
     })[0];
   }
