@@ -47,7 +47,7 @@ module.exports = function (db) {
   }
 
   function create(request, response, next) {
-    ScenarioRepository.create(
+    ScenarioRepository.createDirectly(
       request.params.workspaceId,
       request.params.subProblemId,
       request.body.title,
