@@ -1,3 +1,4 @@
+import {Error} from '@shared/interface/IError';
 import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
@@ -11,7 +12,6 @@ import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
-import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
@@ -86,7 +86,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     client: any,
     effects: Effect[],
     inProgressworkspaceId: number,
-    callback: (error: IError, inProgressworkspaceId: number) => void
+    callback: (error: Error, inProgressworkspaceId: number) => void
   ) {
     if (effects.length) {
       const cellCommands = mapToCellCommands(
@@ -109,7 +109,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     client: any,
     distributions: Distribution[],
     inProgressworkspaceId: number,
-    callback: (error: IError, inProgressworkspaceId: number) => void
+    callback: (error: Error, inProgressworkspaceId: number) => void
   ) {
     if (distributions.length) {
       const cellCommands = mapToCellCommands(
@@ -132,7 +132,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     client: any,
     ownerId: string,
     toCreate: IInProgressWorkspace,
-    callback: (error: IError, createdId: string) => void
+    callback: (error: Error, createdId: string) => void
   ) {
     const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, 
         title, therapeuticContext) 
@@ -269,7 +269,7 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function get(
-    inProgressId: number,
+    inProgressId: string,
     callback: (error: any, result: IInProgressMessage) => void
   ): void {
     db.runInTransaction(
@@ -297,7 +297,7 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function getTransaction(
-    inProgressId: number,
+    inProgressId: string,
     client: any,
     transactionCallback: (
       error: any,
@@ -326,7 +326,7 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function getWorkspace(
-    inProgressId: number,
+    inProgressId: string,
     client: any,
     callback: (error: any, inProgressWorkspace: IInProgressWorkspace) => void
   ): void {
@@ -345,7 +345,7 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function getCriteria(
-    inProgressId: number,
+    inProgressId: string,
     client: any,
     callback: (error: any, criteria: ICriterion[]) => void
   ): void {
@@ -365,7 +365,7 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function getAlternatives(
-    inProgressId: number,
+    inProgressId: string,
     client: any,
     callback: (error: any, alternatives: IAlternative[]) => void
   ): void {
@@ -385,7 +385,7 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function getDataSources(
-    inProgressId: number,
+    inProgressId: string,
     client: any,
     callback: (error: any, dataSources: IDataSource[]) => void
   ) {
@@ -405,7 +405,7 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function getInProgressValues(
-    inProgressId: number,
+    inProgressId: string,
     client: any,
     callback: (
       error: any,
@@ -545,7 +545,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function upsertCellsDirectly(
     cellCommands: ICellCommand[],
-    callback: (error: IError) => void
+    callback: (error: Error) => void
   ): void {
     const query = buildUpsertCellsQuery(cellCommands);
     db.query(query, [], callback);
@@ -555,10 +555,10 @@ export default function InProgressWorkspaceRepository(db: any) {
     client: any,
     cellCommands: ICellCommand[],
     inProgressworkspaceId: number,
-    callback: (error: IError, inProgressworkspaceId: number) => void
+    callback: (error: Error, inProgressworkspaceId: number) => void
   ) {
     const query = buildUpsertCellsQuery(cellCommands);
-    client.query(query, [], (error: IError) => {
+    client.query(query, [], (error: Error) => {
       callback(error, error ? null : inProgressworkspaceId);
     });
   }
@@ -605,7 +605,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function createWorkspace(
     userId: string,
-    inProgressId: number,
+    inProgressId: string,
     inProgressMessage: IInProgressMessage,
     callback: (error: any, createdId: string) => void
   ) {
@@ -622,7 +622,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function createWorkspaceTransaction(
     userId: string,
-    inProgressId: number,
+    inProgressId: string,
     inProgressMessage: IInProgressMessage,
     client: any,
     transactionCallback: (error: any, createdId: string) => void
@@ -657,14 +657,14 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function deleteInTransaction(
     client: any,
-    inProgressId: number,
+    inProgressId: string,
     callback: (error: any) => void
   ) {
     del(client, inProgressId, callback);
   }
 
   function deleteDirectly(
-    inProgressId: number,
+    inProgressId: string,
     callback: (error: any) => void
   ) {
     del(db, inProgressId, callback);
@@ -672,7 +672,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function del(
     client: any,
-    inProgressId: number,
+    inProgressId: string,
     callback: (error: any) => void
   ) {
     const query = 'DELETE FROM inprogressworkspace WHERE id=$1';
@@ -681,10 +681,10 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function query(
     ownerId: number,
-    callback: (error: IError | null, result: any[]) => void
+    callback: (error: Error, result: any[]) => void
   ) {
     const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
-    db.query(query, [ownerId], (error: IError, result: {rows: any[]}) => {
+    db.query(query, [ownerId], (error: Error, result: {rows: any[]}) => {
       callback(error, error ? null : result.rows);
     });
   }

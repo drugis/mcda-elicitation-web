@@ -2,7 +2,6 @@ import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
 import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
-import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
@@ -19,11 +18,12 @@ import {
   buildProblem,
   createOrdering
 } from './inProgressRepositoryService';
-import {logger} from './loggerTS';
+import logger from './loggerTS';
 import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
 import WorkspaceRepository from './workspaceRepository';
+import {Error} from '@shared/interface/IError';
 
 export default function InProgressHandler(db: any) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
@@ -52,8 +52,7 @@ export default function InProgressHandler(db: any) {
     next: () => void
   ): void {
     const user: {id: string} = getUser(request);
-    const sourceWorkspaceId = Number.parseInt(request.body.sourceWorkspaceId);
-
+    const sourceWorkspaceId = request.body.sourceWorkspaceId;
     waterfall(
       [
         _.partial(workspaceRepository.get, sourceWorkspaceId),
@@ -67,7 +66,7 @@ export default function InProgressHandler(db: any) {
   function createCallback(
     response: Response,
     next: () => void,
-    error: IError | null,
+    error: Error,
     createdId: string
   ) {
     if (error) {
@@ -80,7 +79,7 @@ export default function InProgressHandler(db: any) {
 
   function buildInProgress(
     workspace: IOldWorkspace,
-    callback: (error: IError | null, inProgressCopy: IWorkspace) => void
+    callback: (error: Error, inProgressCopy: IWorkspace) => void
   ) {
     callback(null, buildInProgressCopy(workspace));
   }
@@ -88,14 +87,14 @@ export default function InProgressHandler(db: any) {
   function createNew(
     userId: string,
     inProgressCopy: IWorkspace,
-    callback: (error: IError | null, createdId: string) => void
+    callback: (error: Error, createdId: string) => void
   ) {
     inProgressWorkspaceRepository.create(userId, inProgressCopy, callback);
   }
 
   function get(request: Request, response: Response, next: () => void): void {
     inProgressWorkspaceRepository.get(
-      Number.parseInt(request.params.id),
+      request.params.id,
       (error: any, inProgressWorkspace: IInProgressMessage) => {
         if (error) {
           handleError(error, next);
@@ -240,14 +239,14 @@ export default function InProgressHandler(db: any) {
     response: Response,
     next: (error: any) => void
   ): void {
-    const inProgressId = Number.parseInt(request.params.id);
+    const inProgressId = request.params.id;
     waterfall(
       [
         _.partial(inProgressWorkspaceRepository.get, inProgressId),
         buildProblemFromInProgress,
         _.partial(createInTransaction, request.user, inProgressId)
       ],
-      (error: IError | null, createdWorkspaceInfo: IWorkspaceInfo): void => {
+      (error: Error, createdWorkspaceInfo: IWorkspaceInfo): void => {
         if (error) {
           logger.debug('error creating workspace from in progress ' + error);
           next(error);
@@ -268,10 +267,10 @@ export default function InProgressHandler(db: any) {
 
   function createInTransaction(
     user: any,
-    inProgressId: number,
+    inProgressId: string,
     problem: IProblem,
     overallCallback: (
-      error: IError | null,
+      error: Error,
       createdWorkspaceInfo?: IWorkspaceInfo
     ) => void
   ): void {
@@ -286,7 +285,7 @@ export default function InProgressHandler(db: any) {
       (
         client: any,
         transactionCallback: (
-          error: IError | null,
+          error: Error,
           createdWorkspaceInfo?: IWorkspaceInfo
         ) => void
       ) => {
@@ -294,7 +293,7 @@ export default function InProgressHandler(db: any) {
           [
             _.partial(
               workspaceHandler.createWorkspaceTransaction,
-              fakeRequest,
+              fakeRequest as Request,
               client
             ),
             _.partial(deleteInprogress, client, inProgressId),
@@ -303,7 +302,7 @@ export default function InProgressHandler(db: any) {
           transactionCallback
         );
       },
-      (error: IError | null, createdWorkspaceInfo?: IWorkspaceInfo): void => {
+      (error: Error, createdWorkspaceInfo?: IWorkspaceInfo): void => {
         overallCallback(error, error ? null : createdWorkspaceInfo);
       }
     );
@@ -311,17 +310,14 @@ export default function InProgressHandler(db: any) {
 
   function deleteInprogress(
     client: any,
-    inProgressId: number,
+    inProgressId: string,
     createdWorkspaceInfo: IWorkspaceInfo,
-    callback: (
-      error: IError | null,
-      createWorkspaceInfo?: IWorkspaceInfo
-    ) => void
+    callback: (error: Error, createWorkspaceInfo?: IWorkspaceInfo) => void
   ): void {
     inProgressWorkspaceRepository.deleteInTransaction(
       client,
       inProgressId,
-      (error: IError | null) => {
+      (error: Error) => {
         callback(error, error ? null : createdWorkspaceInfo);
       }
     );
@@ -330,10 +326,7 @@ export default function InProgressHandler(db: any) {
   function insertOrdering(
     client: any,
     createdWorkspaceInfo: IWorkspaceInfo,
-    callback: (
-      error: IError | null,
-      createdWorkspaceInfo?: IWorkspaceInfo
-    ) => void
+    callback: (error: Error, createdWorkspaceInfo?: IWorkspaceInfo) => void
   ) {
     const ordering = createOrdering(
       createdWorkspaceInfo.problem.criteria,
@@ -343,7 +336,7 @@ export default function InProgressHandler(db: any) {
       client,
       createdWorkspaceInfo.id,
       ordering,
-      (error: IError) => {
+      (error: Error) => {
         if (error) {
           callback(error);
         } else {
@@ -357,7 +350,7 @@ export default function InProgressHandler(db: any) {
     const user: {id: number} = getUser(request);
     inProgressWorkspaceRepository.query(
       user.id,
-      (error: IError, results: any[]) => {
+      (error: Error, results: any[]) => {
         if (error) {
           handleError(error, next);
         } else {
@@ -369,8 +362,8 @@ export default function InProgressHandler(db: any) {
 
   function del(request: Request, response: Response, next: () => {}): void {
     inProgressWorkspaceRepository.deleteDirectly(
-      Number.parseInt(request.params.id),
-      (error: IError) => {
+      request.params.id,
+      (error: Error) => {
         if (error) {
           handleError(error, next);
         } else {

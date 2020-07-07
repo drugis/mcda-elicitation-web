@@ -7,7 +7,7 @@ var dbStub = {
     console.log('query being called');
   }
 };
-var subProblemRepository = require('../node-backend/subProblemRepository')(
+var subProblemRepository = require('../node-backend/subproblemRepository')(
   dbStub
 );
 
