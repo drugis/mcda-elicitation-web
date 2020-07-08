@@ -1,16 +1,17 @@
+import { Error } from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
-import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
+import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import _ from 'lodash';
 import logger from './loggerTS';
-import {Request} from 'express';
-import { Error } from '@shared/interface/IError';
+import { Request } from 'express';
 
-export function getUser(request: Request) {
-  if (request.user) {
+export function getUserId(request: Request) {
+  if (request.user && request.user) {
     return request.user;
-  }
-  if (request.session.user) {
+  } else if (request.session.user && request.session.user.id) {
     return request.session.user;
+  } else {
+    throw 'No user id found';
   }
 }
 

@@ -2,15 +2,15 @@
 import {Error} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
-import async from 'async';
+import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
 import logger from './loggerTS';
-import {getRanges, getUser, handleError, reduceProblem} from './util';
-import WorkspaceRepository from './workspaceRepository';
-import SubproblemRepository from './subproblemRepository';
 import ScenarioRepository from './scenarioRepository';
+import SubproblemRepository from './subproblemRepository';
+import {getRanges, getUserId, handleError, reduceProblem} from './util';
+import WorkspaceRepository from './workspaceRepository';
 
 export default function WorkspaceHandler(db: any) {
   const workspaceRepository = WorkspaceRepository(db);
@@ -19,7 +19,7 @@ export default function WorkspaceHandler(db: any) {
 
   function query(request: Request, response: Response, next: any): void {
     workspaceRepository.query(
-      getUser(request).id,
+      getUserId(request).id,
       (error: Error, result: IOldWorkspace[]) => {
         if (error) {
           handleError(error, next);
@@ -33,7 +33,7 @@ export default function WorkspaceHandler(db: any) {
   function create(request: Request, response: Response, next: any): void {
     db.runInTransaction(
       _.partial(createWorkspaceTransaction, request),
-      function (error: Error, workspaceInfo: IWorkspaceInfo) {
+      (error: Error, workspaceInfo: IWorkspaceInfo) => {
         if (error) {
           handleError(error, next);
         } else {
@@ -49,133 +49,132 @@ export default function WorkspaceHandler(db: any) {
     client: any,
     transactionCallback: (error: Error, workspaceInfo: IWorkspaceInfo) => void
   ): void {
-    async.waterfall(
+    waterfall(
       [
-        _.partial(createNewWorkspace, client),
-        _.partial(createSubProblem, client),
+        _.partial(createNewWorkspace, client, request),
+        _.partial(createSubProblem, client, request),
         _.partial(setDefaultSubProblem, client),
-        _.partial(createScenario, client),
+        _.partial(createScenario, client, request),
         _.partial(setDefaultScenario, client),
         _.partial(workspaceRepository.getWorkspaceInfo, client)
       ],
       transactionCallback
     );
+  }
 
-    function createNewWorkspace(
-      client: any,
-      callback: (error: Error, id: string) => void
-    ) {
-      logger.debug('creating new workspace');
+  function createNewWorkspace(
+    client: any,
+    request: Request,
+    callback: (error: Error, id: string) => void
+  ) {
+    logger.debug('creating new workspace');
 
-      const owner = getUser(request).id;
-      const title = request.body.title;
-      const problem = request.body.problem;
-      workspaceRepository.create(client, owner, title, problem, callback);
-    }
+    const owner = getUserId(request).id;
+    const title = request.body.title;
+    const problem = request.body.problem;
+    workspaceRepository.create(client, owner, title, problem, callback);
+  }
 
-    function createSubProblem(
-      client: any,
-      workspaceId: string,
-      callback: (
-        error: Error,
-        workspaceId?: string,
-        subproblemId?: number
-      ) => void
-    ) {
-      logger.debug('creating subProblem');
-      const definition = {
-        ranges: getRanges(request.body.problem)
-      };
-      subproblemRepository.create(
-        client,
-        workspaceId,
-        'Default',
-        definition,
-        (error: Error, subproblemId: number) => {
-          if (error) {
-            callback(error);
-          } else {
-            callback(null, workspaceId, subproblemId);
-          }
+  function createSubProblem(
+    client: any,
+    request: Request,
+    workspaceId: string,
+    callback: (
+      error: Error,
+      workspaceId?: string,
+      subproblemId?: number
+    ) => void
+  ) {
+    logger.debug('creating subProblem');
+    const definition = {
+      ranges: getRanges(request.body.problem)
+    };
+    subproblemRepository.create(
+      client,
+      workspaceId,
+      'Default',
+      definition,
+      (error: Error, subproblemId: number) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, workspaceId, subproblemId);
         }
-      );
-    }
+      }
+    );
+  }
 
-    function setDefaultSubProblem(
-      client: any,
-      workspaceId: string,
-      subproblemId: number,
-      callback: (
-        error: Error,
-        workspaceId?: string,
-        subproblemId?: number
-      ) => void
-    ): void {
-      logger.debug('setting default subProblem');
-      workspaceRepository.setDefaultSubProblem(
-        client,
-        workspaceId,
-        subproblemId,
-        (error: Error) => {
-          if (error) {
-            callback(error);
-          } else {
-            callback(null, workspaceId, subproblemId);
-          }
+  function setDefaultSubProblem(
+    client: any,
+    workspaceId: string,
+    subproblemId: number,
+    callback: (
+      error: Error,
+      workspaceId?: string,
+      subproblemId?: number
+    ) => void
+  ): void {
+    logger.debug('setting default subProblem');
+    workspaceRepository.setDefaultSubProblem(
+      client,
+      workspaceId,
+      subproblemId,
+      (error: Error) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, workspaceId, subproblemId);
         }
-      );
-    }
+      }
+    );
+  }
 
-    function createScenario(
-      client: any,
-      workspaceId: string,
-      subproblemId: number,
-      callback: (
-        error: Error,
-        workspaceId?: string,
-        scenarioId?: number
-      ) => void
-    ) {
-      logger.debug('creating scenario');
-      var state = {
-        problem: reduceProblem(request.body.problem)
-      };
-      scenarioRepository.createInTransaction(
-        client,
-        workspaceId,
-        subproblemId,
-        'Default',
-        state,
-        (error: Error, scenarioId: number) => {
-          if (error) {
-            callback(error);
-          } else {
-            callback(null, workspaceId, scenarioId);
-          }
+  function createScenario(
+    client: any,
+    request: Request,
+    workspaceId: string,
+    subproblemId: number,
+    callback: (error: Error, workspaceId?: string, scenarioId?: number) => void
+  ) {
+    logger.debug('creating scenario');
+    const state = {
+      problem: reduceProblem(request.body.problem)
+    };
+    scenarioRepository.createInTransaction(
+      client,
+      workspaceId,
+      subproblemId,
+      'Default',
+      state,
+      (error: Error, scenarioId: number) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, workspaceId, scenarioId);
         }
-      );
-    }
+      }
+    );
+  }
 
-    function setDefaultScenario(
-      client: any,
-      workspaceId: string,
-      scenarioId: number,
-      callback: (error: Error, workspaceId?: string) => void
-    ) {
-      logger.debug('setting default scenario');
-      workspaceRepository.setDefaultScenario(
-        client,
-        workspaceId,
-        scenarioId,
-        (error: Error) => {
-          if (error) {
-            callback(error);
-          } else {
-            callback(null, workspaceId);
-          }
+  function setDefaultScenario(
+    client: any,
+    workspaceId: string,
+    scenarioId: number,
+    callback: (error: Error, workspaceId?: string) => void
+  ) {
+    logger.debug('setting default scenario');
+    workspaceRepository.setDefaultScenario(
+      client,
+      workspaceId,
+      scenarioId,
+      (error: Error) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, workspaceId);
         }
-      );
-    }
+      }
+    );
   }
 
   function get(request: Request, response: Response, next: any) {

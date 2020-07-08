@@ -20,7 +20,7 @@ import {
 } from './inProgressRepositoryService';
 import logger from './loggerTS';
 import OrderingRepository from './orderingRepository';
-import {getUser, handleError} from './util';
+import {getUserId, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
 import WorkspaceRepository from './workspaceRepository';
 import {Error} from '@shared/interface/IError';
@@ -37,10 +37,9 @@ export default function InProgressHandler(db: any) {
     response: Response,
     next: () => {}
   ): void {
-    const user: {id: string} = getUser(request);
     const emptyInProgress = buildEmptyInProgress();
     inProgressWorkspaceRepository.create(
-      user.id,
+      getUserId(request).id,
       emptyInProgress,
       _.partial(createCallback, response, next)
     );
@@ -51,13 +50,12 @@ export default function InProgressHandler(db: any) {
     response: Response,
     next: () => void
   ): void {
-    const user: {id: string} = getUser(request);
     const sourceWorkspaceId = request.body.sourceWorkspaceId;
     waterfall(
       [
         _.partial(workspaceRepository.get, sourceWorkspaceId),
         buildInProgress,
-        _.partial(createNew, user.id)
+        _.partial(createNew,  getUserId(request).id)
       ],
       _.partial(createCallback, response, next)
     );
@@ -347,9 +345,8 @@ export default function InProgressHandler(db: any) {
   }
 
   function query(request: Request, response: Response, next: () => {}): void {
-    const user: {id: number} = getUser(request);
     inProgressWorkspaceRepository.query(
-      user.id,
+      getUserId(request).id,
       (error: Error, results: any[]) => {
         if (error) {
           handleError(error, next);

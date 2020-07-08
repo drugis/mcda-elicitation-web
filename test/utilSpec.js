@@ -73,7 +73,7 @@ describe('The utility', function() {
       var req = {
         user: userId
       };
-      var result = util.getUser(req);
+      var result = util.getUserId(req);
       expect(result).to.equal(userId);
     });
 
@@ -84,7 +84,7 @@ describe('The utility', function() {
           user: userId
         }
       };
-      var result = util.getUser(req);
+      var result = util.getUserId(req);
       expect(result).to.equal(userId);
     });
   });

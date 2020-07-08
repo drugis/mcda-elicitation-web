@@ -15,7 +15,10 @@ import Signin from 'signin';
 // @ts-ignore
 import StartupDiagnostics from 'startup-diagnostics';
 import DB from './node-backend/db';
-import dbUtil from './node-backend/dbUtil';
+import {
+  buildMCDADBUrl,
+  buildMcdaDBConnectionConfig
+} from './node-backend/dbUtil';
 import InProgressWorkspaceRepository from './node-backend/inProgressRepository';
 import InProgressRouter from './node-backend/inProgressRouter';
 import logger from './node-backend/loggerTS';
@@ -28,11 +31,11 @@ import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
 import IRights, {requiredRightType} from '@shared/interface/IRights';
 
-const db = DB(dbUtil.connectionConfig);
+const db = DB(buildMcdaDBConnectionConfig());
 
-logger.info(dbUtil.mcdaDBUrl);
+logger.info(buildMCDADBUrl());
 
-var appEnvironmentSettings = {
+const appEnvironmentSettings = {
   googleKey: process.env.MCDAWEB_GOOGLE_KEY,
   googleSecret: process.env.MCDAWEB_GOOGLE_SECRET,
   host: process.env.MCDA_HOST
@@ -78,7 +81,7 @@ function initApp(): void {
   setRequiredRights();
   const sessionOptions = {
     store: new (require('connect-pg-simple')(session))({
-      conString: dbUtil.mcdaDBUrl
+      conString: buildMCDADBUrl()
     }),
     secret: process.env.MCDAWEB_COOKIE_SECRET,
     resave: false,
