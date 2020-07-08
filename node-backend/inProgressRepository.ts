@@ -1,4 +1,3 @@
-import {Error} from '@shared/interface/IError';
 import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
@@ -12,6 +11,7 @@ import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
+import {Error} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
@@ -19,6 +19,7 @@ import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {parallel, waterfall} from 'async';
 import _ from 'lodash';
+import {PoolClient, QueryResult} from 'pg';
 import pgPromise, {IMain} from 'pg-promise';
 import {
   buildProblem,
@@ -31,15 +32,16 @@ import {
   mapToCellCommands,
   mapWorkspace
 } from './inProgressRepositoryService';
+import IDB, {ClientOrDB} from './interface/IDB';
 
-export default function InProgressWorkspaceRepository(db: any) {
+export default function InProgressWorkspaceRepository(db: IDB) {
   const pgp: IMain = pgPromise();
 
   function create(
     userId: string,
     newInProgress: IWorkspace,
     callback: (error: any, createdId: string) => void
-  ) {
+  ): void {
     db.runInTransaction(
       _.partial(createInProgressWorkspaceTransaction, userId, newInProgress),
       callback
@@ -49,9 +51,9 @@ export default function InProgressWorkspaceRepository(db: any) {
   function createInProgressWorkspaceTransaction(
     ownerId: string,
     newInProgress: IWorkspace,
-    client: any,
+    client: PoolClient,
     transactionCallback: (error: any, createdId: string) => void
-  ) {
+  ): void {
     const dataSources: IDataSource[] = _.flatMap(
       newInProgress.criteria,
       'dataSources'
@@ -83,11 +85,11 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function createInProgressEffects(
-    client: any,
+    client: PoolClient,
     effects: Effect[],
     inProgressworkspaceId: number,
     callback: (error: Error, inProgressworkspaceId: number) => void
-  ) {
+  ): void {
     if (effects.length) {
       const cellCommands = mapToCellCommands(
         effects,
@@ -106,11 +108,11 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function createInProgressDistributions(
-    client: any,
+    client: PoolClient,
     distributions: Distribution[],
     inProgressworkspaceId: number,
     callback: (error: Error, inProgressworkspaceId: number) => void
-  ) {
+  ): void {
     if (distributions.length) {
       const cellCommands = mapToCellCommands(
         distributions,
@@ -129,11 +131,11 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function createInProgressWorkspace(
-    client: any,
+    client: PoolClient,
     ownerId: string,
     toCreate: IInProgressWorkspace,
     callback: (error: Error, createdId: string) => void
-  ) {
+  ): void {
     const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, 
         title, therapeuticContext) 
           VALUES ($1, $2, $3, $4, $5) 
@@ -147,18 +149,18 @@ export default function InProgressWorkspaceRepository(db: any) {
         toCreate.title,
         toCreate.therapeuticContext
       ],
-      function (error: any, result: {rows: any[]}) {
+      (error: any, result: {rows: any[]}): void => {
         callback(error, error || result.rows[0].id);
       }
     );
   }
 
   function createInProgressCriteria(
-    client: any,
+    client: PoolClient,
     toCreate: ICriterion[],
     inProgressworkspaceId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
-  ) {
+  ): void {
     const toInsert = _.map(toCreate, (criterion: ICriterion, index: number) => {
       return {
         id: criterion.id,
@@ -181,7 +183,7 @@ export default function InProgressWorkspaceRepository(db: any) {
       {table: 'inprogresscriterion'}
     );
     const query = pgp.helpers.insert(toInsert, columns);
-    client.query(query, [], (error: any) => {
+    client.query(query, [], (error: any): void => {
       if (error) {
         callback(error, null);
       } else {
@@ -191,11 +193,11 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function createInProgressDataSources(
-    client: any,
+    client: PoolClient,
     toCreate: IDataSource[],
     inProgressworkspaceId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
-  ) {
+  ): void {
     const toInsert = _.map(toCreate, (item: IDataSource, index: number) => {
       return {
         id: item.id,
@@ -228,7 +230,7 @@ export default function InProgressWorkspaceRepository(db: any) {
       {table: 'inprogressdatasource'}
     );
     const query = pgp.helpers.insert(toInsert, columns);
-    client.query(query, [], (error: any) => {
+    client.query(query, [], (error: any): void => {
       if (error) {
         callback(error, null);
       } else {
@@ -238,11 +240,11 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function createInProgressAlternatives(
-    client: any,
+    client: PoolClient,
     toCreate: IAlternative[],
     inProgressworkspaceId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
-  ) {
+  ): void {
     const toInsert = _.map(
       toCreate,
       (alternative: IAlternative, index: number) => {
@@ -259,7 +261,7 @@ export default function InProgressWorkspaceRepository(db: any) {
       {table: 'inprogressalternative'}
     );
     const query = pgp.helpers.insert(toInsert, columns);
-    client.query(query, [], (error: any) => {
+    client.query(query, [], (error: any): void => {
       if (error) {
         callback(error, null);
       } else {
@@ -298,7 +300,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function getTransaction(
     inProgressId: string,
-    client: any,
+    client: PoolClient,
     transactionCallback: (
       error: any,
       results: [
@@ -312,7 +314,7 @@ export default function InProgressWorkspaceRepository(db: any) {
         ]
       ]
     ) => void
-  ) {
+  ): void {
     parallel(
       [
         _.partial(getWorkspace, inProgressId, client),
@@ -327,14 +329,14 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function getWorkspace(
     inProgressId: string,
-    client: any,
+    client: PoolClient,
     callback: (error: any, inProgressWorkspace: IInProgressWorkspace) => void
   ): void {
     const query = 'SELECT * FROM inProgressWorkspace WHERE id=$1';
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: [IWorkspaceQueryResult]}) => {
+      (error: any, result: QueryResult<IWorkspaceQueryResult>): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -346,7 +348,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function getCriteria(
     inProgressId: string,
-    client: any,
+    client: PoolClient,
     callback: (error: any, criteria: ICriterion[]) => void
   ): void {
     const query =
@@ -354,7 +356,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: ICriterionQueryResult[]}) => {
+      (error: any, result: {rows: ICriterionQueryResult[]}): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -366,7 +368,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function getAlternatives(
     inProgressId: string,
-    client: any,
+    client: PoolClient,
     callback: (error: any, alternatives: IAlternative[]) => void
   ): void {
     const query =
@@ -374,7 +376,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: IAlternativeQueryResult[]}) => {
+      (error: any, result: {rows: IAlternativeQueryResult[]}): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -386,15 +388,15 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function getDataSources(
     inProgressId: string,
-    client: any,
+    client: PoolClient,
     callback: (error: any, dataSources: IDataSource[]) => void
-  ) {
+  ): void {
     const query =
       'SELECT * FROM inProgressDataSource WHERE inProgressWorkspaceId=$1';
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: IDataSourceQueryResult[]}) => {
+      (error: any, result: {rows: IDataSourceQueryResult[]}): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -406,7 +408,7 @@ export default function InProgressWorkspaceRepository(db: any) {
 
   function getInProgressValues(
     inProgressId: string,
-    client: any,
+    client: PoolClient,
     callback: (
       error: any,
       values: [
@@ -420,7 +422,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: IValueCellQueryResult[]}) => {
+      (error: any, result: {rows: IValueCellQueryResult[]}): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -552,13 +554,13 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function upsertCellsInTransaction(
-    client: any,
+    client: PoolClient,
     cellCommands: ICellCommand[],
     inProgressworkspaceId: number,
     callback: (error: Error, inProgressworkspaceId: number) => void
-  ) {
+  ): void {
     const query = buildUpsertCellsQuery(cellCommands);
-    client.query(query, [], (error: Error) => {
+    client.query(query, [], (error: Error): void => {
       callback(error, error ? null : inProgressworkspaceId);
     });
   }
@@ -608,7 +610,7 @@ export default function InProgressWorkspaceRepository(db: any) {
     inProgressId: string,
     inProgressMessage: IInProgressMessage,
     callback: (error: any, createdId: string) => void
-  ) {
+  ): void {
     db.runInTransaction(
       _.partial(
         createWorkspaceTransaction,
@@ -624,9 +626,9 @@ export default function InProgressWorkspaceRepository(db: any) {
     userId: string,
     inProgressId: string,
     inProgressMessage: IInProgressMessage,
-    client: any,
+    client: PoolClient,
     transactionCallback: (error: any, createdId: string) => void
-  ) {
+  ): void {
     const problem = buildProblem(inProgressMessage);
     waterfall(
       [
@@ -638,53 +640,53 @@ export default function InProgressWorkspaceRepository(db: any) {
   }
 
   function createProblem(
-    client: any,
+    client: PoolClient,
     userId: string,
     problem: IProblem,
     callback: (error: any | null, workspaceId: number) => void
-  ) {
+  ): void {
     const query = `INSERT INTO workspace (owner, title, problem) 
                    VALUES ($1, $2, $3) 
                    RETURNING id`;
     client.query(
       query,
       [userId, problem.title, problem],
-      (error: any, result: {rows: any[]}) => {
+      (error: any, result: {rows: any[]}): void => {
         callback(error, error || result.rows[0].id);
       }
     );
   }
 
   function deleteInTransaction(
-    client: any,
+    client: PoolClient,
     inProgressId: string,
     callback: (error: any) => void
-  ) {
+  ): void {
     del(client, inProgressId, callback);
   }
 
   function deleteDirectly(
     inProgressId: string,
     callback: (error: any) => void
-  ) {
+  ): void {
     del(db, inProgressId, callback);
   }
 
   function del(
-    client: any,
+    clientOrDB: ClientOrDB,
     inProgressId: string,
     callback: (error: any) => void
-  ) {
+  ): void {
     const query = 'DELETE FROM inprogressworkspace WHERE id=$1';
-    client.query(query, [inProgressId], callback);
+    clientOrDB.query(query, [inProgressId], callback);
   }
 
   function query(
     ownerId: number,
     callback: (error: Error, result: any[]) => void
-  ) {
+  ): void {
     const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
-    db.query(query, [ownerId], (error: Error, result: {rows: any[]}) => {
+    db.query(query, [ownerId], (error: Error, result: {rows: any[]}): void => {
       callback(error, error ? null : result.rows);
     });
   }

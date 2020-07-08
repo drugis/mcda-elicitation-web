@@ -1,13 +1,13 @@
 'use strict';
-import express from 'express';
 import WorkspaceHandler from './workspaceHandler';
+import {Router} from 'express';
+import IDB from './interface/IDB';
 
-export default function WorkspaceRouter(db: any) {
+export default function WorkspaceRouter(db: IDB) {
   const workspaceHandler = WorkspaceHandler(db);
   const {query, create, get, update, delete: del} = workspaceHandler;
 
-  return express
-    .Router()
+  return Router()
     .get('/', query)
     .post('/', create)
     .get('/:id', get)

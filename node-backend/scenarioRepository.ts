@@ -1,11 +1,13 @@
 'use strict';
-import logger from './loggerTS';
+import logger from './logger';
 import _ from 'lodash';
 import {Error} from '@shared/interface/IError';
+import IDB, { ClientOrDB } from './interface/IDB';
+import { PoolClient } from 'pg';
 
-export default function ScenarioRepository(db: any) {
+export default function ScenarioRepository(db: IDB) {
   function createInTransaction(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     subproblemId: number,
     title: string,
@@ -26,7 +28,7 @@ export default function ScenarioRepository(db: any) {
   }
 
   function create(
-    clientOrDB: any,
+    clientOrDB: ClientOrDB,
     workspaceId: string,
     subproblemId: number,
     title: string,
@@ -137,7 +139,7 @@ export default function ScenarioRepository(db: any) {
   }
 
   function deleteScenario(
-    client: any,
+    client: PoolClient,
     subproblemId: number,
     callback: (error: Error) => void
   ) {

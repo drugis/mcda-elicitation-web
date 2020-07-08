@@ -1,11 +1,11 @@
 'use strict';
-import express from 'express';
+import {Router} from 'express';
 import SubproblemHandler from './subproblemHandler';
+import IDB from './interface/IDB';
 
-export default function SubproblemRouter(db: any) {
+export default function SubproblemRouter(db: IDB) {
   const {query, get, create, update, delete: del} = SubproblemHandler(db);
-  return express
-    .Router()
+  return Router()
     .get('/:workspaceId/problems/', query)
     .get('/:workspaceId/problems/:subproblemId', get)
     .post('/:workspaceId/problems/', create)

@@ -6,13 +6,15 @@ import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
-import logger from './loggerTS';
+import {PoolClient} from 'pg';
+import IDB from './interface/IDB';
+import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
 import {getRanges, getUserId, handleError, reduceProblem} from './util';
 import WorkspaceRepository from './workspaceRepository';
 
-export default function WorkspaceHandler(db: any) {
+export default function WorkspaceHandler(db: IDB) {
   const workspaceRepository = WorkspaceRepository(db);
   const subproblemRepository = SubproblemRepository(db);
   const scenarioRepository = ScenarioRepository(db);
@@ -33,7 +35,7 @@ export default function WorkspaceHandler(db: any) {
   function create(request: Request, response: Response, next: any): void {
     db.runInTransaction(
       _.partial(createWorkspaceTransaction, request),
-      (error: Error, workspaceInfo: IWorkspaceInfo) => {
+      (error: Error, workspaceInfo: IWorkspaceInfo): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -46,7 +48,7 @@ export default function WorkspaceHandler(db: any) {
 
   function createWorkspaceTransaction(
     request: Request,
-    client: any,
+    client: PoolClient,
     transactionCallback: (error: Error, workspaceInfo: IWorkspaceInfo) => void
   ): void {
     waterfall(
@@ -63,7 +65,7 @@ export default function WorkspaceHandler(db: any) {
   }
 
   function createNewWorkspace(
-    client: any,
+    client: PoolClient,
     request: Request,
     callback: (error: Error, id: string) => void
   ) {
@@ -76,7 +78,7 @@ export default function WorkspaceHandler(db: any) {
   }
 
   function createSubProblem(
-    client: any,
+    client: PoolClient,
     request: Request,
     workspaceId: string,
     callback: (
@@ -84,7 +86,7 @@ export default function WorkspaceHandler(db: any) {
       workspaceId?: string,
       subproblemId?: number
     ) => void
-  ) {
+  ): void {
     logger.debug('creating subProblem');
     const definition = {
       ranges: getRanges(request.body.problem)
@@ -105,7 +107,7 @@ export default function WorkspaceHandler(db: any) {
   }
 
   function setDefaultSubProblem(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     subproblemId: number,
     callback: (
@@ -130,12 +132,12 @@ export default function WorkspaceHandler(db: any) {
   }
 
   function createScenario(
-    client: any,
+    client: PoolClient,
     request: Request,
     workspaceId: string,
     subproblemId: number,
     callback: (error: Error, workspaceId?: string, scenarioId?: number) => void
-  ) {
+  ): void {
     logger.debug('creating scenario');
     const state = {
       problem: reduceProblem(request.body.problem)
@@ -157,11 +159,11 @@ export default function WorkspaceHandler(db: any) {
   }
 
   function setDefaultScenario(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     scenarioId: number,
     callback: (error: Error, workspaceId?: string) => void
-  ) {
+  ): void {
     logger.debug('setting default scenario');
     workspaceRepository.setDefaultScenario(
       client,
@@ -177,10 +179,10 @@ export default function WorkspaceHandler(db: any) {
     );
   }
 
-  function get(request: Request, response: Response, next: any) {
+  function get(request: Request, response: Response, next: any): void {
     workspaceRepository.get(
       request.params.id,
-      (error: Error, result: IOldWorkspace) => {
+      (error: Error, result: IOldWorkspace): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -190,12 +192,12 @@ export default function WorkspaceHandler(db: any) {
     );
   }
 
-  function update(request: Request, response: Response, next: any) {
+  function update(request: Request, response: Response, next: any): void {
     workspaceRepository.update(
       request.body.problem.title,
       request.body.problem,
       request.params.id,
-      (error: Error) => {
+      (error: Error): void => {
         if (error) {
           handleError(error, next);
         } else {

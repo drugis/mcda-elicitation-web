@@ -3,10 +3,11 @@ import {Error} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
+import logger from './logger';
+import IDB from './interface/IDB';
+import {PoolClient, QueryResult} from 'pg';
 
-const logger = require('./logger');
-
-export default function WorkspaceRepository(db: any) {
+export default function WorkspaceRepository(db: IDB) {
   function get(
     workspaceId: string,
     callback: (error: Error, result?: IOldWorkspace) => void
@@ -33,7 +34,7 @@ export default function WorkspaceRepository(db: any) {
   }
 
   function create(
-    client: any,
+    client: PoolClient,
     owner: number,
     title: string,
     problem: IProblem,
@@ -42,20 +43,21 @@ export default function WorkspaceRepository(db: any) {
     logger.debug('creating workspace');
     const query =
       'INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id';
-    client.query(query, [owner, title, problem], function (
-      error: Error,
-      result: {rows: [{id: string}]}
-    ) {
-      if (error) {
-        callback(error);
-      } else {
-        callback(null, result.rows[0].id);
+    client.query(
+      query,
+      [owner, title, problem],
+      (error: Error, result: QueryResult<{id: string}>) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, result.rows[0].id);
+        }
       }
-    });
+    );
   }
 
   function setDefaultSubProblem(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     subproblemId: number,
     callback: (error: Error) => void
@@ -74,7 +76,7 @@ export default function WorkspaceRepository(db: any) {
     db.query(
       query,
       [workspaceId],
-      (error: Error, result: {rows: [{defaultsubproblemid: string}]}) => {
+      (error: Error, result: QueryResult<{defaultsubproblemid: string}>) => {
         if (error) {
           callback(error);
         } else {
@@ -85,7 +87,7 @@ export default function WorkspaceRepository(db: any) {
   }
 
   function setDefaultScenario(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     scenarioId: number,
     callback: (error: Error) => void
@@ -105,7 +107,7 @@ export default function WorkspaceRepository(db: any) {
     const query = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
     db.query(query, [workspaceId], function (
       error: Error,
-      result: {rows: [{defaultscenarioid: string}]}
+      result: QueryResult<{defaultscenarioid: string}>
     ) {
       if (error) {
         callback(error);
@@ -116,7 +118,7 @@ export default function WorkspaceRepository(db: any) {
   }
 
   function getWorkspaceInfo(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     callback: (error: Error, workspaceInfo?: IWorkspaceInfo) => void
   ) {
@@ -126,7 +128,7 @@ export default function WorkspaceRepository(db: any) {
     client.query(
       query,
       [workspaceId],
-      (error: Error, result: {rows: [IWorkspaceInfo]}) => {
+      (error: Error, result: QueryResult<IWorkspaceInfo>) => {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {
@@ -166,7 +168,7 @@ export default function WorkspaceRepository(db: any) {
       'SELECT id, owner, title, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
     db.query(query, [ownerId], function (
       error: Error,
-      result: {rows: IOldWorkspace[]}
+      result: QueryResult<IOldWorkspace>
     ) {
       if (error) {
         callback(error);

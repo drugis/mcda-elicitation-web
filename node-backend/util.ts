@@ -1,9 +1,9 @@
-import { Error } from '@shared/interface/IError';
+import {Error} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
-import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import {Request} from 'express';
+import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
-import logger from './loggerTS';
-import { Request } from 'express';
+import logger from './logger';
 
 export function getUserId(request: Request) {
   if (request.user && request.user) {

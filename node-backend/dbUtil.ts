@@ -1,7 +1,8 @@
 'use strict';
-import logger from './loggerTS';
+import DBConfig from './interface/IDBConfig';
+import logger from './logger';
 
-export function buildMCDADBUrl():string {
+export function buildDBUrl(): string {
   const env = process.env;
   const url = buildUrl(
     env.MCDAWEB_DB_HOST,
@@ -13,12 +14,7 @@ export function buildMCDADBUrl():string {
   return url;
 }
 
-export function buildMcdaDBConnectionConfig(): {
-  host: string;
-  user: string;
-  database: string;
-  password: string;
-} {
+export function buildDBConfig():DBConfig {
   const env = process.env;
   return {
     host: env.MCDAWEB_DB_HOST,

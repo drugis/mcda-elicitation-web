@@ -1,8 +1,9 @@
 'use strict';
-import express from 'express';
+import {Router} from 'express';
 import ScenarioHandler from './scenarioHandler';
+import IDB from './interface/IDB';
 
-export default function ScenarioRouter(db: any) {
+export default function ScenarioRouter(db: IDB) {
   const {
     query,
     queryForSubProblem,
@@ -11,8 +12,7 @@ export default function ScenarioRouter(db: any) {
     update,
     delete: del
   } = ScenarioHandler(db);
-  return express
-    .Router()
+  return Router()
     .get('/:workspaceId/scenarios', query)
     .get('/:workspaceId/problems/:subproblemId/scenarios', queryForSubProblem)
     .get('/:workspaceId/problems/:subproblemId/scenarios/:id', get)

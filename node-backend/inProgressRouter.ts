@@ -1,9 +1,10 @@
-import express from 'express';
+import {Router} from 'express';
 import InProgressHandler from './inProgressHandler';
-export default function InProgressRouter(db: any) {
+import IDB from './interface/IDB';
+
+export default function InProgressRouter(db: IDB) {
   const inProgressHandler = InProgressHandler(db);
-  return express
-    .Router()
+  return Router()
     .post('/', inProgressHandler.createEmpty)
     .get('/', inProgressHandler.query)
     .get('/:id', inProgressHandler.get)

@@ -4,12 +4,14 @@ import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
-import logger from './loggerTS';
+import logger from './logger';
 import {handleError} from './util';
 import WorkspaceRepository from './workspaceRepository';
 import ScenarioRepository from './scenarioRepository';
+import IDB from './interface/IDB';
+import {PoolClient} from 'pg';
 
-export default function ScenarioHandler(db: any) {
+export default function ScenarioHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
   const workspaceRepository = WorkspaceRepository(db);
 
@@ -101,7 +103,7 @@ export default function ScenarioHandler(db: any) {
         Number.parseInt(subproblemId),
         Number.parseInt(scenarioId)
       ),
-      (error: Error) => {
+      (error: Error): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -116,7 +118,7 @@ export default function ScenarioHandler(db: any) {
     workspaceId: string,
     subproblemId: number,
     scenarioId: number,
-    client: any,
+    client: PoolClient,
     transactionCallback: (error: Error) => void
   ) {
     waterfall(
@@ -152,7 +154,7 @@ export default function ScenarioHandler(db: any) {
   }
 
   function setDefaultScenario(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     scenarioId: number,
     defaultScenarioId: number,

@@ -1,11 +1,13 @@
 'use strict';
-import logger from './loggerTS';
+import logger from './logger';
 import {Error} from '@shared/interface/IError';
 import _ from 'lodash';
+import IDB from './interface/IDB';
+import {PoolClient, QueryResult} from 'pg';
 
-export default function SubproblemRepository(db: any) {
+export default function SubproblemRepository(db: IDB) {
   function create(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     title: string,
     definition: any,
@@ -17,7 +19,7 @@ export default function SubproblemRepository(db: any) {
     client.query(
       query,
       [workspaceId, title, definition],
-      (error: Error, result: {rows: [{id: number}]}) => {
+      (error: Error, result: QueryResult<{id: number}>): void => {
         if (error) {
           callback(error);
         } else {
@@ -77,7 +79,7 @@ export default function SubproblemRepository(db: any) {
   }
 
   function deleteSubproblem(
-    client: any,
+    client: PoolClient,
     subproblemId: number,
     callback: (error: Error) => void
   ): void {
