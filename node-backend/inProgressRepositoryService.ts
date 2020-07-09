@@ -45,7 +45,6 @@ import {TableInputMode} from 'app/ts/type/TableInputMode';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
-import {stringify} from 'querystring';
 
 export function mapWorkspace(
   queryResult: IWorkspaceQueryResult
@@ -1018,4 +1017,64 @@ export function buildPercentageMap(
     });
   });
   return _.fromPairs(values);
+}
+
+export function mapToCriteriaQueryResult(
+  criteria: ICriterion[],
+  inProgressId: string
+): ICriterionQueryResult[] {
+  return _.map(
+    criteria,
+    (criterion: ICriterion, index: number): ICriterionQueryResult => {
+      return {
+        id: criterion.id,
+        title: criterion.title,
+        description: criterion.description || '',
+        isfavourable: criterion.isFavourable,
+        orderindex: index,
+        inprogressworkspaceid: Number.parseInt(inProgressId)
+      };
+    }
+  );
+}
+
+export function mapToDataSourceQueryResult(
+  dataSources: IDataSource[],
+  inprogresId: string
+): IDataSourceQueryResult[] {
+  return _.map(
+    dataSources,
+    (item: IDataSource, index: number): IDataSourceQueryResult => {
+      return {
+        id: item.id,
+        orderindex: index,
+        criterionid: item.criterionId,
+        inprogressworkspaceid: Number.parseInt(inprogresId),
+        unitlabel: item.unitOfMeasurement.label,
+        unittype: item.unitOfMeasurement.type,
+        unitlowerbound: item.unitOfMeasurement.lowerBound,
+        unitupperbound: item.unitOfMeasurement.upperBound,
+        reference: item.reference || '',
+        strengthofevidence: item.strengthOfEvidence || '',
+        uncertainty: item.uncertainty || ''
+      };
+    }
+  );
+}
+
+export function mapToAlternativeQueryResult(
+  alternatives: IAlternative[],
+  inprogressId: string
+): IAlternativeQueryResult[] {
+  return _.map(
+    alternatives,
+    (alternative: IAlternative, index: number): IAlternativeQueryResult => {
+      return {
+        id: alternative.id,
+        orderindex: index,
+        inprogressworkspaceid: Number.parseInt(inprogressId),
+        title: alternative.title
+      };
+    }
+  );
 }

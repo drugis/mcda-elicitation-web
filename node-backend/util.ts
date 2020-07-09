@@ -4,12 +4,11 @@ import {Request} from 'express';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
 import logger from './logger';
-import ICriterion from '@shared/interface/ICriterion';
 
 export function getUserId(request: Request) {
   if (request.user && request.user) {
     return request.user;
-  } else if (request.session.user && request.session.user.id) {
+  } else if (request.session && request.session.user && request.session.user.id) {
     return request.session.user;
   } else {
     throw 'No user id found';

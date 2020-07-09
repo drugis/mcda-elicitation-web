@@ -68,11 +68,15 @@ import {
   finishDistributionCreation,
   isNotNMAEntry,
   mapAlternatives,
+  mapCellCommands,
   mapCellValues,
   mapCombinedResults,
   mapCriteria,
   mapDataSources,
+  mapToAlternativeQueryResult,
   mapToCellCommands,
+  mapToCriteriaQueryResult,
+  mapToDataSourceQueryResult,
   mapWorkspace
 } from '../node-backend/inProgressRepositoryService';
 
@@ -99,6 +103,7 @@ const idMap: Record<string, string> = {
   ds1Id: 'newDs1'
 };
 const isPercentageMap: Record<string, boolean> = {ds1Id: true};
+const inprogressId = '37';
 
 describe('inProgressRepositoryService', () => {
   describe('mapWorkspace', () => {
@@ -1655,6 +1660,138 @@ describe('inProgressRepositoryService', () => {
         ds1Id: 'unique_uuid',
         alt1Id: 'unique_uuid'
       };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('inProgressworkspaceId', () => {
+    it('should map criteria into CriteriaQueryResults', () => {
+      const criteria: ICriterion[] = [
+        {
+          dataSources: [],
+          description: 'desc',
+          id: 'crit1Id',
+          isFavourable: undefined,
+          title: 'title'
+        }
+      ];
+      const result = mapToCriteriaQueryResult(criteria, inprogressId);
+      const expectedResult: ICriterionQueryResult[] = [
+        {
+          id: 'crit1Id',
+          title: 'title',
+          description: 'desc',
+          isfavourable: undefined,
+          orderindex: 0,
+          inprogressworkspaceid: 37
+        }
+      ];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('mapToDataSourceQueryResult', () => {
+    it('should map data sources into DataSourceQueryResults', () => {
+      const dataSources: IDataSource[] = [
+        {
+          id: 'ds1Id',
+          reference: 'ref',
+          strengthOfEvidence: 'stronk',
+          uncertainty: 'unc',
+          unitOfMeasurement: {
+            label: 'some unit',
+            type: UnitOfMeasurementType.custom,
+            lowerBound: 0,
+            upperBound: Infinity
+          },
+          criterionId: 'crit1Id'
+        }
+      ];
+      const result = mapToDataSourceQueryResult(dataSources, inprogressId);
+      const expectedResult: IDataSourceQueryResult[] = [
+        {
+          id: 'ds1Id',
+          reference: 'ref',
+          strengthofevidence: 'stronk',
+          uncertainty: 'unc',
+
+          unitlabel: 'some unit',
+          unittype: UnitOfMeasurementType.custom,
+          unitlowerbound: 0,
+          unitupperbound: Infinity,
+          inprogressworkspaceid: 37,
+          criterionid: 'crit1Id',
+          orderindex: 0
+        }
+      ];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('mapToAlternativeQueryResult', () => {
+    it('should map criteria into CriteriaQueryResults', () => {
+      const alternatives: IAlternative[] = [
+        {
+          id: 'alt1Id',
+          title: 'alternative 1'
+        }
+      ];
+      const result = mapToAlternativeQueryResult(alternatives, inprogressId);
+      const expectedResult: IAlternativeQueryResult[] = [
+        {
+          id: 'alt1Id',
+          title: 'alternative 1',
+          inprogressworkspaceid: 37,
+          orderindex: 0
+        }
+      ];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('mapCellCommands', () => {
+    it('should map ICellCommands into IDataBaseInputCells', () => {
+      const cells: ICellCommand[] = [
+        {
+          inProgressWorkspaceId: 37,
+          alternativeId: 'alt1Id',
+          dataSourceId: 'ds1Id',
+          criterionId: 'crit1Id',
+          value: 42,
+          lowerBound: 1,
+          upperBound: 100,
+          isNotEstimableLowerBound: false,
+          isNotEstimableUpperBound: false,
+          text: undefined,
+          mean: undefined,
+          standardError: undefined,
+          alpha: undefined,
+          beta: undefined,
+          cellType: 'effect',
+          type: 'valueCI'
+        }
+      ];
+      const result = mapCellCommands(cells);
+      const expectedResult: IDatabaseInputCell[] = [
+        {
+          inprogressworkspaceid: 37,
+          alternativeid: 'alt1Id',
+          datasourceid: 'ds1Id',
+          criterionid: 'crit1Id',
+          val: 42,
+          lowerbound: 1,
+          upperbound: 100,
+          isnotestimablelowerbound: false,
+          isnotestimableupperbound: false,
+          txt: undefined,
+          mean: undefined,
+          standarderror: undefined,
+          alpha: undefined,
+          beta: undefined,
+          celltype: 'effect',
+          inputtype: 'valueCI'
+        }
+      ];
       expect(result).toEqual(expectedResult);
     });
   });

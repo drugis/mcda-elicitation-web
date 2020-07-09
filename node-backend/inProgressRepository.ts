@@ -30,7 +30,10 @@ import {
   mapCriteria,
   mapDataSources,
   mapToCellCommands,
-  mapWorkspace
+  mapWorkspace,
+  mapToDataSourceQueryResult,
+  mapToAlternativeQueryResult,
+  mapToCriteriaQueryResult
 } from './inProgressRepositoryService';
 import IDB, {ClientOrDB} from './interface/IDB';
 
@@ -158,22 +161,10 @@ export default function InProgressWorkspaceRepository(db: IDB) {
   function createInProgressCriteria(
     client: PoolClient,
     toCreate: ICriterion[],
-    inProgressworkspaceId: string,
+    inProgressId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ): void {
-    const toInsert = _.map(
-      toCreate,
-      (criterion: ICriterion, index: number): ICriterionQueryResult => {
-        return {
-          id: criterion.id,
-          title: criterion.title,
-          description: criterion.description || '',
-          isfavourable: criterion.isFavourable,
-          orderindex: index,
-          inprogressworkspaceid: Number.parseInt(inProgressworkspaceId)
-        };
-      }
-    );
+    const toInsert = mapToCriteriaQueryResult(toCreate, inProgressId);
     const columns = new pgp.helpers.ColumnSet(
       [
         'id',
@@ -190,35 +181,18 @@ export default function InProgressWorkspaceRepository(db: IDB) {
       if (error) {
         callback(error, null);
       } else {
-        callback(null, inProgressworkspaceId);
+        callback(null, inProgressId);
       }
     });
   }
 
   function createInProgressDataSources(
     client: PoolClient,
-    toCreate: IDataSource[],
-    inProgressworkspaceId: string,
+    dataSources: IDataSource[],
+    inProgressId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ): void {
-    const toInsert = _.map(
-      toCreate,
-      (item: IDataSource, index: number): IDataSourceQueryResult => {
-        return {
-          id: item.id,
-          orderindex: index,
-          criterionid: item.criterionId,
-          inprogressworkspaceid: Number.parseInt(inProgressworkspaceId),
-          unitlabel: item.unitOfMeasurement.label,
-          unittype: item.unitOfMeasurement.type,
-          unitlowerbound: item.unitOfMeasurement.lowerBound,
-          unitupperbound: item.unitOfMeasurement.upperBound,
-          reference: item.reference || '',
-          strengthofevidence: item.strengthOfEvidence || '',
-          uncertainty: item.uncertainty || ''
-        };
-      }
-    );
+    const toInsert = mapToDataSourceQueryResult(dataSources, inProgressId);
     const columns = new pgp.helpers.ColumnSet(
       [
         'id',
@@ -240,28 +214,18 @@ export default function InProgressWorkspaceRepository(db: IDB) {
       if (error) {
         callback(error, null);
       } else {
-        callback(null, inProgressworkspaceId);
+        callback(null, inProgressId);
       }
     });
   }
 
   function createInProgressAlternatives(
     client: PoolClient,
-    toCreate: IAlternative[],
-    inProgressworkspaceId: string,
-    callback: (error: any | null, inProgressworkspaceId: string) => {}
+    alternatives: IAlternative[],
+    inProgressId: string,
+    callback: (error: any | null, inProgressId: string) => {}
   ): void {
-    const toInsert = _.map(
-      toCreate,
-      (alternative: IAlternative, index: number): IAlternativeQueryResult => {
-        return {
-          id: alternative.id,
-          orderindex: index,
-          inprogressworkspaceid: Number.parseInt(inProgressworkspaceId),
-          title: alternative.title
-        };
-      }
-    );
+    const toInsert = mapToAlternativeQueryResult(alternatives, inProgressId);
     const columns = new pgp.helpers.ColumnSet(
       ['id', 'orderindex', 'inprogressworkspaceid', 'title'],
       {table: 'inprogressalternative'}
@@ -271,7 +235,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
       if (error) {
         callback(error, null);
       } else {
-        callback(null, inProgressworkspaceId);
+        callback(null, inProgressId);
       }
     });
   }
