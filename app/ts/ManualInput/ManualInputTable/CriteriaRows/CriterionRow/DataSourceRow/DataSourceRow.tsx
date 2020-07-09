@@ -26,7 +26,7 @@ export default function DataSourceRow({
   isFirstRowForCriterion: boolean;
 }) {
   const {criterion} = useContext(DataSourceRowContext);
-  const {alternatives} = useContext(ManualInputContext);
+  const {alternatives, useFavourability} = useContext(ManualInputContext);
   const numberOfColumns = alternatives.length + 6;
   const numberOfDataSourceRows = criterion.dataSources.length;
 
@@ -74,9 +74,13 @@ export default function DataSourceRow({
               <Grid item xs={12}>
                 <DeleteCriterionButton />
               </Grid>
-              <Grid item xs={12}>
-                <ChangeFavourabilityButton />
-              </Grid>
+              {useFavourability ? (
+                <Grid item xs={12}>
+                  <ChangeFavourabilityButton />
+                </Grid>
+              ) : (
+                <></>
+              )}
             </Grid>
           </TableCell>
           <TableCell rowSpan={numberOfDataSourceRows} align="center">

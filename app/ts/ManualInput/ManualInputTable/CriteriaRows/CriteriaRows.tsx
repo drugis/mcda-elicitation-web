@@ -44,24 +44,27 @@ export default function CriteriaRows() {
     criterion: ICriterion,
     criterionIndex: number
   ): JSX.Element[] {
-    return _.map(criterion.dataSources, (dataSource, dataSourceIndex) => {
-      return (
-        <DataSourceRowContextProviderComponent
-          key={dataSource.id}
-          criterion={criterion}
-          dataSource={dataSource}
-          nextCriterion={localCriteria[criterionIndex + 1]}
-          previousCriterion={localCriteria[criterionIndex - 1]}
-          previousDataSource={criterion.dataSources[dataSourceIndex - 1]}
-          nextDataSource={criterion.dataSources[dataSourceIndex + 1]}
-        >
-          <DataSourceRow
+    return _.map(
+      criterion.dataSources,
+      (dataSource, dataSourceIndex: number) => {
+        return (
+          <DataSourceRowContextProviderComponent
+            key={dataSource.id}
+            criterion={criterion}
             dataSource={dataSource}
-            isFirstRowForCriterion={dataSourceIndex === 0}
-          />
-        </DataSourceRowContextProviderComponent>
-      );
-    });
+            nextCriterion={localCriteria[criterionIndex + 1]}
+            previousCriterion={localCriteria[criterionIndex - 1]}
+            previousDataSource={criterion.dataSources[dataSourceIndex - 1]}
+            nextDataSource={criterion.dataSources[dataSourceIndex + 1]}
+          >
+            <DataSourceRow
+              dataSource={dataSource}
+              isFirstRowForCriterion={dataSourceIndex === 0}
+            />
+          </DataSourceRowContextProviderComponent>
+        );
+      }
+    );
   }
 
   if (useFavourability) {
