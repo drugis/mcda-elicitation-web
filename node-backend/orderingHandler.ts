@@ -10,10 +10,10 @@ import IDB from './interface/IDB';
 export default function OrderingHandler(db: IDB) {
   const orderingRepository = OrderingRepository(db);
 
-  function get(request: Request, response: Response, next: any) {
+  function get(request: Request, response: Response, next: any): void {
     orderingRepository.get(
       request.params.workspaceId,
-      (error: Error, result: any) => {
+      (error: Error, result: any): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -25,11 +25,11 @@ export default function OrderingHandler(db: IDB) {
     );
   }
 
-  function update(request: Request, response: Response, next: any) {
+  function update(request: Request, response: Response, next: any): void {
     orderingRepository.updateDirect(
       request.params.workspaceId,
       request.body,
-      (error: Error) => {
+      (error: Error): void => {
         if (error) {
           handleError(error, next);
         } else {

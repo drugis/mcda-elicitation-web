@@ -4,6 +4,7 @@ import {Request} from 'express';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
 import logger from './logger';
+import ICriterion from '@shared/interface/ICriterion';
 
 export function getUserId(request: Request) {
   if (request.user && request.user) {
@@ -23,21 +24,21 @@ export function handleError(error: Error, next: any): void {
   });
 }
 
-export function getRanges(problem: IProblem) {
+export function getRanges(problem: IProblem): Record<string, any> {
   return _.reduce(
     problem.criteria,
-    function (accum: Record<string, any>, criterion, key) {
+    (accum: Record<string, any>, criterion, key): Record<string, any> => {
       accum[key] = _.pick(criterion, ['pvf.range']);
       return accum;
     },
-    {} as IProblem
+    {}
   );
 }
 
-export function reduceProblem(problem: IProblem) {
-  var criteria = _.reduce(
+export function reduceProblem(problem: IProblem): Record<string, any> {
+  const criteria = _.reduce(
     problem.criteria,
-    function (accum: Record<string, any>, criterion, key) {
+    function (accum: Record<string, any>, criterion, key): Record<string, any> {
       accum[key] = _.pick(criterion, ['scale', 'pvf', 'title']);
       return accum;
     },

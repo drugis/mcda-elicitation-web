@@ -25,7 +25,7 @@ import OrderingRepository from './orderingRepository';
 import {getUserId, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
 import WorkspaceRepository from './workspaceRepository';
-import { PoolClient } from 'pg';
+import {PoolClient} from 'pg';
 
 export default function InProgressHandler(db: IDB) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);
@@ -95,7 +95,7 @@ export default function InProgressHandler(db: IDB) {
   function get(request: Request, response: Response, next: () => void): void {
     inProgressWorkspaceRepository.get(
       request.params.id,
-      (error: any, inProgressWorkspace: IInProgressMessage) => {
+      (error: any, inProgressWorkspace: IInProgressMessage): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -113,7 +113,7 @@ export default function InProgressHandler(db: IDB) {
   ): void {
     inProgressWorkspaceRepository.updateWorkspace(
       request.body,
-      (error: any) => {
+      (error: any): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -129,13 +129,16 @@ export default function InProgressHandler(db: IDB) {
     next: () => void
   ): void {
     const command: ICriterionCommand = request.body;
-    inProgressWorkspaceRepository.upsertCriterion(command, (error: any) => {
-      if (error) {
-        handleError(error, next);
-      } else {
-        response.sendStatus(OK);
+    inProgressWorkspaceRepository.upsertCriterion(
+      command,
+      (error: any): void => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.sendStatus(OK);
+        }
       }
-    });
+    );
   }
 
   function deleteCriterion(
@@ -145,7 +148,7 @@ export default function InProgressHandler(db: IDB) {
   ): void {
     inProgressWorkspaceRepository.deleteCriterion(
       request.params.criterionId,
-      (error: any) => {
+      (error: any): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -231,13 +234,16 @@ export default function InProgressHandler(db: IDB) {
     next: () => void
   ): void {
     const cells: ICellCommand[] = [request.body];
-    inProgressWorkspaceRepository.upsertCellsDirectly(cells, (error: any) => {
-      if (error) {
-        handleError(error, next);
-      } else {
-        response.sendStatus(OK);
+    inProgressWorkspaceRepository.upsertCellsDirectly(
+      cells,
+      (error: any): void => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.sendStatus(OK);
+        }
       }
-    });
+    );
   }
 
   function createWorkspace(
@@ -294,7 +300,7 @@ export default function InProgressHandler(db: IDB) {
           error: Error,
           createdWorkspaceInfo?: IWorkspaceInfo
         ) => void
-      ) => {
+      ): void => {
         waterfall(
           [
             _.partial(

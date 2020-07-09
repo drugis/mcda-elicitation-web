@@ -3,37 +3,46 @@ import InProgressHandler from './inProgressHandler';
 import IDB from './interface/IDB';
 
 export default function InProgressRouter(db: IDB) {
-  const inProgressHandler = InProgressHandler(db);
+  const {
+    createEmpty,
+    query,
+    get,
+    delete: del,
+    updateWorkspace,
+    createCopy,
+    updateCriterion,
+    deleteCriterion,
+    updateDataSource,
+    deleteDataSource,
+    updateAlternative,
+    deleteAlternative,
+    updateCell,
+    createWorkspace
+  } = InProgressHandler(db);
   return Router()
-    .post('/', inProgressHandler.createEmpty)
-    .get('/', inProgressHandler.query)
-    .get('/:id', inProgressHandler.get)
-    .delete('/:id', inProgressHandler.delete)
-    .put('/:id', inProgressHandler.updateWorkspace)
+    .post('/', createEmpty)
+    .get('/', query)
+    .get('/:id', get)
+    .delete('/:id', del)
+    .put('/:id', updateWorkspace)
 
-    .post('/createCopy', inProgressHandler.createCopy)
+    .post('/createCopy', createCopy)
 
-    .put('/:id/criteria/:criterionId', inProgressHandler.updateCriterion)
-    .delete('/:id/criteria/:criterionId', inProgressHandler.deleteCriterion)
+    .put('/:id/criteria/:criterionId', updateCriterion)
+    .delete('/:id/criteria/:criterionId', deleteCriterion)
 
     .put(
       '/:id/criteria/:criterionId/dataSources/:dataSourceId',
-      inProgressHandler.updateDataSource
+      updateDataSource
     )
     .delete(
       '/:id/criteria/:criterionId/dataSources/:dataSourceId',
-      inProgressHandler.deleteDataSource
+      deleteDataSource
     )
 
-    .put(
-      '/:id/alternatives/:alternativeId',
-      inProgressHandler.updateAlternative
-    )
-    .delete(
-      '/:id/alternatives/:alternativeId',
-      inProgressHandler.deleteAlternative
-    )
-    .put('/:id/cells', inProgressHandler.updateCell)
+    .put('/:id/alternatives/:alternativeId', updateAlternative)
+    .delete('/:id/alternatives/:alternativeId', deleteAlternative)
+    .put('/:id/cells', updateCell)
 
-    .post('/:id/doCreateWorkspace', inProgressHandler.createWorkspace);
+    .post('/:id/doCreateWorkspace', createWorkspace);
 }

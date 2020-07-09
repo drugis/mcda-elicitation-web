@@ -15,14 +15,18 @@ export default function ScenarioHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
   const workspaceRepository = WorkspaceRepository(db);
 
-  function query(request: Request, response: Response, next: any) {
+  function query(request: Request, response: Response, next: any): void {
     scenarioRepository.query(
       request.params.workspaceId,
       _.partial(defaultCallback, response, next)
     );
   }
 
-  function queryForSubProblem(request: Request, response: Response, next: any) {
+  function queryForSubProblem(
+    request: Request,
+    response: Response,
+    next: any
+  ): void {
     const {workspaceId, subproblemId} = request.params;
     scenarioRepository.queryForSubProblem(
       workspaceId,
@@ -31,7 +35,7 @@ export default function ScenarioHandler(db: IDB) {
     );
   }
 
-  function get(request: Request, response: Response, next: any) {
+  function get(request: Request, response: Response, next: any): void {
     scenarioRepository.get(
       request.params.id,
       _.partial(defaultCallback, response, next)
@@ -43,7 +47,7 @@ export default function ScenarioHandler(db: IDB) {
     next: any,
     error: Error,
     result: any
-  ) {
+  ): void {
     if (error) {
       next(error);
     } else {
@@ -51,7 +55,7 @@ export default function ScenarioHandler(db: IDB) {
     }
   }
 
-  function create(request: Request, response: Response, next: any) {
+  function create(request: Request, response: Response, next: any): void {
     scenarioRepository.createDirectly(
       request.params.workspaceId,
       Number.parseInt(request.params.subproblemId),
@@ -60,7 +64,7 @@ export default function ScenarioHandler(db: IDB) {
         problem: request.body.state.problem,
         prefs: request.body.state.prefs
       },
-      (error: Error, id?: number) => {
+      (error: Error, id?: number): void => {
         if (error) {
           next(error);
         } else {
@@ -71,12 +75,12 @@ export default function ScenarioHandler(db: IDB) {
     );
   }
 
-  function update(request: Request, response: Response, next: any) {
+  function update(request: Request, response: Response, next: any): void {
     scenarioRepository.update(
       request.body.state,
       request.body.title,
       request.body.id,
-      (error: Error) => {
+      (error: Error): void => {
         if (error) {
           next(error);
         } else {
@@ -86,7 +90,11 @@ export default function ScenarioHandler(db: IDB) {
     );
   }
 
-  function deleteScenario(request: Request, response: Response, next: any) {
+  function deleteScenario(
+    request: Request,
+    response: Response,
+    next: any
+  ): void {
     const {subproblemId, id: scenarioId, workspaceId} = request.params;
     logger.debug(
       'Deleting workspace/' +
@@ -120,7 +128,7 @@ export default function ScenarioHandler(db: IDB) {
     scenarioId: number,
     client: PoolClient,
     transactionCallback: (error: Error) => void
-  ) {
+  ): void {
     waterfall(
       [
         _.partial(scenarioRepository.getScenarioIdsForSubproblem, subproblemId),
@@ -146,7 +154,7 @@ export default function ScenarioHandler(db: IDB) {
     } else {
       workspaceRepository.getDefaultScenarioId(
         workspaceId,
-        (error: Error, defaultScenarioId: string) => {
+        (error: Error, defaultScenarioId: string): void => {
           callback(error, defaultScenarioId, scenarioIds);
         }
       );
@@ -167,7 +175,7 @@ export default function ScenarioHandler(db: IDB) {
         client,
         workspaceId,
         newDefaultScenario,
-        (error) => {
+        (error): void => {
           // discarding extra result arguments to make waterfall cleaner
           callback(error);
         }
@@ -181,7 +189,7 @@ export default function ScenarioHandler(db: IDB) {
     scenarioIds: number[],
     currentDefaultScenarioId: number
   ): number {
-    return _.reject(scenarioIds, (id: number) => {
+    return _.reject(scenarioIds, (id: number): boolean => {
       return id === currentDefaultScenarioId;
     })[0];
   }

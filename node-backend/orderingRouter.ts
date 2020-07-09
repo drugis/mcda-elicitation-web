@@ -4,8 +4,8 @@ import {Router} from 'express';
 import IDB from './interface/IDB';
 
 export default function OrderingRouter(db: IDB) {
-  const orderingHandler = OrderingHandler(db);
+  const {get, update} = OrderingHandler(db);
   return Router()
-    .get('/:workspaceId/ordering/', orderingHandler.get)
-    .put('/:workspaceId/ordering/', orderingHandler.update);
+    .get('/:workspaceId/ordering/', get)
+    .put('/:workspaceId/ordering/', update);
 }

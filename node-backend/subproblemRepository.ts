@@ -40,7 +40,7 @@ export default function SubproblemRepository(db: IDB) {
     db.query(
       query,
       [workspaceId, subproblemId],
-      (error: Error, result: {rows: [any]}) => {
+      (error: Error, result: QueryResult<any>) => {
         if (error) {
           callback(error);
         } else {
@@ -57,7 +57,7 @@ export default function SubproblemRepository(db: IDB) {
     logger.debug('retrieving subproblems for workspace: ' + workspaceId);
     const query =
       'SELECT id, workspaceId AS "workspaceId", title, definition FROM subproblem WHERE workspaceId = $1';
-    db.query(query, [workspaceId], (error: Error, result: {rows: any[]}) => {
+    db.query(query, [workspaceId], (error: Error, result: QueryResult<any>) => {
       if (error) {
         callback(error);
       } else {
@@ -96,8 +96,8 @@ export default function SubproblemRepository(db: IDB) {
     const query = 'SELECT id FROM subproblem WHERE workspaceid = $1';
     db.query(query, [workspaceId], function (
       error: Error,
-      result: {rows: string[]}
-    ) {
+      result: QueryResult<{id: string}>
+    ): void {
       if (error) {
         callback(error);
       } else {

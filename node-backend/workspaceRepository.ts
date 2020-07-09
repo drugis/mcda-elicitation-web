@@ -18,7 +18,7 @@ export default function WorkspaceRepository(db: IDB) {
     db.query(
       query,
       [workspaceId],
-      (error: Error, result: {rows: IOldWorkspace[]}) => {
+      (error: Error, result: QueryResult<IOldWorkspace>) => {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {

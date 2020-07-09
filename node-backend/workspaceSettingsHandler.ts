@@ -10,10 +10,10 @@ import IDB from './interface/IDB';
 export default function WorkspaceSettingsHandler(db: IDB) {
   const workspaceSettingsRepository = WorkspaceSettingsRepository(db);
 
-  function get(request: Request, response: Response, next: any) {
+  function get(request: Request, response: Response, next: any): void {
     workspaceSettingsRepository.get(
       request.params.workspaceId,
-      (error: Error, result: any) => {
+      (error: Error, result: any): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -23,11 +23,11 @@ export default function WorkspaceSettingsHandler(db: IDB) {
     );
   }
 
-  function put(request: Request, response: Response, next: any) {
+  function put(request: Request, response: Response, next: any): void {
     workspaceSettingsRepository.put(
       request.params.workspaceId,
       request.body,
-      (error: Error) => {
+      (error: Error): void => {
         if (error) {
           handleError(error, next);
         } else {

@@ -201,13 +201,13 @@ export default function SubproblemHandler(db: IDB) {
     response: Response,
     next: any
   ): void {
-    const {workspaceId, subproblemIdString} = request.params;
-    const subproblemId = Number.parseInt(subproblemIdString);
+    const {workspaceId, subproblemId} = request.params;
+    const subproblemIdNumber = Number.parseInt(subproblemId);
     logger.debug(
       'Deleting workspace/' + workspaceId + '/problem/' + subproblemId
     );
     db.runInTransaction(
-      _.partial(deleteTransaction, workspaceId, subproblemId),
+      _.partial(deleteTransaction, workspaceId, subproblemIdNumber),
       (error: Error) => {
         if (error) {
           handleError(error, next);

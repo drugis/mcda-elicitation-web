@@ -22,7 +22,7 @@ export default function WorkspaceHandler(db: IDB) {
   function query(request: Request, response: Response, next: any): void {
     workspaceRepository.query(
       getUserId(request).id,
-      (error: Error, result: IOldWorkspace[]) => {
+      (error: Error, result: IOldWorkspace[]): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -68,7 +68,7 @@ export default function WorkspaceHandler(db: IDB) {
     client: PoolClient,
     request: Request,
     callback: (error: Error, id: string) => void
-  ) {
+  ): void {
     logger.debug('creating new workspace');
 
     const owner = getUserId(request).id;
@@ -96,7 +96,7 @@ export default function WorkspaceHandler(db: IDB) {
       workspaceId,
       'Default',
       definition,
-      (error: Error, subproblemId: number) => {
+      (error: Error, subproblemId: number): void => {
         if (error) {
           callback(error);
         } else {
@@ -121,7 +121,7 @@ export default function WorkspaceHandler(db: IDB) {
       client,
       workspaceId,
       subproblemId,
-      (error: Error) => {
+      (error: Error): void => {
         if (error) {
           callback(error);
         } else {
@@ -148,7 +148,7 @@ export default function WorkspaceHandler(db: IDB) {
       subproblemId,
       'Default',
       state,
-      (error: Error, scenarioId: number) => {
+      (error: Error, scenarioId: number): void => {
         if (error) {
           callback(error);
         } else {
@@ -169,7 +169,7 @@ export default function WorkspaceHandler(db: IDB) {
       client,
       workspaceId,
       scenarioId,
-      (error: Error) => {
+      (error: Error): void => {
         if (error) {
           callback(error);
         } else {
@@ -207,8 +207,8 @@ export default function WorkspaceHandler(db: IDB) {
     );
   }
 
-  function del(request: Request, response: Response, next: any) {
-    workspaceRepository.delete(request.params.id, (error: Error) => {
+  function del(request: Request, response: Response, next: any): void {
+    workspaceRepository.delete(request.params.id, (error: Error): void => {
       if (error) {
         handleError(error, next);
       } else {

@@ -149,7 +149,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
         toCreate.title,
         toCreate.therapeuticContext
       ],
-      (error: any, result: {rows: any[]}): void => {
+      (error: any, result: QueryResult<{id: string}>): void => {
         callback(error, error || result.rows[0].id);
       }
     );
@@ -161,16 +161,19 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     inProgressworkspaceId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ): void {
-    const toInsert = _.map(toCreate, (criterion: ICriterion, index: number) => {
-      return {
-        id: criterion.id,
-        title: criterion.title,
-        description: criterion.description || '',
-        isfavourable: criterion.isFavourable,
-        orderindex: index,
-        inprogressworkspaceid: inProgressworkspaceId
-      };
-    });
+    const toInsert = _.map(
+      toCreate,
+      (criterion: ICriterion, index: number): ICriterionQueryResult => {
+        return {
+          id: criterion.id,
+          title: criterion.title,
+          description: criterion.description || '',
+          isfavourable: criterion.isFavourable,
+          orderindex: index,
+          inprogressworkspaceid: Number.parseInt(inProgressworkspaceId)
+        };
+      }
+    );
     const columns = new pgp.helpers.ColumnSet(
       [
         'id',
@@ -198,21 +201,24 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     inProgressworkspaceId: string,
     callback: (error: any | null, inProgressworkspaceId: string) => {}
   ): void {
-    const toInsert = _.map(toCreate, (item: IDataSource, index: number) => {
-      return {
-        id: item.id,
-        orderindex: index,
-        criterionid: item.criterionId,
-        inprogressworkspaceid: inProgressworkspaceId,
-        unitlabel: item.unitOfMeasurement.label,
-        unittype: item.unitOfMeasurement.type,
-        unitlowerbound: item.unitOfMeasurement.lowerBound,
-        unitupperbound: item.unitOfMeasurement.upperBound,
-        reference: item.reference || '',
-        strengthofevidence: item.strengthOfEvidence || '',
-        uncertainty: item.uncertainty || ''
-      };
-    });
+    const toInsert = _.map(
+      toCreate,
+      (item: IDataSource, index: number): IDataSourceQueryResult => {
+        return {
+          id: item.id,
+          orderindex: index,
+          criterionid: item.criterionId,
+          inprogressworkspaceid: Number.parseInt(inProgressworkspaceId),
+          unitlabel: item.unitOfMeasurement.label,
+          unittype: item.unitOfMeasurement.type,
+          unitlowerbound: item.unitOfMeasurement.lowerBound,
+          unitupperbound: item.unitOfMeasurement.upperBound,
+          reference: item.reference || '',
+          strengthofevidence: item.strengthOfEvidence || '',
+          uncertainty: item.uncertainty || ''
+        };
+      }
+    );
     const columns = new pgp.helpers.ColumnSet(
       [
         'id',
@@ -247,11 +253,11 @@ export default function InProgressWorkspaceRepository(db: IDB) {
   ): void {
     const toInsert = _.map(
       toCreate,
-      (alternative: IAlternative, index: number) => {
+      (alternative: IAlternative, index: number): IAlternativeQueryResult => {
         return {
           id: alternative.id,
           orderindex: index,
-          inprogressworkspaceid: inProgressworkspaceId,
+          inprogressworkspaceid: Number.parseInt(inProgressworkspaceId),
           title: alternative.title
         };
       }
@@ -288,7 +294,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
             Record<string, Record<string, Distribution>>
           ]
         ]
-      ) => {
+      ): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -356,7 +362,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: ICriterionQueryResult[]}): void => {
+      (error: any, result: QueryResult<ICriterionQueryResult>): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -376,7 +382,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: IAlternativeQueryResult[]}): void => {
+      (error: any, result: QueryResult<IAlternativeQueryResult>): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -396,7 +402,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: IDataSourceQueryResult[]}): void => {
+      (error: any, result: QueryResult<IDataSourceQueryResult>): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -422,7 +428,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client.query(
       query,
       [inProgressId],
-      (error: any, result: {rows: IValueCellQueryResult[]}): void => {
+      (error: any, result: QueryResult<IValueCellQueryResult>): void => {
         if (error) {
           callback(error, null);
         } else {
@@ -651,7 +657,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client.query(
       query,
       [userId, problem.title, problem],
-      (error: any, result: {rows: any[]}): void => {
+      (error: any, result: QueryResult<{id: string}>): void => {
         callback(error, error || result.rows[0].id);
       }
     );
@@ -683,12 +689,16 @@ export default function InProgressWorkspaceRepository(db: IDB) {
 
   function query(
     ownerId: number,
-    callback: (error: Error, result: any[]) => void
+    callback: (error: Error, result: IInProgressWorkspace[]) => void
   ): void {
     const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
-    db.query(query, [ownerId], (error: Error, result: {rows: any[]}): void => {
-      callback(error, error ? null : result.rows);
-    });
+    db.query(
+      query,
+      [ownerId],
+      (error: Error, result: QueryResult<IInProgressWorkspace>): void => {
+        callback(error, error ? null : result.rows);
+      }
+    );
   }
 
   return {

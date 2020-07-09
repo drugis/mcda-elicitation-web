@@ -2,8 +2,8 @@
 import logger from './logger';
 import _ from 'lodash';
 import {Error} from '@shared/interface/IError';
-import IDB, { ClientOrDB } from './interface/IDB';
-import { PoolClient } from 'pg';
+import IDB, {ClientOrDB} from './interface/IDB';
+import {PoolClient, QueryResult} from 'pg';
 
 export default function ScenarioRepository(db: IDB) {
   function createInTransaction(
@@ -13,7 +13,7 @@ export default function ScenarioRepository(db: IDB) {
     title: string,
     state: any,
     callback: (error: Error, id?: number) => void
-  ) {
+  ): void {
     create(client, workspaceId, subproblemId, title, state, callback);
   }
 
@@ -23,7 +23,7 @@ export default function ScenarioRepository(db: IDB) {
     title: string,
     state: any,
     callback: (error: Error, id?: number) => void
-  ) {
+  ): void {
     create(db, workspaceId, subproblemId, title, state, callback);
   }
 
@@ -34,14 +34,14 @@ export default function ScenarioRepository(db: IDB) {
     title: string,
     state: any,
     callback: (error: Error, id?: number) => void
-  ) {
+  ): void {
     logger.debug('Creating scenario');
     const query =
       'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
     clientOrDB.query(
       query,
       [workspaceId, subproblemId, title, state],
-      (error: Error, result: {rows: [{id: number}]}) => {
+      (error: Error, result: QueryResult<{id: number}>) => {
         if (error) {
           callback(error);
         } else {
@@ -54,7 +54,7 @@ export default function ScenarioRepository(db: IDB) {
   function query(
     workspaceId: string,
     callback: (error: Error, scenarios?: any[]) => void
-  ) {
+  ): void {
     logger.debug('Getting scenarios for workspace: ' + workspaceId);
     const query =
       'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
@@ -85,8 +85,8 @@ export default function ScenarioRepository(db: IDB) {
   function resultsCallback(
     callback: (error: Error, result?: any) => void,
     error: Error,
-    result: {rows: any[]}
-  ) {
+    result: QueryResult<any>
+  ): void {
     if (error) {
       callback(error);
     } else {
@@ -96,11 +96,11 @@ export default function ScenarioRepository(db: IDB) {
   function get(
     scenarioId: string,
     callback: (error: Error, scenario?: any) => void
-  ) {
+  ): void {
     logger.debug('Getting scenario: ' + scenarioId);
     const query =
       'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
-    db.query(query, [scenarioId], (error: Error, result: {rows: any[]}) => {
+    db.query(query, [scenarioId], (error: Error, result: QueryResult<any>) => {
       if (error) {
         callback(error);
       } else if (!result.rows.length) {
@@ -119,7 +119,7 @@ export default function ScenarioRepository(db: IDB) {
     title: string,
     scenarioId: number,
     callback: (error: Error) => void
-  ) {
+  ): void {
     logger.debug('updating scenario:' + scenarioId);
     const query = 'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
     db.query(
@@ -142,7 +142,7 @@ export default function ScenarioRepository(db: IDB) {
     client: PoolClient,
     subproblemId: number,
     callback: (error: Error) => void
-  ) {
+  ): void {
     const query = 'DELETE FROM scenario WHERE id = $1';
     client.query(query, [subproblemId], callback);
   }
@@ -150,13 +150,13 @@ export default function ScenarioRepository(db: IDB) {
   function getScenarioIdsForSubproblem(
     subproblemId: number,
     callback: (error: Error, scenarioIds?: number[]) => void
-  ) {
+  ): void {
     logger.debug('Getting scenario ids for: ' + subproblemId);
     const query = 'SELECT id FROM scenario WHERE subproblemId = $1';
     db.query(
       query,
       [subproblemId],
-      (error: Error, result: {rows: {id: number}[]}) => {
+      (error: Error, result: QueryResult<{id: number}>) => {
         if (error) {
           callback(error);
         } else {

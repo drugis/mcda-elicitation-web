@@ -45,6 +45,7 @@ import {TableInputMode} from 'app/ts/type/TableInputMode';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
+import {stringify} from 'querystring';
 
 export function mapWorkspace(
   queryResult: IWorkspaceQueryResult
@@ -60,15 +61,17 @@ export function mapWorkspace(
 export function mapCriteria(criteria: ICriterionQueryResult[]): ICriterion[] {
   return _(criteria)
     .sortBy('orderindex')
-    .map((queryCriterion) => {
-      return {
-        id: queryCriterion.id,
-        title: queryCriterion.title,
-        description: queryCriterion.description,
-        isFavourable: queryCriterion.isfavourable,
-        dataSources: []
-      };
-    })
+    .map(
+      (queryCriterion): ICriterion => {
+        return {
+          id: queryCriterion.id,
+          title: queryCriterion.title,
+          description: queryCriterion.description,
+          isFavourable: queryCriterion.isfavourable,
+          dataSources: []
+        };
+      }
+    )
     .value();
 }
 
@@ -77,12 +80,14 @@ export function mapAlternatives(
 ): IAlternative[] {
   return _(alternatives)
     .sortBy('orderindex')
-    .map((queryAlternative) => {
-      return {
-        id: queryAlternative.id,
-        title: queryAlternative.title
-      };
-    })
+    .map(
+      (queryAlternative): IAlternative => {
+        return {
+          id: queryAlternative.id,
+          title: queryAlternative.title
+        };
+      }
+    )
     .value();
 }
 
@@ -91,27 +96,29 @@ export function mapDataSources(
 ): IDataSource[] {
   return _(dataSources)
     .sortBy('orderindex')
-    .map((queryDataSource) => {
-      return {
-        id: queryDataSource.id,
-        criterionId: queryDataSource.criterionid,
-        reference: queryDataSource.reference,
-        uncertainty: queryDataSource.uncertainty,
-        strengthOfEvidence: queryDataSource.strengthofevidence,
-        unitOfMeasurement: {
-          label: queryDataSource.unitlabel,
-          type: queryDataSource.unittype,
-          lowerBound:
-            queryDataSource.unitlowerbound === null
-              ? undefined
-              : queryDataSource.unitlowerbound,
-          upperBound:
-            queryDataSource.unitupperbound === null
-              ? undefined
-              : queryDataSource.unitupperbound
-        }
-      };
-    })
+    .map(
+      (queryDataSource): IDataSource => {
+        return {
+          id: queryDataSource.id,
+          criterionId: queryDataSource.criterionid,
+          reference: queryDataSource.reference,
+          uncertainty: queryDataSource.uncertainty,
+          strengthOfEvidence: queryDataSource.strengthofevidence,
+          unitOfMeasurement: {
+            label: queryDataSource.unitlabel,
+            type: queryDataSource.unittype,
+            lowerBound:
+              queryDataSource.unitlowerbound === null
+                ? undefined
+                : queryDataSource.unitlowerbound,
+            upperBound:
+              queryDataSource.unitupperbound === null
+                ? undefined
+                : queryDataSource.unitupperbound
+          }
+        };
+      }
+    )
     .value();
 }
 
@@ -136,7 +143,10 @@ function createEffectRecords(
 ): Record<string, Record<string, Effect>> {
   return _.reduce(
     effectQueryResults,
-    (accum: Record<string, Record<string, Effect>>, effectQueryResult) => {
+    (
+      accum: Record<string, Record<string, Effect>>,
+      effectQueryResult
+    ): Record<string, Record<string, Effect>> => {
       if (!accum[effectQueryResult.datasourceid]) {
         accum[effectQueryResult.datasourceid] = {};
       }
@@ -201,7 +211,7 @@ function createDistributionRecords(
     (
       accum: Record<string, Record<string, Distribution>>,
       distributionQueryResult
-    ) => {
+    ): Record<string, Record<string, Distribution>> => {
       if (!accum[distributionQueryResult.datasourceid]) {
         accum[distributionQueryResult.datasourceid] = {};
       }
@@ -301,39 +311,45 @@ function mapDataSourcesOntoCriteria(
   dataSources: IDataSource[]
 ): ICriterion[] {
   const dataSourcesGroupedByCriterion = _.groupBy(dataSources, 'criterionId');
-  return _.map(criteria, (criterion) => {
-    return {
-      ...criterion,
-      dataSources: dataSourcesGroupedByCriterion[criterion.id]
-        ? dataSourcesGroupedByCriterion[criterion.id]
-        : []
-    };
-  });
+  return _.map(
+    criteria,
+    (criterion): ICriterion => {
+      return {
+        ...criterion,
+        dataSources: dataSourcesGroupedByCriterion[criterion.id]
+          ? dataSourcesGroupedByCriterion[criterion.id]
+          : []
+      };
+    }
+  );
 }
 
 export function mapCellCommands(
   cellCommands: ICellCommand[]
 ): IDatabaseInputCell[] {
-  return _.map(cellCommands, (command) => {
-    return {
-      inprogressworkspaceid: command.inProgressWorkspaceId,
-      alternativeid: command.alternativeId,
-      datasourceid: command.dataSourceId,
-      criterionid: command.criterionId,
-      val: command.value,
-      lowerbound: command.lowerBound,
-      upperbound: command.upperBound,
-      isnotestimablelowerbound: command.isNotEstimableLowerBound,
-      isnotestimableupperbound: command.isNotEstimableUpperBound,
-      txt: command.text,
-      mean: command.mean,
-      standarderror: command.standardError,
-      alpha: command.alpha,
-      beta: command.beta,
-      celltype: command.cellType,
-      inputtype: command.type
-    };
-  });
+  return _.map(
+    cellCommands,
+    (command): IDatabaseInputCell => {
+      return {
+        inprogressworkspaceid: command.inProgressWorkspaceId,
+        alternativeid: command.alternativeId,
+        datasourceid: command.dataSourceId,
+        criterionid: command.criterionId,
+        val: command.value,
+        lowerbound: command.lowerBound,
+        upperbound: command.upperBound,
+        isnotestimablelowerbound: command.isNotEstimableLowerBound,
+        isnotestimableupperbound: command.isNotEstimableUpperBound,
+        txt: command.text,
+        mean: command.mean,
+        standarderror: command.standardError,
+        alpha: command.alpha,
+        beta: command.beta,
+        celltype: command.cellType,
+        inputtype: command.type
+      };
+    }
+  );
 }
 
 export function buildProblem(inProgressMessage: IInProgressMessage): IProblem {
@@ -704,7 +720,7 @@ export function buildIdMap(
 function buildGenericIdMap<T>(
   items: Record<string, T>
 ): Record<string, string> {
-  const values = _.map(items, (item, oldId: string) => {
+  const values = _.map(items, (item: any, oldId: string): [string, string] => {
     return [oldId, generateUuid()];
   });
   return _.fromPairs(values);
@@ -713,8 +729,8 @@ function buildGenericIdMap<T>(
 function buildDataSourcesIdMap(
   criteria: Record<string, IProblemCriterion>
 ): Record<string, string> {
-  const values = _.flatMap(criteria, (criterion) => {
-    return _.map(criterion.dataSources, (dataSource) => {
+  const values = _.flatMap(criteria, (criterion): [string, string][] => {
+    return _.map(criterion.dataSources, (dataSource): [string, string] => {
       return [dataSource.id, generateUuid()];
     });
   });
@@ -727,9 +743,12 @@ export function buildInProgressWorkspace(
   return {
     title: `Copy of ${workspace.problem.title}`,
     therapeuticContext: workspace.problem.description,
-    useFavourability: _.some(workspace.problem.criteria, (criterion) => {
-      return criterion.hasOwnProperty('isFavorable');
-    })
+    useFavourability: _.some(
+      workspace.problem.criteria,
+      (criterion): boolean => {
+        return criterion.hasOwnProperty('isFavorable');
+      }
+    )
   };
 }
 
@@ -737,15 +756,18 @@ export function buildInProgressCriteria(
   criteria: Record<string, IProblemCriterion>,
   idMap: Record<string, string>
 ): ICriterion[] {
-  return _.map(criteria, (criterion: IProblemCriterion, oldId: string) => {
-    return {
-      id: idMap[oldId],
-      title: criterion.title,
-      description: criterion.description,
-      isFavourable: !!criterion.isFavorable,
-      dataSources: buildInProgressDataSources(criterion, idMap[oldId], idMap)
-    };
-  });
+  return _.map(
+    criteria,
+    (criterion: IProblemCriterion, oldId: string): ICriterion => {
+      return {
+        id: idMap[oldId],
+        title: criterion.title,
+        description: criterion.description,
+        isFavourable: !!criterion.isFavorable,
+        dataSources: buildInProgressDataSources(criterion, idMap[oldId], idMap)
+      };
+    }
+  );
 }
 
 export function buildInProgressDataSources(
@@ -753,33 +775,39 @@ export function buildInProgressDataSources(
   criterionId: string,
   idMap: Record<string, string>
 ): IDataSource[] {
-  return _.map(criterion.dataSources, (dataSource) => {
-    return {
-      id: idMap[dataSource.id],
-      reference: dataSource.source,
-      unitOfMeasurement: {
-        label: dataSource.unitOfMeasurement.label,
-        type: dataSource.unitOfMeasurement.type,
-        lowerBound: dataSource.scale[0],
-        upperBound: dataSource.scale[1]
-      },
-      uncertainty: dataSource.uncertainties,
-      strengthOfEvidence: dataSource.strengthOfEvidence,
-      criterionId: criterionId
-    };
-  });
+  return _.map(
+    criterion.dataSources,
+    (dataSource): IDataSource => {
+      return {
+        id: idMap[dataSource.id],
+        reference: dataSource.source,
+        unitOfMeasurement: {
+          label: dataSource.unitOfMeasurement.label,
+          type: dataSource.unitOfMeasurement.type,
+          lowerBound: dataSource.scale[0],
+          upperBound: dataSource.scale[1]
+        },
+        uncertainty: dataSource.uncertainties,
+        strengthOfEvidence: dataSource.strengthOfEvidence,
+        criterionId: criterionId
+      };
+    }
+  );
 }
 
 export function buildInProgressAlternatives(
   alternatives: Record<string, {title: string}>,
   idMap: Record<string, string>
 ): IAlternative[] {
-  return _.map(alternatives, (alternative: {title: string}, oldId: string) => {
-    return {
-      id: idMap[oldId],
-      title: alternative.title
-    };
-  });
+  return _.map(
+    alternatives,
+    (alternative: {title: string}, oldId: string): IAlternative => {
+      return {
+        id: idMap[oldId],
+        title: alternative.title
+      };
+    }
+  );
 }
 
 export function buildInProgressEffects(
@@ -788,7 +816,7 @@ export function buildInProgressEffects(
   isPercentageMap: Record<string, boolean>
 ): Effect[] {
   return _(performanceTable)
-    .filter((entry: IPerformanceTableEntry) => {
+    .filter((entry: IPerformanceTableEntry): boolean => {
       return isNotNMAEntry(entry) && 'effect' in entry.performance;
     })
     .map(_.partial(buildEffect, idMap, isPercentageMap))
@@ -888,7 +916,7 @@ export function buildInProgressDistributions(
   isPercentageMap: Record<string, boolean>
 ): Distribution[] {
   return _(performanceTable)
-    .filter((entry: IPerformanceTableEntry) => {
+    .filter((entry: IPerformanceTableEntry): boolean => {
       return isNotNMAEntry(entry) && 'distribution' in entry.performance;
     })
     .map(_.partial(buildDistribution, idMap, isPercentageMap))
@@ -966,20 +994,23 @@ export function mapToCellCommands(
   inProgressId: number,
   cellType: TableInputMode
 ): ICellCommand[] {
-  return _.map(tableCells, (cell) => {
-    return {
-      ...cell,
-      cellType: cellType,
-      inProgressWorkspaceId: inProgressId
-    };
-  });
+  return _.map(
+    tableCells,
+    (cell): ICellCommand => {
+      return {
+        ...cell,
+        cellType: cellType,
+        inProgressWorkspaceId: inProgressId
+      };
+    }
+  );
 }
 
 export function buildPercentageMap(
   criteria: Record<string, IProblemCriterion>
 ): Record<string, boolean> {
-  const values = _.flatMap(criteria, (criterion) => {
-    return _.map(criterion.dataSources, (dataSource) => {
+  const values = _.flatMap(criteria, (criterion): [string, boolean][] => {
+    return _.map(criterion.dataSources, (dataSource): [string, boolean] => {
       return [
         dataSource.id,
         dataSource.unitOfMeasurement.type === 'percentage'

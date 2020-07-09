@@ -3,7 +3,7 @@
 import {Error} from '@shared/interface/IError';
 import logger from './logger';
 import IDB, {ClientOrDB} from './interface/IDB';
-import {PoolClient} from 'pg';
+import {PoolClient, QueryResult} from 'pg';
 
 export default function OrderingRepository(db: IDB) {
   function get(
@@ -14,7 +14,7 @@ export default function OrderingRepository(db: IDB) {
     db.query(
       'SELECT workspaceId AS "workspaceId", ordering FROM ordering WHERE workspaceId = $1',
       [workspaceId],
-      (error: Error, result: {rows: any[]}): void => {
+      (error: Error, result: QueryResult<any>): void => {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {
