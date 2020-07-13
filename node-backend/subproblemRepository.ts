@@ -1,11 +1,12 @@
-'use strict';
-import logger from './loggerTS';
+import logger from './logger';
 import {Error} from '@shared/interface/IError';
 import _ from 'lodash';
+import IDB from './interface/IDB';
+import {PoolClient, QueryResult} from 'pg';
 
-export default function SubproblemRepository(db: any) {
+export default function SubproblemRepository(db: IDB) {
   function create(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     title: string,
     definition: any,
@@ -17,7 +18,7 @@ export default function SubproblemRepository(db: any) {
     client.query(
       query,
       [workspaceId, title, definition],
-      (error: Error, result: {rows: [{id: number}]}) => {
+      (error: Error, result: QueryResult<{id: number}>): void => {
         if (error) {
           callback(error);
         } else {
@@ -38,7 +39,7 @@ export default function SubproblemRepository(db: any) {
     db.query(
       query,
       [workspaceId, subproblemId],
-      (error: Error, result: {rows: [any]}) => {
+      (error: Error, result: QueryResult<any>) => {
         if (error) {
           callback(error);
         } else {
@@ -55,7 +56,7 @@ export default function SubproblemRepository(db: any) {
     logger.debug('retrieving subproblems for workspace: ' + workspaceId);
     const query =
       'SELECT id, workspaceId AS "workspaceId", title, definition FROM subproblem WHERE workspaceId = $1';
-    db.query(query, [workspaceId], (error: Error, result: {rows: any[]}) => {
+    db.query(query, [workspaceId], (error: Error, result: QueryResult<any>) => {
       if (error) {
         callback(error);
       } else {
@@ -77,7 +78,7 @@ export default function SubproblemRepository(db: any) {
   }
 
   function deleteSubproblem(
-    client: any,
+    client: PoolClient,
     subproblemId: number,
     callback: (error: Error) => void
   ): void {
@@ -94,8 +95,8 @@ export default function SubproblemRepository(db: any) {
     const query = 'SELECT id FROM subproblem WHERE workspaceid = $1';
     db.query(query, [workspaceId], function (
       error: Error,
-      result: {rows: string[]}
-    ) {
+      result: QueryResult<{id: string}>
+    ): void {
       if (error) {
         callback(error);
       } else {

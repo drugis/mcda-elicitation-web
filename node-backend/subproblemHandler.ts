@@ -1,16 +1,17 @@
-'use strict';
-import logger from './loggerTS';
 import {Error} from '@shared/interface/IError';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
+import {PoolClient} from 'pg';
+import IDB from './interface/IDB';
+import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
 import {handleError} from './util';
 import WorkspaceRepository from './workspaceRepository';
 
-export default function SubproblemHandler(db: any) {
+export default function SubproblemHandler(db: IDB) {
   const subproblemRepository = SubproblemRepository(db);
   const scenarioRepository = ScenarioRepository(db);
   const workspaceRepository = WorkspaceRepository(db);
@@ -50,16 +51,16 @@ export default function SubproblemHandler(db: any) {
     const {workspaceId} = request.params;
     db.runInTransaction(
       _.partial(subproblemTransaction, request),
-      _.partial(createTransactionCallback, response, next, workspaceId)
+      _.partialRight(createTransactionCallback, response, next, workspaceId)
     );
   }
 
   function createTransactionCallback(
+    error: Error,
+    subproblemId: number,
     response: Response,
     next: any,
-    workspaceId: string,
-    error: Error,
-    subproblemId: number
+    workspaceId: string
   ): void {
     if (error) {
       handleError(error, next);
@@ -67,16 +68,16 @@ export default function SubproblemHandler(db: any) {
       retrieveSubProblem(
         workspaceId,
         subproblemId,
-        _.partial(retrieveSubProblemCallback, response, next)
+        _.partialRight(retrieveSubProblemCallback, response, next)
       );
     }
   }
 
   function retrieveSubProblemCallback(
-    response: Response,
-    next: any,
     error: Error,
-    subproblem: any
+    subproblem: any,
+    response: Response,
+    next: any
   ): void {
     if (error) {
       handleError(error, next);
@@ -89,7 +90,7 @@ export default function SubproblemHandler(db: any) {
 
   function subproblemTransaction(
     request: Request,
-    client: any,
+    client: PoolClient,
     transactionCallback: (error: Error, newSubproblemId?: number) => void
   ): void {
     waterfall(
@@ -104,7 +105,7 @@ export default function SubproblemHandler(db: any) {
   }
 
   function createSubProblem(
-    client: any,
+    client: PoolClient,
     request: Request,
     callback: (
       error: Error,
@@ -132,7 +133,7 @@ export default function SubproblemHandler(db: any) {
   }
 
   function createScenario(
-    client: any,
+    client: PoolClient,
     request: Request,
     workspaceId: string,
     subproblemId: number,
@@ -199,13 +200,13 @@ export default function SubproblemHandler(db: any) {
     response: Response,
     next: any
   ): void {
-    const {workspaceId, subproblemIdString} = request.params;
-    const subproblemId = Number.parseInt(subproblemIdString);
+    const {workspaceId, subproblemId} = request.params;
+    const subproblemIdNumber = Number.parseInt(subproblemId);
     logger.debug(
       'Deleting workspace/' + workspaceId + '/problem/' + subproblemId
     );
     db.runInTransaction(
-      _.partial(deleteTransaction, workspaceId, subproblemId),
+      _.partial(deleteTransaction, workspaceId, subproblemIdNumber),
       (error: Error) => {
         if (error) {
           handleError(error, next);
@@ -220,7 +221,7 @@ export default function SubproblemHandler(db: any) {
   function deleteTransaction(
     workspaceId: string,
     subproblemId: number,
-    client: any,
+    client: PoolClient,
     transactionCallback: (error: Error) => void
   ): void {
     waterfall(
@@ -281,7 +282,7 @@ export default function SubproblemHandler(db: any) {
   }
 
   function setDefaultSubproblem(
-    client: any,
+    client: PoolClient,
     subproblemId: number,
     workspaceId: string,
     subproblemIds: number[],
@@ -302,7 +303,7 @@ export default function SubproblemHandler(db: any) {
   }
 
   function setNewDefaultSubproblem(
-    client: any,
+    client: PoolClient,
     subproblemId: number,
     workspaceId: string,
     subproblemIds: number[],
@@ -338,7 +339,7 @@ export default function SubproblemHandler(db: any) {
   }
 
   function determineAndSetNewDefaultScenario(
-    client: any,
+    client: PoolClient,
     subproblemId: number,
     workspaceId: string,
     callback: (error: Error) => void
@@ -357,7 +358,7 @@ export default function SubproblemHandler(db: any) {
   }
 
   function setDefaultScenario(
-    client: any,
+    client: PoolClient,
     workspaceId: string,
     newDefaultScenario: number,
     callback: (error: Error) => void
@@ -373,7 +374,7 @@ export default function SubproblemHandler(db: any) {
   }
 
   function deleteSubproblemAction(
-    client: any,
+    client: PoolClient,
     subproblemId: number,
     callback: (error: Error) => void
   ): void {
