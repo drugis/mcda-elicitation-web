@@ -96,7 +96,7 @@ export function mapDataSources(
   return _(dataSources)
     .sortBy('orderindex')
     .map(
-      (queryDataSource): IDataSource => {
+      (queryDataSource: IDataSourceQueryResult): IDataSource => {
         return {
           id: queryDataSource.id,
           criterionId: queryDataSource.criterionid,
@@ -144,7 +144,7 @@ function createEffectRecords(
     effectQueryResults,
     (
       accum: Record<string, Record<string, Effect>>,
-      effectQueryResult
+      effectQueryResult: IDatabaseInputCell
     ): Record<string, Record<string, Effect>> => {
       if (!accum[effectQueryResult.datasourceid]) {
         accum[effectQueryResult.datasourceid] = {};
@@ -209,7 +209,7 @@ function createDistributionRecords(
     distributionQueryResults,
     (
       accum: Record<string, Record<string, Distribution>>,
-      distributionQueryResult
+      distributionQueryResult: IDatabaseInputCell
     ): Record<string, Record<string, Distribution>> => {
       if (!accum[distributionQueryResult.datasourceid]) {
         accum[distributionQueryResult.datasourceid] = {};
@@ -369,7 +369,7 @@ function buildCriteria(
   criteria: ICriterion[],
   useFavourability: boolean
 ): Record<string, IProblemCriterion> {
-  const newCriteria = _.map(criteria, function (criterion) {
+  const newCriteria = _.map(criteria, (criterion: ICriterion) => {
     const newCriterion = {
       title: criterion.title,
       description: criterion.description,
@@ -413,7 +413,7 @@ function buildAlternatives(
 ): Record<string, {title: string}> {
   return _(alternatives)
     .keyBy('id')
-    .mapValues(function (alternative) {
+    .mapValues((alternative) => {
       return _.pick(alternative, ['title']);
     })
     .value();
@@ -442,7 +442,7 @@ function buildEntriesForCriterion(
   distributions: Record<string, Record<string, Distribution>>,
   criterion: ICriterion
 ): IPerformanceTableEntry[][] {
-  return _.map(criterion.dataSources, function (dataSource) {
+  return _.map(criterion.dataSources, (dataSource: IDataSource) => {
     return buildPerformanceEntries(
       effects,
       distributions,
@@ -460,7 +460,7 @@ function buildPerformanceEntries(
   dataSource: IDataSource,
   alternatives: IAlternative[]
 ): IPerformanceTableEntry[] {
-  return _.map(alternatives, function (alternative) {
+  return _.map(alternatives, (alternative: IAlternative) => {
     const effectCell = effects[dataSource.id][alternative.id];
     const distributionCell = distributions[dataSource.id]
       ? distributions[dataSource.id][alternative.id]
@@ -622,7 +622,7 @@ export function createOrdering(
     alternatives: _.keys(alternatives),
     dataSources: _.reduce(
       criteria,
-      function (accum, criterion) {
+      (accum: string[], criterion: IProblemCriterion) => {
         return accum.concat(_.map(criterion.dataSources, 'id'));
       },
       []
@@ -728,8 +728,14 @@ function buildGenericIdMap<T>(
 function buildDataSourcesIdMap(
   criteria: Record<string, IProblemCriterion>
 ): Record<string, string> {
-  const values = _.flatMap(criteria, (criterion): [string, string][] => {
-    return _.map(criterion.dataSources, (dataSource): [string, string] => {
+  const values = _.flatMap(criteria, (criterion: IProblemCriterion): [
+    string,
+    string
+  ][] => {
+    return _.map(criterion.dataSources, (dataSource: IProblemDataSource): [
+      string,
+      string
+    ] => {
       return [dataSource.id, generateUuid()];
     });
   });
@@ -744,7 +750,7 @@ export function buildInProgressWorkspace(
     therapeuticContext: workspace.problem.description,
     useFavourability: _.some(
       workspace.problem.criteria,
-      (criterion): boolean => {
+      (criterion: IProblemCriterion): boolean => {
         return criterion.hasOwnProperty('isFavorable');
       }
     )
@@ -776,7 +782,7 @@ export function buildInProgressDataSources(
 ): IDataSource[] {
   return _.map(
     criterion.dataSources,
-    (dataSource): IDataSource => {
+    (dataSource: IProblemDataSource): IDataSource => {
       return {
         id: idMap[dataSource.id],
         reference: dataSource.source,
@@ -1008,8 +1014,14 @@ export function mapToCellCommands(
 export function buildPercentageMap(
   criteria: Record<string, IProblemCriterion>
 ): Record<string, boolean> {
-  const values = _.flatMap(criteria, (criterion): [string, boolean][] => {
-    return _.map(criterion.dataSources, (dataSource): [string, boolean] => {
+  const values = _.flatMap(criteria, (criterion: IProblemCriterion): [
+    string,
+    boolean
+  ][] => {
+    return _.map(criterion.dataSources, (dataSource: IProblemDataSource): [
+      string,
+      boolean
+    ] => {
       return [
         dataSource.id,
         dataSource.unitOfMeasurement.type === 'percentage'

@@ -27,7 +27,7 @@ export function handleError(error: Error, next: any): void {
   });
 }
 
-export function getRanges(problem: IProblem): Record<string, any> {
+export function getRanges(problem: IProblem): Record<string, [number, number]> {
   return _.reduce(
     problem.criteria,
     (
