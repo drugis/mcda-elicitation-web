@@ -4,9 +4,7 @@ const seleniumServer = require('selenium-server');
 const geckodriver = require('geckodriver');
 
 module.exports = {
-  src_folders: [
-    'test/endToEnd'
-  ],
+  src_folders: ['test/endToEnd'],
   selenium: {
     check_process_delay: 1000,
     start_process: true,
@@ -26,7 +24,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'firefox',
         'moz:firefoxOptions': {
-          args: ['-headless']
+          // args: ['-headless']
         },
         javascriptEnabled: true,
         acceptSslCerts: true,

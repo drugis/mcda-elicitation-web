@@ -1,5 +1,5 @@
 import {Grid, Paper} from '@material-ui/core';
-import React from 'react';
+import React, {useEffect} from 'react';
 import DoneButton from './DoneButton/DoneButton';
 import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
 import Favourability from './Favourability/Favourability';
@@ -10,6 +10,12 @@ import Title from './Title/Title';
 import Warnings from './Warnings/Warnings';
 
 export default function ManualInput() {
+  useEffect(setPageTitle, []);
+
+  function setPageTitle() {
+    document.title = 'Manual input';
+  }
+
   return (
     <Grid container justify="center">
       <Grid container item spacing={2} xs={12} component={Paper}>

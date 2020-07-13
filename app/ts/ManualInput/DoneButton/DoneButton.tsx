@@ -24,6 +24,7 @@ export default function DoneButton() {
 
   return (
     <Button
+      id="done-button"
       color="primary"
       variant="contained"
       onClick={handleDoneClick}

@@ -58,7 +58,7 @@ function createDataSource(reference) {
 }
 
 function createAlternative(title) {
-  return { title: title };
+  return {title: title};
 }
 
 function createInputDefault(browser) {
@@ -67,17 +67,7 @@ function createInputDefault(browser) {
     .click('#create-workspace-button')
     .click('#manual-workspace-radio')
     .click('#add-workspace-button')
-    .waitForElementVisible('#manual-input-header-step1')
-    .setValue('#workspace-title', TITLE)
-    .setValue('#therapeutic-context', THERAPEUTIC_CONTEXT)
-    .click('#favorability-checkbox');
-
-  addCriterion(browser, CRITERION1);
-  addCriterion(browser, CRITERION2);
-  addDataSource(browser, CRITERION1_ADD_DATA_SOURCE, DATA_SOURCE1);
-  addDataSource(browser, CRITERION2_ADD_DATA_SOURCE, DATA_SOURCE2);
-  addAlternative(browser, ALTERNATIVE1);
-  addAlternative(browser, ALTERNATIVE2);
+    .waitForElementVisible('#workspace-title');
   return browser;
 }
 
@@ -88,7 +78,11 @@ function setValuesForRow(browser, rowNumber) {
 
 function setValues(browser, rowNumber, columnNumber) {
   const path = '//tr[' + rowNumber + ']' + '/td[' + columnNumber + ']//a';
-  browser.element('xpath', path, _.partial(clickElement, browser, rowNumber, columnNumber));
+  browser.element(
+    'xpath',
+    path,
+    _.partial(clickElement, browser, rowNumber, columnNumber)
+  );
 }
 
 function clickElement(browser, rowNumber, columnNumber, element) {

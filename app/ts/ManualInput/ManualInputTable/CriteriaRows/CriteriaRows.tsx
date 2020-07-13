@@ -73,26 +73,38 @@ export default function CriteriaRows() {
         <TableRow>
           <TableCell colSpan={10 + alternatives.length}>
             <Box p={1}>
-              <Typography variant="caption">Favourable criteria</Typography>
+              <Typography id="favourable-criteria-label" variant="caption">
+                Favourable criteria
+              </Typography>
             </Box>
           </TableCell>
         </TableRow>
         {createCriteriaRows(favourableCriteria)}
         <TableRow>
-          <TableCell colSpan={10 + alternatives.length} align="center">
+          <TableCell
+            id="add-favourable-criterion-cell"
+            colSpan={10 + alternatives.length}
+            align="center"
+          >
             <AddCriterionButton isFavourable={true} />
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell colSpan={10 + alternatives.length}>
             <Box p={1}>
-              <Typography variant="caption">Unfavourable criteria</Typography>
+              <Typography id="unfavourable-criteria-label" variant="caption">
+                Unfavourable criteria
+              </Typography>
             </Box>
           </TableCell>
         </TableRow>
         {createCriteriaRows(unfavourableCriteria)}
         <TableRow>
-          <TableCell colSpan={10 + alternatives.length} align="center">
+          <TableCell
+            id="add-unfavourable-criterion-cell"
+            colSpan={10 + alternatives.length}
+            align="center"
+          >
             <AddCriterionButton isFavourable={false} />
           </TableCell>
         </TableRow>
@@ -103,7 +115,11 @@ export default function CriteriaRows() {
       <TableBody>
         {createCriteriaRows(criteria)}
         <TableRow>
-          <TableCell colSpan={10 + alternatives.length} align="center">
+          <TableCell
+            id="add-unfavourable-criterion-cell"
+            colSpan={10 + alternatives.length}
+            align="center"
+          >
             <AddCriterionButton isFavourable={false} />
           </TableCell>
         </TableRow>

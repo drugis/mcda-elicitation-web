@@ -26,9 +26,13 @@ export default function DataSourceRow({
   isFirstRowForCriterion: boolean;
 }) {
   const {criterion} = useContext(DataSourceRowContext);
-  const {alternatives, useFavourability} = useContext(ManualInputContext);
+  const {alternatives, useFavourability, criteria} = useContext(
+    ManualInputContext
+  );
   const numberOfColumns = alternatives.length + 6;
   const numberOfDataSourceRows = criterion.dataSources.length;
+  const uniqueRowId =
+    'criterion-row-' + _.findIndex(criteria, ['id', criterion.id]);
 
   const dataSourceCells = dataSource.id.startsWith(DUMMY_ID) ? (
     <TableCell colSpan={numberOfColumns} align="center">
@@ -66,7 +70,7 @@ export default function DataSourceRow({
   }
 
   return (
-    <TableRow>
+    <TableRow id={uniqueRowId}>
       {isFirstRowForCriterion ? (
         <>
           <TableCell rowSpan={numberOfDataSourceRows} align={'center'}>
