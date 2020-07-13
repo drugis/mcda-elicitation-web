@@ -1,16 +1,16 @@
 'use strict';
-import logger from './logger';
 import {Error} from '@shared/interface/IError';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
+import {PoolClient} from 'pg';
+import IDB from './interface/IDB';
+import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
 import {handleError} from './util';
 import WorkspaceRepository from './workspaceRepository';
-import IDB from './interface/IDB';
-import { PoolClient } from 'pg';
 
 export default function SubproblemHandler(db: IDB) {
   const subproblemRepository = SubproblemRepository(db);
@@ -52,16 +52,16 @@ export default function SubproblemHandler(db: IDB) {
     const {workspaceId} = request.params;
     db.runInTransaction(
       _.partial(subproblemTransaction, request),
-      _.partial(createTransactionCallback, response, next, workspaceId)
+      _.partialRight(createTransactionCallback, response, next, workspaceId)
     );
   }
 
   function createTransactionCallback(
+    error: Error,
+    subproblemId: number,
     response: Response,
     next: any,
-    workspaceId: string,
-    error: Error,
-    subproblemId: number
+    workspaceId: string
   ): void {
     if (error) {
       handleError(error, next);
@@ -69,16 +69,16 @@ export default function SubproblemHandler(db: IDB) {
       retrieveSubProblem(
         workspaceId,
         subproblemId,
-        _.partial(retrieveSubProblemCallback, response, next)
+        _.partialRight(retrieveSubProblemCallback, response, next)
       );
     }
   }
 
   function retrieveSubProblemCallback(
-    response: Response,
-    next: any,
     error: Error,
-    subproblem: any
+    subproblem: any,
+    response: Response,
+    next: any
   ): void {
     if (error) {
       handleError(error, next);
