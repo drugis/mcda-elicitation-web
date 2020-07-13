@@ -1,4 +1,3 @@
-'use strict';
 import IError, {Error} from '@shared/interface/IError';
 import _ from 'lodash';
 import pg, {PoolClient} from 'pg';

@@ -1,4 +1,3 @@
-'use strict';
 import {Error} from '@shared/interface/IError';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';

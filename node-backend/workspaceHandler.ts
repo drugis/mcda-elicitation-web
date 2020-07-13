@@ -11,7 +11,7 @@ import IDB from './interface/IDB';
 import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
-import {getRanges, getUserId, handleError, reduceProblem} from './util';
+import {getRanges, getUser, handleError, reduceProblem} from './util';
 import WorkspaceRepository from './workspaceRepository';
 
 export default function WorkspaceHandler(db: IDB) {
@@ -21,7 +21,7 @@ export default function WorkspaceHandler(db: IDB) {
 
   function query(request: Request, response: Response, next: any): void {
     workspaceRepository.query(
-      getUserId(request).id,
+      getUser(request).id,
       (error: Error, result: IOldWorkspace[]): void => {
         if (error) {
           handleError(error, next);
@@ -71,7 +71,7 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     logger.debug('creating new workspace');
 
-    const owner = getUserId(request).id;
+    const owner = getUser(request).id;
     const title = request.body.title;
     const problem = request.body.problem;
     workspaceRepository.create(client, owner, title, problem, callback);

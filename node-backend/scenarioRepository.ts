@@ -1,4 +1,3 @@
-'use strict';
 import logger from './logger';
 import _ from 'lodash';
 import {Error} from '@shared/interface/IError';

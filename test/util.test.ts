@@ -1,7 +1,7 @@
 'use strict';
 import {
   getRanges,
-  getUserId,
+  getUser,
   handleError,
   reduceProblem
 } from '../node-backend/util';
@@ -14,7 +14,7 @@ describe('The utility', () => {
       const request: any = {
         user: {id: userId}
       };
-      const result = getUserId(request);
+      const result = getUser(request);
       expect(result).toEqual(expectedResult);
     });
 
@@ -25,14 +25,14 @@ describe('The utility', () => {
           user: {id: userId}
         }
       };
-      const result = getUserId(request);
+      const result = getUser(request);
       expect(result).toEqual(expectedResult);
     });
 
     it('should throw an error if there is no user on the request', () => {
       const request: any = {};
       try {
-        getUserId(request);
+        getUser(request);
       } catch (error) {
         expect(error).toBe('No user id found');
       }

@@ -5,10 +5,14 @@ import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
 import logger from './logger';
 
-export function getUserId(request: Request) {
-  if (request.user && request.user) {
+export function getUser(request: Request) {
+  if (request.user) {
     return request.user;
-  } else if (request.session && request.session.user && request.session.user.id) {
+  } else if (
+    request.session &&
+    request.session.user &&
+    request.session.user.id
+  ) {
     return request.session.user;
   } else {
     throw 'No user id found';
@@ -26,7 +30,11 @@ export function handleError(error: Error, next: any): void {
 export function getRanges(problem: IProblem): Record<string, any> {
   return _.reduce(
     problem.criteria,
-    (accum: Record<string, any>, criterion, key): Record<string, any> => {
+    (
+      accum: Record<string, any>,
+      criterion,
+      key
+    ): Record<string, [number, number]> => {
       accum[key] = _.pick(criterion, ['pvf.range']);
       return accum;
     },

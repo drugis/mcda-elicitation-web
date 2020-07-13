@@ -61,7 +61,7 @@ export function mapCriteria(criteria: ICriterionQueryResult[]): ICriterion[] {
   return _(criteria)
     .sortBy('orderindex')
     .map(
-      (queryCriterion): ICriterion => {
+      (queryCriterion: ICriterionQueryResult): ICriterion => {
         return {
           id: queryCriterion.id,
           title: queryCriterion.title,
@@ -80,7 +80,7 @@ export function mapAlternatives(
   return _(alternatives)
     .sortBy('orderindex')
     .map(
-      (queryAlternative): IAlternative => {
+      (queryAlternative: IAlternativeQueryResult): IAlternative => {
         return {
           id: queryAlternative.id,
           title: queryAlternative.title

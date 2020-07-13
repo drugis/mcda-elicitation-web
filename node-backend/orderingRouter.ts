@@ -1,4 +1,3 @@
-'use strict';
 import OrderingHandler from './orderingHandler';
 import {Router} from 'express';
 import IDB from './interface/IDB';

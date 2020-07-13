@@ -1,4 +1,3 @@
-'use strict';
 import DBConfig from './interface/IDBConfig';
 import logger from './logger';
 

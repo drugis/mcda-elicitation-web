@@ -1,5 +1,3 @@
-'use strict';
-
 import {Request, Response} from 'express';
 import {Error} from '@shared/interface/IError';
 import {handleError} from './util';

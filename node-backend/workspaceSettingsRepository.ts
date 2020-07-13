@@ -1,5 +1,3 @@
-'use strict';
-
 import logger from './logger';
 import IDB from './interface/IDB';
 import {QueryResult} from 'pg';

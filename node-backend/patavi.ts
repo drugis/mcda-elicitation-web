@@ -1,5 +1,3 @@
-'use strict';
-
 import {Error} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
 import fs from 'fs';

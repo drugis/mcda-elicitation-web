@@ -1,5 +1,3 @@
-'use strict';
-
 import {Error} from '@shared/interface/IError';
 import logger from './logger';
 import IDB, {ClientOrDB} from './interface/IDB';

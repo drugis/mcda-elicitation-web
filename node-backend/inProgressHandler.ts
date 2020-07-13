@@ -22,7 +22,7 @@ import {
 import IDB from './interface/IDB';
 import logger from './logger';
 import OrderingRepository from './orderingRepository';
-import {getUserId, handleError} from './util';
+import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
 import WorkspaceRepository from './workspaceRepository';
 import {PoolClient} from 'pg';
@@ -41,7 +41,7 @@ export default function InProgressHandler(db: IDB) {
   ): void {
     const emptyInProgress = buildEmptyInProgress();
     inProgressWorkspaceRepository.create(
-      getUserId(request).id,
+      getUser(request).id,
       emptyInProgress,
       _.partial(createCallback, response, next)
     );
@@ -57,7 +57,7 @@ export default function InProgressHandler(db: IDB) {
       [
         _.partial(workspaceRepository.get, sourceWorkspaceId),
         buildInProgress,
-        _.partial(createNew, getUserId(request).id)
+        _.partial(createNew, getUser(request).id)
       ],
       _.partial(createCallback, response, next)
     );
@@ -360,7 +360,7 @@ export default function InProgressHandler(db: IDB) {
 
   function query(request: Request, response: Response, next: () => {}): void {
     inProgressWorkspaceRepository.query(
-      getUserId(request).id,
+      getUser(request).id,
       (error: Error, results: any[]): void => {
         if (error) {
           handleError(error, next);

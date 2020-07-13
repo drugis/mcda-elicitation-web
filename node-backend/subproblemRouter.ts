@@ -1,4 +1,3 @@
-'use strict';
 import {Router} from 'express';
 import SubproblemHandler from './subproblemHandler';
 import IDB from './interface/IDB';

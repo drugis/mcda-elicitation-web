@@ -1,5 +1,3 @@
-'use strict';
-
 import {Router} from 'express';
 import WorkspaceSettingsHandler from './workspaceSettingsHandler';
 import IDB from './interface/IDB';

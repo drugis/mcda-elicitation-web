@@ -1,4 +1,3 @@
-'use strict';
 import {Router} from 'express';
 import ScenarioHandler from './scenarioHandler';
 import IDB from './interface/IDB';
