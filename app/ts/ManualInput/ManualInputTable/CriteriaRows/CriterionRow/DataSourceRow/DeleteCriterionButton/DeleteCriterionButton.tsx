@@ -15,6 +15,7 @@ export default function DeleteCriterionButton() {
   return (
     <Tooltip title="Delete criterion">
       <IconButton
+        id={`delete-criterion-${criterion.id}`}
         size="small"
         color="secondary"
         onClick={handleDeleteCriterion}

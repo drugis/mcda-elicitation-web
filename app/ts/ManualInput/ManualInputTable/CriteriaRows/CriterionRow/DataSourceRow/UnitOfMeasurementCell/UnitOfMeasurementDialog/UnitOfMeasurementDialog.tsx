@@ -115,6 +115,7 @@ export default function UnitOfMeasurementDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              id="unit-type-selector"
               value={unitType}
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
@@ -177,6 +178,7 @@ export default function UnitOfMeasurementDialog({
       </DialogContent>
       <DialogActions>
         <Button
+          id="edit-unit-button"
           color="primary"
           onClick={handleEditButtonClick}
           variant="contained"

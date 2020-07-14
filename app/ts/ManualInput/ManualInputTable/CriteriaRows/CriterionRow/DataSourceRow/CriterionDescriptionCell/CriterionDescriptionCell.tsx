@@ -17,7 +17,11 @@ export default function CriterionDescriptionCell({
   }
 
   return (
-    <TableCell rowSpan={numberOfDataSourceRows} align="center">
+    <TableCell
+      id={`criterion-description-${criterion.id}`}
+      rowSpan={numberOfDataSourceRows}
+      align="center"
+    >
       <InlineEditor
         value={criterion.description}
         tooltipText={'Edit criterion description'}

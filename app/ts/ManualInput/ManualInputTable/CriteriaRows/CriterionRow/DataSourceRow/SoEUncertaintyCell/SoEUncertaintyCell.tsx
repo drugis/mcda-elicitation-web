@@ -23,7 +23,7 @@ export default function SoEUncertaintyCell({
   }
 
   return (
-    <TableCell>
+    <TableCell id={`ds-soe-unc-${dataSource.id}`}>
       <Box p={1}>
         <Grid container>
           <Grid item xs={2}>
