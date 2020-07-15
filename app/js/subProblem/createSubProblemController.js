@@ -143,10 +143,9 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.subProblemState.numberOfCriteriaSelected = _.filter($scope.subProblemState.criterionInclusions).length;
       $scope.subProblemState.numberOfAlternativesSelected = _.filter($scope.subProblemState.alternativeInclusions).length;
       $scope.subProblemState.numberOfDataSourcesPerCriterion = SubProblemService.getNumberOfDataSourcesPerCriterion($scope.problem.criteria, $scope.subProblemState.dataSourceInclusions);
-      $scope.hasMissingValues = SubProblemService.areValuesMissingInEffectsTable($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
-      $scope.areTooManyDataSourcesSelected = SubProblemService.areTooManyDataSourcesSelected($scope.subProblemState.numberOfDataSourcesPerCriterion);
+      $scope.missingValueWarnings = SubProblemService.getMissingValueWarnings($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
+      $scope.scaleBlockingWarnings = SubProblemService.getScaleBlockingWarnings($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
       $scope.scalesDataSources = getDataSourcesForScaleSliders();
-      $scope.warnings = SubProblemService.getMissingValueWarnings($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
       initializeScales();
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
@@ -154,8 +153,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getDataSourcesForScaleSliders() {
-      return ($scope.hasMissingValues || $scope.areTooManyDataSourcesSelected) ?
-        [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
+      return $scope.scaleBlockingWarnings.length ? [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
     }
 
     function initializeScales() {

@@ -64,11 +64,11 @@
           <tbody>
             <tr>
               <td id="alternative-{{ $index }}-base-case" ng-repeat="alternative in alternatives"
-                ng-if="results.results.total.data[alternative.id]" class="text-centered">
-                {{results.results.total.data[alternative.id] | number}}
+                ng-if="results.results.total[alternative.id]" class="text-centered">
+                {{results.results.total[alternative.id] | number}}
               </td>
               <td class="text-centered" ng-repeat="alternative in alternatives"
-                ng-if="!results.results.total.data[alternative.id]">
+                ng-if="!results.results.total[alternative.id]">
                 <i class="fa fa-spinner fa-spin"></i>
               </td>
             </tr>
@@ -84,11 +84,11 @@
           <tbody>
             <tr>
               <td id="alternative-{{ $index }}-recalculated-case" ng-repeat="alternative in alternatives"
-                ng-if="recalculatedResults.results.total.data[alternative.id]" class="text-centered">
-                {{recalculatedResults.results.total.data[alternative.id] | number}}
+                ng-if="recalculatedResults.results.total[alternative.id]" class="text-centered">
+                {{recalculatedResults.results.total[alternative.id] | number}}
               </td>
               <td class="text-centered" ng-repeat="alternative in alternatives"
-                ng-if="!recalculatedResults.results.total.data[alternative.id]">
+                ng-if="!recalculatedResults.results.total[alternative.id]">
                 <i class="fa fa-spinner fa-spin"></i>
               </td>
             </tr>
@@ -124,7 +124,7 @@
         <!-- Keep grid layout consistent  -->
       </div>
       <div id="value-profile-table-container" class="cell large-6" ng-if="results.results">
-        <value-profile-table alternatives="alternatives" criteria="criteria" data="results.results.value.data"
+        <value-profile-table alternatives="alternatives" criteria="criteria" data="results.results.value"
           alternativesLegend="scenario.state.legend" case="'base'"></value-profile-table>
       </div>
       <div class="cell large-6" ng-if="!results.results">
@@ -132,7 +132,7 @@
       </div>
       <div id="value-profile-table-recalculated-container" ng-if="recalculatedResults.results" class="cell large-6">
         <value-profile-table alternatives="alternatives" criteria="criteria"
-          data="recalculatedResults.results.value.data" alternativesLegend="scenario.state.legend"
+          data="recalculatedResults.results.value" alternativesLegend="scenario.state.legend"
           case="'recalculated'">
         </value-profile-table>
       </div>

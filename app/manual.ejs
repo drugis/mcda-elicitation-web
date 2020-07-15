@@ -155,7 +155,7 @@
             <p>
               The `criteria` property should contain a series of properties with the names and details of the different
               criteria in your analysis. The following is an example of JSON describing a single criterion (HAM-D):
-              <pre>
+            <pre>
               "criteria": {
                 "hamd-id": {
                   "title": "HAM-D",
@@ -166,14 +166,15 @@
                     "sourceLink": "https://example.com/studies/3",
                     "scale": [0, 1]
                     ],
-                    "unitOfMeasurement": "Proportion",
+                    "unitOfMeasurement": "",
                   }]
                 }
               }
             </pre>
-              <p>
-                The `alternatives` property should contain the alternatives under investigation. For example:
-                <pre>
+            </p>
+            <p>
+              The `alternatives` property should contain the alternatives under investigation. For example:
+            <pre>
               "alternatives": {
                 "placebo-id": {
                   "title": "Placebo"
@@ -186,17 +187,18 @@
                 }
               }
             </pre>
-                <p>
-                  The performanceTable property should contain the actual data of the measurements for each criterion
-                  for
-                  each alternative. Performance can be measured either in relative or exact terms. If relative, the
-                  performance should contain a baseline plus a matrix of relative deviations. If exact, simply the value
-                  suffices.
-                </p>
-                <p>
-                  An example of exact performance:
-                </p>
-                <pre>
+            </p>
+            <p>
+              The performanceTable property should contain the actual data of the measurements for each criterion
+              for
+              each alternative. Performance can be measured either in relative or exact terms. If relative, the
+              performance should contain a baseline plus a matrix of relative deviations. If exact, simply the value
+              suffices.
+            </p>
+            <p>
+              An example of exact performance:
+            </p>
+            <pre>
               "performanceTable": [
                 {
                   "alternative": "placebo-id,
@@ -222,8 +224,8 @@
                 }
               ]
             </pre>
-                <p>An example of relative performance:</p>
-                <pre>
+            <p>An example of relative performance:</p>
+            <pre>
               "performanceTable": [{
                 "criterion": "hamd-id",
                 "performance": {
@@ -255,55 +257,55 @@
                 }
               }]
             </pre>
-                <p>
-                  The `preferences` property is optional and should generally be omitted. It will be filled in by
-                  performing preference elicitation within the MCDA app after the upload step.
-                </p>
-                <p>
-                  A list of examples is available on the <a
-                    href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA
-                    repository</a>.
-                  The JSON schema is available from our <a
-                    href="https://github.com/drugis/mcda-elicitation-web/tree/master/schema">GitHub repository</a>.
-                </p>
-                <h4 id="mcda-manual-entry">Manual entry</h4>
-                <p>
-                  Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace
-                  creation screen. Here, you can input the title, therapeutic context, criteria, and alternatives as
-                  well as
-                  the measurement data.
-                </p>
-                <div class="figure">
-                  <img src="img/manualEntry1.jpg" />
-                  <div class="caption">Manual entry, first step.</div>
-                </div>
-                <p>
-                  Creating an alternative consists simply of choosing its name. Criteria are more complicated. They have
-                  several properties, i.e. whether or not they are favourable and what the source(s() of your data for
-                  this
-                  criterion are. Data sources (for example a specific study or meta-analysis) are added to a criterion
-                  after
-                  its creation.
-                </p>
-                <p>At any time during the manual entry process you can click the 'Save' button and the current state of
-                  your
-                  workspace in progress will be saved. You can click this in-progress workspace from your personal
-                  homepage
-                  later, and continue where you left off.
-                </p>
-                <div class="figure">
-                  <img src="img/manualEntry2.png" />
-                  <div class="caption">Manual entry, second step.</div>
-                </div>
-                <p>
-                  The second step has two tabs, one to enter 'Deterministic' data, i.e. directly measured effects, and
-                  another, 'SMAA' to enter the distributions of each effect for use in <a
-                    href="#mcda-smaa-analysis">Stochastic Multicriteria Analysis</a>.
-                  For many types of deterministic effects, these distributions can be calculated directly from the
-                  deterministic effects. The 'Generate distributions' button below the data table does so for each cell
-                  in the table and fills out the SMAA table.
-                </p>
-                <div id="mcda-shared-content"></div>
+            <p>
+              The `preferences` property is optional and should generally be omitted. It will be filled in by
+              performing preference elicitation within the MCDA app after the upload step.
+            </p>
+            <p>
+              A list of examples is available on the <a
+                href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA
+                repository</a>.
+              The JSON schema is available from our <a
+                href="https://github.com/drugis/mcda-elicitation-web/tree/master/schema">GitHub repository</a>.
+            </p>
+            <h4 id="mcda-manual-entry">Manual entry</h4>
+            <p>
+              Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace
+              creation screen. Here, you can input the title, therapeutic context, criteria, and alternatives as
+              well as
+              the measurement data.
+            </p>
+            <div class="figure">
+              <img src="img/manualEntry1.jpg" />
+              <div class="caption">Manual entry, first step.</div>
+            </div>
+            <p>
+              Creating an alternative consists simply of choosing its name. Criteria are more complicated. They have
+              several properties, i.e. whether or not they are favourable and what the source(s() of your data for
+              this
+              criterion are. Data sources (for example a specific study or meta-analysis) are added to a criterion
+              after
+              its creation.
+            </p>
+            <p>At any time during the manual entry process you can click the 'Save' button and the current state of
+              your
+              workspace in progress will be saved. You can click this in-progress workspace from your personal
+              homepage
+              later, and continue where you left off.
+            </p>
+            <div class="figure">
+              <img src="img/manualEntry2.png" />
+              <div class="caption">Manual entry, second step.</div>
+            </div>
+            <p>
+              The second step has two tabs, one to enter 'Deterministic' data, i.e. directly measured effects, and
+              another, 'SMAA' to enter the distributions of each effect for use in <a
+                href="#mcda-smaa-analysis">Stochastic Multicriteria Analysis</a>.
+              For many types of deterministic effects, these distributions can be calculated directly from the
+              deterministic effects. The 'Generate distributions' button below the data table does so for each cell
+              in the table and fills out the SMAA table.
+            </p>
+            <div id="mcda-shared-content"></div>
           </div>
         </div>
       </div>

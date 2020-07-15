@@ -94,7 +94,7 @@ define(['lodash', 'jquery', 'angular'],
           function loadWeights() {
             if (scope.criteriaHavePvf) {
               PreferencesService.getWeights(scope.problem).then(function(result) {
-                scope.weights = result.data;
+                scope.weights = result;
               });
             }
           }

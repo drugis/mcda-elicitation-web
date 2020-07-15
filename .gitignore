@@ -15,6 +15,7 @@ node_modules
 dist
 coverage
 ssl
+/tscomp
 
 # Numerous always-ignore extensions
 *.diff
@@ -27,6 +28,7 @@ ssl
 *.swp
 *.vi
 *~
+*.js.map
 # OS or Editor folders
 .DS_Store
 .cache
@@ -45,3 +47,6 @@ Chromium_*
 R/.Rhistory
 R/*.json
 .vscode
+# TSC artifacts
+app/js/interface/*.js
+app/js/type/*.js

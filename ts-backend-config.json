@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@shared/*": ["shared/*"]
+    },
+    "outDir": "./tscomp",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "allowJs": true
+  },
+  "include": ["index.ts", "node-backend/**/*.ts"],
+  "exclude": ["node_modules"]
+}

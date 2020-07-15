@@ -10,7 +10,7 @@
   </div>
   <div id="rank-plot-container" class="cell large-6">
     <div export file-name="'rank-acceptability-plot'" legend style="width: 400px; height: 400px">
-      <rank-plot values="state.results.ranks.data" alternatives="alternatives" labels="scenario.state.legend">
+      <rank-plot values="state.results.ranks" alternatives="alternatives" labels="scenario.state.legend">
       </rank-plot>
     </div>
   </div>
@@ -26,7 +26,7 @@
         <tr ng-repeat="alternative in alternatives">
           <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
           <td id="alternative-{{ $parent.$index }}-rank-{{ $index + 1 }}" class="text-centered"
-            ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index">
+            ng-repeat="rank in state.results.ranks[alternative.id] track by $index">
             {{::rank | number}}
           </td>
         </tr>

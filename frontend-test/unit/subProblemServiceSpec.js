@@ -272,111 +272,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('areValuesMissingInEffectsTable', () => {
-      var subProblemState = {
-        dataSourceInclusions: { 'ds1': true },
-        alternativeInclusions: { 'alt1': true }
-      };
-
-      it('should return truthy if there is a missing scale for the included datasources+alternatives', () => {
-        var scales = {
-          ds1: {
-            alt1: {}
-          }
-        };
-        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
-        expect(result).toBeTruthy();
-      });
-
-      it('should return truthy if there is a NaN scale for the included datasources+alternatives', () => {
-        var scales = {
-          ds1: {
-            alt1: { '50%': NaN }
-          }
-        };
-        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
-        expect(result).toBeTruthy();
-      });
-
-      it('should return truthy if there is a null scale for the included datasources+alternatives', () => {
-        var scales = {
-          ds1: {
-            alt1: { '50%': null }
-          }
-        };
-        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
-        expect(result).toBeTruthy();
-      });
-
-      it('should return falsy if there no missing or invalid values', () => {
-        var scales = {
-          ds1: {
-            alt1: { '50%': 5 }
-          }
-        };
-        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if the distribution is missing, but there is an effect value', function() {
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'value',
-              value: 10
-            }
-          }
-        }];
-        var scales = {
-          ds1: {
-            alt1: { '50%': null }
-          }
-        };
-        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if the effect is missing, but there is an distribution value', function() {
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'empty'
-            }
-          }
-        }];
-        var scales = {
-          ds1: {
-            alt1: { '50%': 5 }
-          }
-        };
-        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return truthy if both the distribution and effect value are missing', function() {
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'empty'
-            }
-          }
-        }];
-        var scales = {
-          ds1: {
-            alt1: { '50%': null }
-          }
-        };
-        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
-        expect(result).toBeTruthy();
-      });
-    });
-
     describe('getMissingValueWarnings', function() {
       var subProblemState = {
         dataSourceInclusions: { 'ds1': true },
@@ -585,27 +480,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('areTooManyDataSourcesSelected', () => {
-      it('return truthy if there is atleast one criterion with multiple selected datasources', () => {
-        var numberOfDataSourcesPerCriterion = {
-          crit1: 0,
-          crit2: 1,
-          crit3: 2
-        };
-        var result = subProblemService.areTooManyDataSourcesSelected(numberOfDataSourcesPerCriterion);
-        expect(result).toBeTruthy();
-      });
-      it('should return falsy if there is no criterion with multiple datasources selected', () => {
-        var numberOfDataSourcesPerCriterion = {
-          crit1: 0,
-          crit2: 1,
-          crit3: 1
-        };
-        var result = subProblemService.areTooManyDataSourcesSelected(numberOfDataSourcesPerCriterion);
-        expect(result).toBeFalsy();
-      });
-    });
-
     describe('getCriteriaByDataSource', () => {
       it('should return the criterion ids keyed by their datasource ids', () => {
         var criteria = [{
@@ -783,6 +657,151 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var scales = {};
         var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
         expect(result).toBeFalsy();
+      });
+    });
+
+    describe('getScaleBlockingWarnings', function() {
+      var subProblemState;
+      var missingValuesWarning = 'Effects table contains missing values';
+
+      beforeEach(function() {
+        subProblemState = {
+          dataSourceInclusions: { 'ds1': true },
+          alternativeInclusions: { 'alt1': true },
+          numberOfDataSourcesPerCriterion: {
+            crit1: 0,
+            crit2: 1,
+            crit3: 1
+          }
+        };
+      });
+
+      it('should return a warning if there is a missing scale for the included datasources+alternatives', () => {
+        var scales = {
+          ds1: {
+            alt1: {}
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var expectedResult = [missingValuesWarning];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return a warning if there is a NaN scale for the included datasources+alternatives', () => {
+        var scales = {
+          ds1: {
+            alt1: { '50%': NaN }
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var expectedResult = [missingValuesWarning];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return a warning if there is a null scale for the included datasources+alternatives', () => {
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var expectedResult = [missingValuesWarning];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return no warnings if there are no missing or invalid values', () => {
+        var scales = {
+          ds1: {
+            alt1: { '50%': 5 }
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var expectedResult = [];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return no warnings if the distribution is missing, but there is an effect value', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales, performanceTable);
+        var expectedResult = [];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return no warnings if the effect is missing, but there is an distribution value', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': 5 }
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales, performanceTable);
+        var expectedResult = [];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return a warning if both the distribution and effect value are missing', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales, performanceTable);
+        var expectedResult = [missingValuesWarning];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('return a warning if there is atleast one criterion with multiple selected datasources', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': 5 }
+          }
+        };
+        subProblemState.numberOfDataSourcesPerCriterion.crit1 = 3;
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var expectedResult = ['Effects table contains multiple data sources per criterion'];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return no warnings if there is no criterion with multiple datasources selected', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': 5 }
+          }
+        };
+        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var expectedResult = [];
+        expect(result).toEqual(expectedResult);
       });
     });
   });

@@ -1154,7 +1154,7 @@ define([
               crit1: {
                 dataSources: [{
                   unitOfMeasurement: {
-                    label: 'Proportion',
+                    label: '',
                     type: 'decimal'
                   },
                   scale: [0, 1],
@@ -1163,7 +1163,7 @@ define([
                   }
                 }, {
                   unitOfMeasurement: {
-                    label: 'Proportion',
+                    label: '',
                     type: 'decimal'
                   },
                   scale: [0, 1]
@@ -1172,7 +1172,7 @@ define([
               crit2: {
                 dataSources: [{
                   unitOfMeasurement: {
-                    label: 'Proportion',
+                    label: '',
                     type: 'decimal'
                   },
                   scale: [0, 1],
@@ -1342,7 +1342,7 @@ define([
                 }, {
                   scale: [0, 1],
                   unitOfMeasurement: {
-                    label: 'Proportion',
+                    label: '',
                     type: 'decimal'
                   }
                 }]
@@ -1352,7 +1352,7 @@ define([
                   scale: [0, 1],
                   pvf: {},
                   unitOfMeasurement: {
-                    label: 'Proportion',
+                    label: '',
                     type: 'decimal'
                   }
                 }, {
@@ -1361,7 +1361,7 @@ define([
                     range: [0.3, 0.4]
                   },
                   unitOfMeasurement: {
-                    label: 'Proportion',
+                    label: '',
                     type: 'decimal'
                   }
                 }]
