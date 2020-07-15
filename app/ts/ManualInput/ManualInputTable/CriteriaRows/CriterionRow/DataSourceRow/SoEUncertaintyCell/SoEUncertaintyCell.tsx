@@ -34,6 +34,7 @@ export default function SoEUncertaintyCell({
               value={dataSource.strengthOfEvidence}
               tooltipText={'Edit strength of evidence'}
               callback={handleSoEChange}
+              multiline={true}
             />
           </Grid>
           <Grid item xs={2}>
@@ -44,6 +45,7 @@ export default function SoEUncertaintyCell({
               value={dataSource.uncertainty}
               tooltipText={'Edit uncertainty'}
               callback={handleUncertaintyChange}
+              multiline={true}
             />
           </Grid>
         </Grid>
