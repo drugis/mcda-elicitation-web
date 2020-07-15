@@ -392,7 +392,7 @@ function editSterengthOfEvidence(browser) {
       const basePath = '//*[@id="ds-soe-unc-' + dataSourceId + '"]';
       const strengthOfEvidence = basePath + '/div/div/div[2]/span/span';
       const strengthOfEvidenceInput =
-        basePath + '/div/div/div[2]/div/div/input';
+        basePath + '/div/div/div[2]/div/div/textarea[1]';
       browser.assert
         .containsText(strengthOfEvidence, 'click to edit')
         .click(strengthOfEvidence)
@@ -409,7 +409,8 @@ function editUncertainties(browser) {
       const dataSourceId = result.value.split('-').slice(2).join('-');
       const basePath = '//*[@id="ds-soe-unc-' + dataSourceId + '"]';
       const uncertainties = basePath + '/div/div/div[4]/span/span';
-      const uncertaintiesInput = basePath + '/div/div/div[4]/div/div/input';
+      const uncertaintiesInput =
+        basePath + '/div/div/div[4]/div/div/textarea[1]';
       browser.assert
         .containsText(uncertainties, 'click to edit')
         .click(uncertainties)

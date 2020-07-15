@@ -36,7 +36,7 @@ function addTutorial(browser, title) {
   return goHomeAfterLoading(browser, title);
 }
 
-function copy(browser, index, newTitle) {
+function copy(browser, index) {
   return browser
     .click('#copy-workspace-' + index)
     .waitForElementVisible('#workspace-title');
@@ -98,7 +98,7 @@ function cleanUnfinishedList(browser) {
       browser.click(expectPath);
       browser.waitForElementVisible('#delete-workspace-confirm-button');
       browser.click('#delete-workspace-confirm-button');
-      cleanList(browser);
+      cleanUnfinishedList(browser);
     } else {
       console.log('✔ Unfinished workspace list is empty.');
     }
