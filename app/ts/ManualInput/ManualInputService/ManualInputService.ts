@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
@@ -152,4 +153,37 @@ export function swapItems<T>(id1: string, id2: string, items: T[]): T[] {
     itemsCopy[index1]
   ];
   return itemsCopy;
+}
+
+export function replaceUndefinedBounds(criteria: ICriterion[]): ICriterion[] {
+  return _.map(criteria, (criterion) => {
+    return {
+      ...criterion,
+      dataSources: replaceBoundsOnDataSources(criterion.dataSources)
+    };
+  });
+}
+
+function replaceBoundsOnDataSources(dataSources: IDataSource[]): IDataSource[] {
+  return _.map(dataSources, (dataSource) => {
+    return {
+      ...dataSource,
+      unitOfMeasurement: {
+        ...dataSource.unitOfMeasurement,
+        lowerBound: getBound(
+          dataSource.unitOfMeasurement.lowerBound,
+          -Infinity
+        ),
+        upperBound: getBound(dataSource.unitOfMeasurement.upperBound, +Infinity)
+      }
+    };
+  });
+}
+
+function getBound(bound: number, defaultBound: number) {
+  if (bound === undefined) {
+    return defaultBound;
+  } else {
+    return bound;
+  }
 }

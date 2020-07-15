@@ -1,44 +1,44 @@
-"use strict";
+'use strict';
 
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  "Login page": loginPage,
+  'Login page': loginPage,
   Workspaces: workspaces,
-  "A workspace overview": overview,
-  "A workspace problem definition": problemDefition,
-  "A workspace preferences": preferences,
-  "A workspace deterministic results": deterministicResults,
-  "A workspace SMAA results": smaaResults,
-  "Partial value function": partialValueFunction,
-  "Ranking weights": rankingWeights,
-  "Matching weights": matchingWeights,
-  "Precise swing weighting": preciseSwingWeights,
-  "Imprecise swing weighting": impreciseSwingWeights,
-  "Manual input": manualInput,
-  "Manual input in progress": manualInputInProgress,
+  'A workspace overview': overview,
+  'A workspace problem definition': problemDefition,
+  'A workspace preferences': preferences,
+  'A workspace deterministic results': deterministicResults,
+  'A workspace SMAA results': smaaResults,
+  'Partial value function': partialValueFunction,
+  'Ranking weights': rankingWeights,
+  'Matching weights': matchingWeights,
+  'Precise swing weighting': preciseSwingWeights,
+  'Imprecise swing weighting': impreciseSwingWeights
+  // "Manual input": manualInput,
+  // "Manual input in progress": manualInputInProgress,
 };
 
-const loginService = require("./util/loginService");
-const workspaceService = require("./util/workspaceService");
-const errorService = require("./util/errorService");
-const TEST_URL = require("./util/constants").TEST_URL;
-const util = require("./util/util");
+const loginService = require('./util/loginService');
+const workspaceService = require('./util/workspaceService');
+const errorService = require('./util/errorService');
+const TEST_URL = require('./util/constants').TEST_URL;
+const util = require('./util/util');
 
 const title =
-  "Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)";
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function goToPreferences(browser) {
-  browser.click("#create-workspace-button").click("#add-workspace-button");
+  browser.click('#create-workspace-button').click('#add-workspace-button');
   return util.delayedClick(
     browser,
-    "#preferences-tab",
-    "#partial-value-functions-header"
+    '#preferences-tab',
+    '#partial-value-functions-header'
   );
 }
 
 function cleanUpWorkspace(browser) {
-  browser.click("#logo");
+  browser.click('#logo');
   workspaceService.deleteFromList(browser, 0);
 }
 
@@ -53,9 +53,9 @@ function afterEach(browser) {
 function loginPage(browser) {
   browser
     .url(TEST_URL)
-    .waitForElementVisible("#signinButton")
+    .waitForElementVisible('#signinButton')
     .getTitle(function (result) {
-      browser.assert.equal(result, "mcda.drugis.org");
+      browser.assert.equal(result, 'mcda.drugis.org');
     });
   errorService.isErrorBarNotPresent(browser);
 }
@@ -65,7 +65,7 @@ function workspaces(browser) {
     .login(browser)
     .pause(5000)
     .getTitle(function (result) {
-      browser.assert.equal(result, "Workspaces");
+      browser.assert.equal(result, 'Workspaces');
     });
   errorService.isErrorBarHidden(browser);
 }
@@ -73,8 +73,8 @@ function workspaces(browser) {
 function overview(browser) {
   loginService
     .login(browser)
-    .click("#create-workspace-button")
-    .click("#add-workspace-button")
+    .click('#create-workspace-button')
+    .click('#add-workspace-button')
     .pause(2000)
     .getTitle(function (result) {
       browser.assert.equal(result, title + "'s overview");
@@ -85,11 +85,11 @@ function overview(browser) {
 function problemDefition(browser) {
   loginService
     .login(browser)
-    .click("#create-workspace-button")
-    .click("#add-workspace-button");
+    .click('#create-workspace-button')
+    .click('#add-workspace-button');
 
   util
-    .delayedClick(browser, "#problem-definition-tab", "#effects-table-header")
+    .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
     .getTitle(function (result) {
       browser.assert.equal(result, title + "'s problem definition");
     });
@@ -109,14 +109,14 @@ function preferences(browser) {
 function deterministicResults(browser) {
   loginService
     .login(browser)
-    .click("#create-workspace-button")
-    .click("#add-workspace-button");
+    .click('#create-workspace-button')
+    .click('#add-workspace-button');
 
   util
     .delayedClick(
       browser,
-      "#deterministic-tab",
-      "#sensitivity-measurements-header"
+      '#deterministic-tab',
+      '#sensitivity-measurements-header'
     )
     .getTitle(function (result) {
       browser.assert.equal(result, title + "'s deterministic results");
@@ -127,11 +127,11 @@ function deterministicResults(browser) {
 function smaaResults(browser) {
   loginService
     .login(browser)
-    .click("#create-workspace-button")
-    .click("#add-workspace-button");
+    .click('#create-workspace-button')
+    .click('#add-workspace-button');
 
   util
-    .delayedClick(browser, "#smaa-tab", "#smaa-measurements-header")
+    .delayedClick(browser, '#smaa-tab', '#smaa-measurements-header')
     .getTitle(function (result) {
       browser.assert.equal(result, title + "'s SMAA results");
     });
@@ -141,7 +141,7 @@ function smaaResults(browser) {
 function partialValueFunction(browser) {
   loginService.login(browser);
   goToPreferences(browser)
-    .click("#criterion-0-pvf-button")
+    .click('#criterion-0-pvf-button')
     .pause(2000)
     .getTitle(function (result) {
       browser.assert.equal(
@@ -155,10 +155,10 @@ function partialValueFunction(browser) {
 function rankingWeights(browser) {
   loginService.login(browser);
   goToPreferences(browser)
-    .click("#ranking-button")
+    .click('#ranking-button')
     .pause(2000)
     .getTitle(function (result) {
-      browser.assert.equal(result, "Ranking");
+      browser.assert.equal(result, 'Ranking');
     });
   cleanUpWorkspace(browser);
 }
@@ -166,10 +166,10 @@ function rankingWeights(browser) {
 function matchingWeights(browser) {
   loginService.login(browser);
   goToPreferences(browser)
-    .click("#matching-button")
+    .click('#matching-button')
     .pause(2000)
     .getTitle(function (result) {
-      browser.assert.equal(result, "Matching");
+      browser.assert.equal(result, 'Matching');
     });
   cleanUpWorkspace(browser);
 }
@@ -177,10 +177,10 @@ function matchingWeights(browser) {
 function preciseSwingWeights(browser) {
   loginService.login(browser);
   goToPreferences(browser)
-    .click("#precise-swing-button")
+    .click('#precise-swing-button')
     .pause(2000)
     .getTitle(function (result) {
-      browser.assert.equal(result, "Precise swing weighting");
+      browser.assert.equal(result, 'Precise swing weighting');
     });
   cleanUpWorkspace(browser);
 }
@@ -188,10 +188,10 @@ function preciseSwingWeights(browser) {
 function impreciseSwingWeights(browser) {
   loginService.login(browser);
   goToPreferences(browser)
-    .click("#imprecise-swing-button")
+    .click('#imprecise-swing-button')
     .pause(2000)
     .getTitle(function (result) {
-      browser.assert.equal(result, "Imprecise swing weighting");
+      browser.assert.equal(result, 'Imprecise swing weighting');
     });
   cleanUpWorkspace(browser);
 }
@@ -199,12 +199,12 @@ function impreciseSwingWeights(browser) {
 function manualInput(browser) {
   loginService
     .login(browser)
-    .click("#create-workspace-button")
-    .click("#manual-workspace-radio")
-    .click("#add-workspace-button")
+    .click('#create-workspace-button')
+    .click('#manual-workspace-radio')
+    .click('#add-workspace-button')
     .pause(2000)
     .getTitle(function (result) {
-      browser.assert.equal(result, "Manual input");
+      browser.assert.equal(result, 'Manual input');
     });
   errorService.isErrorBarHidden(browser);
 }
@@ -212,16 +212,16 @@ function manualInput(browser) {
 function manualInputInProgress(browser) {
   loginService
     .login(browser)
-    .click("#create-workspace-button")
-    .click("#manual-workspace-radio")
-    .click("#add-workspace-button")
-    .setValue("#workspace-title", "title")
-    .click("#step1-save-button")
+    .click('#create-workspace-button')
+    .click('#manual-workspace-radio')
+    .click('#add-workspace-button')
+    .setValue('#workspace-title', 'title')
+    .click('#step1-save-button')
     .pause(2000)
     .getTitle(function (result) {
-      browser.assert.equal(result, "Manual input");
+      browser.assert.equal(result, 'Manual input');
     });
-  browser.click("#logo");
+  browser.click('#logo');
   workspaceService.deleteUnfinishedFromList(browser, 0);
   errorService.isErrorBarHidden(browser);
 }

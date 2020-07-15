@@ -16,6 +16,7 @@ import TestExport, {TableInputMode} from '../type/TableInputMode';
 import {
   createDistributions,
   createWarnings,
+  replaceUndefinedBounds,
   swapItems
 } from './ManualInputService/ManualInputService';
 
@@ -53,7 +54,9 @@ export function ManualInputContextProviderComponent({
   const [tableInputMode, setTableInputMode] = useState<TableInputMode>(
     'effect'
   );
-  const [criteria, setCriteria] = useState<ICriterion[]>(message.criteria);
+  const [criteria, setCriteria] = useState<ICriterion[]>(
+    replaceUndefinedBounds(message.criteria)
+  );
   const [alternatives, setAlternatives] = useState<IAlternative[]>(
     message.alternatives
   );

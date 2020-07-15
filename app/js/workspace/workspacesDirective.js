@@ -1,20 +1,14 @@
 'use strict';
-define(['lodash'], function(_) {
-  var dependencies = [
-    '$modal',
-    '$state'
-  ];
-  var WorkspacesDirective = function(
-    $modal,
-    $state
-  ) {
+define(['lodash'], function (_) {
+  var dependencies = ['$modal', '$state', 'InProgressResource'];
+  var WorkspacesDirective = function ($modal, $state, InProgressResource) {
     return {
       restrict: 'E',
       scope: {
-        'workspacesList': '='
+        workspacesList: '='
       },
       templateUrl: './workspacesDirective.html',
-      link: function(scope) {
+      link: function (scope) {
         scope.deleteWorkspace = deleteWorkspace;
         scope.copyWorkspace = copyWorkspace;
 
@@ -23,22 +17,30 @@ define(['lodash'], function(_) {
             templateUrl: './deleteWorkspace.html',
             controller: 'DeleteWorkspaceController',
             resolve: {
-              callback: function() {
-                return function() {
-                  scope.workspacesList = _.reject(scope.workspacesList, ['id', workspace.id]);
+              callback: function () {
+                return function () {
+                  scope.workspacesList = _.reject(scope.workspacesList, [
+                    'id',
+                    workspace.id
+                  ]);
                 };
               },
-              workspace: function() {
+              workspace: function () {
                 return workspace;
               }
             }
           });
         }
-    
+
         function copyWorkspace(workspace) {
-          $state.go('manualInput', {
-            workspace: workspace
-          });
+          InProgressResource.createCopy(
+            {sourceWorkspaceId: workspace.id},
+            function (response) {
+              $state.go('manualInput', {
+                inProgressId: response.id
+              });
+            }
+          );
         }
       }
     };

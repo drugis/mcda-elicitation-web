@@ -204,7 +204,7 @@ function switchSettingsInProblemDefition(browser) {
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectTableCellPath, '0.6')
     .assert.containsText(scaleRangeCellPath, '0.5');
 
@@ -224,7 +224,7 @@ function switchSettingsInProblemDefition(browser) {
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectTableCellPath, '0.6')
     .assert.containsText(scaleRangeCellPath, '0.5')
     .useCss();
@@ -316,7 +316,7 @@ function switchSettingsInOverview(browser) {
     .assert.containsText(effectCellPath, '60');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.6');
 
   showPercentagesAndSmaaEntered(browser)
@@ -332,7 +332,7 @@ function switchSettingsInOverview(browser) {
     .assert.containsText(effectCellPath, '60');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.6');
 }
 
@@ -346,7 +346,7 @@ function switchSettingsInPreferences(browser) {
     .assert.containsText(effectCellPath, '45');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
 
   showPercentagesAndValues(browser)
@@ -354,7 +354,7 @@ function switchSettingsInPreferences(browser) {
     .assert.containsText(effectCellPath, '45');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
 
   showPercentagesAndSmaaEntered(browser)
@@ -362,7 +362,7 @@ function switchSettingsInPreferences(browser) {
     .assert.containsText(effectCellPath, '45');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
 
   showPercentagesAndSmaaValues(browser)
@@ -370,7 +370,7 @@ function switchSettingsInPreferences(browser) {
     .assert.containsText(effectCellPath, '45');
 
   showDecimals(browser)
-    .assert.containsText(unitsCellPath, 'Proportion')
+    .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
 }
 

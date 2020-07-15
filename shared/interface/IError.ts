@@ -1,6 +1,14 @@
+export type Error = IError | null;
+
 export default interface IError {
-  message: String;
-  response: {
+  type?: string;
+  message: string;
+  status?: number;
+  statusCode?: number;
+  err?: {
+    message: string;
+  };
+  response?: {
     data: string;
   };
 }
