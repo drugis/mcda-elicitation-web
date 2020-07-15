@@ -3,13 +3,11 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Copy a workspace': copy,
-  'Copy and modify a workspace': copyAndModify
+  'Copy a workspace': copy
 };
 
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
-const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
 const NEW_TITLE =
@@ -38,7 +36,7 @@ function afterEach(browser) {
 function copy(browser) {
   browser
     .click('#done-button')
-    .pause(500)
+    .waitForElementVisible('#workspace-title')
     .assert.containsText('#workspace-title', NEW_TITLE);
   workspaceService.goHomeAfterLoading(browser, NEW_TITLE);
 }
