@@ -67,8 +67,11 @@ jobs:
       - name: run webpack
         run: npm run build-local-login
 
+      - name: build backend
+        run: yarn build-backend
+
       - name: run mcda
-        run: yarn build-backend && yarn start &
+        run: yarn start &
         env:
           MCDAWEB_AUTHENTICATION_METHOD: LOCAL
           MCDAWEB_DB_USER: mcdaweb
