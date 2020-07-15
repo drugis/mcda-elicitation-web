@@ -1,0 +1,108 @@
+name: MCDA | pull request | end-to-end tests
+
+on:
+  pull_request:
+    branches: githubActions
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: ['12']
+        os: [ubuntu-16.04]
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: develop
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.deployPrivateKey }}
+
+      - name: create ssl files
+        run: |
+          echo "${{ secrets.pataviClientCrt }}" > crt.pem 
+          echo "${{ secrets.pataviClientKey }}" > key.pem
+
+      - name: setup mcda database
+        run: |
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
+
+      - name: initialize mcda database
+        run: |
+          docker cp database.pg.sql ${{ job.services.postgres.id }}:/database.pg.sql
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sql
+
+      - name: add local users
+        run: |
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: run yarn
+        run: yarn
+
+      - name: run webpack
+        run: npm run build-local-login
+
+      - name: run mcda
+        run: node index.js &
+        env:
+          MCDAWEB_AUTHENTICATION_METHOD: LOCAL
+          MCDAWEB_DB_USER: mcdaweb
+          MCDAWEB_DB_PASSWORD: develop
+          MCDAWEB_DB_HOST: localhost
+          MCDAWEB_DB_NAME: mcdaweb
+          MCDAWEB_COOKIE_SECRET: abc
+          MCDA_HOST: localhost
+          PATAVI_HOST: patavi-test.drugis.org
+          PATAVI_PORT: 443
+          PATAVI_CLIENT_KEY: key.pem
+          PATAVI_CLIENT_CRT: crt.pem
+
+      - name: run nightwatch tests
+        id: nightwatch
+        run: npx nightwatch -c nightwatch.github.conf.js
+
+      - name: notify on slack channel on nightwatch failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Develop pull request:'
+          SLACK_MESSAGE: 'End-to-end tests failed'
+
+      - name: notify on slack channel on success
+        if: success()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Develop pull request:'
+          SLACK_MESSAGE: 'End-to-end tests passed'
+
+      - name: stop mcda
+        run: sudo pkill -9 node
