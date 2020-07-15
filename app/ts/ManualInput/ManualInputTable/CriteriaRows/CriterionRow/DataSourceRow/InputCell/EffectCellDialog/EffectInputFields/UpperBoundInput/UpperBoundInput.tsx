@@ -1,8 +1,8 @@
-import {Grid, TextField, FormControlLabel, Checkbox} from '@material-ui/core';
+import {Checkbox, FormControlLabel, Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {getUpperBoundError} from '../../../../../../../../CellValidityService/CellValidityService';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
-import {getUpperBoundError} from '../../../../../../../../CellValidityService/CellValidityService';
 
 export default function UpperBoundInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -67,6 +67,7 @@ export default function UpperBoundInput() {
       </Grid>
       <Grid item xs={6}>
         <TextField
+          id="upper-bound-input"
           value={upperBound}
           onChange={valueChanged}
           type="number"

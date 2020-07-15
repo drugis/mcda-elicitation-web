@@ -24,7 +24,7 @@ export default function DoneButton() {
 
   return (
     <Button
-      id="done-button"
+      id="finish-creating-workspace"
       color="primary"
       variant="contained"
       onClick={handleDoneClick}

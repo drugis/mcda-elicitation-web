@@ -34,7 +34,12 @@ export default function GenerateDistributionsButton() {
   return (
     <>
       <Tooltip title={tooltip}>
-        <Button color="primary" variant="contained" onClick={openDialog}>
+        <Button
+          id="generate-distributions"
+          color="primary"
+          variant="contained"
+          onClick={openDialog}
+        >
           Generate distributions
         </Button>
       </Tooltip>
@@ -52,6 +57,7 @@ export default function GenerateDistributionsButton() {
         </DialogContent>
         <DialogActions>
           <Button
+            id="confirm-generating-distributions"
             color="primary"
             onClick={handleClickGenerate}
             variant="contained"

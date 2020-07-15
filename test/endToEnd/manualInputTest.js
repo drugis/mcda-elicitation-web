@@ -28,7 +28,11 @@ module.exports = {
   'Moving an alternative': moveAlternative,
   'Editing the alternative title': editAlternative,
   'Displaying a warning when an alternative title is missing': missingAlternativeTitleWarning,
-  'Displaying a warning when an alternative has a duplicate title': duplicateAlternativeTitleWarning
+  'Displaying a warning when an alternative has a duplicate title': duplicateAlternativeTitleWarning,
+  'Finishing creating the workspace': finishCreatingWorkspace,
+  'Generating distributions from effects': generateDistributions,
+  'Entering effects': enterEffects,
+  'Entering distributions': enterDistributions
 };
 
 const loginService = require('./util/loginService');
@@ -59,6 +63,8 @@ const DUPLICATE_CRITERIA_TITLE_WARNING = 'Criteria must have unique titles';
 const MISSING_ALTERNATIVE_TITLE_WARING = 'Alternatives must have a title';
 const DUPLICATE_ALTERNATIVES_TITLE_WARNING =
   'Alternatives must have unique titles';
+const UNFILLED_VALUES_WARNING =
+  'Either effects or distributions must be fully filled out';
 
 function getCriterionTitlePaths(criterionId) {
   const basePath = '//*[@id="criterion-title-' + criterionId + '"]';
@@ -92,7 +98,7 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.useCss().click('#logo');
-  workspaceService.deleteUnfinishedFromList(browser, 0);
+  workspaceService.cleanUnfinishedList(browser);
   browser.end();
 }
 
@@ -524,4 +530,181 @@ function duplicateAlternativeTitleWarning(browser) {
         );
     });
   });
+}
+
+function finishCreatingWorkspace(browser) {
+  const firstCell = '//tbody/tr[2]/td[8]/span';
+  const secondCell = '//tbody/tr[2]/td[9]/span';
+  const thirdCell = '//tbody/tr[4]/td[8]/span';
+  const fourthCell = '//tbody/tr[4]/td[9]/span';
+  const editEffectCell = '//*[@id="edit-effect-cell"]';
+  browser
+    .useXpath()
+    .assert.containsText(FIRST_WARNING_PATH, UNFILLED_VALUES_WARNING)
+    .click(firstCell)
+    .click(editEffectCell)
+    .click(secondCell)
+    .click(editEffectCell)
+    .click(thirdCell)
+    .click(editEffectCell)
+    .click(fourthCell)
+    .click(editEffectCell)
+    .click('//*[@id="finish-creating-workspace"]')
+    .pause(500)
+    .getTitle(function (result) {
+      browser.assert.equal(result, "new workspace's overview");
+    })
+    .useCss()
+    .click('#logo');
+  workspaceService.cleanList(browser);
+}
+
+function generateDistributions(browser) {
+  const firstCell = '//tbody/tr[2]/td[8]/span';
+  const editEffectCell = '//*[@id="edit-effect-cell"]';
+  browser
+    .useXpath()
+    .assert.containsText('//*[@id="table-input-mode-selector"]', 'Effect')
+    .assert.containsText(FIRST_WARNING_PATH, UNFILLED_VALUES_WARNING)
+    .click(firstCell)
+    .click(editEffectCell)
+    .click('//*[@id="generate-distributions"]')
+    .click('//*[@id="confirm-generating-distributions"]')
+    .assert.containsText('//*[@id="table-input-mode-selector"]', 'Distribution')
+    .assert.containsText(firstCell, '0');
+}
+
+function enterEffects(browser) {
+  const firstCell = '//tbody/tr[2]/td[8]/span';
+  const editEffectCell = '//*[@id="edit-effect-cell"]';
+  const typeSelector = '//*[@id="input-parameters-selector"]';
+  const valueCI = '//*[@id="menu-"]/div[3]/ul/li[2]';
+  const range = '//*[@id="menu-"]/div[3]/ul/li[3]';
+  const empty = '//*[@id="menu-"]/div[3]/ul/li[4]';
+  const text = '//*[@id="menu-"]/div[3]/ul/li[5]';
+  const valueInput = '//*[@id="value-input"]';
+  const lowerBoundInput = '//*[@id="lower-bound-input"]';
+  const upperBoundInput = '//*[@id="upper-bound-input"]';
+  const textInput = '//*[@id="text-input"]';
+  browser
+    .useXpath()
+    .click(firstCell)
+    .setValue(valueInput, 1)
+    .click(editEffectCell)
+    .assert.containsText(firstCell, 1)
+    .click(firstCell)
+    .click(typeSelector)
+    .click(valueCI)
+    .pause(100)
+    .clearValue(valueInput)
+    .setValue(valueInput, 2)
+    .setValue(lowerBoundInput, 1)
+    .setValue(upperBoundInput, 3)
+    .click(editEffectCell)
+    .assert.containsText(firstCell, '2 (1, 3)')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(range)
+    .pause(100)
+    .clearValue(lowerBoundInput)
+    .setValue(lowerBoundInput, 0)
+    .clearValue(upperBoundInput)
+    .setValue(upperBoundInput, 1)
+    .click(editEffectCell)
+    .assert.containsText(firstCell, '[0, 1]')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(empty)
+    .pause(100)
+    .click(editEffectCell)
+    .assert.containsText(firstCell, 'Empty')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(text)
+    .pause(100)
+    .setValue(textInput, 'text')
+    .click(editEffectCell)
+    .assert.containsText(firstCell, 'text');
+}
+
+function enterDistributions(browser) {
+  const firstCell = '//tbody/tr[2]/td[8]/span';
+  const editDistributionCell = '//*[@id="edit-distribution-cell"]';
+  const typeSelector = '//*[@id="input-parameters-selector"]';
+  const beta = '//*[@id="menu-"]/div[3]/ul/li[2]';
+  const gamma = '//*[@id="menu-"]/div[3]/ul/li[3]';
+  const value = '//*[@id="menu-"]/div[3]/ul/li[4]';
+  const range = '//*[@id="menu-"]/div[3]/ul/li[5]';
+  const empty = '//*[@id="menu-"]/div[3]/ul/li[6]';
+  const text = '//*[@id="menu-"]/div[3]/ul/li[7]';
+  const meanInput = '//*[@id="mean-input"]';
+  const standardErrorInput = '//*[@id="standard-error-input"]';
+  const alphaInput = '//*[@id="alpha-input"]';
+  const betaInput = '//*[@id="beta-input"]';
+  const valueInput = '//*[@id="value-input"]';
+  const lowerBoundInput = '//*[@id="lower-bound-input"]';
+  const upperBoundInput = '//*[@id="upper-bound-input"]';
+  const textInput = '//*[@id="text-input"]';
+  browser
+    .useXpath()
+    .click('//*[@id="table-input-mode-selector"]')
+    .click('//*[@id="menu-"]/div[3]/ul/li[2]')
+    .pause(100)
+    .click(firstCell)
+    .setValue(meanInput, 1)
+    .clearValue(standardErrorInput)
+    .setValue(standardErrorInput, 2)
+    .click(editDistributionCell)
+    .pause(100)
+    .assert.containsText(firstCell, 'Normal(1, 2)')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(beta)
+    .clearValue(alphaInput)
+    .setValue(alphaInput, 2)
+    .clearValue(betaInput)
+    .setValue(betaInput, 3)
+    .pause(100)
+    .click(editDistributionCell)
+    .assert.containsText(firstCell, 'Beta(2, 3)')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(gamma)
+    .clearValue(alphaInput)
+    .setValue(alphaInput, 3)
+    .clearValue(betaInput)
+    .setValue(betaInput, 4)
+    .pause(100)
+    .click(editDistributionCell)
+    .assert.containsText(firstCell, 'Gamma(3, 4)')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(value)
+    .setValue(valueInput, 1)
+    .pause(100)
+    .click(editDistributionCell)
+    .assert.containsText(firstCell, 1)
+    .click(firstCell)
+    .click(typeSelector)
+    .click(range)
+    .pause(100)
+    .clearValue(lowerBoundInput)
+    .setValue(lowerBoundInput, 0)
+    .clearValue(upperBoundInput)
+    .setValue(upperBoundInput, 1)
+    .click(editDistributionCell)
+    .assert.containsText(firstCell, '[0, 1]')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(empty)
+    .pause(100)
+    .click(editDistributionCell)
+    .assert.containsText(firstCell, 'Empty')
+    .click(firstCell)
+    .click(typeSelector)
+    .click(text)
+    .pause(100)
+    .setValue(textInput, 'text')
+    .click(editDistributionCell)
+    .assert.containsText(firstCell, 'text');
 }

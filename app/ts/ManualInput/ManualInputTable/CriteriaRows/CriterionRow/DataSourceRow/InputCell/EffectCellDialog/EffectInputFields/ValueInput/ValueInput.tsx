@@ -1,8 +1,8 @@
 import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {getValueError} from '../../../../../../../../CellValidityService/CellValidityService';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
-import {getValueError} from '../../../../../../../../CellValidityService/CellValidityService';
 
 export default function ValueInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -34,6 +34,7 @@ export default function ValueInput() {
       </Grid>
       <Grid item xs={6}>
         <TextField
+          id="value-input"
           value={value}
           onChange={valueChanged}
           type="number"

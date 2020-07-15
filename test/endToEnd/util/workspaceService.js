@@ -87,6 +87,25 @@ function cleanList(browser) {
   return browser;
 }
 
+function cleanUnfinishedList(browser) {
+  var expectPath = '#delete-in-progress-workspace-0';
+  browser.waitForElementVisible('#workspaces-header');
+  browser.elements('css selector', expectPath, function (result) {
+    if (result.value.length !== 0) {
+      console.log(
+        '! Unfinished workspace list is not empty. Deleting an unfinished workspace.'
+      );
+      browser.click(expectPath);
+      browser.waitForElementVisible('#delete-workspace-confirm-button');
+      browser.click('#delete-workspace-confirm-button');
+      cleanList(browser);
+    } else {
+      console.log('✔ Unfinished workspace list is empty.');
+    }
+  });
+  return browser;
+}
+
 module.exports = {
   addExample: addExample,
   addTutorial: addTutorial,
@@ -95,5 +114,6 @@ module.exports = {
   deleteUnfinishedFromList: deleteUnfinishedFromList,
   uploadTestWorkspace: uploadTestWorkspace,
   goHomeAfterLoading: goHomeAfterLoading,
-  cleanList: cleanList
+  cleanList: cleanList,
+  cleanUnfinishedList: cleanUnfinishedList
 };

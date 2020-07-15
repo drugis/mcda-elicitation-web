@@ -145,6 +145,7 @@ export default function DistributionCellDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              id="input-parameters-selector"
               value={inputType}
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
@@ -166,6 +167,7 @@ export default function DistributionCellDialog({
       </DialogContent>
       <DialogActions>
         <Button
+          id="edit-distribution-cell"
           color="primary"
           onClick={handleEditButtonClick}
           variant="contained"

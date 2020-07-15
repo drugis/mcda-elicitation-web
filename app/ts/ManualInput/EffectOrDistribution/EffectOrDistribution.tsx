@@ -20,6 +20,7 @@ export default function EffectOrDistribution() {
       <Grid item>Table input mode</Grid>
       <Grid item>
         <Select
+          id="table-input-mode-selector"
           value={tableInputMode}
           onChange={handleChange}
           style={{minWidth: '150px'}}

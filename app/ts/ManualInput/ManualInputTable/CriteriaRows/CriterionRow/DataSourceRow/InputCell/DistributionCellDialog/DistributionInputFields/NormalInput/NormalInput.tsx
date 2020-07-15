@@ -1,8 +1,8 @@
 import {Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {getNormalError} from '../../../../../../../../CellValidityService/CellValidityService';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
-import {getNormalError} from '../../../../../../../../CellValidityService/CellValidityService';
 
 export default function NormalInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -70,6 +70,7 @@ export default function NormalInput() {
       </Grid>
       <Grid item xs={6}>
         <TextField
+          id="mean-input"
           value={mean}
           onChange={meanChanged}
           type="number"
@@ -83,6 +84,7 @@ export default function NormalInput() {
       </Grid>
       <Grid item xs={6}>
         <TextField
+          id="standard-error-input"
           value={standardError}
           onChange={standardErrorChanged}
           type="number"
