@@ -71,6 +71,7 @@ export default function InlineEditor({
       multiline={multiline}
       onBlur={handleClick}
       onKeyDown={handleKey}
+      fullWidth
       error={errorOnEmpty && !newValue}
       helperText={errorOnEmpty && !newValue ? 'Please provide a title' : ''}
     />
