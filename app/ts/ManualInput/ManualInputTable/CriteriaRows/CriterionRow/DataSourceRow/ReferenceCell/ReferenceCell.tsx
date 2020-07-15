@@ -19,7 +19,7 @@ export default function ReferenceCell({
   }
 
   return (
-    <TableCell align="center">
+    <TableCell id={`ds-reference-${dataSource.id}`} align="center">
       <InlineEditor
         value={dataSource.reference}
         tooltipText={'Edit reference'}

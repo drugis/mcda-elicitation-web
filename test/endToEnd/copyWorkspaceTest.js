@@ -3,41 +3,34 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Copy a workspace': copy,
-  'Copy and modify a workspace': copyAndModify
+  'Copy a workspace': copy
 };
 
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
-const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
-const NEW_TITLE = 'copy of a workspace';
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
-
-function beforeEach(browser) {
-  loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-  workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title);
-  workspaceService.copy(browser, 0, NEW_TITLE);
-}
-
-function afterEach(browser) {
-  workspaceService.deleteFromList(browser, 1);
-  workspaceService.deleteFromList(browser, 0);
-  browser.end();
-}
+const NEW_TITLE =
+  'Copy of Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const TITLE =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function copy(browser) {
+  loginService.login(
+    browser,
+    testUrl,
+    loginService.username,
+    loginService.correctPassword
+  );
+  workspaceService.cleanList(browser);
+  workspaceService.addExample(browser, TITLE);
+  workspaceService.copy(browser, 0);
   browser
-    .click('#enter-data-button')
-    .click('#done-button').pause(500);
+    .click('#finish-creating-workspace')
+    .waitForElementVisible('#workspace-title')
+    .assert.containsText('#workspace-title', NEW_TITLE);
   workspaceService.goHomeAfterLoading(browser, NEW_TITLE);
-}
-
-function copyAndModify(browser) {
-  browser
-    .click('#enter-data-button')
-    .click('#done-button').pause(500);
-  workspaceService.goHomeAfterLoading(browser, NEW_TITLE);  
+  workspaceService.cleanList(browser);
+  workspaceService.cleanUnfinishedList(browser);
+  browser.end();
 }

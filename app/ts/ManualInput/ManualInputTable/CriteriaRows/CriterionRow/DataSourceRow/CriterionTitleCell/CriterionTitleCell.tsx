@@ -17,7 +17,11 @@ export default function CriterionTitleCell({
   }
 
   return (
-    <TableCell rowSpan={numberOfDataSourceRows} align="center">
+    <TableCell
+      id={`criterion-title-${criterion.id}`}
+      rowSpan={numberOfDataSourceRows}
+      align="center"
+    >
       <InlineEditor
         value={criterion.title}
         tooltipText={'Edit criterion title'}

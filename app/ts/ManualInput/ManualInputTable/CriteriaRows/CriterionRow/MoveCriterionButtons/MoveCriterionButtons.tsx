@@ -26,10 +26,18 @@ export default function MoveCriterionButtons() {
       variant="text"
       size="small"
     >
-      <Button disabled={!previousCriterion} onClick={moveUp}>
+      <Button
+        id={`move-criterion-up-${criterion.id}`}
+        disabled={!previousCriterion}
+        onClick={moveUp}
+      >
         <ArrowDropUp />
       </Button>
-      <Button disabled={!nextCriterion} onClick={moveDown}>
+      <Button
+        id={`move-criterion-down-${criterion.id}`}
+        disabled={!nextCriterion}
+        onClick={moveDown}
+      >
         <ArrowDropDown />
       </Button>
     </ButtonGroup>

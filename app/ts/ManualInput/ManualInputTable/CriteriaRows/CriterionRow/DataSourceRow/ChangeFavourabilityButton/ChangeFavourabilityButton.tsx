@@ -22,7 +22,11 @@ export default function ChangeFavourabilityButton() {
   return (
     <Tooltip title={createTooltip()}>
       <IconButton size="small" color="primary" onClick={handleClick}>
-        {criterion.isFavourable ? <ThumbDown /> : <ThumbUp />}
+        {criterion.isFavourable ? (
+          <ThumbDown id={`make-unfavourable-${criterion.id}`} />
+        ) : (
+          <ThumbUp id={`make-favourable-${criterion.id}`} />
+        )}
       </IconButton>
     </Tooltip>
   );

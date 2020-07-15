@@ -8,7 +8,7 @@ export default function AddAlternativeButton() {
 
   return (
     <Tooltip title="Add an alternative">
-      <IconButton onClick={addAlternative}>
+      <IconButton id="add-alternative" onClick={addAlternative}>
         <AddBox color="primary"></AddBox>
       </IconButton>
     </Tooltip>

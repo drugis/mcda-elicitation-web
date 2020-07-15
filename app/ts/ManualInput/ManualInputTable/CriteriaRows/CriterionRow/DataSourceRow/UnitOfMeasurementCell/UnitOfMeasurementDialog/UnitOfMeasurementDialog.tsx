@@ -115,6 +115,7 @@ export default function UnitOfMeasurementDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              id="unit-type-selector"
               value={unitType}
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
@@ -127,7 +128,7 @@ export default function UnitOfMeasurementDialog({
           <Grid item xs={6}>
             Label
           </Grid>
-          <Grid item xs={6}>
+          <Grid id="unit-label" item xs={6}>
             <TextField
               value={label}
               onChange={handleLabelChange}
@@ -140,6 +141,7 @@ export default function UnitOfMeasurementDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              id="unit-lower-bound-selector"
               value={lowerBound}
               onChange={handleLowerBoundChange}
               style={{minWidth: '198px'}}
@@ -159,6 +161,7 @@ export default function UnitOfMeasurementDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              id="unit-upper-bound-selector"
               value={upperBound}
               onChange={handleUpperBoundChange}
               style={{minWidth: '198px'}}
@@ -177,6 +180,7 @@ export default function UnitOfMeasurementDialog({
       </DialogContent>
       <DialogActions>
         <Button
+          id="edit-unit-of-measurement"
           color="primary"
           onClick={handleEditButtonClick}
           variant="contained"

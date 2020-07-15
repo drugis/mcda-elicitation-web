@@ -31,13 +31,13 @@ export default function MoveDataSourceButtons() {
       size="small"
     >
       <Button disabled={!previousDataSource} onClick={moveUp}>
-        <ArrowDropUp />
+        <ArrowDropUp id={`move-ds-up-${dataSource.id}`} />
       </Button>
       <Button
         disabled={!nextDataSource || nextDataSource.id.startsWith(DUMMY_ID)}
         onClick={moveDown}
       >
-        <ArrowDropDown />
+        <ArrowDropDown id={`move-ds-down-${dataSource.id}`} />
       </Button>
     </ButtonGroup>
   );

@@ -17,7 +17,7 @@ export default function AddDataSourceButton({
 
   return (
     <Tooltip title="Add a reference">
-      <IconButton onClick={handleClick}>
+      <IconButton id={`add-ds-for-${criterion.id}`} onClick={handleClick}>
         <AddBox color="primary"></AddBox>
       </IconButton>
     </Tooltip>

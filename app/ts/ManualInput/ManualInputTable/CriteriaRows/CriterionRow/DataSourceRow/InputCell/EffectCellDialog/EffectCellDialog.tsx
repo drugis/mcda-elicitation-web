@@ -122,6 +122,7 @@ export default function EffectCellDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              id="input-parameters-selector"
               value={inputType}
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
@@ -141,6 +142,7 @@ export default function EffectCellDialog({
       </DialogContent>
       <DialogActions>
         <Button
+          id="edit-effect-cell"
           color="primary"
           onClick={handleEditButtonClick}
           variant="contained"

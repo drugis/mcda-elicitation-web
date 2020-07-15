@@ -4,9 +4,11 @@ const errorService = require('./errorService.js');
 const util = require('./util.js');
 
 function goHomeAfterLoading(browser, title) {
-  errorService.isErrorBarHidden(browser)
+  errorService
+    .isErrorBarHidden(browser)
     .assert.containsText('#workspace-title', title);
-  return util.delayedClick(browser, '#logo', '#workspaces-header')
+  return util
+    .delayedClick(browser, '#logo', '#workspaces-header')
     .waitForElementVisible('#workspaces-header');
 }
 
@@ -17,7 +19,8 @@ function addExample(browser, title) {
     .click('#example-workspace-radio')
     .click('#example-workspace-selector')
     .click('option[label="' + title + '"]')
-    .click('#add-workspace-button').pause(500);
+    .click('#add-workspace-button')
+    .pause(500);
   return goHomeAfterLoading(browser, title);
 }
 
@@ -28,14 +31,15 @@ function addTutorial(browser, title) {
     .click('#tutorial-workspace-radio')
     .click('#tutorial-workspace-selector')
     .click('option[label="' + title + '"]')
-    .click('#add-workspace-button').pause(500);
+    .click('#add-workspace-button')
+    .pause(500);
   return goHomeAfterLoading(browser, title);
 }
 
-function copy(browser, index, newTitle) {
+function copy(browser, index) {
   return browser
     .click('#copy-workspace-' + index)
-    .setValue('#workspace-title', newTitle);
+    .waitForElementVisible('#workspace-title');
 }
 
 function deleteFromList(browser, index) {
@@ -50,8 +54,12 @@ function uploadTestWorkspace(browser, path) {
     .waitForElementVisible('#create-workspace-button')
     .click('#create-workspace-button')
     .click('#upload-workspace-radio')
-    .setValue('#workspace-upload-input', require('path').resolve(__dirname + path))
-    .click('#add-workspace-button').pause(500);
+    .setValue(
+      '#workspace-upload-input',
+      require('path').resolve(__dirname + path)
+    )
+    .click('#add-workspace-button')
+    .pause(500);
   return errorService.isErrorBarHidden(browser);
 }
 
@@ -79,6 +87,25 @@ function cleanList(browser) {
   return browser;
 }
 
+function cleanUnfinishedList(browser) {
+  var expectPath = '#delete-in-progress-workspace-0';
+  browser.waitForElementVisible('#workspaces-header');
+  browser.elements('css selector', expectPath, function (result) {
+    if (result.value.length !== 0) {
+      console.log(
+        '! Unfinished workspace list is not empty. Deleting an unfinished workspace.'
+      );
+      browser.click(expectPath);
+      browser.waitForElementVisible('#delete-workspace-confirm-button');
+      browser.click('#delete-workspace-confirm-button');
+      cleanUnfinishedList(browser);
+    } else {
+      console.log('✔ Unfinished workspace list is empty.');
+    }
+  });
+  return browser;
+}
+
 module.exports = {
   addExample: addExample,
   addTutorial: addTutorial,
@@ -87,5 +114,6 @@ module.exports = {
   deleteUnfinishedFromList: deleteUnfinishedFromList,
   uploadTestWorkspace: uploadTestWorkspace,
   goHomeAfterLoading: goHomeAfterLoading,
-  cleanList: cleanList
+  cleanList: cleanList,
+  cleanUnfinishedList: cleanUnfinishedList
 };

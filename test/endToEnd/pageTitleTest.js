@@ -14,9 +14,8 @@ module.exports = {
   'Ranking weights': rankingWeights,
   'Matching weights': matchingWeights,
   'Precise swing weighting': preciseSwingWeights,
-  'Imprecise swing weighting': impreciseSwingWeights
-  // "Manual input": manualInput,
-  // "Manual input in progress": manualInputInProgress,
+  'Imprecise swing weighting': impreciseSwingWeights,
+  'Manual input': manualInput
 };
 
 const loginService = require('./util/loginService');
@@ -205,23 +204,9 @@ function manualInput(browser) {
     .pause(2000)
     .getTitle(function (result) {
       browser.assert.equal(result, 'Manual input');
-    });
-  errorService.isErrorBarHidden(browser);
-}
-
-function manualInputInProgress(browser) {
-  loginService
-    .login(browser)
-    .click('#create-workspace-button')
-    .click('#manual-workspace-radio')
-    .click('#add-workspace-button')
-    .setValue('#workspace-title', 'title')
-    .click('#step1-save-button')
-    .pause(2000)
-    .getTitle(function (result) {
-      browser.assert.equal(result, 'Manual input');
-    });
-  browser.click('#logo');
-  workspaceService.deleteUnfinishedFromList(browser, 0);
-  errorService.isErrorBarHidden(browser);
+    })
+    .assert.not.elementPresent('#error')
+    .click('#logo')
+    .click('#delete-in-progress-workspace-0')
+    .click('#delete-workspace-confirm-button');
 }

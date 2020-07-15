@@ -58,7 +58,7 @@ export default function UnitOfMeasurementCell({
   }
 
   return (
-    <TableCell align="center">
+    <TableCell id={`ds-unit-${dataSource.id}`} align="center">
       <Grid container>
         <Grid item xs={12} onClick={openDialog} style={{cursor: 'pointer'}}>
           {createLabel()}

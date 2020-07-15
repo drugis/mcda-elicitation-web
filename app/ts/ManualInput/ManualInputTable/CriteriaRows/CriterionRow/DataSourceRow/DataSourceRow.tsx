@@ -66,7 +66,7 @@ export default function DataSourceRow({
   }
 
   return (
-    <TableRow>
+    <TableRow id={`criterion-row-${criterion.id}`}>
       {isFirstRowForCriterion ? (
         <>
           <TableCell rowSpan={numberOfDataSourceRows} align={'center'}>

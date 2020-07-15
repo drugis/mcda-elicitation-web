@@ -32,6 +32,7 @@ export default function BetaValueInput({
       </Grid>
       <Grid item xs={6}>
         <TextField
+          id="beta-input"
           value={beta}
           onChange={betaChanged}
           type="number"

@@ -32,6 +32,7 @@ export default function AlphaValueInput({
       </Grid>
       <Grid item xs={6}>
         <TextField
+          id="alpha-input"
           value={alpha}
           onChange={alphaChanged}
           type="number"

@@ -17,7 +17,12 @@ export default function TextInput() {
         Text
       </Grid>
       <Grid item xs={6}>
-        <TextField value={text} onChange={handleTextChanged} autoFocus />
+        <TextField
+          id="text-input"
+          value={text}
+          onChange={handleTextChanged}
+          autoFocus
+        />
       </Grid>
     </>
   );

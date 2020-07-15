@@ -5,7 +5,7 @@ export default function Error() {
   const {error} = useContext(ErrorContext);
 
   return (
-    <div>
+    <div id="error">
       <pre>{error}</pre>
     </div>
   );

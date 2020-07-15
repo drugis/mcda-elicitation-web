@@ -37,8 +37,12 @@ export default function AlternativeHeader({
   }
 
   return (
-    <TableCell align="center">
-      <Button disabled={!previousAlternative} onClick={moveLeft}>
+    <TableCell id={`alternative-${alternative.id}`} align="center">
+      <Button
+        id={`move-alternative-left-${alternative.id}`}
+        disabled={!previousAlternative}
+        onClick={moveLeft}
+      >
         <ArrowLeft />
       </Button>
       <InlineEditor
@@ -48,11 +52,20 @@ export default function AlternativeHeader({
         errorOnEmpty={true}
       />
       <Tooltip title="Delete alternative">
-        <IconButton size="small" color="secondary" onClick={handleDelete}>
+        <IconButton
+          id={`delete-alternative-${alternative.id}`}
+          size="small"
+          color="secondary"
+          onClick={handleDelete}
+        >
           <Delete fontSize={'small'} />
         </IconButton>
       </Tooltip>
-      <Button disabled={!nextAlternative} onClick={moveRight}>
+      <Button
+        id={`move-alternative-right-${alternative.id}`}
+        disabled={!nextAlternative}
+        onClick={moveRight}
+      >
         <ArrowRight />
       </Button>
     </TableCell>

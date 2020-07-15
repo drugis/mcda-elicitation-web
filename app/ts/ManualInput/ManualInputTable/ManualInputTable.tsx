@@ -25,7 +25,7 @@ export default function ManualInputTable() {
   }
 
   return (
-    <Table size="small" padding="none">
+    <Table id="manual-input-table" size="small" padding="none">
       <TableHead>
         <TableRow>
           <TableCell align="center" colSpan={3}>

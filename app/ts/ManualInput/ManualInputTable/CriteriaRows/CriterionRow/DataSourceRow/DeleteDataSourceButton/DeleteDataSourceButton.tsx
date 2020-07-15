@@ -20,6 +20,7 @@ export default function DeleteDataSourceButton({
     <Tooltip title="Delete reference">
       <span>
         <IconButton
+          id={`delete-ds-${dataSourceId}`}
           size="small"
           color="secondary"
           onClick={handleDeleteDataSource}

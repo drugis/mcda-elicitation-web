@@ -1,8 +1,8 @@
-import {Grid, TextField, Checkbox, FormControlLabel} from '@material-ui/core';
+import {Checkbox, FormControlLabel, Grid, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {getLowerBoundError} from '../../../../../../../../CellValidityService/CellValidityService';
 import {DataSourceRowContext} from '../../../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
-import {getLowerBoundError} from '../../../../../../../../CellValidityService/CellValidityService';
 
 export default function LowerBoundInput() {
   const {dataSource} = useContext(DataSourceRowContext);
@@ -78,6 +78,7 @@ export default function LowerBoundInput() {
       </Grid>
       <Grid item xs={6}>
         <TextField
+          id="lower-bound-input"
           value={lowerBound}
           onChange={valueChanged}
           type="number"
