@@ -17,7 +17,9 @@ module.exports = {
   'Adding a data source': addDataSource,
   'Deleting a data source': deleteDataSource,
   'Moving a data source': moveDataSource,
-  'Editing unit of measurement': editUnitOfMeaurement,
+  'Setting the unit of measurement to percentage': setUnitOfMeaurementToPercentage,
+  'Setting the unit of measurement to decimal': setUnitOfMeaurementToDecimal,
+  'Setting the unit of measurement to custom': setUnitOfMeaurementToCustom,
   'Editing strength of evidence': editSterengthOfEvidence,
   'Editing uncertainties': editUncertainties,
   'Editing reference': editReference,
@@ -33,6 +35,11 @@ const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
 const workspaceService = require('./util/workspaceService');
 
+const FIRST_WARNING_PATH = '//*[@id="warnings"]/div[1]';
+const CRITERION_ROW_PATH = '//tbody/tr[2]';
+const DATA_SOURCE_PATH = '//tbody/tr[2]/td[12]';
+const ALTERNATIVE_PATH = '//thead/tr/th[6]';
+
 const NEW_TITLE = 'new title';
 const NEW_THERAPEUTIC_CONTEXT = 'therapeutic context';
 const NEW_CRITERION_DESCRIPTION = 'new description';
@@ -41,6 +48,7 @@ const NEW_STRENGTH_OF_EVIDENCE = 'new strength of evidence';
 const NEW_UNCERTAINTY = 'new uncertainty';
 const DUPLICATE_CRITERION_TITLE = 'criterion 2';
 const DUPLICATE_ALTERNATIVE_TITLE = 'alternative 2';
+const CUSTOM_UNIT_LABEL = 'custom unit label';
 
 const TOO_FEW_CRITERIA_WARNING = 'At least two criteria are required';
 const NO_TITLE_WARNING = 'No title entered';
@@ -52,6 +60,30 @@ const MISSING_ALTERNATIVE_TITLE_WARING = 'Alternatives must have a title';
 const DUPLICATE_ALTERNATIVES_TITLE_WARNING =
   'Alternatives must have unique titles';
 
+function getCriterionTitlePaths(criterionId) {
+  const basePath = '//*[@id="criterion-title-' + criterionId + '"]';
+  return {
+    criterionTitle: basePath + '/span/span',
+    criterionTitleInput: basePath + '/div/div/input'
+  };
+}
+
+function getUnitOfMeasurementPaths(dataSourceId) {
+  const basePath = '//*[@id="ds-unit-' + dataSourceId + '"]';
+  return {
+    labelPath: basePath + '/div/div[1]/span',
+    boundsPath: basePath + '/div/div[2]/span'
+  };
+}
+
+function getAlternativePaths(alternativeId) {
+  const basePath = '//*[@id="alternative-' + alternativeId + '"]';
+  return {
+    alternativeTitle: basePath + '/span/span',
+    alternativeTitleInput: basePath + '/div/div/input'
+  };
+}
+
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
@@ -59,6 +91,7 @@ function beforeEach(browser) {
 }
 
 function afterEach(browser) {
+  browser.useCss().click('#logo');
   workspaceService.deleteUnfinishedFromList(browser, 0);
   browser.end();
 }
@@ -68,7 +101,7 @@ function editTitle(browser) {
     .clearValue('#workspace-title')
     .assert.containsText('#warnings > div:nth-child(1)', NO_TITLE_WARNING)
     .setValue('#workspace-title', 'another title')
-    .pause(250) // wait for debounce?
+    .pause(500) // wait for debounce?
     .click('#logo')
     .assert.containsText('#in-progress-workspace-0', 'another title');
 }
@@ -76,11 +109,10 @@ function editTitle(browser) {
 function editContext(browser) {
   browser
     .setValue('#therapeutic-context', NEW_THERAPEUTIC_CONTEXT)
-    .pause(250)
+    .pause(500)
     .click('#logo')
     .click('#in-progress-workspace-0')
-    .assert.containsText('#therapeutic-context', NEW_THERAPEUTIC_CONTEXT)
-    .click('#logo');
+    .assert.containsText('#therapeutic-context', NEW_THERAPEUTIC_CONTEXT);
 }
 
 function toggleFavourability(browser) {
@@ -93,382 +125,403 @@ function toggleFavourability(browser) {
     .assert.not.elementPresent('#favourable-criteria-label')
     .assert.not.elementPresent('#unfavourable-criteria-label')
     .assert.not.elementPresent('#add-favourable-criterion-cell')
-    .waitForElementVisible('#add-unfavourable-criterion-cell')
-    .click('#logo');
+    .waitForElementVisible('#add-unfavourable-criterion-cell');
 }
 
 function changeCriterionFavourability(browser) {
   const criterionTitle = 'criterion 2';
-  const favourableCriterionTitlePath = '//tbody/tr[4]/td[3]/span/span';
-  const unFavourableCriterionTitlePath = '//tbody/tr[6]/td[3]/span/span';
+  const favourableCriterionTitle = '//tbody/tr[4]/td[3]/span/span';
+  const unFavourableCriterionTitle = '//tbody/tr[6]/td[3]/span/span';
+  const criterionRow = '//tbody/tr[4]';
 
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[4]', 'id', (result) => {
-      var criterionId = result.value.split('-').slice(2).join('-');
-      var makeUnfavourableButton =
+    browser.useXpath().getAttribute(criterionRow, 'id', (result) => {
+      const criterionId = result.value.split('-').slice(2).join('-');
+      const makeUnfavourableButton =
         '//*[@id="make-unfavourable-' + criterionId + '"]';
-      var makeFavourableButton =
+      const makeFavourableButton =
         '//*[@id="make-favourable-' + criterionId + '"]';
       browser
         .waitForElementVisible(makeUnfavourableButton)
         .click(makeUnfavourableButton)
-        .assert.containsText(unFavourableCriterionTitlePath, criterionTitle)
+        .assert.containsText(unFavourableCriterionTitle, criterionTitle)
         .waitForElementVisible(makeFavourableButton)
         .click(makeFavourableButton)
-        .assert.containsText(favourableCriterionTitlePath, criterionTitle)
-        .useCss()
-        .click('#logo');
+        .assert.containsText(favourableCriterionTitle, criterionTitle);
     });
   });
 }
 
 function addCriterion(browser) {
+  const addCriterionButton = '//*[@id="add-favourable-criterion-cell"]/button';
+  const newCriterionTitle = '//tbody/tr[6]/td[3]/span/span';
   browser
     .useXpath()
-    .click('//tbody/tr[6]/td/button')
-    .assert.containsText('//tbody/tr[6]/td[3]/span/span', 'new criterion')
-    .useCss()
-    .click('#logo');
+    .click(addCriterionButton)
+    .assert.containsText(newCriterionTitle, 'new criterion');
 }
 
 function deleteCriterion(browser) {
+  const deleteCriterionButton = '//tbody/tr[4]/td[1]/div/div[1]/button';
   browser
     .useXpath()
-    .click('//tbody/tr[4]/td[1]/div/div[1]/button')
-    .assert.containsText('//*[@id="warnings"]/div[1]', TOO_FEW_CRITERIA_WARNING)
-    .useCss()
-    .click('#logo');
+    .click(deleteCriterionButton)
+    .assert.containsText(FIRST_WARNING_PATH, TOO_FEW_CRITERIA_WARNING);
 }
 
 function moveCriterion(browser) {
+  const criterionTitle = '//tbody/tr[2]/td[3]/span/span';
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]', 'id', (result) => {
-      var criterionId = result.value.split('-').slice(2).join('-');
-      var moveDownButton = '//*[@id="move-criterion-down-' + criterionId + '"]';
-      var moveUpButton = '//*[@id="move-criterion-up-' + criterionId + '"]';
+    browser.useXpath().getAttribute(CRITERION_ROW_PATH, 'id', (result) => {
+      const criterionId = result.value.split('-').slice(2).join('-');
+      const moveDownButton =
+        '//*[@id="move-criterion-down-' + criterionId + '"]';
+      const moveUpButton = '//*[@id="move-criterion-up-' + criterionId + '"]';
       browser.assert
-        .containsText('//tbody/tr[2]/td[3]/span/span', 'criterion 1')
+        .containsText(criterionTitle, 'criterion 1')
         .click(moveDownButton)
-        .assert.containsText('//tbody/tr[2]/td[3]/span/span', 'criterion 2')
+        .assert.containsText(criterionTitle, 'criterion 2')
         .click(moveUpButton)
-        .assert.containsText('//tbody/tr[2]/td[3]/span/span', 'criterion 1')
-        .useCss()
-        .click('#logo');
+        .assert.containsText(criterionTitle, 'criterion 1');
     });
   });
 }
 
 function editCriterionTitle(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]', 'id', (result) => {
-      var criterionId = result.value.split('-').slice(2).join('-');
-      var basePath = '//*[@id="criterion-title-' + criterionId + '"]';
+    browser.useXpath().getAttribute(CRITERION_ROW_PATH, 'id', (result) => {
+      const criterionId = result.value.split('-').slice(2).join('-');
+      const {criterionTitleInput, criterionTitle} = getCriterionTitlePaths(
+        criterionId
+      );
       browser.assert
-        .containsText(basePath + '/span/span', 'criterion 1')
-        .click(basePath + '/span/span')
-        .clearValue(basePath + '/div/div/input')
-        .click(basePath + '/span/span')
-        .setValue(basePath + '/div/div/input', NEW_TITLE)
+        .containsText(criterionTitle, 'criterion 1')
+        .click(criterionTitle)
+        .clearValue(criterionTitleInput)
+        .click(criterionTitle)
+        .setValue(criterionTitleInput, NEW_TITLE)
         .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(basePath + '/span/span', NEW_TITLE)
-        .useCss()
-        .click('#logo');
+        .assert.containsText(criterionTitle, NEW_TITLE);
     });
   });
 }
 
 function missingCriterionTitleWarning(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]', 'id', (result) => {
+    browser.useXpath().getAttribute(CRITERION_ROW_PATH, 'id', (result) => {
       const criterionId = result.value.split('-').slice(2).join('-');
-      const basePath = '//*[@id="criterion-title-' + criterionId + '"]';
+      const {criterionTitleInput, criterionTitle} = getCriterionTitlePaths(
+        criterionId
+      );
       browser
-        .click(basePath + '/span/span')
-        .clearValue(basePath + '/div/div/input')
-        .assert.containsText(basePath + '/span/span', NO_TITLE_WARNING)
+        .click(criterionTitle)
+        .clearValue(criterionTitleInput)
+        .assert.containsText(criterionTitle, NO_TITLE_WARNING)
         .assert.containsText(
-          '//*[@id="warnings"]/div[1]',
+          FIRST_WARNING_PATH,
           MISSING_CRITERIA_TITLE_WARNING
-        )
-        .useCss()
-        .click('#logo');
+        );
     });
   });
 }
 
 function duplicateCriterionTitleWarning(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]', 'id', (result) => {
-      var criterionId = result.value.split('-').slice(2).join('-');
-      var basePath = '//*[@id="criterion-title-' + criterionId + '"]';
+    browser.useXpath().getAttribute(CRITERION_ROW_PATH, 'id', (result) => {
+      const criterionId = result.value.split('-').slice(2).join('-');
+      const {criterionTitleInput, criterionTitle} = getCriterionTitlePaths(
+        criterionId
+      );
       browser
-        .click(basePath + '/span/span')
-        .clearValue(basePath + '/div/div/input')
-        .click(basePath + '/span/span')
-        .setValue(basePath + '/div/div/input', DUPLICATE_CRITERION_TITLE)
+        .click(criterionTitle)
+        .clearValue(criterionTitleInput)
+        .click(criterionTitle)
+        .setValue(criterionTitleInput, DUPLICATE_CRITERION_TITLE)
         .click('//*[@id="favourable-criteria-label"]')
         .assert.containsText(
-          '//*[@id="warnings"]/div[1]',
+          FIRST_WARNING_PATH,
           DUPLICATE_CRITERIA_TITLE_WARNING
-        )
-        .useCss()
-        .click('#logo');
+        );
     });
   });
 }
 
 function editCriterionDescription(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]', 'id', (result) => {
-      var criterionId = result.value.split('-').slice(2).join('-');
-      var basePath = '//*[@id="criterion-description-' + criterionId + '"]';
+    browser.useXpath().getAttribute(CRITERION_ROW_PATH, 'id', (result) => {
+      const criterionId = result.value.split('-').slice(2).join('-');
+      const basePath = '//*[@id="criterion-description-' + criterionId + '"]';
+      const criterionDescription = basePath + '/span/span';
+      const criterionDescriptionInput = basePath + '/div/div/textarea[1]';
       browser.assert
-        .containsText(basePath + '/span/span', '')
-        .click(basePath + '/span/span')
-        .setValue(basePath + '/div/div/textarea[1]', NEW_CRITERION_DESCRIPTION)
+        .containsText(criterionDescription, '')
+        .click(criterionDescription)
+        .setValue(criterionDescriptionInput, NEW_CRITERION_DESCRIPTION)
         .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(basePath + '/span/span', NEW_CRITERION_DESCRIPTION)
-        .useCss()
-        .click('#logo');
+        .assert.containsText(criterionDescription, NEW_CRITERION_DESCRIPTION);
     });
   });
 }
 
 function addDataSource(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]', 'id', (result) => {
-      var criterionId = result.value.split('-').slice(2).join('-');
+    browser.useXpath().getAttribute(CRITERION_ROW_PATH, 'id', (result) => {
+      const criterionId = result.value.split('-').slice(2).join('-');
+      const addDataSourceButton = '//*[@id="add-ds-for-' + criterionId + '"]';
+      const reference =
+        '//*[@id="criterion-row-' + criterionId + '"]/td[8]/span/span';
       browser
-        .click('//*[@id="add-ds-for-' + criterionId + '"]')
-        .assert.containsText(
-          '//*[@id="criterion-row-' + criterionId + '"]/td[8]/span/span',
-          NEW_REFERENCE
-        )
-        .useCss()
-        .click('#logo');
+        .click(addDataSourceButton)
+        .assert.containsText(reference, NEW_REFERENCE);
     });
   });
 }
 
 function deleteDataSource(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]/td[12]', 'id', (result) => {
-      var dataSourceId = result.value.split('-').slice(2).join('-');
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const deleteDataSourceButton =
+        '//*[@id="delete-ds-' + dataSourceId + '"]';
       browser
-        .click('//*[@id="delete-ds-' + dataSourceId + '"]')
-        .assert.containsText(
-          '//*[@id="warnings"]/div[1]',
-          MISSING_REFERENCE_WARNING
-        )
-        .useCss()
-        .click('#logo');
+        .click(deleteDataSourceButton)
+        .assert.containsText(FIRST_WARNING_PATH, MISSING_REFERENCE_WARNING);
     });
   });
 }
 
 function moveDataSource(browser) {
+  const addDataSourceButton = '//table/tbody/tr[3]/td/button';
+  const firstDataSourceReference = '//table/tbody/tr[2]/td[12]/span/span';
+  const secondDataSourceReference = '//table/tbody/tr[3]/td[8]/span/span';
   browser
     .useXpath()
-    .click('//table/tbody/tr[3]/td/button')
+    .click(addDataSourceButton)
     .perform(() => {
-      browser.getAttribute('//tbody/tr[2]/td[12]', 'id', (result) => {
-        var dataSourceId = result.value.split('-').slice(2).join('-');
+      browser.getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+        const dataSourceId = result.value.split('-').slice(2).join('-');
+        const moveDataSourceDownButton =
+          '//*[@id="move-ds-down-' + dataSourceId + '"]';
+        const moveDataSourceUpButton =
+          '//*[@id="move-ds-up-' + dataSourceId + '"]';
         browser
-          .click('//*[@id="move-ds-down-' + dataSourceId + '"]')
-          .assert.containsText(
-            '//table/tbody/tr[2]/td[12]/span/span',
-            NEW_REFERENCE
-          )
-          .click('//*[@id="move-ds-up-' + dataSourceId + '"]')
-          .assert.containsText(
-            '//table/tbody/tr[3]/td[8]/span/span',
-            NEW_REFERENCE
-          )
-          .useCss()
-          .click('#logo');
+          .click(moveDataSourceDownButton)
+          .assert.containsText(firstDataSourceReference, NEW_REFERENCE)
+          .click(moveDataSourceUpButton)
+          .assert.containsText(secondDataSourceReference, NEW_REFERENCE);
       });
     });
 }
 
-function editUnitOfMeaurement(browser) {
+function setUnitOfMeaurementToPercentage(browser) {
+  const percentagePath = '//*[@id="menu-"]/div[3]/ul/li[3]';
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]/td[12]', 'id', (result) => {
-      var dataSourceId = result.value.split('-').slice(2).join('-');
-      var basePath = '//*[@id="ds-unit-' + dataSourceId + '"]';
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const {labelPath, boundsPath} = getUnitOfMeasurementPaths(dataSourceId);
       browser.assert
-        .containsText(basePath + '/div/div[1]/span', 'click to edit')
-        .assert.containsText(
-          basePath + '/div/div[2]/span',
-          '[-Infinity, Infinity]'
-        )
-        .click(basePath + '/div/div[1]/span')
+        .containsText(labelPath, 'click to edit')
+        .assert.containsText(boundsPath, '[-Infinity, Infinity]')
+        .click(labelPath)
         .click('//*[@id="unit-type-selector"]')
-        .click('//*[@id="menu-"]/div[3]/ul/li[3]')
+        .click(percentagePath)
         .pause(500)
-        .click('//*[@id="edit-unit-button"]')
-        .assert.containsText(basePath + '/div/div[1]/span', '%')
-        .assert.containsText(basePath + '/div/div[2]/span', '[0, 100]')
-        .useCss()
-        .click('#logo');
+        .click('//*[@id="edit-unit-of-measurement"]')
+        .assert.containsText(labelPath, '%')
+        .assert.containsText(boundsPath, '[0, 100]');
+    });
+  });
+}
+
+function setUnitOfMeaurementToDecimal(browser) {
+  const decimalPath = '//*[@id="menu-"]/div[3]/ul/li[2]';
+  browser.perform(() => {
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const {labelPath, boundsPath} = getUnitOfMeasurementPaths(dataSourceId);
+      browser.assert
+        .containsText(labelPath, 'click to edit')
+        .assert.containsText(boundsPath, '[-Infinity, Infinity]')
+        .click(labelPath)
+        .click('//*[@id="unit-type-selector"]')
+        .click(decimalPath)
+        .pause(500)
+        .click('//*[@id="edit-unit-of-measurement"]')
+        .assert.containsText(labelPath, 'click to edit')
+        .assert.containsText(boundsPath, '[0, 1]');
+    });
+  });
+}
+
+function setUnitOfMeaurementToCustom(browser) {
+  const lowerBoundChoicePath = '//*[@id="menu-"]/div[3]/ul/li[2]';
+  const upperBoundChoicePath = '//*[@id="menu-"]/div[3]/ul/li[2]';
+  const unitLabelInput = '//*[@id="unit-label"]/div/div/input';
+  browser.perform(() => {
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const {labelPath, boundsPath} = getUnitOfMeasurementPaths(dataSourceId);
+      browser.assert
+        .containsText(labelPath, 'click to edit')
+        .assert.containsText(boundsPath, '[-Infinity, Infinity]')
+        .click(labelPath)
+        .setValue(unitLabelInput, CUSTOM_UNIT_LABEL)
+        .click('//*[@id="unit-lower-bound-selector"]')
+        .click(lowerBoundChoicePath)
+        .pause(100)
+        .click('//*[@id="unit-upper-bound-selector"]')
+        .click(upperBoundChoicePath)
+        .pause(100)
+        .click('//*[@id="edit-unit-of-measurement"]')
+        .assert.containsText(labelPath, CUSTOM_UNIT_LABEL)
+        .assert.containsText(boundsPath, '[0, 100]');
     });
   });
 }
 
 function editSterengthOfEvidence(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]/td[12]', 'id', (result) => {
-      var dataSourceId = result.value.split('-').slice(2).join('-');
-      var basePath = '//*[@id="ds-soe-unc-' + dataSourceId + '"]';
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const basePath = '//*[@id="ds-soe-unc-' + dataSourceId + '"]';
+      const strengthOfEvidence = basePath + '/div/div/div[2]/span/span';
+      const strengthOfEvidenceInput =
+        basePath + '/div/div/div[2]/div/div/input';
       browser.assert
-        .containsText(basePath + '/div/div/div[2]/span/span', 'click to edit')
-        .click(basePath + '/div/div/div[2]/span/span')
-        .setValue(
-          basePath + '/div/div/div[2]/div/div/input',
-          NEW_STRENGTH_OF_EVIDENCE
-        )
+        .containsText(strengthOfEvidence, 'click to edit')
+        .click(strengthOfEvidence)
+        .setValue(strengthOfEvidenceInput, NEW_STRENGTH_OF_EVIDENCE)
         .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(
-          basePath + '/div/div/div[2]/span/span',
-          NEW_STRENGTH_OF_EVIDENCE
-        )
-        .useCss()
-        .click('#logo');
+        .assert.containsText(strengthOfEvidence, NEW_STRENGTH_OF_EVIDENCE);
     });
   });
 }
 
 function editUncertainties(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]/td[12]', 'id', (result) => {
-      var dataSourceId = result.value.split('-').slice(2).join('-');
-      var basePath = '//*[@id="ds-soe-unc-' + dataSourceId + '"]';
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const basePath = '//*[@id="ds-soe-unc-' + dataSourceId + '"]';
+      const uncertainties = basePath + '/div/div/div[4]/span/span';
+      const uncertaintiesInput = basePath + '/div/div/div[4]/div/div/input';
       browser.assert
-        .containsText(basePath + '/div/div/div[4]/span/span', 'click to edit')
-        .click(basePath + '/div/div/div[4]/span/span')
-        .setValue(basePath + '/div/div/div[4]/div/div/input', NEW_UNCERTAINTY)
+        .containsText(uncertainties, 'click to edit')
+        .click(uncertainties)
+        .setValue(uncertaintiesInput, NEW_UNCERTAINTY)
         .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(
-          basePath + '/div/div/div[4]/span/span',
-          NEW_UNCERTAINTY
-        )
-        .useCss()
-        .click('#logo');
+        .assert.containsText(uncertainties, NEW_UNCERTAINTY);
     });
   });
 }
 
 function editReference(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//tbody/tr[2]/td[12]', 'id', (result) => {
-      var dataSourceId = result.value.split('-').slice(2).join('-');
-      var basePath = '//*[@id="ds-reference-' + dataSourceId + '"]';
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const basePath = '//*[@id="ds-reference-' + dataSourceId + '"]';
+      const reference = basePath + '/span/span';
+      const referenceInput = basePath + '/div/div/input';
       browser.assert
-        .containsText(basePath + '/span/span', 'click to edit')
-        .click(basePath + '/span/span')
-        .setValue(basePath + '/div/div/input', NEW_REFERENCE)
+        .containsText(reference, 'click to edit')
+        .click(reference)
+        .setValue(referenceInput, NEW_REFERENCE)
         .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(basePath + '/span/span', NEW_REFERENCE)
-        .useCss()
-        .click('#logo');
+        .assert.containsText(reference, NEW_REFERENCE);
     });
   });
 }
 
 function addAlternative(browser) {
+  const alternativeTitle =
+    '//*[@id="manual-input-table"]/thead/tr/th[8]/span/span';
   browser
     .useXpath()
-    .click('//*[@id="add-alternative-button"]')
-    .assert.containsText(
-      '//*[@id="manual-input-table"]/thead/tr/th[8]/span/span',
-      'new alternative'
-    )
-    .useCss()
-    .click('#logo');
+    .click('//*[@id="add-alternative"]')
+    .assert.containsText(alternativeTitle, 'new alternative');
 }
 
 function deleteAlternative(browser) {
+  const deleteAlternative = '//thead/tr/th[7]/button[2]';
   browser
     .useXpath()
-    .click('//thead/tr/th[7]/button[2]')
-    .assert.containsText(
-      '//*[@id="warnings"]/div[1]',
-      TOO_FEW_ALTERNATIVES_WARNING
-    )
-    .useCss()
-    .click('#logo');
+    .click(deleteAlternative)
+    .assert.containsText(FIRST_WARNING_PATH, TOO_FEW_ALTERNATIVES_WARNING);
 }
 
 function moveAlternative(browser) {
+  const firstAlternativeTitle = '//thead/tr/th[6]/span/span';
   browser.perform(() => {
     browser.useXpath().getAttribute('//thead/tr/th[6]', 'id', (result) => {
-      var alternativeId = result.value.split('-').slice(1).join('-');
+      const alternativeId = result.value.split('-').slice(1).join('-');
+      const moveAlternativeRight =
+        '//*[@id="move-alternative-right-' + alternativeId + '"]';
+      const moveAlternativeLeft =
+        '//*[@id="move-alternative-left-' + alternativeId + '"]';
       browser.assert
-        .containsText('//thead/tr/th[6]/span/span', 'alternative 1')
-        .click('//*[@id="move-alternative-right-' + alternativeId + '"]')
-        .assert.containsText('//thead/tr/th[6]/span/span', 'alternative 2')
-        .click('//*[@id="move-alternative-left-' + alternativeId + '"]')
-        .assert.containsText('//thead/tr/th[6]/span/span', 'alternative 1')
-        .useCss()
-        .click('#logo');
+        .containsText(firstAlternativeTitle, 'alternative 1')
+        .click(moveAlternativeRight)
+        .assert.containsText(firstAlternativeTitle, 'alternative 2')
+        .click(moveAlternativeLeft)
+        .assert.containsText(firstAlternativeTitle, 'alternative 1');
     });
   });
 }
 
 function editAlternative(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//thead/tr/th[6]', 'id', (result) => {
-      var alternativeId = result.value.split('-').slice(1).join('-');
-      var basePath = '//*[@id="alternative-' + alternativeId + '"]';
+    browser.useXpath().getAttribute(ALTERNATIVE_PATH, 'id', (result) => {
+      const alternativeId = result.value.split('-').slice(1).join('-');
+      const {alternativeTitleInput, alternativeTitle} = getAlternativePaths(
+        alternativeId
+      );
       browser.assert
-        .containsText(basePath + '/span/span', 'alternative 1')
-        .click(basePath + '/span/span')
-        .clearValue(basePath + '/div/div/input')
-        .click(basePath + '/span/span')
-        .setValue(basePath + '/div/div/input', NEW_TITLE)
+        .containsText(alternativeTitle, 'alternative 1')
+        .click(alternativeTitle)
+        .clearValue(alternativeTitleInput)
+        .click(alternativeTitle)
+        .setValue(alternativeTitleInput, NEW_TITLE)
         .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(basePath + '/span/span', NEW_TITLE)
-        .useCss()
-        .click('#logo');
+        .assert.containsText(alternativeTitle, NEW_TITLE);
     });
   });
 }
 
 function missingAlternativeTitleWarning(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//thead/tr/th[6]', 'id', (result) => {
-      var alternativeId = result.value.split('-').slice(1).join('-');
-      var basePath = '//*[@id="alternative-' + alternativeId + '"]';
+    browser.useXpath().getAttribute(ALTERNATIVE_PATH, 'id', (result) => {
+      const alternativeId = result.value.split('-').slice(1).join('-');
+      const {alternativeTitleInput, alternativeTitle} = getAlternativePaths(
+        alternativeId
+      );
       browser
-        .click(basePath + '/span/span')
-        .clearValue(basePath + '/div/div/input')
-        .assert.containsText(basePath + '/span/span', NO_TITLE_WARNING)
+        .click(alternativeTitle)
+        .clearValue(alternativeTitleInput)
+        .assert.containsText(alternativeTitle, NO_TITLE_WARNING)
         .assert.containsText(
-          '//*[@id="warnings"]/div[1]',
+          FIRST_WARNING_PATH,
           MISSING_ALTERNATIVE_TITLE_WARING
-        )
-        .useCss()
-        .click('#logo');
+        );
     });
   });
 }
 
 function duplicateAlternativeTitleWarning(browser) {
   browser.perform(() => {
-    browser.useXpath().getAttribute('//thead/tr/th[6]', 'id', (result) => {
-      var alternativeId = result.value.split('-').slice(1).join('-');
-      var basePath = '//*[@id="alternative-' + alternativeId + '"]';
+    browser.useXpath().getAttribute(ALTERNATIVE_PATH, 'id', (result) => {
+      const alternativeId = result.value.split('-').slice(1).join('-');
+      const {alternativeTitleInput, alternativeTitle} = getAlternativePaths(
+        alternativeId
+      );
       browser
-        .click(basePath + '/span/span')
-        .clearValue(basePath + '/div/div/input')
-        .click(basePath + '/span/span')
-        .setValue(basePath + '/div/div/input', DUPLICATE_ALTERNATIVE_TITLE)
+        .click(alternativeTitle)
+        .clearValue(alternativeTitleInput)
+        .click(alternativeTitle)
+        .setValue(alternativeTitleInput, DUPLICATE_ALTERNATIVE_TITLE)
         .click('//*[@id="favourable-criteria-label"]')
         .assert.containsText(
-          '//*[@id="warnings"]/div[1]',
+          FIRST_WARNING_PATH,
           DUPLICATE_ALTERNATIVES_TITLE_WARNING
-        )
-        .useCss()
-        .click('#logo');
+        );
     });
   });
 }

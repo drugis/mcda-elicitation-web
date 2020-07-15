@@ -12,7 +12,7 @@ const workspaceService = require('./util/workspaceService.js');
 const testUrl = require('./util/constants').testUrl;
 const NEW_TITLE =
   'Copy of Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
-const title =
+const TITLE =
   'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function beforeEach(browser) {
@@ -23,7 +23,7 @@ function beforeEach(browser) {
     loginService.correctPassword
   );
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title);
+  workspaceService.addExample(browser, TITLE);
   workspaceService.copy(browser, 0, NEW_TITLE);
 }
 
