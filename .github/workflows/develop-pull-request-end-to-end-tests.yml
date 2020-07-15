@@ -68,7 +68,7 @@ jobs:
         run: npm run build-local-login
 
       - name: run mcda
-        run: node index.js &
+        run: yarn start &
         env:
           MCDAWEB_AUTHENTICATION_METHOD: LOCAL
           MCDAWEB_DB_USER: mcdaweb
