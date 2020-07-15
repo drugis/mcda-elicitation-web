@@ -1,7 +1,7 @@
 name: MCDA | pull request | front-end tests
 
 on:
-  pull_request:
+  push:
     branches: githubActions
 
 jobs:
