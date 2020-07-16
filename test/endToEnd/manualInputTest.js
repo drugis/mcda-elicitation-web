@@ -556,7 +556,7 @@ function finishCreatingWorkspace(browser) {
       browser.assert.equal(result, "new workspace's overview");
     })
     .useCss()
-    .click('#logo');
+    .click('#logo').pause(5000);
   workspaceService.cleanList(browser);
 }
 
