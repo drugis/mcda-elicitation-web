@@ -38,6 +38,7 @@ module.exports = {
 const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
 const workspaceService = require('./util/workspaceService');
+const {TEST_URL} = require('./util/constants');
 
 const FIRST_WARNING_PATH = '//*[@id="warnings"]/div[1]';
 const CRITERION_ROW_PATH = '//tbody/tr[2]';
@@ -97,7 +98,7 @@ function beforeEach(browser) {
 }
 
 function afterEach(browser) {
-  browser.useCss().click('#logo');
+  browser.useCss().url(TEST_URL);
   workspaceService.cleanUnfinishedList(browser);
   workspaceService.cleanList(browser);
   browser.end();
@@ -556,7 +557,6 @@ function finishCreatingWorkspace(browser) {
     .getTitle(function (result) {
       browser.assert.equal(result, "new workspace's overview");
     });
-
 }
 
 function generateDistributions(browser) {

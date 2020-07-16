@@ -89,11 +89,7 @@ function cleanList(browser) {
 
 function cleanUnfinishedList(browser) {
   var expectPath = '#delete-in-progress-workspace-0';
-  browser
-    .source((result) => {
-      console.log(result.value);
-    })
-    .waitForElementVisible('#workspaces-header');
+  browser.waitForElementVisible('#workspaces-header');
   browser.elements('css selector', expectPath, (result) => {
     if (result.value.length !== 0) {
       console.log(
