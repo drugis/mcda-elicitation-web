@@ -38,8 +38,11 @@ jobs:
       - name: run yarn
         run: yarn
 
+      - name: build backend
+        run: yarn build-backend
+
       - name: run webpack
-        run: npm run build-local-login
+        run: npm run build-prod
 
       - name: back-end tests
         id: jest
