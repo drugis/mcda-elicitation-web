@@ -87,8 +87,7 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        # run: npx nightwatch -c nightwatch.github.conf.js 
-        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/subproblemTest.js --testcase 'Deleting'
+        run: npx nightwatch -c nightwatch.github.conf.js 
 
       # - name: notify on slack channel on nightwatch failure
       #   if: failure()
