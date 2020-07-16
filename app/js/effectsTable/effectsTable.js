@@ -3,24 +3,29 @@ define([
   'angular',
   './effectsTableCellDirective',
   './effectsTableScalesCellDirective',
-  './effectsTableDirective',
   './criterionListDirective',
   './criterionCardDirective',
-  './effectsTableService'], function(
-    angular,
-    effectsTableCell,
-    effectsTableScalesCell,
-    effectsTable,
-    criterionList,
-    criterionCard,
-    EffectsTableService
-  ) {
-    return angular.module('elicit.effectsTable', [])
-      .directive('effectsTableCell', effectsTableCell)
-      .directive('effectsTableScalesCell', effectsTableScalesCell)
-      .directive('effectsTable', effectsTable)
-      .directive('criterionList', criterionList)
-      .directive('criterionCard', criterionCard)
-      .factory('EffectsTableService', EffectsTableService)
-      ;
-  });
+  './effectsTableService',
+  'react2angular',
+  '../../ts/EffectsTable/EffectsTable'
+], function (
+  angular,
+  effectsTableCell,
+  effectsTableScalesCell,
+  criterionList,
+  criterionCard,
+  EffectsTableService,
+  react2angular
+) {
+  return angular
+    .module('elicit.effectsTable', [])
+    .directive('effectsTableCell', effectsTableCell)
+    .directive('effectsTableScalesCell', effectsTableScalesCell)
+    .directive('criterionList', criterionList)
+    .directive('criterionCard', criterionCard)
+    .factory('EffectsTableService', EffectsTableService)
+    .component(
+      'effectsTable',
+      react2angular.react2angular(EffectsTable.default, [])
+    );
+});

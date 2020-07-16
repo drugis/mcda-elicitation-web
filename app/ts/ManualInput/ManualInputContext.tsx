@@ -31,8 +31,6 @@ export const ManualInputContext = createContext<IManualInputContext>(
   {} as IManualInputContext
 );
 
-const foo: TestExport = {};
-
 export function ManualInputContextProviderComponent({
   children,
   message,

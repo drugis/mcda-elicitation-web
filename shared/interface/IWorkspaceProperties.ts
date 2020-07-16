@@ -1,4 +1,4 @@
-export default interface IInProgressWorkspace {
+export default interface IWorkspaceProperties {
   id?: number;
   title: string;
   therapeuticContext: string;

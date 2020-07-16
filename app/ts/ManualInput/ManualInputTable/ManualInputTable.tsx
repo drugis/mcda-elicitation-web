@@ -5,12 +5,13 @@ import {ManualInputContext} from '../ManualInputContext';
 import AddAlternativeButton from './AddAlternativeButton/AddAlternativeButton';
 import AlternativeHeader from './AlternativeHeader/AlternativeHeader';
 import CriteriaRows from './CriteriaRows/CriteriaRows';
+import IAlternative from '@shared/interface/IAlternative';
 
 export default function ManualInputTable() {
   const {alternatives} = useContext(ManualInputContext);
 
   function createAlternativeHeaders() {
-    return _.map(alternatives, (alternative, index: number) => {
+    return _.map(alternatives, (alternative: IAlternative, index: number) => {
       const previous = alternatives[index - 1];
       const next = alternatives[index + 1];
       return (
