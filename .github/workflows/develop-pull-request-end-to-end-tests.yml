@@ -1,8 +1,8 @@
 name: MCDA | pull request | end-to-end tests
 
 on:
-  push:
-    branches: githubActions
+  pull_request:
+    branches: develop
 
 jobs:
   test:
