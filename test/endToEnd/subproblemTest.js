@@ -142,8 +142,8 @@ function deleteSubproblem(browser) {
     .waitForElementVisible('#delete-subproblem-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
+    .pause(5000)
     .click('#delete-subproblem-confirm-button')
-    .source((results)=>{console.log(results.value)})
     .waitForElementVisible('#delete-subproblem-disabled')
     .assert.containsText('#subproblem-selector', 'Default');
 }
