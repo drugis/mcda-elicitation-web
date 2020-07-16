@@ -1,4 +1,5 @@
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import _ from 'lodash';
 import IAlternative from './interface/IAlternative';
 import ICriterion from './interface/ICriterion';
 import IDataSource from './interface/IDataSource';
@@ -26,7 +27,6 @@ import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
 import {generateUuid} from './util';
-import _ from 'lodash';
 
 export function buildWorkspace(workspace: IOldWorkspace): IWorkspace {
   const idMapper = _.identity;
@@ -65,7 +65,7 @@ export function buildNewStyleCopy<T>(
   const isPercentageMap = buildPercentageMap(workspace.problem.criteria);
 
   return {
-    workspace: buildWorkspaceProperties(workspace, title),
+    properties: buildWorkspaceProperties(workspace, title),
     criteria: buildWorkspaceCriteria(workspace.problem.criteria, idMapper),
     alternatives: buildWorkspaceAlternatives(
       workspace.problem.alternatives,

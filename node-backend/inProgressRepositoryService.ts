@@ -8,17 +8,11 @@ import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
-import IEmptyEffect from '@shared/interface/IEmptyEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
-import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IOrdering from '@shared/interface/IOrdering';
-import IRangeEffect from '@shared/interface/IRangeEffect';
-import ITextEffect from '@shared/interface/ITextEffect';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IValueCIEffect from '@shared/interface/IValueCIEffect';
-import IValueEffect from '@shared/interface/IValueEffect';
 import IWorkspace from '@shared/interface/IWorkspace';
+import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
 import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
@@ -26,11 +20,7 @@ import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import {
-  IDistributionPerformance,
-  IEffectPerformance,
-  Performance
-} from '@shared/interface/Problem/IPerformance';
+import {Performance} from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -645,7 +635,7 @@ export function buildEmptyInProgress(): IWorkspace {
     }
   ];
   return {
-    workspace: {
+    properties: {
       title: 'new workspace',
       therapeuticContext: '',
       useFavourability: true
@@ -695,7 +685,6 @@ export function mapToCellCommands(
     }
   );
 }
-
 
 export function mapToCriteriaQueryResult(
   criteria: ICriterion[],

@@ -13,8 +13,8 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import {Error} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
-import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspace from '@shared/interface/IWorkspace';
+import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {parallel, waterfall} from 'async';
@@ -29,11 +29,11 @@ import {
   mapCombinedResults,
   mapCriteria,
   mapDataSources,
-  mapToCellCommands,
-  mapWorkspace,
-  mapToDataSourceQueryResult,
   mapToAlternativeQueryResult,
-  mapToCriteriaQueryResult
+  mapToCellCommands,
+  mapToCriteriaQueryResult,
+  mapToDataSourceQueryResult,
+  mapWorkspace
 } from './inProgressRepositoryService';
 import IDB, {ClientOrDB} from './interface/IDB';
 
@@ -67,7 +67,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
           createInProgressWorkspace,
           client,
           ownerId,
-          newInProgress.workspace
+          newInProgress.properties
         ),
         _.partial(createInProgressCriteria, client, newInProgress.criteria),
         _.partial(createInProgressDataSources, client, dataSources),

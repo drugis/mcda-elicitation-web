@@ -1,24 +1,26 @@
-import React from 'react';
-import IDataSource from '@shared/interface/IDataSource';
-import ICriterion from '@shared/interface/ICriterion';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import _ from 'lodash';
+import React, {useContext} from 'react';
+import {EffectsTableContext} from '../../EffectsTableContext/EffectsTableContext';
+import ValueCell from './ValueCell/ValueCell';
 
 export default function EffectsTableDataSourceRow({
   criterion,
   dataSource,
-  alternatives,
   index
 }: {
   criterion: ICriterion;
   dataSource: IDataSource;
-  alternatives: IAlternative[];
   index: number;
 }) {
+  const {alternatives} = useContext(EffectsTableContext);
+
   function createDataSourceCells(dataSource: IDataSource) {
     return (
       <>
@@ -42,11 +44,19 @@ export default function EffectsTableDataSourceRow({
       </>
     );
   }
+
   function createCells() {
     return _.map(alternatives, (alternative: IAlternative) => {
-      return <EffectsTableCell key={alternative.id} alternativeId={alternative.id} />;
+      return (
+        <ValueCell
+          key={alternative.id}
+          alternativeId={alternative.id}
+          dataSourceId={dataSource.id}
+        />
+      );
     });
   }
+
   return (
     <TableRow id={`criterion-row-${criterion.id}`}>
       {index === 0 ? (

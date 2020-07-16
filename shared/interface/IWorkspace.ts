@@ -5,7 +5,7 @@ import {Effect} from './IEffect';
 import IWorkspaceProperties from './IWorkspaceProperties';
 
 export default interface IWorkspace {
-  workspace: IWorkspaceProperties;
+  properties: IWorkspaceProperties;
   criteria: ICriterion[];
   alternatives: IAlternative[];
   effects: Effect[];

@@ -11,7 +11,7 @@ import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableD
 
 export default function EffectsTableCriteriaRows() {
   const {workspace} = useContext(EffectsTableContext);
-  const useFavourability = workspace.workspaceProperties.useFavourability;
+  const useFavourability = workspace.properties.useFavourability;
 
   const favourableCriteria = _.filter(workspace.criteria, [
     'isFavourable',

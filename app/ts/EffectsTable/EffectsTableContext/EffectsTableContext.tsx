@@ -1,9 +1,12 @@
+import IEffectsTableContext from '@shared/interface/IEffectsTableContext';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {buildWorkspace} from '@shared/workspaceService';
 import React, {createContext} from 'react';
 
-export const EffectsTableContext = createContext<any>({});
+export const EffectsTableContext = createContext<IEffectsTableContext>(
+  {} as IEffectsTableContext
+);
 
 export function EffectsTableContextProviderComponent({
   children,
@@ -16,7 +19,8 @@ export function EffectsTableContextProviderComponent({
   return (
     <EffectsTableContext.Provider
       value={{
-        workspace: workspace
+        workspace: workspace,
+        alternatives: workspace.alternatives
       }}
     >
       {children}

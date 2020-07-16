@@ -957,7 +957,7 @@ describe('inProgressRepositoryService', () => {
     it('should return a new workspace ready to insert into the database', () => {
       const result = buildEmptyInProgress();
       const expectedResult: IWorkspace = {
-        workspace: {
+        properties: {
           title: 'new workspace',
           therapeuticContext: '',
           useFavourability: true
@@ -1041,7 +1041,7 @@ describe('inProgressRepositoryService', () => {
       expect(result).toEqual(expectedResult);
     });
   });
- 
+
   describe('inProgressworkspaceId', () => {
     it('should map criteria into CriteriaQueryResults', () => {
       const criteria: ICriterion[] = [
