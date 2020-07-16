@@ -63,11 +63,11 @@ jobs:
       - name: run yarn
         run: yarn
 
-      - name: run webpack
-        run: npm run build-local-login
-
       - name: build backend
         run: yarn build-backend
+        
+      - name: run webpack
+        run: npm run build-local-login
 
       - name: run mcda
         run: yarn start &

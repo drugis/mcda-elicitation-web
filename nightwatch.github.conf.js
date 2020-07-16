@@ -20,7 +20,7 @@ module.exports = {
   test_settings: {
     default: {
       globals: {
-        waitForConditionTimeout: 10000
+        waitForConditionTimeout: 5000
       },
       exclude: ['*/*.js'],
       desiredCapabilities: {
