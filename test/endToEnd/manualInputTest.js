@@ -99,6 +99,7 @@ function beforeEach(browser) {
 function afterEach(browser) {
   browser.useCss().click('#logo');
   workspaceService.cleanUnfinishedList(browser);
+  workspaceService.cleanList(browser);
   browser.end();
 }
 
@@ -554,10 +555,8 @@ function finishCreatingWorkspace(browser) {
     .pause(500)
     .getTitle(function (result) {
       browser.assert.equal(result, "new workspace's overview");
-    })
-    .useCss()
-    .click('#logo').pause(5000);
-  workspaceService.cleanList(browser);
+    });
+
 }
 
 function generateDistributions(browser) {
