@@ -129,6 +129,7 @@ function deleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-disabled');
   setupSubProblem(browser)
     .click('#create-new-subproblem-button')
+    .waitForElementVisible('#delete-subproblem-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
     .click('#delete-subproblem-confirm-button')
