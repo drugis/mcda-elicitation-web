@@ -1,3 +1,17 @@
+import {
+  AnalysisType,
+  DisplayMode,
+  ScalesCalculationMethod
+} from '@shared/interface/ISettings';
+
 export default interface ISettingsContext {
-  deterministicOrSmaa: 'deterministic' | 'smaa';
+  scalesCalculationMethod: ScalesCalculationMethod;
+  showPercentages: boolean;
+  displayMode: DisplayMode;
+  analysisType: AnalysisType;
+  hasNoEffects: boolean;
+  hasNoDistributions: boolean;
+  isRelativeProblem: boolean;
+  changed: boolean;
+  randomSeed: number;
 }

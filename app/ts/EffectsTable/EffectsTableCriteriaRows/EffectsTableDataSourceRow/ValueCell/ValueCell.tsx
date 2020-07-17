@@ -1,11 +1,13 @@
 import TableCell from '@material-ui/core/TableCell';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
+import { Distribution } from '@shared/interface/IDistribution';
+import { Effect } from '@shared/interface/IEffect';
+import IScale from '@shared/interface/IScale';
+import { AnalysisType } from '@shared/interface/ISettings';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext/EffectsTableContext';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import { EffectsTableContext } from 'app/ts/EffectsTable/EffectsTableContext/EffectsTableContext';
+import { SettingsContext } from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
 import EffectValueCell from './EffectValueCell/EffectValueCell';
 
@@ -16,25 +18,33 @@ export default function ValueCell({
   alternativeId: string;
   dataSourceId: string;
 }) {
-  const {workspace} = useContext(EffectsTableContext);
-  const {deterministicOrSmaa} = useContext(SettingsContext);
-  const valueLabel = buildValueLabel(deterministicOrSmaa, workspace);
+  const {workspace, scales} = useContext(EffectsTableContext);
+  const {analysisType} = useContext(SettingsContext);
+  const valueLabel = buildValueLabel(analysisType, workspace);
 
-  function findValue<T extends Effect | Distribution>(things: T[]): T {
-    return _.find(things, (effect: T) => {
+  function findValue<T extends Effect | Distribution>(items: T[]): T {
+    return _.find(items, (item: T) => {
       return (
-        effect.alternativeId === alternativeId &&
-        effect.dataSourceId === dataSourceId
+        item.alternativeId === alternativeId &&
+        item.dataSourceId === dataSourceId
       );
     });
   }
 
-  function buildValueLabel(
-    deterministicOrSmaa: 'deterministic' | 'smaa',
-    workspace: IWorkspace
-  ) {
-    return deterministicOrSmaa === 'deterministic' ? (
-      <EffectValueCell effect={findValue(workspace.effects)} />
+  function findScale(scales: Record<string, Record<string, IScale>>): IScale {
+    if (scales[dataSourceId] && scales[dataSourceId][alternativeId]) {
+      return scales[dataSourceId][alternativeId];
+    } else {
+      return undefined;
+    }
+  }
+
+  function buildValueLabel(analysisType: AnalysisType, workspace: IWorkspace) {
+    return analysisType === 'deterministic' ? (
+      <EffectValueCell
+        effect={findValue(workspace.effects)}
+        scale={findScale(scales)}
+      />
     ) : (
       <DistributionValueCell
         distribution={findValue(workspace.distributions)}

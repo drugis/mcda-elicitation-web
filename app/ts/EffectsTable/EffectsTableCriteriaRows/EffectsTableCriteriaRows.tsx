@@ -5,8 +5,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
 import _ from 'lodash';
-import React, {useContext} from 'react';
-import {EffectsTableContext} from '../EffectsTableContext/EffectsTableContext';
+import React, { useContext } from 'react';
+import { EffectsTableContext } from '../EffectsTableContext/EffectsTableContext';
 import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableDataSourceRow';
 
 export default function EffectsTableCriteriaRows() {
@@ -30,6 +30,7 @@ export default function EffectsTableCriteriaRows() {
     return _.map(criterion.dataSources, (dataSource, index) => {
       return (
         <EffectsTableDataSourceRow
+          key={dataSource.id}
           criterion={criterion}
           dataSource={dataSource}
           index={index}
@@ -42,7 +43,7 @@ export default function EffectsTableCriteriaRows() {
     return (
       <TableBody>
         <TableRow>
-          <TableCell colSpan={9 + workspace.alternatives.length}>
+          <TableCell colSpan={5 + workspace.alternatives.length}>
             <Box p={1}>
               <Typography id="favourable-criteria-label" variant="caption">
                 Favourable criteria
@@ -53,7 +54,7 @@ export default function EffectsTableCriteriaRows() {
         {createCriteriaRows(favourableCriteria)}
 
         <TableRow>
-          <TableCell colSpan={9 + workspace.alternatives.length}>
+          <TableCell colSpan={5 + workspace.alternatives.length}>
             <Box p={1}>
               <Typography id="unfavourable-criteria-label" variant="caption">
                 Unfavourable criteria

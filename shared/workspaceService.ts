@@ -1,10 +1,10 @@
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
+import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
 import IAlternative from './interface/IAlternative';
 import ICriterion from './interface/ICriterion';
 import IDataSource from './interface/IDataSource';
-import {Distribution} from './interface/IDistribution';
-import {Effect} from './interface/IEffect';
+import { Distribution } from './interface/IDistribution';
+import { Effect } from './interface/IEffect';
 import IEmptyEffect from './interface/IEmptyEffect';
 import IOldWorkspace from './interface/IOldWorkspace';
 import IRangeEffect from './interface/IRangeEffect';
@@ -13,20 +13,20 @@ import IValueCIEffect from './interface/IValueCIEffect';
 import IValueEffect from './interface/IValueEffect';
 import IWorkspace from './interface/IWorkspace';
 import IWorkspaceProperties from './interface/IWorkspaceProperties';
-import {DistributionPerformance} from './interface/Problem/IDistributionPerformance';
+import { DistributionPerformance } from './interface/Problem/IDistributionPerformance';
 import IEmptyPerformance from './interface/Problem/IEmptyPerformance';
 import {
   IDistributionPerformance,
   IEffectPerformance
 } from './interface/Problem/IPerformance';
-import {IPerformanceTableEntry} from './interface/Problem/IPerformanceTableEntry';
+import { IPerformanceTableEntry } from './interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
-import {generateUuid} from './util';
+import { generateUuid } from './util';
 
 export function buildWorkspace(workspace: IOldWorkspace): IWorkspace {
   const idMapper = _.identity;

@@ -15,7 +15,8 @@ define([
   criterionList,
   criterionCard,
   EffectsTableService,
-  react2angular
+  react2angular,
+  EffectsTable
 ) {
   return angular
     .module('elicit.effectsTable', [])
@@ -26,6 +27,6 @@ define([
     .factory('EffectsTableService', EffectsTableService)
     .component(
       'effectsTable',
-      react2angular.react2angular(EffectsTable.default, [])
+      react2angular.react2angular(EffectsTable.default, ['oldWorkspace', 'settings', 'scales'])
     );
 });

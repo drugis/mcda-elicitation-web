@@ -6,8 +6,8 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import _ from 'lodash';
-import React, {useContext} from 'react';
-import {EffectsTableContext} from '../../EffectsTableContext/EffectsTableContext';
+import React, { useContext } from 'react';
+import { EffectsTableContext } from '../../EffectsTableContext/EffectsTableContext';
 import ValueCell from './ValueCell/ValueCell';
 
 export default function EffectsTableDataSourceRow({
