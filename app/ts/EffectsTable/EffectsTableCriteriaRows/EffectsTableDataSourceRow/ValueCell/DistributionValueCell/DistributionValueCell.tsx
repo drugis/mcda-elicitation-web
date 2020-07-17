@@ -1,14 +1,27 @@
 import {Distribution} from '@shared/interface/IDistribution';
-import React from 'react';
+import IScale from '@shared/interface/IScale';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {useContext} from 'react';
 
 export default function DistributionValueCell({
-  distribution
+  distribution,
+  scale
 }: {
   distribution: Distribution;
-}) {
-  function renderDistribution(distribution: Distribution): string {
-    // todo: values used for analysis view, then
-    // if no distri entered, take value from effects cell
+  scale: IScale;
+}): JSX.Element {
+  const {displayMode} = useContext(SettingsContext);
+  function render(distribution: Distribution) {
+    if (displayMode === 'enteredData') {
+      return renderDistribution(distribution);
+    } else {
+      return renderValuesForAnalysis(distribution, scale);
+    }
+  }
+  function renderDistribution(distribution: Distribution) {
+    if (!distribution) {
+      return 'empty';
+    }
     switch (distribution.type) {
       case 'empty':
         return 'empty';
@@ -26,5 +39,18 @@ export default function DistributionValueCell({
         return distribution.value.toString();
     }
   }
-  return <span>{renderDistribution(distribution)}</span>;
+  function renderValuesForAnalysis(distribution: Distribution, scale: IScale) {
+    return scale['50%'] ? (
+      <>
+        <div>{scale['50%'].toString()}</div>
+        <div className="uncertain">
+          {scale['2.5%']}, {scale['97.5%']}
+        </div>
+      </>
+    ) : (
+      <div>empty</div>
+    );
+  }
+
+  return <div>{render(distribution)}</div>;
 }

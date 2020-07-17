@@ -1,11 +1,16 @@
-import { Effect } from '@shared/interface/IEffect';
+import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
-import { SettingsContext } from 'app/ts/Settings/SettingsContext';
-import React, { useContext } from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {useContext} from 'react';
 
-export default function EffectValueCell({effect, scale}: {effect: Effect; scale: IScale}) {
+export default function EffectValueCell({
+  effect,
+  scale
+}: {
+  effect: Effect;
+  scale: IScale;
+}) {
   const {displayMode} = useContext(SettingsContext);
-  // if no value entered the value is calculated from distribution cell
 
   function renderEffect(effect: Effect): string {
     if (displayMode === 'enteredData') {
@@ -52,8 +57,8 @@ export default function EffectValueCell({effect, scale}: {effect: Effect; scale:
       return effect.type !== 'empty' && effect.type !== 'text';
     }
 
-    function getValueFromScales(scale: IScale):string {
-      return scale["50%"].toString(); //fixme
+    function getValueFromScales(scale: IScale): string {
+      return scale['50%'] ? scale['50%'].toString() : 'empty';
     }
   }
 

@@ -6,8 +6,8 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import _ from 'lodash';
-import React, { useContext } from 'react';
-import { EffectsTableContext } from '../../EffectsTableContext/EffectsTableContext';
+import React, {useContext} from 'react';
+import {EffectsTableContext} from '../../EffectsTableContext/EffectsTableContext';
 import ValueCell from './ValueCell/ValueCell';
 
 export default function EffectsTableDataSourceRow({
@@ -61,8 +61,12 @@ export default function EffectsTableDataSourceRow({
     <TableRow id={`criterion-row-${criterion.id}`}>
       {index === 0 ? (
         <>
-          <TableCell>{criterion.title}</TableCell>
-          <TableCell>{criterion.description}</TableCell>
+          <TableCell rowSpan={criterion.dataSources.length}>
+            {criterion.title}
+          </TableCell>
+          <TableCell rowSpan={criterion.dataSources.length}>
+            {criterion.description}
+          </TableCell>
         </>
       ) : (
         <></>

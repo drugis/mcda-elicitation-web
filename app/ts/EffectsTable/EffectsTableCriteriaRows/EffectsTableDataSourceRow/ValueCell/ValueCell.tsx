@@ -1,13 +1,13 @@
 import TableCell from '@material-ui/core/TableCell';
-import { Distribution } from '@shared/interface/IDistribution';
-import { Effect } from '@shared/interface/IEffect';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
-import { AnalysisType } from '@shared/interface/ISettings';
+import {AnalysisType} from '@shared/interface/ISettings';
 import IWorkspace from '@shared/interface/IWorkspace';
-import { EffectsTableContext } from 'app/ts/EffectsTable/EffectsTableContext/EffectsTableContext';
-import { SettingsContext } from 'app/ts/Settings/SettingsContext';
+import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext/EffectsTableContext';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
 import EffectValueCell from './EffectValueCell/EffectValueCell';
 
@@ -48,6 +48,7 @@ export default function ValueCell({
     ) : (
       <DistributionValueCell
         distribution={findValue(workspace.distributions)}
+        scale={findScale(scales)}
       />
     );
   }
