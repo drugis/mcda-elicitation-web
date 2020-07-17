@@ -1,4 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -22,16 +23,25 @@ export default function EffectsTable({
   scales: Record<string, Record<string, IScale>>;
 }) {
   function createAlternativeHeaders(): JSX.Element[] {
-    return _.map(
-      oldWorkspace.problem.alternatives,
-      (alternative: {title: string}, alternativeId: string) => {
-        return (
-          <TableCell key={alternativeId} align="center">
-            {alternative.title}
-          </TableCell>
-        );
-      }
-    );
+    return _(oldWorkspace.problem.alternatives)
+      .toPairs()
+      .map(
+        (
+          [alternativeId, alternative]: [string, {title: string}],
+          index: number
+        ) => {
+          return (
+            <TableCell
+              id={`column-alternative-${index}`}
+              key={alternativeId}
+              align="center"
+            >
+              {alternative.title}
+            </TableCell>
+          );
+        }
+      )
+      .value();
   }
 
   return scales ? (
@@ -40,21 +50,34 @@ export default function EffectsTable({
         oldWorkspace={oldWorkspace}
         scales={scales}
       >
-        <Table id="effects-table" size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Criterion</TableCell>
-              <TableCell align="center">Description</TableCell>
-              <TableCell align="center">Unit of measurement</TableCell>
-              {createAlternativeHeaders()}
-              <TableCell align="center">
-                Strength of evidence / Uncertainties
-              </TableCell>
-              <TableCell align="center">Reference</TableCell>
-            </TableRow>
-          </TableHead>
-          <EffectsTableCriteriaRows />
-        </Table>
+        <Grid container>
+          <Grid item id="effects-table-header">
+            <h4>Effects Table</h4>
+          </Grid>
+          <Grid item>
+            <Table id="effectstable" size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell id="column-criterion" align="center">
+                    Criterion
+                  </TableCell>
+                  <TableCell id="column-description" align="center">
+                    Description
+                  </TableCell>
+                  <TableCell id="column-unit-of-measurement" align="center">
+                    Unit of measurement
+                  </TableCell>
+                  {createAlternativeHeaders()}
+                  <TableCell align="center">
+                    Strength of evidence / Uncertainties
+                  </TableCell>
+                  <TableCell align="center">Reference</TableCell>
+                </TableRow>
+              </TableHead>
+              <EffectsTableCriteriaRows />
+            </Table>
+          </Grid>
+        </Grid>
       </EffectsTableContextProviderComponent>
     </SettingsContextProviderComponent>
   ) : (

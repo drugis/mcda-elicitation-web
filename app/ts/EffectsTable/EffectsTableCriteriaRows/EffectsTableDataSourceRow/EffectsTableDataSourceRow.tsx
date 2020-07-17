@@ -61,7 +61,10 @@ export default function EffectsTableDataSourceRow({
     <TableRow id={`criterion-row-${criterion.id}`}>
       {index === 0 ? (
         <>
-          <TableCell rowSpan={criterion.dataSources.length}>
+          <TableCell
+            id={`criterion-title-${index}`}
+            rowSpan={criterion.dataSources.length}
+          >
             {criterion.title}
           </TableCell>
           <TableCell rowSpan={criterion.dataSources.length}>
