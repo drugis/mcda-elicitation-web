@@ -8,7 +8,7 @@ module.exports = {
   'Edit the title': edit,
   'Reset during subproblem creation': reset,
   'Interact with scale sliders': changeScale,
-  'Deleting': deleteSubproblem,
+  Deleting: deleteSubproblem,
   'Cancel deleting': cancelDeleteSubproblem,
   'Create non-analyzable problem': createNonAnalyzableProblem
 };
@@ -29,8 +29,14 @@ function setupSubProblem(browser) {
     .waitForElementVisible('#create-subproblem-header')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
     .assert.containsText('#no-title-warning', 'No title entered')
-    .assert.containsText('#scale-blocking-warning-0', 'Effects table contains missing values, therefore no scales can be set and this problem cannot be analyzed.')
-    .assert.containsText('#scale-blocking-warning-1', 'Effects table contains multiple data sources per criterion, therefore no scales can be set and this problem cannot be analyzed.')
+    .assert.containsText(
+      '#scale-blocking-warning-0',
+      'Effects table contains missing values, therefore no scales can be set and this problem cannot be analyzed.'
+    )
+    .assert.containsText(
+      '#scale-blocking-warning-1',
+      'Effects table contains multiple data sources per criterion, therefore no scales can be set and this problem cannot be analyzed.'
+    )
     .setValue('#subproblem-title', subproblem1.title)
     .waitForElementVisible('#create-new-subproblem-button:enabled')
     .click('#alternative-2')
@@ -42,21 +48,25 @@ function setupSubProblem(browser) {
 function beforeEach(browser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
-  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
+  workspaceService.uploadTestWorkspace(
+    browser,
+    '/createSubproblemTestProblem.json'
+  );
+  util.delayedClick(
+    browser,
+    '#problem-definition-tab',
+    '#effects-table-header'
+  );
 }
 
 function afterEach(browser) {
   errorService.isErrorBarHidden(browser);
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function create(browser) {
-  setupSubProblem(browser)
-    .click('#create-new-subproblem-button');
+  setupSubProblem(browser).click('#create-new-subproblem-button');
 }
 
 function switchSubproblem(browser) {
@@ -129,8 +139,10 @@ function deleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-disabled');
   setupSubProblem(browser)
     .click('#create-new-subproblem-button')
+    .waitForElementVisible('#delete-subproblem-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
+    .pause(5000) //needed for the test to pass on github
     .click('#delete-subproblem-confirm-button')
     .waitForElementVisible('#delete-subproblem-disabled')
     .assert.containsText('#subproblem-selector', 'Default');

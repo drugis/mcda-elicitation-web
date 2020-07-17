@@ -73,7 +73,7 @@ function deleteUnfinishedFromList(browser, index) {
 function cleanList(browser) {
   var expectPath = '#delete-workspace-0';
   browser.waitForElementVisible('#workspaces-header');
-  browser.elements('css selector', expectPath, function (result) {
+  browser.elements('css selector', expectPath, (result) => {
     if (result.value.length !== 0) {
       console.log('! Workspace list is not empty. Deleting a workspace.');
       browser.click(expectPath);
@@ -90,7 +90,7 @@ function cleanList(browser) {
 function cleanUnfinishedList(browser) {
   var expectPath = '#delete-in-progress-workspace-0';
   browser.waitForElementVisible('#workspaces-header');
-  browser.elements('css selector', expectPath, function (result) {
+  browser.elements('css selector', expectPath, (result) => {
     if (result.value.length !== 0) {
       console.log(
         '! Unfinished workspace list is not empty. Deleting an unfinished workspace.'
