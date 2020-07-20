@@ -9,6 +9,10 @@ import _ from 'lodash';
 import React, {useContext} from 'react';
 import {EffectsTableContext} from '../../EffectsTableContext/EffectsTableContext';
 import ValueCell from './ValueCell/ValueCell';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import IUnitOfMeasurement, {
+  UnitOfMeasurementType
+} from '@shared/interface/IUnitOfMeasurement';
 
 export default function EffectsTableDataSourceRow({
   criterion,
@@ -20,11 +24,12 @@ export default function EffectsTableDataSourceRow({
   index: number;
 }) {
   const {alternatives} = useContext(EffectsTableContext);
+  const {showPercentages} = useContext(SettingsContext);
 
-  function createDataSourceCells(dataSource: IDataSource) {
+  function createDataSourceCells(dataSource: IDataSource): JSX.Element {
     return (
       <>
-        <TableCell>{dataSource.unitOfMeasurement.label}</TableCell>
+        <TableCell>{getUnitLabel(dataSource.unitOfMeasurement)}</TableCell>
         {createCells()}
         <TableCell>
           <Box p={1}>
@@ -45,7 +50,15 @@ export default function EffectsTableDataSourceRow({
     );
   }
 
-  function createCells() {
+  function getUnitLabel(unit: IUnitOfMeasurement): string {
+    if (showPercentages && unit.type === UnitOfMeasurementType.decimal) {
+      return '%';
+    } else {
+      return unit.label;
+    }
+  }
+
+  function createCells(): JSX.Element[] {
     return _.map(alternatives, (alternative: IAlternative) => {
       return (
         <ValueCell

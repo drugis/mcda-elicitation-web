@@ -39,7 +39,7 @@ export default function DataSourceRow({
     createDataSourceCells()
   );
 
-  function createDataSourceCells() {
+  function createDataSourceCells(): JSX.Element {
     return (
       <>
         <TableCell align={'center'}>
@@ -60,8 +60,8 @@ export default function DataSourceRow({
     );
   }
 
-  function createInputCells() {
-    return _.map(alternatives, (alternative:IAlternative) => {
+  function createInputCells(): JSX.Element[] {
+    return _.map(alternatives, (alternative: IAlternative) => {
       return <InputCell key={alternative.id} alternativeId={alternative.id} />;
     });
   }

@@ -6,4 +6,5 @@ export default interface IEffectsTableContext {
   workspace: IWorkspace;
   alternatives: IAlternative[];
   scales: Record<string, Record<string, IScale>>;
+  canBePercentage: (dataSourceId: string) => boolean;
 }

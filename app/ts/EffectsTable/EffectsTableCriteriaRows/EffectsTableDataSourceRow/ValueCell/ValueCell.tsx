@@ -18,7 +18,7 @@ export default function ValueCell({
   alternativeId: string;
   dataSourceId: string;
 }) {
-  const {workspace, scales} = useContext(EffectsTableContext);
+  const {workspace, scales, canBePercentage} = useContext(EffectsTableContext);
   const {analysisType} = useContext(SettingsContext);
   const valueLabel = buildValueLabel(analysisType, workspace);
 
@@ -44,11 +44,13 @@ export default function ValueCell({
       <EffectValueCell
         effect={findValue(workspace.effects)}
         scale={findScale(scales)}
+        canBePercentage={canBePercentage(dataSourceId)}
       />
     ) : (
       <DistributionValueCell
         distribution={findValue(workspace.distributions)}
         scale={findScale(scales)}
+        canBePercentage={canBePercentage(dataSourceId)}
       />
     );
   }
