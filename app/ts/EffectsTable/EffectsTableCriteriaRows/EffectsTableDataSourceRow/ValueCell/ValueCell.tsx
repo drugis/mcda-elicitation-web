@@ -43,19 +43,23 @@ export default function ValueCell({
     analysisType: AnalysisType,
     workspace: IWorkspace
   ): JSX.Element {
-    return analysisType === 'deterministic' ? (
-      <EffectValueCell
-        effect={findValue(workspace.effects)}
-        scale={findScale(scales)}
-        canBePercentage={canBePercentage(dataSourceId)}
-      />
-    ) : (
-      <DistributionValueCell
-        distribution={findValue(workspace.distributions)}
-        scale={findScale(scales)}
-        canBePercentage={canBePercentage(dataSourceId)}
-      />
-    );
+    if (analysisType === 'deterministic') {
+      return (
+        <EffectValueCell
+          effect={findValue(workspace.effects)}
+          scale={findScale(scales)}
+          canBePercentage={canBePercentage(dataSourceId)}
+        />
+      );
+    } else {
+      return (
+        <DistributionValueCell
+          distribution={findValue(workspace.distributions)}
+          scale={findScale(scales)}
+          canBePercentage={canBePercentage(dataSourceId)}
+        />
+      );
+    }
   }
 
   return (

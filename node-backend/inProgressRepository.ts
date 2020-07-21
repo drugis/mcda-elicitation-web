@@ -9,18 +9,18 @@ import IValueCellQueryResult from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
-import { Distribution } from '@shared/interface/IDistribution';
-import { Effect } from '@shared/interface/IEffect';
-import { Error } from '@shared/interface/IError';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import {Error} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
-import { parallel, waterfall } from 'async';
+import {parallel, waterfall} from 'async';
 import _ from 'lodash';
-import { PoolClient, QueryResult } from 'pg';
-import pgPromise, { IMain } from 'pg-promise';
+import {PoolClient, QueryResult} from 'pg';
+import pgPromise, {IMain} from 'pg-promise';
 import {
   buildProblem,
   mapAlternatives,
@@ -35,7 +35,7 @@ import {
   mapToDataSourceQueryResult,
   mapWorkspace
 } from './inProgressRepositoryService';
-import IDB, { ClientOrDB } from './interface/IDB';
+import IDB, {ClientOrDB} from './interface/IDB';
 
 export default function InProgressWorkspaceRepository(db: IDB) {
   const pgp: IMain = pgPromise();

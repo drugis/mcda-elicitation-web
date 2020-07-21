@@ -2,18 +2,18 @@ import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
 import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
-import { Error } from '@shared/interface/IError';
+import {Error} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
-import { buildInProgressCopy } from '@shared/workspaceService';
-import { waterfall } from 'async';
-import { Request, Response } from 'express';
-import { CREATED, OK } from 'http-status-codes';
+import {buildInProgressCopy} from '@shared/workspaceService';
+import {waterfall} from 'async';
+import {Request, Response} from 'express';
+import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
-import { PoolClient } from 'pg';
+import {PoolClient} from 'pg';
 import InProgressWorkspaceRepository from './inProgressRepository';
 import {
   buildEmptyInProgress,
@@ -23,7 +23,7 @@ import {
 import IDB from './interface/IDB';
 import logger from './logger';
 import OrderingRepository from './orderingRepository';
-import { getUser, handleError } from './util';
+import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
 import WorkspaceRepository from './workspaceRepository';
 

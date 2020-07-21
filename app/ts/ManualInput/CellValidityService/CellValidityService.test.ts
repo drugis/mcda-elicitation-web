@@ -1,20 +1,19 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import { Distribution } from '@shared/interface/IDistribution';
-import { Effect } from '@shared/interface/IEffect';
-import IUnitOfMeasurement, { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import IUnitOfMeasurement, {
+  UnitOfMeasurementType
+} from '@shared/interface/IUnitOfMeasurement';
 import {
   getBetaAlphaError,
   getBetaBetaError,
   getGammaAlphaError,
   getGammaBetaError,
-
   getLowerBoundError,
-
-  getNormalError, getUpperBoundError, getValueError,
-
-
-
+  getNormalError,
+  getUpperBoundError,
+  getValueError,
   hasInvalidCell
 } from './CellValidityService';
 

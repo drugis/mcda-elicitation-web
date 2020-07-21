@@ -10,8 +10,8 @@ import ISettings from '@shared/interface/ISettings';
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
 import React from 'react';
-import { SettingsContextProviderComponent } from '../Settings/SettingsContext';
-import { EffectsTableContextProviderComponent } from './EffectsTableContext/EffectsTableContext';
+import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
+import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 
 export default function EffectsTable({
@@ -28,23 +28,23 @@ export default function EffectsTable({
   function renderAlternativeHeaders(): JSX.Element[] {
     return _(oldWorkspace.problem.alternatives)
       .toPairs()
-      .map(
-        (
-          [alternativeId, alternative]: [string, {title: string}],
-          index: number
-        ) => {
-          return (
-            <TableCell
-              id={`column-alternative-${index}`}
-              key={alternativeId}
-              align="center"
-            >
-              {alternative.title}
-            </TableCell>
-          );
-        }
-      )
+      .map(createAlternativeHeader)
       .value();
+  }
+
+  function createAlternativeHeader(
+    [alternativeId, alternative]: [string, {title: string}],
+    index: number
+  ) {
+    return (
+      <TableCell
+        id={`column-alternative-${index}`}
+        key={alternativeId}
+        align="center"
+      >
+        {alternative.title}
+      </TableCell>
+    );
   }
 
   function renderTableHeaders(): JSX.Element {
@@ -128,7 +128,7 @@ export default function EffectsTable({
             <h4>Effects Table</h4>
           </Grid>
           <Grid item xs={12}>
-            <Table id="effectstable" size="small">
+            <Table size="small">
               {renderTableHeaders()}
               <EffectsTableCriteriaRows />
             </Table>

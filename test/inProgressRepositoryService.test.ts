@@ -17,18 +17,18 @@ import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
 import IDatabaseInputCell from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
-import { Distribution } from '@shared/interface/IDistribution';
-import { Effect } from '@shared/interface/IEffect';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOrdering from '@shared/interface/IOrdering';
-import { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
-import { IPerformanceTableEntry } from '@shared/interface/Problem/IPerformanceTableEntry';
+import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import { CURRENT_SCHEMA_VERSION } from 'app/ts/ManualInput/constants';
+import {CURRENT_SCHEMA_VERSION} from 'app/ts/ManualInput/constants';
 import {
   buildEmptyInProgress,
   buildProblem,
