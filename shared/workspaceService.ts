@@ -189,6 +189,7 @@ export function buildWorkspaceDataSources(
       return {
         id: idMapper(dataSource.id),
         reference: dataSource.source,
+        referenceLink: dataSource.sourceLink,
         unitOfMeasurement: {
           label: dataSource.unitOfMeasurement.label,
           type: dataSource.unitOfMeasurement.type,

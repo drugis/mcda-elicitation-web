@@ -9,18 +9,18 @@ import IValueCellQueryResult from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
-import {Error} from '@shared/interface/IError';
+import { Distribution } from '@shared/interface/IDistribution';
+import { Effect } from '@shared/interface/IEffect';
+import { Error } from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
-import {parallel, waterfall} from 'async';
+import { parallel, waterfall } from 'async';
 import _ from 'lodash';
-import {PoolClient, QueryResult} from 'pg';
-import pgPromise, {IMain} from 'pg-promise';
+import { PoolClient, QueryResult } from 'pg';
+import pgPromise, { IMain } from 'pg-promise';
 import {
   buildProblem,
   mapAlternatives,
@@ -35,7 +35,7 @@ import {
   mapToDataSourceQueryResult,
   mapWorkspace
 } from './inProgressRepositoryService';
-import IDB, {ClientOrDB} from './interface/IDB';
+import IDB, { ClientOrDB } from './interface/IDB';
 
 export default function InProgressWorkspaceRepository(db: IDB) {
   const pgp: IMain = pgPromise();
@@ -204,6 +204,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
         'unitlowerbound',
         'unitupperbound',
         'reference',
+        'referencelink',
         'strengthofevidence',
         'uncertainty'
       ],
@@ -457,16 +458,17 @@ export default function InProgressWorkspaceRepository(db: IDB) {
       reference,
       strengthOfEvidence,
       uncertainty,
-      unitOfMeasurement
+      unitOfMeasurement,
+      referenceLink
     }: IDataSourceCommand,
     callback: (error: any) => void
   ): void {
     const query = `INSERT INTO inProgressDataSource 
-                  (id, inProgressWorkspaceId, criterionId, orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                  (id, inProgressWorkspaceId, criterionId, orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound, referenceLink) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                   ON CONFLICT (id)
                   DO UPDATE
-                  SET (orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) = ($4, $5, $6, $7, $8, $9, $10, $11)`;
+                  SET (orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound, referenceLink) = ($4, $5, $6, $7, $8, $9, $10, $11, $12)`;
     db.query(
       query,
       [
@@ -480,7 +482,8 @@ export default function InProgressWorkspaceRepository(db: IDB) {
         unitOfMeasurement.label,
         unitOfMeasurement.type,
         unitOfMeasurement.lowerBound,
-        unitOfMeasurement.upperBound
+        unitOfMeasurement.upperBound,
+        referenceLink
       ],
       callback
     );

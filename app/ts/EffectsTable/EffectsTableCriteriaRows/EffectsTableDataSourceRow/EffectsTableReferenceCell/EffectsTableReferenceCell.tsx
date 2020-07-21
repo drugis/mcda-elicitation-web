@@ -9,9 +9,14 @@ export default function EffectsTableReferenceCell({
   dataSource: IDataSource;
 }) {
   const {showRefereces} = useContext(SettingsContext);
-  return showRefereces ? (
-    <TableCell>{dataSource.reference}</TableCell>
-  ) : (
-    <></>
-  );
+
+  function renderReference(): JSX.Element | string {
+    if (dataSource.referenceLink) {
+      return <a target="_blank" href={dataSource.referenceLink}>{dataSource.reference}</a>;
+    } else {
+      return dataSource.reference;
+    }
+  }
+
+  return showRefereces ? <TableCell>{renderReference()}</TableCell> : <></>;
 }

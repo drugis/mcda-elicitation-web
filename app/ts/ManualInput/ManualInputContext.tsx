@@ -1,18 +1,18 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
+import { Distribution } from '@shared/interface/IDistribution';
+import { Effect } from '@shared/interface/IEffect';
 import IError from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IManualInputContext from '@shared/interface/IManualInputContext';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
 import Axios from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
-import {generateUuid} from 'shared/util';
-import {ErrorContext} from '../Error/ErrorContext';
-import TestExport, {TableInputMode} from '../type/TableInputMode';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { generateUuid } from 'shared/util';
+import { ErrorContext } from '../Error/ErrorContext';
+import { TableInputMode } from '../type/TableInputMode';
 import {
   createDistributions,
   createWarnings,
@@ -75,7 +75,7 @@ export function ManualInputContextProviderComponent({
   ]);
 
   function addCriterion(isFavourable: boolean) {
-    const newCriterion = {
+    const newCriterion : ICriterion = {
       id: generateUuid(),
       title: 'new criterion',
       description: '',
@@ -84,6 +84,7 @@ export function ManualInputContextProviderComponent({
         {
           id: generateUuid(),
           reference: '',
+          referenceLink: '',
           uncertainty: '',
           unitOfMeasurement: defaultUnitOfMeasurement,
           strengthOfEvidence: ''
@@ -271,9 +272,10 @@ export function ManualInputContextProviderComponent({
   function addDefaultDataSource(criterionId: string) {
     let criteriaCopy = _.cloneDeep(criteria);
     let criterion = _.find(criteriaCopy, ['id', criterionId]);
-    const newDataSource = {
+    const newDataSource : IDataSource = {
       id: generateUuid(),
       reference: 'new reference',
+      referenceLink: '',
       unitOfMeasurement: defaultUnitOfMeasurement,
       uncertainty: 'unc',
       strengthOfEvidence: 'soe'

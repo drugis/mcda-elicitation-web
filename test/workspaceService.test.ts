@@ -19,17 +19,17 @@ import INormalDistribution from '@shared/interface/INormalDistribution';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import ITextEffect from '@shared/interface/ITextEffect';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
-import {effectPerformanceType} from '@shared/interface/Problem/IEffectPerformance';
+import { effectPerformanceType } from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import { IPerformanceTableEntry } from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IRangeDistributionPerformance from '@shared/interface/Problem/IRangeDistributionPerformance';
@@ -37,23 +37,53 @@ import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
 import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
 import {
-  buildInProgressCopy,
-  buildWorkspaceDataSources,
-  buildWorkspaceCriteria,
-  buildWorkspaceProperties,
-  buildWorkspaceAlternatives,
-  buildWorkspaceEffects,
-  isNotNMAEntry,
-  buildEffect,
-  createEmptyOrTextEffect,
-  createExactEffect,
-  createBoundEffect,
-  buildWorkspaceDistributions,
-  buildDistribution,
-  finishDistributionCreation,
+  buildDistribution, buildEffect,
+
+
+
+
+
+
+
+  buildIdMap, buildInProgressCopy,
+
+
+
+
+
+
+
+
+
+
+
+
+
   buildInProgressIdMapper,
-  buildIdMap,
-  buildPercentageMap
+
+  buildPercentageMap, buildWorkspaceAlternatives, buildWorkspaceCriteria, buildWorkspaceDataSources,
+
+
+
+
+
+
+
+
+
+  buildWorkspaceDistributions, buildWorkspaceEffects, buildWorkspaceProperties,
+
+
+
+
+
+
+  createBoundEffect, createEmptyOrTextEffect,
+  createExactEffect,
+
+
+
+  finishDistributionCreation, isNotNMAEntry
 } from '@shared/workspaceService';
 import _ from 'lodash';
 
@@ -174,6 +204,7 @@ describe('buildWorkspace', () => {
             id: dataSource1Id,
             scale: [0, 100],
             source: 'ref',
+            sourceLink: 'www.link.com',
             strengthOfEvidence: 'str',
             uncertainties: 'unc',
             unitOfMeasurement: {
@@ -192,6 +223,7 @@ describe('buildWorkspace', () => {
         {
           id: dataSource1Id,
           reference: 'ref',
+          referenceLink: 'www.link.com',
           strengthOfEvidence: 'str',
           uncertainty: 'unc',
           unitOfMeasurement: {
@@ -597,6 +629,7 @@ describe('buildWorkspace', () => {
               id: dataSource1Id,
               scale: [0, 100],
               source: 'ref',
+              sourceLink: 'www.link.com',
               strengthOfEvidence: 'str',
               uncertainties: 'unc',
               unitOfMeasurement: {
@@ -634,6 +667,7 @@ describe('buildWorkspace', () => {
                 type: UnitOfMeasurementType.percentage
               },
               source: '',
+              sourceLink: '',
               uncertainties: '',
               strengthOfEvidence: ''
             }
@@ -652,6 +686,7 @@ describe('buildWorkspace', () => {
                 type: UnitOfMeasurementType.decimal
               },
               source: '',
+              sourceLink: '',
               uncertainties: '',
               strengthOfEvidence: ''
             }

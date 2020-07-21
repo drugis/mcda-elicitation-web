@@ -17,18 +17,18 @@ import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
 import IDatabaseInputCell from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
+import { Distribution } from '@shared/interface/IDistribution';
+import { Effect } from '@shared/interface/IEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOrdering from '@shared/interface/IOrdering';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import { IPerformanceTableEntry } from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import {CURRENT_SCHEMA_VERSION} from 'app/ts/ManualInput/constants';
+import { CURRENT_SCHEMA_VERSION } from 'app/ts/ManualInput/constants';
 import {
   buildEmptyInProgress,
   buildProblem,
@@ -155,6 +155,7 @@ describe('inProgressRepositoryService', () => {
           orderindex: 2,
           criterionid: criterion1Id,
           reference: 'reference',
+          referencelink: 'www.link.com',
           strengthofevidence: 'strengths',
           uncertainty: 'uncertainties',
           unitlabel: '%',
@@ -168,6 +169,7 @@ describe('inProgressRepositoryService', () => {
           orderindex: 1,
           criterionid: criterion1Id,
           reference: 'reference',
+          referencelink: 'www.link.com',
           strengthofevidence: 'strengths',
           uncertainty: 'uncertainties',
           unitlabel: '',
@@ -182,6 +184,7 @@ describe('inProgressRepositoryService', () => {
           id: dataSources[1].id,
           criterionId: dataSources[1].criterionid,
           reference: dataSources[1].reference,
+          referenceLink: dataSources[1].referencelink,
           strengthOfEvidence: dataSources[1].strengthofevidence,
           uncertainty: dataSources[1].uncertainty,
           unitOfMeasurement: {
@@ -195,6 +198,7 @@ describe('inProgressRepositoryService', () => {
           id: dataSources[0].id,
           criterionId: dataSources[0].criterionid,
           reference: dataSources[0].reference,
+          referenceLink: dataSources[0].referencelink,
           strengthOfEvidence: dataSources[0].strengthofevidence,
           uncertainty: dataSources[0].uncertainty,
           unitOfMeasurement: {
@@ -458,6 +462,7 @@ describe('inProgressRepositoryService', () => {
           id: dataSource1Id,
           criterionId: criterion1Id,
           reference: 'reference',
+          referenceLink: 'www.link.com',
           strengthOfEvidence: 'strengths',
           uncertainty: 'uncertainties',
           unitOfMeasurement: {
@@ -544,6 +549,7 @@ describe('inProgressRepositoryService', () => {
             id: dataSource1Id,
             criterionId: criterion1Id,
             reference: 'reference',
+            referenceLink: 'www.link.com',
             strengthOfEvidence: 'strengths',
             uncertainty: 'uncertainties',
             unitOfMeasurement: {
@@ -703,6 +709,7 @@ describe('inProgressRepositoryService', () => {
             {
               id: dataSource1Id,
               source: criteria[0].dataSources[0].reference,
+              sourceLink: criteria[0].dataSources[0].referenceLink,
               unitOfMeasurement: {
                 type: criteria[0].dataSources[0].unitOfMeasurement.type,
                 label: criteria[0].dataSources[0].unitOfMeasurement.label
@@ -906,6 +913,7 @@ describe('inProgressRepositoryService', () => {
             {
               id: dataSource1Id,
               source: 'reference',
+              sourceLink: 'www.link.com',
               unitOfMeasurement: {
                 type: UnitOfMeasurementType.percentage,
                 label: '%'
@@ -924,6 +932,7 @@ describe('inProgressRepositoryService', () => {
             {
               id: 'ds2Id',
               source: 'reference',
+              sourceLink: 'www.link.com',
               unitOfMeasurement: {
                 type: UnitOfMeasurementType.percentage,
                 label: '%'
@@ -973,6 +982,7 @@ describe('inProgressRepositoryService', () => {
                 id: 'unique_uuid',
                 criterionId: 'unique_uuid',
                 reference: '',
+                referenceLink: '',
                 uncertainty: '',
                 strengthOfEvidence: '',
                 unitOfMeasurement: {
@@ -992,6 +1002,7 @@ describe('inProgressRepositoryService', () => {
                 id: 'unique_uuid',
                 criterionId: 'unique_uuid',
                 reference: '',
+                referenceLink: '',
                 uncertainty: '',
                 strengthOfEvidence: '',
                 unitOfMeasurement: {
@@ -1074,6 +1085,7 @@ describe('inProgressRepositoryService', () => {
         {
           id: 'ds1Id',
           reference: 'ref',
+          referenceLink: 'www.link.com',
           strengthOfEvidence: 'stronk',
           uncertainty: 'unc',
           unitOfMeasurement: {
@@ -1090,6 +1102,7 @@ describe('inProgressRepositoryService', () => {
         {
           id: 'ds1Id',
           reference: 'ref',
+          referencelink: 'www.link.com',
           strengthofevidence: 'stronk',
           uncertainty: 'unc',
 

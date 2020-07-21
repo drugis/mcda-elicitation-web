@@ -1,10 +1,10 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
+import { Distribution } from '@shared/interface/IDistribution';
+import { Effect } from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import {
@@ -93,6 +93,7 @@ describe('manualInputService', () => {
   describe('createWarnings', () => {
     const dataSource = {
       reference: 'reference',
+      referenceLink: 'www.link.com',
       strengthOfEvidence: 'strength',
       uncertainty: 'uncertainty',
       unitOfMeasurement: {
@@ -474,6 +475,7 @@ describe('manualInputService', () => {
         {
           id: dataSourceId + '1',
           reference: 'ref',
+          referenceLink: 'www.link.com',
           strengthOfEvidence: 'str',
           uncertainty: 'unc',
           unitOfMeasurement: {
@@ -486,6 +488,7 @@ describe('manualInputService', () => {
         {
           id: dataSourceId + '2',
           reference: 'ref',
+          referenceLink: 'www.link.com',
           strengthOfEvidence: 'str',
           uncertainty: 'unc',
           unitOfMeasurement: {
