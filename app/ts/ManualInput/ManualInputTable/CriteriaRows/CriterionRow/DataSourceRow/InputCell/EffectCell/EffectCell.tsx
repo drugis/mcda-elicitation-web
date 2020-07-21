@@ -81,7 +81,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
       const upperBound = effect.isNotEstimableUpperBound
         ? 'NE'
         : `${effect.upperBound}%`;
-      return `${effect.value}% (${lowerBound}, ${upperBound}%)`;
+      return `${effect.value}% (${lowerBound}, ${upperBound})`;
     } else {
       const lowerBound = effect.isNotEstimableLowerBound
         ? 'NE'

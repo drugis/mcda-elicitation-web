@@ -6,13 +6,11 @@ module.exports = {
   'Verifying all components are visible': verifyComponents,
   'Default button resetting options': reset,
   '(De)select all button deselects and selects all column options': deselectAll,
-  'Switching settings in problem definition tab': switchSettingsInProblemDefition,
-  'Unselecting criterion column in problem definition tab': unselectCriterionInProblemDefinition,
+  'Switching settings in problem definition tab': switchSettingsInProblemDefinition,
   'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
   'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
   'Unselecting uncertainties column in problem definition tab': unselectUncertaintiesInProblemDefinition,
   'Unselecting reference column in problem definition tab': unselectReferenceInProblemDefinition,
-  'Unselecting criterion column in deterministic results tab': unselectCriterionInDeterministic,
   'Unselecting description column in deterministic results tab': unselectDescriptionInDeterministic,
   'Unselecting units column in deterministic results tab': unselectUnitsInDeterministic,
   'Unselecting uncertainties column in deterministic results tab': unselectUncertaintiesInDeterministic,
@@ -46,7 +44,12 @@ function showDecimals(browser) {
 }
 
 function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
-  return util.delayedClick(browser, '#deterministic-tab', '#sensitivity-measurements-header')
+  return util
+    .delayedClick(
+      browser,
+      '#deterministic-tab',
+      '#sensitivity-measurements-header'
+    )
     .click('#settings-button')
     .click(settingsPath)
     .click('#save-settings-button')
@@ -55,11 +58,12 @@ function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
 }
 
 function changeProblemDefinitionTabSetting(browser, settingsPath, columnPath) {
-  return util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
+  return util
+    .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
     .click('#settings-button')
     .click(settingsPath)
     .click('#save-settings-button')
-    .assert.not.visible(columnPath);
+    .assert.not.elementPresent(columnPath);
 }
 
 function showPercentagesAndValues(browser) {
@@ -101,7 +105,8 @@ function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 }
@@ -109,9 +114,7 @@ function beforeEach(browser) {
 function afterEach(browser) {
   browser.useCss();
   browser.click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function verifyComponents(browser) {
@@ -126,7 +129,6 @@ function verifyComponents(browser) {
     .waitForElementVisible('#show-median-radio')
     .waitForElementVisible('#show-mode-radio')
     .waitForElementVisible('#toggle-selection-button')
-    .waitForElementVisible('#criterion-column-checkbox')
     .waitForElementVisible('#description-column-checkbox')
     .waitForElementVisible('#units-column-checkbox')
     .waitForElementVisible('#reference-column-checkbox')
@@ -144,13 +146,11 @@ function reset(browser) {
     .click('#smaa-radio')
     .click('#values-radio')
     .click('#show-mode-radio')
-    .click('#criterion-column-checkbox')
     .click('#reset-default-button')
     .waitForElementVisible('#show-percentages-radio:checked')
     .waitForElementVisible('#deterministic-radio:checked')
     .waitForElementVisible('#entered-radio:checked')
     .waitForElementVisible('#show-median-radio:checked')
-    .waitForElementVisible('#criterion-column-checkbox:checked')
     .waitForElementVisible('#description-column-checkbox:checked')
     .waitForElementVisible('#units-column-checkbox:checked')
     .waitForElementVisible('#reference-column-checkbox:checked')
@@ -162,11 +162,8 @@ function reset(browser) {
 }
 
 function deselectAll(browser) {
-  browser
-    .click('#settings-button')
-    .click('#toggle-selection-button');
+  browser.click('#settings-button').click('#toggle-selection-button');
 
-  browser.expect.element('#criterion-column-checkbox').to.not.be.selected;
   browser.expect.element('#description-column-checkbox').to.not.be.selected;
   browser.expect.element('#units-column-checkbox').to.not.be.selected;
   browser.expect.element('#reference-column-checkbox').to.not.be.selected;
@@ -174,7 +171,6 @@ function deselectAll(browser) {
 
   browser
     .click('#toggle-selection-button')
-    .waitForElementVisible('#criterion-column-checkbox:checked')
     .waitForElementVisible('#description-column-checkbox:checked')
     .waitForElementVisible('#units-column-checkbox:checked')
     .waitForElementVisible('#reference-column-checkbox:checked')
@@ -182,25 +178,27 @@ function deselectAll(browser) {
     .click('#save-settings-button');
 }
 
-function switchSettingsInProblemDefition(browser) {
-  var effectTableCellPath = '//*[@id="effectstable"]/tbody/tr[2]/td[4]/div/effects-table-cell/div/div';
-  var unitsCellPath = '//*[@id="effectstable"]/tbody/tr[2]/td[3]';
+function switchSettingsInProblemDefinition(browser) {
+  var effectTableCellPath =
+    '//*[@id="value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1"]';
+  var unitsCellPath =
+    '//*[@id="unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e"]';
   var scaleRangeCellPath = '//*[@id="scalestable"]/tbody/tr[1]/td[3]/span[1]';
-
-  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
+  util
+    .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
     .useXpath()
-    .getValue(unitsCellPath, _.partial(checkValue, browser, null))
+    .assert.containsText(unitsCellPath, '%')
     .assert.containsText(effectTableCellPath, '60%')
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
-    .getValue(unitsCellPath, _.partial(checkValue, browser, null))
-    .assert.containsText(effectTableCellPath, '60%')
+    .assert.containsText(unitsCellPath, '')
+    .assert.containsText(effectTableCellPath, '0.6')
     .assert.containsText(scaleRangeCellPath, '0.5');
 
   showPercentagesAndValues(browser)
     .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectTableCellPath, '60')
+    .assert.containsText(effectTableCellPath, '60%')
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
@@ -209,18 +207,18 @@ function switchSettingsInProblemDefition(browser) {
     .assert.containsText(scaleRangeCellPath, '0.5');
 
   showPercentagesAndSmaaEntered(browser)
-    .getValue(unitsCellPath, _.partial(checkValue, browser, null))
-    .getValue(effectTableCellPath, _.partial(checkValue, browser, null))
+    .assert.containsText(unitsCellPath, '%')
+    .assert.containsText(effectTableCellPath, 'empty')
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
-    .getValue(unitsCellPath, _.partial(checkValue, browser, null))
-    .getValue(effectTableCellPath, _.partial(checkValue, browser, null))
+    .assert.containsText(unitsCellPath, '')
+    .assert.containsText(effectTableCellPath, 'empty')
     .assert.containsText(scaleRangeCellPath, '0.5');
 
   showPercentagesAndSmaaValues(browser)
     .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectTableCellPath, '60')
+    .assert.containsText(effectTableCellPath, '60%')
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
@@ -228,12 +226,6 @@ function switchSettingsInProblemDefition(browser) {
     .assert.containsText(effectTableCellPath, '0.6')
     .assert.containsText(scaleRangeCellPath, '0.5')
     .useCss();
-}
-
-function unselectCriterionInProblemDefinition(browser) {
-  var columnPath = '#column-criterion';
-  var settingPath = '#criterion-column-checkbox';
-  changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
 }
 
 function unselectDescriptionInProblemDefinition(browser) {
@@ -258,12 +250,6 @@ function unselectReferenceInProblemDefinition(browser) {
   var columnPath = '#column-references';
   var settingPath = '#reference-column-checkbox';
   changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
-}
-
-function unselectCriterionInDeterministic(browser) {
-  var columnPath = '#column-criterion';
-  var settingPath = '#criterion-column-checkbox';
-  changeDeterministicTabSetting(browser, settingPath, columnPath);
 }
 
 function unselectDescriptionInDeterministic(browser) {
@@ -291,7 +277,12 @@ function unselectReferenceInDeterministic(browser) {
 }
 
 function switchMedianInDeterministic(browser) {
-  util.delayedClick(browser, '#deterministic-tab', '#sensitivity-measurements-header')
+  util
+    .delayedClick(
+      browser,
+      '#deterministic-tab',
+      '#sensitivity-measurements-header'
+    )
     .click('#settings-button')
     .click('#show-mode-radio')
     .click('#save-settings-button')
@@ -299,8 +290,10 @@ function switchMedianInDeterministic(browser) {
 }
 
 function switchSettingsInOverview(browser) {
-  var effectCellPath = '//*[@id="c-0-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
-  var unitsCellPath = '//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]';
+  var effectCellPath =
+    '//*[@id="c-0-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
+  var unitsCellPath =
+    '//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]';
 
   browser
     .useXpath()
@@ -337,10 +330,17 @@ function switchSettingsInOverview(browser) {
 }
 
 function switchSettingsInPreferences(browser) {
-  var effectCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[4]';
-  var unitsCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[3]';
+  var effectCellPath =
+    '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[4]';
+  var unitsCellPath =
+    '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[3]';
 
-  util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header')
+  util
+    .delayedClick(
+      browser,
+      '#preferences-tab',
+      '#partial-value-functions-header'
+    )
     .useXpath()
     .assert.containsText(unitsCellPath, '%')
     .assert.containsText(effectCellPath, '45');
@@ -377,47 +377,73 @@ function switchSettingsInPreferences(browser) {
 function switchSettingsWhileSettingPVF(browser) {
   var lowestOption = '//*[@id="decreasing-pvf-option"]';
 
-  util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header')
+  util
+    .delayedClick(
+      browser,
+      '#preferences-tab',
+      '#partial-value-functions-header'
+    )
     .click('#criterion-0-pvf-button')
     .useXpath()
     .assert.containsText(lowestOption, '45 % is best');
 
-  showDecimals(browser)
-    .assert.containsText(lowestOption, '0.45 is best');
-  showPercentagesAndValues(browser)
-    .assert.containsText(lowestOption, '45 % is best');
-  showDecimals(browser)
-    .assert.containsText(lowestOption, '0.45 is best');
-  showPercentagesAndSmaaEntered(browser)
-    .assert.containsText(lowestOption, '45 % is best');
-  showDecimals(browser)
-    .assert.containsText(lowestOption, '0.45 is best');
-  showPercentagesAndSmaaValues(browser)
-    .assert.containsText(lowestOption, '45 % is best');
-  showDecimals(browser)
-    .assert.containsText(lowestOption, '0.45 is best');
+  showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
+  showPercentagesAndValues(browser).assert.containsText(
+    lowestOption,
+    '45 % is best'
+  );
+  showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
+  showPercentagesAndSmaaEntered(browser).assert.containsText(
+    lowestOption,
+    '45 % is best'
+  );
+  showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
+  showPercentagesAndSmaaValues(browser).assert.containsText(
+    lowestOption,
+    '45 % is best'
+  );
+  showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
 }
 
 function switchSettingsWhileSettingWeights(browser) {
   var firstCriterion = '//*[@id="criterion-0"]';
 
-  util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header')
+  util
+    .delayedClick(
+      browser,
+      '#preferences-tab',
+      '#partial-value-functions-header'
+    )
     .click('#ranking-button')
     .useXpath()
     .assert.containsText(firstCriterion, '2-year survival: 45 %');
 
-  showDecimals(browser)
-    .assert.containsText(firstCriterion, '2-year survival: 0.45');
-  showPercentagesAndValues(browser)
-    .assert.containsText(firstCriterion, '2-year survival: 45 %');
-  showDecimals(browser)
-    .assert.containsText(firstCriterion, '2-year survival: 0.45');
-  showPercentagesAndSmaaEntered(browser)
-    .assert.containsText(firstCriterion, '2-year survival: 45 %');
-  showDecimals(browser)
-    .assert.containsText(firstCriterion, '2-year survival: 0.45');
-  showPercentagesAndSmaaValues(browser)
-    .assert.containsText(firstCriterion, '2-year survival: 45 %');
-  showDecimals(browser)
-    .assert.containsText(firstCriterion, '2-year survival: 0.45');
+  showDecimals(browser).assert.containsText(
+    firstCriterion,
+    '2-year survival: 0.45'
+  );
+  showPercentagesAndValues(browser).assert.containsText(
+    firstCriterion,
+    '2-year survival: 45 %'
+  );
+  showDecimals(browser).assert.containsText(
+    firstCriterion,
+    '2-year survival: 0.45'
+  );
+  showPercentagesAndSmaaEntered(browser).assert.containsText(
+    firstCriterion,
+    '2-year survival: 45 %'
+  );
+  showDecimals(browser).assert.containsText(
+    firstCriterion,
+    '2-year survival: 0.45'
+  );
+  showPercentagesAndSmaaValues(browser).assert.containsText(
+    firstCriterion,
+    '2-year survival: 45 %'
+  );
+  showDecimals(browser).assert.containsText(
+    firstCriterion,
+    '2-year survival: 0.45'
+  );
 }

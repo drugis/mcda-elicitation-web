@@ -13,8 +13,8 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import {Error} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
-import IInProgressWorkspace from '@shared/interface/IInProgressWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
+import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {parallel, waterfall} from 'async';
@@ -29,11 +29,11 @@ import {
   mapCombinedResults,
   mapCriteria,
   mapDataSources,
-  mapToCellCommands,
-  mapWorkspace,
-  mapToDataSourceQueryResult,
   mapToAlternativeQueryResult,
-  mapToCriteriaQueryResult
+  mapToCellCommands,
+  mapToCriteriaQueryResult,
+  mapToDataSourceQueryResult,
+  mapWorkspace
 } from './inProgressRepositoryService';
 import IDB, {ClientOrDB} from './interface/IDB';
 
@@ -67,7 +67,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
           createInProgressWorkspace,
           client,
           ownerId,
-          newInProgress.workspace
+          newInProgress.properties
         ),
         _.partial(createInProgressCriteria, client, newInProgress.criteria),
         _.partial(createInProgressDataSources, client, dataSources),
@@ -136,7 +136,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
   function createInProgressWorkspace(
     client: PoolClient,
     ownerId: string,
-    toCreate: IInProgressWorkspace,
+    toCreate: IWorkspaceProperties,
     callback: (error: Error, createdId: string) => void
   ): void {
     const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, 
@@ -204,6 +204,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
         'unitlowerbound',
         'unitupperbound',
         'reference',
+        'referencelink',
         'strengthofevidence',
         'uncertainty'
       ],
@@ -249,7 +250,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
       (
         error: any,
         results: [
-          IInProgressWorkspace,
+          IWorkspaceProperties,
           ICriterion[],
           IAlternative[],
           IDataSource[],
@@ -274,7 +275,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     transactionCallback: (
       error: any,
       results: [
-        IInProgressWorkspace,
+        IWorkspaceProperties,
         ICriterion[],
         IAlternative[],
         IDataSource[],
@@ -300,7 +301,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
   function getWorkspace(
     inProgressId: string,
     client: PoolClient,
-    callback: (error: any, inProgressWorkspace: IInProgressWorkspace) => void
+    callback: (error: any, inProgressWorkspace: IWorkspaceProperties) => void
   ): void {
     const query = 'SELECT * FROM inProgressWorkspace WHERE id=$1';
     client.query(
@@ -403,7 +404,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
   }
 
   function updateWorkspace(
-    {title, therapeuticContext, useFavourability, id}: IInProgressWorkspace,
+    {title, therapeuticContext, useFavourability, id}: IWorkspaceProperties,
     callback: (error: any) => void
   ): void {
     const query = `UPDATE inProgressWorkspace
@@ -457,16 +458,17 @@ export default function InProgressWorkspaceRepository(db: IDB) {
       reference,
       strengthOfEvidence,
       uncertainty,
-      unitOfMeasurement
+      unitOfMeasurement,
+      referenceLink
     }: IDataSourceCommand,
     callback: (error: any) => void
   ): void {
     const query = `INSERT INTO inProgressDataSource 
-                  (id, inProgressWorkspaceId, criterionId, orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                  (id, inProgressWorkspaceId, criterionId, orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound, referenceLink) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                   ON CONFLICT (id)
                   DO UPDATE
-                  SET (orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound) = ($4, $5, $6, $7, $8, $9, $10, $11)`;
+                  SET (orderIndex, reference, strengthOfEvidence, uncertainty, unitLabel, unitType, unitLowerBound, unitUpperBound, referenceLink) = ($4, $5, $6, $7, $8, $9, $10, $11, $12)`;
     db.query(
       query,
       [
@@ -480,7 +482,8 @@ export default function InProgressWorkspaceRepository(db: IDB) {
         unitOfMeasurement.label,
         unitOfMeasurement.type,
         unitOfMeasurement.lowerBound,
-        unitOfMeasurement.upperBound
+        unitOfMeasurement.upperBound,
+        referenceLink
       ],
       callback
     );
@@ -653,13 +656,13 @@ export default function InProgressWorkspaceRepository(db: IDB) {
 
   function query(
     ownerId: number,
-    callback: (error: Error, result: IInProgressWorkspace[]) => void
+    callback: (error: Error, result: IWorkspaceProperties[]) => void
   ): void {
     const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
     db.query(
       query,
       [ownerId],
-      (error: Error, result: QueryResult<IInProgressWorkspace>): void => {
+      (error: Error, result: QueryResult<IWorkspaceProperties>): void => {
         callback(error, error ? null : result.rows);
       }
     );

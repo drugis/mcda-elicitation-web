@@ -17,6 +17,7 @@ import MoveDataSourceButtons from './MoveDataSourceButtons/MoveDataSourceButtons
 import ReferenceCell from './ReferenceCell/ReferenceCell';
 import SoEUncertaintyCell from './SoEUncertaintyCell/SoEUncertaintyCell';
 import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
+import IAlternative from '@shared/interface/IAlternative';
 
 export default function DataSourceRow({
   dataSource,
@@ -38,13 +39,7 @@ export default function DataSourceRow({
     createDataSourceCells()
   );
 
-  function createInputCells() {
-    return _.map(alternatives, (alternative) => {
-      return <InputCell key={alternative.id} alternativeId={alternative.id} />;
-    });
-  }
-
-  function createDataSourceCells() {
+  function createDataSourceCells(): JSX.Element {
     return (
       <>
         <TableCell align={'center'}>
@@ -63,6 +58,12 @@ export default function DataSourceRow({
         <ReferenceCell criterion={criterion} dataSource={dataSource} />
       </>
     );
+  }
+
+  function createInputCells(): JSX.Element[] {
+    return _.map(alternatives, (alternative: IAlternative) => {
+      return <InputCell key={alternative.id} alternativeId={alternative.id} />;
+    });
   }
 
   return (

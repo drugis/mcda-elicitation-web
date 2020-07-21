@@ -1,12 +1,12 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
   var dependencies = [
     '$filter',
     'WorkspaceSettingsService',
     'significantDigits'
   ];
 
-  var EffectsTableService = function(
+  var EffectsTableService = function (
     $filter,
     WorkspaceSettingsService,
     significantDigits
@@ -15,7 +15,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectsTable(criteria) {
       var tableRows = angular.copy(criteria);
-      var useFavorability = _.find(criteria, function(criterion) {
+      var useFavorability = _.find(criteria, function (criterion) {
         return criterion.hasOwnProperty('isFavorable');
       });
       if (useFavorability) {
@@ -34,26 +34,31 @@ define(['lodash', 'angular'], function(_, angular) {
           [favorabilityHeader],
           orderedFavorableCriteria,
           [unFavorabilityHeader],
-          orderedUnfavorableCriteria);
+          orderedUnfavorableCriteria
+        );
       }
       tableRows = buildTableRows(tableRows);
       return tableRows;
     }
 
     function buildTableRows(rows) {
-      return _.reduce(rows, function(accum, row) {
-        if (row.isHeaderRow) {
-          return accum.concat(row);
-        }
-        var criterion = _.omit(row, ['dataSources']);
-        criterion.numberOfDataSources = row.dataSources.length;
-        accum = accum.concat(createRow(row.dataSources, criterion));
-        return accum;
-      }, []);
+      return _.reduce(
+        rows,
+        function (accum, row) {
+          if (row.isHeaderRow) {
+            return accum.concat(row);
+          }
+          var criterion = _.omit(row, ['dataSources']);
+          criterion.numberOfDataSources = row.dataSources.length;
+          accum = accum.concat(createRow(row.dataSources, criterion));
+          return accum;
+        },
+        []
+      );
     }
 
     function createRow(dataSources, criterion) {
-      return _.map(dataSources, function(dataSource, index) {
+      return _.map(dataSources, function (dataSource, index) {
         var newDataSource = angular.copy(dataSource);
         newDataSource.scale = getScale(dataSource.scale);
         return {
@@ -80,17 +85,24 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createEffectsTableInfo(performanceTable) {
-      return _.reduce(performanceTable, function(accum, tableEntry) {
-        var dataSourceId = tableEntry.dataSource;
-        if (accum[dataSourceId]) {
+      return _.reduce(
+        performanceTable,
+        function (accum, tableEntry) {
+          var dataSourceId = tableEntry.dataSource;
+          if (accum[dataSourceId]) {
+            return accum;
+          } else if (tableEntry.alternative) {
+            accum[dataSourceId] = createAbsoluteInfo(
+              dataSourceId,
+              performanceTable
+            );
+          } else {
+            accum[dataSourceId] = createRelativeInfo();
+          }
           return accum;
-        } else if (tableEntry.alternative) {
-          accum[dataSourceId] = createAbsoluteInfo(dataSourceId, performanceTable);
-        } else {
-          accum[dataSourceId] = createRelativeInfo();
-        }
-        return accum;
-      }, {});
+        },
+        {}
+      );
     }
 
     function createRelativeInfo() {
@@ -103,11 +115,17 @@ define(['lodash', 'angular'], function(_, angular) {
     function createAbsoluteInfo(dataSourceId, performanceTable) {
       return {
         isAbsolute: true,
-        studyDataLabelsAndUncertainty: createStudyDataLabelsAndUncertainty(dataSourceId, performanceTable)
+        studyDataLabelsAndUncertainty: createStudyDataLabelsAndUncertainty(
+          dataSourceId,
+          performanceTable
+        )
       };
     }
 
-    function createStudyDataLabelsAndUncertainty(dataSourceId, performanceTable) {
+    function createStudyDataLabelsAndUncertainty(
+      dataSourceId,
+      performanceTable
+    ) {
       return _(performanceTable)
         .filter(['dataSource', dataSourceId])
         .reduce(buildLabels, {});
@@ -116,12 +134,6 @@ define(['lodash', 'angular'], function(_, angular) {
     function buildLabels(accum, entryForCriterion) {
       accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
       return accum;
-    }
-
-    function isStudyDataAvailable(effectsTableInfo) {
-      return !!(_.find(effectsTableInfo, function(infoEntry) {
-        return infoEntry.distributionType !== 'relative';
-      }));
     }
 
     function buildLabel(entry) {
@@ -140,9 +152,11 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function determineUncertainty(distribution) {
-      return !!distribution &&
+      return (
+        !!distribution &&
         distribution.type !== 'empty' &&
-        distribution.type !== 'exact';
+        distribution.type !== 'exact'
+      );
     }
 
     function buildEffectValueLabel(performance) {
@@ -162,7 +176,10 @@ define(['lodash', 'angular'], function(_, angular) {
         return buildNormalLabel(distribution);
       } else if (distribution.type === 'dbeta') {
         return buildBetaLabel(distribution.parameters);
-      } else if (distribution.type === 'dsurv' || distribution.type === 'dgamma') {
+      } else if (
+        distribution.type === 'dsurv' ||
+        distribution.type === 'dgamma'
+      ) {
         return buildGammaLabel(distribution.parameters);
       } else if (distribution.type === 'exact') {
         return buildExactDistributionLabel(distribution);
@@ -182,42 +199,74 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildRangeDistributionLabel(parameters) {
-      return '[' + significantDigits(parameters.lowerBound) + ', ' + significantDigits(parameters.upperBound) + ']';
+      return (
+        '[' +
+        significantDigits(parameters.lowerBound) +
+        ', ' +
+        significantDigits(parameters.upperBound) +
+        ']'
+      );
     }
 
     function buildStudentsTLabel(parameters) {
-      return 'Student\'s t(' +
-        significantDigits(parameters.mu) + ', ' +
-        significantDigits(parameters.stdErr) + ', ' +
-        significantDigits(parameters.dof) + ')';
+      return (
+        "Student's t(" +
+        significantDigits(parameters.mu) +
+        ', ' +
+        significantDigits(parameters.stdErr) +
+        ', ' +
+        significantDigits(parameters.dof) +
+        ')'
+      );
     }
 
     function buildNormalLabel(distribution) {
       if (hasPercentageNormalInput(distribution.input)) {
-        return 'Normal(' +
-          significantDigits(distribution.input.mu) + '%, ' +
-          significantDigits(distribution.input.sigma) + '%)';
+        return (
+          'Normal(' +
+          significantDigits(distribution.input.mu) +
+          '%, ' +
+          significantDigits(distribution.input.sigma) +
+          '%)'
+        );
       } else {
-        return 'Normal(' +
-          significantDigits(distribution.parameters.mu) + ', ' +
-          significantDigits(distribution.parameters.sigma) + ')';
+        return (
+          'Normal(' +
+          significantDigits(distribution.parameters.mu) +
+          ', ' +
+          significantDigits(distribution.parameters.sigma) +
+          ')'
+        );
       }
     }
 
     function hasPercentageNormalInput(input) {
-      return input && input.scale === 'percentage' && input.hasOwnProperty('mu') && input.hasOwnProperty('sigma');
+      return (
+        input &&
+        input.scale === 'percentage' &&
+        input.hasOwnProperty('mu') &&
+        input.hasOwnProperty('sigma')
+      );
     }
 
     function buildBetaLabel(parameters) {
-      return 'Beta(' +
-        significantDigits(parameters.alpha) + ', ' +
-        significantDigits(parameters.beta) + ')';
+      return (
+        'Beta(' +
+        significantDigits(parameters.alpha) +
+        ', ' +
+        significantDigits(parameters.beta) +
+        ')'
+      );
     }
 
     function buildGammaLabel(parameters) {
-      return 'Gamma(' +
-        significantDigits(parameters.alpha) + ', ' +
-        significantDigits(parameters.beta) + ')';
+      return (
+        'Gamma(' +
+        significantDigits(parameters.alpha) +
+        ', ' +
+        significantDigits(parameters.beta) +
+        ')'
+      );
     }
 
     function buildEffectLabel(performance) {
@@ -226,7 +275,9 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (performance.effect.input) {
         return buildEffectInputLabel(performance.effect.input);
       } else if (performance.effect.type === 'empty') {
-        return performance.effect.value !== undefined ? performance.effect.value : '';
+        return performance.effect.value !== undefined
+          ? performance.effect.value
+          : '';
       } else {
         return performance.effect.value;
       }
@@ -245,11 +296,15 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isOldNormalDistributionFromEffect(performance) {
-      return performance.distribution.input && performance.distribution.type !== 'dt';
+      return (
+        performance.distribution.input && performance.distribution.type !== 'dt'
+      );
     }
 
     function isPercentageNormalDistribution(performance) {
-      return performance.distribution.input && performance.distribution.input.mu;
+      return (
+        performance.distribution.input && performance.distribution.input.mu
+      );
     }
 
     function buildEffectInputLabel(input) {
@@ -279,22 +334,43 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createRangeLabel(input, percentage) {
-      return '[' + input.lowerBound + percentage + ', ' + input.upperBound + percentage + ']';
+      return (
+        '[' +
+        input.lowerBound +
+        percentage +
+        ', ' +
+        input.upperBound +
+        percentage +
+        ']'
+      );
     }
 
     function createCILabel(input, percentage) {
-      return input.value + percentage + ' (' + input.lowerBound + percentage + '; ' + input.upperBound + percentage + ')';
+      return (
+        input.value +
+        percentage +
+        ' (' +
+        input.lowerBound +
+        percentage +
+        '; ' +
+        input.upperBound +
+        percentage +
+        ')'
+      );
     }
 
     function isValueCI(input) {
-      return input.hasOwnProperty('lowerBound') &&
+      return (
+        input.hasOwnProperty('lowerBound') &&
         input.hasOwnProperty('upperBound') &&
-        input.hasOwnProperty('value');
+        input.hasOwnProperty('value')
+      );
     }
 
     function isRange(input) {
-      return input.hasOwnProperty('lowerBound') &&
-        input.hasOwnProperty('upperBound');
+      return (
+        input.hasOwnProperty('lowerBound') && input.hasOwnProperty('upperBound')
+      );
     }
 
     function isValueSampleSize(input) {
@@ -305,43 +381,100 @@ define(['lodash', 'angular'], function(_, angular) {
       return input.events && input.sampleSize;
     }
 
-    function createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales) {
-      return _.reduce(rows, function(accum, row) {
-        if (row.isHeaderRow) {
+    function createIsCellAnalysisViable(
+      rows,
+      alternatives,
+      effectsTableInfo,
+      scales
+    ) {
+      return _.reduce(
+        rows,
+        function (accum, row) {
+          if (row.isHeaderRow) {
+            return accum;
+          } else {
+            accum[row.dataSource.id] = createViabilityRows(
+              row.dataSource.id,
+              alternatives,
+              effectsTableInfo,
+              scales
+            );
+            return accum;
+          }
+        },
+        {}
+      );
+    }
+
+    function createIsCellAnalysisViableForCriterionCard(
+      criterion,
+      alternatives,
+      effectsTableInfo,
+      scales
+    ) {
+      return _.reduce(
+        criterion.dataSources,
+        function (accum, dataSource) {
+          accum[dataSource.id] = createViabilityRows(
+            dataSource.id,
+            alternatives,
+            effectsTableInfo,
+            scales
+          );
           return accum;
-        } else {
-          accum[row.dataSource.id] = createViabilityRows(row.dataSource.id, alternatives, effectsTableInfo, scales);
+        },
+        {}
+      );
+    }
+
+    function createViabilityRows(
+      dataSourceId,
+      alternatives,
+      effectsTableInfo,
+      scales
+    ) {
+      return _.reduce(
+        alternatives,
+        function (accum, alternative) {
+          accum[alternative.id] = isCellViable(
+            dataSourceId,
+            alternative.id,
+            effectsTableInfo,
+            scales
+          );
           return accum;
-        }
-      }, {});
+        },
+        {}
+      );
     }
 
-    function createIsCellAnalysisViableForCriterionCard(criterion, alternatives, effectsTableInfo, scales) {
-      return _.reduce(criterion.dataSources, function(accum, dataSource) {
-        accum[dataSource.id] = createViabilityRows(dataSource.id, alternatives, effectsTableInfo, scales);
-        return accum;
-      }, {});
-    }
-
-    function createViabilityRows(dataSourceId, alternatives, effectsTableInfo, scales) {
-      return _.reduce(alternatives, function(accum, alternative) {
-        accum[alternative.id] = isCellViable(dataSourceId, alternative.id, effectsTableInfo, scales);
-        return accum;
-      }, {});
-    }
-
-    function isCellViable(dataSourceId, alternativeId, effectsTableInfo, scales) {
-      return isRelative(dataSourceId, effectsTableInfo) ||
+    function isCellViable(
+      dataSourceId,
+      alternativeId,
+      effectsTableInfo,
+      scales
+    ) {
+      return (
+        isRelative(dataSourceId, effectsTableInfo) ||
         hasEffectValueLabel(dataSourceId, alternativeId, effectsTableInfo) ||
-        hasScaleValue(dataSourceId, alternativeId, scales);
+        hasScaleValue(dataSourceId, alternativeId, scales)
+      );
     }
 
     function isRelative(dataSourceId, effectsTableInfo) {
       return !effectsTableInfo[dataSourceId].isAbsolute;
     }
 
-    function hasEffectValueLabel(dataSourceId, alternativeId, effectsTableInfo) {
-      return effectsTableInfo[dataSourceId].studyDataLabelsAndUncertainty[alternativeId].effectValue !== '';
+    function hasEffectValueLabel(
+      dataSourceId,
+      alternativeId,
+      effectsTableInfo
+    ) {
+      return (
+        effectsTableInfo[dataSourceId].studyDataLabelsAndUncertainty[
+          alternativeId
+        ].effectValue !== ''
+      );
     }
 
     function hasScaleValue(dataSourceId, alternativeId, scales) {
@@ -357,8 +490,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getRoundedScales(scales) {
-      return _.mapValues(scales, function(scalesByAlternatives) {
-        return _.mapValues(scalesByAlternatives, function(alternative) {
+      return _.mapValues(scales, function (scalesByAlternatives) {
+        return _.mapValues(scalesByAlternatives, function (alternative) {
           return {
             '2.5%': getRoundedValue(alternative['2.5%']),
             '50%': getRoundedValue(alternative['50%']),
@@ -369,7 +502,10 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getMedian(scales) {
-      if (WorkspaceSettingsService.setWorkspaceSettings().calculationMethod === 'mode') {
+      if (
+        WorkspaceSettingsService.setWorkspaceSettings().calculationMethod ===
+        'mode'
+      ) {
         return getMode(scales);
       } else {
         return getRoundedValue(scales['50%']);
@@ -387,7 +523,6 @@ define(['lodash', 'angular'], function(_, angular) {
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
-      isStudyDataAvailable: isStudyDataAvailable,
       buildTableRows: buildTableRows,
       createIsCellAnalysisViable: createIsCellAnalysisViable,
       createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard,

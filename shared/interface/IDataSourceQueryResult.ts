@@ -1,4 +1,4 @@
-import {UnitOfMeasurementType} from './IUnitOfMeasurement';
+import { UnitOfMeasurementType } from './IUnitOfMeasurement';
 
 export default interface IDataSourceQueryResult {
   id: string;
@@ -6,6 +6,7 @@ export default interface IDataSourceQueryResult {
   criterionid: string;
   orderindex: number;
   reference: string;
+  referencelink: string;
   uncertainty: string;
   strengthofevidence: string;
   unitlabel: string;

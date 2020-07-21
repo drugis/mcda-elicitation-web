@@ -1,21 +1,21 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import IUnitOfMeasurement, {
+  UnitOfMeasurementType
+} from '@shared/interface/IUnitOfMeasurement';
 import {
   getBetaAlphaError,
   getBetaBetaError,
   getGammaAlphaError,
   getGammaBetaError,
-  getValueError,
   getLowerBoundError,
-  getUpperBoundError,
   getNormalError,
+  getUpperBoundError,
+  getValueError,
   hasInvalidCell
 } from './CellValidityService';
-import IUnitOfMeasurement, {
-  UnitOfMeasurementType
-} from '@shared/interface/IUnitOfMeasurement';
-import ICriterion from '@shared/interface/ICriterion';
-import IAlternative from '@shared/interface/IAlternative';
-import {Effect} from '@shared/interface/IEffect';
-import {Distribution} from '@shared/interface/IDistribution';
 
 const NUMERIC_INPUT_ERROR = 'Please provide a numeric input';
 const INPUT_OUT_OF_BOUNDS = 'Input out of bounds [0, 100]';
@@ -233,6 +233,7 @@ describe('CellValidityService', () => {
             id: 'ds1',
             uncertainty: '',
             reference: '',
+            referenceLink: '',
             strengthOfEvidence: '',
             unitOfMeasurement: {
               type: UnitOfMeasurementType.percentage,

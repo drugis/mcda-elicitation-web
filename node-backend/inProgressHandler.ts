@@ -8,14 +8,15 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
+import {buildInProgressCopy} from '@shared/workspaceService';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
+import {PoolClient} from 'pg';
 import InProgressWorkspaceRepository from './inProgressRepository';
 import {
   buildEmptyInProgress,
-  buildInProgressCopy,
   buildProblem,
   createOrdering
 } from './inProgressRepositoryService';
@@ -25,7 +26,6 @@ import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
 import WorkspaceHandler from './workspaceHandler';
 import WorkspaceRepository from './workspaceRepository';
-import {PoolClient} from 'pg';
 
 export default function InProgressHandler(db: IDB) {
   const inProgressWorkspaceRepository = InProgressWorkspaceRepository(db);

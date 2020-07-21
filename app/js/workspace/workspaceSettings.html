@@ -25,7 +25,7 @@
       <div class="cell">
         <label>
           <input id="entered-radio"  type="radio" ng-model="settings.displayMode" ng-value="'enteredData'" ng-change="checkForWarnings()">
-          Entered data (unaffected by percentage/decimal toggle)
+          Entered data
         </label>
       </div>
       <div class="cell">
@@ -70,10 +70,6 @@
       </div>
       <div class="cell">
         <button id="toggle-selection-button" class="button tiny" type="button" ng-click="toggleSelection()">(De)select all</button>
-      </div>
-      <div class="cell">
-        <input id="criterion-column-checkbox" type="checkbox" ng-model="toggledColumns['criteria']">
-        <label for="criterion-column-checkbox">Criterion</label>
       </div>
       <div class="cell">
         <input id="description-column-checkbox" type="checkbox" ng-model="toggledColumns['description']">

@@ -778,38 +778,6 @@ define([
         });
       });
 
-      describe('isStudyDataAvailable', function() {
-        it('should return true if there is any entry in the effects table info which is not exact or relative', function() {
-          var effectsTableInfo = {
-            criterionId1: {
-              distributionType: 'exact'
-            },
-            criterionId2: {
-              distributionType: 'something else',
-              studyDataLabelsAndUncertainty: {
-                alternativeId6: { hasUncertainty: true }
-              }
-            }
-          };
-          var result = effectsTableService.isStudyDataAvailable(effectsTableInfo);
-          expect(result).toBeTruthy();
-        });
-
-        it('should return false if all entries arerelative', function() {
-          var effectsTableInfo = {
-            criterionId1: {
-              distributionType: 'relative'
-            },
-            criterionId2: {
-              distributionType: 'relative'
-            }
-          };
-          var result = effectsTableService.isStudyDataAvailable(effectsTableInfo);
-          expect(result).toBeFalsy();
-
-        });
-      });
-
       describe('buildTableRows', function() {
         it('should create one row for each dataSource of each criterion ', function() {
           var criteria = [{
