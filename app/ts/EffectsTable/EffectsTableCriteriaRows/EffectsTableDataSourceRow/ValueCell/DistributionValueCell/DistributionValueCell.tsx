@@ -1,10 +1,10 @@
-import {Distribution} from '@shared/interface/IDistribution';
+import { Distribution } from '@shared/interface/IDistribution';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import React, {useContext} from 'react';
+import { SettingsContext } from 'app/ts/Settings/SettingsContext';
+import React, { useContext } from 'react';
 
 export default function DistributionValueCell({
   distribution,
@@ -15,7 +15,9 @@ export default function DistributionValueCell({
   scale: IScale;
   canBePercentage: boolean;
 }): JSX.Element {
-  const {displayMode, showPercentages} = useContext(SettingsContext);
+  const {displayMode, showPercentages, scalesCalculationMethod} = useContext(
+    SettingsContext
+  );
 
   function render(distribution: Distribution): JSX.Element {
     if (displayMode === 'enteredData') {
@@ -71,23 +73,26 @@ export default function DistributionValueCell({
 
   function renderValuesForAnalysis(scale: IScale): JSX.Element {
     if (scale['50%'] !== null) {
-      const median = getStringForValue(significantDigits(scale['50%']));
       const lowerBound = getStringForValue(significantDigits(scale['2.5%']));
       const upperBound = getStringForValue(significantDigits(scale['97.5%']));
-      return renderUncertainValue(median, lowerBound, upperBound);
+      const modeOrMedian =
+        scalesCalculationMethod === 'mode'
+          ? getStringForValue(significantDigits(scale.mode))
+          : getStringForValue(significantDigits(scale['50%']));
+      return renderUncertainValue(modeOrMedian, lowerBound, upperBound);
     } else {
       return <div className="text-centered">No data entered</div>;
     }
   }
 
   function renderUncertainValue(
-    median: string,
+    modeOrMedian: string,
     lowerBound: string,
     upperBound: string
   ): JSX.Element {
     return (
       <div className="text-centered">
-        <div className="text-centered">{median}</div>
+        <div className="text-centered">{modeOrMedian}</div>
         <div className="uncertain">
           {lowerBound}, {upperBound}
         </div>
