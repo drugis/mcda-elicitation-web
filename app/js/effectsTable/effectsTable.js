@@ -27,6 +27,6 @@ define([
     .factory('EffectsTableService', EffectsTableService)
     .component(
       'effectsTable',
-      react2angular.react2angular(EffectsTable.default, ['oldWorkspace', 'settings', 'scales'])
+      react2angular.react2angular(EffectsTable.default, ['oldWorkspace', 'settings', 'scales', 'toggledColumns'])
     );
 });

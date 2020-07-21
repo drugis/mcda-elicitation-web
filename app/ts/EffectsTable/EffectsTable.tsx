@@ -7,22 +7,25 @@ import TableRow from '@material-ui/core/TableRow';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISettings from '@shared/interface/ISettings';
+import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
 import React from 'react';
-import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
-import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
+import { SettingsContextProviderComponent } from '../Settings/SettingsContext';
+import { EffectsTableContextProviderComponent } from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 
 export default function EffectsTable({
   oldWorkspace,
   settings,
-  scales
+  scales,
+  toggledColumns
 }: {
   oldWorkspace: IOldWorkspace;
   settings: ISettings;
   scales: Record<string, Record<string, IScale>>;
+  toggledColumns: IToggledColumns;
 }) {
-  function createAlternativeHeaders(): JSX.Element[] {
+  function renderAlternativeHeaders(): JSX.Element[] {
     return _(oldWorkspace.problem.alternatives)
       .toPairs()
       .map(
@@ -44,36 +47,89 @@ export default function EffectsTable({
       .value();
   }
 
+  function renderTableHeaders(): JSX.Element {
+    return (
+      <TableHead>
+        <TableRow>
+          {renderCriteriaHeader()}
+          {renderDescriptionHeader()}
+          {renderUnitOfMeasurementHeader()}
+          {renderAlternativeHeaders()}
+          {renderStrengthAndUncertaintyHeader()}
+          {renderReferenceHeader()}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  function renderCriteriaHeader(): JSX.Element {
+    return (
+      <TableCell id="column-criterion" align="center">
+        Criterion
+      </TableCell>
+    );
+  }
+
+  function renderDescriptionHeader(): JSX.Element {
+    if (toggledColumns.description) {
+      return (
+        <TableCell id="column-description" align="center">
+          Description
+        </TableCell>
+      );
+    } else {
+      return <></>;
+    }
+  }
+
+  function renderUnitOfMeasurementHeader(): JSX.Element {
+    if (toggledColumns.units) {
+      return (
+        <TableCell id="column-unit-of-measurement" align="center">
+          Unit of measurement
+        </TableCell>
+      );
+    } else {
+      return <></>;
+    }
+  }
+
+  function renderStrengthAndUncertaintyHeader(): JSX.Element {
+    if (toggledColumns.strength) {
+      return (
+        <TableCell align="center">
+          Strength of evidence / Uncertainties
+        </TableCell>
+      );
+    } else {
+      return <></>;
+    }
+  }
+
+  function renderReferenceHeader(): JSX.Element {
+    if (toggledColumns.references) {
+      return <TableCell align="center">Reference</TableCell>;
+    } else {
+      return <></>;
+    }
+  }
+
   return scales ? (
-    <SettingsContextProviderComponent settings={settings}>
+    <SettingsContextProviderComponent
+      settings={settings}
+      toggledColumns={toggledColumns}
+    >
       <EffectsTableContextProviderComponent
         oldWorkspace={oldWorkspace}
         scales={scales}
       >
         <Grid container>
-          <Grid item id="effects-table-header">
+          <Grid item xs={12} id="effects-table-header">
             <h4>Effects Table</h4>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <Table id="effectstable" size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell id="column-criterion" align="center">
-                    Criterion
-                  </TableCell>
-                  <TableCell id="column-description" align="center">
-                    Description
-                  </TableCell>
-                  <TableCell id="column-unit-of-measurement" align="center">
-                    Unit of measurement
-                  </TableCell>
-                  {createAlternativeHeaders()}
-                  <TableCell align="center">
-                    Strength of evidence / Uncertainties
-                  </TableCell>
-                  <TableCell align="center">Reference</TableCell>
-                </TableRow>
-              </TableHead>
+              {renderTableHeaders()}
               <EffectsTableCriteriaRows />
             </Table>
           </Grid>

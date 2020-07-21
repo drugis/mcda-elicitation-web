@@ -14,4 +14,9 @@ export default interface ISettingsContext {
   isRelativeProblem: boolean;
   changed: boolean;
   randomSeed: number;
+  showDescriptions: boolean;
+  showUnitsOfMeasurement: boolean;
+  showRefereces: boolean;
+  showStrengthsAndUncertainties: boolean;
+  numberOfToggledColumns: number;
 }

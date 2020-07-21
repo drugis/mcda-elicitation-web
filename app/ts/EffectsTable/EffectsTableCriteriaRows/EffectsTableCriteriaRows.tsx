@@ -4,6 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
+import { SettingsContext } from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
 import React, { useContext } from 'react';
 import { EffectsTableContext } from '../EffectsTableContext/EffectsTableContext';
@@ -11,7 +12,9 @@ import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableD
 
 export default function EffectsTableCriteriaRows() {
   const {workspace} = useContext(EffectsTableContext);
+  const {numberOfToggledColumns} = useContext(SettingsContext);
   const useFavourability = workspace.properties.useFavourability;
+  const numberOfColumns = numberOfToggledColumns + workspace.alternatives.length;
 
   const favourableCriteria = _.filter(workspace.criteria, [
     'isFavourable',
@@ -27,13 +30,13 @@ export default function EffectsTableCriteriaRows() {
   }
 
   function buildDataSourceRows(criterion: ICriterion): JSX.Element[] {
-    return _.map(criterion.dataSources, (dataSource, index) => {
+    return _.map(criterion.dataSources, (dataSource, rowIndex) => {
       return (
         <EffectsTableDataSourceRow
           key={dataSource.id}
           criterion={criterion}
           dataSource={dataSource}
-          index={index}
+          rowIndex={rowIndex}
         />
       );
     });
@@ -43,7 +46,7 @@ export default function EffectsTableCriteriaRows() {
     return (
       <TableBody>
         <TableRow>
-          <TableCell colSpan={5 + workspace.alternatives.length}>
+          <TableCell colSpan={numberOfColumns}>
             <Box p={1}>
               <Typography id="favourable-criteria-label" variant="caption">
                 Favourable criteria
@@ -54,7 +57,7 @@ export default function EffectsTableCriteriaRows() {
         {createCriteriaRows(favourableCriteria)}
 
         <TableRow>
-          <TableCell colSpan={5 + workspace.alternatives.length}>
+          <TableCell colSpan={numberOfColumns}>
             <Box p={1}>
               <Typography id="unfavourable-criteria-label" variant="caption">
                 Unfavourable criteria
