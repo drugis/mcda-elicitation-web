@@ -475,5 +475,4 @@ CREATE UNIQUE INDEX inProgressWorkspaceCell_index ON inProgressWorkspaceCell (al
 --changeset zalitek:25
 ALTER TABLE inProgressDataSource 
   ADD COLUMN referenceLink varchar;
-
-  --rollback ALTER TABLE inProgressDataSource DROP COLUMN referenceLink;
+--rollback ALTER TABLE inProgressDataSource DROP COLUMN referenceLink;

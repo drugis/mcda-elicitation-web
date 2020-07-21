@@ -39,7 +39,10 @@ export default function ValueCell({
     }
   }
 
-  function buildValueLabel(analysisType: AnalysisType, workspace: IWorkspace) {
+  function buildValueLabel(
+    analysisType: AnalysisType,
+    workspace: IWorkspace
+  ): JSX.Element {
     return analysisType === 'deterministic' ? (
       <EffectValueCell
         effect={findValue(workspace.effects)}
@@ -55,5 +58,9 @@ export default function ValueCell({
     );
   }
 
-  return <TableCell>{valueLabel}</TableCell>;
+  return (
+    <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
+      {valueLabel}
+    </TableCell>
+  );
 }

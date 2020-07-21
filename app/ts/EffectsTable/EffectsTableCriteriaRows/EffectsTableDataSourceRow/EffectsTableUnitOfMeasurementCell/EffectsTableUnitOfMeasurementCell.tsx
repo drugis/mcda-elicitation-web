@@ -20,7 +20,7 @@ export default function EffectsTableUnitOfMeasurementCell({
   }
 
   return showUnitsOfMeasurement ? (
-    <TableCell>{getUnitLabel(dataSource.unitOfMeasurement)}</TableCell>
+    <TableCell id={`unit-cell-${dataSource.id}`}>{getUnitLabel(dataSource.unitOfMeasurement)}</TableCell>
   ) : (
     <></>
   );
