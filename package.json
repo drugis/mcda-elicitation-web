@@ -23,7 +23,7 @@
   "license": "GPL-3.0-or-later",
   "readmeFilename": "README.md",
   "dependencies": {
-    "@material-ui/core": "^4.10.0",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@types/async": "^3.2.3",
     "@types/csurf": "^1.9.36",
@@ -64,7 +64,7 @@
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "ajv": "~6.10.2",
-    "angular": "~1.7.9",
+    "angular": "~1.8.0",
     "angular-animate": "~1.7.8",
     "angular-cookies": "~1.7.8",
     "angular-foundation-6": "drugis/angular-foundation-6#master",
