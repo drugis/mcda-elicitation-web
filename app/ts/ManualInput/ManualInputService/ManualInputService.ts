@@ -126,7 +126,25 @@ export function createWarnings(
       'Either effects or distributions must be fully filled out'
     );
   }
+  if (hasInvalidReferenceLink(criteria)) {
+    newWarnings.push('Links must be valid');
+  }
   return newWarnings;
+}
+
+function hasInvalidReferenceLink(criteria: ICriterion[]) {
+  return _.some(criteria, (criterion: ICriterion) => {
+    return _.some(criterion.dataSources, (dataSource: IDataSource) => {
+      return checkIfLinkIsInvalidity(dataSource.referenceLink);
+    });
+  });
+}
+
+export function checkIfLinkIsInvalidity(link: string): boolean {
+  const regex = new RegExp(
+    /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
+  );
+  return !!link && !regex.test(link);
 }
 
 function hasEmptyTitle<T>(items: T[]): boolean {

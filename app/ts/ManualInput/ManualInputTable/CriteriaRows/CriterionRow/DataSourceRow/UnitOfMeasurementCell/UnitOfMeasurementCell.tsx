@@ -15,8 +15,8 @@ export default function UnitOfMeasurementCell({
   dataSource: IDataSource;
 }) {
   const {setDataSource} = useContext(ManualInputContext);
-
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const tooltipText = 'Edit unit of measurement';
 
   function openDialog(): void {
     setIsDialogOpen(true);
@@ -39,12 +39,12 @@ export default function UnitOfMeasurementCell({
   function createLabel(): JSX.Element {
     if (dataSource.unitOfMeasurement.label) {
       return (
-        <Tooltip title="Edit unit of measurement">
+        <Tooltip title={tooltipText}>
           <span>{dataSource.unitOfMeasurement.label}</span>
         </Tooltip>
       );
     } else {
-      return <InlineTooltip />;
+      return <InlineTooltip tooltipText={tooltipText} />;
     }
   }
 

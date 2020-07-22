@@ -17,7 +17,8 @@ import {
   generateDistribution,
   generateValueCIDistribution,
   replaceUndefinedBounds,
-  swapItems
+  swapItems,
+  checkIfLinkIsInvalidity
 } from './ManualInputService';
 
 const criterionId = 'critId';
@@ -529,4 +530,11 @@ describe('manualInputService', () => {
       );
     });
   });
+
+  describe('checkIfLinkIsInvalidity', ()=>{
+    it('should return true for a valid link with protocol',()=>{
+      const link = 'http:/'
+      expect(checkIfLinkIsInvalidity(link)).toBeTruthy();
+    })
+  })
 });
