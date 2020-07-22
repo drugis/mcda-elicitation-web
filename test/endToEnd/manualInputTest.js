@@ -23,6 +23,7 @@ module.exports = {
   'Editing strength of evidence': editSterengthOfEvidence,
   'Editing uncertainties': editUncertainties,
   'Editing reference': editReference,
+  'Editing reference link': editReferenceLink,
   'Adding an alternative': addAlternative,
   'Deleting an alternative': deleteAlternative,
   'Moving an alternative': moveAlternative,
@@ -49,6 +50,7 @@ const NEW_TITLE = 'new title';
 const NEW_THERAPEUTIC_CONTEXT = 'therapeutic context';
 const NEW_CRITERION_DESCRIPTION = 'new description';
 const NEW_REFERENCE = 'new reference';
+const NEW_REFERENCE_LINK = 'http://www.link.com';
 const NEW_STRENGTH_OF_EVIDENCE = 'new strength of evidence';
 const NEW_UNCERTAINTY = 'new uncertainty';
 const DUPLICATE_CRITERION_TITLE = 'criterion 2';
@@ -66,6 +68,7 @@ const DUPLICATE_ALTERNATIVES_TITLE_WARNING =
   'Alternatives must have unique titles';
 const UNFILLED_VALUES_WARNING =
   'Either effects or distributions must be fully filled out';
+const INVDALID_REFERENCE_LINK_WARNING = 'Provided link is not valid';
 
 function getCriterionTitlePaths(criterionId) {
   const basePath = '//*[@id="criterion-title-' + criterionId + '"]';
@@ -277,10 +280,17 @@ function addDataSource(browser) {
       const criterionId = result.value.split('-').slice(2).join('-');
       const addDataSourceButton = '//*[@id="add-ds-for-' + criterionId + '"]';
       const reference =
-        '//*[@id="criterion-row-' + criterionId + '"]/td[8]/span/span';
+        '//*[@id="criterion-row-' +
+        criterionId +
+        '"]/td[8]/div/div[1]/span/span';
+      const referenceLink =
+        '//*[@id="criterion-row-' +
+        criterionId +
+        '"]/td[8]/div/div[2]/span/span';
       browser
         .click(addDataSourceButton)
-        .assert.containsText(reference, NEW_REFERENCE);
+        .assert.containsText(reference, NEW_REFERENCE)
+        .assert.containsText(referenceLink, 'click to edit');
     });
   });
 }
@@ -300,8 +310,8 @@ function deleteDataSource(browser) {
 
 function moveDataSource(browser) {
   const addDataSourceButton = '//table/tbody/tr[3]/td/button';
-  const firstDataSourceReference = '//table/tbody/tr[2]/td[12]/span/span';
-  const secondDataSourceReference = '//table/tbody/tr[3]/td[8]/span/span';
+  const firstDataSourceReference = '//table/tbody/tr[2]/td[12]/div/div[1]/span/span';
+  const secondDataSourceReference = '//table/tbody/tr[3]/td[8]/div/div[1]/span/span';
   browser
     .useXpath()
     .click(addDataSourceButton)
@@ -428,14 +438,37 @@ function editReference(browser) {
     browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
       const dataSourceId = result.value.split('-').slice(2).join('-');
       const basePath = '//*[@id="ds-reference-' + dataSourceId + '"]';
-      const reference = basePath + '/span/span';
-      const referenceInput = basePath + '/div/div/input';
+      const reference = basePath + '/div/div[1]/span/span';
+      const referenceInput = basePath + '/div/div[1]/div/div/input';
       browser.assert
         .containsText(reference, 'click to edit')
         .click(reference)
         .setValue(referenceInput, NEW_REFERENCE)
         .click('//*[@id="favourable-criteria-label"]')
         .assert.containsText(reference, NEW_REFERENCE);
+    });
+  });
+}
+
+function editReferenceLink(browser) {
+  browser.perform(() => {
+    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
+      const dataSourceId = result.value.split('-').slice(2).join('-');
+      const basePath = '//*[@id="ds-reference-' + dataSourceId + '"]';
+      const referenceLink = basePath + '/div/div[2]/span/span';
+      const referenceLinkInput = basePath + '/div/div[2]/div/div/input';
+      browser.assert
+        .containsText(referenceLink, 'click to edit')
+        .click(referenceLink)
+        .setValue(referenceLinkInput, 'not_a_link')
+        .click('//*[@id="favourable-criteria-label"]')
+        .assert.containsText(referenceLink, INVDALID_REFERENCE_LINK_WARNING)
+        .click(referenceLink)
+        .clearValue(referenceLinkInput)
+        .click(referenceLink)
+        .setValue(referenceLinkInput, NEW_REFERENCE_LINK)
+        .click('//*[@id="favourable-criteria-label"]')
+        .assert.containsText(referenceLink, NEW_REFERENCE_LINK);
     });
   });
 }
