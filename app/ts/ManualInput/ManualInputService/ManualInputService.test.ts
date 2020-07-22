@@ -10,6 +10,7 @@ import IValueEffect from '@shared/interface/IValueEffect';
 import {
   areBoundsSymmetric,
   boundsToStandardError,
+  checkIfLinkIsInvalid,
   createDistributions,
   createNormalDistribution,
   createValueDistribution,
@@ -17,8 +18,7 @@ import {
   generateDistribution,
   generateValueCIDistribution,
   replaceUndefinedBounds,
-  swapItems,
-  checkIfLinkIsInvalidity
+  swapItems
 } from './ManualInputService';
 
 const criterionId = 'critId';
@@ -26,7 +26,7 @@ const dataSourceId = 'dsId';
 
 describe('manualInputService', () => {
   describe('areBoundsSymmetric', () => {
-    test('should return true if bounds are symmetric', () => {
+    it('should return true if bounds are symmetric', () => {
       const effectWithSymmetricBounds: IValueCIEffect = {
         type: 'valueCI',
         alternativeId: 'altId',
@@ -42,7 +42,7 @@ describe('manualInputService', () => {
       expect(result).toBeTruthy();
     });
 
-    test('should return true if bounds are not symmetric but within the permissable interval', () => {
+    it('should return true if bounds are not symmetric but within the permissable interval', () => {
       const effectWithSymmetricBounds: IValueCIEffect = {
         type: 'valueCI',
         alternativeId: 'altId',
@@ -58,7 +58,7 @@ describe('manualInputService', () => {
       expect(result).toBeTruthy();
     });
 
-    test('should return false if bounds are not symmetric', () => {
+    it('should return false if bounds are not symmetric', () => {
       const effectWithSymmetricBounds: IValueCIEffect = {
         type: 'valueCI',
         alternativeId: 'altId',
@@ -76,14 +76,14 @@ describe('manualInputService', () => {
   });
 
   describe('boundsToStandardError', () => {
-    test('should calculate standard error from bounds', () => {
+    it('should calculate standard error from bounds', () => {
       const result = boundsToStandardError(0, 2);
       expect(result).toEqual(0.51);
     });
   });
 
   describe('swapItems', () => {
-    test('should swap two items in a list', () => {
+    it('should swap two items in a list', () => {
       const items = [{id: '1'}, {id: '2'}];
       const result = swapItems('1', '2', items);
       const expectedResult = [{id: '2'}, {id: '1'}];
@@ -196,7 +196,7 @@ describe('manualInputService', () => {
       }
     };
 
-    test('should return a warning if no title is entered', () => {
+    it('should return a warning if no title is entered', () => {
       const result = createWarnings(
         '',
         criteria,
@@ -209,7 +209,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if there are less than two criteria', () => {
+    it('should return a warning if there are less than two criteria', () => {
       const result = createWarnings(
         title,
         [criteria[0]],
@@ -222,7 +222,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if there are less than two alternatives', () => {
+    it('should return a warning if there are less than two alternatives', () => {
       const result = createWarnings(
         title,
         criteria,
@@ -235,7 +235,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if a criterion lacks a reference', () => {
+    it('should return a warning if a criterion lacks a data source', () => {
       const result = createWarnings(
         title,
         [criteria[0], {...criteria[1], dataSources: []}],
@@ -248,7 +248,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if criteria don\t have unique titles', () => {
+    it('should return a warning if criteria don\t have unique titles', () => {
       const result = createWarnings(
         title,
         [criteria[0], {...criteria[1], title: criteria[0].title}],
@@ -261,7 +261,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if alternatives don\t have unique titles', () => {
+    it('should return a warning if alternatives don\t have unique titles', () => {
       const result = createWarnings(
         title,
         criteria,
@@ -274,7 +274,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if a criterion lacks a title', () => {
+    it('should return a warning if a criterion lacks a title', () => {
       const result = createWarnings(
         title,
         [criteria[0], {...criteria[1], title: ''}],
@@ -287,7 +287,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if an alternative lacks a title', () => {
+    it('should return a warning if an alternative lacks a title', () => {
       const result = createWarnings(
         title,
         criteria,
@@ -300,7 +300,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return a warning if effects and distibutions are not fully filled out', () => {
+    it('should return a warning if effects and distibutions are not fully filled out', () => {
       const result = createWarnings(
         title,
         criteria,
@@ -314,7 +314,7 @@ describe('manualInputService', () => {
       expect(result.length).toEqual(1);
     });
 
-    test('should return two warnings', () => {
+    it('should return two warnings', () => {
       const result = createWarnings(
         title,
         [criteria[0], {...criteria[1], title: ''}],
@@ -324,10 +324,34 @@ describe('manualInputService', () => {
       );
       expect(result.length).toEqual(2);
     });
+
+    it('should return a warning if a data source has an invalid referece link', () => {
+      const dataSourceWithInvalidLink = {
+        ...dataSource,
+        id: 'ds2Id',
+        referenceLink: 'not_a_link'
+      };
+      const result = createWarnings(
+        title,
+        [
+          criteria[0],
+          {
+            ...criteria[1],
+            dataSources: [dataSourceWithInvalidLink]
+          }
+        ],
+        alternatives,
+        effects,
+        distributions
+      );
+      const expectedWarning = 'Reference links must be valid';
+      expect(result[0]).toEqual(expectedWarning);
+      expect(result.length).toEqual(1);
+    });
   });
 
   describe('createValueDistribution', () => {
-    test('should create a value distribution from ValueCI effect', () => {
+    it('should create a value distribution from ValueCI effect', () => {
       const effect: IValueCIEffect = {
         alternativeId: 'altId',
         criterionId: criterionId,
@@ -352,7 +376,7 @@ describe('manualInputService', () => {
   });
 
   describe('createNormalDistribution', () => {
-    test('should create a normal distribution from ValueCI effect', () => {
+    it('should create a normal distribution from ValueCI effect', () => {
       const effect: IValueCIEffect = {
         alternativeId: 'altId',
         criterionId: criterionId,
@@ -389,15 +413,15 @@ describe('manualInputService', () => {
       isNotEstimableLowerBound: false,
       isNotEstimableUpperBound: false
     };
-    test('should create a normal distribution if bounds are estimable and symmetric', () => {
+    it('should create a normal distribution if bounds are estimable and symmetric', () => {
       const result = generateValueCIDistribution(effect);
       expect(result.type).toEqual('normal');
     });
-    test('should create a value distribution if bounds are estimable but not symmetric', () => {
+    it('should create a value distribution if bounds are estimable but not symmetric', () => {
       const result = generateValueCIDistribution({...effect, upperBound: 1});
       expect(result.type).toEqual('value');
     });
-    test('should create a value distribution if bounds are not estimable', () => {
+    it('should create a value distribution if bounds are not estimable', () => {
       const result = generateValueCIDistribution({
         ...effect,
         isNotEstimableLowerBound: true
@@ -407,7 +431,7 @@ describe('manualInputService', () => {
   });
 
   describe('generateDistribution', () => {
-    test('should generate a normal distribution from valueCI effect', () => {
+    it('should generate a normal distribution from valueCI effect', () => {
       const effect: IValueCIEffect = {
         alternativeId: 'altId',
         criterionId: criterionId,
@@ -423,7 +447,7 @@ describe('manualInputService', () => {
       expect(result.type).toEqual('normal');
     });
 
-    test('should copy a not-valueCI effect onto a distribution', () => {
+    it('should copy a not-valueCI effect onto a distribution', () => {
       const effect: IValueEffect = {
         alternativeId: 'altId',
         criterionId: criterionId,
@@ -437,7 +461,7 @@ describe('manualInputService', () => {
   });
 
   describe('createDistributions', () => {
-    test('should create a distribution for each effect, overwriting the old distributions', () => {
+    it('should create a distribution for each effect, overwriting the old distributions', () => {
       const distributions: Record<string, Record<string, Distribution>> = {
         dsId: {
           altId: {
@@ -531,10 +555,25 @@ describe('manualInputService', () => {
     });
   });
 
-  describe('checkIfLinkIsInvalidity', ()=>{
-    it('should return true for a valid link with protocol',()=>{
-      const link = 'http:/'
-      expect(checkIfLinkIsInvalidity(link)).toBeTruthy();
-    })
-  })
+  describe('checkIfLinkIsInvalid', () => {
+    it('should return false for a valid link with protocol', () => {
+      const link = 'http://www.link.com';
+      expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+    });
+
+    it('should return false for a valid link without a protocol', () => {
+      const link = 'www.link.com';
+      expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+    });
+
+    it('should return true for an invalid link', () => {
+      const link = 'not_a_link';
+      expect(checkIfLinkIsInvalid(link)).toBeTruthy();
+    });
+
+    it('should return false for an empty link', () => {
+      const link = '';
+      expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+    });
+  });
 });

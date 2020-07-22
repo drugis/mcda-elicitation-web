@@ -1,10 +1,10 @@
+import { TextField, Tooltip } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
-import React, {useContext, useState, KeyboardEvent, ChangeEvent} from 'react';
-import {Tooltip, TextField} from '@material-ui/core';
+import { ManualInputContext } from 'app/ts/ManualInput/ManualInputContext';
+import { checkIfLinkIsInvalid } from 'app/ts/ManualInput/ManualInputService/ManualInputService';
+import React, { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
 import InlineTooltip from '../../InlineTooltip/InlineTooltip';
-import {checkIfLinkIsInvalidity} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 
 export default function ReferenceLink({
   dataSource,
@@ -16,13 +16,13 @@ export default function ReferenceLink({
   const [areWeEditing, setAreWeEditing] = useState<boolean>(false);
   const [newValue, setNewValue] = useState<string>(dataSource.referenceLink);
   const [isInvalidLink, setIsInvalidLink] = useState<boolean>(
-    checkIfLinkIsInvalidity(dataSource.referenceLink)
+    checkIfLinkIsInvalid(dataSource.referenceLink)
   );
   const {setDataSource} = useContext(ManualInputContext);
   const tooltipText = 'Edit reference link';
 
   function handleReferenceLinkChanged(newReferenceLink: string): void {
-    setIsInvalidLink(checkIfLinkIsInvalidity(newReferenceLink));
+    setIsInvalidLink(checkIfLinkIsInvalid(newReferenceLink));
     setDataSource(criterion.id, {
       ...dataSource,
       referenceLink: newReferenceLink
@@ -53,7 +53,7 @@ export default function ReferenceLink({
   function handleChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void {
-    setIsInvalidLink(checkIfLinkIsInvalidity(event.target.value));
+    setIsInvalidLink(checkIfLinkIsInvalid(event.target.value));
     setNewValue(event.target.value);
   }
 

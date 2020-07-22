@@ -1,13 +1,13 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
+import { Distribution } from '@shared/interface/IDistribution';
+import { Effect } from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import _ from 'lodash';
-import {hasInvalidCell} from '../CellValidityService/CellValidityService';
+import { hasInvalidCell } from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
 
 export function createDistributions(
@@ -127,7 +127,7 @@ export function createWarnings(
     );
   }
   if (hasInvalidReferenceLink(criteria)) {
-    newWarnings.push('Links must be valid');
+    newWarnings.push('Reference links must be valid');
   }
   return newWarnings;
 }
@@ -135,12 +135,12 @@ export function createWarnings(
 function hasInvalidReferenceLink(criteria: ICriterion[]) {
   return _.some(criteria, (criterion: ICriterion) => {
     return _.some(criterion.dataSources, (dataSource: IDataSource) => {
-      return checkIfLinkIsInvalidity(dataSource.referenceLink);
+      return checkIfLinkIsInvalid(dataSource.referenceLink);
     });
   });
 }
 
-export function checkIfLinkIsInvalidity(link: string): boolean {
+export function checkIfLinkIsInvalid(link: string): boolean {
   const regex = new RegExp(
     /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
   );
