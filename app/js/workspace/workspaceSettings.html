@@ -24,8 +24,8 @@
       </div>
       <div class="cell">
         <label>
-          <input id="entered-radio"  type="radio" ng-model="settings.displayMode" ng-value="'enteredData'" ng-change="checkForWarnings()">
-          Entered data
+          <input id="entered-radio"  type="radio" ng-model="settings.displayMode" ng-value="'enteredData'" ng-change="checkForWarnings()" ng-disabled="settings.isRelativeProblem">
+          Entered effects / distributions
         </label>
       </div>
       <div class="cell">
@@ -102,7 +102,7 @@
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
       <div class="cell">
-        <button id="save-settings-button" class="button success" type="submit">Save</button>
+        <button id="save-settings-button" class="button success" type="submit" ng-disabled="warnings.length">Save</button>
       </div>
       <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
         <span aria-hidden="true">&times;</span>

@@ -59,7 +59,7 @@ export default function InlineEditor({
         </Tooltip>
       );
     } else {
-      return <InlineTooltip />;
+      return <InlineTooltip tooltipText={tooltipText}/>;
     }
   }
 
