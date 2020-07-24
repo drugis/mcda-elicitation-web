@@ -26,6 +26,7 @@ function checkEnteredValuesDisabled(browser: NightwatchBrowser) {
       browser,
       'Antidepressants - relative effectiveness analysis (Van Valkenhoef et al, J Clin Epi, 2012)'
     )
+    .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
     .useCss()
     .click('#settings-button')
