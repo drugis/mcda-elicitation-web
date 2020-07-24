@@ -4,6 +4,7 @@ import IScale from '@shared/interface/IScale';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 import {renderEffect} from './EffectValueCellService';
+import EmptyCell from '../EmptyCell/EmptyCell';
 
 export default function EffectValueCell({
   effect,
@@ -20,11 +21,17 @@ export default function EffectValueCell({
 }) {
   const {displayMode} = useContext(SettingsContext);
 
-  return (
+  const renderedEffect = renderEffect(
+    effect,
+    displayMode,
+    usePercentage,
+    scale
+  );
+  return renderedEffect ? (
     <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
-      <div className="text-centered">
-        {renderEffect(effect, displayMode, usePercentage, scale)}
-      </div>
+      <div className="text-centered">{renderedEffect}</div>
     </TableCell>
+  ) : (
+    <EmptyCell dataSourceId={dataSourceId} alternativeId={alternativeId} />
   );
 }

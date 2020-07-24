@@ -6,6 +6,7 @@ import UncertainValue from '../UncertainValue/UncertainValue';
 import {getStringForValue} from '../ValueCellService';
 import {renderDistribution} from './DistributionValueCellService';
 import {TableCell} from '@material-ui/core';
+import EmptyCell from '../EmptyCell/EmptyCell';
 
 export default function DistributionValueCell({
   distribution,
@@ -49,10 +50,12 @@ export default function DistributionValueCell({
       return 'No data entered';
     }
   }
-
-  return (
+  const renderedDistribution = render();
+  return renderedDistribution ? (
     <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
-      <div className="text-centered">{render()} </div>
+      <div className="text-centered">{renderedDistribution} </div>
     </TableCell>
+  ) : (
+    <EmptyCell dataSourceId={dataSourceId} alternativeId={alternativeId} />
   );
 }

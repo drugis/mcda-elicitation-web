@@ -11,6 +11,7 @@ import DistributionValueCell from './DistributionValueCell/DistributionValueCell
 import EffectValueCell from './EffectValueCell/EffectValueCell';
 import EmptyCell from './EmptyCell/EmptyCell';
 import NMACell from './NMACell/NMACell';
+import {ErrorContext} from 'app/ts/Error/ErrorContext';
 
 export default function ValueCell({
   alternativeId,
@@ -21,6 +22,8 @@ export default function ValueCell({
 }) {
   const {workspace, scales, canBePercentage} = useContext(EffectsTableContext);
   const {analysisType, showPercentages} = useContext(SettingsContext);
+  const {setError} = useContext(ErrorContext);
+
   const usePercentage = canBePercentage(dataSourceId) && showPercentages;
   const effect = findValue(workspace.effects, dataSourceId, alternativeId);
   const distribution = findValue(
@@ -85,9 +88,7 @@ export default function ValueCell({
         />
       );
     } else {
-      return (
-        <EmptyCell dataSourceId={dataSourceId} alternativeId={alternativeId} />
-      );
+      setError('No values to display for current view settings');
     }
   }
 
@@ -112,9 +113,7 @@ export default function ValueCell({
         />
       );
     } else {
-      return (
-        <EmptyCell dataSourceId={dataSourceId} alternativeId={alternativeId} />
-      );
+      setError('No values to display for current view settings');
     }
   }
 
