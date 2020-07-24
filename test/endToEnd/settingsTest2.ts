@@ -1,13 +1,12 @@
+import { NightwatchBrowser } from 'nightwatch';
 import loginService from './util/loginService';
 import workspaceService from './util/workspaceService';
-import util from './util/util';
-import _ from 'lodash';
-import {NightwatchBrowser} from 'nightwatch';
 
 export = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Check if entered values view is disabled for relative problem': checkEnteredValuesDisabled
+  'Check if entered values view is disabled for relative problem': checkEnteredValuesDisabled,
+  'Check if entered effects view is disabled for problem with only distributions': checkEnteredEffectsDisabled
 };
 
 function beforeEach(browser: NightwatchBrowser) {
@@ -17,7 +16,6 @@ function beforeEach(browser: NightwatchBrowser) {
 }
 
 function afterEach(browser: NightwatchBrowser) {
-  browser.useCss();
   browser.click('#logo');
   workspaceService.deleteFromList(browser, 0).end();
 }
@@ -33,6 +31,21 @@ function checkEnteredValuesDisabled(browser: NightwatchBrowser) {
     .useCss()
     .click('#settings-button')
     .waitForElementVisible('#entered-radio:disabled')
-    .click('#close-modal-button')
-    .useXpath();
+    .click('#close-modal-button');
+}
+
+function checkEnteredEffectsDisabled(browser: NightwatchBrowser) {
+  workspaceService
+    .uploadTestWorkspace(browser, '/onlyDistributionsProblem.json')
+    .waitForElementVisible('#workspace-title')
+    .useCss()
+    .click('#settings-button')
+    .waitForElementVisible('#save-settings-button:enabled')
+    .click('#deterministic-radio')
+    .waitForElementVisible('#save-settings-button:disabled')
+    .assert.containsText(
+      '#settings-warnings',
+      'No entered data available for deterministic analysis.'
+    )
+    .click('#close-modal-button');
 }

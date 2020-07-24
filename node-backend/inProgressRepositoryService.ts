@@ -6,22 +6,22 @@ import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
 import IDatabaseInputCell from '@shared/interface/IDatabaseInputCell';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
+import { Distribution } from '@shared/interface/IDistribution';
+import { Effect } from '@shared/interface/IEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOrdering from '@shared/interface/IOrdering';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
-import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
-import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
+import { DistributionPerformance } from '@shared/interface/Problem/IDistributionPerformance';
+import { EffectPerformance } from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import {Performance} from '@shared/interface/Problem/IPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import { Performance } from '@shared/interface/Problem/IPerformance';
+import { IPerformanceTableEntry } from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
@@ -30,10 +30,10 @@ import IRangeEffectPerformance from '@shared/interface/Problem/IRangeEffectPerfo
 import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
 import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
-import {generateUuid} from '@shared/util';
-import {TableInputMode} from 'app/ts/type/TableInputMode';
+import { generateUuid } from '@shared/util';
+import { TableInputMode } from 'app/ts/type/TableInputMode';
 import _ from 'lodash';
-import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
+import { CURRENT_SCHEMA_VERSION } from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
 
 export function mapWorkspace(
@@ -453,7 +453,9 @@ function buildPerformanceEntries(
   alternatives: IAlternative[]
 ): IPerformanceTableEntry[] {
   return _.map(alternatives, (alternative: IAlternative) => {
-    const effectCell = effects[dataSource.id][alternative.id];
+    const effectCell = effects[dataSource.id]
+      ? effects[dataSource.id][alternative.id]
+      : undefined;
     const distributionCell = distributions[dataSource.id]
       ? distributions[dataSource.id][alternative.id]
       : undefined;
