@@ -10,11 +10,15 @@ import {TableCell} from '@material-ui/core';
 export default function DistributionValueCell({
   distribution,
   scale,
-  usePercentage
+  usePercentage,
+  dataSourceId,
+  alternativeId
 }: {
   distribution: Distribution;
   scale: IScale;
   usePercentage: boolean;
+  dataSourceId: string;
+  alternativeId: string;
 }): JSX.Element {
   const {displayMode, scalesCalculationMethod} = useContext(SettingsContext);
 
@@ -47,7 +51,7 @@ export default function DistributionValueCell({
   }
 
   return (
-    <TableCell>
+    <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
       <div className="text-centered">{render()} </div>
     </TableCell>
   );

@@ -8,16 +8,20 @@ import {renderEffect} from './EffectValueCellService';
 export default function EffectValueCell({
   effect,
   scale,
-  usePercentage
+  usePercentage,
+  dataSourceId,
+  alternativeId
 }: {
   effect: Effect;
   scale: IScale;
   usePercentage: boolean;
+  dataSourceId: string;
+  alternativeId: string;
 }) {
   const {displayMode} = useContext(SettingsContext);
 
   return (
-    <TableCell>
+    <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
       <div className="text-centered">
         {renderEffect(effect, displayMode, usePercentage, scale)}
       </div>

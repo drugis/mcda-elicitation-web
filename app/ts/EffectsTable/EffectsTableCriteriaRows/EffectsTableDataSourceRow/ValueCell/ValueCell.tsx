@@ -71,6 +71,8 @@ export default function ValueCell({
           effect={effect}
           scale={scale}
           usePercentage={usePercentage}
+          dataSourceId={dataSourceId}
+          alternativeId={alternativeId}
         />
       );
     } else if (hasScaleValues) {
@@ -96,6 +98,8 @@ export default function ValueCell({
           distribution={distribution}
           scale={scale}
           usePercentage={usePercentage}
+          dataSourceId={dataSourceId}
+          alternativeId={alternativeId}
         />
       );
     } else if (hasScaleValues) {

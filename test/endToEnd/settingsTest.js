@@ -206,14 +206,9 @@ function switchSettingsInProblemDefinition(browser) {
     .assert.containsText(effectTableCellPath, '0.6')
     .assert.containsText(scaleRangeCellPath, '0.5');
 
-  showPercentagesAndSmaaEntered(browser)
-    .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectTableCellPath, 'empty')
-    .assert.containsText(scaleRangeCellPath, '50');
-
   showDecimals(browser)
     .assert.containsText(unitsCellPath, '')
-    .assert.containsText(effectTableCellPath, 'empty')
+    .assert.containsText(effectTableCellPath, '')
     .assert.containsText(scaleRangeCellPath, '0.5');
 
   showPercentagesAndSmaaValues(browser)
@@ -312,10 +307,6 @@ function switchSettingsInOverview(browser) {
     .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.6');
 
-  showPercentagesAndSmaaEntered(browser)
-    .getValue(unitsCellPath, _.partial(checkValue, browser, null))
-    .getValue(effectCellPath, _.partial(checkValue, browser, null));
-
   showDecimals(browser)
     .getValue(unitsCellPath, _.partial(checkValue, browser, null))
     .getValue(effectCellPath, _.partial(checkValue, browser, null));
@@ -357,10 +348,6 @@ function switchSettingsInPreferences(browser) {
     .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
 
-  showPercentagesAndSmaaEntered(browser)
-    .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectCellPath, '45');
-
   showDecimals(browser)
     .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
@@ -393,10 +380,6 @@ function switchSettingsWhileSettingPVF(browser) {
     '45 % is best'
   );
   showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
-  showPercentagesAndSmaaEntered(browser).assert.containsText(
-    lowestOption,
-    '45 % is best'
-  );
   showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
   showPercentagesAndSmaaValues(browser).assert.containsText(
     lowestOption,
@@ -429,10 +412,6 @@ function switchSettingsWhileSettingWeights(browser) {
   showDecimals(browser).assert.containsText(
     firstCriterion,
     '2-year survival: 0.45'
-  );
-  showPercentagesAndSmaaEntered(browser).assert.containsText(
-    firstCriterion,
-    '2-year survival: 45 %'
   );
   showDecimals(browser).assert.containsText(
     firstCriterion,
