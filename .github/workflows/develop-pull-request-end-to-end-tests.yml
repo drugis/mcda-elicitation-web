@@ -87,25 +87,25 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: npx nightwatch -c nightwatch.github.conf.js 
+        run: for i in {1..20}; do npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/randomSeedTest.js --testcase 'Set invalid random seed'; done
 
-      - name: notify on slack channel on nightwatch failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop pull request:'
-          SLACK_MESSAGE: 'End-to-end tests failed'
+      # - name: notify on slack channel on nightwatch failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop pull request:'
+      #     SLACK_MESSAGE: 'End-to-end tests failed'
 
-      - name: notify on slack channel on success
-        if: success()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop pull request:'
-          SLACK_MESSAGE: 'End-to-end tests passed'
+      # - name: notify on slack channel on success
+      #   if: success()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop pull request:'
+      #     SLACK_MESSAGE: 'End-to-end tests passed'
 
       - name: stop mcda
         run: sudo pkill -9 node
