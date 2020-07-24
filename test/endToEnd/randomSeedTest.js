@@ -49,6 +49,7 @@ function set(browser) {
 function setInvalid(browser) {
   browser
     .setValue('#random-seed', 1.5)
+    .pause(500) // needed for GitHub Actions
     .click('#save-settings-button')
     .waitForElementVisible('#random-seed');
 }
