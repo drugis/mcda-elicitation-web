@@ -6,6 +6,7 @@ module.exports = {
   'Verifying all components are visible': verifyComponents,
   'Default button resetting options': reset,
   '(De)select all button deselects and selects all column options': deselectAll,
+  'Verify that save can not be pressed if there are not values for entered smaa':checkEnteredSmaaDisabled,
   'Switching settings in problem definition tab': switchSettingsInProblemDefinition,
   'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
   'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
@@ -72,18 +73,6 @@ function showPercentagesAndValues(browser) {
     .click('#settings-button')
     .click('#show-percentages-radio')
     .click('#values-radio')
-    .click('#save-settings-button')
-    .useXpath();
-  return browser;
-}
-
-function showPercentagesAndSmaaEntered(browser) {
-  browser
-    .useCss()
-    .click('#settings-button')
-    .click('#show-percentages-radio')
-    .click('#entered-radio')
-    .click('#smaa-radio')
     .click('#save-settings-button')
     .useXpath();
   return browser;
@@ -176,6 +165,18 @@ function deselectAll(browser) {
     .waitForElementVisible('#reference-column-checkbox:checked')
     .waitForElementVisible('#uncertainties-column-checkbox:checked')
     .click('#save-settings-button');
+}
+
+function checkEnteredSmaaDisabled(browser){
+  browser
+  .useCss()
+  .click('#settings-button')
+  .click('#show-percentages-radio')
+  .click('#entered-radio')
+  .click('#smaa-radio')
+  .waitForElementVisible('#save-settings-button:disabled')
+  .click('#close-modal-button')
+  .useXpath();
 }
 
 function switchSettingsInProblemDefinition(browser) {
