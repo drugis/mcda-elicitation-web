@@ -1,4 +1,5 @@
 import { NightwatchBrowser } from 'nightwatch';
+import { TEST_URL } from './util/constants';
 import loginService from './util/loginService';
 import workspaceService from './util/workspaceService';
 
@@ -16,7 +17,7 @@ function beforeEach(browser: NightwatchBrowser) {
 }
 
 function afterEach(browser: NightwatchBrowser) {
-  browser.click('#logo');
+  browser.url(TEST_URL);
   workspaceService.deleteFromList(browser, 0).end();
 }
 
