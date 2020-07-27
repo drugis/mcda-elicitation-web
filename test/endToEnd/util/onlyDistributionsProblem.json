@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.4.4",
+  "title": "only distributions",
+  "description": "",
+  "criteria": {
+    "147ea7ec-9fdf-4964-93e6-80200f82655e": {
+      "title": "criterion 1",
+      "description": "",
+      "dataSources": [
+        {
+          "id": "f494a773-ab6a-46c0-b871-fce53dfbaae7",
+          "source": "",
+          "sourceLink": "",
+          "uncertainties": "",
+          "strengthOfEvidence": "",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          },
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ],
+      "isFavorable": true
+    },
+    "86a1e25c-6050-4980-86dc-3425eea03ffe": {
+      "title": "criterion 2",
+      "description": "",
+      "dataSources": [
+        {
+          "id": "b99ba99e-344c-42e0-ba35-5f63cc8b1ec8",
+          "source": "",
+          "sourceLink": "",
+          "uncertainties": "",
+          "strengthOfEvidence": "",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          },
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ],
+      "isFavorable": true
+    }
+  },
+  "alternatives": {
+    "0eabd978-d69d-4034-8711-1da52a1e4562": {
+      "title": "alternative 1"
+    },
+    "1d909410-eee5-4c68-98b2-9bb5b93afa52": {
+      "title": "alternative 2"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "0eabd978-d69d-4034-8711-1da52a1e4562",
+      "criterion": "147ea7ec-9fdf-4964-93e6-80200f82655e",
+      "dataSource": "f494a773-ab6a-46c0-b871-fce53dfbaae7",
+      "performance": {
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 0,
+            "sigma": 0.5
+          }
+        }
+      }
+    },
+    {
+      "alternative": "1d909410-eee5-4c68-98b2-9bb5b93afa52",
+      "criterion": "147ea7ec-9fdf-4964-93e6-80200f82655e",
+      "dataSource": "f494a773-ab6a-46c0-b871-fce53dfbaae7",
+      "performance": {
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 1,
+            "sigma": 0.5
+          }
+        }
+      }
+    },
+    {
+      "alternative": "0eabd978-d69d-4034-8711-1da52a1e4562",
+      "criterion": "86a1e25c-6050-4980-86dc-3425eea03ffe",
+      "dataSource": "b99ba99e-344c-42e0-ba35-5f63cc8b1ec8",
+      "performance": {
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 2,
+            "sigma": 0.5
+          }
+        }
+      }
+    },
+    {
+      "alternative": "1d909410-eee5-4c68-98b2-9bb5b93afa52",
+      "criterion": "86a1e25c-6050-4980-86dc-3425eea03ffe",
+      "dataSource": "b99ba99e-344c-42e0-ba35-5f63cc8b1ec8",
+      "performance": {
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 3,
+            "sigma": 0.5
+          }
+        }
+      }
+    }
+  ]
+}

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node tscomp/index",
     "test": "jest && karma start --singleRun && yarn test-R",
-    "test-end-to-end": "nightwatch -c nightwatch.local.conf.js",
+    "test-end-to-end": "tsc -p ts-end2end-config.json && nightwatch -c nightwatch.local.conf.js",
     "build-backend": "rm -rf tscomp/*  && tsc -p ts-backend-config.json",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
@@ -30,6 +30,7 @@
     "@types/express": "^4.17.6",
     "@types/express-session": "^1.17.0",
     "@types/helmet": "^0.0.47",
+    "@types/nightwatch": "^1.1.6",
     "@types/node": "^14.0.19",
     "@types/passport": "^1.0.4",
     "@types/pg": "^7.14.3",

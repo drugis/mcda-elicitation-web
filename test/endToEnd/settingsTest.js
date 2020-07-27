@@ -6,6 +6,7 @@ module.exports = {
   'Verifying all components are visible': verifyComponents,
   'Default button resetting options': reset,
   '(De)select all button deselects and selects all column options': deselectAll,
+  'Verify that save can not be pressed if there are not values for entered smaa':checkEnteredSmaaDisabled,
   'Switching settings in problem definition tab': switchSettingsInProblemDefinition,
   'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
   'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
@@ -72,18 +73,6 @@ function showPercentagesAndValues(browser) {
     .click('#settings-button')
     .click('#show-percentages-radio')
     .click('#values-radio')
-    .click('#save-settings-button')
-    .useXpath();
-  return browser;
-}
-
-function showPercentagesAndSmaaEntered(browser) {
-  browser
-    .useCss()
-    .click('#settings-button')
-    .click('#show-percentages-radio')
-    .click('#entered-radio')
-    .click('#smaa-radio')
     .click('#save-settings-button')
     .useXpath();
   return browser;
@@ -178,6 +167,18 @@ function deselectAll(browser) {
     .click('#save-settings-button');
 }
 
+function checkEnteredSmaaDisabled(browser){
+  browser
+  .useCss()
+  .click('#settings-button')
+  .click('#show-percentages-radio')
+  .click('#entered-radio')
+  .click('#smaa-radio')
+  .waitForElementVisible('#save-settings-button:disabled')
+  .click('#close-modal-button')
+  .useXpath();
+}
+
 function switchSettingsInProblemDefinition(browser) {
   var effectTableCellPath =
     '//*[@id="value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1"]';
@@ -206,14 +207,9 @@ function switchSettingsInProblemDefinition(browser) {
     .assert.containsText(effectTableCellPath, '0.6')
     .assert.containsText(scaleRangeCellPath, '0.5');
 
-  showPercentagesAndSmaaEntered(browser)
-    .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectTableCellPath, 'empty')
-    .assert.containsText(scaleRangeCellPath, '50');
-
   showDecimals(browser)
     .assert.containsText(unitsCellPath, '')
-    .assert.containsText(effectTableCellPath, 'empty')
+    .assert.containsText(effectTableCellPath, '')
     .assert.containsText(scaleRangeCellPath, '0.5');
 
   showPercentagesAndSmaaValues(browser)
@@ -312,10 +308,6 @@ function switchSettingsInOverview(browser) {
     .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.6');
 
-  showPercentagesAndSmaaEntered(browser)
-    .getValue(unitsCellPath, _.partial(checkValue, browser, null))
-    .getValue(effectCellPath, _.partial(checkValue, browser, null));
-
   showDecimals(browser)
     .getValue(unitsCellPath, _.partial(checkValue, browser, null))
     .getValue(effectCellPath, _.partial(checkValue, browser, null));
@@ -357,10 +349,6 @@ function switchSettingsInPreferences(browser) {
     .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
 
-  showPercentagesAndSmaaEntered(browser)
-    .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectCellPath, '45');
-
   showDecimals(browser)
     .assert.containsText(unitsCellPath, '')
     .assert.containsText(effectCellPath, '0.45');
@@ -393,10 +381,6 @@ function switchSettingsWhileSettingPVF(browser) {
     '45 % is best'
   );
   showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
-  showPercentagesAndSmaaEntered(browser).assert.containsText(
-    lowestOption,
-    '45 % is best'
-  );
   showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
   showPercentagesAndSmaaValues(browser).assert.containsText(
     lowestOption,
@@ -429,10 +413,6 @@ function switchSettingsWhileSettingWeights(browser) {
   showDecimals(browser).assert.containsText(
     firstCriterion,
     '2-year survival: 0.45'
-  );
-  showPercentagesAndSmaaEntered(browser).assert.containsText(
-    firstCriterion,
-    '2-year survival: 45 %'
   );
   showDecimals(browser).assert.containsText(
     firstCriterion,

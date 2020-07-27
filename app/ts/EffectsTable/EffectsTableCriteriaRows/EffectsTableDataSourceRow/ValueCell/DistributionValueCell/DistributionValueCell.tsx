@@ -1,104 +1,61 @@
-import { Distribution } from '@shared/interface/IDistribution';
-import INormalDistribution from '@shared/interface/INormalDistribution';
-import IRangeEffect from '@shared/interface/IRangeEffect';
+import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import { SettingsContext } from 'app/ts/Settings/SettingsContext';
-import React, { useContext } from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {useContext} from 'react';
+import UncertainValue from '../UncertainValue/UncertainValue';
+import {getStringForValue} from '../ValueCellService';
+import {renderDistribution} from './DistributionValueCellService';
+import {TableCell} from '@material-ui/core';
+import EmptyCell from '../EmptyCell/EmptyCell';
 
 export default function DistributionValueCell({
   distribution,
   scale,
-  canBePercentage
+  usePercentage,
+  dataSourceId,
+  alternativeId
 }: {
   distribution: Distribution;
   scale: IScale;
-  canBePercentage: boolean;
+  usePercentage: boolean;
+  dataSourceId: string;
+  alternativeId: string;
 }): JSX.Element {
-  const {displayMode, showPercentages, scalesCalculationMethod} = useContext(
-    SettingsContext
-  );
+  const {displayMode, scalesCalculationMethod} = useContext(SettingsContext);
 
-  function render(distribution: Distribution): JSX.Element {
+  function render(): JSX.Element | string {
     if (displayMode === 'enteredData') {
-      return (
-        <div className="text-centered">{renderDistribution(distribution)}</div>
-      );
+      return renderDistribution(distribution, usePercentage);
     } else {
       return renderValuesForAnalysis(scale);
     }
   }
 
-  function renderDistribution(distribution: Distribution): string {
-    if (!distribution) {
-      return 'empty';
-    }
-    switch (distribution.type) {
-      case 'empty':
-        return 'empty';
-      case 'beta':
-        return `Beta(${distribution.alpha}, ${distribution.beta})`;
-      case 'gamma':
-        return `Gamma(${distribution.alpha}, ${distribution.beta})`;
-      case 'normal':
-        return renderNormalDistribution(distribution);
-      case 'range':
-        return renderRangeDistribution(distribution);
-      case 'text':
-        return distribution.text;
-      case 'value':
-        return getStringForValue(distribution.value);
-    }
-  }
-
-  function renderRangeDistribution(distribution: IRangeEffect): string {
-    return `[${getStringForValue(distribution.lowerBound)}, ${getStringForValue(
-      distribution.upperBound
-    )}]`;
-  }
-
-  function getStringForValue(value: number): string {
-    if (showPercentages && canBePercentage) {
-      return significantDigits(value * 100) + '%';
-    } else {
-      return value.toString();
-    }
-  }
-
-  function renderNormalDistribution(distribution: INormalDistribution): string {
-    return `Normal(${getStringForValue(distribution.mean)}, ${getStringForValue(
-      distribution.standardError
-    )})`;
-  }
-
-  function renderValuesForAnalysis(scale: IScale): JSX.Element {
+  function renderValuesForAnalysis(scale: IScale): JSX.Element | string {
     if (scale['50%'] !== null) {
-      const lowerBound = getStringForValue(significantDigits(scale['2.5%']));
-      const upperBound = getStringForValue(significantDigits(scale['97.5%']));
+      const lowerBound = getStringForValue(scale['2.5%'], usePercentage);
+      const upperBound = getStringForValue(scale['97.5%'], usePercentage);
       const modeOrMedian =
         scalesCalculationMethod === 'mode'
-          ? getStringForValue(significantDigits(scale.mode))
-          : getStringForValue(significantDigits(scale['50%']));
-      return renderUncertainValue(modeOrMedian, lowerBound, upperBound);
+          ? getStringForValue(scale.mode, usePercentage)
+          : getStringForValue(scale['50%'], usePercentage);
+      return (
+        <UncertainValue
+          value={modeOrMedian}
+          lowerBound={lowerBound}
+          upperBound={upperBound}
+        />
+      );
     } else {
-      return <div className="text-centered">No data entered</div>;
+      return 'No data entered';
     }
   }
-
-  function renderUncertainValue(
-    modeOrMedian: string,
-    lowerBound: string,
-    upperBound: string
-  ): JSX.Element {
-    return (
-      <div className="text-centered">
-        <div className="text-centered">{modeOrMedian}</div>
-        <div className="uncertain">
-          {lowerBound}, {upperBound}
-        </div>
-      </div>
-    );
-  }
-
-  return render(distribution);
+  const renderedDistribution = render();
+  return renderedDistribution ? (
+    <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
+      <div className="text-centered">{renderedDistribution} </div>
+    </TableCell>
+  ) : (
+    <EmptyCell dataSourceId={dataSourceId} alternativeId={alternativeId} />
+  );
 }
