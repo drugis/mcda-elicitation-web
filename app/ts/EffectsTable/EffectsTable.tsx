@@ -13,6 +13,7 @@ import React from 'react';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
+import ClipboardButton from '../ClipboardButton/ClipboardButton';
 
 export default function EffectsTable({
   oldWorkspace,
@@ -124,11 +125,14 @@ export default function EffectsTable({
         scales={scales}
       >
         <Grid container>
-          <Grid item xs={12} id="effects-table-header">
+          <Grid item xs={9} id="effects-table-header">
             <h4>Effects Table</h4>
           </Grid>
+          <Grid item container xs={3} justify="flex-end">
+            <ClipboardButton targetId="#effects-table" />
+          </Grid>
           <Grid item xs={12}>
-            <Table size="small">
+            <Table size="small" id="effects-table">
               {renderTableHeaders()}
               <EffectsTableCriteriaRows />
             </Table>
