@@ -9,6 +9,13 @@ genRepresentativeWeights <- function(params) {
   return(representativeWeights)
 }
 
+genWeightsQuantiles <- function(params) {
+  criteria <- names(params$criteria)
+  weights <- sampleWeights(params$preferences, criteria)
+  weightsQuantiles <- getWeightsQuantiles(weights)
+  return(weightsQuantiles)
+}
+
 sampleWeights <- function(preferences, criteria) {
   numberOfCriteria <- length(criteria)
   constraints <- mergeConstraints(lapply(preferences, genHARconstraint, crit = criteria))

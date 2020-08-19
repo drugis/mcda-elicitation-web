@@ -95,6 +95,7 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
 
         function resetWeights() {
           scope.scenario.state.prefs = [];
+          delete scope.scenario.state.weights;
           scope.importance = PreferencesService.buildImportance(
             scope.criteria,
             scope.scenario.state.prefs
@@ -107,7 +108,7 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
             if (scope.scenario.state.weights) {
               scope.weights = scope.scenario.state.weights;
             } else {
-              PreferencesService.getWeights(scope.problem).then((result) => {
+              PreferencesService.getWeights(scope.problem).then(function (result) {
                 scope.weights = result;
               });
             }
