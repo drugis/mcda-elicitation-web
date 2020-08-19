@@ -16,7 +16,6 @@ genWeightsQuantiles <- function(params) {
     criteria <- names(params$criteria)
     weights <- sampleWeights(params$preferences, criteria)
     weightsQuantiles <- getWeightsQuantiles(weights)
-    stop('foo')
     return(weightsQuantiles)
   }
 }

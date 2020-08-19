@@ -1,4 +1,4 @@
-test_that("run_representativeWeights return representative weights", {
+test_that("run_representativeWeights return quantiles of weights", {
   params <- list(
     "criteria" = list(
       "criterionId1" = list(
@@ -62,5 +62,6 @@ test_that("run_representativeWeights return representative weights", {
   )
 
   result <- run_representativeWeights(params)
-  expect_that(names(result), equals(c("criterionId1", "criterionId2")))
+  expect_that(names(result), equals(c("2.5%", "mean", "97.5%")))
+  expect_that(names(result[['mean']]), equals(c("criterionId1", "criterionId2")))
 })
