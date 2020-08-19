@@ -5,7 +5,7 @@ getDeterministicResults <- function(params, measurements) {
   if (!is.null(params[["weights"]])) {
     weights <- params[["weights"]]
   } else {
-    weights <- genWeightsQuantiles(params)
+    weights <- wrapMatrix(genWeightsQuantiles(params))
   }
   valueProfiles <- calculateValueProfiles(params, measurements, weights[["mean"]])
   totalValue <- rowSums(valueProfiles)
