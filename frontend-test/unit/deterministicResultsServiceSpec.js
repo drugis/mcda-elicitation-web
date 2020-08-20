@@ -58,7 +58,8 @@ define([
           }
         }]
       },
-      prefs: {}
+      prefs: {},
+      weights: []
     };
 
     const transformedPerformanceTable = [{
@@ -470,6 +471,7 @@ define([
           preferences: state.prefs,
           method: 'deterministic',
           performanceTable: transformedPerformanceTable,
+          weights: state.weights,
           criteria: {
             criterion1: {
               some: 'thing',
