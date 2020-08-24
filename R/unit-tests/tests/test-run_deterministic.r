@@ -58,19 +58,15 @@ test_that("run_deterministic return results of deterministic analysis", {
           "value" = 0.75
         )
       )
-    ),
-    "weights" = list(
-      "2.5%" = list("criterionId1" = 0.1, "criterionId2" = 0.9),
-      "mean" = list("criterionId1" = 0.1, "criterionId2" = 0.9),
-      "97.5%" = list("criterionId1" = 0.1, "criterionId2" = 0.9)
     )
   )
 
   result <- run_deterministic(params)
 
+  expectedWeights <- c("criterionId1" = 0.4985817, "criterionId2" = 0.5014183)
   expectedTotal <- c("alternativeId1" = 1, "alternativeId2" = 0)
 
-  expect_that(result$weights, equals(params[["weights"]]))
+  expect_that(result$weights, equals(expectedWeights))
   expect_gt(result$value[["alternativeId1"]][["criterionId1"]], 0)
   expect_gt(result$value[["alternativeId1"]][["criterionId2"]], 0)
   expect_that(result$value[["alternativeId2"]][["criterionId1"]], equals(0))

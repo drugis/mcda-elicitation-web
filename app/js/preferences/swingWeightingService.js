@@ -1,27 +1,20 @@
 'use strict';
-define(['lodash', 'angular', '..//controllers/wizard'], function (
-  _,
-  angular,
-  Wizard
-) {
-  var dependencies = [
-    '$state',
+define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wizard) {
+  var dependencies = ['$state',
     '$injector',
     '$timeout',
     'PartialValueFunctionService',
-    'PreferencesService',
     'OrderingService',
     'WorkspaceSettingsService'
   ];
-  var SwingWeightingService = function (
-    $state,
+  var SwingWeightingService = function($state,
     $injector,
     $timeout,
     PartialValueFunctionService,
-    PreferencesService,
     OrderingService,
     WorkspaceSettingsService
   ) {
+
     function initWeightingScope(
       scope,
       $stateParams,
@@ -40,21 +33,18 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
 
       // init
       scope.pvf = PartialValueFunctionService;
-      scope.$on('elicit.settingsChanged', function () {
+      scope.$on('elicit.settingsChanged', function() {
         resetWizard();
       });
       scope.scalesPromise.then(resetWizard);
 
       function resetWizard() {
-        var state = WorkspaceSettingsService.usePercentage()
-          ? scope.aggregateState.percentified
-          : scope.aggregateState.dePercentified;
-        OrderingService.getOrderedCriteriaAndAlternatives(
-          state.problem,
-          $stateParams
-        ).then(function (orderings) {
+        var state = WorkspaceSettingsService.usePercentage() ? scope.aggregateState.percentified : scope.aggregateState.dePercentified;
+        OrderingService.getOrderedCriteriaAndAlternatives(state.problem, $stateParams).then(function(orderings) {
           scope.alternatives = orderings.alternatives;
-          scope.criteria = _(orderings.criteria).map(setBestAndWorst).value();
+          scope.criteria = _(orderings.criteria)
+            .map(setBestAndWorst)
+            .value();
 
           $injector.invoke(Wizard, undefined, {
             $scope: scope,
@@ -72,7 +62,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
       function setBestAndWorst(criterion) {
         return _.extend({}, criterion, {
           best: PartialValueFunctionService.best(criterion.dataSources[0]),
-          worst: PartialValueFunctionService.worst(criterion.dataSources[0])
+          worst: PartialValueFunctionService.worst(criterion.dataSources[0]),
         });
       }
 
@@ -110,14 +100,15 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
             disabled: true,
             floor: 1,
             ceil: 100,
-            translate: function (value) {
+            translate: function(value) {
               return value + '%';
             }
           }
         };
-        $timeout(function () {
+        $timeout(function() {
           scope.$broadcast('rzSliderForceRender');
         }, 100);
+
 
         next.title = title(next.step, state.total);
         return _.extend(angular.copy(state), next);
@@ -132,25 +123,21 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
           .omit(state.mostImportantCriterionId)
           .map(toBackEnd(state.mostImportantCriterionId))
           .value();
-        const newProblem = _.extend({}, state.problem, {
-          preferences: prefs
-        });
-        PreferencesService.getWeights(newProblem).then((result) => {
-          currentScenario.state = {
-            problem: currentScenario.state.problem,
-            prefs: prefs,
-            weights: result
-          };
-          currentScenario.$save($stateParams, function (scenario) {
-            scope.$emit('elicit.resultsAccessible', scenario);
-            $state.go('preferences');
-          });
+
+        currentScenario.state = {
+          problem: currentScenario.state.problem
+        };
+        currentScenario.state.prefs = prefs;
+        currentScenario.$save($stateParams, function(scenario) {
+          scope.$emit('elicit.resultsAccessible', scenario);
+          $state.go('preferences');
         });
       }
 
       function cancel() {
         $state.go('preferences');
       }
+
     }
 
     return {

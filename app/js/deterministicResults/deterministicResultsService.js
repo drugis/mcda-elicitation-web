@@ -106,7 +106,6 @@ define([
       var deterministicResultsState = {
         problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
-          weights: state.weights,
           method: 'deterministic'
         })
       };

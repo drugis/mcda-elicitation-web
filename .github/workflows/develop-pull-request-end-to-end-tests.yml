@@ -87,7 +87,7 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js
+        run: yarn test-end-to-end
 
       - name: notify on slack channel on nightwatch failure
         if: failure()
