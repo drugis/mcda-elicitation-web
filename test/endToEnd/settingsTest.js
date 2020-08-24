@@ -323,9 +323,9 @@ function switchSettingsInOverview(browser) {
 
 function switchSettingsInPreferences(browser) {
   var effectCellPath =
-    '//*[@id="trade-off-block"]/div[3]/table/tbody/tr[1]/td[4]';
+    '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[4]';
   var unitsCellPath =
-    '//*[@id="trade-off-block"]/div[3]/table/tbody/tr[1]/td[3]';
+    '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[3]';
 
   util
     .delayedClick(

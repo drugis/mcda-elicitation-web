@@ -74,7 +74,6 @@ getConfidenceFactors <- function(ranks, weights, measurements) {
 getWeightsQuantiles <- function(weights) {
   weightsQuantiles <- apply(weights, 2, quantile, probs = c(0.025, 0.5, 0.975))
   weightsQuantiles[2,] <- colMeans(weights)
-  rownames(weightsQuantiles)[2] <- "mean";
   return(weightsQuantiles)
 }
 

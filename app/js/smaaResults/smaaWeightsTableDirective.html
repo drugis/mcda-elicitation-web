@@ -17,7 +17,7 @@
         <tr>
           <td class="text-centered" ng-repeat="criterion in criteria">
             <div>
-              {{weights['mean'][criterion.id] | number}}</div>
+              {{weights['50%'][criterion.id] | number}}</div>
             <div class="uncertain">
               {{weights['2.5%'][criterion.id] | number}}, {{weights['97.5%'][criterion.id] | number}}</div>
           </td>

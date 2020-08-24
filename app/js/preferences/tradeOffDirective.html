@@ -39,10 +39,10 @@
           <td id="importance-criterion-{{ $index }}" class="text-centered">
             {{importance[criterion.id]}}
           </td>
-          <td id="weight-criterion-{{ $index }}" class="text-centered" ng-if="weights['mean'] && weights['mean'][criterion.id]">
-            {{weights['mean'][criterion.id] | number}}
+          <td id="weight-criterion-{{ $index }}" class="text-centered" ng-if="weights[criterion.id]">
+            {{weights[criterion.id] | number}}
           </td>
-          <td class="text-centered" ng-if="!weights['mean'] || !weights['mean'][criterion.id]">
+          <td class="text-centered" ng-if="!weights[criterion.id]">
             <i class="fa fa-spinner fa-spin"></i>
           </td>
         </tr>
