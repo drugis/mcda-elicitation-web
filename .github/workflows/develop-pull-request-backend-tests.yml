@@ -49,7 +49,7 @@ jobs:
         if: success()
         uses: rtCamp/action-slack-notify@master
         env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
           SLACK_USERNAME: gitbot
           SLACK_TITLE: 'Develop pull request:'
           SLACK_MESSAGE: 'Back-end tests passed'
