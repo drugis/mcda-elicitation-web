@@ -1,7 +1,7 @@
-import { Error } from '@shared/interface/IError';
+import {Error} from '@shared/interface/IError';
 import _ from 'lodash';
-import { PoolClient, QueryResult } from 'pg';
-import IDB, { ClientOrDB } from './interface/IDB';
+import {PoolClient, QueryResult} from 'pg';
+import IDB, {ClientOrDB} from './interface/IDB';
 import logger from './logger';
 
 export default function ScenarioRepository(db: IDB) {
