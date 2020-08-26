@@ -41,7 +41,7 @@ jobs:
         if: failure()
         uses: rtCamp/action-slack-notify@master
         env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
           SLACK_USERNAME: gitbot
           SLACK_TITLE: 'Develop pull request:'
           SLACK_MESSAGE: 'Front-end tests failed'
