@@ -72,7 +72,6 @@ jobs:
           docker build --tag addis/patavi-smaa-worker .
           docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
           cd ..
-          ls
 
       - name: setup mcda database
         run: |
@@ -82,7 +81,7 @@ jobs:
       - name: initialize mcda database
         run: |
           docker cp database.pg.sql ${{ job.services.postgres.id }}:/database.pg.sql
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sq
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sql
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
