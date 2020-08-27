@@ -72,6 +72,7 @@ jobs:
           docker build --tag addis/patavi-smaa-worker .
           docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
           cd ..
+          ls
 
       - name: setup mcda database
         run: |
