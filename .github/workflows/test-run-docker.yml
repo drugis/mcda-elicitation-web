@@ -1,0 +1,32 @@
+name: MCDA-test | pull request | front-end tests
+
+on:
+  push:
+    branches: testRunDocker
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: ['12']
+        os: [ubuntu-16.04]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.deployPrivateKey }}
+
+      - name: run postgres
+        run: docker run postgres
+
+      # - name: notify on slack channel on karma failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop pull request:'
+      #     SLACK_MESSAGE: 'Front-end tests failed'
