@@ -35,6 +35,9 @@ jobs:
         run: |
           echo "${{ secrets.pataviClientCrt }}" > crt.pem 
           echo "${{ secrets.pataviClientKey }}" > key.pem
+          echo "${{ secrets.certificateAuthority }}" > ca.pem
+          echo "${{ secrets.pataviservercertificate }}" > server-crt.pem
+          echo "${{ secrets.pataviserverkey }}" > server-key.pem
 
       - name: fetch schema
         run: curl https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql -o patavi.schema.sql
@@ -56,8 +59,8 @@ jobs:
         run: |
           docker volume create patavi_server_certs
           docker run -v patavi_server_certs:/patavi --name helper busybox true
-          docker cp ./crt.pem helper:/patavi/
-          docker cp ./key.pem helper:/patavi/
+          docker cp ./server-crt.pem helper:/patavi/
+          docker cp ./server-key.pem helper:/patavi/
           docker rm helper
 
       - name: run patavi server
@@ -109,6 +112,7 @@ jobs:
           PATAVI_PORT: 3000
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
+          PATAVI_CA: ca.pem
 
       - name: docker logs
         run: docker logs patavi-server
