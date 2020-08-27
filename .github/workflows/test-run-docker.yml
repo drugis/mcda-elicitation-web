@@ -92,8 +92,8 @@ jobs:
       - name: build backend
         run: yarn build-backend
 
-      - name: run webpack
-        run: npm run build-local-login
+      # - name: run webpack
+      #   run: npm run build-local-login
 
       - name: run mcda
         run: yarn start &
@@ -109,6 +109,12 @@ jobs:
           PATAVI_PORT: 3000
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
+
+      - name: docker logs
+        run: docker logs patavi-server
+
+      - name: curl
+        run: curl localhost:3000
 
       - name: stop docker containers
         run: docker ps -a
