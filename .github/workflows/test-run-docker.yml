@@ -27,6 +27,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: pg log
+        run: docker logs ${{ job.services.postgres.id }}
+
       - name: create ssl files
         run: |
           echo "${{ secrets.pataviClientCrt }}" > crt.pem 
@@ -43,26 +46,34 @@ jobs:
           docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER patavi WITH PASSWORD 'develop'"
           docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE patavi ENCODING 'utf-8' OWNER patavi"
 
+      - name: pg log
+        run: docker logs ${{ job.services.postgres.id }}
+
       - name: initialize patavi database
         run: |
           docker cp patavi.schema.sql ${{ job.services.postgres.id }}:/patavi.schema.sql
           docker exec ${{ job.services.postgres.id }} psql -U patavi -f patavi.schema.sql
 
+      - name: pg log
+        run: docker logs ${{ job.services.postgres.id }}
+
       - name: run rabbit
-        run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 --network="host" rabbitmq:3-management
+        run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
       - name: run helper container
         run: |
-          ls
           docker volume create patavi_server_certs
-          docker run -v patavi_server_certs:/patavi --network="host" --name helper busybox true
+          docker run -v patavi_server_certs:/patavi --name helper busybox true
           docker cp ./server-crt.pem helper:/patavi/
           docker cp ./server-key.pem helper:/patavi/
           docker rm helper
 
       - name: run patavi server
         run: |
-          docker run -d --network="host" --name patavi-server --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=guest:guest@rabbit -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop --mount source=patavi_server_certs,target=/var/lib/patavi/mount addis/patavi-server
+          docker run -d --name patavi-server --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=guest:guest@rabbit -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop --mount source=patavi_server_certs,target=/var/lib/patavi/mount addis/patavi-server
+
+      - name: pg log
+        run: docker logs ${{ job.services.postgres.id }}
 
       - name: copy certificates to patavi server
         run: docker exec patavi-server sh -c "cp /var/lib/patavi/mount/* /var/lib/patavi/ssl/"
@@ -71,8 +82,11 @@ jobs:
         run: |
           cd R
           docker build --tag addis/patavi-smaa-worker .
-          docker run -d --network="host" --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
+          docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
           cd ..
+
+      - name: pg log
+        run: docker logs ${{ job.services.postgres.id }}
 
       - name: setup mcda database
         run: |
