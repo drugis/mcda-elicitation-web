@@ -27,9 +27,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: webfactory/ssh-agent@v0.1.1
-        with:
-          ssh-private-key: ${{ secrets.deployPrivateKey }}
+      # - uses: webfactory/ssh-agent@v0.1.1
+      #   with:
+      #     ssh-private-key: ${{ secrets.deployPrivateKey }}
+
+      - name: create ssl files
+        run: |
+          echo "${{ secrets.pataviClientCrt }}" > crt.pem 
+          echo "${{ secrets.pataviClientKey }}" > key.pem
 
       - name: fetch schema
         run: curl https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql -o patavi.schema.sql
@@ -66,6 +71,45 @@ jobs:
           cd R
           docker build --tag addis/patavi-smaa-worker .
           docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
+
+      - name: setup mcda database
+        run: |
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
+
+      - name: setup mcda database
+        run: |
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+       - name: run yarn
+        run: yarn
+
+      - name: build backend
+        run: yarn build-backend
+
+      - name: run webpack
+        run: npm run build-local-login
+
+      - name: run mcda
+        run: yarn start &
+        env:
+          MCDAWEB_AUTHENTICATION_METHOD: LOCAL
+          MCDAWEB_DB_USER: mcdaweb
+          MCDAWEB_DB_PASSWORD: develop
+          MCDAWEB_DB_HOST: localhost
+          MCDAWEB_DB_NAME: mcdaweb
+          MCDAWEB_COOKIE_SECRET: abc
+          MCDA_HOST: localhost
+          PATAVI_HOST: localhost
+          PATAVI_PORT: 3000
+          PATAVI_CLIENT_KEY: key.pem
+          PATAVI_CLIENT_CRT: crt.pem
 
       - name: stop docker containers
         run: docker ps -a
