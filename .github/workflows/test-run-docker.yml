@@ -134,7 +134,7 @@ jobs:
         run: |
           docker ps -a
           docker logs patavi-server
-          docker logs postgres
+          docker logs ${{ job.services.postgres.id }}
 
       - name: stop mcda
         run: sudo pkill -9 node
