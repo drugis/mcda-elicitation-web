@@ -18,7 +18,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          repository: https://github.com/drugis/patavi
+          repository: drugis/patavi
           path: patavi
 
       - uses: webfactory/ssh-agent@v0.1.1
