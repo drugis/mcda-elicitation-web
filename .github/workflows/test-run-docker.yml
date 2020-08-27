@@ -27,10 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - uses: webfactory/ssh-agent@v0.1.1
-      #   with:
-      #     ssh-private-key: ${{ secrets.deployPrivateKey }}
-
       - name: create ssl files
         run: |
           echo "${{ secrets.pataviClientCrt }}" > crt.pem 
@@ -123,15 +119,19 @@ jobs:
           MCDAWEB_DB_NAME: mcdaweb
           MCDAWEB_COOKIE_SECRET: abc
           MCDA_HOST: localhost
-          PATAVI_HOST: patavi-test.drugis.org
-          PATAVI_PORT: 443
+          PATAVI_HOST: localhost
+          PATAVI_PORT: 3000
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
           PATAVI_CA: ca.pem
 
       - name: run nightwatch tests
         id: nightwatch
-        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js
+        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/addExampleWorkspacesTest.js
+
+      - name: docker logs
+        run: |
+          docker logs patavi-server
 
       - name: stop mcda
         run: sudo pkill -9 node
