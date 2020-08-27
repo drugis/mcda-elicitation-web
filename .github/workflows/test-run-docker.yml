@@ -48,96 +48,99 @@ jobs:
           docker cp patavi.schema.sql ${{ job.services.postgres.id }}:/patavi.schema.sql
           docker exec ${{ job.services.postgres.id }} psql -U patavi -f patavi.schema.sql
 
-      - name: run rabbit
-        run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+      - name: test connection
+        run: PGPASSWORD=develop psql -h localhost -U patavi -c 'select * from patavi_task'
 
-      - name: run helper container
-        run: |
-          ls
-          docker volume create patavi_server_certs
-          docker run -v patavi_server_certs:/patavi --name helper busybox true
-          docker cp ./server-crt.pem helper:/patavi/
-          docker cp ./server-key.pem helper:/patavi/
-          docker rm helper
+      # - name: run rabbit
+      #   run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
-      - name: run patavi server
-        run: |
-          docker run -d --name patavi-server --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=guest:guest@rabbit -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop --mount source=patavi_server_certs,target=/var/lib/patavi/mount addis/patavi-server
+      # - name: run helper container
+      #   run: |
+      #     ls
+      #     docker volume create patavi_server_certs
+      #     docker run -v patavi_server_certs:/patavi --name helper busybox true
+      #     docker cp ./server-crt.pem helper:/patavi/
+      #     docker cp ./server-key.pem helper:/patavi/
+      #     docker rm helper
 
-      - name: copy certificates to patavi server
-        run: docker exec patavi-server sh -c "cp /var/lib/patavi/mount/* /var/lib/patavi/ssl/"
+      # - name: run patavi server
+      #   run: |
+      #     docker run -d --name patavi-server --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=guest:guest@rabbit -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop --mount source=patavi_server_certs,target=/var/lib/patavi/mount addis/patavi-server
 
-      - name: build and run patavi worker
-        run: |
-          cd R
-          docker build --tag addis/patavi-smaa-worker .
-          docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
-          cd ..
+      # - name: copy certificates to patavi server
+      #   run: docker exec patavi-server sh -c "cp /var/lib/patavi/mount/* /var/lib/patavi/ssl/"
 
-      - name: setup mcda database
-        run: |
-          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
-          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
+      # - name: build and run patavi worker
+      #   run: |
+      #     cd R
+      #     docker build --tag addis/patavi-smaa-worker .
+      #     docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
+      #     cd ..
 
-      - name: initialize mcda database
-        run: |
-          docker cp database.pg.sql ${{ job.services.postgres.id }}:/database.pg.sql
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sql
+      # - name: setup mcda database
+      #   run: |
+      #     docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
+      #     docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
 
-      - name: add local users
-        run: |
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user2', 'user2', 'user2', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
+      # - name: initialize mcda database
+      #   run: |
+      #     docker cp database.pg.sql ${{ job.services.postgres.id }}:/database.pg.sql
+      #     docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sql
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+      # - name: add local users
+      #   run: |
+      #     docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
+      #     docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user2', 'user2', 'user2', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
 
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
 
-      - name: run yarn
-        run: yarn
+      # - name: Cache node modules
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: node_modules
+      #     key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      - name: build backend
-        run: yarn build-backend
+      # - name: run yarn
+      #   run: yarn
 
-      - name: run webpack
-        run: npm run build-local-login
+      # - name: build backend
+      #   run: yarn build-backend
 
-      - name: run mcda
-        run: yarn start &
-        env:
-          MCDAWEB_AUTHENTICATION_METHOD: LOCAL
-          MCDAWEB_DB_USER: mcdaweb
-          MCDAWEB_DB_PASSWORD: develop
-          MCDAWEB_DB_HOST: localhost
-          MCDAWEB_DB_NAME: mcdaweb
-          MCDAWEB_COOKIE_SECRET: abc
-          MCDA_HOST: localhost
-          PATAVI_HOST: localhost
-          PATAVI_PORT: 3000
-          PATAVI_CLIENT_KEY: key.pem
-          PATAVI_CLIENT_CRT: crt.pem
-          PATAVI_CA: ca.pem
+      # - name: run webpack
+      #   run: npm run build-local-login
 
-      - name: run nightwatch tests
-        id: nightwatch
-        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/addExampleWorkspacesTest.js
+      # - name: run mcda
+      #   run: yarn start &
+      #   env:
+      #     MCDAWEB_AUTHENTICATION_METHOD: LOCAL
+      #     MCDAWEB_DB_USER: mcdaweb
+      #     MCDAWEB_DB_PASSWORD: develop
+      #     MCDAWEB_DB_HOST: localhost
+      #     MCDAWEB_DB_NAME: mcdaweb
+      #     MCDAWEB_COOKIE_SECRET: abc
+      #     MCDA_HOST: localhost
+      #     PATAVI_HOST: localhost
+      #     PATAVI_PORT: 3000
+      #     PATAVI_CLIENT_KEY: key.pem
+      #     PATAVI_CLIENT_CRT: crt.pem
+      #     PATAVI_CA: ca.pem
 
-      - name: docker logs
-        if: failure()
-        run: |
-          docker ps -a
-          docker logs patavi-server
-          docker logs ${{ job.services.postgres.id }}
+      # - name: run nightwatch tests
+      #   id: nightwatch
+      #   run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/addExampleWorkspacesTest.js
 
-      - name: stop mcda
-        run: sudo pkill -9 node
+      # - name: docker logs
+      #   if: failure()
+      #   run: |
+      #     docker ps -a
+      #     docker logs patavi-server
+      #     docker logs ${{ job.services.postgres.id }}
 
-      - name: stop docker containers
-        run: docker ps -a
+      # - name: stop mcda
+      #   run: sudo pkill -9 node
+
+      # - name: stop docker containers
+      #   run: docker ps -a
