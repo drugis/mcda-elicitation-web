@@ -130,8 +130,10 @@ jobs:
         run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/addExampleWorkspacesTest.js
 
       - name: docker logs
+        if: failure()
         run: |
           docker logs patavi-server
+          docker logs patavi-mcda-worker
 
       - name: stop mcda
         run: sudo pkill -9 node
