@@ -67,7 +67,7 @@ jobs:
       - name: copy certificates to patavi server
         run: docker exec patavi-server sh -c "cp /var/lib/patavi/mount/* /var/lib/patavi/ssl/"
 
-      -name: inspect patavi
+      - name: inspect patavi
         run: docker inspect patavi-server
 
       # - name: build and run patavi worker
