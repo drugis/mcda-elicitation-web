@@ -131,7 +131,7 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: yarn test-end-to-end
+        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js
 
       - name: stop mcda
         run: sudo pkill -9 node
