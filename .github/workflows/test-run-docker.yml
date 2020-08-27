@@ -77,10 +77,10 @@ jobs:
           docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
           docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
 
-      - name: setup mcda database
+      - name: initialize mcda database
         run: |
-          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
-          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
+          docker cp database.pg.sql ${{ job.services.postgres.id }}:/database.pg.sql
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sq
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
