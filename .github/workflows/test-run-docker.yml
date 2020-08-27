@@ -49,7 +49,9 @@ jobs:
           docker exec ${{ job.services.postgres.id }} psql -U patavi -f patavi.schema.sql
 
       - name: test connection
-        run: PGPASSWORD=develop psql -h localhost -U patavi -c 'select * from patavi_task'
+        run: |
+          PGPASSWORD=develop psql -h localhost -p 5432 -U patavi -c '\d'
+          PGPASSWORD=develop psql -h localhost -p 5432 -U patavi -c '\l'
 
       # - name: run rabbit
       #   run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
