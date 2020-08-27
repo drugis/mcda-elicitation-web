@@ -35,4 +35,4 @@ jobs:
         run: ls patavi
 
       - name: stop docker containers
-        run: docker stop postgres my-rabbit
+        run: docker ps -a
