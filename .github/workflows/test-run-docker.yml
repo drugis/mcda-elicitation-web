@@ -1,4 +1,4 @@
-name: MCDA-test | pull request | front-end tests
+name: test docker run
 
 on:
   push:
