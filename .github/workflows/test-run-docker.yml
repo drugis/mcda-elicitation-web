@@ -26,10 +26,13 @@ jobs:
           ssh-private-key: ${{ secrets.deployPrivateKey }}
 
       - name: run postgres
-        run: docker run -e POSTGRES_PASSWORD=develop postgres
+        run: docker run -e POSTGRES_PASSWORD=develop postgres &
 
       - name: run rabbit
-        run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+        run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management &
 
       - name: list patavi?
         run: ls patavi
+
+      - name: stop docker containers
+        run: docker stop postgres my-rabbit
