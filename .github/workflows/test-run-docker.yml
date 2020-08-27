@@ -123,8 +123,8 @@ jobs:
           MCDAWEB_DB_NAME: mcdaweb
           MCDAWEB_COOKIE_SECRET: abc
           MCDA_HOST: localhost
-          PATAVI_HOST: localhost
-          PATAVI_PORT: 3000
+          PATAVI_HOST: patavi-test.drugis.org
+          PATAVI_PORT: 443
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
           PATAVI_CA: ca.pem
