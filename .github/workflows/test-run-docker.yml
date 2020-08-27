@@ -27,6 +27,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: docker net
+        run: docker network ls
+
       - name: create ssl files
         run: |
           echo "${{ secrets.pataviClientCrt }}" > crt.pem 
