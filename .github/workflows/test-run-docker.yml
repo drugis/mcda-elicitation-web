@@ -88,10 +88,21 @@ jobs:
           docker cp database.pg.sql ${{ job.services.postgres.id }}:/database.pg.sql
           docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sql
 
+      - name: add local users
+        run: |
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user2', 'user2', 'user2', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
       - name: run yarn
         run: yarn
@@ -99,8 +110,8 @@ jobs:
       - name: build backend
         run: yarn build-backend
 
-      # - name: run webpack
-      #   run: npm run build-local-login
+      - name: run webpack
+        run: npm run build-local-login
 
       - name: run mcda
         run: yarn start &
@@ -118,11 +129,12 @@ jobs:
           PATAVI_CLIENT_CRT: crt.pem
           PATAVI_CA: ca.pem
 
-      - name: docker logs
-        run: docker logs patavi-server
+      - name: run nightwatch tests
+        id: nightwatch
+        run: yarn test-end-to-end
 
-      - name: curl
-        run: curl localhost:3000
+      - name: stop mcda
+        run: sudo pkill -9 node
 
       - name: stop docker containers
         run: docker ps -a
