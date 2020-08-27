@@ -13,6 +13,17 @@ jobs:
         node-version: ['12']
         os: [ubuntu-16.04]
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: develop
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - uses: actions/checkout@v2
 
@@ -25,14 +36,8 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.deployPrivateKey }}
 
-      # - name: run postgres
-      #   run: docker run -e POSTGRES_PASSWORD=develop postgres &
-
       - name: run rabbit
         run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
-      - name: list patavi?
-        run: ls patavi
-
       - name: stop docker containers
-        run: docker ps -a
+        run: docker stop my-rabbit
