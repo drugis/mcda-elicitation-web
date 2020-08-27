@@ -2,7 +2,7 @@ name: test docker run
 
 on:
   push:
-    branches: testRunDocker
+    branches: github/testRunDocker
 
 jobs:
   test:
