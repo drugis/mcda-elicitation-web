@@ -132,8 +132,9 @@ jobs:
       - name: docker logs
         if: failure()
         run: |
+          docker ps -a
           docker logs patavi-server
-          docker logs patavi-mcda-worker
+          docker logs postgres
 
       - name: stop mcda
         run: sudo pkill -9 node
