@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          repository: drugis/patavi
+          repository: drugis/patavi/server/schema.sql
           path: patavi
 
       - uses: webfactory/ssh-agent@v0.1.1
@@ -50,7 +50,8 @@ jobs:
         run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
       - name: pull patavi server image
-        run: docker run -d --name patavi-server \
+        run: |
+          docker run -d --name patavi-server \
           --link my-rabbit:rabbit \
           -e PATAVI_BROKER_HOST=guest:guest@rabbit \
           -p 3000:3000 \
