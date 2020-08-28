@@ -44,8 +44,8 @@ jobs:
 
       - name: setup patavi database
         run: |
-          docker exec postgres psql -U postgres -c "CREATE USER patavi WITH PASSWORD 'develop'"
-          docker exec postgres psql -U postgres -c "CREATE DATABASE patavi ENCODING 'utf-8' OWNER patavi"
+          docker exec postgres psql -U postgres -h localhost -c "CREATE USER patavi WITH PASSWORD 'develop'"
+          docker exec postgres psql -U postgres -h localhost -c "CREATE DATABASE patavi ENCODING 'utf-8' OWNER patavi"
 
       # - name: initialize patavi database
       #   run: |
