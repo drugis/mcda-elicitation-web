@@ -37,7 +37,7 @@ jobs:
           echo "${{ secrets.pataviserverkey }}" > server-key.pem
 
       - name: run postgres docker
-        run: docker run postgres -e PGPASSWORD=develop -p 5432:5432
+        run: docker run postgres -e POSTGRES_PASSWORD=develop -p 5432:5432
 
       - name: fetch schema
         run: curl https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql -o patavi.schema.sql
