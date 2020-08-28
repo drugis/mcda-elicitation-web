@@ -37,15 +37,15 @@ jobs:
           echo "${{ secrets.pataviserverkey }}" > server-key.pem
 
       - name: run postgres docker
-        run: docker run -d --name postgres -e POSTGRES_PASSWORD="develop" -p 5432:5432 postgres
+        run: docker run -d --name postgres -e POSTGRES_PASSWORD="develop" -e POSTGRES_HOST_AUTH_METHOD="trust" -p 5432:5432 postgres
 
       - name: fetch schema
         run: curl https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql -o patavi.schema.sql
 
       - name: setup patavi database
         run: |
-          PGPASSWORD=develop psql -U postgres -h localhost -c "CREATE USER patavi WITH PASSWORD 'develop'"
-          PGPASSWORD=develop psql -U postgres -h localhost -c "CREATE DATABASE patavi ENCODING 'utf-8' OWNER patavi"
+          psql -U postgres -h localhost -c "CREATE USER patavi WITH PASSWORD 'develop'"
+          psql -U postgres -h localhost -c "CREATE DATABASE patavi ENCODING 'utf-8' OWNER patavi"
 
       # - name: initialize patavi database
       #   run: |
