@@ -11,6 +11,7 @@ module.exports = {
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
+const errorService = require('./util/errorService');
 
 var deterministicWarning =
   'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
@@ -56,10 +57,10 @@ function stochasticWeightsWarning(browser) {
     .click('#swing-option-0')
     .click('#next-button')
     .click('#save-button')
-    .waitForElementVisible('#smaa-tab')
+    .waitForElementVisible('#smaa-tab');
+  errorService
+    .isErrorBarHidden()
     .click('#smaa-tab')
-
-    .waitForElementVisible('smaa-measurements-header')
     .waitForElementVisible('#uncertainty-weights-checkbox:disabled')
     .assert.containsText('#warning-0', hasNoStochasticWeightsWarning);
 }
