@@ -1,66 +1,104 @@
 <div class="grid-x" ng-if="!state.results">
-    <div class="cell text-centered">
-      <a class="fa fa-spinner fa-2x fa-spin"></a>
-    </div>
+  <div class="cell text-centered">
+    <a class="fa fa-spinner fa-2x fa-spin"></a>
+  </div>
 </div>
 
 <div ng-if="state.results">
   <div class="grid-x">
-    <div class="cell large-3">
-      Scenario:
-    </div>
+    <div class="cell large-3">Scenario:</div>
     <div class="cell large-9">
-      <select id="scenario-selector" class="scenario-select" ng-model="scenario"
+      <select
+        id="scenario-selector"
+        class="scenario-select"
+        ng-model="scenario"
         ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
-        ng-change="scenarioChanged(scenario)">
-      </select>
+        ng-change="scenarioChanged(scenario)"
+      ></select>
       <inline-help help-key="scenario"></inline-help>
     </div>
-    <br><br>
+    <br /><br />
   </div>
 
   <div class="grid-x underlined-div">
-    <br><br>
-    <div class="cell large-3">
-      Take into account uncertainty in:
-    </div>
+    <br /><br />
+    <div class="cell large-3">Take into account uncertainty in:</div>
     <div class="cell large-9">
       <div class="grid-x">
         <div class="cell">
           <label>
-            <input id="uncertainty-measurements-checkbox" type="checkbox"
-              ng-model="scenario.state.uncertaintyOptions.measurements" ng-change="uncertaintyOptionsChanged()"
-              ng-disabled="noStochasticMeasurements">
-            measurements <inline-help help-key="measurements-smaa-uncertainty"></inline-help>
+            <input
+              id="uncertainty-measurements-checkbox"
+              type="checkbox"
+              ng-model="scenario.state.uncertaintyOptions.measurements"
+              ng-change="uncertaintyOptionsChanged()"
+              ng-disabled="noStochasticMeasurements"
+            />
+            measurements
+            <inline-help help-key="measurements-smaa-uncertainty"></inline-help>
           </label>
         </div>
         <div class="cell">
           <label>
-            <input id="uncertainty-weights-checkbox" type="checkbox"
-              ng-model="scenario.state.uncertaintyOptions.weights" ng-change="uncertaintyOptionsChanged()"
-              ng-disabled="noStochasticWeights">
-            weights <inline-help help-key="weights-smaa-uncertainty"></inline-help>
+            <input
+              id="uncertainty-weights-checkbox"
+              type="checkbox"
+              ng-model="scenario.state.uncertaintyOptions.weights"
+              ng-change="uncertaintyOptionsChanged()"
+              ng-disabled="noStochasticWeights"
+            />
+            weights
+            <inline-help help-key="weights-smaa-uncertainty"></inline-help>
           </label>
         </div>
       </div>
     </div>
     <div class="cell">
-      <button id="recalculate-button" class="button" ng-disabled="!uncertaintyOptions.dirty"
-        ng-click="recalculateSmaa()">Recalculate</button>
+      <button
+        id="recalculate-button"
+        class="button"
+        ng-disabled="!uncertaintyOptions.dirty"
+        ng-click="recalculateSmaa()"
+      >
+        Recalculate
+      </button>
     </div>
-    <div id="warning-{{ $index }}" ng-if="warnings.length" ng-repeat="warning in warnings" class="cell">
+    <div
+      id="warning-{{ $index }}"
+      ng-if="warnings.length"
+      ng-repeat="warning in warnings"
+      class="cell"
+    >
       <i class="fa fa-exclamation-triangle"></i> {{ warning }}
     </div>
   </div>
 
-  <smaa-table state="aggregateState" criteria="criteria" alternatives="alternatives" scales="workspace.scales.observed"
-    toggled-columns="toggledColumns"></smaa-table>
+  <smaa-table
+    state="aggregateState"
+    criteria="criteria"
+    alternatives="alternatives"
+    scales="workspace.scales.observed"
+    toggled-columns="toggledColumns"
+  ></smaa-table>
 
-  <smaa-weights-table weights="state.results.weightsQuantiles" criteria="criteria"></smaa-weights-table>
+  <smaa-weights-table
+    weights="state.results.weightsQuantiles"
+    criteria="criteria"
+  ></smaa-weights-table>
 
-  <rank-acceptabilities alternatives="alternatives" edit-mode="editMode" state="state" scenario="scenario">
+  <rank-acceptabilities
+    alternatives="alternatives"
+    edit-mode="editMode"
+    state="state"
+    scenario="scenario"
+  >
   </rank-acceptabilities>
 
-  <central-weights alternatives="alternatives" criteria="criteria" edit-mode="editMode" scenario="scenario"
-    state="state"></central-weights>
+  <central-weights
+    alternatives="alternatives"
+    criteria="criteria"
+    edit-mode="editMode"
+    scenario="scenario"
+    state="state"
+  ></central-weights>
 </div>
