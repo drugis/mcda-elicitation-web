@@ -6,29 +6,35 @@ define([
   'mcda/deterministicResults/deterministicResults',
   'angular-patavi-client',
   'angularjs-slider'
-], function(angular) {
-  describe('The DeterministicResultsService', function() {
+], function (angular) {
+  describe('The DeterministicResultsService', function () {
     var deterministicResultsService;
-    const pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['postAndHandleResults']);
+    const pataviResultsServiceMock = jasmine.createSpyObj(
+      'PataviResultsServiceMock',
+      ['postAndHandleResults']
+    );
 
-    beforeEach(function() {
-      angular.mock.module('patavi', function() { });
-      angular.mock.module('elicit.deterministicResults', function($provide) {
+    beforeEach(function () {
+      angular.mock.module('patavi', function () {});
+      angular.mock.module('elicit.deterministicResults', function ($provide) {
         $provide.value('PataviResultsService', pataviResultsServiceMock);
       });
     });
 
-    beforeEach(inject(function(DeterministicResultsService) {
+    beforeEach(inject(function (DeterministicResultsService) {
       deterministicResultsService = DeterministicResultsService;
     }));
 
-    const alternatives = [{
-      id: 'Fluox',
-      title: 'Fluoxetine'
-    }, {
-      id: 'Parox',
-      title: 'Paroxetine'
-    }];
+    const alternatives = [
+      {
+        id: 'Fluox',
+        title: 'Fluoxetine'
+      },
+      {
+        id: 'Parox',
+        title: 'Paroxetine'
+      }
+    ];
 
     const legend = {
       Fluox: {
@@ -43,33 +49,41 @@ define([
       problem: {
         criteria: {
           criterion1: {
-            dataSources: [{
-              some: 'thing'
-            }]
+            dataSources: [
+              {
+                some: 'thing'
+              }
+            ]
           }
         },
-        performanceTable: [{
-          performance: {
-            effect: 'effect'
+        performanceTable: [
+          {
+            performance: {
+              effect: 'effect'
+            }
+          },
+          {
+            performance: {
+              distribution: 'distribution'
+            }
           }
-        }, {
-          performance: {
-            distribution: 'distribution'
-          }
-        }]
+        ]
       },
       prefs: {},
-      weights: []
+      weights: {}
     };
 
-    const transformedPerformanceTable = [{
-      performance: 'effect'
-    }, {
-      performance: 'distribution'
-    }];
+    const transformedPerformanceTable = [
+      {
+        performance: 'effect'
+      },
+      {
+        performance: 'distribution'
+      }
+    ];
 
-    describe('resetModifiableScales', function() {
-      it('it should reset the scales to their original values', function() {
+    describe('resetModifiableScales', function () {
+      it('it should reset the scales to their original values', function () {
         var alternatives = {
           alt1: 'alt1Id',
           alt2: 'alt2Id'
@@ -79,32 +93,35 @@ define([
             alt1: {
               '50%': 0.5,
               '2.5%': 0.1,
-              '97.5': 0.9
+              97.5: 0.9
             },
             alt2: {
               '50%': 0.05,
               '2.5%': 0.01,
-              '97.5': 0.09
+              97.5: 0.09
             },
             alt3: {
               '50%': 0.005,
               '2.5%': 0.001,
-              '97.5': 0.009
+              97.5: 0.009
             }
           }
         };
-        var result = deterministicResultsService.resetModifiableScales(observed, alternatives);
+        var result = deterministicResultsService.resetModifiableScales(
+          observed,
+          alternatives
+        );
         var expectedResult = {
           crit1: {
             alt1: {
               '50%': 0.5,
               '2.5%': 0.1,
-              '97.5': 0.9
+              97.5: 0.9
             },
             alt2: {
               '50%': 0.05,
               '2.5%': 0.01,
-              '97.5': 0.09
+              97.5: 0.09
             }
           }
         };
@@ -112,7 +129,7 @@ define([
       });
     });
 
-    describe('pataviResultToLineValues', function() {
+    describe('pataviResultToLineValues', function () {
       const pataviResult = {
         total: {
           Fluox: {
@@ -128,8 +145,11 @@ define([
         }
       };
 
-      it('should transform a measurements or preferences patavi result to linevalues for the plot', function() {
-        var result = deterministicResultsService.pataviResultToLineValues(pataviResult, alternatives);
+      it('should transform a measurements or preferences patavi result to linevalues for the plot', function () {
+        var result = deterministicResultsService.pataviResultToLineValues(
+          pataviResult,
+          alternatives
+        );
         var expectedResult = [
           ['x', '0', '1', '2'],
           ['Fluoxetine', 1, 3, 6],
@@ -138,8 +158,12 @@ define([
         expect(result).toEqual(expectedResult);
       });
 
-      it('should transform a measurements or preferences patavi result to linevalues for the plot and uses the alternative legend', function() {
-        var result = deterministicResultsService.pataviResultToLineValues(pataviResult, alternatives, legend);
+      it('should transform a measurements or preferences patavi result to linevalues for the plot and uses the alternative legend', function () {
+        var result = deterministicResultsService.pataviResultToLineValues(
+          pataviResult,
+          alternatives,
+          legend
+        );
         var expectedResult = [
           ['x', '0', '1', '2'],
           ['newfluox', 1, 3, 6],
@@ -149,16 +173,18 @@ define([
       });
     });
 
-    describe('percentifySensitivityResult', function() {
-      it('should return the values of given coordinate multiplied by 100', function() {
+    describe('percentifySensitivityResult', function () {
+      it('should return the values of given coordinate multiplied by 100', function () {
         var values = [['x', 0.6, 0.8]];
-        var result = deterministicResultsService.percentifySensitivityResult(values);
+        var result = deterministicResultsService.percentifySensitivityResult(
+          values
+        );
         var expectedResult = [['x', 60, 80]];
         expect(result).toEqual(expectedResult);
       });
     });
 
-    describe('createDeterministicScales', function() {
+    describe('createDeterministicScales', function () {
       var expectedResult = {
         ds1: {
           alt1: {
@@ -167,29 +193,34 @@ define([
         }
       };
 
-      it('should create deterministic scales from the performance table', function() {
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              value: 10
-            }
-          },
-          alternative: 'alt1'
-        }
+      it('should create deterministic scales from the performance table', function () {
+        var performanceTable = [
+          {
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                value: 10
+              }
+            },
+            alternative: 'alt1'
+          }
         ];
         var smaaScales = {};
-        var result = deterministicResultsService.createDeterministicScales(performanceTable, smaaScales);
+        var result = deterministicResultsService.createDeterministicScales(
+          performanceTable,
+          smaaScales
+        );
 
         expect(result).toEqual(expectedResult);
       });
 
-      it('should create deterministic scales from the smaa values if there are no deterministic values in the performance table', function() {
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {},
-          alternative: 'alt1'
-        }
+      it('should create deterministic scales from the smaa values if there are no deterministic values in the performance table', function () {
+        var performanceTable = [
+          {
+            dataSource: 'ds1',
+            performance: {},
+            alternative: 'alt1'
+          }
         ];
         var smaaScales = {
           ds1: {
@@ -198,17 +229,21 @@ define([
             }
           }
         };
-        var result = deterministicResultsService.createDeterministicScales(performanceTable, smaaScales);
+        var result = deterministicResultsService.createDeterministicScales(
+          performanceTable,
+          smaaScales
+        );
         expect(result).toEqual(expectedResult);
       });
 
-      it('should work for relative data', function() {
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {
-            distribution: {}
+      it('should work for relative data', function () {
+        var performanceTable = [
+          {
+            dataSource: 'ds1',
+            performance: {
+              distribution: {}
+            }
           }
-        }
         ];
         var smaaScales = {
           ds1: {
@@ -217,13 +252,15 @@ define([
             }
           }
         };
-        var result = deterministicResultsService.createDeterministicScales(performanceTable, smaaScales);
+        var result = deterministicResultsService.createDeterministicScales(
+          performanceTable,
+          smaaScales
+        );
         expect(result).toEqual(expectedResult);
-
       });
     });
 
-    describe('getValueProfilePlotSettings', function() {
+    describe('getValueProfilePlotSettings', function () {
       const pataviResult = {
         value: {
           Fluox: {
@@ -237,19 +274,28 @@ define([
         }
       };
 
-      const criteria = [{
-        id: 'crit1',
-        title: 'Crit1'
-      }, {
-        id: 'crit2',
-        title: 'Crit2'
-      }];
+      const criteria = [
+        {
+          id: 'crit1',
+          title: 'Crit1'
+        },
+        {
+          id: 'crit2',
+          title: 'Crit2'
+        }
+      ];
 
-      it('should return the settings for a value profile plot', function() {
+      it('should return the settings for a value profile plot', function () {
         var undefinedLegend;
         const root = {};
 
-        var settings = deterministicResultsService.getValueProfilePlotSettings(pataviResult, criteria, alternatives, undefinedLegend, root);
+        var settings = deterministicResultsService.getValueProfilePlotSettings(
+          pataviResult,
+          criteria,
+          alternatives,
+          undefinedLegend,
+          root
+        );
 
         delete settings.axis.y.tick.format;
 
@@ -276,7 +322,7 @@ define([
             y: {
               tick: {
                 count: 5
-              },
+              }
             }
           },
           grid: {
@@ -294,15 +340,25 @@ define([
         expect(settings).toEqual(expectedSettings);
       });
 
-      it('should return the settings for a value profile plot using alternative legend', function() {
+      it('should return the settings for a value profile plot using alternative legend', function () {
         const root = 'root';
 
-        var settings = deterministicResultsService.getValueProfilePlotSettings(pataviResult, criteria, alternatives, legend, root);
+        var settings = deterministicResultsService.getValueProfilePlotSettings(
+          pataviResult,
+          criteria,
+          alternatives,
+          legend,
+          root
+        );
 
         delete settings.axis.y.tick.format;
 
         var plotValues = [
-          ['x', legend[alternatives[0].id].newTitle, legend[alternatives[1].id].newTitle],
+          [
+            'x',
+            legend[alternatives[0].id].newTitle,
+            legend[alternatives[1].id].newTitle
+          ],
           [criteria[0].title, 1, 1],
           [criteria[1].title, 2, 2]
         ];
@@ -324,7 +380,7 @@ define([
             y: {
               tick: {
                 count: 5
-              },
+              }
             }
           },
           grid: {
@@ -343,8 +399,8 @@ define([
       });
     });
 
-    describe('getSensitivityLineChartSettings', function() {
-      it('should return the settings for a sensitivity line chart', function() {
+    describe('getSensitivityLineChartSettings', function () {
+      it('should return the settings for a sensitivity line chart', function () {
         const root = 'root';
         const values = [['x', 0, 1]];
         const options = {
@@ -353,7 +409,11 @@ define([
           labelYAxis: 'ylabel'
         };
 
-        var settings = deterministicResultsService.getSensitivityLineChartSettings(root, values, options);
+        var settings = deterministicResultsService.getSensitivityLineChartSettings(
+          root,
+          values,
+          options
+        );
 
         delete settings.axis.x.tick.format;
 
@@ -376,7 +436,7 @@ define([
                 right: 0
               },
               tick: {
-                count: 5,
+                count: 5
               }
             },
             y: {
@@ -404,7 +464,7 @@ define([
         expect(settings).toEqual(expectedSettings);
       });
 
-      it('should return the settings for a sensitivity line chart setting the correct min and max values for the x axis, when the order is not correct in the values', function() {
+      it('should return the settings for a sensitivity line chart setting the correct min and max values for the x axis, when the order is not correct in the values', function () {
         const root = 'root';
         const values = [['x', '-10', '-30']];
         const options = {
@@ -413,7 +473,11 @@ define([
           labelYAxis: 'ylabel'
         };
 
-        var settings = deterministicResultsService.getSensitivityLineChartSettings(root, values, options);
+        var settings = deterministicResultsService.getSensitivityLineChartSettings(
+          root,
+          values,
+          options
+        );
 
         delete settings.axis.x.tick.format;
 
@@ -436,7 +500,7 @@ define([
                 right: 0
               },
               tick: {
-                count: 5,
+                count: 5
               }
             },
             y: {
@@ -465,8 +529,8 @@ define([
       });
     });
 
-    describe('getDeterministicResults', function() {
-      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+    describe('getDeterministicResults', function () {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function () {
         const expectedProblem = {
           preferences: state.prefs,
           method: 'deterministic',
@@ -474,24 +538,26 @@ define([
           weights: state.weights,
           criteria: {
             criterion1: {
-              some: 'thing',
+              some: 'thing'
             }
           }
         };
-        const result = deterministicResultsService.getDeterministicResults(state);
+        const result = deterministicResultsService.getDeterministicResults(
+          state
+        );
         expect(result.problem).toEqual(expectedProblem);
       });
     });
 
-    describe('getRecalculatedDeterministicResults', function() {
-      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+    describe('getRecalculatedDeterministicResults', function () {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function () {
         const alteredTableCells = [{}, {}];
         const expectedProblem = {
           preferences: state.prefs,
           method: 'sensitivityMeasurements',
           criteria: {
             criterion1: {
-              some: 'thing',
+              some: 'thing'
             }
           },
           performanceTable: state.problem.performanceTable,
@@ -499,13 +565,16 @@ define([
             meas: alteredTableCells
           }
         };
-        const result = deterministicResultsService.getRecalculatedDeterministicResults(alteredTableCells, state);
+        const result = deterministicResultsService.getRecalculatedDeterministicResults(
+          alteredTableCells,
+          state
+        );
         expect(result.problem).toEqual(expectedProblem);
       });
     });
 
-    describe('getMeasurementSensitivityResults', function() {
-      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+    describe('getMeasurementSensitivityResults', function () {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function () {
         const measurementsAlternativeId = 1;
         const measurementsCriterionId = 37;
         const expectedProblem = {
@@ -513,7 +582,7 @@ define([
           method: 'sensitivityMeasurementsPlot',
           criteria: {
             criterion1: {
-              some: 'thing',
+              some: 'thing'
             }
           },
           performanceTable: transformedPerformanceTable,
@@ -522,20 +591,24 @@ define([
             criterion: measurementsCriterionId
           }
         };
-        const result = deterministicResultsService.getMeasurementSensitivityResults(measurementsAlternativeId, measurementsCriterionId, state);
+        const result = deterministicResultsService.getMeasurementSensitivityResults(
+          measurementsAlternativeId,
+          measurementsCriterionId,
+          state
+        );
         expect(result.problem).toEqual(expectedProblem);
       });
     });
 
-    describe('getPreferencesSensitivityResults', function() {
-      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+    describe('getPreferencesSensitivityResults', function () {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function () {
         const selectedCriterionId = 37;
         const expectedProblem = {
           preferences: state.prefs,
           method: 'sensitivityWeightPlot',
           criteria: {
             criterion1: {
-              some: 'thing',
+              some: 'thing'
             }
           },
           performanceTable: transformedPerformanceTable,
@@ -543,7 +616,10 @@ define([
             criterion: selectedCriterionId
           }
         };
-        const result = deterministicResultsService.getPreferencesSensitivityResults(selectedCriterionId, state);
+        const result = deterministicResultsService.getPreferencesSensitivityResults(
+          selectedCriterionId,
+          state
+        );
         expect(result.problem).toEqual(expectedProblem);
       });
     });
