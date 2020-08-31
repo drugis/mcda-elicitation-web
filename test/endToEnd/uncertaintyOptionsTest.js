@@ -56,8 +56,9 @@ function stochasticWeightsWarning(browser) {
     .click('#swing-option-0')
     .click('#next-button')
     .click('#save-button')
+    .waitForElementVisible('#smaa-tab')
     .click('#smaa-tab')
-    .waitForElementVisible('#uncertainty-weights-checkbox')
+    .waitForElementVisible('#uncertainty-weights-checkbox:disabled')
     .assert.containsText('#warning-0', hasNoStochasticWeightsWarning);
 }
 
