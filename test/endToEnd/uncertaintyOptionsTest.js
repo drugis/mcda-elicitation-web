@@ -64,7 +64,7 @@ function stochasticWeightsWarning(browser) {
     })
     .useCss();
   errorService
-    .isErrorBarHidden()
+    .isErrorBarHidden(browser)
     .waitForElementVisible('#uncertainty-weights-checkbox:disabled')
     .assert.containsText('#warning-0', hasNoStochasticWeightsWarning);
 }
