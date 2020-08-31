@@ -12,24 +12,25 @@ module.exports = {
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 
-var deterministicWarning = 'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
+var deterministicWarning =
+  'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
 var hasNoStochasticWeightsWarning = 'Weights are not stochastic';
 
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const title =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function beforeEach(browser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 }
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function defaultSelection(browser) {
@@ -66,5 +67,5 @@ function save(browser) {
     .click('#uncertainty-weights-checkbox')
     .click('#recalculate-button')
     .waitForElementVisible('#uncertainty-measurements-checkbox:checked')
-    .assert.elementNotPresent('#uncertainty-weights-checkbox:checked');
+    .assert.not.elementPresent('#uncertainty-weights-checkbox:checked');
 }
