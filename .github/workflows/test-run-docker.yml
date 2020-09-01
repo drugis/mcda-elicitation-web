@@ -132,12 +132,11 @@ jobs:
       #   id: nightwatch
       #   run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/addExampleWorkspacesTest.js
 
-      # - name: docker logs
-      #   if: failure()
-      #   run: |
-      #     docker ps -a
-      #     docker logs patavi-server
-      #     docker logs ${{ job.services.postgres.id }}
+      - name: docker logs
+        if: failure()
+        run: |
+          docker ps -a
+          docker logs postgres
 
       # - name: stop mcda
       #   run: sudo pkill -9 node
