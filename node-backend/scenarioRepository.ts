@@ -1,8 +1,8 @@
-import logger from './logger';
-import _ from 'lodash';
 import {Error} from '@shared/interface/IError';
-import IDB, {ClientOrDB} from './interface/IDB';
+import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
+import IDB, {ClientOrDB} from './interface/IDB';
+import logger from './logger';
 
 export default function ScenarioRepository(db: IDB) {
   function createInTransaction(
@@ -128,7 +128,8 @@ export default function ScenarioRepository(db: IDB) {
           problem: state.problem,
           prefs: state.prefs,
           legend: state.legend,
-          uncertaintyOptions: state.uncertaintyOptions
+          uncertaintyOptions: state.uncertaintyOptions,
+          weights: state.weights
         },
         title,
         scenarioId

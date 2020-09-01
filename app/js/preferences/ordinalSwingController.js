@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', '../controllers/wizard'], function(_, Wizard) {
+define(['lodash', '../controllers/wizard'], function (_, Wizard) {
   var dependencies = [
     '$scope',
     '$state',
@@ -7,32 +7,35 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     '$injector',
     'PartialValueFunctionService',
     'PageTitleService',
+    'PreferencesService',
     'OrderingService',
     'WorkspaceSettingsService',
     'currentScenario',
     'taskDefinition'
   ];
-  var OrdinalSwingController = function(
+  var OrdinalSwingController = function (
     $scope,
     $state,
     $stateParams,
     $injector,
     PartialValueFunctionService,
     PageTitleService,
+    PreferencesService,
     OrderingService,
     WorkspaceSettingsService,
     currentScenario,
     taskDefinition
   ) {
-    //functions 
+    //functions
     $scope.save = save;
     $scope.canSave = canSave;
     $scope.cancel = cancel;
-    $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
+    $scope.getUnitOfMeasurement =
+      PartialValueFunctionService.getUnitOfMeasurement;
 
     //init
     $scope.pvf = PartialValueFunctionService;
-    $scope.$on('elicit.settingsChanged', function() {
+    $scope.$on('elicit.settingsChanged', function () {
       resetWizard();
     });
 
@@ -40,35 +43,60 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     $scope.scalesPromise.then(resetWizard);
 
     function resetWizard() {
-      $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
-        $scope.criteria = _.map(orderings.criteria, function(criterion) {
-          criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
-          criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
+      $scope.problem = WorkspaceSettingsService.usePercentage()
+        ? $scope.aggregateState.percentified.problem
+        : $scope.aggregateState.dePercentified.problem;
+      OrderingService.getOrderedCriteriaAndAlternatives(
+        $scope.problem,
+        $stateParams
+      ).then(function (orderings) {
+        $scope.criteria = _.map(orderings.criteria, function (criterion) {
+          criterion.best = PartialValueFunctionService.best(
+            criterion.dataSources[0]
+          );
+          criterion.worst = PartialValueFunctionService.worst(
+            criterion.dataSources[0]
+          );
           return criterion;
         });
-        $injector.invoke(Wizard, {}, {
-          $scope: $scope,
-          handler: {
-            validChoice: validChoice,
-            fields: ['choice', 'reference', 'choices', 'type', 'standardized', 'previousChoice'],
-            nextState: nextState,
-            initialize: initialize,
-            standardize: standardize
+        $injector.invoke(
+          Wizard,
+          {},
+          {
+            $scope: $scope,
+            handler: {
+              validChoice: validChoice,
+              fields: [
+                'choice',
+                'reference',
+                'choices',
+                'type',
+                'standardized',
+                'previousChoice'
+              ],
+              nextState: nextState,
+              initialize: initialize,
+              standardize: standardize
+            }
           }
-        });
+        );
       });
     }
 
     function save(state) {
       var nextState = standardize(state);
-      currentScenario.state = _.extend({}, currentScenario.state,
-        {
-          prefs: nextState.prefs
+      const newProblem = _.extend({}, $scope.problem, {
+        preferences: nextState.prefs
+      });
+      PreferencesService.getWeights(newProblem).then((result) => {
+        currentScenario.state = _.extend({}, currentScenario.state, {
+          prefs: nextState.prefs,
+          weights: result
         });
-      currentScenario.$save($stateParams, function() {
-        $scope.$emit('elicit.resultsAccessible', currentScenario);
-        $state.go('preferences');
+        currentScenario.$save($stateParams, function () {
+          $scope.$emit('elicit.resultsAccessible', currentScenario);
+          $state.go('preferences');
+        });
       });
     }
 
@@ -107,14 +135,21 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
       if (!validChoice(state)) {
         return null;
       }
-      var choiceCriterion = _.find($scope.criteria, function(criterion) { return criterion.id === state.choice; });
+      var choiceCriterion = _.find($scope.criteria, function (criterion) {
+        return criterion.id === state.choice;
+      });
       choiceCriterion.alreadyChosen = true;
 
       var nextState = _.cloneDeep(state);
       nextState.choice = undefined;
-      nextState.choices = _.reject(nextState.choices, function(criterion) { return criterion.id === state.choice; });
+      nextState.choices = _.reject(nextState.choices, function (criterion) {
+        return criterion.id === state.choice;
+      });
       nextState.prefs.ordinal.push(state.choice);
-      nextState.title = title(nextState.prefs.ordinal.length + 1, $scope.criteria.length - 1);
+      nextState.title = title(
+        nextState.prefs.ordinal.length + 1,
+        $scope.criteria.length - 1
+      );
 
       return nextState;
     }
@@ -139,10 +174,15 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
         result.push(ordinal(order[i], order[i + 1]));
       }
       if (order.length > 0) {
-        var remaining = _.difference(_.map($scope.criteria, 'id'), order).sort();
-        result = result.concat(_.map(remaining, function(criterion) {
-          return ordinal(_.last(order), criterion);
-        }));
+        var remaining = _.difference(
+          _.map($scope.criteria, 'id'),
+          order
+        ).sort();
+        result = result.concat(
+          _.map(remaining, function (criterion) {
+            return ordinal(_.last(order), criterion);
+          })
+        );
       }
       standardizedState.prefs = result;
       return standardizedState;

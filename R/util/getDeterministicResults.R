@@ -2,8 +2,12 @@
 # import genRepresentativeWeights from weights.R
 
 getDeterministicResults <- function(params, measurements) {
-  weights <- genRepresentativeWeights(params)
-  valueProfiles <- calculateValueProfiles(params, measurements, weights)
+  if (!is.null(params[["weights"]])) {
+    weights <- params[["weights"]]
+  } else {
+    weights <- wrapMatrix(genWeightsQuantiles(params))
+  }
+  valueProfiles <- calculateValueProfiles(params, measurements, weights[["mean"]])
   totalValue <- rowSums(valueProfiles)
 
   results <- list(
