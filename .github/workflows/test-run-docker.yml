@@ -63,12 +63,13 @@ jobs:
 
       - name: run patavi server
         run: |
-          docker run -d --name patavi-server --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=guest:guest@rabbit -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop --mount source=patavi_server_certs,target=/var/lib/patavi/mount addis/patavi-server
+          docker run -d --name patavi-server --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=guest:guest@rabbit -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop addis/patavi-server
+          doccker exec patavi-server ls
 
       - name: copy certificates to patavi server
         run: |
-          docker cp ./server-crt.pem patavi-server:/patavi/ssl/
-          docker cp ./server-key.pem patavi-server:/patavi/ssl/
+          docker cp ./server-crt.pem patavi-server:/ssl/
+          docker cp ./server-key.pem patavi-server:/ssl/
 
       - name: build and run patavi worker
         run: |
