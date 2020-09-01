@@ -11,7 +11,7 @@ module.exports = {
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
+const util = require('./util/util');
 
 var deterministicWarning =
   'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
