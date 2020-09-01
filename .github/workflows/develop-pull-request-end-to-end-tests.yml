@@ -87,7 +87,7 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/uncertaintyOptionsTest.js --testcase 'Warning when weights are not stochastic'
+        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js
 
       - name: notify on slack channel on nightwatch failure
         if: failure()
