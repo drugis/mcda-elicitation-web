@@ -68,9 +68,8 @@ jobs:
 
       - name: copy certificates to patavi server
         run: |
-          ls
-          docker cp server-crt.pem patavi-server:/ssl/
-          docker cp server-key.pem patavi-server:/ssl/
+          docker cp server-crt.pem patavi-server:/var/lib/patavi/ssl/
+          docker cp server-key.pem patavi-server:/var/lib/patavi/ssl/
 
       - name: build and run patavi worker
         run: |
