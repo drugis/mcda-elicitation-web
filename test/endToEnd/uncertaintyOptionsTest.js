@@ -57,8 +57,9 @@ function stochasticWeightsWarning(browser) {
     .click('#swing-option-0')
     .click('#next-button')
     .click('#save-button')
-    .waitForElementVisible('#precise-swing-button')
-    .click('#smaa-tab')
+    .waitForElementVisible('#precise-swing-button');
+  util
+    .delayedClick(browser, '#smaa-tab', '#uncertainty-weights-checkbox')
     .source((result) => {
       console.log(result.value);
     })
