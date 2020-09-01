@@ -55,7 +55,6 @@ jobs:
       - name: run patavi server
         run: |
           docker run -d --name patavi-server --network host -e PATAVI_BROKER_HOST=guest:guest@localhost -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop addis/patavi-server
-          docker exec patavi-server ls
 
       - name: copy certificates to patavi server
         run: |
@@ -122,7 +121,7 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/dockerTest.js
+        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js
 
       - name: docker logs
         if: failure()
