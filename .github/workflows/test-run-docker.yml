@@ -52,15 +52,6 @@ jobs:
       - name: run rabbit
         run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
-      # - name: run helper container
-      #   run: |
-      #     docker volume create patavi_server_certs
-      #     docker run -v patavi_server_certs:/patavi --name helper busybox true
-      #     docker cp ./server-crt.pem helper:/patavi/
-      #     docker cp ./server-key.pem helper:/patavi/
-      #     docker rm helper
-      # docker exec patavi-server sh -c "cp /var/lib/patavi/mount/* /var/lib/patavi/ssl/"
-
       - name: run patavi server
         run: |
           docker run -d --name patavi-server --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=guest:guest@rabbit -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop addis/patavi-server
@@ -131,14 +122,13 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/addExampleWorkspacesTest.js
+        run: yarn tsc -p ts-end2end-config.json && yarn nightwatch -c nightwatch.github.conf.js --test test/endToEnd/dockerTest.js
 
       - name: docker logs
         if: failure()
         run: |
           docker ps -a
           docker logs patavi-server
-          docker logs my-rabbit
 
       - name: stop mcda
         run: sudo pkill -9 node
