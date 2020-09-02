@@ -1,28 +1,65 @@
 <div ng-if="aggregateState">
+  <preferences
+    scenarios="reactScenarios"
+    workspace-id="workspace.id"
+  ></preferences>
   <div class="grid-x">
-    <div class="cell large-3">
-      Scenario:
-    </div>
+    <div class="cell large-3">Scenario:</div>
     <div class="cell large-9">
-      <select id="scenario-selector" class="scenario-select" ng-model="scenario"
+      <select
+        id="scenario-selector"
+        class="scenario-select"
+        ng-model="scenario"
         ng-options="scenario.title for scenario in scenarios | orderBy:'title' track by scenario.id"
-        ng-change="scenarioChanged(scenario)"></select>
+        ng-change="scenarioChanged(scenario)"
+      ></select>
       <inline-help help-key="scenario"></inline-help>
-      <a id="edit-scenario-button" ng-if="editMode.canEdit" ng-click="editScenarioTitle()"
-        tooltip="Edit current scenario title"><i class="fa fa-edit"></i></a>
-      <a id="create-scenario-button" ng-if="editMode.canEdit" ng-click="newScenario()"
-        tooltip="Create clean scenario"><i class="fa fa-plus"></i></a>
-      <a id="copy-scenario-button" ng-if="isStandalone && editMode.canEdit" ng-click="copyScenario()"
-        tooltip="Copy current scenario"><i class="fa fa-copy"></i></a>
-      <a id="delete-scenario-button" ng-if="isStandalone && editMode.canEdit && scenarios.length > 1"
-        ng-click="deleteScenario()" tooltip="Delete current scenario." class="fa fa-trash" style="color: red"></a>
-      <i id="delete-scenario-disabled" ng-if="editMode.canEdit && scenarios.length === 1"
-        tooltip="Cannot delete scenario if there is only 1 scenario." class="fa fa-trash" style="color: gray"></i>
+      <a
+        id="edit-scenario-button"
+        ng-if="editMode.canEdit"
+        ng-click="editScenarioTitle()"
+        tooltip="Edit current scenario title"
+        ><i class="fa fa-edit"></i
+      ></a>
+      <a
+        id="create-scenario-button"
+        ng-if="editMode.canEdit"
+        ng-click="newScenario()"
+        tooltip="Create clean scenario"
+        ><i class="fa fa-plus"></i
+      ></a>
+      <a
+        id="copy-scenario-button"
+        ng-if="isStandalone && editMode.canEdit"
+        ng-click="copyScenario()"
+        tooltip="Copy current scenario"
+        ><i class="fa fa-copy"></i
+      ></a>
+      <a
+        id="delete-scenario-button"
+        ng-if="isStandalone && editMode.canEdit && scenarios.length > 1"
+        ng-click="deleteScenario()"
+        tooltip="Delete current scenario."
+        class="fa fa-trash"
+        style="color: red"
+      ></a>
+      <i
+        id="delete-scenario-disabled"
+        ng-if="editMode.canEdit && scenarios.length === 1"
+        tooltip="Cannot delete scenario if there is only 1 scenario."
+        class="fa fa-trash"
+        style="color: gray"
+      ></i>
     </div>
   </div>
-  <br>
+  <br />
 
-  <scenario aggregate-state="aggregateState" edit-mode="editMode" tasks="tasks" scenario="scenario">
+  <scenario
+    aggregate-state="aggregateState"
+    edit-mode="editMode"
+    tasks="tasks"
+    scenario="scenario"
+  >
   </scenario>
 </div>
 
