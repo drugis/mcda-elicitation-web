@@ -95,6 +95,7 @@ export default function RankingButtons({
         onClick={handlePreviousClick}
         color="primary"
         variant="contained"
+        disabled={currentStep === 1}
       >
         Previous
       </Button>

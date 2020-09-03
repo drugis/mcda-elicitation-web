@@ -1,4 +1,11 @@
-<!-- First step -->
+<matching-elicitation
+  ng-if="criteria"
+  criteria="criteria"
+  save="save"
+  cancel="cancel"
+></matching-elicitation>
+
+<!-- First step
 <div ng-if="state.step === 1">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
@@ -43,20 +50,43 @@
 <div ng-if="state.step === 2">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
-      <h3>{{state.title}}
+      <h3>
+        {{state.title}}
         <inline-help help-key="matching"></inline-help>
       </h3>
     </div>
     <div class="cell">
-      <preference-elicitation-table criteria="criteria" most-important-criterion-id="state.mostImportantCriterionId"
-        values="state.values"></preference-elicitation-table>
+      <preference-elicitation-table
+        criteria="criteria"
+        most-important-criterion-id="state.mostImportantCriterionId"
+        values="state.values"
+      ></preference-elicitation-table>
     </div>
 
     <div class="grid-x">
       <div class="cell">
-        <button id="cancel-step2-button" class="button" ng-click="cancel()">Cancel</button>
-        <button id="previous-button" class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-        <button id="save-button" class="success button" ng-if="canSave(state)" ng-click="save(state)" ng-disabled="!canProceed(state)">Save</button>
+        <button id="cancel-step2-button" class="button" ng-click="cancel()">
+          Cancel
+        </button>
+        <button
+          id="previous-button"
+          class="button"
+          ng-click="previousStep()"
+          ng-disabled="!canReturn()"
+        >
+          Previous
+        </button>
+        <button
+          id="save-button"
+          class="success button"
+          ng-if="canSave(state)"
+          ng-click="save(state)"
+          ng-disabled="!canProceed(state)"
+        >
+          Save
+        </button>
       </div>
     </div>
   </div>
+  -->
+</div>

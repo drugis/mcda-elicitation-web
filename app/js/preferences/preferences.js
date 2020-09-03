@@ -31,6 +31,7 @@ define([
   './willingnessToTradeOffChartDirective',
   './willingnessToTradeOffDirective',
   '../../ts/Elicitation/RankingElicitation/RankingElicitationWrapper',
+  '../../ts/Elicitation/MatchingElicitation/MatchingElicitationWrapper',
 
   '../workspace/workspace',
   '../results/results'
@@ -64,7 +65,8 @@ define([
   preferenceElicitationTableDirective,
   willingnessToTradeOffChartDirective,
   willingnessToTradeOffDirective,
-  RankingElicitation
+  RankingElicitation,
+  MatchingElicitation
 ) {
   return angular
     .module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
@@ -109,6 +111,14 @@ define([
     .component(
       'rankingElicitation',
       react2angular.react2angular(RankingElicitation.default, [
+        'criteria',
+        'cancel',
+        'save'
+      ])
+    )
+    .component(
+      'matchingElicitation',
+      react2angular.react2angular(MatchingElicitation.default, [
         'criteria',
         'cancel',
         'save'

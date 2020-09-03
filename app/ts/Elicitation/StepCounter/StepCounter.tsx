@@ -13,7 +13,7 @@ export default function StepCounter() {
     } else if (elicitationMethod === 'precise') {
       return 'of 3';
     } else if (elicitationMethod === 'matching') {
-      return `of ${criteria.size + 1}`;
+      return `of ${criteria.size}`;
     } else if (elicitationMethod === 'choice') {
       return '';
     } else {

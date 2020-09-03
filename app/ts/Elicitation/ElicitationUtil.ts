@@ -1,5 +1,3 @@
-import significantDigits from '../ManualInput/Util/significantDigits';
-import IElicitationCriterion from './Interface/IElicitationCriterion';
 // import IChoiceBasedMatchingState from '../Interface/IChoiceBasedMatchingState';
 // import ICriterion from '../Interface/ICriterion';
 // import IFinishedSurvey from '../Interface/IFinishedSurvey';
@@ -8,6 +6,45 @@ import IElicitationCriterion from './Interface/IElicitationCriterion';
 // import ISurveyPreciseSwingAnswer from '../Interface/ISurveyPreciseSwingAnswer';
 // import ISurveyRankingAnswer from '../Interface/ISurveyRankingAnswer';
 // import significantDigits from '../util/significantDigits';
+import _ from 'lodash';
+import significantDigits from '../ManualInput/Util/significantDigits';
+import IElicitationCriterion from './Interface/IElicitationCriterion';
+import IInputCriterion from './Interface/IInputCriterion';
+
+export function buildElicitationCriteria(
+  input: IInputCriterion[]
+): Map<string, IElicitationCriterion> {
+  return new Map(
+    _.map(input, (criterion: IInputCriterion) => {
+      const elicitationCriterion: IElicitationCriterion = {
+        mcdaId: criterion.id,
+        title: criterion.title,
+        scales: [criterion.worst, criterion.best],
+        unitOfMeasurement: criterion.dataSources[0].unitOfMeasurement.label,
+        pvfDirection: criterion.dataSources[0].pvf.direction
+      };
+      return [criterion.id, elicitationCriterion];
+    })
+  );
+}
+
+export function buildElicitationCriteriaWithImportances(
+  input: IInputCriterion[]
+): Map<string, IElicitationCriterion> {
+  return new Map(
+    _.map(input, (criterion: IInputCriterion) => {
+      const elicitationCriterion: IElicitationCriterion = {
+        mcdaId: criterion.id,
+        title: criterion.title,
+        scales: [criterion.worst, criterion.best],
+        unitOfMeasurement: criterion.dataSources[0].unitOfMeasurement.label,
+        pvfDirection: criterion.dataSources[0].pvf.direction,
+        importance: 100
+      };
+      return [criterion.id, elicitationCriterion];
+    })
+  );
+}
 
 // type Answer = ISurveyRankingAnswer | ISurveyPreciseSwingAnswer;
 
