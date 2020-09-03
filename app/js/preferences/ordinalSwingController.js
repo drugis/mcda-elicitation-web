@@ -83,10 +83,10 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
       });
     }
 
-    function save(state) {
-      var nextState = standardize(state);
+    function save(prefs) {
+      // var nextState = standardize(state);
       const newProblem = _.extend({}, $scope.problem, {
-        preferences: nextState.prefs
+        preferences: prefs
       });
       PreferencesService.getWeights(newProblem).then((result) => {
         currentScenario.state = _.extend({}, currentScenario.state, {
