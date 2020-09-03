@@ -51,11 +51,12 @@ export default function EditScenarioTitleButton() {
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
-            <Grid item xs={6}>
+            <Grid item xs={9}>
               <TextField
                 id="new-scenario-title"
                 value={title}
                 onChange={titleChanged}
+                fullWidth
               />
             </Grid>
           </Grid>
@@ -63,7 +64,7 @@ export default function EditScenarioTitleButton() {
         <DialogActions>
           <Button
             id="edit-scenario-title-button"
-            variant="outlined"
+            variant="contained"
             color="primary"
             onClick={handleEditButtonClick}
           >

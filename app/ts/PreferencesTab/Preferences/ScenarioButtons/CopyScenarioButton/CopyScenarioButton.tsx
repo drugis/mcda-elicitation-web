@@ -1,10 +1,10 @@
-import {TextField} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import FileCopy from '@material-ui/icons/FileCopy';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
@@ -39,7 +39,7 @@ export default function CopyScenarioButton() {
         <IconButton onClick={openDialog}>
           <FileCopy color="primary" />
         </IconButton>
-      </Tooltip>{' '}
+      </Tooltip>
       <Dialog
         open={isDialogOpen}
         onClose={closeDialog}
@@ -51,12 +51,13 @@ export default function CopyScenarioButton() {
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={9}>
               <TextField
-                title="new title"
+                label="new title"
                 id="new-scenario-title"
                 value={title}
                 onChange={titleChanged}
+                fullWidth
               ></TextField>
             </Grid>
           </Grid>

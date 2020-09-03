@@ -7,4 +7,5 @@ export default interface IPreferencesContext {
   updateScenario: (newScenario: IScenario) => void;
   deleteScenario: (id: string) => void;
   copyScenario: (newTitle: string) => void;
+  addScenario: (newTitle: string) => void;
 }

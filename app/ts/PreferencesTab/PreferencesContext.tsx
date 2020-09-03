@@ -1,7 +1,7 @@
 import IScenario from '@shared/interface/Scenario/IScenario';
 import React, {createContext, useState, useContext, useEffect} from 'react';
 import IPreferencesContext from './IPreferencesContext';
-import _, {values} from 'lodash';
+import _ from 'lodash';
 import Axios, {AxiosResponse} from 'axios';
 import {ErrorContext} from '../Error/ErrorContext';
 import IError from '@shared/interface/IError';
@@ -62,7 +62,8 @@ export function PreferencesContextProviderComponent({
     const scenarioCommand: IScenarioCommand = {
       title: newTitle,
       state: _.cloneDeep(currentScenario.state),
-      subproblemId: subproblemId
+      subproblemId: subproblemId,
+      workspaceId: workspaceId
     };
     Axios.post(
       `/workspaces/${workspaceId}/problems/${subproblemId}/scenarios`,
@@ -78,13 +79,14 @@ export function PreferencesContextProviderComponent({
       .catch(errorCallback);
   }
 
-  function newScenario(newTitle: string){
+  function addScenario(newTitle: string) {
     const scenarioCommand: IScenarioCommand = {
       title: newTitle,
-      state: {prefs:[],problem: {criteria: {}}},
-      subproblemId: subproblemId
+      state: {prefs: [], problem: {criteria: {}}},
+      subproblemId: subproblemId,
+      workspaceId: workspaceId
     };
-     Axios.post(
+    Axios.post(
       `/workspaces/${workspaceId}/problems/${subproblemId}/scenarios`,
       scenarioCommand
     )
@@ -96,7 +98,6 @@ export function PreferencesContextProviderComponent({
         setScenarios({...contextScenarios, ...scenarioToAdd});
       })
       .catch(errorCallback);
-  }
   }
 
   function errorCallback(error: IError) {
@@ -111,7 +112,8 @@ export function PreferencesContextProviderComponent({
         setCurrentScenario,
         updateScenario,
         deleteScenario,
-        copyScenario
+        copyScenario,
+        addScenario
       }}
     >
       {children}
