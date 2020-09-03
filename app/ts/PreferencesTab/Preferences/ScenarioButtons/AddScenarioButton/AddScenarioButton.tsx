@@ -58,6 +58,7 @@ export default function AddScenarioButton() {
                 value={title}
                 onChange={titleChanged}
                 fullWidth
+                variant="outlined"
               ></TextField>
             </Grid>
           </Grid>

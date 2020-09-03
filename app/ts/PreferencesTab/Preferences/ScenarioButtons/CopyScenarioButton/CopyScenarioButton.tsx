@@ -58,6 +58,7 @@ export default function CopyScenarioButton() {
                 value={title}
                 onChange={titleChanged}
                 fullWidth
+                variant="outlined"
               ></TextField>
             </Grid>
           </Grid>

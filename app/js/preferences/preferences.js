@@ -72,7 +72,9 @@ define([
       'preferences',
       react2angular.react2angular(PreferencesTab.default, [
         'scenarios',
-        'workspaceId'
+        'currentScenarioId',
+        'workspaceId',
+        'problem'
       ])
     )
 

@@ -6,6 +6,7 @@ import Axios, {AxiosResponse} from 'axios';
 import {ErrorContext} from '../Error/ErrorContext';
 import IError from '@shared/interface/IError';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
+import IProblem from '@shared/interface/Problem/IProblem';
 export const PreferencesContext = createContext<IPreferencesContext>(
   {} as IPreferencesContext
 );
@@ -13,11 +14,15 @@ export const PreferencesContext = createContext<IPreferencesContext>(
 export function PreferencesContextProviderComponent({
   children,
   scenarios,
-  workspaceId
+  currentScenarioId,
+  workspaceId,
+  problem
 }: {
   children: any;
   scenarios: IScenario[];
+  currentScenarioId: string;
   workspaceId: string;
+  problem: IProblem;
 }) {
   const {setError} = useContext(ErrorContext);
   const [contextScenarios, setScenarios] = useState<Record<string, IScenario>>(
@@ -25,7 +30,7 @@ export function PreferencesContextProviderComponent({
   );
 
   const [currentScenario, setCurrentScenario] = useState<IScenario>(
-    scenarios[0] // TODO: take the one who's id is in the url instead
+    _.find(contextScenarios, ['id', currentScenarioId]) // TODO: take the one who's id is in the url instead
   );
   const subproblemId = currentScenario.subproblemId;
 
@@ -109,6 +114,7 @@ export function PreferencesContextProviderComponent({
       value={{
         scenarios: contextScenarios,
         currentScenario,
+        problem,
         setCurrentScenario,
         updateScenario,
         deleteScenario,
