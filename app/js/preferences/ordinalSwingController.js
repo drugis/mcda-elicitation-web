@@ -90,7 +90,7 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
       });
       PreferencesService.getWeights(newProblem).then((result) => {
         currentScenario.state = _.extend({}, currentScenario.state, {
-          prefs: nextState.prefs,
+          prefs: prefs,
           weights: result
         });
         currentScenario.$save($stateParams, function () {
