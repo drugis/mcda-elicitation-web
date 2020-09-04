@@ -1,7 +1,10 @@
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {generate} from 'c3';
 import {format, selectAll} from 'd3';
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
+import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
+import IPvf from '@shared/interface/Problem/IPvf';
+import {PreferencesContext} from '../../PreferencesContext';
 
 export default function PartialValueFunctionPlot({
   criterion,
@@ -10,6 +13,7 @@ export default function PartialValueFunctionPlot({
   criterion: IProblemCriterion;
   criterionId: string;
 }) {
+  const {currentScenario} = useContext(PreferencesContext);
   const width = '300px';
   const height = '216px';
 
@@ -65,9 +69,11 @@ export default function PartialValueFunctionPlot({
     };
     generate(settings);
     selectAll('.c3-line').style('stroke-width', '2px');
-  });
+  }, [currentScenario]);
 
-  function getPvfCoordinatesForCriterion(criterion: IProblemCriterion) {
+  function getPvfCoordinatesForCriterion(
+    criterion: IProblemCriterion
+  ): [['x', ...number[]], ['y', 1, ...number[]]] {
     let pvfCoordinates = [];
     const xValues = getXValues(criterion.dataSources[0]);
     pvfCoordinates.push(xValues);
@@ -75,48 +81,51 @@ export default function PartialValueFunctionPlot({
     const yValues = getYValues(criterion);
     pvfCoordinates.push(yValues);
 
-    return pvfCoordinates as [['x', ...number[]], ['y', ...number[]]];
+    return pvfCoordinates as [['x', ...number[]], ['y', 1, ...number[]]];
   }
 
-  function getXValues(dataSource: any) {
-    return [].concat(
+  function getXValues(dataSource: IProblemDataSource) {
+    return [
       'x',
       best(dataSource),
-      intermediateX(dataSource.pvf),
+      ...intermediateX(dataSource.pvf),
       worst(dataSource)
-    );
+    ];
   }
 
-  function getYValues(criterion: any) {
-    return [].concat(
+  function getYValues(criterion: IProblemCriterion) {
+    return [
       criterion.title,
       1,
-      intermediateY(criterion.dataSources[0].pvf),
+      ...intermediateY(criterion.dataSources[0].pvf),
       0
-    );
+    ];
   }
-  function intermediateX(pvf: any) {
+  function intermediateX(pvf: IPvf): number[] {
     return pvf.cutoffs ? pvf.cutoffs : [];
   }
 
-  function intermediateY(pvf: any) {
+  function intermediateY(pvf: IPvf): number[] {
     return pvf.values ? pvf.values : [];
   }
 
-  function best(dataSource: any) {
+  function best(dataSource: IProblemDataSource): number {
     return isIncreasing(dataSource)
       ? dataSource.pvf.range[1]
       : dataSource.pvf.range[0];
   }
 
-  function worst(dataSource: any) {
+  function worst(dataSource: IProblemDataSource): number {
     return isIncreasing(dataSource)
       ? dataSource.pvf.range[0]
       : dataSource.pvf.range[1];
   }
-  function isIncreasing(dataSource: any) {
+  function isIncreasing(dataSource: IProblemDataSource): boolean {
     return dataSource.pvf.direction === 'increasing';
   }
 
-  return <div id={`pvfplot-${criterionId}`} />;
+  return (
+    // <div style={{width: width, height: height}} id={`pvfplot-${criterionId}`} />
+    <div id={`pvfplot-${criterionId}`} />
+  );
 }

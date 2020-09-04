@@ -1,5 +1,5 @@
-import IScenarioPVF from './IScenarioPVF';
+import IPvf from '../Problem/IPvf';
 
 export default interface IScenarioCriterion {
-  dataSources: [IScenarioPVF];
+  dataSources: [{pvf: IPvf}];
 }
