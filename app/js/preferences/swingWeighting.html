@@ -1,8 +1,16 @@
+<precise-swing-elicitation
+  ng-if="criteria && isPrecise"
+  criteria="criteria"
+  save="save"
+  cancel="cancel"
+></precise-swing-elicitation>
+
 <!-- First step -->
-<div ng-if="state.step === 1">
+<div ng-if="state.step === 1 && isImprecise">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
-      <h3 id="swing-weighting-title-header">{{state.title}}
+      <h3 id="swing-weighting-title-header">
+        {{state.title}}
         <inline-help help-key="swing-weighting"></inline-help>
       </h3>
     </div>
@@ -12,27 +20,43 @@
     <div class="cell">
       <ul class="inline-list">
         <li ng-repeat="criterion in criteria">
-          {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best | number) : (criterion.worst | number) }}
+          {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best |
+          number) : (criterion.worst | number) }}
           {{getUnitOfMeasurement(criterion)}}
         </li>
       </ul>
     </div>
-    <div class="cell">Which of the following improvements is most important?</div>
+    <div class="cell">
+      Which of the following improvements is most important?
+    </div>
     <div class="cell" ng-repeat="criterion in criteria">
       <label>
-        <input id="swing-option-{{ $index }}" type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
-        {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{criterion.worst |
-        number}}
-        {{getUnitOfMeasurement(criterion)}} to {{criterion.best | number}}
-        {{getUnitOfMeasurement(criterion)}}
+        <input
+          id="swing-option-{{ $index }}"
+          type="radio"
+          ng-model="state.mostImportantCriterionId"
+          value="{{criterion.id}}"
+        />
+        {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from
+        {{criterion.worst | number}} {{getUnitOfMeasurement(criterion)}} to
+        {{criterion.best | number}} {{getUnitOfMeasurement(criterion)}}
       </label>
     </div>
   </div>
   <div class="grid-x">
     <div class="cell">
-      <button id="cancel-step1-button" class="button" ng-click="cancel()">Cancel</button>
+      <button id="cancel-step1-button" class="button" ng-click="cancel()">
+        Cancel
+      </button>
       <button class="button" ng-disabled="true">Previous</button>
-      <button id="next-button" class="button" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
+      <button
+        id="next-button"
+        class="button"
+        ng-click="nextStep(state)"
+        ng-disabled="!canProceed(state)"
+      >
+        Next
+      </button>
     </div>
     <div class="cell alert" ng-if="!canProceed(state)">
       Cannot proceed because the most important improvement has not been chosen.
@@ -40,73 +64,112 @@
   </div>
 </div>
 <!-- Second step -->
-<div ng-if="state.step === 2">
+<div ng-if="state.step === 2 && isImprecise"">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
-      <h3>{{state.title}}
+      <h3>
+        {{state.title}}
         <inline-help help-key="swing-weighting"></inline-help>
       </h3>
     </div>
     <div class="cell">
       <table>
         <thead>
-          <th>Criterion
+          <th>
+            Criterion
             <inline-help help-key="criterion"></inline-help>
           </th>
           <th>Description</th>
-          <th>Unit
+          <th>
+            Unit
             <inline-help help-key="criterion-unit"></inline-help>
           </th>
           <th>Worst</th>
           <th>Best</th>
-          <th>
-            Importance <inline-help help-key="importance"></inline-help>
-          </th>
+          <th>Importance <inline-help help-key="importance"></inline-help></th>
         </thead>
         <tbody>
           <tr ng-repeat="criterion in criteria">
             <td>{{criterion.title}}</td>
             <td>{{criterion.description}}</td>
             <td>{{getUnitOfMeasurement(criterion)}}</td>
-            <td class="text-centered">{{pvf.worst(criterion.dataSources[0]) | number}}</td>
-            <td class="text-centered">{{pvf.best(criterion.dataSources[0]) | number}}</td>
-            <td class="text-centered" ng-if="criterion.id !== state.mostImportantCriterionId">{{isPrecise ? state.values[criterion.id] : (isImprecise ? state.values[criterion.id].low + '-' + state.values[criterion.id].high
-              : 'error')}}%</td>
-            <td class="text-centered" ng-if="criterion.id === state.mostImportantCriterionId">100%</td>
+            <td class="text-centered">
+              {{pvf.worst(criterion.dataSources[0]) | number}}
+            </td>
+            <td class="text-centered">
+              {{pvf.best(criterion.dataSources[0]) | number}}
+            </td>
+            <td
+              class="text-centered"
+              ng-if="criterion.id !== state.mostImportantCriterionId"
+            >
+              {{isPrecise ? state.values[criterion.id] : (isImprecise ?
+              state.values[criterion.id].low + '-' +
+              state.values[criterion.id].high : 'error')}}%
+            </td>
+            <td
+              class="text-centered"
+              ng-if="criterion.id === state.mostImportantCriterionId"
+            >
+              100%
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="cell">
-      You've indicated that improving {{state.problem.criteria[state.mostImportantCriterionId].title}} from
+      You've indicated that improving
+      {{state.problem.criteria[state.mostImportantCriterionId].title}} from
       {{pvf.worst(state.problem.criteria[state.mostImportantCriterionId].dataSources[0])}}
-      {{getUnitOfMeasurement(state.problem.criteria[state.mostImportantCriterionId])}} to
+      {{getUnitOfMeasurement(state.problem.criteria[state.mostImportantCriterionId])}}
+      to
       {{pvf.best(state.problem.criteria[state.mostImportantCriterionId].dataSources[0])}}
-      {{getUnitOfMeasurement(state.problem.criteria[state.mostImportantCriterionId])}} is the most important (i.e. it
-      has 100%
-      importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement
-      using the sliders below.
+      {{getUnitOfMeasurement(state.problem.criteria[state.mostImportantCriterionId])}}
+      is the most important (i.e. it has 100% importance). Now indicate the
+      relative importance (in %) to this improvement of each other criterion's
+      improvement using the sliders below.
     </div>
     <div class="cell">
-      <br>
+      <br />
       <table>
         <tbody>
           <tr ng-repeat="criterion in criteria">
             <td>
-              {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from
-              {{pvf.worst(criterion.dataSources[0]) | number}} {{getUnitOfMeasurement(criterion)}}
-              to {{pvf.best(criterion.dataSources[0]) | number}} {{getUnitOfMeasurement(criterion)}}
+              {{criterion.dataSources[0].pvf.direction}} {{criterion.title}}
+              from {{pvf.worst(criterion.dataSources[0]) | number}}
+              {{getUnitOfMeasurement(criterion)}} to
+              {{pvf.best(criterion.dataSources[0]) | number}}
+              {{getUnitOfMeasurement(criterion)}}
             </td>
-            <td ng-if="state.mostImportantCriterionId === criterion.id" style="width:50%">
-              <rzslider id="{{ criterion.id }}-slider" rz-slider-model="state.mostImportantWeight" rz-slider-options="state.sliderOptionsDisabled">
+            <td
+              ng-if="state.mostImportantCriterionId === criterion.id"
+              style="width: 50%"
+            >
+              <rzslider
+                id="{{ criterion.id }}-slider"
+                rz-slider-model="state.mostImportantWeight"
+                rz-slider-options="state.sliderOptionsDisabled"
+              >
               </rzslider>
             </td>
-            <td ng-if="state.mostImportantCriterionId !== criterion.id && isPrecise" style="width:50%">
-              <rzslider rz-slider-model="state.values[criterion.id]" rz-slider-options="state.sliderOptions"></rzslider>
+            <td
+              ng-if="state.mostImportantCriterionId !== criterion.id && isPrecise"
+              style="width: 50%"
+            >
+              <rzslider
+                rz-slider-model="state.values[criterion.id]"
+                rz-slider-options="state.sliderOptions"
+              ></rzslider>
             </td>
-            <td ng-if="state.mostImportantCriterionId !== criterion.id && isImprecise" style="width:50%">
-              <rzslider rz-slider-model="state.values[criterion.id].low"
-                rz-slider-high="state.values[criterion.id].high" rz-slider-options="state.sliderOptions"></rzslider>
+            <td
+              ng-if="state.mostImportantCriterionId !== criterion.id && isImprecise"
+              style="width: 50%"
+            >
+              <rzslider
+                rz-slider-model="state.values[criterion.id].low"
+                rz-slider-high="state.values[criterion.id].high"
+                rz-slider-options="state.sliderOptions"
+              ></rzslider>
             </td>
           </tr>
         </tbody>
@@ -114,10 +177,27 @@
     </div>
     <div class="grid-x">
       <div class="cell">
-        <button id="cancel-step2-button" class="button" ng-click="cancel()">Cancel</button>
-        <button id="previous-button" class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-        <button id="save-button" class="success button" ng-if="canSave(state)" ng-click="save(state)"
-          ng-disabled="!canProceed(state)">Save</button>
+        <button id="cancel-step2-button" class="button" ng-click="cancel()">
+          Cancel
+        </button>
+        <button
+          id="previous-button"
+          class="button"
+          ng-click="previousStep()"
+          ng-disabled="!canReturn()"
+        >
+          Previous
+        </button>
+        <button
+          id="save-button"
+          class="success button"
+          ng-if="canSave(state)"
+          ng-click="saveImprecise(state)"
+          ng-disabled="!canProceed(state)"
+        >
+          Save
+        </button>
       </div>
     </div>
   </div>
+</div>

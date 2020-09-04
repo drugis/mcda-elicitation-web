@@ -1,8 +1,10 @@
 import Slider from '@material-ui/core/Slider';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
+import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCriterion';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
-import {MatchingElicitationContext} from '../../../MatchingElicitationContext';
+import {ElicitationContext} from '../../../../ElicitationContext';
 
 export default function MatchingSlider({
   currentCriterionId
@@ -11,15 +13,18 @@ export default function MatchingSlider({
 }) {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const {
+    criteria,
     currentStep,
     setImportance,
     mostImportantCriterion,
     setIsNextDisabled
-  } = useContext(MatchingElicitationContext);
+  } = useContext(ElicitationContext);
 
   useEffect(() => {
     setSliderValue(getBest(mostImportantCriterion));
   }, [currentStep, mostImportantCriterion]);
+
+  const stepSize = determineStepSize();
 
   function getScales(): [number, number] {
     if (mostImportantCriterion.scales) {
@@ -46,6 +51,13 @@ export default function MatchingSlider({
     return importance;
   }
 
+  function determineStepSize(): number {
+    const criterion: IElicitationCriterion = criteria.get(currentCriterionId);
+    const interval = _.max(criterion.scales) - _.min(criterion.scales);
+    const magnitude = Math.floor(Math.log10(interval));
+    return Math.pow(10, magnitude - 1);
+  }
+
   return (
     <>
       {significantDigits(sliderValue)}
@@ -54,7 +66,7 @@ export default function MatchingSlider({
         min={Math.min(...getScales())}
         max={Math.max(...getScales())}
         onChange={handleSliderChanged}
-        step={0.1} //fixme
+        step={stepSize}
       />
     </>
   );

@@ -8,12 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {MatchingElicitationContext} from '../../MatchingElicitationContext';
+import {ElicitationContext} from '../../../ElicitationContext';
 import MatchingSlider from './MatchingSlider/MatchingSlider';
 
 export default function MatchingSetImportance() {
   const {mostImportantCriterion, criteria, currentStep} = useContext(
-    MatchingElicitationContext
+    ElicitationContext
   );
 
   const currentCriterion = getCurrentCriterion();

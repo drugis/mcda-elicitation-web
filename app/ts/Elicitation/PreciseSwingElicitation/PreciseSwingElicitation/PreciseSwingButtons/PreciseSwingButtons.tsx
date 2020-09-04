@@ -1,33 +1,35 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import {ElicitationContext} from 'app/ts/Elicitation/ElicitationContext';
 import {
   buildPreciseSwingAnsers,
   buildPreciseSwingPreferences
 } from 'app/ts/Elicitation/ElicitationUtil';
 import IExactSwingRatio from 'app/ts/Elicitation/Interface/IExactSwingRatio';
+import IPreciseSwingAnswer from 'app/ts/Elicitation/Interface/IPreciseSwingAnswer';
 import React, {useContext} from 'react';
-import {ElicitationContext} from '../../../ElicitationContext';
-import IPreciseSwingAnswer from '../../../Interface/IPreciseSwingAnswer';
 
-export default function MatchingButtons() {
+export default function PreciseSwingButtons() {
   const {
     mostImportantCriterion,
-    isNextDisabled,
-    setIsNextDisabled,
     criteria,
-    setImportance,
     currentStep,
     setCurrentStep,
     cancel,
-    save
+    save,
+    isNextDisabled
   } = useContext(ElicitationContext);
 
   function handleNextButtonClick() {
     if (isLastStep()) {
       finishElicitation();
     } else {
-      matchingNext();
+      setCurrentStep(currentStep + 1);
     }
+  }
+
+  function handlePreviousClick() {
+    setCurrentStep(currentStep - 1);
   }
 
   function finishElicitation() {
@@ -39,33 +41,9 @@ export default function MatchingButtons() {
     save(preferences);
   }
 
-  function matchingNext() {
-    setCurrentStep(currentStep + 1);
-
-    if (currentStep === 1) {
-      setImportance(mostImportantCriterion.mcdaId, 100);
-    }
-  }
-
   function isLastStep() {
-    return currentStep === criteria.size;
+    return currentStep === 2;
   }
-
-  function handlePreviousClick() {
-    setIsNextDisabled(false);
-    setCurrentStep(currentStep - 1);
-  }
-
-  //FIXME: tooltips cause errors?
-  // function getTooltipMessage() {
-  //   if (currentStep === 1 && isNextDisabled) {
-  //     return 'Please select a criterion to proceed';
-  //   } else if (isNextDisabled) {
-  //     return 'Alternative A and Alternative B values must differ';
-  //   } else {
-  //     return '';
-  //   }
-  // }
 
   return (
     <ButtonGroup>
@@ -82,7 +60,6 @@ export default function MatchingButtons() {
         onClick={handlePreviousClick}
         color="primary"
         variant="contained"
-        disabled={currentStep === 1}
       >
         Previous
       </Button>

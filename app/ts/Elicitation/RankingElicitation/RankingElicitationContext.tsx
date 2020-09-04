@@ -40,7 +40,6 @@ export function RankingElicitationContextProviderComponent({
       value={{
         criteria: criteria,
         currentStep: currentStep,
-        elicitationMethod: 'ranking',
         cancel: cancel,
         setCurrentStep: setCurrentStep,
         setRanking: setRanking,

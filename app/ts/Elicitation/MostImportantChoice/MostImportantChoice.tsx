@@ -4,8 +4,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import React, {ChangeEvent, useContext} from 'react';
+import {ElicitationContext} from '../ElicitationContext';
 import {getBest, getWorst} from '../ElicitationUtil';
-import {MatchingElicitationContext} from '../MatchingElicitation/MatchingElicitationContext';
 
 export default function MostImportantChoice() {
   const {
@@ -13,7 +13,7 @@ export default function MostImportantChoice() {
     setMostImportantCriterion,
     setIsNextDisabled,
     criteria
-  } = useContext(MatchingElicitationContext);
+  } = useContext(ElicitationContext);
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
     setMostImportantCriterion(criteria.get(event.target.value)!);

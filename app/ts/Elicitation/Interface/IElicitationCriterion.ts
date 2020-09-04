@@ -1,4 +1,4 @@
-import {PVFDirection} from '../Type/PVFDirection';
+import {PVFDirection} from './IPVF';
 
 export default interface IElicitationCriterion {
   mcdaId: string;
@@ -8,5 +8,5 @@ export default interface IElicitationCriterion {
   importance?: number;
   unitOfMeasurement: string;
   pvfDirection?: PVFDirection;
-  description?: string;
+  description: string;
 }

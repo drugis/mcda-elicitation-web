@@ -4,9 +4,9 @@ import React from 'react';
 import {ElicitationContextProviderComponent} from '../ElicitationContext';
 import IExactSwingRatio from '../Interface/IExactSwingRatio';
 import IInputCriterion from '../Interface/IInputCriterion';
-import MatchingElicitation from './MatchingElicitation/MatchingElicitation';
+import PreciseSwingWeighting from './PreciseSwingElicitation/PreciseSwingWeighting';
 
-export default function MatchingElicitationWrapper({
+export default function PreciseSwingElicitationWrapper({
   criteria,
   cancel,
   save
@@ -22,7 +22,7 @@ export default function MatchingElicitationWrapper({
       save={save}
     >
       <Grid container justify="center" component={Box} mt={2}>
-        <MatchingElicitation />
+        <PreciseSwingWeighting />
       </Grid>
     </ElicitationContextProviderComponent>
   );

@@ -1,6 +1,6 @@
 import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCriterion';
 import {getCriterionIdForRank, getUpdatedCriteria} from './RankingUtils';
-
+//FIXME: cleanup & tests
 describe('RankingUtil', () => {
   // it('buildCriteria should return a map of criteria', () => {
   //   const effectsTableRows: IRow[] = [
@@ -48,7 +48,8 @@ describe('RankingUtil', () => {
           scales: [0, 1],
           unitOfMeasurement: '%',
           databaseId: 1,
-          ordering: 1
+          ordering: 1,
+          description: 'desc'
         }
       ],
       [
@@ -60,7 +61,8 @@ describe('RankingUtil', () => {
           unitOfMeasurement: '%',
           databaseId: 1,
           rank: 1,
-          ordering: 2
+          ordering: 2,
+          description: 'desc'
         }
       ],
       [
@@ -72,7 +74,8 @@ describe('RankingUtil', () => {
           unitOfMeasurement: '%',
           databaseId: 1,
           rank: 0,
-          ordering: 1
+          ordering: 1,
+          description: 'desc'
         }
       ]
     ]);
@@ -92,7 +95,8 @@ describe('RankingUtil', () => {
           scales: [0, 1],
           unitOfMeasurement: '%',
           databaseId: 1,
-          ordering: 1
+          ordering: 1,
+          description: 'desc'
         }
       ],
       [
@@ -103,7 +107,8 @@ describe('RankingUtil', () => {
           scales: [0, 1],
           unitOfMeasurement: '%',
           databaseId: 2,
-          ordering: 2
+          ordering: 2,
+          description: 'desc'
         }
       ]
     ]);
@@ -120,7 +125,8 @@ describe('RankingUtil', () => {
           unitOfMeasurement: '%',
           databaseId: 1,
           rank: 1,
-          ordering: 1
+          ordering: 1,
+          description: 'desc'
         }
       ],
       [
@@ -132,7 +138,8 @@ describe('RankingUtil', () => {
           unitOfMeasurement: '%',
           databaseId: 2,
           rank: 2,
-          ordering: 2
+          ordering: 2,
+          description: 'desc'
         }
       ]
     ]);

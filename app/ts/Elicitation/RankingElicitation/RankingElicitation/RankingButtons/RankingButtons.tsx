@@ -30,14 +30,13 @@ export default function RankingButtons({
 
   function handleNextButtonClick() {
     if (isLastStep()) {
-      finishSurvey();
+      finishElicitation();
     } else {
       rankNext();
     }
   }
 
-  function finishSurvey() {
-    // setIsSurveyDone(true);
+  function finishElicitation() {
     const updatedCriteria = getUpdatedCriteria(
       criteria,
       selectedCriterionId,

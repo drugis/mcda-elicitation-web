@@ -36,6 +36,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
       // functions
       scope.canSave = canSaveArg || canSave;
       scope.save = save;
+      scope.saveImprecise = saveImprecise;
       scope.cancel = cancel;
 
       // init
@@ -49,6 +50,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
         var state = WorkspaceSettingsService.usePercentage()
           ? scope.aggregateState.percentified
           : scope.aggregateState.dePercentified;
+        $state.problem = state.problem;
         OrderingService.getOrderedCriteriaAndAlternatives(
           state.problem,
           $stateParams
@@ -127,7 +129,24 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
         return state && state.step === 2;
       }
 
-      function save(state) {
+      function save(prefs) {
+        const newProblem = _.extend({}, $state.problem, {
+          preferences: prefs
+        });
+        PreferencesService.getWeights(newProblem).then((result) => {
+          currentScenario.state = {
+            problem: currentScenario.state.problem,
+            prefs: prefs,
+            weights: result
+          };
+          currentScenario.$save($stateParams, function (scenario) {
+            scope.$emit('elicit.resultsAccessible', scenario);
+            $state.go('preferences');
+          });
+        });
+      }
+
+      function saveImprecise(state) {
         var prefs = _(state.values)
           .omit(state.mostImportantCriterionId)
           .map(toBackEnd(state.mostImportantCriterionId))

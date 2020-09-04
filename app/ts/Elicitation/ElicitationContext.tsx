@@ -1,15 +1,16 @@
 import _ from 'lodash';
 import React, {createContext, useState} from 'react';
-import {buildElicitationCriteriaWithImportances} from '../ElicitationUtil';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
-import IInputCriterion from '../Interface/IInputCriterion';
-import IMatchingElicitationContext from './IMatchingElicitationContext';
+import {buildElicitationCriteriaWithImportances} from './ElicitationUtil';
+import IElicitationContext from './IElicitationContext';
+import IElicitationCriterion from './Interface/IElicitationCriterion';
+import IExactSwingRatio from './Interface/IExactSwingRatio';
+import IInputCriterion from './Interface/IInputCriterion';
 
-export const MatchingElicitationContext = createContext<
-  IMatchingElicitationContext
->({} as IMatchingElicitationContext);
+export const ElicitationContext = createContext<IElicitationContext>(
+  {} as IElicitationContext
+);
 
-export function MatchingElicitationContextProviderComponent({
+export function ElicitationContextProviderComponent({
   inputCriteria,
   cancel,
   save,
@@ -17,7 +18,7 @@ export function MatchingElicitationContextProviderComponent({
 }: {
   inputCriteria: IInputCriterion[];
   cancel: () => void;
-  save: (preferences: any) => void;
+  save: (preferences: IExactSwingRatio[]) => void;
   children: any;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -40,11 +41,10 @@ export function MatchingElicitationContextProviderComponent({
   }
 
   return (
-    <MatchingElicitationContext.Provider
+    <ElicitationContext.Provider
       value={{
         criteria: criteria,
         currentStep: currentStep,
-        elicitationMethod: 'matching',
         isNextDisabled: isNextDisabled,
         mostImportantCriterion: mostImportantCriterion,
         cancel: cancel,
@@ -56,6 +56,6 @@ export function MatchingElicitationContextProviderComponent({
       }}
     >
       {children}
-    </MatchingElicitationContext.Provider>
+    </ElicitationContext.Provider>
   );
 }
