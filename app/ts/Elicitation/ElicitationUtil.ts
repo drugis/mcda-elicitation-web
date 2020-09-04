@@ -15,7 +15,10 @@ export function buildElicitationCriteria(
   input: IInputCriterion[]
 ): Map<string, IElicitationCriterion> {
   return new Map(
-    _.map(input, (criterion: IInputCriterion) => {
+    _.map(input, (criterion: IInputCriterion): [
+      string,
+      IElicitationCriterion
+    ] => {
       const elicitationCriterion: IElicitationCriterion = {
         mcdaId: criterion.id,
         title: criterion.title,

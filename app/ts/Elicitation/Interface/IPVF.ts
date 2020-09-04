@@ -1,4 +1,4 @@
-import {PVFDirection} from '../Type/PVFDirection';
+export type PVFDirection = 'increasing' | 'decreasing' | '';
 
 export default interface IPVF {
   direction: PVFDirection;
