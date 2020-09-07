@@ -1,24 +1,20 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {ElicitationContext} from 'app/ts/Elicitation/ElicitationContext';
-import {
-  buildPreciseSwingAnsers,
-  buildPreciseSwingPreferences
-} from 'app/ts/Elicitation/ElicitationUtil';
-import IExactSwingRatio from 'app/ts/Elicitation/Interface/IExactSwingRatio';
-import IPreciseSwingAnswer from 'app/ts/Elicitation/Interface/IPreciseSwingAnswer';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
+import _ from 'lodash';
 import React, {useContext} from 'react';
 
 export default function PreciseSwingButtons() {
   const {
-    mostImportantCriterion,
-    criteria,
     currentStep,
     setCurrentStep,
     cancel,
     save,
-    isNextDisabled
+    isNextDisabled,
+    preferences
   } = useContext(ElicitationContext);
+  const {} = useContext(PreferencesContext);
 
   function handleNextButtonClick() {
     if (isLastStep()) {
@@ -33,12 +29,7 @@ export default function PreciseSwingButtons() {
   }
 
   function finishElicitation() {
-    const answers: IPreciseSwingAnswer[] = buildPreciseSwingAnsers(criteria);
-    const preferences: IExactSwingRatio[] = buildPreciseSwingPreferences(
-      mostImportantCriterion.mcdaId,
-      answers
-    );
-    save(preferences);
+    save(_.toArray(preferences));
   }
 
   function isLastStep() {

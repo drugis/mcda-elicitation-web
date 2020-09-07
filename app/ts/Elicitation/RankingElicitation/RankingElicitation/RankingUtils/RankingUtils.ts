@@ -19,19 +19,19 @@ import {UNRANKED} from '../../../constants';
 // }
 
 export function getCriterionIdForRank(
-  criteria: Map<string, IElicitationCriterion>,
+  criteria: Record<string, IElicitationCriterion>,
   rank: number
 ): string {
-  return [...criteria.values()].find((criterion) => {
+  return _.find(criteria, (criterion) => {
     return criterion.rank === rank;
   })!.mcdaId;
 }
 
 export function getUpdatedCriteria(
-  criteria: Map<string, IElicitationCriterion>,
+  criteria: Record<string, IElicitationCriterion>,
   criterionId: string,
   rankToSet: number
-): Map<string, IElicitationCriterion> {
+): Record<string, IElicitationCriterion> {
   let criteriaCopy = _.cloneDeep(criteria);
   let updatedCriterion = getUpdatedCriterion(
     criteriaCopy,
@@ -39,7 +39,7 @@ export function getUpdatedCriteria(
     rankToSet
   );
 
-  criteriaCopy.set(criterionId, updatedCriterion);
+  criteriaCopy[criterionId] = updatedCriterion;
 
   let lastCriterionToUpdate = getCriterionWithoutRank(criteriaCopy);
 
@@ -49,33 +49,34 @@ export function getUpdatedCriteria(
       lastCriterionToUpdate.mcdaId,
       rankToSet + 1
     );
-    criteriaCopy.set(lastUpdatedCriterion.mcdaId, lastUpdatedCriterion);
+    criteriaCopy[lastUpdatedCriterion.mcdaId] = lastUpdatedCriterion;
   }
   return criteriaCopy;
 }
 
 function getUpdatedCriterion(
-  criteria: Map<string, IElicitationCriterion>,
+  criteria: Record<string, IElicitationCriterion>,
   criterionId: string,
   rankToSet: number
 ) {
   return {
-    ...criteria.get(criterionId)!,
+    ...criteria[criterionId],
     rank: rankToSet
   };
 }
 
-function getCriterionWithoutRank(criteria: Map<string, IElicitationCriterion>) {
-  return [...criteria.values()].find((criterion) => {
+function getCriterionWithoutRank(
+  criteria: Record<string, IElicitationCriterion>
+) {
+  return _.find(criteria, (criterion) => {
     return !criterion.rank || criterion.rank === UNRANKED;
   });
 }
 
 export function buildRankingAnswers(
-  criteria: Map<string, IElicitationCriterion>
+  criteria: Record<string, IElicitationCriterion>
 ): IRankingAnswer[] {
-  const criteriaAsArray = [...criteria.values()];
-  return _.map(criteriaAsArray, (criterion) => {
+  return _.map(criteria, (criterion) => {
     return {
       criterionId: criterion.mcdaId,
       rank: criterion.rank

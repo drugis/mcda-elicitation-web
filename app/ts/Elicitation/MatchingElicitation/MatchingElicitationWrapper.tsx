@@ -4,6 +4,7 @@ import React from 'react';
 import {ElicitationContextProviderComponent} from '../ElicitationContext';
 import IExactSwingRatio from '../Interface/IExactSwingRatio';
 import IInputCriterion from '../Interface/IInputCriterion';
+import {PreferencesContextProviderComponent} from '../PreferencesContext';
 import MatchingElicitation from './MatchingElicitation/MatchingElicitation';
 
 export default function MatchingElicitationWrapper({
@@ -16,14 +17,12 @@ export default function MatchingElicitationWrapper({
   save: (preferences: IExactSwingRatio[]) => void;
 }) {
   return (
-    <ElicitationContextProviderComponent
-      inputCriteria={criteria}
-      cancel={cancel}
-      save={save}
-    >
-      <Grid container justify="center" component={Box} mt={2}>
-        <MatchingElicitation />
-      </Grid>
-    </ElicitationContextProviderComponent>
+    <PreferencesContextProviderComponent inputCriteria={criteria}>
+      <ElicitationContextProviderComponent cancel={cancel} save={save}>
+        <Grid container justify="center" component={Box} mt={2}>
+          <MatchingElicitation />
+        </Grid>
+      </ElicitationContextProviderComponent>
+    </PreferencesContextProviderComponent>
   );
 }

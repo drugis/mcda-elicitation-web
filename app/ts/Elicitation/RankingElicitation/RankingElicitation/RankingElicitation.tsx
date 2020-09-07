@@ -1,6 +1,8 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import _ from 'lodash';
 import React, {ChangeEvent, useContext, useState} from 'react';
+import {PreferencesContext} from '../../PreferencesContext';
 import {RankingElicitationContext} from '../RankingElicitationContext';
 import RankingButtons from './RankingButtons/RankingButtons';
 import RankingChoices from './RankingChoices/RankingChoices';
@@ -8,7 +10,8 @@ import RankingSituation from './RankingSituation/RankingSituation';
 
 export default function RankingElicitation() {
   const [selectedCriterionId, setSelectedCriterionId] = useState('');
-  const {currentStep, criteria} = useContext(RankingElicitationContext);
+  const {currentStep} = useContext(RankingElicitationContext);
+  const {criteria} = useContext(PreferencesContext);
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
     setSelectedCriterionId(event.target.value);
@@ -33,7 +36,7 @@ export default function RankingElicitation() {
       </Grid>
       <Grid item xs={3} container alignItems="center" justify="flex-end">
         <Grid item>
-          Step {currentStep} of {criteria.size - 1}
+          Step {currentStep} of {_.toArray(criteria).length - 1}
         </Grid>
       </Grid>
     </Grid>

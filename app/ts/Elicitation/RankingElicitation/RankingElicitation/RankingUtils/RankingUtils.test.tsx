@@ -39,46 +39,31 @@ describe('RankingUtil', () => {
   // });
 
   it('getCriterionIdForRank should return a criterion with a given rank', () => {
-    const criteria: Map<string, IElicitationCriterion> = new Map([
-      [
-        'critId1',
-        {
-          mcdaId: 'critId1',
-          title: 'crit1',
-          scales: [0, 1],
-          unitOfMeasurement: '%',
-          databaseId: 1,
-          ordering: 1,
-          description: 'desc'
-        }
-      ],
-      [
-        'critId2',
-        {
-          mcdaId: 'critId2',
-          title: 'crit2',
-          scales: [0, 1],
-          unitOfMeasurement: '%',
-          databaseId: 1,
-          rank: 1,
-          ordering: 2,
-          description: 'desc'
-        }
-      ],
-      [
-        'critId3',
-        {
-          mcdaId: 'critId3',
-          title: 'crit3',
-          scales: [0, 1],
-          unitOfMeasurement: '%',
-          databaseId: 1,
-          rank: 0,
-          ordering: 1,
-          description: 'desc'
-        }
-      ]
-    ]);
+    const criteria: Record<string, IElicitationCriterion> = {
+      critId1: {
+        mcdaId: 'critId1',
+        title: 'crit1',
+        scales: [0, 1],
+        unitOfMeasurement: '%',
+        description: 'desc'
+      },
+      critId2: {
+        mcdaId: 'critId2',
+        title: 'crit2',
+        scales: [0, 1],
+        unitOfMeasurement: '%',
+        rank: 1,
+        description: 'desc'
+      },
+      critId3: {
+        mcdaId: 'critId3',
+        title: 'crit3',
+        scales: [0, 1],
+        unitOfMeasurement: '%',
+        rank: 0,
+        description: 'desc'
+      }
+    };
     const rank: number = 1;
     const result = getCriterionIdForRank(criteria, rank);
     const expectedResult = 'critId2';
@@ -86,32 +71,22 @@ describe('RankingUtil', () => {
   });
 
   it('getUpdatedCriteria should set ranks to two criteria and return the updated collection', () => {
-    const criteria: Map<string, IElicitationCriterion> = new Map([
-      [
-        'critId1',
-        {
-          mcdaId: 'critId1',
-          title: 'crit1',
-          scales: [0, 1],
-          unitOfMeasurement: '%',
-          databaseId: 1,
-          ordering: 1,
-          description: 'desc'
-        }
-      ],
-      [
-        'critId2',
-        {
-          mcdaId: 'critId2',
-          title: 'crit2',
-          scales: [0, 1],
-          unitOfMeasurement: '%',
-          databaseId: 2,
-          ordering: 2,
-          description: 'desc'
-        }
-      ]
-    ]);
+    const criteria: Record<string, IElicitationCriterion> = {
+      critId1: {
+        mcdaId: 'critId1',
+        title: 'crit1',
+        scales: [0, 1],
+        unitOfMeasurement: '%',
+        description: 'desc'
+      },
+      critId2: {
+        mcdaId: 'critId2',
+        title: 'crit2',
+        scales: [0, 1],
+        unitOfMeasurement: '%',
+        description: 'desc'
+      }
+    };
     const criterionId = 'critId1';
     const rankToSet = 1;
     const result = getUpdatedCriteria(criteria, criterionId, rankToSet);

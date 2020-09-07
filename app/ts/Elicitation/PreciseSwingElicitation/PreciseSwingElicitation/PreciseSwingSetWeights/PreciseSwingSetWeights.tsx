@@ -1,11 +1,14 @@
 import {Grid} from '@material-ui/core';
 import {ElicitationContext} from 'app/ts/Elicitation/ElicitationContext';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import React, {useContext} from 'react';
 import OverviewTable from './OverviewTable/OverviewTable';
 
 export default function PreciseSwingSetWeights() {
-  const {mostImportantCriterion} = useContext(ElicitationContext);
+  const {mostImportantCriterionId} = useContext(ElicitationContext);
+  const {criteria} = useContext(PreferencesContext);
+  const mostImportantCriterion = criteria[mostImportantCriterionId];
 
   const statement = getStatement();
 

@@ -5,9 +5,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import {UNRANKED} from 'app/ts/Elicitation/constants';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
+import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
-import {RankingElicitationContext} from '../../RankingElicitationContext';
-
 export default function RankingChoices({
   selectedCriterionId,
   handleSelection
@@ -15,8 +15,8 @@ export default function RankingChoices({
   selectedCriterionId: string;
   handleSelection: (event: ChangeEvent<HTMLInputElement>) => void;
 }) {
-  const {criteria} = useContext(RankingElicitationContext);
-  const filteredCriteria = [...criteria.values()].filter((criterion) => {
+  const {criteria} = useContext(PreferencesContext);
+  const filteredCriteria = _.filter(criteria, (criterion) => {
     return !criterion.rank || criterion.rank === UNRANKED;
   });
 

@@ -1,6 +1,7 @@
 import Slider from '@material-ui/core/Slider';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
 import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCriterion';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
@@ -13,16 +14,19 @@ export default function MatchingSlider({
 }) {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const {
-    criteria,
     currentStep,
-    setImportance,
-    mostImportantCriterion,
-    setIsNextDisabled
+    setIsNextDisabled,
+    mostImportantCriterionId,
+    setPreference
   } = useContext(ElicitationContext);
+  const {criteria} = useContext(PreferencesContext);
+  const mostImportantCriterion = criteria[mostImportantCriterionId];
 
   useEffect(() => {
-    setSliderValue(getBest(mostImportantCriterion));
-  }, [currentStep, mostImportantCriterion]);
+    const sliderValue = getBest(mostImportantCriterion);
+    setSliderValue(sliderValue);
+    setPreference(currentCriterionId, getImportance(sliderValue));
+  }, [currentStep, mostImportantCriterionId]);
 
   const stepSize = determineStepSize();
 
@@ -37,7 +41,7 @@ export default function MatchingSlider({
   function handleSliderChanged(event: any, newValue: any) {
     setSliderValue(newValue);
     setIsNextDisabled(newValue === getWorst(mostImportantCriterion));
-    setImportance(currentCriterionId, getImportance(newValue));
+    setPreference(currentCriterionId, getImportance(newValue));
   }
 
   function getImportance(value: number): number {
@@ -52,7 +56,7 @@ export default function MatchingSlider({
   }
 
   function determineStepSize(): number {
-    const criterion: IElicitationCriterion = criteria.get(currentCriterionId);
+    const criterion: IElicitationCriterion = criteria[currentCriterionId];
     const interval = _.max(criterion.scales) - _.min(criterion.scales);
     const magnitude = Math.floor(Math.log10(interval));
     return Math.pow(10, magnitude - 1);

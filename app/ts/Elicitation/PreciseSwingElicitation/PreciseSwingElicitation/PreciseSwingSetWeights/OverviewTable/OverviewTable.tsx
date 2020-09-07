@@ -4,14 +4,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
-import {ElicitationContext} from 'app/ts/Elicitation/ElicitationContext';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import PreciseSwingSlider from './PreciseSwingSlider/PreciseSwingSlider';
 
 export default function OverviewTable() {
-  const {criteria} = useContext(ElicitationContext);
+  const {criteria} = useContext(PreferencesContext);
 
   return (
     <Table size="small">
@@ -25,7 +25,7 @@ export default function OverviewTable() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {_.map([...criteria.values()], (criterion) => {
+        {_.map(criteria, (criterion) => {
           return (
             <TableRow key={criterion.mcdaId}>
               <TableCell>

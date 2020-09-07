@@ -3,11 +3,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
 import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCriterion';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
+import _ from 'lodash';
 import React, {useContext} from 'react';
-import {RankingElicitationContext} from '../../RankingElicitationContext';
 
 export default function RankingSituation() {
-  const {criteria} = useContext(RankingElicitationContext);
+  const {criteria} = useContext(PreferencesContext);
 
   function getValueToDisplay(criterion: IElicitationCriterion) {
     return !criterion.rank ? getWorst(criterion) : getBest(criterion);
@@ -19,7 +20,7 @@ export default function RankingSituation() {
         <Typography variant="h6">Given the following situation:</Typography>
       </Grid>
       <Grid item xs={12}>
-        {[...criteria.values()].map((criterion) => {
+        {_.map(criteria, (criterion) => {
           return (
             <ul key={criterion.mcdaId}>
               <li>

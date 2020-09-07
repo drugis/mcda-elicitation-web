@@ -3,6 +3,8 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {UNRANKED} from 'app/ts/Elicitation/constants';
 import IOrdinalRanking from 'app/ts/Elicitation/Interface/IOrdinalRanking';
 import IRankingAnswer from 'app/ts/Elicitation/Interface/IRankingAnswer';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
+import _ from 'lodash';
 import React, {useContext} from 'react';
 import {RankingElicitationContext} from '../../RankingElicitationContext';
 import {
@@ -19,14 +21,10 @@ export default function RankingButtons({
   selectedCriterionId: string;
   setSelectedCriterionId: (criterionId: string) => void;
 }) {
-  const {
-    cancel,
-    currentStep,
-    criteria,
-    setRanking,
-    setCurrentStep,
-    save
-  } = useContext(RankingElicitationContext);
+  const {cancel, currentStep, setRanking, setCurrentStep, save} = useContext(
+    RankingElicitationContext
+  );
+  const {criteria} = useContext(PreferencesContext);
 
   function handleNextButtonClick() {
     if (isLastStep()) {
@@ -76,7 +74,7 @@ export default function RankingButtons({
   }
 
   function isLastStep(): boolean {
-    return currentStep === criteria.size - 1;
+    return currentStep === _.toArray(criteria).length - 1;
   }
 
   return (

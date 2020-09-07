@@ -8,24 +8,34 @@ export default function PreciseSwingSlider({
 }: {
   criterion: IElicitationCriterion;
 }) {
-  const {setImportance, mostImportantCriterion} = useContext(
+  const {setPreference, mostImportantCriterionId, preferences} = useContext(
     ElicitationContext
   );
 
   function handleSliderChanged(event: any, newValue: any) {
-    setImportance(criterion.mcdaId, newValue);
+    setPreference(criterion.mcdaId, newValue);
+  }
+
+  function buildDisplayValue(): number {
+    if (preferences[criterion.mcdaId] === undefined) {
+      return 100;
+    } else if (preferences[criterion.mcdaId].ratio === 0) {
+      return 0;
+    } else {
+      return Math.round(100 / preferences[criterion.mcdaId].ratio);
+    }
   }
 
   return (
     <>
-      {criterion.importance}
+      {buildDisplayValue()}
       <Slider
-        value={criterion.importance ? criterion.importance : 100}
+        value={buildDisplayValue()}
         min={1}
         max={100}
         onChange={handleSliderChanged}
         step={1}
-        disabled={mostImportantCriterion.mcdaId === criterion.mcdaId}
+        disabled={mostImportantCriterionId === criterion.mcdaId}
       />
     </>
   );

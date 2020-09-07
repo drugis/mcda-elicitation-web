@@ -6,21 +6,24 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../../ElicitationContext';
 import MatchingSlider from './MatchingSlider/MatchingSlider';
 
 export default function MatchingSetImportance() {
-  const {mostImportantCriterion, criteria, currentStep} = useContext(
+  const {mostImportantCriterionId, currentStep} = useContext(
     ElicitationContext
   );
+  const {criteria} = useContext(PreferencesContext);
+  const mostImportantCriterion = criteria[mostImportantCriterionId];
 
   const currentCriterion = getCurrentCriterion();
   const statement = getStatement();
 
   function getCurrentCriterion() {
-    return _.reject([...criteria.values()], (criterion) => {
+    return _.reject(criteria, (criterion) => {
       return criterion.mcdaId === mostImportantCriterion.mcdaId;
     })[currentStep - 2];
   }

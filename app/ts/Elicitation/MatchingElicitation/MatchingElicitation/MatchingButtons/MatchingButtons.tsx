@@ -1,26 +1,22 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import {
-  buildPreciseSwingAnsers,
-  buildPreciseSwingPreferences
-} from 'app/ts/Elicitation/ElicitationUtil';
-import IExactSwingRatio from 'app/ts/Elicitation/Interface/IExactSwingRatio';
+import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
+import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../../ElicitationContext';
-import IPreciseSwingAnswer from '../../../Interface/IPreciseSwingAnswer';
 
 export default function MatchingButtons() {
   const {
-    mostImportantCriterion,
+    mostImportantCriterionId,
     isNextDisabled,
     setIsNextDisabled,
-    criteria,
-    setImportance,
     currentStep,
     setCurrentStep,
     cancel,
-    save
+    save,
+    preferences
   } = useContext(ElicitationContext);
+  const {criteria} = useContext(PreferencesContext);
 
   function handleNextButtonClick() {
     if (isLastStep()) {
@@ -31,24 +27,15 @@ export default function MatchingButtons() {
   }
 
   function finishElicitation() {
-    const answers: IPreciseSwingAnswer[] = buildPreciseSwingAnsers(criteria);
-    const preferences: IExactSwingRatio[] = buildPreciseSwingPreferences(
-      mostImportantCriterion.mcdaId,
-      answers
-    );
-    save(preferences);
+    save(_.toArray(preferences));
   }
 
   function matchingNext() {
     setCurrentStep(currentStep + 1);
-
-    if (currentStep === 1) {
-      setImportance(mostImportantCriterion.mcdaId, 100);
-    }
   }
 
   function isLastStep() {
-    return currentStep === criteria.size;
+    return currentStep === _.toArray(criteria).length;
   }
 
   function handlePreviousClick() {

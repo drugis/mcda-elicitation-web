@@ -3,20 +3,24 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 import {ElicitationContext} from '../ElicitationContext';
 import {getBest, getWorst} from '../ElicitationUtil';
+import {PreferencesContext} from '../PreferencesContext';
 
 export default function MostImportantChoice() {
   const {
-    mostImportantCriterion,
-    setMostImportantCriterion,
+    mostImportantCriterionId,
+    setMostImportantCriterionId,
     setIsNextDisabled,
-    criteria
+    initializePreferences
   } = useContext(ElicitationContext);
+  const {criteria} = useContext(PreferencesContext);
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
-    setMostImportantCriterion(criteria.get(event.target.value)!);
+    setMostImportantCriterionId(event.target.value);
+    initializePreferences(criteria, event.target.value);
     setIsNextDisabled(false);
   }
 
@@ -26,7 +30,7 @@ export default function MostImportantChoice() {
         <Typography variant="h6">Given the following situation:</Typography>
       </Grid>
       <Grid item xs={12}>
-        {[...criteria.values()].map((criterion) => {
+        {_.map(criteria, (criterion) => {
           return (
             <ul key={criterion.mcdaId}>
               <li>
@@ -50,12 +54,10 @@ export default function MostImportantChoice() {
       <Grid item xs={12}>
         <RadioGroup
           name="most-important-criterion-radio"
-          value={
-            mostImportantCriterion.mcdaId ? mostImportantCriterion.mcdaId : ''
-          }
+          value={mostImportantCriterionId ? mostImportantCriterionId : ''}
           onChange={handleSelection}
         >
-          {[...criteria.values()].map((criterion) => {
+          {_.map(criteria, (criterion) => {
             return (
               <label key={criterion.mcdaId}>
                 <Radio key={criterion.mcdaId} value={criterion.mcdaId} />
