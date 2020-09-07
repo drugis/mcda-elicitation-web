@@ -8,6 +8,7 @@ import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
+import {RankingElicitationContext} from '../../RankingElicitationContext';
 export default function RankingChoices({
   selectedCriterionId,
   handleSelection
@@ -16,8 +17,12 @@ export default function RankingChoices({
   handleSelection: (event: ChangeEvent<HTMLInputElement>) => void;
 }) {
   const {criteria} = useContext(PreferencesContext);
+  const {rankings} = useContext(RankingElicitationContext);
   const filteredCriteria = _.filter(criteria, (criterion) => {
-    return !criterion.rank || criterion.rank === UNRANKED;
+    return (
+      !rankings[criterion.mcdaId] ||
+      rankings[criterion.mcdaId].rank === UNRANKED
+    );
   });
 
   return (

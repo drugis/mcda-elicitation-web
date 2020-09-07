@@ -1,6 +1,7 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {UNRANKED} from 'app/ts/Elicitation/constants';
+import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCriterion';
 import IOrdinalRanking from 'app/ts/Elicitation/Interface/IOrdinalRanking';
 import IRankingAnswer from 'app/ts/Elicitation/Interface/IRankingAnswer';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
@@ -9,9 +10,7 @@ import React, {useContext} from 'react';
 import {RankingElicitationContext} from '../../RankingElicitationContext';
 import {
   buildOrdinalPreferences,
-  buildRankingAnswers,
-  getCriterionIdForRank,
-  getUpdatedCriteria
+  getCriterionIdForRank
 } from '../RankingUtils/RankingUtils';
 
 export default function RankingButtons({
@@ -21,9 +20,14 @@ export default function RankingButtons({
   selectedCriterionId: string;
   setSelectedCriterionId: (criterionId: string) => void;
 }) {
-  const {cancel, currentStep, setRanking, setCurrentStep, save} = useContext(
-    RankingElicitationContext
-  );
+  const {
+    cancel,
+    currentStep,
+    setRanking,
+    setCurrentStep,
+    save,
+    rankings
+  } = useContext(RankingElicitationContext);
   const {criteria} = useContext(PreferencesContext);
 
   function handleNextButtonClick() {
@@ -35,16 +39,28 @@ export default function RankingButtons({
   }
 
   function finishElicitation() {
-    const updatedCriteria = getUpdatedCriteria(
+    let finishedRankings = _.cloneDeep(rankings);
+    const secondToLastRanking: IRankingAnswer = {
+      criterionId: selectedCriterionId,
+      rank: getRankToSet()
+    };
+    finishedRankings[selectedCriterionId] = secondToLastRanking;
+    const lastCriterion: IElicitationCriterion = _.find(
       criteria,
-      selectedCriterionId,
-      getRankToSet()
+      (criterion) => {
+        return (
+          finishedRankings[criterion.mcdaId] === undefined ||
+          finishedRankings[criterion.mcdaId].rank === UNRANKED
+        );
+      }
     );
-    const rankingAnswers: IRankingAnswer[] = buildRankingAnswers(
-      updatedCriteria
-    );
+    const lastRanking: IRankingAnswer = {
+      criterionId: lastCriterion.mcdaId,
+      rank: getRankToSet() + 1
+    };
+    finishedRankings[lastCriterion.mcdaId] = lastRanking;
     const preferences: IOrdinalRanking[] = buildOrdinalPreferences(
-      rankingAnswers
+      _.toArray(finishedRankings)
     );
     save(preferences);
   }
