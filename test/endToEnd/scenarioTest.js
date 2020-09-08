@@ -17,17 +17,20 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const title =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const scenarioTitle = 'scenario title';
 
 function beforeEach(browser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 
-  errorService.isErrorBarHidden(browser)
+  errorService
+    .isErrorBarHidden(browser)
     .click('#preferences-tab')
     .pause(50)
     .waitForElementVisible('#partial-value-functions-block');
@@ -35,9 +38,7 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function create(browser) {
@@ -46,7 +47,7 @@ function create(browser) {
     .waitForElementVisible('#create-new-scenario-button:disabled')
     .setValue('#new-scenario-title', 'Default')
     .waitForElementVisible('#create-new-scenario-button:disabled')
-    .waitForElementVisible('#duplicate-title-alert')
+    .assert.containsText('#error-0', 'Duplicate title')
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
@@ -67,8 +68,8 @@ function edit(browser) {
 }
 
 function copy(browser) {
-  browser
-    .assert.containsText('#scenario-selector', 'Default')
+  browser.assert
+    .containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
     .waitForElementVisible('#create-new-scenario-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
@@ -85,10 +86,10 @@ function switchinPreferences(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
     .click('#create-new-scenario-button')
-    .pause(50)
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
-    .click('option[label="Default"]')
+    .click('li.MuiButtonBase-root:nth-child(1)')
     .assert.containsText('#scenario-selector', 'Default');
 }
 

@@ -36,9 +36,9 @@ export default function PartialValueFunctions() {
 
   return (
     <>
-      <Grid container>
+      <Grid container id="partial-value-functions-block">
         <Grid item xs={12}>
-          <h4>Partial Value Functions</h4>
+          <h4 id="partial-value-functions-header">Partial Value Functions</h4>
         </Grid>
         <Grid container item xs={12}>
           {getPartialValueFunctions()}

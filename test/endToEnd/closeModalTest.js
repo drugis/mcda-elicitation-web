@@ -14,26 +14,29 @@ module.exports = {
   'Cancel setting a partial value function': cancelSettingPartialValueFunction,
   'Cancel setting weights via ranking': cancelSettingRankingWeights,
   'Cancel setting weights via matching': cancelSettingMatchingWeights,
-  'Cancel precise swing weighting':  cancelSettingPreciseSwingWeights,
-  'Cancel imprecise swing weighting':  cancelSettingImpreciseSwingWeights,
-  'Cancel editing a scenario':  cancelEditingScenario,
-  'Cancel creating a new scenario':  cancelCreatingScenario,
-  'Cancel copying a scenario':  cancelCopyingScenario,
-  'Cancel editing graph labels':  cancelEditingGraphLabels
+  'Cancel precise swing weighting': cancelSettingPreciseSwingWeights,
+  'Cancel imprecise swing weighting': cancelSettingImpreciseSwingWeights,
+  'Cancel editing a scenario': cancelEditingScenario,
+  'Cancel creating a new scenario': cancelCreatingScenario,
+  'Cancel copying a scenario': cancelCopyingScenario,
+  'Cancel editing graph labels': cancelEditingGraphLabels
 };
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
 
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const title =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const preferenceTabPath = '#preferences-tab';
 const importanceCellPath = '#importance-criterion-0';
 const closeModalButtonPath = '#close-modal-button';
 const cancelStep1Path = '#cancel-step1-button';
+const treatmentRespondersId = 'de14e778-f723-48d4-8f4e-1e589714f4f2';
 
 function cancelAction(browser, paths, expectedValue) {
-  util.delayedClick(browser, paths.tab, paths.actionButton)
+  util
+    .delayedClick(browser, paths.tab, paths.actionButton)
     .click(paths.actionButton)
     .click(paths.cancelButton)
     .assert.containsText(paths.content, expectedValue);
@@ -51,16 +54,15 @@ function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 }
 
 function afterEach(browser) {
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService
-  .deleteFromList(browser, 0)
-  .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function cancelEditingWorkspaceTitle(browser) {
@@ -124,7 +126,8 @@ function cancelSettings(browser) {
 function cancelEditingSubroblemTitle(browser) {
   var actionButtonPath = '#edit-subproblem-button';
   var contentPath = '#subproblem-selector';
-  util.delayedClick(browser, '#problem-definition-tab', actionButtonPath)
+  util
+    .delayedClick(browser, '#problem-definition-tab', actionButtonPath)
     .click(actionButtonPath)
     .clearValue('#subproblem-title-input')
     .click(closeModalButtonPath)
@@ -144,7 +147,7 @@ function cancelCreatingSubproblem(browser) {
 function cancelSettingPartialValueFunction(browser) {
   var paths = {
     tab: preferenceTabPath,
-    actionButton: '#criterion-0-pvf-button',
+    actionButton: `#advanced-pvf-button-${treatmentRespondersId}`,
     cancelButton: '#cancel-button',
     content: '#partial-value-functions-header'
   };
@@ -195,7 +198,8 @@ function cancelEditingScenario(browser) {
   var actionButtonPath = '#edit-scenario-button';
   var cancelButtonPath = closeModalButtonPath;
   var contentPath = '#scenario-selector';
-  util.delayedClick(browser, '#preferences-tab', actionButtonPath)
+  util
+    .delayedClick(browser, '#preferences-tab', actionButtonPath)
     .click(actionButtonPath)
     .clearValue('#new-scenario-title')
     .click(cancelButtonPath)
@@ -228,9 +232,16 @@ function cancelEditingGraphLabels(browser) {
     tab: '#deterministic-tab',
     actionButton: '//*[@id="value-profile-container"]/div[2]/button',
     cancelButton: closeModalButtonPath,
-    content: '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
+    content:
+      '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
   };
-  util.delayedClick(browser, paths.tab, paths.actionButton, util.xpathSelectorType)
+  util
+    .delayedClick(
+      browser,
+      paths.tab,
+      paths.actionButton,
+      util.xpathSelectorType
+    )
     .useXpath()
     .click(paths.actionButton)
     .useCss()

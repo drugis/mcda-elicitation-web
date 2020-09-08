@@ -33,6 +33,7 @@ const DialogTitleWithCross = withStyles(styles)((props: DialogTitleProps) => {
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton
+          id="close-modal-button"
           aria-label="close"
           className={classes.closeButton}
           onClick={onClose}

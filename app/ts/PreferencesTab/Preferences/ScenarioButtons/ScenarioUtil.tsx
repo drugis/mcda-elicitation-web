@@ -34,8 +34,8 @@ export function showErrors(errors: string[]): JSX.Element[] {
   return _.map(errors, (error, index) => {
     return (
       <Grid
+        id={`error-${index}`}
         item
-        container
         xs={12}
         justify="flex-end"
         key={`error-${index}`}

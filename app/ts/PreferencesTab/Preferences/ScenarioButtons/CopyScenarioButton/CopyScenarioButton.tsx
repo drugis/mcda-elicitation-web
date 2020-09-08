@@ -40,7 +40,7 @@ export default function CopyScenarioButton() {
   return (
     <>
       <Tooltip title="Copy current scenario">
-        <IconButton onClick={openDialog}>
+        <IconButton onClick={openDialog} id="copy-scenario-button">
           <FileCopy color="primary" />
         </IconButton>
       </Tooltip>

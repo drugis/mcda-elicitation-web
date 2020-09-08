@@ -40,7 +40,7 @@ export default function AddScenarioButton() {
   return (
     <>
       <Tooltip title="Create clean scenario">
-        <IconButton onClick={openDialog}>
+        <IconButton onClick={openDialog} id="create-scenario-button">
           <Add color="primary" />
         </IconButton>
       </Tooltip>
