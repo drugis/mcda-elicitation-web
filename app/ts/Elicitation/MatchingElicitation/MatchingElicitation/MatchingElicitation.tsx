@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
 import MostImportantChoice from '../../MostImportantChoice/MostImportantChoice';
@@ -25,7 +26,7 @@ export default function MatchingElicitation() {
       </Grid>
       <Grid item xs={3} container alignItems="center" justify="flex-end">
         <Grid item>
-          Step {currentStep} of {criteria.size}
+          Step {currentStep} of {_.toArray(criteria).length}
         </Grid>
       </Grid>
     </Grid>

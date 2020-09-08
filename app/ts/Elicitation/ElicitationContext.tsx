@@ -34,6 +34,7 @@ export function ElicitationContextProviderComponent({
       ratio: 100 / answer
     };
     updatedPreferences[criterionId] = preference;
+    console.log(updatedPreferences);
     setPreferences(updatedPreferences);
   }
 
