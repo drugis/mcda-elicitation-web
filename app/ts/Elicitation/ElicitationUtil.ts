@@ -5,7 +5,7 @@ import IElicitationCriterion from './Interface/IElicitationCriterion';
 import IInputCriterion from './Interface/IInputCriterion';
 import IOrdinalRanking from './Interface/IOrdinalRanking';
 import IRankingAnswer from './Interface/IRankingAnswer';
-//FIXME: tests
+
 export function buildElicitationCriteria(
   input: IInputCriterion[]
 ): Record<string, IElicitationCriterion> {

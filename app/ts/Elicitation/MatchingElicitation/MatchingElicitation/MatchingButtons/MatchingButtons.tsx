@@ -42,17 +42,6 @@ export default function MatchingButtons() {
     setCurrentStep(currentStep - 1);
   }
 
-  //FIXME: tooltips cause errors?
-  // function getTooltipMessage() {
-  //   if (currentStep === 1 && isNextDisabled) {
-  //     return 'Please select a criterion to proceed';
-  //   } else if (isNextDisabled) {
-  //     return 'Alternative A and Alternative B values must differ';
-  //   } else {
-  //     return '';
-  //   }
-  // }
-
   return (
     <ButtonGroup>
       <Button
