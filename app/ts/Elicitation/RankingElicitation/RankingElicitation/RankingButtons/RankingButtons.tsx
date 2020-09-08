@@ -1,17 +1,16 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {UNRANKED} from 'app/ts/Elicitation/constants';
-import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCriterion';
-import IOrdinalRanking from 'app/ts/Elicitation/Interface/IOrdinalRanking';
+import {
+  assignMissingRankings,
+  buildOrdinalPreferences,
+  findCriterionIdForRank
+} from 'app/ts/Elicitation/ElicitationUtil';
 import IRankingAnswer from 'app/ts/Elicitation/Interface/IRankingAnswer';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {RankingElicitationContext} from '../../RankingElicitationContext';
-import {
-  buildOrdinalPreferences,
-  getCriterionIdForRank
-} from '../RankingUtils/RankingUtils';
 
 export default function RankingButtons({
   selectedCriterionId,
@@ -39,40 +38,22 @@ export default function RankingButtons({
   }
 
   function finishElicitation() {
-    let finishedRankings = _.cloneDeep(rankings);
-    const secondToLastRanking: IRankingAnswer = {
-      criterionId: selectedCriterionId,
-      rank: getRankToSet()
-    };
-    finishedRankings[selectedCriterionId] = secondToLastRanking;
-    const lastCriterion: IElicitationCriterion = _.find(
-      criteria,
-      (criterion) => {
-        return (
-          finishedRankings[criterion.mcdaId] === undefined ||
-          finishedRankings[criterion.mcdaId].rank === UNRANKED
-        );
-      }
+    const finishedRankings: Record<
+      string,
+      IRankingAnswer
+    > = assignMissingRankings(
+      rankings,
+      selectedCriterionId,
+      currentStep,
+      criteria
     );
-    const lastRanking: IRankingAnswer = {
-      criterionId: lastCriterion.mcdaId,
-      rank: getRankToSet() + 1
-    };
-    finishedRankings[lastCriterion.mcdaId] = lastRanking;
-    const preferences: IOrdinalRanking[] = buildOrdinalPreferences(
-      _.toArray(finishedRankings)
-    );
-    save(preferences);
+    save(buildOrdinalPreferences(_.toArray(finishedRankings)));
   }
 
   function rankNext() {
-    setRanking(selectedCriterionId, getRankToSet());
+    setRanking(selectedCriterionId, currentStep);
     setSelectedCriterionId('');
     setCurrentStep(currentStep + 1);
-  }
-
-  function getRankToSet() {
-    return currentStep;
   }
 
   function handlePreviousClick() {
@@ -84,8 +65,8 @@ export default function RankingButtons({
   }
 
   function removeRankFromCriterion() {
-    const lookupRank = getRankToSet() - 1;
-    const criterionId = getCriterionIdForRank(criteria, lookupRank);
+    const lookupRank = currentStep - 1;
+    const criterionId = findCriterionIdForRank(criteria, rankings, lookupRank);
     setRanking(criterionId, UNRANKED);
   }
 
