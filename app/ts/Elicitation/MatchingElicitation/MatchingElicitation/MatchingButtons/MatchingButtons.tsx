@@ -7,7 +7,6 @@ import {ElicitationContext} from '../../../ElicitationContext';
 
 export default function MatchingButtons() {
   const {
-    mostImportantCriterionId,
     isNextDisabled,
     setIsNextDisabled,
     currentStep,

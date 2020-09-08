@@ -115,3 +115,30 @@ export function buildOrdinalPreferences(
     [] as IOrdinalRanking[]
   );
 }
+
+export function determineStepSize(
+  criteria: Record<string, IElicitationCriterion>,
+  currentCriterionId: string
+): number {
+  const criterion: IElicitationCriterion = criteria[currentCriterionId];
+  const interval = _.max(criterion.scales) - _.min(criterion.scales);
+  const magnitude = Math.floor(Math.log10(interval));
+  return Math.pow(10, magnitude - 1);
+}
+
+export function getScales(criterion: IElicitationCriterion): [number, number] {
+  if (criterion.scales) {
+    return criterion.scales;
+  } else {
+    return [-1, -1];
+  }
+}
+
+export function calculateImportance(
+  sliderValue: number,
+  scales: [number, number]
+): number {
+  const rebased = sliderValue - Math.min(...scales);
+  const importance = (rebased / Math.abs(scales[0] - scales[1])) * 100;
+  return importance === 0 ? 100 : importance;
+}
