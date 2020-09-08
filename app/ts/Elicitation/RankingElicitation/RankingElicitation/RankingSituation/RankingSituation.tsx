@@ -1,17 +1,23 @@
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import {UNRANKED} from 'app/ts/Elicitation/constants';
 import {getBest, getWorst} from 'app/ts/Elicitation/ElicitationUtil';
 import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCriterion';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import {RankingElicitationContext} from '../../RankingElicitationContext';
 
 export default function RankingSituation() {
   const {criteria} = useContext(PreferencesContext);
+  const {rankings} = useContext(RankingElicitationContext);
 
   function getValueToDisplay(criterion: IElicitationCriterion) {
-    return !criterion.rank ? getWorst(criterion) : getBest(criterion);
+    return !rankings[criterion.mcdaId] ||
+      rankings[criterion.mcdaId].rank === UNRANKED
+      ? getWorst(criterion)
+      : getBest(criterion);
   }
 
   return (
