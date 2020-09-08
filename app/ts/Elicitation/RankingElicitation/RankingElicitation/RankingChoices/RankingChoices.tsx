@@ -38,7 +38,7 @@ export default function RankingChoices({
           value={selectedCriterionId}
           onChange={handleSelection}
         >
-          {filteredCriteria.map((criterion) => {
+          {filteredCriteria.map((criterion, index) => {
             return (
               <label key={criterion.mcdaId}>
                 <Radio key={criterion.mcdaId} value={criterion.mcdaId} />
@@ -47,7 +47,12 @@ export default function RankingChoices({
                   disableHoverListener={!criterion.description}
                   title={criterion.description ? criterion.description : ''}
                 >
-                  <span className="criterion-title">{criterion.title}</span>
+                  <span
+                    id={`ranking-option-${index}`}
+                    className="criterion-title"
+                  >
+                    {criterion.title}
+                  </span>
                 </Tooltip>{' '}
                 {`from ${getWorst(criterion)} to ${getBest(criterion)}`}
               </label>

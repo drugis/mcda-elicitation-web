@@ -57,7 +57,7 @@ export default function MostImportantChoice() {
           value={mostImportantCriterionId ? mostImportantCriterionId : ''}
           onChange={handleSelection}
         >
-          {_.map(criteria, (criterion) => {
+          {_.map(_.toArray(criteria), (criterion, index) => {
             return (
               <label key={criterion.mcdaId}>
                 <Radio key={criterion.mcdaId} value={criterion.mcdaId} />
@@ -66,7 +66,12 @@ export default function MostImportantChoice() {
                   disableHoverListener={!criterion.description}
                   title={criterion.description ? criterion.description : ''}
                 >
-                  <span className="criterion-title">{criterion.title}</span>
+                  <span
+                    id={`most-important-option-${index}`}
+                    className="criterion-title"
+                  >
+                    {criterion.title}
+                  </span>
                 </Tooltip>{' '}
                 from {getWorst(criterion)} to {getBest(criterion)}
               </label>

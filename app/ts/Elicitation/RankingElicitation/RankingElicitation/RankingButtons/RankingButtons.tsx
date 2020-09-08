@@ -96,7 +96,7 @@ export default function RankingButtons({
       <Button
         disabled={!selectedCriterionId}
         color="primary"
-        id="next-button"
+        id={isLastStep() ? 'save-button' : 'next-button'}
         variant="contained"
         onClick={handleNextButtonClick}
       >

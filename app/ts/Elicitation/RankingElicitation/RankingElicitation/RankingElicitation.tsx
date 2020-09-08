@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext, useState} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -18,7 +19,12 @@ export default function RankingElicitation() {
   }
 
   return (
-    <Grid container item spacing={4} sm={12} md={6} component={Paper}>
+    <Grid container item spacing={4} sm={12} md={9} component={Paper}>
+      <Grid item xs={12}>
+        <Typography id="ranking-title-header" variant="h4">
+          Ranking
+        </Typography>
+      </Grid>
       <Grid item xs={12}>
         <RankingSituation />
       </Grid>
@@ -35,7 +41,7 @@ export default function RankingElicitation() {
         />
       </Grid>
       <Grid item xs={3} container alignItems="center" justify="flex-end">
-        <Grid item>
+        <Grid item id="step-counter">
           Step {currentStep} of {_.toArray(criteria).length - 1}
         </Grid>
       </Grid>

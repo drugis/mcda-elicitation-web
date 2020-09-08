@@ -57,7 +57,7 @@ export default function PreciseSwingButtons() {
       <Button
         disabled={isNextDisabled}
         color="primary"
-        id="next-button"
+        id={isLastStep() ? 'save-button' : 'next-button'}
         variant="contained"
         onClick={handleNextButtonClick}
       >
