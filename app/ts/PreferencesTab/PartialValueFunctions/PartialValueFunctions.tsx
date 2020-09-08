@@ -1,49 +1,37 @@
-import React, {useContext} from 'react';
-import {Grid, ButtonGroup, Button} from '@material-ui/core';
-import {PreferencesContext} from '../PreferencesContext';
+import Grid from '@material-ui/core/Grid';
 import _ from 'lodash';
-import PartialValueFunctionPlot from './PartialValueFunctionPlot/PartialValueFunctionPlot';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import React, {useContext} from 'react';
+import {PreferencesContext} from '../PreferencesContext';
 import PartialValueFunctionButtons from './PartialValueFunctionButtons/PartialValueFunctionButtons';
+import PartialValueFunctionPlot from './PartialValueFunctionPlot/PartialValueFunctionPlot';
 
 export default function PartialValueFunctions() {
-  const {problem} = useContext(PreferencesContext);
+  const {pvfs, criteria} = useContext(PreferencesContext);
 
   function getPartialValueFunctions(): JSX.Element[] {
-    function getPlotOrQuestionMark(
-      criterion: IProblemCriterion,
-      criterionId: string
-    ) {
-      if (criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.type) {
-        return (
-          <PartialValueFunctionPlot
-            criterion={criterion}
-            criterionId={criterionId}
-          />
-        );
-      } else {
-        return <div style={{fontSize: '213px', textAlign: 'center'}}>?</div>;
-      }
-    }
-
-    return _.map(problem.criteria, (criterion, criterionId) => {
+    return _.map(criteria, (criterion) => {
       return (
-        <Grid key={criterionId} container item lg={3} md={4} xs={6}>
+        <Grid key={criterion.id} container item lg={3} md={4} xs={6}>
           <Grid item xs={12} style={{textAlign: 'center'}}>
             {criterion.title}
           </Grid>
           <Grid item xs={12}>
-            {getPlotOrQuestionMark(criterion, criterionId)}
+            {getPlotOrQuestionMark(criterion.id)}
           </Grid>
           <Grid item xs={12} style={{textAlign: 'center'}}>
-            <PartialValueFunctionButtons
-              criterion={criterion}
-              criterionId={criterionId}
-            />
+            <PartialValueFunctionButtons criterionId={criterion.id} />
           </Grid>
         </Grid>
       );
     });
+  }
+
+  function getPlotOrQuestionMark(criterionId: string) {
+    if (pvfs[criterionId].direction) {
+      return <PartialValueFunctionPlot criterionId={criterionId} />;
+    } else {
+      return <div style={{fontSize: '145px', textAlign: 'center'}}>?</div>;
+    }
   }
 
   return (

@@ -1,55 +1,77 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
-import {TPvfDirection} from '@shared/types/PvfTypes';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import {Tooltip} from '@material-ui/core';
+import _ from 'lodash';
+import TrendingUp from '@material-ui/icons/TrendingUp';
 
 export default function PartialValueFunctionButtons({
-  criterion,
   criterionId
 }: {
-  criterion: IProblemCriterion;
   criterionId: string;
 }) {
-  const {currentScenario, updateScenario} = useContext(PreferencesContext);
+  const {setLinearPvf} = useContext(PreferencesContext);
 
-  function handleIncreasingClick() {
-    createNewScenario('increasing');
+  function handleIncreasingClick(): void {
+    setLinearPvf(criterionId, 'increasing');
   }
 
-  function handleDecreasingClick() {
-    createNewScenario('decreasing');
+  function handleDecreasingClick(): void {
+    setLinearPvf(criterionId, 'decreasing');
   }
 
-  function createNewScenario(direction: TPvfDirection) {
-    let newScenario = _.cloneDeep(currentScenario);
-    newScenario.state.problem.criteria[criterionId] = {
-      dataSources: [{pvf: {direction: direction, type: 'linear'}}]
-    };
-    updateScenario(newScenario);
+  function handleAdvancedClick(): void {
+    const newLocation =
+      _.split(window.location.toString(), 'preferences')[0] +
+      'partial-value-function/' +
+      criterionId;
+    window.location.assign(newLocation);
   }
 
   return (
     <ButtonGroup size="small">
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleIncreasingClick}
-      >
-        Increasing
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleDecreasingClick}
-      >
-        Decreasing
-      </Button>
-      <Button variant="contained" color="primary">
-        Advanced
-      </Button>
+      <Tooltip title="Set increasing PVF. Setting a PVF will reset all trade-off preferences.">
+        <Button
+          id={`increasing-pvf-button-${criterionId}`}
+          variant="contained"
+          color="primary"
+          onClick={handleIncreasingClick}
+        >
+          <img
+            src="img/upchart.png"
+            alt="increasing PVF"
+            className="image-in-button"
+          />{' '}
+          Increasing
+        </Button>
+      </Tooltip>
+      <Tooltip title="Set decreasing PVF. Setting a PVF will reset all trade-off preferences.">
+        <Button
+          id={`decreasing-pvf-button-${criterionId}`}
+          variant="contained"
+          color="primary"
+          onClick={handleDecreasingClick}
+        >
+          <img
+            src="img/downchart.png"
+            alt="decreasing PVF"
+            className="image-in-button"
+          />{' '}
+          Decreasing
+        </Button>
+      </Tooltip>
+      <Tooltip title="Set linear of piece-wise PVF via guided process. Setting a PVF will reset all trade-off preferences.">
+        <Button
+          id={`advanced-pvf-button-${criterionId}`}
+          variant="contained"
+          color="primary"
+          onClick={handleAdvancedClick}
+        >
+          <TrendingUp />
+          Advanced
+        </Button>
+      </Tooltip>
     </ButtonGroup>
   );
 }

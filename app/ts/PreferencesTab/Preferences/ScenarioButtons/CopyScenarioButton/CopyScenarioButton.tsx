@@ -9,12 +9,15 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FileCopy from '@material-ui/icons/FileCopy';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import _ from 'lodash';
 import React, {ChangeEvent, useContext, useState} from 'react';
+import {checkScenarioTitleErrors, showErrors} from '../ScenarioUtil';
 
 export default function CopyScenarioButton() {
-  const {copyScenario} = useContext(PreferencesContext);
+  const {copyScenario, scenarios} = useContext(PreferencesContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState<string>('');
+  let errors: string[] = checkScenarioTitleErrors(title, scenarios);
 
   function closeDialog(): void {
     setIsDialogOpen(false);
@@ -31,6 +34,7 @@ export default function CopyScenarioButton() {
 
   function titleChanged(event: ChangeEvent<HTMLTextAreaElement>): void {
     setTitle(event.target.value);
+    errors = checkScenarioTitleErrors(event.target.value, scenarios);
   }
 
   return (
@@ -61,6 +65,7 @@ export default function CopyScenarioButton() {
                 variant="outlined"
               ></TextField>
             </Grid>
+            {showErrors(errors)}
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -69,6 +74,7 @@ export default function CopyScenarioButton() {
             variant="contained"
             color="primary"
             onClick={handleCreateButtonClick}
+            disabled={errors.length > 0}
           >
             Create
           </Button>

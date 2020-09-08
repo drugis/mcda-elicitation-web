@@ -9,9 +9,12 @@ import Delete from '@material-ui/icons/Delete';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import React, {useContext, useState} from 'react';
+import _ from 'lodash';
 
 export default function DeleteScenarioButton() {
-  const {currentScenario, deleteScenario} = useContext(PreferencesContext);
+  const {currentScenario, deleteScenario, scenarios} = useContext(
+    PreferencesContext
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   function closeDialog(): void {
@@ -30,10 +33,16 @@ export default function DeleteScenarioButton() {
   return (
     <>
       <Tooltip title="Delete current scenario">
-        <IconButton id="delete-scenario-button" onClick={openDialog}>
-          <Delete color="secondary" />
-        </IconButton>
-      </Tooltip>{' '}
+        <>
+          <IconButton
+            id="delete-scenario-button"
+            onClick={openDialog}
+            disabled={_.values(scenarios).length < 2}
+          >
+            <Delete color="secondary" />
+          </IconButton>
+        </>
+      </Tooltip>
       <Dialog
         open={isDialogOpen}
         onClose={closeDialog}

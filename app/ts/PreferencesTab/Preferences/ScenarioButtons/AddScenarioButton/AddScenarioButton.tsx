@@ -8,13 +8,16 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Add from '@material-ui/icons/Add';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import React, {ChangeEvent, useContext, useState} from 'react';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import React, {ChangeEvent, useContext, useState} from 'react';
+import {checkScenarioTitleErrors, showErrors} from '../ScenarioUtil';
+import _ from 'lodash';
 
 export default function AddScenarioButton() {
-  const {addScenario} = useContext(PreferencesContext);
+  const {addScenario, scenarios} = useContext(PreferencesContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState<string>('');
+  let errors: string[] = checkScenarioTitleErrors(title, scenarios);
 
   function closeDialog(): void {
     setIsDialogOpen(false);
@@ -31,6 +34,7 @@ export default function AddScenarioButton() {
 
   function titleChanged(event: ChangeEvent<HTMLTextAreaElement>): void {
     setTitle(event.target.value);
+    errors = checkScenarioTitleErrors(event.target.value, scenarios);
   }
 
   return (
@@ -39,7 +43,7 @@ export default function AddScenarioButton() {
         <IconButton onClick={openDialog}>
           <Add color="primary" />
         </IconButton>
-      </Tooltip>{' '}
+      </Tooltip>
       <Dialog
         open={isDialogOpen}
         onClose={closeDialog}
@@ -61,6 +65,7 @@ export default function AddScenarioButton() {
                 variant="outlined"
               ></TextField>
             </Grid>
+            {showErrors(errors)}
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -69,6 +74,7 @@ export default function AddScenarioButton() {
             variant="contained"
             color="primary"
             onClick={handleCreateButtonClick}
+            disabled={errors.length > 0}
           >
             Create
           </Button>

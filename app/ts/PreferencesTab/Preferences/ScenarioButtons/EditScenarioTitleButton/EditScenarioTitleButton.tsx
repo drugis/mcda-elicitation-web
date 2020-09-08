@@ -1,21 +1,29 @@
-import React, {useState, useContext, ChangeEvent} from 'react';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import Edit from '@material-ui/icons/Edit';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
-import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import _ from 'lodash';
+import React, {ChangeEvent, useContext, useState} from 'react';
+import {checkScenarioTitleErrors, showErrors} from '../ScenarioUtil';
 
 export default function EditScenarioTitleButton() {
-  const {currentScenario, updateScenario} = useContext(PreferencesContext);
+  const {currentScenario, updateScenario, scenarios} = useContext(
+    PreferencesContext
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [title, setTitle] = useState(currentScenario.title);
+  const [title, setTitle] = useState<string>(currentScenario.title);
+  let errors: string[] = checkScenarioTitleErrors(
+    title,
+    scenarios,
+    currentScenario.id
+  );
 
   function closeDialog(): void {
     setIsDialogOpen(false);
@@ -27,7 +35,13 @@ export default function EditScenarioTitleButton() {
 
   function titleChanged(event: ChangeEvent<HTMLTextAreaElement>): void {
     setTitle(event.target.value);
+    errors = checkScenarioTitleErrors(
+      event.target.value,
+      scenarios,
+      currentScenario.id
+    );
   }
+
   function handleEditButtonClick(): void {
     updateScenario(_.merge({}, currentScenario, {title: title}));
     closeDialog();
@@ -59,6 +73,7 @@ export default function EditScenarioTitleButton() {
                 fullWidth
               />
             </Grid>
+            {showErrors(errors)}
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -67,6 +82,7 @@ export default function EditScenarioTitleButton() {
             variant="contained"
             color="primary"
             onClick={handleEditButtonClick}
+            disabled={errors.length > 0}
           >
             Edit
           </Button>

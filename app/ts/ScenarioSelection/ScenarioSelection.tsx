@@ -2,18 +2,18 @@ import React, {ChangeEvent} from 'react';
 import IScenario from '@shared/interface/Scenario/IScenario';
 import {Grid, Select, MenuItem} from '@material-ui/core';
 import _ from 'lodash';
+import getScenarioLocation from './getScenarioLocation';
 
 export default function ScenarioSelection({
   scenarios,
-  currentScenario,
-  setCurrentScenario: setCurrentScenario
+  currentScenario
 }: {
   scenarios: Record<string, IScenario>;
   currentScenario: IScenario;
-  setCurrentScenario: (currentScenario: IScenario) => void;
 }) {
   function handleScenarioChanged(event: ChangeEvent<{value: string}>): void {
-    setCurrentScenario(scenarios[event.target.value]);
+    const newScenarioId = scenarios[event.target.value].id;
+    window.location.assign(getScenarioLocation(newScenarioId));
   }
 
   function getScenarioOptions(): JSX.Element[] {

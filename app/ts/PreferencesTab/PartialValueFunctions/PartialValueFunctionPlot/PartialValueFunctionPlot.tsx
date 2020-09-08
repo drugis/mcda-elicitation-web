@@ -1,24 +1,22 @@
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {generate} from 'c3';
 import {format, selectAll} from 'd3';
-import React, {useEffect, useContext} from 'react';
-import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
-import IPvf from '@shared/interface/Problem/IPvf';
+import React, {useContext, useEffect} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
+import {getPvfCoordinates} from '../PartialValueFunctionUtil';
 
 export default function PartialValueFunctionPlot({
-  criterion,
   criterionId
 }: {
-  criterion: IProblemCriterion;
   criterionId: string;
 }) {
-  const {currentScenario} = useContext(PreferencesContext);
+  const {getCriterion, getPvf} = useContext(PreferencesContext);
+  const criterion = getCriterion(criterionId);
+  const pvf = getPvf(criterionId);
   const width = '300px';
   const height = '216px';
 
   useEffect(() => {
-    const values = getPvfCoordinatesForCriterion(criterion);
+    const values = getPvfCoordinates(pvf, criterion.title);
     const settings = {
       bindto: `#pvfplot-${criterionId}`,
       data: {
@@ -69,63 +67,9 @@ export default function PartialValueFunctionPlot({
     };
     generate(settings);
     selectAll('.c3-line').style('stroke-width', '2px');
-  }, [currentScenario]);
-
-  function getPvfCoordinatesForCriterion(
-    criterion: IProblemCriterion
-  ): [['x', ...number[]], ['y', 1, ...number[]]] {
-    let pvfCoordinates = [];
-    const xValues = getXValues(criterion.dataSources[0]);
-    pvfCoordinates.push(xValues);
-
-    const yValues = getYValues(criterion);
-    pvfCoordinates.push(yValues);
-
-    return pvfCoordinates as [['x', ...number[]], ['y', 1, ...number[]]];
-  }
-
-  function getXValues(dataSource: IProblemDataSource) {
-    return [
-      'x',
-      best(dataSource),
-      ...intermediateX(dataSource.pvf),
-      worst(dataSource)
-    ];
-  }
-
-  function getYValues(criterion: IProblemCriterion) {
-    return [
-      criterion.title,
-      1,
-      ...intermediateY(criterion.dataSources[0].pvf),
-      0
-    ];
-  }
-  function intermediateX(pvf: IPvf): number[] {
-    return pvf.cutoffs ? pvf.cutoffs : [];
-  }
-
-  function intermediateY(pvf: IPvf): number[] {
-    return pvf.values ? pvf.values : [];
-  }
-
-  function best(dataSource: IProblemDataSource): number {
-    return isIncreasing(dataSource)
-      ? dataSource.pvf.range[1]
-      : dataSource.pvf.range[0];
-  }
-
-  function worst(dataSource: IProblemDataSource): number {
-    return isIncreasing(dataSource)
-      ? dataSource.pvf.range[0]
-      : dataSource.pvf.range[1];
-  }
-  function isIncreasing(dataSource: IProblemDataSource): boolean {
-    return dataSource.pvf.direction === 'increasing';
-  }
+  }, [pvf]);
 
   return (
-    // <div style={{width: width, height: height}} id={`pvfplot-${criterionId}`} />
-    <div id={`pvfplot-${criterionId}`} />
+    <div style={{width: width, height: height}} id={`pvfplot-${criterionId}`} />
   );
 }

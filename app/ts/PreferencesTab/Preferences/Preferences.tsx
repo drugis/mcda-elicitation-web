@@ -5,14 +5,11 @@ import ScenarioButtons from './ScenarioButtons/ScenarioButtons';
 import PartialValueFunctions from '../PartialValueFunctions/PartialValueFunctions';
 
 export default function Preferences() {
-  const {currentScenario, scenarios, setCurrentScenario} = useContext(
-    PreferencesContext
-  );
+  const {currentScenario, scenarios} = useContext(PreferencesContext);
   return (
     <>
       <ScenarioSelection
         scenarios={scenarios}
-        setCurrentScenario={setCurrentScenario}
         currentScenario={currentScenario}
       />
       <ScenarioButtons />
