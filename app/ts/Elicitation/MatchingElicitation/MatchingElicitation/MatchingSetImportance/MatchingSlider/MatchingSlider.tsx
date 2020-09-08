@@ -3,7 +3,6 @@ import {
   calculateImportance,
   determineStepSize,
   getBest,
-  getScales,
   getWorst
 } from 'app/ts/Elicitation/ElicitationUtil';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
@@ -26,7 +25,7 @@ export default function MatchingSlider({
   const {criteria} = useContext(PreferencesContext);
 
   const mostImportantCriterion = criteria[mostImportantCriterionId];
-  const scales = getScales(mostImportantCriterion);
+  const scales = mostImportantCriterion.scales;
   const stepSize = determineStepSize(criteria, currentCriterionId);
 
   useEffect(() => {

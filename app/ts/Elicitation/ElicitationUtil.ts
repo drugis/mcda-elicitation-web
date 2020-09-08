@@ -59,18 +59,6 @@ export function findCriterionIdForRank(
   }).mcdaId;
 }
 
-function findCriterionIdWithoutRanking(
-  criteria: Record<string, IElicitationCriterion>,
-  rankings: Record<string, IRankingAnswer>
-): string {
-  return _.find(criteria, (criterion) => {
-    return (
-      rankings[criterion.mcdaId] === undefined ||
-      rankings[criterion.mcdaId].rank === UNRANKED
-    );
-  }).mcdaId;
-}
-
 export function assignMissingRankings(
   rankings: Record<string, IRankingAnswer>,
   selectedCriterionId: string,
@@ -87,6 +75,18 @@ export function assignMissingRankings(
   const lastRanking = buildRankingAnswer(lastCriterionId, rank + 1);
   finishedRankings[lastCriterionId] = lastRanking;
   return finishedRankings;
+}
+
+function findCriterionIdWithoutRanking(
+  criteria: Record<string, IElicitationCriterion>,
+  rankings: Record<string, IRankingAnswer>
+): string {
+  return _.find(criteria, (criterion) => {
+    return (
+      rankings[criterion.mcdaId] === undefined ||
+      rankings[criterion.mcdaId].rank === UNRANKED
+    );
+  }).mcdaId;
 }
 
 function buildRankingAnswer(criterionId: string, rank: number): IRankingAnswer {
@@ -124,14 +124,6 @@ export function determineStepSize(
   const interval = _.max(criterion.scales) - _.min(criterion.scales);
   const magnitude = Math.floor(Math.log10(interval));
   return Math.pow(10, magnitude - 1);
-}
-
-export function getScales(criterion: IElicitationCriterion): [number, number] {
-  if (criterion.scales) {
-    return criterion.scales;
-  } else {
-    return [-1, -1];
-  }
 }
 
 export function calculateImportance(
