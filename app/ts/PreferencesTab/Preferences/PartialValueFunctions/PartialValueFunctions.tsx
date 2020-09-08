@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {PreferencesContext} from '../PreferencesContext';
+import {PreferencesContext} from '../../PreferencesContext';
 import PartialValueFunctionButtons from './PartialValueFunctionButtons/PartialValueFunctionButtons';
 import PartialValueFunctionPlot from './PartialValueFunctionPlot/PartialValueFunctionPlot';
 

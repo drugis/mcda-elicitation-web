@@ -1,11 +1,9 @@
 import IError from '@shared/interface/IError';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IScenario from '@shared/interface/Scenario/IScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import {TPvfDirection} from '@shared/types/PvfTypes';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
@@ -13,6 +11,7 @@ import React, {createContext, useContext, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import IPreferencesContext from './IPreferencesContext';
+import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
 export const PreferencesContext = createContext<IPreferencesContext>(
   {} as IPreferencesContext
 );
@@ -40,44 +39,12 @@ export function PreferencesContextProviderComponent({
   );
   const criteria = createPreferencesCriteria(problem.criteria);
   const [pvfs, setPvfs] = useState<Record<string, IPvf>>(
-    initPvfs(problem.criteria)
+    initPvfs(problem.criteria, currentScenario)
   );
   const subproblemId = currentScenario.subproblemId;
 
-  function initPvfs(
-    criteria: Record<string, IProblemCriterion>
-  ): Record<string, IPvf> {
-    return _.mapValues(criteria, (criterion, id) => {
-      const scenarioPvf = getScenarioPvf(id);
-      return _.merge({}, criterion.dataSources[0].pvf, scenarioPvf);
-    });
-  }
-
-  function getScenarioPvf(criterionId: string): IScenarioPvf {
-    const scenarioCriterion =
-      currentScenario.state.problem.criteria[criterionId];
-    if (scenarioCriterion && scenarioCriterion.dataSources) {
-      return scenarioCriterion.dataSources[0].pvf;
-    }
-  }
-
   function getPvf(criterionId: string): IPvf {
     return pvfs[criterionId];
-  }
-
-  function createPreferencesCriteria(
-    criteria: Record<string, IProblemCriterion>
-  ): Record<string, IPreferencesCriterion> {
-    return _.mapValues(criteria, (criterion, id) => {
-      const dataSource = criterion.dataSources[0];
-      let preferencesCriterion = {
-        ..._.pick(criterion, ['title', 'description', 'isFavorable']),
-        id: id,
-        dataSourceId: dataSource.id,
-        ..._.pick(dataSource, ['unitOfMeasurement', 'scale'])
-      };
-      return preferencesCriterion;
-    });
   }
 
   function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
@@ -91,7 +58,7 @@ export function PreferencesContextProviderComponent({
     setPvfs(newPvfs);
     let newScenario = _.cloneDeep(currentScenario);
     newScenario.state.problem.criteria[criterionId] = {
-      dataSources: [{pvf}]
+      dataSources: [{pvf: {direction: direction, type: 'linear'}}]
     };
     updateScenario(newScenario);
   }

@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import React, {useContext} from 'react';
-import {PreferencesContext} from '../../PreferencesContext';
+import {PreferencesContext} from '../../../PreferencesContext';
 import {Tooltip} from '@material-ui/core';
 import _ from 'lodash';
 import TrendingUp from '@material-ui/icons/TrendingUp';

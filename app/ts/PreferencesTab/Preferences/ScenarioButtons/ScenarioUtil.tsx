@@ -13,10 +13,7 @@ export function checkScenarioTitleErrors(
     errors.push('Empty title');
   }
 
-  if (
-    isDuplicate(newTitle, scenarios) &&
-    !_.some(scenarios, ['id', currentScenarioId])
-  ) {
+  if (isDuplicate(newTitle, scenarios, currentScenarioId)) {
     errors.push('Duplicate title');
   }
 
@@ -25,10 +22,11 @@ export function checkScenarioTitleErrors(
 
 function isDuplicate(
   title: string,
-  scenarios: Record<string, IScenario>
+  scenarios: Record<string, IScenario>,
+  currentScenarioId: string
 ): boolean {
   return _.some(scenarios, (scenario) => {
-    return scenario.title === title;
+    return scenario.title === title && scenario.id !== currentScenarioId;
   });
 }
 

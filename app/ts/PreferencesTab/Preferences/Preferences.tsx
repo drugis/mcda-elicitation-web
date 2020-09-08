@@ -1,8 +1,9 @@
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../PreferencesContext';
+import PartialValueFunctions from './PartialValueFunctions/PartialValueFunctions';
+import PreferencesWeights from './PreferencesWeights/PreferencesWeights';
 import ScenarioButtons from './ScenarioButtons/ScenarioButtons';
-import PartialValueFunctions from '../PartialValueFunctions/PartialValueFunctions';
 
 export default function Preferences() {
   const {currentScenario, scenarios} = useContext(PreferencesContext);
@@ -14,6 +15,7 @@ export default function Preferences() {
       />
       <ScenarioButtons />
       <PartialValueFunctions />
+      <PreferencesWeights />
     </>
   );
 }

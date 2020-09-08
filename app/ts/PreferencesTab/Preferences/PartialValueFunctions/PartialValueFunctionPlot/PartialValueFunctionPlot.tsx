@@ -1,7 +1,7 @@
 import {generate} from 'c3';
 import {format, selectAll} from 'd3';
 import React, {useContext, useEffect} from 'react';
-import {PreferencesContext} from '../../PreferencesContext';
+import {PreferencesContext} from '../../../PreferencesContext';
 import {getPvfCoordinates} from '../PartialValueFunctionUtil';
 
 export default function PartialValueFunctionPlot({
