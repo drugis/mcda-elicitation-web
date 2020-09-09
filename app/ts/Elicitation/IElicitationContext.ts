@@ -16,4 +16,7 @@ export default interface IElicitationContext {
     criterionId: string,
     preference: [number, number]
   ) => void;
+  setPreferences: (
+    preferences: Record<string, IExactSwingRatio | IRatioBound>
+  ) => void;
 }

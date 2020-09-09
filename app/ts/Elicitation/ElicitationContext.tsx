@@ -50,7 +50,7 @@ export function ElicitationContextProviderComponent({
       elicitationMethod: 'imprecise',
       type: 'ratio bound',
       criteria: [mostImportantCriterionId, criterionId],
-      ratio: [100 / answer[0], 100 / answer[1]]
+      bounds: [100 / answer[0], 100 / answer[1]]
     };
     updatedPreferences[criterionId] = preference;
     setPreferences(updatedPreferences);
@@ -69,7 +69,8 @@ export function ElicitationContextProviderComponent({
         setIsNextDisabled,
         setMostImportantCriterionId,
         setPreference,
-        setBoundPreference
+        setBoundPreference,
+        setPreferences
       }}
     >
       {children}
