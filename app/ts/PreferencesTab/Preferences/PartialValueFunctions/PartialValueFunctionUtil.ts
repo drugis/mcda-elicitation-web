@@ -1,4 +1,5 @@
 import IPvf from '@shared/interface/Problem/IPvf';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 
 export function getPvfCoordinates(
   pvf: IPvf,
@@ -10,7 +11,7 @@ export function getPvfCoordinates(
 
 function getXValues(pvf: IPvf) {
   // Cannot type function because of smearing
-  return ['x', best(pvf), ...intermediateX(pvf), worst(pvf)];
+  return ['x', getBest(pvf), ...intermediateX(pvf), getWorst(pvf)];
 }
 
 function intermediateX(pvf: IPvf): number[] {
@@ -26,12 +27,12 @@ function intermediateY(pvf: IPvf): number[] {
   return pvf.values ? pvf.values : [];
 }
 
-function best(pvf: IPvf): number {
-  return isIncreasing(pvf) ? pvf.range[1] : pvf.range[0];
+export function getBest(pvf: IPvf): number {
+  return significantDigits(isIncreasing(pvf) ? pvf.range[1] : pvf.range[0]);
 }
 
-function worst(pvf: IPvf): number {
-  return isIncreasing(pvf) ? pvf.range[0] : pvf.range[1];
+export function getWorst(pvf: IPvf): number {
+  return significantDigits(isIncreasing(pvf) ? pvf.range[0] : pvf.range[1]);
 }
 function isIncreasing(pvf: IPvf): boolean {
   return pvf.direction === 'increasing';

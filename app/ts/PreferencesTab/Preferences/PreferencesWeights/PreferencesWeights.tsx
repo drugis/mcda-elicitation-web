@@ -1,5 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import PreferencesWeightsTable from './PreferencesWeightsTable/PreferencesWeightsTable';
 
 export default function PreferencesWeights() {
   return (
@@ -8,7 +9,7 @@ export default function PreferencesWeights() {
         <h4>Weights</h4>
       </Grid>
       <Grid item xs={12}>
-        {/* <PreferencesWeightsTable/> */}
+        <PreferencesWeightsTable />
       </Grid>
     </Grid>
   );

@@ -36,6 +36,7 @@ export function showErrors(errors: string[]): JSX.Element[] {
       <Grid
         id={`error-${index}`}
         item
+        container
         xs={12}
         justify="flex-end"
         key={`error-${index}`}

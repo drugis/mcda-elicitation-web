@@ -1,5 +1,5 @@
 'use strict';
-define(['clipboard'], function(Clipboard) {
+define(['clipboard'], function (Clipboard) {
   var dependencies = [
     '$scope',
     '$modal',
@@ -9,7 +9,7 @@ define(['clipboard'], function(Clipboard) {
     'ScenarioResource',
     'PageTitleService'
   ];
-  var PreferencesController = function(
+  var PreferencesController = function (
     $scope,
     $modal,
     $stateParams,
@@ -26,8 +26,12 @@ define(['clipboard'], function(Clipboard) {
 
     new Clipboard('.clipboard-button');
 
-    $scope.scalesPromise.then(function() {
-      PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s preferences');
+    $scope.scalesPromise.then(function () {
+      PageTitleService.setPageTitle(
+        'PreferencesController',
+        ($scope.aggregateState.problem.title || $scope.workspace.title) +
+          "'s preferences"
+      );
     });
 
     function editScenarioTitle() {
@@ -35,16 +39,19 @@ define(['clipboard'], function(Clipboard) {
         templateUrl: '../preferences/editScenarioTitle.html',
         controller: 'EditScenarioTitleController',
         resolve: {
-          scenario: function() {
+          scenario: function () {
             return $scope.scenario;
           },
-          scenarios: function() {
+          scenarios: function () {
             return $scope.scenarios;
           },
-          callback: function() {
-            return function(newTitle) {
+          callback: function () {
+            return function (newTitle) {
               $scope.scenario.title = newTitle;
-              ScenarioResource.save($stateParams, $scope.scenario).$promise.then(function() {
+              ScenarioResource.save(
+                $stateParams,
+                $scope.scenario
+              ).$promise.then(function () {
                 $state.reload();
               });
             };
@@ -58,14 +65,14 @@ define(['clipboard'], function(Clipboard) {
         templateUrl: '../preferences/newScenario.html',
         controller: 'NewScenarioController',
         resolve: {
-          scenarios: function() {
+          scenarios: function () {
             return $scope.scenarios;
           },
-          type: function() {
+          type: function () {
             return 'Copy';
           },
-          callback: function() {
-            return function(newTitle) {
+          callback: function () {
+            return function (newTitle) {
               ScenarioService.copyScenarioAndGo(newTitle, $scope.subProblem);
             };
           }
@@ -78,15 +85,19 @@ define(['clipboard'], function(Clipboard) {
         templateUrl: '../preferences/newScenario.html',
         controller: 'NewScenarioController',
         resolve: {
-          scenarios: function() {
+          scenarios: function () {
             return $scope.scenarios;
           },
-          type: function() {
+          type: function () {
             return 'New';
           },
-          callback: function() {
-            return function(newTitle) {
-              ScenarioService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
+          callback: function () {
+            return function (newTitle) {
+              ScenarioService.newScenarioAndGo(
+                newTitle,
+                $scope.workspace,
+                $scope.subProblem
+              );
             };
           }
         }
@@ -98,13 +109,16 @@ define(['clipboard'], function(Clipboard) {
         templateUrl: './deleteScenario.html',
         controller: 'DeleteScenarioController',
         resolve: {
-          scenario: function() {
+          scenario: function () {
             return $scope.scenario;
           },
-          callback: function() {
-            return function() {
-              ScenarioResource.delete($stateParams).$promise.then(function() {
-                var otherScenario = _.reject($scope.scenarios, ['id', $scope.scenario.id])[0];
+          callback: function () {
+            return function () {
+              ScenarioResource.delete($stateParams).$promise.then(function () {
+                var otherScenario = _.reject($scope.scenarios, [
+                  'id',
+                  $scope.scenario.id
+                ])[0];
                 $scope.scenarioChanged(otherScenario);
               });
             };
@@ -112,7 +126,6 @@ define(['clipboard'], function(Clipboard) {
         }
       });
     }
-
   };
   return dependencies.concat(PreferencesController);
 });

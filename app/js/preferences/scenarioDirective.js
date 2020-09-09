@@ -38,6 +38,9 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
         function init() {
           scope.criteriaHavePvf = doAllCriteriaHavePvf();
           scope.isOrdinal = isWeightingOrdinal();
+          if (!scope.scenario.state.weights) {
+            loadWeights();
+          }
         }
 
         function isPVFDefined(dataSource) {
@@ -108,7 +111,9 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
             if (scope.scenario.state.weights) {
               scope.weights = scope.scenario.state.weights;
             } else {
-              PreferencesService.getWeights(scope.problem).then(function (result) {
+              PreferencesService.getWeights(scope.problem).then((result) => {
+                scope.scenario.state.weights = result;
+                scope.scenario.$save($stateParams);
                 scope.weights = result;
               });
             }
@@ -141,7 +146,7 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
           return OrderingService.getOrderedCriteriaAndAlternatives(
             scope.problem,
             $stateParams
-          ).then(function (orderings) {
+          ).then((orderings) => {
             scope.alternatives = orderings.alternatives;
             scope.criteria = orderings.criteria;
             var preferences = scope.scenario.state.prefs;

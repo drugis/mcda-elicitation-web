@@ -1,17 +1,10 @@
-import IExactSwingRatio from './IExactSwingRatio';
-import IOrdinalRanking from './IOrdinalRanking';
-import IRatioBoundConstraint from './IRatioBoundConstraint';
+import {TPreferences} from '@shared/types/Preferences';
 import IScenarioProblem from './IScenarioProblem';
-import IUpperRatioConstraint from './IUpperRatioConstraint';
 import IWeights from './IWeights';
 
 export default interface IScenarioState {
   problem: IScenarioProblem;
-  prefs:
-    | IOrdinalRanking[]
-    | IExactSwingRatio[]
-    | IRatioBoundConstraint[]
-    | IUpperRatioConstraint[];
+  prefs: TPreferences;
   legend?: Record<string, string>;
   uncertaintyOptions?: Record<string, boolean>;
   weights?: IWeights;
