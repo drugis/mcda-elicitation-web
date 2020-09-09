@@ -3,6 +3,7 @@ import React, {createContext, useState} from 'react';
 import IElicitationContext from './IElicitationContext';
 import {ElicitationMethod} from './Interface/ElicitationMethod';
 import IExactSwingRatio from './Interface/IExactSwingRatio';
+import IRatioBound from './Interface/IRatioBound';
 
 export const ElicitationContext = createContext<IElicitationContext>(
   {} as IElicitationContext
@@ -16,7 +17,7 @@ export function ElicitationContextProviderComponent({
 }: {
   elicitationMethod: ElicitationMethod;
   cancel: () => void;
-  save: (preferences: IExactSwingRatio[]) => void;
+  save: (preferences: (IRatioBound | IExactSwingRatio)[]) => void;
   children: any;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -25,7 +26,7 @@ export function ElicitationContextProviderComponent({
     string
   >();
   const [preferences, setPreferences] = useState<
-    Record<string, IExactSwingRatio>
+    Record<string, IExactSwingRatio | IRatioBound>
   >({});
 
   function setPreference(criterionId: string, answer: number): void {
@@ -35,6 +36,21 @@ export function ElicitationContextProviderComponent({
       type: 'exact swing',
       criteria: [mostImportantCriterionId, criterionId],
       ratio: 100 / answer
+    };
+    updatedPreferences[criterionId] = preference;
+    setPreferences(updatedPreferences);
+  }
+
+  function setBoundPreference(
+    criterionId: string,
+    answer: [number, number]
+  ): void {
+    let updatedPreferences = _.cloneDeep(preferences);
+    const preference: IRatioBound = {
+      elicitationMethod: 'imprecise',
+      type: 'ratio bound',
+      criteria: [mostImportantCriterionId, criterionId],
+      ratio: [100 / answer[0], 100 / answer[1]]
     };
     updatedPreferences[criterionId] = preference;
     setPreferences(updatedPreferences);
@@ -52,7 +68,8 @@ export function ElicitationContextProviderComponent({
         save,
         setIsNextDisabled,
         setMostImportantCriterionId,
-        setPreference
+        setPreference,
+        setBoundPreference
       }}
     >
       {children}

@@ -4,28 +4,32 @@ import IElicitationCriterion from 'app/ts/Elicitation/Interface/IElicitationCrit
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import React, {useContext, useEffect, useState} from 'react';
 
-export default function PreciseSwingSlider({
+export default function ImpreciseSwingSlider({
   criterion
 }: {
   criterion: IElicitationCriterion;
 }) {
-  const [sliderValue, setSliderValue] = useState<number>(100);
-  const {setPreference, mostImportantCriterionId} = useContext(
+  const [sliderValue, setSliderValue] = useState<[number, number]>([1, 100]);
+  const {setBoundPreference, mostImportantCriterionId} = useContext(
     ElicitationContext
   );
 
   useEffect(() => {
-    setPreference(criterion.id, sliderValue);
+    setBoundPreference(criterion.id, sliderValue);
   }, [mostImportantCriterionId]);
 
   function handleSliderChanged(event: any, newValue: any) {
     setSliderValue(newValue);
-    setPreference(criterion.id, newValue);
+    setBoundPreference(criterion.id, newValue);
   }
 
   return (
     <>
-      {significantDigits(sliderValue)}
+      {mostImportantCriterionId === criterion.id
+        ? '100%'
+        : `${significantDigits(sliderValue[0])} - ${significantDigits(
+            sliderValue[1]
+          )}%`}
       <Slider
         value={sliderValue}
         min={1}

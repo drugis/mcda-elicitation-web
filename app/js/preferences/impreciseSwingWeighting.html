@@ -1,5 +1,12 @@
+<imprecise-swing-elicitation
+  ng-if="criteria"
+  criteria="criteria"
+  save="save"
+  cancel="cancel"
+></imprecise-swing-elicitation>
+
 <!-- First step -->
-<div ng-if="state.step === 1">
+<div ng-if="state.step === 3">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
       <h3 id="swing-weighting-title-header">
@@ -57,7 +64,7 @@
   </div>
 </div>
 <!-- Second step -->
-<div ng-if="state.step === 2">
+<div ng-if="state.step === 4">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
       <h3>

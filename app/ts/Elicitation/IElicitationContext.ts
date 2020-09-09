@@ -1,14 +1,19 @@
 import IExactSwingRatio from './Interface/IExactSwingRatio';
+import IRatioBound from './Interface/IRatioBound';
 
 export default interface IElicitationContext {
   currentStep: number;
   isNextDisabled: boolean;
   mostImportantCriterionId: string;
-  preferences: Record<string, IExactSwingRatio>;
+  preferences: Record<string, IExactSwingRatio | IRatioBound>;
   cancel: () => void;
   setCurrentStep: (newStep: number) => void;
-  save: (preferences: IExactSwingRatio[]) => void;
+  save: (preferences: (IRatioBound | IExactSwingRatio)[]) => void;
   setIsNextDisabled: (isNextDisabled: boolean) => void;
   setMostImportantCriterionId: (criterionId: string) => void;
   setPreference: (criterionId: string, preference: number) => void;
+  setBoundPreference: (
+    criterionId: string,
+    preference: [number, number]
+  ) => void;
 }

@@ -1,1 +1,6 @@
-export type ElicitationMethod = 'ranking' | 'precise' | 'matching' | 'choice';
+export type ElicitationMethod =
+  | 'ranking'
+  | 'precise'
+  | 'matching'
+  | 'choice'
+  | 'imprecise';

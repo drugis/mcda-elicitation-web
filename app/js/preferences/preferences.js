@@ -33,6 +33,7 @@ define([
   '../../ts/Elicitation/RankingElicitation/RankingElicitationWrapper',
   '../../ts/Elicitation/MatchingElicitation/MatchingElicitationWrapper',
   '../../ts/Elicitation/PreciseSwingElicitation/PreciseSwingElicitationWrapper',
+  '../../ts/Elicitation/ImpreciseSwingElicitation/ImpreciseSwingElicitationWrapper',
 
   '../workspace/workspace',
   '../results/results'
@@ -68,7 +69,8 @@ define([
   willingnessToTradeOffDirective,
   RankingElicitation,
   MatchingElicitation,
-  PreciseSwingElicitation
+  PreciseSwingElicitation,
+  ImpreciseSwingElicitation
 ) {
   return angular
     .module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
@@ -129,6 +131,14 @@ define([
     .component(
       'preciseSwingElicitation',
       react2angular.react2angular(PreciseSwingElicitation.default, [
+        'criteria',
+        'cancel',
+        'save'
+      ])
+    )
+    .component(
+      'impreciseSwingElicitation',
+      react2angular.react2angular(ImpreciseSwingElicitation.default, [
         'criteria',
         'cancel',
         'save'
