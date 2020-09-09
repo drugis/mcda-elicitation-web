@@ -11,4 +11,5 @@ export default interface IElicitationContext {
   setIsNextDisabled: (isNextDisabled: boolean) => void;
   setMostImportantCriterionId: (criterionId: string) => void;
   setPreference: (criterionId: string, preference: number) => void;
+  setPreferences: (preferences: Record<string, IExactSwingRatio>) => void;
 }

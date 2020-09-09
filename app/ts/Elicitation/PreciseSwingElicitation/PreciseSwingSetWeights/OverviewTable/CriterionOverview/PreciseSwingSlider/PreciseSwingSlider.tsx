@@ -9,30 +9,18 @@ export default function PreciseSwingSlider({
 }: {
   criterion: IElicitationCriterion;
 }) {
-  const [sliderValue, setSliderValue] = useState<number>(0);
-  const {setPreference, mostImportantCriterionId, preferences} = useContext(
+  const [sliderValue, setSliderValue] = useState<number>(100);
+  const {setPreference, mostImportantCriterionId} = useContext(
     ElicitationContext
   );
-
+  //FIXME: doesnt init
   useEffect(() => {
-    const sliderValue = calculateSliderValue();
-    setSliderValue(sliderValue);
     setPreference(criterion.id, sliderValue);
   }, [mostImportantCriterionId]);
 
   function handleSliderChanged(event: any, newValue: any) {
     setSliderValue(newValue);
     setPreference(criterion.id, newValue);
-  }
-
-  function calculateSliderValue(): number {
-    if (preferences[criterion.id] === undefined) {
-      return 100;
-    } else if (preferences[criterion.id].ratio === 0) {
-      return 0;
-    } else {
-      return 100 / preferences[criterion.id].ratio;
-    }
   }
 
   return (

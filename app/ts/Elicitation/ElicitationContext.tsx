@@ -52,7 +52,8 @@ export function ElicitationContextProviderComponent({
         save,
         setIsNextDisabled,
         setMostImportantCriterionId,
-        setPreference
+        setPreference,
+        setPreferences
       }}
     >
       {children}
