@@ -39,6 +39,7 @@ export default function PartialValueFunctionButtons({
           onClick={handleIncreasingClick}
         >
           <img
+            id={`pvf-questionmark-${criterionId}`}
             src="img/upchart.png"
             alt="increasing PVF"
             className="image-in-button"

@@ -62,7 +62,7 @@ export default function DeleteScenarioButton() {
         </DialogContent>
         <DialogActions>
           <Button
-            id="delete-scenario-button"
+            id="delete-scenario-confirm-button"
             variant="contained"
             color="secondary"
             onClick={handleDeleteButtonClick}

@@ -32,7 +32,7 @@ function beforeEach(browser) {
   errorService
     .isErrorBarHidden(browser)
     .click('#preferences-tab')
-    .pause(50)
+    .pause(100)
     .waitForElementVisible('#partial-value-functions-block');
 }
 
@@ -52,7 +52,7 @@ function create(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
     .click('#create-new-scenario-button')
-    .pause(50)
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
 
@@ -62,7 +62,7 @@ function edit(browser) {
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
     .click('#edit-scenario-title-button')
-    .pause(50)
+    .pause(100)
     .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
@@ -75,7 +75,7 @@ function copy(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
     .click('#create-new-scenario-button')
-    .pause(50) //pause needed to not get 'stale element' error
+    .pause(100) //pause needed to not get 'stale element' error
     .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
@@ -99,7 +99,7 @@ function switchInDeterministic(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
     .click('#create-new-scenario-button')
-    .pause(50)
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#deterministic-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
@@ -114,7 +114,7 @@ function switchInSmaa(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
     .click('#create-new-scenario-button')
-    .pause(50)
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#smaa-tab')
     .waitForElementVisible('#smaa-measurements-header')
@@ -124,35 +124,35 @@ function switchInSmaa(browser) {
 }
 function deleteScenario(browser) {
   browser
-    .waitForElementVisible('#delete-scenario-disabled')
+    .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
     .waitForElementVisible('#create-new-scenario-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
     .click('#create-new-scenario-button')
-    .pause(50) //pause needed to not get 'stale element' error
+    .pause(100) //pause needed to not get 'stale element' error
     .waitForElementVisible('#delete-scenario-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#delete-scenario-button')
-    .waitForElementVisible('#delete-scenario-header')
+    .waitForElementVisible('#dialog-title')
     .click('#delete-scenario-confirm-button')
-    .waitForElementVisible('#delete-scenario-disabled')
+    .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default');
 }
 
 function cancelDeleteScenario(browser) {
   browser
-    .waitForElementVisible('#delete-scenario-disabled')
+    .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
     .waitForElementVisible('#create-new-scenario-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#create-new-scenario-button:enabled')
     .click('#create-new-scenario-button')
-    .pause(50) //pause needed to not get 'stale element' error
+    .pause(100) //pause needed to not get 'stale element' error
     .click('#delete-scenario-button')
-    .waitForElementVisible('#delete-scenario-header')
+    .waitForElementVisible('#dialog-title')
     .click('#close-modal-button')
     .waitForElementVisible('#delete-scenario-button')
     .assert.containsText('#scenario-selector', scenarioTitle);
