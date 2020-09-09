@@ -27,9 +27,7 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function set(browser) {
@@ -87,12 +85,11 @@ function resetTradeOffs(browser) {
     .assert.containsText('#importance-criterion-1', '?')
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
-    .click('#ranking-option-0')
+    .click('#criterion-option-0')
     .click('#save-button')
     .assert.containsText('#importance-criterion-0', '1')
     .assert.containsText('#importance-criterion-1', '2')
     .click('#set-decreasing-pvf-0')
     .assert.containsText('#importance-criterion-0', '?')
-    .assert.containsText('#importance-criterion-1', '?')
-    ;
+    .assert.containsText('#importance-criterion-1', '?');
 }

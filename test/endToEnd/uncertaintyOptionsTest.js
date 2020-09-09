@@ -54,7 +54,7 @@ function stochasticWeightsWarning(browser) {
     .click('#preferences-tab')
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#swing-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .click('#save-button')
     .waitForElementVisible('#precise-swing-button');
