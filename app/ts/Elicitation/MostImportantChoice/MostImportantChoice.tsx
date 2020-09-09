@@ -1,26 +1,25 @@
 import Grid from '@material-ui/core/Grid';
-import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
+import CriterionChoice from '../CriterionChoice/CriterionChoice';
+import CriterionSituation from '../CriterionSituation/CriterionSituation';
 import {ElicitationContext} from '../ElicitationContext';
-import {getBest, getWorst} from '../ElicitationUtil';
+import {getWorst} from '../ElicitationUtil';
+import IElicitationCriterion from '../Interface/IElicitationCriterion';
 import {PreferencesContext} from '../PreferencesContext';
 
 export default function MostImportantChoice() {
   const {
     mostImportantCriterionId,
     setMostImportantCriterionId,
-    setIsNextDisabled,
-    initializePreferences
+    setIsNextDisabled
   } = useContext(ElicitationContext);
   const {criteria} = useContext(PreferencesContext);
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
     setMostImportantCriterionId(event.target.value);
-    initializePreferences(criteria, event.target.value);
     setIsNextDisabled(false);
   }
 
@@ -30,19 +29,13 @@ export default function MostImportantChoice() {
         <Typography variant="h6">Given the following situation:</Typography>
       </Grid>
       <Grid item xs={12}>
-        {_.map(criteria, (criterion) => {
+        {_.map(criteria, (criterion: IElicitationCriterion) => {
           return (
-            <ul key={criterion.mcdaId}>
-              <li>
-                <Tooltip
-                  disableHoverListener={!criterion.description}
-                  title={criterion.description ? criterion.description : ''}
-                >
-                  <span className="criterion-title">{criterion.title}</span>
-                </Tooltip>
-                : {getWorst(criterion)} {criterion.unitOfMeasurement}
-              </li>
-            </ul>
+            <CriterionSituation
+              key={criterion.id}
+              criterion={criterion}
+              displayValue={getWorst(criterion)}
+            />
           );
         })}
       </Grid>
@@ -59,22 +52,11 @@ export default function MostImportantChoice() {
         >
           {_.map(_.toArray(criteria), (criterion, index) => {
             return (
-              <label key={criterion.mcdaId}>
-                <Radio key={criterion.mcdaId} value={criterion.mcdaId} />
-                {criterion.pvfDirection}{' '}
-                <Tooltip
-                  disableHoverListener={!criterion.description}
-                  title={criterion.description ? criterion.description : ''}
-                >
-                  <span
-                    id={`most-important-option-${index}`}
-                    className="criterion-title"
-                  >
-                    {criterion.title}
-                  </span>
-                </Tooltip>{' '}
-                from {getWorst(criterion)} to {getBest(criterion)}
-              </label>
+              <CriterionChoice
+                key={criterion.id}
+                criterion={criterion}
+                index={index}
+              />
             );
           })}
         </RadioGroup>

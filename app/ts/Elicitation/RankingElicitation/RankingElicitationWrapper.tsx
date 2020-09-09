@@ -4,7 +4,7 @@ import React from 'react';
 import IInputCriterion from '../Interface/IInputCriterion';
 import IOrdinalRanking from '../Interface/IOrdinalRanking';
 import {PreferencesContextProviderComponent} from '../PreferencesContext';
-import RankingElicitation from './RankingElicitation/RankingElicitation';
+import RankingElicitation from './RankingElicitation';
 import {RankingElicitationContextProviderComponent} from './RankingElicitationContext';
 
 export default function RankingElicitationWrapper({

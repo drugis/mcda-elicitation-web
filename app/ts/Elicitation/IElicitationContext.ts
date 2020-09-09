@@ -1,4 +1,3 @@
-import IElicitationCriterion from './Interface/IElicitationCriterion';
 import IExactSwingRatio from './Interface/IExactSwingRatio';
 
 export default interface IElicitationContext {
@@ -12,8 +11,4 @@ export default interface IElicitationContext {
   setIsNextDisabled: (isNextDisabled: boolean) => void;
   setMostImportantCriterionId: (criterionId: string) => void;
   setPreference: (criterionId: string, preference: number) => void;
-  initializePreferences: (
-    criteria: Record<string, IElicitationCriterion>,
-    mostImportantCriterionId: string
-  ) => void;
 }

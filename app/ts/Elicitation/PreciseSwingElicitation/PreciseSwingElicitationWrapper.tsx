@@ -5,7 +5,7 @@ import {ElicitationContextProviderComponent} from '../ElicitationContext';
 import IExactSwingRatio from '../Interface/IExactSwingRatio';
 import IInputCriterion from '../Interface/IInputCriterion';
 import {PreferencesContextProviderComponent} from '../PreferencesContext';
-import PreciseSwingWeighting from './PreciseSwingElicitation/PreciseSwingWeighting';
+import PreciseSwingWeighting from './PreciseSwingWeighting';
 
 export default function PreciseSwingElicitationWrapper({
   criteria,
@@ -18,7 +18,11 @@ export default function PreciseSwingElicitationWrapper({
 }) {
   return (
     <PreferencesContextProviderComponent inputCriteria={criteria}>
-      <ElicitationContextProviderComponent cancel={cancel} save={save}>
+      <ElicitationContextProviderComponent
+        elicitationMethod={'precise'}
+        cancel={cancel}
+        save={save}
+      >
         <Grid container justify="center" component={Box} mt={2}>
           <PreciseSwingWeighting />
         </Grid>

@@ -69,9 +69,9 @@ function ranking(browser) {
   browser
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
-    .click('#ranking-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
-    .click('#ranking-option-0')
+    .click('#criterion-option-0')
     .click('#save-button');
 
   matchImportanceColumnContents(browser, 'Ranking', 1, 2, 3);
@@ -83,7 +83,7 @@ function rankingGoBack(browser) {
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
     .assert.containsText('#step-counter', 'Step 1 of 2')
-    .click('#ranking-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')
@@ -94,7 +94,7 @@ function matching(browser) {
   browser
     .click('#matching-button')
     .waitForElementVisible('#matching-title-header')
-    .click('#most-important-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .click('#next-button')
     .click('#save-button');
@@ -108,7 +108,7 @@ function matchingGoBack(browser) {
     .click('#matching-button')
     .waitForElementVisible('#matching-title-header')
     .assert.containsText('#step-counter', 'Step 1 of 3')
-    .click('#most-important-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .assert.containsText('#step-counter', 'Step 2 of 3')
     .click('#previous-button')
@@ -119,7 +119,7 @@ function preciseSwing(browser) {
   browser
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#most-important-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .click('#save-button');
 
@@ -138,7 +138,7 @@ function preciseSwingGoBack(browser) {
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
     .assert.containsText('#step-counter', 'Step 1 of 2')
-    .click('#most-important-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')

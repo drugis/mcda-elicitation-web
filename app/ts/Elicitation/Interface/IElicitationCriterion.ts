@@ -1,10 +1,11 @@
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {PVFDirection} from './IPVF';
 
 export default interface IElicitationCriterion {
-  mcdaId: string;
+  id: string;
   title: string;
   scales: [number, number];
-  unitOfMeasurement: string;
+  unitOfMeasurement: IUnitOfMeasurement;
   pvfDirection?: PVFDirection;
   description: string;
 }

@@ -5,7 +5,7 @@ import {ElicitationContextProviderComponent} from '../ElicitationContext';
 import IExactSwingRatio from '../Interface/IExactSwingRatio';
 import IInputCriterion from '../Interface/IInputCriterion';
 import {PreferencesContextProviderComponent} from '../PreferencesContext';
-import MatchingElicitation from './MatchingElicitation/MatchingElicitation';
+import MatchingElicitation from './MatchingElicitation';
 
 export default function MatchingElicitationWrapper({
   criteria,
@@ -18,7 +18,11 @@ export default function MatchingElicitationWrapper({
 }) {
   return (
     <PreferencesContextProviderComponent inputCriteria={criteria}>
-      <ElicitationContextProviderComponent cancel={cancel} save={save}>
+      <ElicitationContextProviderComponent
+        elicitationMethod={'matching'}
+        cancel={cancel}
+        save={save}
+      >
         <Grid container justify="center" component={Box} mt={2}>
           <MatchingElicitation />
         </Grid>
