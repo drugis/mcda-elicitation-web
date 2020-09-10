@@ -123,7 +123,7 @@ define(['angular', 'mcda/services/taskDependencies'], function (angular) {
             criteria: criteria,
             alternatives: {}
           },
-          preferensces: []
+          preferences: []
         };
 
         var expected = angular.copy(state);
