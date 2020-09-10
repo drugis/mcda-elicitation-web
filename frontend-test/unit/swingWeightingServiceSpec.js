@@ -6,7 +6,7 @@ define([
   'angular-mocks',
   'mcda/preferences/preferences'
 ], function (_, angular) {
-  describe('Exact swing weighting service', function () {
+  describe('swingWeightingService', function () {
     var scope;
     var currentScenario;
     var $stateParams;
@@ -45,10 +45,11 @@ define([
       'WorkspaceSettingsService',
       ['usePercentage', 'getRandomSeed']
     );
-    var preferencesServiceMock = jasmine.createSpyObj('PreferencesService', [
-      'getWeights'
-    ]);
-    preferencesServiceMock.getWeights.and.returnValue({
+    var pataviResultsServiceMock = jasmine.createSpyObj(
+      'PataviResultsService',
+      ['getWeights']
+    );
+    pataviResultsServiceMock.getWeights.and.returnValue({
       then: (callback) => {
         callback();
       }
@@ -62,7 +63,7 @@ define([
           workspaceSettingsServiceMock
         );
         $provide.value('OrderingService', orderingServiceMock);
-        $provide.value('PreferencesService', preferencesServiceMock);
+        $provide.value('PataviResultsService', pataviResultsServiceMock);
       })
     );
 
@@ -148,7 +149,6 @@ define([
           stateMock.go.calls.reset();
         });
         it('should set the preferences properly and go back to the preferences screen', function () {
-          expect(currentScenario.$save).toHaveBeenCalled();
           expect(stateMock.go).toHaveBeenCalledWith('preferences');
           expect(scope.$emit).toHaveBeenCalled();
         });

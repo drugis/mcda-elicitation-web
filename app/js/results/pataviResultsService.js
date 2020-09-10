@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function() {
+define(['angular'], function () {
   var dependencies = [
     '$http',
     '$q',
@@ -7,17 +7,32 @@ define(['angular'], function() {
     'PataviService',
     'WorkspaceSettingsService'
   ];
-  var PataviResultsService = function(
+  var PataviResultsService = function (
     $http,
     $q,
     $rootScope,
     PataviService,
     WorkspaceSettingsService
   ) {
+    function getWeights(problem, scenario) {
+      const newProblem = {
+        ..._.cloneDeep(problem),
+        method: 'representativeWeights',
+        seed: WorkspaceSettingsService.getRandomSeed()
+      };
+      return $http
+        .post('/patavi/weights', {problem: newProblem, scenario: scenario})
+        .then((result) => {
+          return result.data;
+        }, errorHandler)
+        .catch(errorHandler);
+    }
+
     function postAndHandleResults(problem, successHandler) {
       problem.seed = WorkspaceSettingsService.getRandomSeed();
-      return $http.post('/patavi', problem)
-        .then(function(result) {
+      return $http
+        .post('/patavi', problem)
+        .then(function (result) {
           var uri = result.headers('Location');
           if (result.status === 201 && uri) {
             return uri;
@@ -38,7 +53,7 @@ define(['angular'], function() {
         type: 'PATAVI',
         message: pataviError.cause
       });
-      return ($q.reject(pataviError));
+      return $q.reject(pataviError);
     }
 
     function defaultSuccessHandler(result) {
@@ -46,7 +61,8 @@ define(['angular'], function() {
     }
 
     return {
-      postAndHandleResults: postAndHandleResults
+      postAndHandleResults,
+      getWeights
     };
   };
   return dependencies.concat(PataviResultsService);
