@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function () {
+define(['lodash', 'angular'], function (_) {
   var dependencies = [
     '$http',
     '$q',

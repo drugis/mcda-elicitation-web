@@ -1,3 +1,4 @@
+import {Tooltip} from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,18 +15,22 @@ import {
 import {buildImportance} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
-  const {criteria, pvfs, currentScenario, problem} = useContext(
-    PreferencesContext
-  );
+  const {criteria, pvfs, currentScenario} = useContext(PreferencesContext);
   const importances: Record<string, string> = buildImportance(
     criteria,
     currentScenario.state.prefs
   );
 
   function getWeight(criterionId: string) {
-    return currentScenario.state.weights
-      ? significantDigits(currentScenario.state.weights.mean[criterionId])
-      : '?';
+    if (currentScenario.state.weights) {
+      return significantDigits(currentScenario.state.weights.mean[criterionId]);
+    } else {
+      return (
+        <Tooltip title="Not all partial value functions have been set">
+          <span>?</span>
+        </Tooltip>
+      );
+    }
   }
 
   return (

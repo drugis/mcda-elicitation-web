@@ -74,7 +74,8 @@ define([
         'scenarios',
         'currentScenarioId',
         'workspaceId',
-        'problem'
+        'problem',
+        'settings'
       ])
     )
 

@@ -12,6 +12,8 @@ import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import IPreferencesContext from './IPreferencesContext';
 import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
+import IWorkspaceSettings from '@shared/interface/IWorkspaceSettings';
+
 export const PreferencesContext = createContext<IPreferencesContext>(
   {} as IPreferencesContext
 );
@@ -21,13 +23,15 @@ export function PreferencesContextProviderComponent({
   scenarios,
   currentScenarioId,
   workspaceId,
-  problem
+  problem,
+  settings
 }: {
   children: any;
   scenarios: IScenario[];
   currentScenarioId: string;
   workspaceId: string;
   problem: IProblem;
+  settings: IWorkspaceSettings;
 }) {
   const {setError} = useContext(ErrorContext);
   const [contextScenarios, setScenarios] = useState<Record<string, IScenario>>(
@@ -56,11 +60,29 @@ export function PreferencesContextProviderComponent({
     let newPvfs = _.cloneDeep(pvfs);
     newPvfs[criterionId] = pvf;
     setPvfs(newPvfs);
-    let newScenario = _.cloneDeep(currentScenario);
+    let newScenario: IScenario = _.cloneDeep(currentScenario);
     newScenario.state.problem.criteria[criterionId] = {
       dataSources: [{pvf: {direction: direction, type: 'linear'}}]
     };
     updateScenario(newScenario);
+    if (areAllPvfsSet()) {
+      getWeights();
+    }
+  }
+
+  function getWeights() {
+    const postProblem = {
+      ..._.cloneDeep(problem),
+      method: 'representativeWeights',
+      seed: settings.randomSeed
+    };
+    Axios.post('/patavi/weights', postProblem);
+  }
+
+  function areAllPvfsSet() {
+    return !_.every(pvfs, (pvf) => {
+      return !!pvf.direction;
+    });
   }
 
   function updateScenario(newScenario: IScenario): void {
