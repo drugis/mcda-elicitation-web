@@ -1,4 +1,5 @@
 import IExactSwingRatio from './Interface/IExactSwingRatio';
+import {ElicitationMethod} from './Interface/IPreference';
 import IRatioBound from './Interface/IRatioBound';
 
 export default interface IElicitationContext {
@@ -6,6 +7,7 @@ export default interface IElicitationContext {
   isNextDisabled: boolean;
   mostImportantCriterionId: string;
   preferences: Record<string, IExactSwingRatio | IRatioBound>;
+  elicitationMethod: ElicitationMethod;
   cancel: () => void;
   setCurrentStep: (newStep: number) => void;
   save: (preferences: (IRatioBound | IExactSwingRatio)[]) => void;

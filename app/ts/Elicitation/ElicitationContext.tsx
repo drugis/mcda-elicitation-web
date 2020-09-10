@@ -63,6 +63,7 @@ export function ElicitationContextProviderComponent({
         isNextDisabled,
         mostImportantCriterionId,
         preferences,
+        elicitationMethod,
         cancel,
         setCurrentStep,
         save,
