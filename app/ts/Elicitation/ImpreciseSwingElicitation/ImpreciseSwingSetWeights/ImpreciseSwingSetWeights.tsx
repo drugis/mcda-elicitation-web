@@ -23,9 +23,9 @@ export default function ImpreciseSwingSetWeights() {
       .map((criterion) => {
         const preference: IRatioBound = {
           criteria: [mostImportantCriterionId, criterion.id],
-          elicitationMethod: 'precise',
+          elicitationMethod: 'imprecise',
           type: 'ratio bound',
-          bounds: [100, 1]
+          bounds: [1, 100]
         };
         return [criterion.id, preference];
       })

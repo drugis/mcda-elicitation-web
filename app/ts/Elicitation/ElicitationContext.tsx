@@ -50,7 +50,7 @@ export function ElicitationContextProviderComponent({
       elicitationMethod: 'imprecise',
       type: 'ratio bound',
       criteria: [mostImportantCriterionId, criterionId],
-      bounds: [100 / answer[0], 100 / answer[1]]
+      bounds: [100 / answer[1], 100 / answer[0]]
     };
     updatedPreferences[criterionId] = preference;
     setPreferences(updatedPreferences);
