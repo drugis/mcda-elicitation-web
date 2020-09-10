@@ -4,6 +4,7 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
     '$stateParams',
     'OrderingService',
     'PartialValueFunctionService',
+    'PataviResultsService',
     'PreferencesService',
     'TaskDependencies',
     'WorkspaceSettingsService'
@@ -12,6 +13,7 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
     $stateParams,
     OrderingService,
     PartialValueFunctionService,
+    PataviResultsService,
     PreferencesService,
     TaskDependencies,
     WorkspaceSettingsService
@@ -108,7 +110,10 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
             if (scope.scenario.state.weights) {
               scope.weights = scope.scenario.state.weights;
             } else {
-              PreferencesService.getWeights(scope.problem).then(function (result) {
+              PataviResultsService.getWeights(
+                scope.problem,
+                scope.scenario
+              ).then((result) => {
                 scope.weights = result;
               });
             }
