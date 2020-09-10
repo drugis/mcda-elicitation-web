@@ -1,10 +1,11 @@
 import {Grid} from '@material-ui/core';
 import {ElicitationContext} from 'app/ts/Elicitation/ElicitationContext';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
-import _ from 'lodash';
 import React, {useContext, useEffect} from 'react';
-import IRatioBound from '../../Interface/IRatioBound';
-import {getPreciseSwingStatement} from '../PreciseSwingElicitationUtil';
+import {
+  getImpreciseSwingStatement,
+  setInitialPreferences
+} from '../ImpreciseSwingElicitationUtil';
 import OverviewTable from './OverviewTable/OverviewTable';
 
 export default function ImpreciseSwingSetWeights() {
@@ -16,25 +17,10 @@ export default function ImpreciseSwingSetWeights() {
   useEffect(initPreferences, [mostImportantCriterionId]);
 
   function initPreferences() {
-    const preferences: Record<string, IRatioBound> = _(criteria)
-      .filter((criterion) => {
-        return criterion.id !== mostImportantCriterionId;
-      })
-      .map((criterion) => {
-        const preference: IRatioBound = {
-          criteria: [mostImportantCriterionId, criterion.id],
-          elicitationMethod: 'imprecise',
-          type: 'ratio bound',
-          bounds: [1, 100]
-        };
-        return [criterion.id, preference];
-      })
-      .fromPairs()
-      .value();
-    setPreferences(preferences);
+    setPreferences(setInitialPreferences(criteria, mostImportantCriterionId));
   }
 
-  const statement = getPreciseSwingStatement(
+  const statement = getImpreciseSwingStatement(
     criteria[mostImportantCriterionId]
   );
 

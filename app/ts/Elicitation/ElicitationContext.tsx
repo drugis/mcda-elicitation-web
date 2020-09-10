@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import React, {createContext, useState} from 'react';
 import IElicitationContext from './IElicitationContext';
-import {ElicitationMethod} from './Interface/ElicitationMethod';
 import IExactSwingRatio from './Interface/IExactSwingRatio';
+import {ElicitationMethod} from './Interface/IPreference';
 import IRatioBound from './Interface/IRatioBound';
 
 export const ElicitationContext = createContext<IElicitationContext>(

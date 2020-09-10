@@ -14,7 +14,7 @@ export default function CriterionChoice({
   return (
     <label key={criterion.id}>
       <Radio key={criterion.id} value={criterion.id} />
-      {criterion.pvfDirection}{' '}
+      {`${criterion.pvfDirection} `}
       <Tooltip
         disableHoverListener={!criterion.description}
         title={criterion.description ? criterion.description : ''}
@@ -22,8 +22,8 @@ export default function CriterionChoice({
         <span id={`criterion-option-${index}`} className="criterion-title">
           {criterion.title}
         </span>
-      </Tooltip>{' '}
-      from {getWorst(criterion)} to {getBest(criterion)}
+      </Tooltip>
+      {` from ${getWorst(criterion)} to ${getBest(criterion)}`}
     </label>
   );
 }

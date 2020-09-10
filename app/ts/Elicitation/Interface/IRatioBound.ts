@@ -1,7 +1,6 @@
-import {ElicitationMethod} from './ElicitationMethod';
+import IPreference from './IPreference';
 
-export default interface IRatioBound {
-  elicitationMethod: ElicitationMethod;
+export default interface IRatioBound extends IPreference {
   type: 'ratio bound';
   criteria: [string, string];
   bounds: [number, number];
