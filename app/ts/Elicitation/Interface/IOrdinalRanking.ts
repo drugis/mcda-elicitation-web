@@ -1,7 +1,6 @@
-import {ElicitationMethod} from './ElicitationMethod';
+import IPreference from './IPreference';
 
-export default interface IOrdinalRanking {
-  elicitationMethod: ElicitationMethod;
+export default interface IOrdinalRanking extends IPreference {
   type: 'ordinal';
   criteria: [string, string];
 }

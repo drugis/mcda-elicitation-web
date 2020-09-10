@@ -2,7 +2,6 @@ import _ from 'lodash';
 import {DEFAULT_MATCHING_TEMPLATE} from '../elicitationConstants';
 import {getBest, getWorst} from '../ElicitationUtil';
 import IElicitationCriterion from '../Interface/IElicitationCriterion';
-//FIXME: tests
 
 export function getCurrentCriterion(
   criteria: Record<string, IElicitationCriterion>,
