@@ -7,7 +7,7 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
     '$injector',
     'PartialValueFunctionService',
     'PageTitleService',
-    'PreferencesService',
+    'PataviResultsService',
     'OrderingService',
     'WorkspaceSettingsService',
     'currentScenario',
@@ -20,7 +20,7 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
     $injector,
     PartialValueFunctionService,
     PageTitleService,
-    PreferencesService,
+    PataviResultsService,
     OrderingService,
     WorkspaceSettingsService,
     currentScenario,
@@ -88,16 +88,16 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
       const newProblem = _.extend({}, $scope.problem, {
         preferences: nextState.prefs
       });
-      PreferencesService.getWeights(newProblem).then((result) => {
-        currentScenario.state = _.extend({}, currentScenario.state, {
-          prefs: nextState.prefs,
-          weights: result
-        });
-        currentScenario.$save($stateParams, function () {
+      PataviResultsService.getWeights(newProblem, currentScenario).then(
+        (result) => {
+          currentScenario.state = _.extend({}, currentScenario.state, {
+            prefs: nextState.prefs,
+            weights: result
+          });
           $scope.$emit('elicit.resultsAccessible', currentScenario);
           $state.go('preferences');
-        });
-      });
+        }
+      );
     }
 
     function canSave(state) {

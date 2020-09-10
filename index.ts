@@ -6,7 +6,6 @@ import session, {SessionOptions} from 'express-session';
 import helmet from 'helmet';
 import http from 'http';
 import {
-  CREATED,
   FORBIDDEN,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
@@ -14,7 +13,6 @@ import {
 } from 'http-status-codes';
 import _ from 'lodash';
 import 'module-alias/register';
-import getRequiredRights from './node-backend/getRequiredRights';
 // @ts-ignore
 import RightsManagement from 'rights-management';
 // @ts-ignore
@@ -23,16 +21,17 @@ import Signin from 'signin';
 import StartupDiagnostics from 'startup-diagnostics';
 import DB from './node-backend/db';
 import {buildDBConfig, buildDBUrl} from './node-backend/dbUtil';
+import getRequiredRights from './node-backend/getRequiredRights';
 import InProgressWorkspaceRepository from './node-backend/inProgressRepository';
 import InProgressRouter from './node-backend/inProgressRouter';
 import logger from './node-backend/logger';
 import OrderingRouter from './node-backend/orderingRouter';
-import createPataviTask from './node-backend/patavi';
 import ScenarioRouter from './node-backend/scenarioRouter';
 import SubproblemRouter from './node-backend/subproblemRouter';
 import WorkspaceRepository from './node-backend/workspaceRepository';
 import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
+import PataviRouter from './node-backend/pataviRouter';
 
 const db = DB(buildDBConfig());
 
@@ -52,6 +51,7 @@ const orderingRouter = OrderingRouter(db);
 const subproblemRouter = SubproblemRouter(db);
 const scenarioRouter = ScenarioRouter(db);
 const workspaceSettingsRouter = WorkspaceSettingsRouter(db);
+const pataviRouter = PataviRouter(db);
 const startupDiagnostics = StartupDiagnostics(db, logger, 'MCDA');
 const rightsManagement = RightsManagement();
 
@@ -148,8 +148,7 @@ function initApp(): void {
   app.use('/workspaces', scenarioRouter);
   app.use('/workspaces', workspaceSettingsRouter);
 
-  app.post('/patavi', pataviHandler);
-
+  app.use('/patavi', pataviRouter);
   app.use(errorHandler);
 
   //The 404 Route (ALWAYS Keep this as the last route)
@@ -159,24 +158,6 @@ function initApp(): void {
 
   startListening((port: string): void => {
     logger.info('Listening on http://localhost:' + port);
-  });
-}
-
-function pataviHandler(request: Request, response: Response, next: any): void {
-  // FIXME: separate routes for scales and results
-  createPataviTask(request.body, (error: Error, taskUri: string): void => {
-    if (error) {
-      logger.error(error);
-      return next({
-        message: error,
-        statusCode: INTERNAL_SERVER_ERROR
-      });
-    }
-    response.location(taskUri);
-    response.status(CREATED);
-    response.json({
-      href: taskUri
-    });
   });
 }
 
