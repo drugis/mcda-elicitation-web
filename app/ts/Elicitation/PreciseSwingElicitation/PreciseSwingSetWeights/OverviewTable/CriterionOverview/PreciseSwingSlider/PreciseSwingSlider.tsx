@@ -13,7 +13,6 @@ export default function PreciseSwingSlider({
   const {setPreference, mostImportantCriterionId} = useContext(
     ElicitationContext
   );
-  //FIXME: doesnt init
   useEffect(() => {
     setPreference(criterion.id, sliderValue);
   }, [mostImportantCriterionId]);

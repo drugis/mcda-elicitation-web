@@ -1,10 +1,11 @@
 import {Grid} from '@material-ui/core';
 import {ElicitationContext} from 'app/ts/Elicitation/ElicitationContext';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
-import _ from 'lodash';
 import React, {useContext, useEffect} from 'react';
-import IExactSwingRatio from '../../Interface/IExactSwingRatio';
-import {getPreciseSwingStatement} from '../PreciseSwingElicitationUtil';
+import {
+  getPreciseSwingStatement,
+  setPreferencesToMax
+} from '../PreciseSwingElicitationUtil';
 import OverviewTable from './OverviewTable/OverviewTable';
 
 export default function PreciseSwingSetWeights() {
@@ -16,22 +17,7 @@ export default function PreciseSwingSetWeights() {
   useEffect(initPreferences, [mostImportantCriterionId]);
 
   function initPreferences() {
-    const preferences: Record<string, IExactSwingRatio> = _(criteria)
-      .filter((criterion) => {
-        return criterion.id !== mostImportantCriterionId;
-      })
-      .map((criterion) => {
-        const preference: IExactSwingRatio = {
-          criteria: [mostImportantCriterionId, criterion.id],
-          elicitationMethod: 'precise',
-          type: 'exact swing',
-          ratio: 1
-        };
-        return [criterion.id, preference];
-      })
-      .fromPairs()
-      .value();
-    setPreferences(preferences);
+    setPreferences(setPreferencesToMax(criteria, mostImportantCriterionId));
   }
 
   const statement = getPreciseSwingStatement(
