@@ -33,8 +33,8 @@ jobs:
           echo "${{ secrets.pataviClientCrt }}" > crt.pem 
           echo "${{ secrets.pataviClientKey }}" > key.pem
           echo "${{ secrets.certificateAuthority }}" > ca.pem
-          echo "${{ secrets.pataviservercertificate }}" > server-crt.pem
-          echo "${{ secrets.pataviserverkey }}" > server-key.pem
+          echo "${{ secrets.pataviServerCertificate }}" > server-crt.pem
+          echo "${{ secrets.pataviServerKey }}" > server-key.pem
 
       - name: fetch schema
         run: curl https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql -o patavi.schema.sql
