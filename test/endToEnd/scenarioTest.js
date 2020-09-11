@@ -58,6 +58,7 @@ function create(browser) {
 
 function edit(browser) {
   browser
+    .waitForElementVisible('#edit-scenario-button')
     .click('#edit-scenario-button')
     .clearValue('#new-scenario-title')
     .pause(150)
@@ -65,6 +66,9 @@ function edit(browser) {
     .pause(150)
     .click('#edit-scenario-title-button')
     .waitForElementVisible('#scenario-selector')
+    .source((result) => {
+      console.log(result);
+    })
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
 
