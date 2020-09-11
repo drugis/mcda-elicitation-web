@@ -61,14 +61,14 @@ function edit(browser) {
     .waitForElementVisible('#edit-scenario-button')
     .click('#edit-scenario-button')
     .clearValue('#new-scenario-title')
-    .pause(150)
+    .pause(250)
     .setValue('#new-scenario-title', scenarioTitle)
-    .pause(150)
-    .click('#edit-scenario-title-button')
-    .waitForElementVisible('#scenario-selector')
+    .pause(250)
     .source((result) => {
       console.log(result);
     })
+    .click('#edit-scenario-title-button')
+    .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
 
