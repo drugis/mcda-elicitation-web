@@ -1,8 +1,8 @@
-import _ from 'lodash';
 import React, {createContext, useState} from 'react';
 import IOrdinalRanking from '../Interface/IOrdinalRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 import IRankingElicitationContext from './IRankingElicitationContext';
+import {addRanking} from './OrdinalRankingUtil';
 
 export const RankingElicitationContext = createContext<
   IRankingElicitationContext
@@ -21,12 +21,7 @@ export function RankingElicitationContextProviderComponent({
   const [rankings, setRankings] = useState<Record<string, IRankingAnswer>>({});
 
   function setRanking(criterionId: string, rank: number) {
-    let updatedRankings = _.cloneDeep(rankings);
-    const newRanking: IRankingAnswer = {
-      criterionId: criterionId,
-      rank: rank
-    };
-    updatedRankings[criterionId] = newRanking;
+    const updatedRankings = addRanking(rankings, criterionId, rank);
     setRankings(updatedRankings);
   }
 

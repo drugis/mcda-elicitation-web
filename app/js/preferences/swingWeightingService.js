@@ -9,7 +9,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
     '$injector',
     '$timeout',
     'PartialValueFunctionService',
-    'PreferencesService',
+    'PataviResultsService',
     'OrderingService',
     'WorkspaceSettingsService'
   ];
@@ -18,7 +18,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
     $injector,
     $timeout,
     PartialValueFunctionService,
-    PreferencesService,
+    PataviResultsService,
     OrderingService,
     WorkspaceSettingsService
   ) {
@@ -132,17 +132,17 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
         const newProblem = _.extend({}, $state.problem, {
           preferences: prefs
         });
-        PreferencesService.getWeights(newProblem).then((result) => {
-          currentScenario.state = {
-            problem: currentScenario.state.problem,
-            prefs: prefs,
-            weights: result
-          };
-          currentScenario.$save($stateParams, function (scenario) {
-            scope.$emit('elicit.resultsAccessible', scenario);
+        PataviResultsService.getWeights(newProblem, currentScenario).then(
+          (result) => {
+            currentScenario.state = {
+              problem: currentScenario.state.problem,
+              prefs: prefs,
+              weights: result
+            };
+            scope.$emit('elicit.resultsAccessible', currentScenario);
             $state.go('preferences');
-          });
-        });
+          }
+        );
       }
 
       function cancel() {

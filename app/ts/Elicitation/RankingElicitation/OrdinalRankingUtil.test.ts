@@ -1,8 +1,10 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import _ from 'lodash';
 import IElicitationCriterion from '../Interface/IElicitationCriterion';
 import IOrdinalRanking from '../Interface/IOrdinalRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 import {
+  addRanking,
   assignMissingRankings,
   buildOrdinalPreferences,
   findCriterionIdForRank
@@ -96,4 +98,31 @@ describe('buildOrdinalPreferences', () => {
     }
   ];
   expect(result).toEqual(expectedResult);
+});
+
+describe('addRanking', () => {
+  const rankings: Record<string, IRankingAnswer> = {
+    critId1: {
+      criterionId: 'critId1',
+      rank: 1
+    },
+    critId2: {
+      criterionId: 'critId2',
+      rank: 2
+    }
+  };
+  it('should return rankings with a new ranking', () => {
+    const result = addRanking(rankings, 'critId3', 3);
+    const expectedResult = _.merge({}, rankings, {
+      critId3: {criterionId: 'critId3', rank: 3}
+    });
+    expect(result).toEqual(expectedResult);
+  });
+  it('should return rankings with an updated rank of an existing criterion', () => {
+    const result = addRanking(rankings, 'critId1', 2);
+    const expectedResult = _.merge({}, rankings, {
+      critId1: {criterionId: 'critId1', rank: 2}
+    });
+    expect(result).toEqual(expectedResult);
+  });
 });
