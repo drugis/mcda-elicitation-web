@@ -17,17 +17,20 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const title =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const scenarioTitle = 'scenario title';
 
 function beforeEach(browser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 
-  errorService.isErrorBarHidden(browser)
+  errorService
+    .isErrorBarHidden(browser)
     .click('#preferences-tab')
     .pause(50)
     .waitForElementVisible('#partial-value-functions-block');
@@ -35,9 +38,7 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function create(browser) {
@@ -59,16 +60,17 @@ function edit(browser) {
   browser
     .click('#edit-scenario-button')
     .clearValue('#new-scenario-title')
+    .pause(150)
     .setValue('#new-scenario-title', scenarioTitle)
+    .pause(150)
     .click('#edit-scenario-title-button')
-    .pause(50)
     .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
 
 function copy(browser) {
-  browser
-    .assert.containsText('#scenario-selector', 'Default')
+  browser.assert
+    .containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
     .waitForElementVisible('#create-new-scenario-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
