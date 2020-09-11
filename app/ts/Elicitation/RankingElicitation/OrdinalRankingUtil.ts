@@ -20,16 +20,26 @@ export function assignMissingRankings(
   rank: number,
   criteria: Record<string, IElicitationCriterion>
 ): Record<string, IRankingAnswer> {
-  let finishedRankings = _.cloneDeep(rankings);
-  const secondToLastRanking = buildRankingAnswer(selectedCriterionId, rank);
-  finishedRankings[selectedCriterionId] = secondToLastRanking;
+  const intermediateRankings = addRanking(rankings, selectedCriterionId, rank);
   const lastCriterionId = findCriterionIdWithoutRanking(
     criteria,
-    finishedRankings
+    intermediateRankings
   );
-  const lastRanking = buildRankingAnswer(lastCriterionId, rank + 1);
-  finishedRankings[lastCriterionId] = lastRanking;
-  return finishedRankings;
+  return addRanking(intermediateRankings, lastCriterionId, rank + 1);
+}
+
+export function addRanking(
+  rankings: Record<string, IRankingAnswer>,
+  criterionId: string,
+  rank: number
+): Record<string, IRankingAnswer> {
+  let updatedRankings = _.cloneDeep(rankings);
+  const newRanking: IRankingAnswer = {
+    criterionId: criterionId,
+    rank: rank
+  };
+  updatedRankings[criterionId] = newRanking;
+  return updatedRankings;
 }
 
 function findCriterionIdWithoutRanking(
