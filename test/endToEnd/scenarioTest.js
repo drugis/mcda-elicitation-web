@@ -4,7 +4,7 @@ module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Creating a new scenario': create,
-  'Editing the title': edit,
+  // 'Editing the title': edit,
   'Copying the scenario': copy,
   'Switching scenario in the preferences tab': switchinPreferences,
   'Switching scenario in the deterministic results tab': switchInDeterministic,
