@@ -1,10 +1,8 @@
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
-import IProblem from '@shared/interface/Problem/IProblem';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IOrdinalRanking from '@shared/interface/Scenario/IOrdinalRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {TPreferences} from '@shared/types/Preferences';
-import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 
 export function buildImportance(

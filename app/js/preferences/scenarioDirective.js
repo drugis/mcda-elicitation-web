@@ -50,10 +50,12 @@ define(['lodash', 'jquery', 'angular'], function (_, $, angular) {
         }
 
         function doAllCriteriaHavePvf() {
-          return !_.some(scope.aggregateState.problem.criteria, function (
+          return _.every(scope.aggregateState.problem.criteria, function (
             criterion
           ) {
-            return !isPVFDefined(criterion.dataSources[0]);
+            return isPVFDefined(
+              scope.scenario.state.problem.criteria[criterion.id].dataSources[0]
+            );
           });
         }
 

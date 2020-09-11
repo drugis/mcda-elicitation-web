@@ -88,10 +88,12 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
       const newProblem = _.extend({}, $scope.problem, {
         preferences: nextState.prefs
       });
+      currentScenario.state = _.extend({}, currentScenario.state, {
+        prefs: nextState.prefs
+      });
       PataviResultsService.getWeights(newProblem, currentScenario).then(
         (result) => {
           currentScenario.state = _.extend({}, currentScenario.state, {
-            prefs: nextState.prefs,
             weights: result
           });
           $scope.$emit('elicit.resultsAccessible', currentScenario);

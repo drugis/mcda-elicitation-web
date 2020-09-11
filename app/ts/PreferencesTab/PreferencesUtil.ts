@@ -19,9 +19,13 @@ function getScenarioPvf(
   criterionId: string,
   currentScenario: IScenario
 ): IScenarioPvf {
-  const scenarioCriterion = currentScenario.state.problem.criteria[criterionId];
-  if (scenarioCriterion && scenarioCriterion.dataSources) {
-    return scenarioCriterion.dataSources[0].pvf;
+  if (
+    currentScenario.state.problem &&
+    currentScenario.state.problem.criteria[criterionId] &&
+    currentScenario.state.problem.criteria[criterionId].dataSources
+  ) {
+    return currentScenario.state.problem.criteria[criterionId].dataSources[0]
+      .pvf;
   }
 }
 

@@ -23,12 +23,8 @@ define([
   './swingWeightingService',
   './tradeOffService',
 
-  './tradeOffDirective',
   './elicitationTradeOffDirective',
   './elicitationTradeOffPlotDirective',
-  './scenarioDirective',
-  './partialValueFunctionDirective',
-  './partialValuePlotDirective',
   './preferenceElicitationTableDirective',
   './willingnessToTradeOffChartDirective',
   './willingnessToTradeOffDirective',
@@ -56,12 +52,8 @@ define([
   SwingWeightingService,
   TradeOffService,
 
-  tradeOffDirective,
   elicitationTradeOffDirective,
   elicitationTradeOffPlotDirective,
-  scenarioDirective,
-  partialValueFunctionDirective,
-  partialValuePlotDirective,
   preferenceElicitationTableDirective,
   willingnessToTradeOffChartDirective,
   willingnessToTradeOffDirective
@@ -102,12 +94,8 @@ define([
     .factory('TradeOffService', TradeOffService)
     .factory('ScenarioService', ScenarioService)
 
-    .directive('tradeOff', tradeOffDirective)
     .directive('elicitationTradeOff', elicitationTradeOffDirective)
     .directive('elicitationTradeOffPlot', elicitationTradeOffPlotDirective)
-    .directive('scenario', scenarioDirective)
-    .directive('partialValueFunctions', partialValueFunctionDirective)
-    .directive('partialValuePlot', partialValuePlotDirective)
     .directive(
       'preferenceElicitationTable',
       preferenceElicitationTableDirective

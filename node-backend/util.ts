@@ -53,6 +53,6 @@ export function reduceProblem(problem: IProblem): Record<string, any> {
   );
   return {
     criteria: criteria,
-    prefs: problem.prefs
+    prefs: problem.preferences
   };
 }

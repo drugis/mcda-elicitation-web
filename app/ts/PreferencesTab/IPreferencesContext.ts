@@ -12,11 +12,12 @@ export default interface IPreferencesContext {
   pvfs: Record<string, IPvf>;
   criteria: Record<string, IPreferencesCriterion>;
   setCurrentScenario: (currentScenario: IScenario) => void;
-  updateScenario: (newScenario: IScenario) => void;
+  updateScenario: (newScenario: IScenario) => Promise<void>;
   deleteScenario: (id: string) => void;
   copyScenario: (newTitle: string) => void;
   addScenario: (newTitle: string) => void;
   getCriterion: (id: string) => IProblemCriterion;
   getPvf: (criterionId: string) => IPvf;
   setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
+  resetPreferences: (scenario: IScenario) => void;
 }

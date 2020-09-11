@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   getBest,
   getWorst
@@ -16,10 +16,13 @@ import {buildImportance} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
   const {criteria, pvfs, currentScenario} = useContext(PreferencesContext);
-  const importances: Record<string, string> = buildImportance(
-    criteria,
-    currentScenario.state.prefs
+  const [importances, setImportances] = useState<Record<string, string>>(
+    buildImportance(criteria, currentScenario.state.prefs)
   );
+
+  useEffect(() => {
+    setImportances(buildImportance(criteria, currentScenario.state.prefs));
+  }, [currentScenario, pvfs]);
 
   function getWeight(criterionId: string) {
     if (currentScenario.state.weights) {
@@ -47,7 +50,7 @@ export default function PreferencesWeightsTable() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {_.map(criteria, (criterion) => {
+        {_.map(criteria, (criterion, index) => {
           return (
             <TableRow key={criterion.id}>
               <TableCell>{criterion.title}</TableCell>
@@ -55,8 +58,12 @@ export default function PreferencesWeightsTable() {
               <TableCell>{criterion.unitOfMeasurement.label}</TableCell>
               <TableCell>{getWorst(pvfs[criterion.id])}</TableCell>
               <TableCell>{getBest(pvfs[criterion.id])}</TableCell>
-              <TableCell>{importances[criterion.id]}</TableCell>
-              <TableCell>{getWeight(criterion.id)}</TableCell>
+              <TableCell id={`importance-criterion-${index}`}>
+                {importances[criterion.id]}
+              </TableCell>
+              <TableCell id={`weights-criterion-${index}`}>
+                {getWeight(criterion.id)}
+              </TableCell>
             </TableRow>
           );
         })}

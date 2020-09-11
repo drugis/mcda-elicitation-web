@@ -7,13 +7,9 @@
     settings="workspaceSettings"
   ></preferences>
 
-  <scenario
-    aggregate-state="aggregateState"
-    edit-mode="editMode"
-    tasks="tasks"
-    scenario="scenario"
-  >
-  </scenario>
+  <div ng-if="criteriaHavePvf">
+    <willingness-to-trade-off state="aggregateState"></willingness-to-trade-off>
+  </div>
 </div>
 
 <div ng-if="!aggregateState" class="grid-x">
