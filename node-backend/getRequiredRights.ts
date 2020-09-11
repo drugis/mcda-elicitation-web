@@ -17,6 +17,8 @@ export default function getRequiredRights(
 ): IRights[] {
   return [
     makeRights('/patavi', 'POST', 'none'),
+    makeRights('/patavi/weights', 'POST', 'none'),
+
     makeRights('/workspaces', 'GET', 'none'),
     makeRights('/workspaces', 'POST', 'none'),
 
