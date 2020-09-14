@@ -36,7 +36,6 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
       // functions
       scope.canSave = canSaveArg || canSave;
       scope.save = save;
-      scope.saveImprecise = saveImprecise;
       scope.cancel = cancel;
 
       // init
@@ -131,27 +130,6 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
 
       function save(prefs) {
         const newProblem = _.extend({}, $state.problem, {
-          preferences: prefs
-        });
-        PataviResultsService.getWeights(newProblem, currentScenario).then(
-          (result) => {
-            currentScenario.state = {
-              problem: currentScenario.state.problem,
-              prefs: prefs,
-              weights: result
-            };
-            scope.$emit('elicit.resultsAccessible', currentScenario);
-            $state.go('preferences');
-          }
-        );
-      }
-
-      function saveImprecise(state) {
-        const prefs = _(state.values)
-          .omit(state.mostImportantCriterionId)
-          .map(toBackEnd(state.mostImportantCriterionId))
-          .value();
-        const newProblem = _.extend({}, state.problem, {
           preferences: prefs
         });
         PataviResultsService.getWeights(newProblem, currentScenario).then(

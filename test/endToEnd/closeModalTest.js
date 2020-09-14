@@ -31,7 +31,6 @@ const title =
 const preferenceTabPath = '#preferences-tab';
 const importanceCellPath = '#importance-criterion-0';
 const closeModalButtonPath = '#close-modal-button';
-const cancelStep1Path = '#cancel-step1-button';
 
 function cancelAction(browser, paths, expectedValue) {
   util
@@ -187,7 +186,7 @@ function cancelSettingImpreciseSwingWeights(browser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#imprecise-swing-button',
-    cancelButton: cancelStep1Path,
+    cancelButton: '#cancel-button',
     content: importanceCellPath
   };
   cancelAction(browser, paths, '?');

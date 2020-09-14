@@ -149,7 +149,7 @@ function impreciseSwing(browser) {
   browser
     .click('#imprecise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#swing-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .click('#save-button');
 
@@ -167,13 +167,12 @@ function impreciseSwingGoBack(browser) {
   browser
     .click('#imprecise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#swing-option-0')
+    .assert.containsText('#step-counter', 'Step 1 of 2')
+    .click('#criterion-option-0')
     .click('#next-button')
+    .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')
-    .assert.containsText(
-      '#swing-weighting-title-header',
-      'Imprecise swing weighting (1/2)'
-    );
+    .assert.containsText('#step-counter', 'Step 1 of 2');
 }
 
 function interactWithPlot(browser) {

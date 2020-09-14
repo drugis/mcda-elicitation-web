@@ -7,14 +7,14 @@ import MostImportantChoice from '../MostImportantChoice/MostImportantChoice';
 import SwingButtons from '../SwingButtons/SwingButtons';
 import SwingSetWeights from '../SwingSetWeights/SwingSetWeights';
 
-export default function PreciseSwingWeighting() {
+export default function ImpreciseSwingWeighting() {
   const {currentStep} = useContext(ElicitationContext);
 
   return (
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
       <Grid item xs={12}>
         <Typography id="swing-weighting-title-header" variant="h4">
-          Precise swing weighting
+          Imprecise swing weighting
         </Typography>
       </Grid>
       <Grid item xs={12}>

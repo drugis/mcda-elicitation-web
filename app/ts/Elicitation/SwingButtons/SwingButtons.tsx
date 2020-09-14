@@ -4,15 +4,18 @@ import {ElicitationContext} from 'app/ts/Elicitation/ElicitationContext';
 import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import IExactSwingRatio from '../Interface/IExactSwingRatio';
+import IRatioBound from '../Interface/IRatioBound';
 
-export default function PreciseSwingButtons() {
+export default function SwingButtons() {
   const {
     currentStep,
     setCurrentStep,
     cancel,
     save,
     isNextDisabled,
-    preferences
+    preferences,
+    elicitationMethod
   } = useContext(ElicitationContext);
   const {} = useContext(PreferencesContext);
 
@@ -29,7 +32,14 @@ export default function PreciseSwingButtons() {
   }
 
   function finishElicitation() {
-    save(_.toArray(preferences));
+    switch (elicitationMethod) {
+      case 'imprecise':
+        save(_.toArray(preferences as Record<string, IRatioBound>));
+        break;
+      case 'precise':
+        save(_.toArray(preferences as Record<string, IExactSwingRatio>));
+        break;
+    }
   }
 
   function isLastStep() {
