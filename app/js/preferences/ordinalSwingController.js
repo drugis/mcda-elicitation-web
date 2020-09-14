@@ -4,34 +4,27 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
     '$scope',
     '$state',
     '$stateParams',
-    '$injector',
     'PartialValueFunctionService',
     'PageTitleService',
     'PataviResultsService',
     'OrderingService',
     'WorkspaceSettingsService',
-    'currentScenario',
-    'taskDefinition'
+    'currentScenario'
   ];
   var OrdinalSwingController = function (
     $scope,
     $state,
     $stateParams,
-    $injector,
     PartialValueFunctionService,
     PageTitleService,
     PataviResultsService,
     OrderingService,
     WorkspaceSettingsService,
-    currentScenario,
-    taskDefinition
+    currentScenario
   ) {
     //functions
     $scope.save = save;
-    $scope.canSave = canSave;
     $scope.cancel = cancel;
-    $scope.getUnitOfMeasurement =
-      PartialValueFunctionService.getUnitOfMeasurement;
 
     //init
     $scope.pvf = PartialValueFunctionService;
@@ -59,39 +52,17 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
           );
           return criterion;
         });
-        $injector.invoke(
-          Wizard,
-          {},
-          {
-            $scope: $scope,
-            handler: {
-              validChoice: validChoice,
-              fields: [
-                'choice',
-                'reference',
-                'choices',
-                'type',
-                'standardized',
-                'previousChoice'
-              ],
-              nextState: nextState,
-              initialize: initialize,
-              standardize: standardize
-            }
-          }
-        );
       });
     }
 
-    function save(state) {
-      var nextState = standardize(state);
+    function save(prefs) {
       const newProblem = _.extend({}, $scope.problem, {
-        preferences: nextState.prefs
+        preferences: prefs
       });
       PataviResultsService.getWeights(newProblem, currentScenario).then(
         (result) => {
           currentScenario.state = _.extend({}, currentScenario.state, {
-            prefs: nextState.prefs,
+            prefs: prefs,
             weights: result
           });
           $scope.$emit('elicit.resultsAccessible', currentScenario);
@@ -100,92 +71,8 @@ define(['lodash', '../controllers/wizard'], function (_, Wizard) {
       );
     }
 
-    function canSave(state) {
-      return state && _.size(state.choices) === 2;
-    }
-
     function cancel() {
       $state.go('preferences');
-    }
-
-    function title(step, total) {
-      var base = 'Ranking';
-      return base + ' (' + step + '/' + total + ')';
-    }
-
-    function initialize() {
-      var state = taskDefinition.clean($scope.aggregateState);
-      var fields = {
-        title: title(1, _.size($scope.criteria) - 1),
-        type: 'elicit',
-        prefs: {
-          ordinal: []
-        },
-        reference: _.cloneDeep($scope.criteria),
-        choices: _.cloneDeep($scope.criteria)
-      };
-      return _.extend(state, fields);
-    }
-
-    function validChoice(state) {
-      return state && _.includes(_.map($scope.criteria, 'id'), state.choice);
-    }
-
-    function nextState(state) {
-      if (!validChoice(state)) {
-        return null;
-      }
-      var choiceCriterion = _.find($scope.criteria, function (criterion) {
-        return criterion.id === state.choice;
-      });
-      choiceCriterion.alreadyChosen = true;
-
-      var nextState = _.cloneDeep(state);
-      nextState.choice = undefined;
-      nextState.choices = _.reject(nextState.choices, function (criterion) {
-        return criterion.id === state.choice;
-      });
-      nextState.prefs.ordinal.push(state.choice);
-      nextState.title = title(
-        nextState.prefs.ordinal.length + 1,
-        $scope.criteria.length - 1
-      );
-
-      return nextState;
-    }
-
-    function standardize(state) {
-      var standardizedState = _.cloneDeep(state);
-      var prefs = standardizedState.prefs;
-      var order = prefs.ordinal;
-
-      function ordinal(a, b) {
-        return {
-          type: 'ordinal',
-          criteria: [a, b]
-        };
-      }
-
-      if (order.length === $scope.criteria.length - 2) {
-        order.push(state.choice);
-      }
-      var result = [];
-      for (var i = 0; i < order.length - 1; i++) {
-        result.push(ordinal(order[i], order[i + 1]));
-      }
-      if (order.length > 0) {
-        var remaining = _.difference(
-          _.map($scope.criteria, 'id'),
-          order
-        ).sort();
-        result = result.concat(
-          _.map(remaining, function (criterion) {
-            return ordinal(_.last(order), criterion);
-          })
-        );
-      }
-      standardizedState.prefs = result;
-      return standardizedState;
     }
   };
   return dependencies.concat(OrdinalSwingController);

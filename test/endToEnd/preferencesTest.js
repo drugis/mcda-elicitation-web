@@ -5,6 +5,7 @@ module.exports = {
   afterEach: afterEach,
   'Setting the weights through ranking': ranking,
   'Ranking previous button': rankingGoBack,
+  'Setting the weights through matching': matching,
   'Matching previous button': matchingGoBack,
   'Setting the weights through precise swing weighting': preciseSwing,
   'Precise swing previous button': preciseSwingGoBack,
@@ -68,9 +69,9 @@ function ranking(browser) {
   browser
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
-    .click('#ranking-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
-    .click('#ranking-option-0')
+    .click('#criterion-option-0')
     .click('#save-button');
 
   matchImportanceColumnContents(browser, 'Ranking', 1, 2, 3);
@@ -81,27 +82,44 @@ function rankingGoBack(browser) {
   browser
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
-    .click('#ranking-option-0')
+    .assert.containsText('#step-counter', 'Step 1 of 2')
+    .click('#criterion-option-0')
     .click('#next-button')
+    .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')
-    .assert.containsText('#ranking-title-header', 'Ranking (1/2)');
+    .assert.containsText('#step-counter', 'Step 1 of 2');
+}
+
+function matching(browser) {
+  browser
+    .click('#matching-button')
+    .waitForElementVisible('#matching-title-header')
+    .click('#criterion-option-0')
+    .click('#next-button')
+    .click('#next-button')
+    .click('#save-button');
+
+  matchImportanceColumnContents(browser, 'Matching', '100%', '100%', '100%');
+  resetWeights(browser);
 }
 
 function matchingGoBack(browser) {
   browser
     .click('#matching-button')
     .waitForElementVisible('#matching-title-header')
-    .click('#matching-option-0')
+    .assert.containsText('#step-counter', 'Step 1 of 3')
+    .click('#criterion-option-0')
     .click('#next-button')
+    .assert.containsText('#step-counter', 'Step 2 of 3')
     .click('#previous-button')
-    .assert.containsText('#matching-title-header', 'Matching (1/2)');
+    .assert.containsText('#step-counter', 'Step 1 of 3');
 }
 
 function preciseSwing(browser) {
   browser
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#swing-option-0')
+    .click('#criterion-option-0')
     .click('#next-button')
     .click('#save-button');
 
@@ -119,13 +137,12 @@ function preciseSwingGoBack(browser) {
   browser
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#swing-option-0')
+    .assert.containsText('#step-counter', 'Step 1 of 2')
+    .click('#criterion-option-0')
     .click('#next-button')
+    .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')
-    .assert.containsText(
-      '#swing-weighting-title-header',
-      'Precise swing weighting (1/2)'
-    );
+    .assert.containsText('#step-counter', 'Step 1 of 2');
 }
 
 function impreciseSwing(browser) {
@@ -136,7 +153,13 @@ function impreciseSwing(browser) {
     .click('#next-button')
     .click('#save-button');
 
-  matchImportanceColumnContents(browser,'Imprecise Swing Weighting', '100%', '1-100%', '1-100%');
+  matchImportanceColumnContents(
+    browser,
+    'Imprecise Swing Weighting',
+    '100%',
+    '1-100%',
+    '1-100%'
+  );
   resetWeights(browser);
 }
 
