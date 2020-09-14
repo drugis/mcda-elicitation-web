@@ -3,7 +3,10 @@ import React, {createContext, useState} from 'react';
 import IElicitationContext from './IElicitationContext';
 import IExactSwingRatio from './Interface/IExactSwingRatio';
 import {ElicitationMethod} from './Interface/IPreference';
+<<<<<<< HEAD
 import IRatioBound from './Interface/IRatioBound';
+=======
+>>>>>>> develop
 
 export const ElicitationContext = createContext<IElicitationContext>(
   {} as IElicitationContext
@@ -17,7 +20,11 @@ export function ElicitationContextProviderComponent({
 }: {
   elicitationMethod: ElicitationMethod;
   cancel: () => void;
+<<<<<<< HEAD
   save: (preferences: (IRatioBound | IExactSwingRatio)[]) => void;
+=======
+  save: (preferences: IExactSwingRatio[]) => void;
+>>>>>>> develop
   children: any;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -26,7 +33,11 @@ export function ElicitationContextProviderComponent({
     string
   >();
   const [preferences, setPreferences] = useState<
+<<<<<<< HEAD
     Record<string, IExactSwingRatio | IRatioBound>
+=======
+    Record<string, IExactSwingRatio>
+>>>>>>> develop
   >({});
 
   function setPreference(criterionId: string, answer: number): void {
@@ -41,6 +52,7 @@ export function ElicitationContextProviderComponent({
     setPreferences(updatedPreferences);
   }
 
+<<<<<<< HEAD
   function setBoundPreference(
     criterionId: string,
     answer: [number, number]
@@ -56,6 +68,8 @@ export function ElicitationContextProviderComponent({
     setPreferences(updatedPreferences);
   }
 
+=======
+>>>>>>> develop
   return (
     <ElicitationContext.Provider
       value={{
@@ -63,14 +77,20 @@ export function ElicitationContextProviderComponent({
         isNextDisabled,
         mostImportantCriterionId,
         preferences,
+<<<<<<< HEAD
         elicitationMethod,
+=======
+>>>>>>> develop
         cancel,
         setCurrentStep,
         save,
         setIsNextDisabled,
         setMostImportantCriterionId,
         setPreference,
+<<<<<<< HEAD
         setBoundPreference,
+=======
+>>>>>>> develop
         setPreferences
       }}
     >

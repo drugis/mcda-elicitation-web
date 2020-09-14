@@ -36,6 +36,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function (
       // functions
       scope.canSave = canSaveArg || canSave;
       scope.save = save;
+      scope.saveImprecise = saveImprecise;
       scope.cancel = cancel;
 
       // init
