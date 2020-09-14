@@ -7,9 +7,7 @@ export function setInitialImprecisePreferences(
   mostImportantCriterionId: string
 ): Record<string, IRatioBound> {
   return _(criteria)
-    .filter((criterion) => {
-      return criterion.id !== mostImportantCriterionId;
-    })
+    .reject(['id', mostImportantCriterionId])
     .map((criterion) => {
       const preference: IRatioBound = {
         criteria: [mostImportantCriterionId, criterion.id],

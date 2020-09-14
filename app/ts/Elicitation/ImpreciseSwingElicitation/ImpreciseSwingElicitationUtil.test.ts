@@ -30,7 +30,7 @@ const criteria: Record<string, IElicitationCriterion> = {
   }
 };
 
-describe('setPreferencesToMax', () => {
+describe('setInitialImprecisePreferences', () => {
   it('should set criteria ratios to 1 except for the most important criterion', () => {
     const result: Record<string, IRatioBound> = setInitialImprecisePreferences(
       criteria,

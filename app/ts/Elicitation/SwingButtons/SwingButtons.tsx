@@ -32,10 +32,13 @@ export default function SwingButtons() {
   }
 
   function finishElicitation() {
-    if (elicitationMethod === 'imprecise') {
-      save(_.toArray(preferences as Record<string, IRatioBound>));
-    } else if (elicitationMethod === 'precise') {
-      save(_.toArray(preferences as Record<string, IExactSwingRatio>));
+    switch (elicitationMethod) {
+      case 'imprecise':
+        save(_.toArray(preferences as Record<string, IRatioBound>));
+        break;
+      case 'precise':
+        save(_.toArray(preferences as Record<string, IExactSwingRatio>));
+        break;
     }
   }
 
