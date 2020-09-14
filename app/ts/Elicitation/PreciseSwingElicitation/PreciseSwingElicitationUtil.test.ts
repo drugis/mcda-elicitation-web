@@ -63,5 +63,6 @@ describe('setPreferencesToMax', () => {
         ratio: 1
       }
     };
+    expect(result).toEqual(expectedResult);
   });
 });

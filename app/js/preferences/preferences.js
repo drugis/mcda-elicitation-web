@@ -33,10 +33,7 @@ define([
   '../../ts/Elicitation/RankingElicitation/RankingElicitationWrapper',
   '../../ts/Elicitation/MatchingElicitation/MatchingElicitationWrapper',
   '../../ts/Elicitation/PreciseSwingElicitation/PreciseSwingElicitationWrapper',
-<<<<<<< HEAD
   '../../ts/Elicitation/ImpreciseSwingElicitation/ImpreciseSwingElicitationWrapper',
-=======
->>>>>>> develop
 
   '../workspace/workspace',
   '../results/results'
@@ -72,12 +69,8 @@ define([
   willingnessToTradeOffDirective,
   RankingElicitation,
   MatchingElicitation,
-<<<<<<< HEAD
   PreciseSwingElicitation,
   ImpreciseSwingElicitation
-=======
-  PreciseSwingElicitation
->>>>>>> develop
 ) {
   return angular
     .module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
