@@ -1,7 +1,6 @@
 # Dockerfile for the SMAA Patavi worker
-# You need the patavi/worker base image from http://github.com/gertvv/patavi-docker
 
-FROM patavi/worker-amqp
+FROM addis/patavi-worker-base
 
 USER root
 
