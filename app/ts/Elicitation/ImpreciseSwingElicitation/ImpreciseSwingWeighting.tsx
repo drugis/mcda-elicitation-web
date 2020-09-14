@@ -4,8 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../ElicitationContext';
 import MostImportantChoice from '../MostImportantChoice/MostImportantChoice';
+import SwingButtons from '../SwingButtons/SwingButtons';
 import SwingSetWeights from '../SwingSetWeights/SwingSetWeights';
-import ImpreciseSwingButtons from './ImpreciseSwingButtons/ImpreciseSwingButtons';
 
 export default function ImpreciseSwingWeighting() {
   const {currentStep} = useContext(ElicitationContext);
@@ -21,7 +21,7 @@ export default function ImpreciseSwingWeighting() {
         {currentStep === 1 ? <MostImportantChoice /> : <SwingSetWeights />}
       </Grid>
       <Grid item xs={9}>
-        <ImpreciseSwingButtons />
+        <SwingButtons />
       </Grid>
       <Grid item xs={3} container alignItems="center" justify="flex-end">
         <Grid item id="step-counter">

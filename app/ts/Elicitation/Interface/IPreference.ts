@@ -1,4 +1,4 @@
-export type ElicitationMethod =
+export type TElicitationMethod =
   | 'ranking'
   | 'precise'
   | 'matching'
@@ -6,5 +6,5 @@ export type ElicitationMethod =
   | 'imprecise';
 
 export default interface IPreference {
-  elicitationMethod: ElicitationMethod;
+  elicitationMethod: TElicitationMethod;
 }

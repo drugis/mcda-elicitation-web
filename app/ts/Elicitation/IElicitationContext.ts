@@ -1,16 +1,16 @@
 import IExactSwingRatio from './Interface/IExactSwingRatio';
-import {ElicitationMethod} from './Interface/IPreference';
+import {TElicitationMethod} from './Interface/IPreference';
 import IRatioBound from './Interface/IRatioBound';
 
 export default interface IElicitationContext {
   currentStep: number;
   isNextDisabled: boolean;
   mostImportantCriterionId: string;
-  preferences: Record<string, IExactSwingRatio | IRatioBound>;
-  elicitationMethod: ElicitationMethod;
+  preferences: Record<string, IExactSwingRatio> | Record<string, IRatioBound>;
+  elicitationMethod: TElicitationMethod;
   cancel: () => void;
   setCurrentStep: (newStep: number) => void;
-  save: (preferences: (IRatioBound | IExactSwingRatio)[]) => void;
+  save: (preferences: IRatioBound[] | IExactSwingRatio[]) => void;
   setIsNextDisabled: (isNextDisabled: boolean) => void;
   setMostImportantCriterionId: (criterionId: string) => void;
   setPreference: (criterionId: string, preference: number) => void;
@@ -19,6 +19,6 @@ export default interface IElicitationContext {
     preference: [number, number]
   ) => void;
   setPreferences: (
-    preferences: Record<string, IExactSwingRatio | IRatioBound>
+    preferences: Record<string, IExactSwingRatio> | Record<string, IRatioBound>
   ) => void;
 }

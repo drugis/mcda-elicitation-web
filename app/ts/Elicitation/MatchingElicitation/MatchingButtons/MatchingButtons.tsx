@@ -4,6 +4,7 @@ import {PreferencesContext} from 'app/ts/Elicitation/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
+import IExactSwingRatio from '../../Interface/IExactSwingRatio';
 
 export default function MatchingButtons() {
   const {
@@ -26,7 +27,7 @@ export default function MatchingButtons() {
   }
 
   function finishElicitation() {
-    save(_.toArray(preferences));
+    save(_.toArray(preferences as Record<string, IExactSwingRatio>));
   }
 
   function matchingNext() {

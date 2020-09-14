@@ -23,13 +23,17 @@ export default function ImpreciseSwingSlider({
     setBoundPreference(criterion.id, newValue);
   }
 
+  function renderValue(): string {
+    return mostImportantCriterionId === criterion.id
+      ? '100%'
+      : `${significantDigits(sliderValue[0])} - ${significantDigits(
+          sliderValue[1]
+        )}%`;
+  }
+
   return (
     <>
-      {mostImportantCriterionId === criterion.id
-        ? '100%'
-        : `${significantDigits(sliderValue[0])} - ${significantDigits(
-            sliderValue[1]
-          )}%`}
+      {renderValue()}
       <Slider
         value={sliderValue}
         min={1}
