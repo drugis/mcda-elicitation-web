@@ -1,12 +1,13 @@
 import IWeights from '@shared/interface/IWeights';
+import IScenario from '@shared/interface/Scenario/IScenario';
+import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED} from 'http-status-codes';
+import _ from 'lodash';
 import IDB from './interface/IDB';
 import logger from './logger';
 import createPataviTask, {postAndHandleResults} from './patavi';
 import ScenarioRepository from './scenarioRepository';
-import {waterfall} from 'async';
-import _ from 'lodash';
 
 export default function PataviHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
@@ -50,7 +51,7 @@ export default function PataviHandler(db: IDB) {
   }
 
   function saveScenario(
-    scenario: any,
+    scenario: IScenario,
     weights: IWeights,
     callback: (error: Error, weights?: IWeights) => void
   ) {
@@ -63,5 +64,6 @@ export default function PataviHandler(db: IDB) {
       }
     );
   }
+
   return {postTask, getWeights};
 }

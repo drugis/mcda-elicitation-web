@@ -1,4 +1,5 @@
 import {Error} from '@shared/interface/IError';
+import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
 import IDB, {ClientOrDB} from './interface/IDB';
@@ -114,9 +115,9 @@ export default function ScenarioRepository(db: IDB) {
   }
 
   function update(
-    state: any,
+    state: IScenarioState,
     title: string,
-    scenarioId: number,
+    scenarioId: string,
     callback: (error: Error) => void
   ): void {
     logger.debug('updating scenario:' + scenarioId);

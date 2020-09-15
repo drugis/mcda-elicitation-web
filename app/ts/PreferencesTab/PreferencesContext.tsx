@@ -11,7 +11,6 @@ import {TPvfDirection} from '@shared/types/PvfTypes';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import scenarioTest from 'test/endToEnd/scenarioTest';
 import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import IPreferencesContext from './IPreferencesContext';

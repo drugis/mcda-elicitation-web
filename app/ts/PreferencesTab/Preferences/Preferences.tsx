@@ -4,7 +4,6 @@ import {PreferencesContext} from '../PreferencesContext';
 import PartialValueFunctions from './PartialValueFunctions/PartialValueFunctions';
 import PreferencesWeights from './PreferencesWeights/PreferencesWeights';
 import ScenarioButtons from './ScenarioButtons/ScenarioButtons';
-import WillingnessToTradeOff from './WillingnessToTradeOff/WillingnessToTradeOff';
 
 export default function Preferences() {
   const {currentScenario, scenarios} = useContext(PreferencesContext);
@@ -17,7 +16,6 @@ export default function Preferences() {
       <ScenarioButtons />
       <PartialValueFunctions />
       <PreferencesWeights />
-      <WillingnessToTradeOff />
     </>
   );
 }

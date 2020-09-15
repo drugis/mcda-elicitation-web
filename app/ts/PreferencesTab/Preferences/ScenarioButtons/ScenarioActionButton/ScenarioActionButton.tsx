@@ -6,33 +6,44 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
-import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import _ from 'lodash';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {checkScenarioTitleErrors, showErrors} from '../ScenarioUtil';
 
-export default function EditScenarioTitleButton() {
-  const {currentScenario, updateScenario, scenarios} = useContext(
-    PreferencesContext
-  );
+export default function ScenarioActionButton({
+  action,
+  icon,
+  callback,
+  idOfScenarioBeingEdited
+}: {
+  action: string;
+  icon: JSX.Element;
+  callback: (newTitle: string) => void;
+  idOfScenarioBeingEdited?: string;
+}) {
+  const {currentScenario, scenarios} = useContext(PreferencesContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [title, setTitle] = useState<string>(currentScenario.title);
+  const [title, setTitle] = useState<string>('');
   const [errors, setErrors] = useState<string[]>(
-    checkScenarioTitleErrors(title, scenarios, currentScenario.id)
+    checkScenarioTitleErrors(title, scenarios, idOfScenarioBeingEdited)
   );
+
   useEffect(() => {
-    setErrors(checkScenarioTitleErrors(title, scenarios, currentScenario.id));
+    setErrors(
+      checkScenarioTitleErrors(title, scenarios, idOfScenarioBeingEdited)
+    );
   }, [title]);
 
-  const handleKey = createEnterHandler(handleEditButtonClick, isDisabled);
+  const handleKey = createEnterHandler(handleButtonClick, isDisabled);
+
   function closeDialog(): void {
     setIsDialogOpen(false);
   }
 
   function openDialog(): void {
+    setTitle(idOfScenarioBeingEdited ? currentScenario.title : '');
     setIsDialogOpen(true);
   }
 
@@ -40,8 +51,8 @@ export default function EditScenarioTitleButton() {
     setTitle(event.target.value);
   }
 
-  function handleEditButtonClick(): void {
-    updateScenario(_.merge({}, currentScenario, {title: title}));
+  function handleButtonClick(): void {
+    callback(title);
     closeDialog();
   }
 
@@ -51,9 +62,12 @@ export default function EditScenarioTitleButton() {
 
   return (
     <>
-      <Tooltip title="Edit current scenario title">
-        <IconButton id="edit-scenario-button" onClick={openDialog}>
-          <Edit color="primary" />
+      <Tooltip title={action + ' scenario title'}>
+        <IconButton
+          id={action.toLowerCase() + 'scenario-button'}
+          onClick={openDialog}
+        >
+          {icon}
         </IconButton>
       </Tooltip>
       <Dialog
@@ -63,12 +77,13 @@ export default function EditScenarioTitleButton() {
         maxWidth={'sm'}
       >
         <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-          Edit scenario title
+          {action} scenario title
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
             <Grid item xs={9}>
               <TextField
+                label="new title"
                 id="new-scenario-title"
                 value={title}
                 onChange={titleChanged}
@@ -81,13 +96,13 @@ export default function EditScenarioTitleButton() {
         </DialogContent>
         <DialogActions>
           <Button
-            id="edit-scenario-title-button"
+            id={action.toLowerCase() + '-scenario-title-button'}
             variant="contained"
             color="primary"
-            onClick={handleEditButtonClick}
+            onClick={handleButtonClick}
             disabled={isDisabled()}
           >
-            Edit
+            {action}
           </Button>
         </DialogActions>
       </Dialog>
