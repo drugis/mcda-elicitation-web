@@ -6,16 +6,13 @@ define([
 
   '../../ts/PreferencesTab/PreferencesTab',
 
-  './editScenarioTitleController',
   './impreciseSwingWeightingController',
   './matchingElicitationController',
-  './newScenarioController',
   './ordinalSwingController',
   './partialValueFunctionController',
   './preferencesController',
   './setMatchingWeightController',
   './swingWeightingController',
-  './deleteScenarioController',
 
   './partialValueFunctionService',
   './preferencesService',
@@ -26,8 +23,6 @@ define([
   './elicitationTradeOffDirective',
   './elicitationTradeOffPlotDirective',
   './preferenceElicitationTableDirective',
-  './willingnessToTradeOffChartDirective',
-  './willingnessToTradeOffDirective',
 
   '../workspace/workspace',
   '../results/results'
@@ -35,16 +30,13 @@ define([
   angular,
   react2angular,
   PreferencesTab,
-  EditScenarioTitleController,
   ImpreciseSwingWeightingController,
   MatchingElicitationController,
-  NewScenarioController,
   OrdinalSwingController,
   PartialValueFunctionController,
   PreferencesController,
   SetMatchingWeightController,
   SwingWeightingController,
-  DeleteScenarioController,
 
   PartialValueFunctionService,
   PreferencesService,
@@ -54,9 +46,7 @@ define([
 
   elicitationTradeOffDirective,
   elicitationTradeOffPlotDirective,
-  preferenceElicitationTableDirective,
-  willingnessToTradeOffChartDirective,
-  willingnessToTradeOffDirective
+  preferenceElicitationTableDirective
 ) {
   return angular
     .module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
@@ -71,14 +61,12 @@ define([
       ])
     )
 
-    .controller('EditScenarioTitleController', EditScenarioTitleController)
     .controller('OrdinalSwingController', OrdinalSwingController)
     .controller(
       'ImpreciseSwingWeightingController',
       ImpreciseSwingWeightingController
     )
     .controller('MatchingElicitationController', MatchingElicitationController)
-    .controller('NewScenarioController', NewScenarioController)
     .controller(
       'PartialValueFunctionController',
       PartialValueFunctionController
@@ -86,7 +74,6 @@ define([
     .controller('PreferencesController', PreferencesController)
     .controller('SetMatchingWeightController', SetMatchingWeightController)
     .controller('SwingWeightingController', SwingWeightingController)
-    .controller('DeleteScenarioController', DeleteScenarioController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
     .factory('SwingWeightingService', SwingWeightingService)
@@ -99,10 +86,5 @@ define([
     .directive(
       'preferenceElicitationTable',
       preferenceElicitationTableDirective
-    )
-    .directive(
-      'willingnessToTradeOffChart',
-      willingnessToTradeOffChartDirective
-    )
-    .directive('willingnessToTradeOff', willingnessToTradeOffDirective);
+    );
 });
