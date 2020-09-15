@@ -5,7 +5,9 @@ import _ from 'lodash';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 
 export default function PreferencesWeightsButtons() {
-  const {resetPreferences, currentScenario} = useContext(PreferencesContext);
+  const {resetPreferences, currentScenario, disableWeightsButtons} = useContext(
+    PreferencesContext
+  );
 
   function handleResetClick() {
     resetPreferences(currentScenario);
@@ -43,6 +45,7 @@ export default function PreferencesWeightsButtons() {
         onClick={handleResetClick}
         color="secondary"
         variant="contained"
+        disabled={disableWeightsButtons}
       >
         Reset Weights
       </Button>
@@ -51,6 +54,7 @@ export default function PreferencesWeightsButtons() {
         onClick={handleRankingClick}
         color="primary"
         variant="contained"
+        disabled={disableWeightsButtons}
       >
         Ranking
       </Button>
@@ -59,6 +63,7 @@ export default function PreferencesWeightsButtons() {
         onClick={handleMatchingClick}
         color="primary"
         variant="contained"
+        disabled={disableWeightsButtons}
       >
         Matching
       </Button>
@@ -67,6 +72,7 @@ export default function PreferencesWeightsButtons() {
         onClick={handlePreciseClick}
         color="primary"
         variant="contained"
+        disabled={disableWeightsButtons}
       >
         Precise Swing Weighting
       </Button>
@@ -75,6 +81,7 @@ export default function PreferencesWeightsButtons() {
         onClick={handleImpreciseClick}
         color="primary"
         variant="contained"
+        disabled={disableWeightsButtons}
       >
         Imprecise Swing Weighting
       </Button>

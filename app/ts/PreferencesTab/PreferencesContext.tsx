@@ -49,6 +49,7 @@ export function PreferencesContextProviderComponent({
     initPvfs(problem.criteria, currentScenario)
   );
   const subproblemId = currentScenario.subproblemId;
+  const disableWeightsButtons = !areAllPvfsSet(pvfs);
 
   useEffect(() => {
     if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {
@@ -210,6 +211,7 @@ export function PreferencesContextProviderComponent({
         problem,
         pvfs,
         criteria,
+        disableWeightsButtons,
         setCurrentScenario,
         updateScenario,
         deleteScenario,

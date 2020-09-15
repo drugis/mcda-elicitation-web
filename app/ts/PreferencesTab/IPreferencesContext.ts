@@ -11,6 +11,7 @@ export default interface IPreferencesContext {
   problem: IProblem;
   pvfs: Record<string, IPvf>;
   criteria: Record<string, IPreferencesCriterion>;
+  disableWeightsButtons: boolean;
   setCurrentScenario: (currentScenario: IScenario) => void;
   updateScenario: (newScenario: IScenario) => Promise<void>;
   deleteScenario: (id: string) => void;
