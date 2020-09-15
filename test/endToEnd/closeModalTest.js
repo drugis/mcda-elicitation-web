@@ -168,7 +168,7 @@ function cancelSettingMatchingWeights(browser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#matching-button',
-    cancelButton: cancelStep1Path,
+    cancelButton: '#cancel-button',
     content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
@@ -178,7 +178,7 @@ function cancelSettingPreciseSwingWeights(browser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#precise-swing-button',
-    cancelButton: cancelStep1Path,
+    cancelButton: '#cancel-button',
     content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
@@ -188,7 +188,7 @@ function cancelSettingImpreciseSwingWeights(browser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#imprecise-swing-button',
-    cancelButton: cancelStep1Path,
+    cancelButton: '#cancel-button',
     content: importanceCellPath
   };
   cancelAction(browser, paths, '?');

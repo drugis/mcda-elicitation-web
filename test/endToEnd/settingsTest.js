@@ -6,7 +6,7 @@ module.exports = {
   'Verifying all components are visible': verifyComponents,
   'Default button resetting options': reset,
   '(De)select all button deselects and selects all column options': deselectAll,
-  'Verify that save can not be pressed if there are not values for entered smaa':checkEnteredSmaaDisabled,
+  'Verify that save can not be pressed if there are not values for entered smaa': checkEnteredSmaaDisabled,
   'Switching settings in problem definition tab': switchSettingsInProblemDefinition,
   'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
   'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
@@ -19,8 +19,8 @@ module.exports = {
   'Switching between median and mode in deterministic tab': switchMedianInDeterministic,
   'Switching settings in the overview tab': switchSettingsInOverview,
   'Switching settings in the preferences tab': switchSettingsInPreferences,
-  'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF,
-  'Switching settings while setting the weights': switchSettingsWhileSettingWeights
+  'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF
+  // 'Switching settings while setting the weights': switchSettingsWhileSettingWeights FIXME
 };
 
 const loginService = require('./util/loginService');
@@ -167,16 +167,16 @@ function deselectAll(browser) {
     .click('#save-settings-button');
 }
 
-function checkEnteredSmaaDisabled(browser){
+function checkEnteredSmaaDisabled(browser) {
   browser
-  .useCss()
-  .click('#settings-button')
-  .click('#show-percentages-radio')
-  .click('#entered-radio')
-  .click('#smaa-radio')
-  .waitForElementVisible('#save-settings-button:disabled')
-  .click('#close-modal-button')
-  .useXpath();
+    .useCss()
+    .click('#settings-button')
+    .click('#show-percentages-radio')
+    .click('#entered-radio')
+    .click('#smaa-radio')
+    .waitForElementVisible('#save-settings-button:disabled')
+    .click('#close-modal-button')
+    .useXpath();
 }
 
 function switchSettingsInProblemDefinition(browser) {

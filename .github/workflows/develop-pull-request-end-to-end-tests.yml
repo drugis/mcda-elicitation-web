@@ -15,25 +15,58 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:12.2-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: develop
           POSTGRES_DB: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: webfactory/ssh-agent@v0.1.1
-        with:
-          ssh-private-key: ${{ secrets.deployPrivateKey }}
+      - uses: actions/checkout@v2
 
       - name: create ssl files
         run: |
           echo "${{ secrets.pataviClientCrt }}" > crt.pem 
           echo "${{ secrets.pataviClientKey }}" > key.pem
+          echo "${{ secrets.certificateAuthority }}" > ca.pem
+          echo "${{ secrets.pataviServerCertificate }}" > server-crt.pem
+          echo "${{ secrets.pataviServerKey }}" > server-key.pem
+
+      - name: fetch schema
+        run: curl https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql -o patavi.schema.sql
+
+      - name: setup patavi database
+        run: |
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER patavi WITH PASSWORD 'develop'"
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE patavi ENCODING 'utf-8' OWNER patavi"
+
+      - name: initialize patavi database
+        run: |
+          docker cp patavi.schema.sql ${{ job.services.postgres.id }}:/patavi.schema.sql
+          docker exec ${{ job.services.postgres.id }} psql -U patavi -f patavi.schema.sql
+
+      - name: run rabbit
+        run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+      - name: run patavi server
+        run: |
+          docker run -d --name patavi-server --network host -e PATAVI_BROKER_HOST=guest:guest@localhost -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop addis/patavi-server
+
+      - name: copy certificates to patavi server
+        run: |
+          docker cp server-crt.pem patavi-server:/var/lib/patavi/ssl/
+          docker cp server-key.pem patavi-server:/var/lib/patavi/ssl/
+
+      - name: build and run patavi worker
+        run: |
+          cd R
+          docker build --tag addis/patavi-smaa-worker .
+          docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
+          cd ..
 
       - name: setup mcda database
         run: |
@@ -80,10 +113,11 @@ jobs:
           MCDAWEB_DB_NAME: mcdaweb
           MCDAWEB_COOKIE_SECRET: abc
           MCDA_HOST: localhost
-          PATAVI_HOST: patavi-test.drugis.org
-          PATAVI_PORT: 443
+          PATAVI_HOST: localhost
+          PATAVI_PORT: 3000
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
+          PATAVI_CA: ca.pem
 
       - name: run nightwatch tests
         id: nightwatch

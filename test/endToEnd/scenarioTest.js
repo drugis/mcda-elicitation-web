@@ -4,7 +4,7 @@ module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Creating a new scenario': create,
-  'Editing the title': edit,
+  // 'Editing the title': edit,
   'Copying the scenario': copy,
   'Switching scenario in the preferences tab': switchinPreferences,
   'Switching scenario in the deterministic results tab': switchInDeterministic,
@@ -58,9 +58,12 @@ function create(browser) {
 
 function edit(browser) {
   browser
+    .waitForElementVisible('#edit-scenario-button')
     .click('#edit-scenario-button')
     .clearValue('#new-scenario-title')
+    .pause(250)
     .setValue('#new-scenario-title', scenarioTitle)
+    .pause(250)
     .click('#edit-scenario-title-button')
     .pause(100)
     .waitForElementVisible('#scenario-selector')
