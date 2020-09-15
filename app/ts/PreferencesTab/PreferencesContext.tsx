@@ -15,6 +15,7 @@ import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import IPreferencesContext from './IPreferencesContext';
 import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
+import {TPreferencesView} from './TPreferencesView';
 
 export const PreferencesContext = createContext<IPreferencesContext>(
   {} as IPreferencesContext
@@ -49,6 +50,7 @@ export function PreferencesContextProviderComponent({
   );
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);
+  const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
 
   useEffect(() => {
     if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {
@@ -211,6 +213,7 @@ export function PreferencesContextProviderComponent({
         pvfs,
         criteria,
         disableWeightsButtons,
+        activeView,
         setCurrentScenario,
         updateScenario,
         deleteScenario,
@@ -219,7 +222,8 @@ export function PreferencesContextProviderComponent({
         getCriterion,
         getPvf,
         setLinearPvf,
-        resetPreferences
+        resetPreferences,
+        setActiveView
       }}
     >
       {children}

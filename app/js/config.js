@@ -20,34 +20,10 @@ define(function () {
         resets: ['criteria-trade-offs']
       },
       {
-        id: 'ordinal-swing',
-        title: 'Ranking',
-        controller: 'OrdinalSwingController',
-        templateUrl: './preferences/ordinalSwing.html',
-        requires: ['partial-value-function'],
-        resets: ['criteria-trade-offs']
-      },
-      {
         id: 'matching',
         title: 'Matching',
         controller: 'MatchingElicitationController',
         templateUrl: './preferences/matchingElicitation.html',
-        requires: ['partial-value-function'],
-        resets: ['criteria-trade-offs']
-      },
-      {
-        id: 'swing-weighting',
-        title: 'Swing Weighting Elicitation',
-        controller: 'SwingWeightingController',
-        templateUrl: './preferences/preciseSwingWeighting.html',
-        requires: ['partial-value-function'],
-        resets: ['criteria-trade-offs']
-      },
-      {
-        id: 'imprecise-swing-weighting',
-        title: 'Imprecise Swing Weighting Elicitation',
-        controller: 'ImpreciseSwingWeightingController',
-        templateUrl: './preferences/impreciseSwingWeighting.html',
         requires: ['partial-value-function'],
         resets: ['criteria-trade-offs']
       },

@@ -2,6 +2,8 @@
 
 define([
   'angular',
+  'react2angular',
+  '../../ts/PreferencesTab/PreferencesTab',
   './matchingElicitationController',
   './partialValueFunctionController',
   './preferencesController',
@@ -10,7 +12,6 @@ define([
   './partialValueFunctionService',
   './preferencesService',
   './scenarioService',
-  './swingWeightingService',
   './tradeOffService',
 
   './elicitationTradeOffDirective',
@@ -21,6 +22,8 @@ define([
   '../results/results'
 ], function (
   angular,
+  react2angular,
+  PreferencesTab,
   MatchingElicitationController,
   PartialValueFunctionController,
   PreferencesController,
@@ -29,7 +32,6 @@ define([
   PartialValueFunctionService,
   PreferencesService,
   ScenarioService,
-  SwingWeightingService,
   TradeOffService,
 
   elicitationTradeOffDirective,
@@ -38,7 +40,16 @@ define([
 ) {
   return angular
     .module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
-
+    .component(
+      'preferences',
+      react2angular.react2angular(PreferencesTab.default, [
+        'scenarios',
+        'currentScenarioId',
+        'workspaceId',
+        'problem',
+        'settings'
+      ])
+    )
     .controller('MatchingElicitationController', MatchingElicitationController)
     .controller(
       'PartialValueFunctionController',
@@ -48,7 +59,6 @@ define([
     .controller('SetMatchingWeightController', SetMatchingWeightController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
-    .factory('SwingWeightingService', SwingWeightingService)
     .factory('PreferencesService', PreferencesService)
     .factory('TradeOffService', TradeOffService)
     .factory('ScenarioService', ScenarioService)
