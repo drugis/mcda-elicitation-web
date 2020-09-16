@@ -1,9 +1,9 @@
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import _ from 'lodash';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
 import IRatioBound from '../Interface/IRatioBound';
 
-export function setInitialImprecisePreferences(
-  criteria: Record<string, IElicitationCriterion>,
+export function buildInitialImprecisePreferences(
+  criteria: Record<string, IPreferencesCriterion>,
   mostImportantCriterionId: string
 ): Record<string, IRatioBound> {
   return _(criteria)

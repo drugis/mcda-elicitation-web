@@ -4,7 +4,6 @@ import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
-import IExactSwingRatio from '../../Interface/IExactSwingRatio';
 
 export default function MatchingButtons() {
   const {
@@ -12,25 +11,27 @@ export default function MatchingButtons() {
     setIsNextDisabled,
     currentStep,
     setCurrentStep,
-    cancel,
-    save,
     preferences
   } = useContext(ElicitationContext);
-  const {criteria} = useContext(PreferencesContext);
+  const {criteria, setActiveView, updateScenario, currentScenario} = useContext(
+    PreferencesContext
+  );
 
-  function handleNextButtonClick() {
-    if (isLastStep()) {
-      finishElicitation();
-    } else {
-      matchingNext();
-    }
+  function handleNextButtonClick(): void {
+    matchingNext();
   }
 
-  function finishElicitation() {
-    save(_.toArray(preferences as Record<string, IExactSwingRatio>));
+  function handleSaveButtonclick(): void {
+    const newPreferences = Object.values(preferences);
+    const newState = {
+      ..._.omit(currentScenario.state, ['weights', 'prefs']),
+      prefs: newPreferences
+    };
+    updateScenario({..._.omit(currentScenario, ['state']), state: newState});
+    setActiveView('preferences');
   }
 
-  function matchingNext() {
+  function matchingNext(): void {
     setCurrentStep(currentStep + 1);
   }
 
@@ -38,9 +39,13 @@ export default function MatchingButtons() {
     return currentStep === _.toArray(criteria).length;
   }
 
-  function handlePreviousClick() {
+  function handlePreviousClick(): void {
     setIsNextDisabled(false);
     setCurrentStep(currentStep - 1);
+  }
+
+  function cancel(): void {
+    setActiveView('preferences');
   }
 
   return (
@@ -68,7 +73,7 @@ export default function MatchingButtons() {
           color="primary"
           id="save-button"
           variant="contained"
-          onClick={handleNextButtonClick}
+          onClick={handleSaveButtonclick}
         >
           Save
         </Button>

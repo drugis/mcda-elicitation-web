@@ -1,38 +1,38 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import _ from 'lodash';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
-import IOrdinalRanking from '../Interface/IOrdinalRanking';
+import IRanking from '../Interface/IRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 import {
   addRanking,
   assignMissingRankings,
-  buildOrdinalPreferences,
+  buildRankingPreferences,
   findCriterionIdForRank
-} from './OrdinalRankingUtil';
+} from './RankingUtil';
 
-const criteria: Record<string, IElicitationCriterion> = {
+const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title',
-    scales: [0, 1],
+    scale: [0, 1],
+    dataSourceId: 'ds1',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   },
   critId2: {
     id: 'critId2',
     title: 'title',
-    scales: [0, 1],
+    scale: [0, 1],
+    dataSourceId: 'ds2',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   },
   critId3: {
     id: 'critId3',
     title: 'title',
-    scales: [0, 1],
+    scale: [0, 1],
+    dataSourceId: 'ds3',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   }
 };
@@ -89,8 +89,8 @@ describe('buildOrdinalPreferences', () => {
     {criterionId: 'critId1', rank: 1},
     {criterionId: 'critId2', rank: 2}
   ];
-  const result: IOrdinalRanking[] = buildOrdinalPreferences(answers);
-  const expectedResult: IOrdinalRanking[] = [
+  const result: IRanking[] = buildRankingPreferences(answers);
+  const expectedResult: IRanking[] = [
     {
       elicitationMethod: 'ranking',
       type: 'ordinal',

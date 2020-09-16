@@ -1,4 +1,3 @@
-import IOrdinalRanking from '../Interface/IOrdinalRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 
 export default interface IRankingElicitationContext {

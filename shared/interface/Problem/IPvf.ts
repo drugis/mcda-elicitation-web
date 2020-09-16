@@ -1,4 +1,3 @@
-import IScenarioPvf from '../Scenario/IScenarioPvf';
 import {TPvfDirection, TPvfType} from '@shared/types/PvfTypes';
 
 export default interface IPvf {

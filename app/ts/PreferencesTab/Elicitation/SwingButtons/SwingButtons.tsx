@@ -1,45 +1,39 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import _ from 'lodash';
+import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
 import {ElicitationContext} from '../ElicitationContext';
-import IExactSwingRatio from '../Interface/IExactSwingRatio';
-import IRatioBound from '../Interface/IRatioBound';
+import _ from 'lodash';
 
 export default function SwingButtons() {
-  const {
-    currentStep,
-    setCurrentStep,
-    cancel,
-    save,
-    isNextDisabled,
-    preferences,
-    elicitationMethod
-  } = useContext(ElicitationContext);
-  const {} = useContext(PreferencesContext);
+  const {currentStep, setCurrentStep, isNextDisabled, preferences} = useContext(
+    ElicitationContext
+  );
+  const {setActiveView, currentScenario, updateScenario} = useContext(
+    PreferencesContext
+  );
 
   function handleNextButtonClick() {
-    if (isLastStep()) {
-      finishElicitation();
-    } else {
-      setCurrentStep(currentStep + 1);
-    }
+    setCurrentStep(currentStep + 1);
   }
 
   function handlePreviousClick() {
     setCurrentStep(currentStep - 1);
   }
 
-  function finishElicitation() {
-    switch (elicitationMethod) {
-      case 'imprecise':
-        save(_.toArray(preferences as Record<string, IRatioBound>));
-        break;
-      case 'precise':
-        save(_.toArray(preferences as Record<string, IExactSwingRatio>));
-        break;
-    }
+  function cancel() {
+    setActiveView('preferences');
+  }
+
+  function handleSaveButtonClick() {
+    const newPreferences = Object.values(preferences);
+    const newState: IScenarioState = {
+      ..._.omit(currentScenario.state, ['weights', 'prefs']),
+      prefs: newPreferences
+    };
+    updateScenario({..._.omit(currentScenario, ['state']), state: newState});
+    setActiveView('preferences');
   }
 
   function isLastStep() {
@@ -70,7 +64,7 @@ export default function SwingButtons() {
           color="primary"
           id="save-button"
           variant="contained"
-          onClick={handleNextButtonClick}
+          onClick={handleSaveButtonClick}
         >
           Save
         </Button>

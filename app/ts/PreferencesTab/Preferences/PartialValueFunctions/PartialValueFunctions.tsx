@@ -1,4 +1,5 @@
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -30,7 +31,7 @@ export default function PartialValueFunctions() {
     if (pvfs[criterionId].direction) {
       return <PartialValueFunctionPlot criterionId={criterionId} />;
     } else {
-      return <div style={{fontSize: '145px', textAlign: 'center'}}>?</div>;
+      return <div style={{fontSize: '144px', textAlign: 'center'}}>?</div>;
     }
   }
 
@@ -38,7 +39,9 @@ export default function PartialValueFunctions() {
     <>
       <Grid container id="partial-value-functions-block">
         <Grid item xs={12}>
-          <h4 id="partial-value-functions-header">Partial Value Functions</h4>
+          <Typography id="partial-value-functions-header" variant="h4">
+            Partial Value Functions
+          </Typography>
         </Grid>
         <Grid container item xs={12}>
           {getPartialValueFunctions()}

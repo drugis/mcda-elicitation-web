@@ -1,37 +1,20 @@
 import {Grid} from '@material-ui/core';
 import {ElicitationContext} from 'app/ts/PreferencesTab/Elicitation/ElicitationContext';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
-import {setInitialImprecisePreferences} from '../ImpreciseSwingElicitation/ImpreciseSwingElicitationUtil';
-import {
-  getSwingStatement,
-  setInitialPrecisePreferences
-} from '../PreciseSwingElicitation/PreciseSwingElicitationUtil';
+import {getSwingStatement} from '../PreciseSwingElicitation/PreciseSwingElicitationUtil';
 import OverviewTable from './OverviewTable/OverviewTable';
 
 export default function SwingSetWeights() {
-  const {
-    mostImportantCriterionId,
-    setPreferences,
-    elicitationMethod
-  } = useContext(ElicitationContext);
-  const {criteria} = useContext(PreferencesContext);
+  const {mostImportantCriterionId, elicitationMethod} = useContext(
+    ElicitationContext
+  );
+  const {criteria, pvfs} = useContext(PreferencesContext);
 
-  useEffect(initPreferences, [mostImportantCriterionId]);
-
-  function initPreferences() {
-    if (elicitationMethod === 'precise') {
-      setPreferences(
-        setInitialPrecisePreferences(criteria, mostImportantCriterionId)
-      );
-    } else if (elicitationMethod === 'imprecise') {
-      setPreferences(
-        setInitialImprecisePreferences(criteria, mostImportantCriterionId)
-      );
-    }
-  }
-
-  const statement = getSwingStatement(criteria[mostImportantCriterionId]);
+  const statement = getSwingStatement(
+    criteria[mostImportantCriterionId],
+    pvfs[mostImportantCriterionId]
+  );
 
   return (
     <Grid container item spacing={2}>

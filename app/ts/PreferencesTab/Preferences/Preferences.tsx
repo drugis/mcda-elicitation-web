@@ -1,6 +1,10 @@
 import {Box, Grid} from '@material-ui/core';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import React, {useContext} from 'react';
+import {ElicitationContextProviderComponent} from '../Elicitation/ElicitationContext';
+import ImpreciseSwingWeighting from '../Elicitation/ImpreciseSwingElicitation/ImpreciseSwingWeighting';
+import MatchingElicitation from '../Elicitation/MatchingElicitation/MatchingElicitation';
+import PreciseSwingWeighting from '../Elicitation/PreciseSwingElicitation/PreciseSwingWeighting';
 import RankingElicitation from '../Elicitation/RankingElicitation/RankingElicitation';
 import {RankingElicitationContextProviderComponent} from '../Elicitation/RankingElicitation/RankingElicitationContext';
 import {PreferencesContext} from '../PreferencesContext';
@@ -27,12 +31,30 @@ export default function Preferences() {
             <PreferencesWeights />
           </>
         );
-      case 'exact':
-        return <>exact</>;
+      case 'precise':
+        return (
+          <ElicitationContextProviderComponent elicitationMethod="precise">
+            <Grid container justify="center" component={Box} mt={2}>
+              <PreciseSwingWeighting />
+            </Grid>
+          </ElicitationContextProviderComponent>
+        );
       case 'imprecise':
-        return <>imprecise</>;
+        return (
+          <ElicitationContextProviderComponent elicitationMethod="imprecise">
+            <Grid container justify="center" component={Box} mt={2}>
+              <ImpreciseSwingWeighting />
+            </Grid>
+          </ElicitationContextProviderComponent>
+        );
       case 'matching':
-        return <>should not happen yet</>;
+        return (
+          <ElicitationContextProviderComponent elicitationMethod={'matching'}>
+            <Grid container justify="center" component={Box} mt={2}>
+              <MatchingElicitation />
+            </Grid>
+          </ElicitationContextProviderComponent>
+        );
       case 'ranking':
         return (
           <RankingElicitationContextProviderComponent>

@@ -20,14 +20,6 @@ define(function () {
         resets: ['criteria-trade-offs']
       },
       {
-        id: 'matching',
-        title: 'Matching',
-        controller: 'MatchingElicitationController',
-        templateUrl: './preferences/matchingElicitation.html',
-        requires: ['partial-value-function'],
-        resets: ['criteria-trade-offs']
-      },
-      {
         id: 'preferences',
         title: 'Preferences',
         controller: 'PreferencesController',

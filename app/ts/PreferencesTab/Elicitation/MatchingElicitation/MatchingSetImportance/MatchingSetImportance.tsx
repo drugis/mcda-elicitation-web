@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import {
   getBest,
   getWorst
-} from 'app/ts/PreferencesTab/Elicitation/ElicitationUtil';
+} from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
@@ -22,7 +22,7 @@ export default function MatchingSetImportance() {
   const {mostImportantCriterionId, currentStep} = useContext(
     ElicitationContext
   );
-  const {criteria} = useContext(PreferencesContext);
+  const {criteria, pvfs} = useContext(PreferencesContext);
   const mostImportantCriterion = criteria[mostImportantCriterionId];
 
   const currentCriterion = getCurrentCriterion(
@@ -59,7 +59,7 @@ export default function MatchingSetImportance() {
             <TableRow>
               <TableCell>{mostImportantCriterion.title}</TableCell>
               <TableCell align="center">
-                {getWorst(mostImportantCriterion)}
+                {getWorst(pvfs[mostImportantCriterionId])}
               </TableCell>
               <TableCell align="center">
                 <MatchingSlider currentCriterionId={currentCriterion.id} />
@@ -67,8 +67,12 @@ export default function MatchingSetImportance() {
             </TableRow>
             <TableRow>
               <TableCell>{currentCriterion.title}</TableCell>
-              <TableCell align="center">{getBest(currentCriterion)}</TableCell>
-              <TableCell align="center">{getWorst(currentCriterion)}</TableCell>
+              <TableCell align="center">
+                {getBest(pvfs[currentCriterion.id])}
+              </TableCell>
+              <TableCell align="center">
+                {getWorst(pvfs[currentCriterion.id])}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>

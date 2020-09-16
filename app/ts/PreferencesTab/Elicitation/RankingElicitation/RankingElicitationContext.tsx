@@ -1,8 +1,7 @@
 import React, {createContext, useState} from 'react';
-import IOrdinalRanking from '../Interface/IOrdinalRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 import IRankingElicitationContext from './IRankingElicitationContext';
-import {addRanking} from './OrdinalRankingUtil';
+import {addRanking} from './RankingUtil';
 
 export const RankingElicitationContext = createContext<
   IRankingElicitationContext

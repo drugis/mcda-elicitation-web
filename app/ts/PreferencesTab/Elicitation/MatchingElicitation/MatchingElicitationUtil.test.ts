@@ -1,5 +1,5 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import {
   calculateImportance,
   determineStepSize,
@@ -7,42 +7,42 @@ import {
   getMatchingStatement
 } from './MatchingElicitationUtil';
 
-const criteria: Record<string, IElicitationCriterion> = {
+const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title1',
-    scales: [0, 1],
+    scale: [0, 1],
+    dataSourceId: 'ds1',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   },
   critId2: {
     id: 'critId2',
     title: 'title2',
-    scales: [0, 1],
+    scale: [0, 1],
+    dataSourceId: 'ds2',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   },
   critId3: {
     id: 'critId3',
     title: 'title3',
-    scales: [0, 1],
+    scale: [0, 1],
+    dataSourceId: 'ds3',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   }
 };
 
 describe('determineStepSize', () => {
-  it('should return the step size based on the criterion scales', () => {
-    const result = determineStepSize(criteria, 'critId1');
+  it('should return the step size based on the criterion scale', () => {
+    const result = determineStepSize([0, 1]);
     expect(result).toEqual(0.1);
   });
 });
 
 describe('calculateImportance', () => {
-  it('should calculate the importance based on slider value and criterion scales', () => {
+  it('should calculate the importance based on slider value and criterion scale', () => {
     const result = calculateImportance(0.5, [0, 1]);
     expect(result).toEqual(50);
   });
@@ -55,7 +55,7 @@ describe('calculateImportance', () => {
 
 describe('getCurrentCriterion', () => {
   it('should return the correct criterion for matching', () => {
-    const result: IElicitationCriterion = getCurrentCriterion(
+    const result: IPreferencesCriterion = getCurrentCriterion(
       criteria,
       'critId1',
       2

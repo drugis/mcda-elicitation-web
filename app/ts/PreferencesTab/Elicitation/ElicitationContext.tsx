@@ -1,9 +1,12 @@
 import _ from 'lodash';
-import React, {createContext, useState} from 'react';
+import React, {createContext, useContext, useState} from 'react';
+import {PreferencesContext} from '../PreferencesContext';
 import IElicitationContext from './IElicitationContext';
+import {buildInitialImprecisePreferences} from './ImpreciseSwingElicitation/ImpreciseSwingElicitationUtil';
 import IExactSwingRatio from './Interface/IExactSwingRatio';
 import {TElicitationMethod} from './Interface/IPreference';
 import IRatioBound from './Interface/IRatioBound';
+import {buildInitialPrecisePreferences} from './PreciseSwingElicitation/PreciseSwingElicitationUtil';
 
 export const ElicitationContext = createContext<IElicitationContext>(
   {} as IElicitationContext
@@ -11,15 +14,14 @@ export const ElicitationContext = createContext<IElicitationContext>(
 
 export function ElicitationContextProviderComponent({
   elicitationMethod,
-  cancel,
-  save,
+
   children
 }: {
   elicitationMethod: TElicitationMethod;
-  cancel: () => void;
-  save: (preferences: IRatioBound[] | IExactSwingRatio[]) => void;
+
   children: any;
 }) {
+  const {criteria} = useContext(PreferencesContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const [mostImportantCriterionId, setMostImportantCriterionId] = useState<
@@ -28,6 +30,15 @@ export function ElicitationContextProviderComponent({
   const [preferences, setPreferences] = useState<
     Record<string, IExactSwingRatio> | Record<string, IRatioBound>
   >({});
+
+  function setMostImportantCriterionIdWrapper(criterionId: string) {
+    if (elicitationMethod === 'precise') {
+      setPreferences(buildInitialPrecisePreferences(criteria, criterionId));
+    } else if (elicitationMethod === 'imprecise') {
+      setPreferences(buildInitialImprecisePreferences(criteria, criterionId));
+    }
+    setMostImportantCriterionId(criterionId);
+  }
 
   function setPreference(criterionId: string, answer: number): void {
     let updatedPreferences = _.cloneDeep(preferences);
@@ -64,11 +75,9 @@ export function ElicitationContextProviderComponent({
         mostImportantCriterionId,
         preferences,
         elicitationMethod,
-        cancel,
         setCurrentStep,
-        save,
         setIsNextDisabled,
-        setMostImportantCriterionId,
+        setMostImportantCriterionId: setMostImportantCriterionIdWrapper,
         setPreference,
         setBoundPreference,
         setPreferences

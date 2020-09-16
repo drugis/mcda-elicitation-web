@@ -1,41 +1,43 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import IPvf from '@shared/interface/Problem/IPvf';
 import IExactSwingRatio from '../Interface/IExactSwingRatio';
 import {
   getSwingStatement,
-  setInitialPrecisePreferences
+  buildInitialPrecisePreferences
 } from './PreciseSwingElicitationUtil';
 
-const criteria: Record<string, IElicitationCriterion> = {
+const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title1',
-    scales: [0, 1],
+    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
+    dataSourceId: 'ds1',
     description: 'description'
   },
   critId2: {
     id: 'critId2',
     title: 'title2',
-    scales: [0, 1],
+    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
+    dataSourceId: 'ds2',
     description: 'description'
   },
   critId3: {
     id: 'critId3',
     title: 'title3',
-    scales: [0, 1],
+    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
+    dataSourceId: 'ds3',
     description: 'description'
   }
 };
 
 describe('getPreciseSwingStatement', () => {
   it('should return a complete matching statement', () => {
-    const result: string = getSwingStatement(criteria['critId1']);
+    const pvf: IPvf = {range: [0, 1]};
+    const result: string = getSwingStatement(criteria['critId1'], pvf);
 
     const expectedResult =
       "You've indicated that improving title1 from 0  to 1  is the most important (i.e. it has 100% importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement using the sliders below.";
@@ -48,7 +50,7 @@ describe('setPreferencesToMax', () => {
     const result: Record<
       string,
       IExactSwingRatio
-    > = setInitialPrecisePreferences(criteria, 'critId1');
+    > = buildInitialPrecisePreferences(criteria, 'critId1');
     const expectedResult: Record<string, IExactSwingRatio> = {
       critId2: {
         criteria: ['critId1', 'critId2'],

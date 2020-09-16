@@ -1,11 +1,11 @@
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import _ from 'lodash';
 import {UNRANKED} from '../elicitationConstants';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
-import IOrdinalRanking from '../Interface/IOrdinalRanking';
+import IRanking from '../Interface/IRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 
 export function findCriterionIdForRank(
-  criteria: Record<string, IElicitationCriterion>,
+  criteria: Record<string, IPreferencesCriterion>,
   rankings: Record<string, IRankingAnswer>,
   rank: number
 ): string {
@@ -18,7 +18,7 @@ export function assignMissingRankings(
   rankings: Record<string, IRankingAnswer>,
   selectedCriterionId: string,
   rank: number,
-  criteria: Record<string, IElicitationCriterion>
+  criteria: Record<string, IPreferencesCriterion>
 ): Record<string, IRankingAnswer> {
   const intermediateRankings = addRanking(rankings, selectedCriterionId, rank);
   const lastCriterionId = findCriterionIdWithoutRanking(
@@ -43,7 +43,7 @@ export function addRanking(
 }
 
 function findCriterionIdWithoutRanking(
-  criteria: Record<string, IElicitationCriterion>,
+  criteria: Record<string, IPreferencesCriterion>,
   rankings: Record<string, IRankingAnswer>
 ): string {
   return _.find(criteria, (criterion) => {
@@ -54,31 +54,22 @@ function findCriterionIdWithoutRanking(
   }).id;
 }
 
-function buildRankingAnswer(criterionId: string, rank: number): IRankingAnswer {
-  return {
-    criterionId: criterionId,
-    rank: rank
-  };
-}
-
-export function buildOrdinalPreferences(
-  answers: IRankingAnswer[]
-): IOrdinalRanking[] {
-  let sortedAnswers = _.sortBy(answers, 'rank');
+export function buildRankingPreferences(answers: IRankingAnswer[]): IRanking[] {
+  const sortedAnswers: IRankingAnswer[] = _.sortBy(answers, 'rank');
   return _.reduce(
     sortedAnswers,
-    (acc, answer, idx) => {
+    (accum: IRanking[], answer: IRankingAnswer, idx: number) => {
       if (idx === answers.length - 1) {
-        return acc;
+        return accum;
       }
-      const ranking: IOrdinalRanking = {
+      const ranking: IRanking = {
         elicitationMethod: 'ranking',
         type: 'ordinal',
         criteria: [answer.criterionId, sortedAnswers[idx + 1].criterionId]
       };
-      acc.push(ranking);
-      return acc;
+      accum.push(ranking);
+      return accum;
     },
-    [] as IOrdinalRanking[]
+    []
   );
 }

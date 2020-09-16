@@ -1,41 +1,41 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IRatioBound from '../Interface/IRatioBound';
-import {setInitialImprecisePreferences} from './ImpreciseSwingElicitationUtil';
+import {buildInitialImprecisePreferences} from './ImpreciseSwingElicitationUtil';
 
-const criteria: Record<string, IElicitationCriterion> = {
+const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title1',
-    scales: [0, 1],
+    dataSourceId: 'ds1',
+    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   },
   critId2: {
     id: 'critId2',
     title: 'title2',
-    scales: [0, 1],
+    dataSourceId: 'ds2',
+    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   },
   critId3: {
     id: 'critId3',
     title: 'title3',
-    scales: [0, 1],
+    dataSourceId: 'ds3',
+    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
-    pvfDirection: 'increasing',
     description: 'description'
   }
 };
 
-describe('setInitialImprecisePreferences', () => {
+describe('buildInitialImprecisePreferences', () => {
   it('should set criteria ratios to 1 except for the most important criterion', () => {
-    const result: Record<string, IRatioBound> = setInitialImprecisePreferences(
-      criteria,
-      'critId1'
-    );
+    const result: Record<
+      string,
+      IRatioBound
+    > = buildInitialImprecisePreferences(criteria, 'critId1');
     const expectedResult: Record<string, IRatioBound> = {
       critId2: {
         criteria: ['critId1', 'critId2'],

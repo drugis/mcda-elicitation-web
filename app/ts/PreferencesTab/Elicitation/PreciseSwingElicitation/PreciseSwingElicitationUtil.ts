@@ -1,18 +1,25 @@
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import IPvf from '@shared/interface/Problem/IPvf';
 import _ from 'lodash';
+import {
+  getBest,
+  getWorst
+} from '../../Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {DEFAULT_PRECISE_TEMPLATE} from '../elicitationConstants';
-import {getBest, getWorst} from '../ElicitationUtil';
-import IElicitationCriterion from '../Interface/IElicitationCriterion';
 import IExactSwingRatio from '../Interface/IExactSwingRatio';
 
-export function getSwingStatement(criterion: IElicitationCriterion): string {
+export function getSwingStatement(
+  criterion: IPreferencesCriterion,
+  pvf: IPvf
+): string {
   return DEFAULT_PRECISE_TEMPLATE.replace(/%criterion1%/gi, criterion.title)
     .replace(/%unit1%/gi, criterion.unitOfMeasurement.label)
-    .replace(/%worst1%/gi, String(getWorst(criterion)))
-    .replace(/%best1%/gi, String(getBest(criterion)));
+    .replace(/%worst1%/gi, String(getWorst(pvf)))
+    .replace(/%best1%/gi, String(getBest(pvf)));
 }
 
-export function setInitialPrecisePreferences(
-  criteria: Record<string, IElicitationCriterion>,
+export function buildInitialPrecisePreferences(
+  criteria: Record<string, IPreferencesCriterion>,
   mostImportantCriterionId: string
 ): Record<string, IExactSwingRatio> {
   return _(criteria)

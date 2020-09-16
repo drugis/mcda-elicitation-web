@@ -1,6 +1,6 @@
 export type TPreferencesView =
   | 'preferences'
   | 'ranking'
-  | 'exact'
+  | 'precise'
   | 'imprecise'
   | 'matching';

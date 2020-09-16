@@ -5,37 +5,31 @@ import _ from 'lodash';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 
 export default function PreferencesWeightsButtons() {
-  const {resetPreferences, currentScenario, disableWeightsButtons} = useContext(
-    PreferencesContext
-  );
+  const {
+    resetPreferences,
+    currentScenario,
+    disableWeightsButtons,
+    setActiveView
+  } = useContext(PreferencesContext);
 
   function handleResetClick() {
     resetPreferences(currentScenario);
   }
 
   function handleRankingClick() {
-    const newLocation =
-      _.split(window.location.toString(), 'preferences')[0] + 'ordinal-swing';
-    window.location.assign(newLocation);
+    setActiveView('ranking');
   }
 
   function handleMatchingClick() {
-    const newLocation =
-      _.split(window.location.toString(), 'preferences')[0] + 'matching';
-    window.location.assign(newLocation);
+    setActiveView('matching');
   }
 
   function handlePreciseClick() {
-    const newLocation =
-      _.split(window.location.toString(), 'preferences')[0] + 'swing-weighting';
-    window.location.assign(newLocation);
+    setActiveView('precise');
   }
 
   function handleImpreciseClick() {
-    const newLocation =
-      _.split(window.location.toString(), 'preferences')[0] +
-      'imprecise-swing-weighting';
-    window.location.assign(newLocation);
+    setActiveView('imprecise');
   }
 
   return (

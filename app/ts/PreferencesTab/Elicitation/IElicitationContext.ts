@@ -8,9 +8,7 @@ export default interface IElicitationContext {
   mostImportantCriterionId: string;
   preferences: Record<string, IExactSwingRatio> | Record<string, IRatioBound>;
   elicitationMethod: TElicitationMethod;
-  cancel: () => void;
   setCurrentStep: (newStep: number) => void;
-  save: (preferences: IRatioBound[] | IExactSwingRatio[]) => void;
   setIsNextDisabled: (isNextDisabled: boolean) => void;
   setMostImportantCriterionId: (criterionId: string) => void;
   setPreference: (criterionId: string, preference: number) => void;

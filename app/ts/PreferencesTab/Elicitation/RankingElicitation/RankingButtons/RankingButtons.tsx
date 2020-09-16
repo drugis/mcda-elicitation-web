@@ -5,12 +5,12 @@ import IRankingAnswer from 'app/ts/PreferencesTab/Elicitation/Interface/IRanking
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import {RankingElicitationContext} from '../RankingElicitationContext';
 import {
   assignMissingRankings,
-  buildOrdinalPreferences,
+  buildRankingPreferences,
   findCriterionIdForRank
-} from '../OrdinalRankingUtil';
-import {RankingElicitationContext} from '../RankingElicitationContext';
+} from '../RankingUtil';
 
 export default function RankingButtons({
   selectedCriterionId,
@@ -42,9 +42,12 @@ export default function RankingButtons({
       currentStep,
       criteria
     );
-    const preferences = buildOrdinalPreferences(_.toArray(finishedRankings));
-    const newState = {...currentScenario.state, prefs: preferences};
-    updateScenario({...currentScenario, state: newState});
+    const preferences = buildRankingPreferences(_.toArray(finishedRankings));
+    const newState = {
+      ..._.omit(currentScenario.state, ['weights', 'prefs']),
+      prefs: preferences
+    };
+    updateScenario({..._.omit(currentScenario, ['state']), state: newState});
     setActiveView('preferences');
   }
 

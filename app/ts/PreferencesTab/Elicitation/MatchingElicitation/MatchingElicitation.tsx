@@ -3,9 +3,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import {PreferencesContext} from '../../PreferencesContext';
 import {ElicitationContext} from '../ElicitationContext';
 import MostImportantChoice from '../MostImportantChoice/MostImportantChoice';
-import {PreferencesContext} from '../PreferencesContext';
 import MatchingButtons from './MatchingButtons/MatchingButtons';
 import MatchingSetImportance from './MatchingSetImportance/MatchingSetImportance';
 
