@@ -1,12 +1,12 @@
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
+import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import _ from 'lodash';
 import {
   getBest,
   getWorst
 } from '../../Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {DEFAULT_PRECISE_TEMPLATE} from '../elicitationConstants';
-import IExactSwingRatio from '../Interface/IExactSwingRatio';
 
 export function getSwingStatement(
   criterion: IPreferencesCriterion,

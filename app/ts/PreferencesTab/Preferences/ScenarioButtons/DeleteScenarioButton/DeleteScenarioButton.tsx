@@ -34,13 +34,15 @@ export default function DeleteScenarioButton() {
   return (
     <>
       <Tooltip title={'Delete scenario'}>
-        <IconButton
-          id="delete-scenario-button"
-          onClick={openDialog}
-          disabled={isDeleteDisabled}
-        >
-          <Delete color={isDeleteDisabled ? 'disabled' : 'secondary'} />
-        </IconButton>
+        <span>
+          <IconButton
+            id="delete-scenario-button"
+            onClick={openDialog}
+            disabled={isDeleteDisabled}
+          >
+            <Delete color={isDeleteDisabled ? 'disabled' : 'secondary'} />
+          </IconButton>
+        </span>
       </Tooltip>
       <Dialog
         open={isDialogOpen}

@@ -46,7 +46,7 @@ function matchImportanceColumnContents(
   value3
 ) {
   browser
-    .waitForElementVisible('#trade-off-block')
+    .waitForElementVisible('#perferences-weights-table')
     .assert.containsText('#elicitation-method', method)
     .assert.containsText('#importance-criterion-0', value1)
     .assert.containsText('#importance-criterion-1', value2)
@@ -57,6 +57,7 @@ function beforeEach(browser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
   loadTestWorkspace(browser);
+  browser.pause(1000);
 }
 
 function afterEach(browser) {

@@ -1,11 +1,11 @@
+import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
+import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
 import {PreferencesContext} from '../PreferencesContext';
+import {TElicitationMethod} from '../TElicitationMethod';
 import IElicitationContext from './IElicitationContext';
 import {buildInitialImprecisePreferences} from './ImpreciseSwingElicitation/ImpreciseSwingElicitationUtil';
-import IExactSwingRatio from './Interface/IExactSwingRatio';
-import {TElicitationMethod} from './Interface/IPreference';
-import IRatioBound from './Interface/IRatioBound';
 import {buildInitialPrecisePreferences} from './PreciseSwingElicitation/PreciseSwingElicitationUtil';
 
 export const ElicitationContext = createContext<IElicitationContext>(
@@ -28,7 +28,7 @@ export function ElicitationContextProviderComponent({
     string
   >();
   const [preferences, setPreferences] = useState<
-    Record<string, IExactSwingRatio> | Record<string, IRatioBound>
+    Record<string, IExactSwingRatio> | Record<string, IRatioBoundConstraint>
   >({});
 
   function setMostImportantCriterionIdWrapper(criterionId: string) {
@@ -57,7 +57,7 @@ export function ElicitationContextProviderComponent({
     answer: [number, number]
   ): void {
     let updatedPreferences = _.cloneDeep(preferences);
-    const preference: IRatioBound = {
+    const preference: IRatioBoundConstraint = {
       elicitationMethod: 'imprecise',
       type: 'ratio bound',
       criteria: [mostImportantCriterionId, criterionId],

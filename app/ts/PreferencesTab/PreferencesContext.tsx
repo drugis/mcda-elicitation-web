@@ -15,6 +15,7 @@ import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import IPreferencesContext from './IPreferencesContext';
 import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
+import {TElicitationMethod} from './TElicitationMethod';
 import {TPreferencesView} from './TPreferencesView';
 
 export const PreferencesContext = createContext<IPreferencesContext>(
@@ -207,6 +208,14 @@ export function PreferencesContextProviderComponent({
     return problem.criteria[id];
   }
 
+  function getElicitationMethod(): TElicitationMethod {
+    if (!currentScenario.state.prefs.length) {
+      return 'none';
+    } else {
+      currentScenario.state.prefs[0].elicitationMethod;
+    }
+  }
+
   return (
     <PreferencesContext.Provider
       value={{
@@ -226,7 +235,8 @@ export function PreferencesContextProviderComponent({
         getPvf,
         setLinearPvf,
         resetPreferences,
-        setActiveView
+        setActiveView,
+        getElicitationMethod
       }}
     >
       {children}

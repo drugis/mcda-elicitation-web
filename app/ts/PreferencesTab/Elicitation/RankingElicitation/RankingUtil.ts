@@ -1,7 +1,7 @@
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import IRanking from '@shared/interface/Scenario/IRanking';
 import _ from 'lodash';
 import {UNRANKED} from '../elicitationConstants';
-import IRanking from '../Interface/IRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 
 export function findCriterionIdForRank(

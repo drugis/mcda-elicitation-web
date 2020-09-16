@@ -1,7 +1,7 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import IRanking from '@shared/interface/Scenario/IRanking';
 import _ from 'lodash';
-import IRanking from '../Interface/IRanking';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 import {
   addRanking,

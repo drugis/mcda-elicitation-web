@@ -1,6 +1,6 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
-import IRatioBound from '../Interface/IRatioBound';
+import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {buildInitialImprecisePreferences} from './ImpreciseSwingElicitationUtil';
 
 const criteria: Record<string, IPreferencesCriterion> = {
@@ -31,9 +31,9 @@ describe('buildInitialImprecisePreferences', () => {
   it('should set criteria ratios to 1 except for the most important criterion', () => {
     const result: Record<
       string,
-      IRatioBound
+      IRatioBoundConstraint
     > = buildInitialImprecisePreferences(criteria, 'critId1');
-    const expectedResult: Record<string, IRatioBound> = {
+    const expectedResult: Record<string, IRatioBoundConstraint> = {
       critId2: {
         criteria: ['critId1', 'critId2'],
         elicitationMethod: 'imprecise',

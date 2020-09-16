@@ -1,7 +1,7 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
-import IExactSwingRatio from '../Interface/IExactSwingRatio';
+import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import {
   buildInitialPrecisePreferences,
   getSwingStatement

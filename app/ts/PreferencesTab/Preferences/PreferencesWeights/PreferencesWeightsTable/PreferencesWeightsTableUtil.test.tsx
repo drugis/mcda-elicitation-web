@@ -34,7 +34,11 @@ describe('buildImportance', () => {
 
   it('should return ranks if preferences are ranked', () => {
     const preferences: IRanking[] = [
-      {type: 'ordinal', criteria: ['critId1', 'critId2']}
+      {
+        type: 'ordinal',
+        criteria: ['critId1', 'critId2'],
+        elicitationMethod: 'ranking'
+      }
     ];
     const result = buildImportance(criteria, preferences);
     const expectedResult: Record<string, string> = {
@@ -46,7 +50,12 @@ describe('buildImportance', () => {
 
   it('should return correct importances for exact swing preferences', () => {
     const preferences: IExactSwingRatio[] = [
-      {type: 'exact swing', criteria: ['critId1', 'critId2'], ratio: 2}
+      {
+        type: 'exact swing',
+        criteria: ['critId1', 'critId2'],
+        ratio: 2,
+        elicitationMethod: 'matching'
+      }
     ];
     const result = buildImportance(criteria, preferences);
     const expectedResult: Record<string, string> = {
@@ -58,7 +67,12 @@ describe('buildImportance', () => {
 
   it('should return correct importances for ratio bound preferences', () => {
     const preferences: IRatioBoundConstraint[] = [
-      {type: 'ratio bound', criteria: ['critId1', 'critId2'], bounds: [1, 100]}
+      {
+        type: 'ratio bound',
+        criteria: ['critId1', 'critId2'],
+        bounds: [1, 100],
+        elicitationMethod: 'imprecise'
+      }
     ];
     const result = buildImportance(criteria, preferences);
     const expectedResult: Record<string, string> = {

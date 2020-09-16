@@ -1,15 +1,15 @@
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import _ from 'lodash';
-import IRatioBound from '../Interface/IRatioBound';
 
 export function buildInitialImprecisePreferences(
   criteria: Record<string, IPreferencesCriterion>,
   mostImportantCriterionId: string
-): Record<string, IRatioBound> {
+): Record<string, IRatioBoundConstraint> {
   return _(criteria)
     .reject(['id', mostImportantCriterionId])
     .map((criterion) => {
-      const preference: IRatioBound = {
+      const preference: IRatioBoundConstraint = {
         criteria: [mostImportantCriterionId, criterion.id],
         elicitationMethod: 'imprecise',
         type: 'ratio bound',
