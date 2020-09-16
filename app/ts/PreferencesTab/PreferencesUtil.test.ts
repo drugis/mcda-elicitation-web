@@ -1,9 +1,9 @@
-import {initPvfs, createPreferencesCriteria} from './PreferencesUtil';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IScenario from '@shared/interface/Scenario/IScenario';
-import IPvf from '@shared/interface/Problem/IPvf';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IPvf from '@shared/interface/Problem/IPvf';
+import IScenario from '@shared/interface/Scenario/IScenario';
+import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
 
 const criterion1: IProblemCriterion = {
   description: '',
@@ -80,7 +80,6 @@ describe('PreferencesUtil', () => {
           title: criterion1.title,
           description: criterion1.description,
           unitOfMeasurement: criterion1.dataSources[0].unitOfMeasurement,
-          scale: criterion1.dataSources[0].scale,
           id: 'critId1',
           dataSourceId: criterion1.dataSources[0].id
         }

@@ -14,7 +14,6 @@ const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title',
-    scale: [0, 1],
     dataSourceId: 'ds1',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
     description: 'description'
@@ -22,7 +21,6 @@ const criteria: Record<string, IPreferencesCriterion> = {
   critId2: {
     id: 'critId2',
     title: 'title',
-    scale: [0, 1],
     dataSourceId: 'ds2',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
     description: 'description'
@@ -30,7 +28,6 @@ const criteria: Record<string, IPreferencesCriterion> = {
   critId3: {
     id: 'critId3',
     title: 'title',
-    scale: [0, 1],
     dataSourceId: 'ds3',
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
     description: 'description'

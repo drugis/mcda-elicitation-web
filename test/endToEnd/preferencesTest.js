@@ -10,8 +10,7 @@ module.exports = {
   'Setting the weights through precise swing weighting': preciseSwing,
   'Precise swing previous button': preciseSwingGoBack,
   'Setting the weights through imprecise swing weighting': impreciseSwing,
-  'Imprecise swing previous button': impreciseSwingGoBack,
-  'Interacting with Willingness to trade off plot': interactWithPlot
+  'Imprecise swing previous button': impreciseSwingGoBack
 };
 
 const loginService = require('./util/loginService');
@@ -173,45 +172,4 @@ function impreciseSwingGoBack(browser) {
     .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')
     .assert.containsText('#step-counter', 'Step 1 of 2');
-}
-
-function interactWithPlot(browser) {
-  const outcomeValue = 60;
-
-  browser.expect
-    .element('#first-criterion-outcome-input')
-    .to.not.have.value.which.contains('.');
-  browser.expect
-    .element('#second-criterion-outcome-input')
-    .to.not.have.value.which.contains('.');
-  browser
-    .useXpath()
-    .waitForElementVisible('//willingness-to-trade-off-chart/div/div[1]/div')
-    .getLocationInView('//willingness-to-trade-off-chart/div/div[1]/div')
-    .moveToElement('//willingness-to-trade-off-chart/div/div[1]/div', 180, 170)
-    .mouseButtonDown(0)
-    .mouseButtonUp(0)
-    .useCss();
-
-  browser.expect
-    .element('#first-criterion-outcome-input')
-    .to.have.value.which.contains('.');
-  browser.expect
-    .element('#second-criterion-outcome-input')
-    .to.have.value.which.contains('.');
-
-  browser
-    .waitForElementVisible('#first-criterion-outcome-b-input')
-    .waitForElementVisible('#second-criterion-outcome-b-input')
-    .waitForElementVisible('#willingness-summary')
-    .waitForElementVisible('#willingness-slider')
-    .clearValue('#first-criterion-outcome-b-input')
-    .setValue('#first-criterion-outcome-b-input', outcomeValue)
-    .pause(500)
-    .useXpath()
-    .assert.containsText(
-      '//willingness-to-trade-off-chart/div/div[2]/div/span[10]',
-      outcomeValue
-    )
-    .useCss();
 }

@@ -6,6 +6,5 @@ export default interface IPreferencesCriterion {
   description: string;
   dataSourceId: string;
   unitOfMeasurement: IUnitOfMeasurement;
-  scale: [number, number];
   isFavorable?: boolean;
 }

@@ -4,9 +4,9 @@ import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 export function getPvfCoordinates(
   pvf: IPvf,
   criterionTitle: string
-): [['x', ...number[]], ['y', 1, ...number[]]] {
+): [['x', ...number[]], [string, 1, ...number[]]] {
   const pvfCoordinates = [getXValues(pvf), getYValues(pvf, criterionTitle)];
-  return pvfCoordinates as [['x', ...number[]], ['y', 1, ...number[]]];
+  return pvfCoordinates as [['x', ...number[]], [string, 1, ...number[]]];
 }
 
 function getXValues(pvf: IPvf) {

@@ -1,9 +1,9 @@
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IPvf from '@shared/interface/Problem/IPvf';
+import IScenario from '@shared/interface/Scenario/IScenario';
 import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import _ from 'lodash';
-import IScenario from '@shared/interface/Scenario/IScenario';
-import IPvf from '@shared/interface/Problem/IPvf';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 
 export function initPvfs(
   criteria: Record<string, IProblemCriterion>,
@@ -38,7 +38,7 @@ export function createPreferencesCriteria(
       ..._.pick(criterion, ['title', 'description', 'isFavorable']),
       id: id,
       dataSourceId: dataSource.id,
-      ..._.pick(dataSource, ['unitOfMeasurement', 'scale'])
+      ..._.pick(dataSource, ['unitOfMeasurement'])
     };
     return preferencesCriterion;
   });

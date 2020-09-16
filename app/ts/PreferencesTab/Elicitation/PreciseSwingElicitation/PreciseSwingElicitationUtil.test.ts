@@ -3,15 +3,14 @@ import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCri
 import IPvf from '@shared/interface/Problem/IPvf';
 import IExactSwingRatio from '../Interface/IExactSwingRatio';
 import {
-  getSwingStatement,
-  buildInitialPrecisePreferences
+  buildInitialPrecisePreferences,
+  getSwingStatement
 } from './PreciseSwingElicitationUtil';
 
 const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title1',
-    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
     dataSourceId: 'ds1',
     description: 'description'
@@ -19,7 +18,6 @@ const criteria: Record<string, IPreferencesCriterion> = {
   critId2: {
     id: 'critId2',
     title: 'title2',
-    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
     dataSourceId: 'ds2',
     description: 'description'
@@ -27,16 +25,15 @@ const criteria: Record<string, IPreferencesCriterion> = {
   critId3: {
     id: 'critId3',
     title: 'title3',
-    scale: [0, 1],
     unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
     dataSourceId: 'ds3',
     description: 'description'
   }
 };
 
-describe('getPreciseSwingStatement', () => {
+describe('getSwingStatement', () => {
   it('should return a complete matching statement', () => {
-    const pvf: IPvf = {range: [0, 1]};
+    const pvf: IPvf = {direction: 'increasing', range: [0, 1]};
     const result: string = getSwingStatement(criteria['critId1'], pvf);
 
     const expectedResult =
@@ -45,7 +42,7 @@ describe('getPreciseSwingStatement', () => {
   });
 });
 
-describe('setPreferencesToMax', () => {
+describe('buildInitialPrecisePreferences', () => {
   it('should set criteria ratios to 1 except for the most important criterion', () => {
     const result: Record<
       string,

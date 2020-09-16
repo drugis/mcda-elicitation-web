@@ -1,6 +1,6 @@
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
-import IOrdinalRanking from '@shared/interface/Scenario/IOrdinalRanking';
+import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
@@ -13,7 +13,7 @@ export function buildImportance(
     if (_.isEmpty(preferences)) {
       return '?';
     } else if (preferences[0].type === 'ordinal') {
-      return determineRank(preferences as IOrdinalRanking[], criterion.id);
+      return determineRank(preferences as IRanking[], criterion.id);
     } else {
       return buildCriterionImportance(
         preferences as IExactSwingRatio[] | IRatioBoundConstraint[],
@@ -23,7 +23,7 @@ export function buildImportance(
   });
 }
 
-function determineRank(preferences: IOrdinalRanking[], criterionId: string) {
+function determineRank(preferences: IRanking[], criterionId: string) {
   const preference = _.findIndex(preferences, (preference) => {
     return preference.criteria[1] === criterionId;
   });
