@@ -1,17 +1,17 @@
+import {Tooltip} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import TrendingUp from '@material-ui/icons/TrendingUp';
+import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../../PreferencesContext';
-import {Tooltip} from '@material-ui/core';
-import _ from 'lodash';
-import TrendingUp from '@material-ui/icons/TrendingUp';
 
 export default function PartialValueFunctionButtons({
   criterionId
 }: {
   criterionId: string;
 }) {
-  const {setLinearPvf} = useContext(PreferencesContext);
+  const {setLinearPvf, currentScenario} = useContext(PreferencesContext);
 
   function handleIncreasingClick(): void {
     setLinearPvf(criterionId, 'increasing');
