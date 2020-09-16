@@ -88,6 +88,7 @@ export default function ScenarioActionButton({
                 value={title}
                 onChange={titleChanged}
                 onKeyDown={handleKey}
+                autoFocus
                 fullWidth
               />
             </Grid>

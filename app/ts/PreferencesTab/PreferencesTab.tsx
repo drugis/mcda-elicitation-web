@@ -1,10 +1,10 @@
-import React from 'react';
-import IScenario from '@shared/interface/Scenario/IScenario';
-import {PreferencesContextProviderComponent} from './PreferencesContext';
-import Preferences from './Preferences/Preferences';
-import {ErrorContextProviderComponent} from '../Error/ErrorContext';
-import IProblem from '@shared/interface/Problem/IProblem';
 import IWorkspaceSettings from '@shared/interface/IWorkspaceSettings';
+import IProblem from '@shared/interface/Problem/IProblem';
+import IScenario from '@shared/interface/Scenario/IScenario';
+import React from 'react';
+import {ErrorContextProviderComponent} from '../Error/ErrorContext';
+import Preferences from './Preferences/Preferences';
+import {PreferencesContextProviderComponent} from './PreferencesContext';
 
 export default function PreferencesTab({
   scenarios,

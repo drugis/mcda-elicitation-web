@@ -149,6 +149,9 @@ export function PreferencesContextProviderComponent({
     scenarioToAdd[scenario.id] = scenario;
     setScenarios({...contextScenarios, ...scenarioToAdd});
     setCurrentScenario(scenario);
+    if (areAllPvfsSet(pvfs)) {
+      window.location.reload(false);
+    }
   }
 
   function deleteScenario(id: string): void {

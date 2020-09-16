@@ -151,7 +151,7 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     function updateScenarios() {
-      ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(
+      return ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(
         (scenarios) => {
           $scope.scenarios = scenarios;
           $scope.reactScenarios = _.map(scenarios, (scenario) => {
