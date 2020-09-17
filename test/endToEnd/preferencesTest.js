@@ -125,7 +125,7 @@ function preciseSwing(browser) {
 
   matchImportanceColumnContents(
     browser,
-    'Matching or Precise Swing Weighting',
+    'Precise Swing Weighting',
     '100%',
     '100%',
     '100%'

@@ -31,8 +31,6 @@ const title =
 const preferenceTabPath = '#preferences-tab';
 const importanceCellPath = '#importance-criterion-0';
 const closeModalButtonPath = '#close-modal-button';
-const cancelStep1Path = '#cancel-step1-button';
-const treatmentRespondersId = 'de14e778-f723-48d4-8f4e-1e589714f4f2';
 
 function cancelAction(browser, paths, expectedValue) {
   util
@@ -147,7 +145,7 @@ function cancelCreatingSubproblem(browser) {
 function cancelSettingPartialValueFunction(browser) {
   var paths = {
     tab: preferenceTabPath,
-    actionButton: `#advanced-pvf-button-${treatmentRespondersId}`,
+    actionButton: `#advanced-pvf-button-0`,
     cancelButton: '#cancel-button',
     content: '#partial-value-functions-header'
   };
@@ -209,7 +207,7 @@ function cancelEditingScenario(browser) {
 function cancelCreatingScenario(browser) {
   var paths = {
     tab: preferenceTabPath,
-    actionButton: '#create-scenario-button',
+    actionButton: '#add-scenario-button',
     cancelButton: closeModalButtonPath,
     content: '#scenario-selector'
   };

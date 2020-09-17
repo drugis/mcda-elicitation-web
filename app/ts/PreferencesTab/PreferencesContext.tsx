@@ -15,7 +15,6 @@ import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import IPreferencesContext from './IPreferencesContext';
 import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
-import {TElicitationMethod} from './TElicitationMethod';
 import {TPreferencesView} from './TPreferencesView';
 
 export const PreferencesContext = createContext<IPreferencesContext>(
@@ -28,7 +27,8 @@ export function PreferencesContextProviderComponent({
   currentScenarioId,
   workspaceId,
   problem,
-  settings
+  settings,
+  updateAngularScenario
 }: {
   children: any;
   scenarios: IScenario[];
@@ -36,6 +36,7 @@ export function PreferencesContextProviderComponent({
   workspaceId: string;
   problem: IProblem;
   settings: IWorkspaceSettings;
+  updateAngularScenario: (scenario: IScenario) => void;
 }) {
   const {setError} = useContext(ErrorContext);
   const [contextScenarios, setScenarios] = useState<Record<string, IScenario>>(
@@ -80,7 +81,7 @@ export function PreferencesContextProviderComponent({
     });
   }
 
-  function areAllPvfsSet(newPvfs: Record<string, IPvf>) {
+  function areAllPvfsSet(newPvfs: Record<string, IPvf>): boolean {
     return _.every(newPvfs, (pvf) => {
       return !!pvf.direction && !!pvf.type;
     });
@@ -151,7 +152,7 @@ export function PreferencesContextProviderComponent({
     setScenarios({...contextScenarios, ...scenarioToAdd});
     setCurrentScenario(scenario);
     if (areAllPvfsSet(pvfs)) {
-      window.location.reload(false);
+      updateAngularScenario(scenario);
     }
   }
 
@@ -208,11 +209,20 @@ export function PreferencesContextProviderComponent({
     return problem.criteria[id];
   }
 
-  function getElicitationMethod(): TElicitationMethod {
+  function determineElicitationMethod(): string {
     if (!currentScenario.state.prefs.length) {
-      return 'none';
+      return 'None';
     } else {
-      currentScenario.state.prefs[0].elicitationMethod;
+      switch (currentScenario.state.prefs[0].elicitationMethod) {
+        case 'ranking':
+          return 'Ranking';
+        case 'precise':
+          return 'Precise Swing Weighting';
+        case 'matching':
+          return 'Matching';
+        case 'imprecise':
+          return 'Imprecise Swing Weighting';
+      }
     }
   }
 
@@ -236,7 +246,8 @@ export function PreferencesContextProviderComponent({
         setLinearPvf,
         resetPreferences,
         setActiveView,
-        getElicitationMethod
+        determineElicitationMethod,
+        areAllPvfsSet
       }}
     >
       {children}

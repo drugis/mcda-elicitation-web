@@ -36,6 +36,7 @@ define(['lodash', 'angular'], function (_, angular) {
     isMcdaStandalone
   ) {
     $scope.scenarioChanged = scenarioChanged;
+    $scope.updateAngularScenario = updateAngularScenario;
 
     $scope.tabStatus = {};
     $scope.deregisterTransitionListener = $transitions.onStart({}, function (
@@ -207,6 +208,10 @@ define(['lodash', 'angular'], function (_, angular) {
           id: newScenario.id
         });
       }
+    }
+
+    function updateAngularScenario(updatedScenario) {
+      $scope.$emit('elicit.resultsAccessible', updatedScenario);
     }
   }
   return dependencies.concat(MCDABenefitRiskController);

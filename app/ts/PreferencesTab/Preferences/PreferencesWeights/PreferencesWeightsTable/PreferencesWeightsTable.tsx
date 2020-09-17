@@ -50,7 +50,7 @@ export default function PreferencesWeightsTable() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {_.map(criteria, (criterion, index) => {
+        {_.map(_.toArray(criteria), (criterion, index) => {
           return (
             <TableRow key={criterion.id}>
               <TableCell>{criterion.title}</TableCell>
@@ -61,7 +61,7 @@ export default function PreferencesWeightsTable() {
               <TableCell id={`importance-criterion-${index}`}>
                 {importances[criterion.id]}
               </TableCell>
-              <TableCell id={`weights-criterion-${index}`}>
+              <TableCell id={`weight-criterion-${index}`}>
                 {getWeight(criterion.id)}
               </TableCell>
             </TableRow>

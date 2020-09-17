@@ -64,7 +64,7 @@ export default function ScenarioActionButton({
     <>
       <Tooltip title={action + ' scenario title'}>
         <IconButton
-          id={action.toLowerCase() + 'scenario-button'}
+          id={action.toLowerCase() + '-scenario-button'}
           onClick={openDialog}
         >
           {icon}

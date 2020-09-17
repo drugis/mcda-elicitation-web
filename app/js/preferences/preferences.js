@@ -33,7 +33,8 @@ define([
         'currentScenarioId',
         'workspaceId',
         'problem',
-        'settings'
+        'settings',
+        'updateAngularScenario'
       ])
     )
     .controller(

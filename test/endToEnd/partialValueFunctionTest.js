@@ -15,9 +15,6 @@ const workspaceService = require('./util/workspaceService');
 
 const workspacePath = '/partialValueFunctionTestProblem.json';
 
-const criterion1Id = 'c1';
-const criterion2Id = 'c2';
-
 function beforeEach(browser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
@@ -35,10 +32,10 @@ function afterEach(browser) {
 
 function set(browser) {
   browser
-    .click('#advanced-pvf-button-c1')
+    .click('#advanced-pvf-button-0')
     .click('#save-button')
     .waitForElementVisible('#partial-value-functions-block')
-    .click('#advanced-pvf-button-c2')
+    .click('#advanced-pvf-button-1')
     .click('#increasing-pvf-option')
     .click('#piece-wise-pvf-option')
     .click('#next-button')
@@ -50,7 +47,7 @@ function set(browser) {
 
 function navigate(browser) {
   browser
-    .click('#advanced-pvf-button-c1')
+    .click('#advanced-pvf-button-0')
     .click('#piece-wise-pvf-option')
     .click('#next-button')
     .click('#previous-button')
@@ -59,32 +56,32 @@ function navigate(browser) {
 
 function setLinearPVF(browser) {
   browser
-    .waitForElementVisible('#pvf-questionmark-c1')
-    .waitForElementVisible('#pvf-questionmark-c2')
-    .click('#increasing-pvf-button-c1')
-    .waitForElementVisible('#pvfplot-c1')
-    .click('#decreasing-pvf-button-c1')
-    .waitForElementVisible('#pvfplot-c1')
-    .click('#decreasing-pvf-button-c2')
-    .waitForElementVisible('#pvfplot-c2');
+    .waitForElementVisible('#pvf-questionmark-0')
+    .waitForElementVisible('#pvf-questionmark-1')
+    .click('#increasing-pvf-button-0')
+    .waitForElementVisible('#pvfplot-0')
+    .click('#decreasing-pvf-button-0')
+    .waitForElementVisible('#pvfplot-0')
+    .click('#decreasing-pvf-button-1')
+    .waitForElementVisible('#pvfplot-1');
 }
 
 function displayWeights(browser) {
   browser
     .waitForElementVisible('#not-all-pvfs-set-warning')
-    .click('#increasing-pvf-button-c1')
+    .click('#increasing-pvf-button-0')
     .waitForElementVisible('#not-all-pvfs-set-warning')
-    .click('#increasing-pvf-button-c2')
-    .waitForElementVisible('#weight-criterion-0')
-    .waitForElementVisible('#weight-criterion-1');
+    .click('#increasing-pvf-button-1')
+    .assert.not.containsText('#weight-criterion-0', '?')
+    .assert.not.containsText('#weight-criterion-1', '?');
 }
 
 function resetTradeOffs(browser) {
   browser
     .waitForElementVisible('#not-all-pvfs-set-warning')
-    .click('#increasing-pvf-button-c1')
+    .click('#increasing-pvf-button-0')
     .waitForElementVisible('#not-all-pvfs-set-warning')
-    .click('#increasing-pvf-button-c2')
+    .click('#increasing-pvf-button-1')
     .assert.containsText('#importance-criterion-0', '?')
     .assert.containsText('#importance-criterion-1', '?')
     .click('#ranking-button')
@@ -93,7 +90,9 @@ function resetTradeOffs(browser) {
     .click('#save-button')
     .assert.containsText('#importance-criterion-0', '1')
     .assert.containsText('#importance-criterion-1', '2')
-    .click('#decreasing-pvf-button-c1')
+    .assert.not.containsText('#weight-criterion-0', '?')
+    .assert.not.containsText('#weight-criterion-1', '?')
+    .click('#decreasing-pvf-button-0')
     .assert.containsText('#importance-criterion-0', '?')
     .assert.containsText('#importance-criterion-1', '?');
 }

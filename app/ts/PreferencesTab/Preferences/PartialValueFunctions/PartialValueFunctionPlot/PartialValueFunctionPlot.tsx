@@ -5,9 +5,11 @@ import {PreferencesContext} from '../../../PreferencesContext';
 import {getPvfCoordinates} from '../PartialValueFunctionUtil';
 
 export default function PartialValueFunctionPlot({
-  criterionId
+  criterionId,
+  index
 }: {
   criterionId: string;
+  index: number;
 }) {
   const {getCriterion, getPvf} = useContext(PreferencesContext);
   const criterion = getCriterion(criterionId);
@@ -18,7 +20,7 @@ export default function PartialValueFunctionPlot({
   useEffect(() => {
     const values = getPvfCoordinates(pvf, criterion.title);
     const settings = {
-      bindto: `#pvfplot-${criterionId}`,
+      bindto: `#pvfplot-${index}`,
       data: {
         x: 'x',
         columns: values
@@ -69,7 +71,5 @@ export default function PartialValueFunctionPlot({
     selectAll('.c3-line').style('stroke-width', '2px');
   }, [pvf]);
 
-  return (
-    <div style={{width: width, height: height}} id={`pvfplot-${criterionId}`} />
-  );
+  return <div style={{width: width, height: height}} id={`pvfplot-${index}`} />;
 }

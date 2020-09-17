@@ -10,26 +10,31 @@ export default function PartialValueFunctions() {
   const {pvfs, criteria} = useContext(PreferencesContext);
 
   function getPartialValueFunctions(): JSX.Element[] {
-    return _.map(criteria, (criterion) => {
+    return _.map(_.toArray(criteria), (criterion, index) => {
       return (
         <Grid key={criterion.id} container item lg={3} md={4} xs={6}>
           <Grid item xs={12} style={{textAlign: 'center'}}>
             {criterion.title}
           </Grid>
           <Grid item xs={12}>
-            {getPlotOrQuestionMark(criterion.id)}
+            {getPlotOrQuestionMark(criterion.id, index)}
           </Grid>
           <Grid item xs={12} style={{textAlign: 'center'}}>
-            <PartialValueFunctionButtons criterionId={criterion.id} />
+            <PartialValueFunctionButtons
+              criterionId={criterion.id}
+              index={index}
+            />
           </Grid>
         </Grid>
       );
     });
   }
 
-  function getPlotOrQuestionMark(criterionId: string) {
+  function getPlotOrQuestionMark(criterionId: string, index: number) {
     if (pvfs[criterionId].direction) {
-      return <PartialValueFunctionPlot criterionId={criterionId} />;
+      return (
+        <PartialValueFunctionPlot criterionId={criterionId} index={index} />
+      );
     } else {
       return <div style={{fontSize: '144px', textAlign: 'center'}}>?</div>;
     }

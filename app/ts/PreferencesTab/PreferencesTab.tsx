@@ -11,13 +11,15 @@ export default function PreferencesTab({
   currentScenarioId,
   workspaceId,
   problem,
-  settings
+  settings,
+  updateAngularScenario
 }: {
   scenarios: IScenario[];
   currentScenarioId: string;
   workspaceId: string;
   problem: IProblem;
   settings: IWorkspaceSettings;
+  updateAngularScenario: (scenario: IScenario) => void;
 }) {
   return scenarios && problem ? (
     <ErrorContextProviderComponent>
@@ -27,6 +29,7 @@ export default function PreferencesTab({
         workspaceId={workspaceId}
         problem={problem}
         settings={settings}
+        updateAngularScenario={updateAngularScenario}
       >
         <Preferences />
       </PreferencesContextProviderComponent>

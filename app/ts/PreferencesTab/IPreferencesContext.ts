@@ -4,7 +4,6 @@ import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IScenario from '@shared/interface/Scenario/IScenario';
 import {TPvfDirection} from '@shared/types/PvfTypes';
-import {TElicitationMethod} from './TElicitationMethod';
 import {TPreferencesView} from './TPreferencesView';
 
 export default interface IPreferencesContext {
@@ -25,5 +24,6 @@ export default interface IPreferencesContext {
   setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
   resetPreferences: (scenario: IScenario) => void;
   setActiveView: (newView: TPreferencesView) => void;
-  getElicitationMethod: () => TElicitationMethod;
+  determineElicitationMethod: () => string;
+  areAllPvfsSet: (newPvfs: Record<string, IPvf>) => boolean;
 }
