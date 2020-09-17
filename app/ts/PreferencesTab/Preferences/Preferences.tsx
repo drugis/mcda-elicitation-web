@@ -1,6 +1,6 @@
 import {Box, Grid} from '@material-ui/core';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {ElicitationContextProviderComponent} from '../Elicitation/ElicitationContext';
 import ImpreciseSwingWeighting from '../Elicitation/ImpreciseSwingElicitation/ImpreciseSwingWeighting';
 import MatchingElicitation from '../Elicitation/MatchingElicitation/MatchingElicitation';
@@ -16,10 +16,12 @@ export default function Preferences() {
   const {currentScenario, scenarios, activeView} = useContext(
     PreferencesContext
   );
+  const [preferencesTitle] = useState(document.title);
 
   function showView(): JSX.Element {
     switch (activeView) {
       case 'preferences':
+        document.title = preferencesTitle;
         return (
           <>
             <ScenarioSelection
@@ -32,6 +34,7 @@ export default function Preferences() {
           </>
         );
       case 'precise':
+        document.title = 'Precise swing weighting';
         return (
           <ElicitationContextProviderComponent elicitationMethod="precise">
             <Grid container justify="center" component={Box} mt={2}>
@@ -40,6 +43,7 @@ export default function Preferences() {
           </ElicitationContextProviderComponent>
         );
       case 'imprecise':
+        document.title = 'Imprecise swing weighting';
         return (
           <ElicitationContextProviderComponent elicitationMethod="imprecise">
             <Grid container justify="center" component={Box} mt={2}>
@@ -48,6 +52,7 @@ export default function Preferences() {
           </ElicitationContextProviderComponent>
         );
       case 'matching':
+        document.title = 'Matching';
         return (
           <ElicitationContextProviderComponent elicitationMethod={'matching'}>
             <Grid container justify="center" component={Box} mt={2}>
@@ -56,6 +61,7 @@ export default function Preferences() {
           </ElicitationContextProviderComponent>
         );
       case 'ranking':
+        document.title = 'Ranking';
         return (
           <RankingElicitationContextProviderComponent>
             <Grid container justify="center" component={Box} mt={2}>

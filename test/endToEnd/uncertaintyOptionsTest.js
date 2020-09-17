@@ -5,13 +5,14 @@ module.exports = {
   afterEach: afterEach,
   'Both selected by default': defaultSelection,
   'Warning when both deselected': bothDeselectedWarning,
-  // 'Warning when weights are not stochastic': stochasticWeightsWarning, // FIXME: checkbox not seen in headless mode!
+  'Warning when weights are not stochastic': stochasticWeightsWarning,
   'Save settings': save
 };
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
+const {TEST_URL} = require('./util/constants');
 
 var deterministicWarning =
   'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
@@ -57,9 +58,11 @@ function stochasticWeightsWarning(browser) {
     .click('#criterion-option-0')
     .click('#next-button')
     .click('#save-button')
-    .waitForElementVisible('#precise-swing-button');
-  util
-    .delayedClick(browser, '#smaa-tab', '#uncertainty-weights-checkbox')
+    .waitForElementVisible('#precise-swing-button')
+    .getAttribute('#smaa-tab', 'href', (result) => {
+      const smaaUrl = TEST_URL + '/' + result.value;
+      browser.url(smaaUrl); // does not work via delayed click -- smaa tab is not clickable
+    })
     .waitForElementVisible('#uncertainty-weights-checkbox:disabled')
     .assert.containsText('#warning-0', hasNoStochasticWeightsWarning);
 }
