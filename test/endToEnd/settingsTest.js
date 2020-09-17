@@ -18,9 +18,9 @@ module.exports = {
   'Unselecting reference column in deterministic results tab': unselectReferenceInDeterministic,
   'Switching between median and mode in deterministic tab': switchMedianInDeterministic,
   'Switching settings in the overview tab': switchSettingsInOverview,
-  // 'Switching settings in the preferences tab': switchSettingsInPreferences, //FIXME:  does not use settings at all atm?
+  // 'Switching settings in the preferences tab': switchSettingsInPreferences, //FIXME:  does not use view settings at all atm
   'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF
-  // 'Switching settings while setting the weights': switchSettingsWhileSettingWeights //FIXME: does not use settings at all atm
+  // 'Switching settings while setting the weights': switchSettingsWhileSettingWeights //FIXME: does not use view settings at all atm
 };
 
 const loginService = require('./util/loginService');
