@@ -1,4 +1,4 @@
-import {Grid} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import {ElicitationContext} from 'app/ts/PreferencesTab/Elicitation/ElicitationContext';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';

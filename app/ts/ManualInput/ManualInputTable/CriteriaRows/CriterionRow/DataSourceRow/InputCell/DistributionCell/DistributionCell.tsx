@@ -1,4 +1,5 @@
-import {TableCell, Tooltip} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
+import Tooltip from '@material-ui/core/Tooltip';
 import IBetaDistribution from '@shared/interface/IBetaDistribution';
 import {Distribution} from '@shared/interface/IDistribution';
 import IGammaDistribution from '@shared/interface/IGammaDistribution';

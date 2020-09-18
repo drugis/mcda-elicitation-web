@@ -1,4 +1,4 @@
-import {TableCell} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
 import ICriterion from '@shared/interface/ICriterion';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../../../../ManualInputContext';

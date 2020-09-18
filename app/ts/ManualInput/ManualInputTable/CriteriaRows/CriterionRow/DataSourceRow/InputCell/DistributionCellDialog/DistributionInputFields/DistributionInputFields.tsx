@@ -1,4 +1,4 @@
-import {Grid} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import React, {KeyboardEvent, useContext} from 'react';
 import RangeInput from '../../EffectCellDialog/EffectInputFields/RangeInput/RangeInput';
 import TextInput from '../../EffectCellDialog/EffectInputFields/TextInput/TextInput';

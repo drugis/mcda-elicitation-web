@@ -1,4 +1,5 @@
-import {TextField, Tooltip} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import InlineTooltip from '../CriteriaRows/CriterionRow/DataSourceRow/InlineTooltip/InlineTooltip';
 
@@ -59,7 +60,7 @@ export default function InlineEditor({
         </Tooltip>
       );
     } else {
-      return <InlineTooltip tooltipText={tooltipText}/>;
+      return <InlineTooltip tooltipText={tooltipText} />;
     }
   }
 
