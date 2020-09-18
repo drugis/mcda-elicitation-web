@@ -1,4 +1,6 @@
-import {Grid, TableCell, TableRow} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 import IDataSource from '@shared/interface/IDataSource';
 import _ from 'lodash';
 import React, {useContext} from 'react';

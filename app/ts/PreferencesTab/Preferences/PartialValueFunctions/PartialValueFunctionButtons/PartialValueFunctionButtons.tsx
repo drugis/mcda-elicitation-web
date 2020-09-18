@@ -1,4 +1,4 @@
-import {Tooltip} from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import TrendingUp from '@material-ui/icons/TrendingUp';

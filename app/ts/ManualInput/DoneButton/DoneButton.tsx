@@ -1,4 +1,4 @@
-import {Button} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import IError from '@shared/interface/IError';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import Axios, {AxiosResponse} from 'axios';

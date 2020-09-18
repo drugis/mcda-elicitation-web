@@ -1,4 +1,4 @@
-import {TableCell} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';

@@ -1,4 +1,5 @@
-import {TableCell, Tooltip} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
+import Tooltip from '@material-ui/core/Tooltip';
 import {Effect} from '@shared/interface/IEffect';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';

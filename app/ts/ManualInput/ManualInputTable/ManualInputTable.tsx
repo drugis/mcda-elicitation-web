@@ -1,4 +1,7 @@
-import {Table, TableCell, TableHead, TableRow} from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';

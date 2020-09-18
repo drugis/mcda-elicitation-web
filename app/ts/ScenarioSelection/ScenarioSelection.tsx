@@ -1,4 +1,6 @@
-import {Grid, MenuItem, Select} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import IScenario from '@shared/interface/Scenario/IScenario';
 import _ from 'lodash';
 import React, {ChangeEvent} from 'react';

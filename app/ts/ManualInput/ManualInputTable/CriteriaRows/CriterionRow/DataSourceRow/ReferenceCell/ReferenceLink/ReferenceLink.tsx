@@ -1,9 +1,10 @@
-import { TextField, Tooltip } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import { ManualInputContext } from 'app/ts/ManualInput/ManualInputContext';
-import { checkIfLinkIsInvalid } from 'app/ts/ManualInput/ManualInputService/ManualInputService';
-import React, { ChangeEvent, KeyboardEvent, useContext, useState } from 'react';
+import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
+import {checkIfLinkIsInvalid} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
+import React, {ChangeEvent, KeyboardEvent, useContext, useState} from 'react';
 import InlineTooltip from '../../InlineTooltip/InlineTooltip';
 
 export default function ReferenceLink({

@@ -1,12 +1,12 @@
+import TableCell from '@material-ui/core/TableCell';
 import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
+import EmptyCell from '../EmptyCell/EmptyCell';
 import UncertainValue from '../UncertainValue/UncertainValue';
 import {getStringForValue} from '../ValueCellService';
 import {renderDistribution} from './DistributionValueCellService';
-import {TableCell} from '@material-ui/core';
-import EmptyCell from '../EmptyCell/EmptyCell';
 
 export default function DistributionValueCell({
   distribution,

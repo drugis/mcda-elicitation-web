@@ -1,5 +1,5 @@
 import React from 'react';
-import {TableCell} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
 import IScale from '@shared/interface/IScale';
 import UncertainValue from '../UncertainValue/UncertainValue';
 import {getStringForValue} from '../ValueCellService';
