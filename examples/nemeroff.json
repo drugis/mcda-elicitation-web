@@ -3,118 +3,94 @@
   "title": "Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)",
   "description": "Application of SMAA to evaluate the potential benefits and risks of two commonly prescribed second-generation antidepressants in the setting of a published placebo-controlled trial (Tervonen et al, Stat Med, 2011)",
   "criteria": {
-    "de14e778-f723-48d4-8f4e-1e589714f4f2": {
+    "treatmentRespondersId": {
       "title": "Treatment responders",
       "description": "Proportion of patients with a 50% or greater decrease on the HAM-D-21 rating scale",
       "isFavorable": true,
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0.28,
-              0.63
-            ],
+            "range": [0.28, 0.63],
             "direction": "increasing",
             "type": "linear"
           },
           "id": "029909c4-cb8c-43cb-9816-e8550ef561be",
           "source": "Nemeroff and Thase (2007)",
           "unitOfMeasurement": "%",
-          "scale": [
-            0,
-            100
-          ]
+          "scale": [0, 100]
         }
       ]
     },
-    "5b99d1e1-116b-4b9f-9aa2-f81eb1976515": {
+    "nauseaId": {
       "title": "Nausea ADRs",
       "description": "Proportion of patients experiencing nausea ADRs",
       "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0.04,
-              0.5
-            ],
+            "range": [0.04, 0.5],
             "direction": "decreasing",
             "type": "linear"
           },
           "id": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
           "source": "Nemeroff and Thase (2007)",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
-    "57711ccd-c57e-46fc-b63a-b1480ff0e2e7": {
+    "insomniaId": {
       "title": "Insomnia ADRs",
       "description": "Proportion of patients experiencing insomnia ADRs",
       "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0.08,
-              0.31
-            ],
+            "range": [0.08, 0.31],
             "direction": "decreasing",
             "type": "linear"
           },
           "id": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
           "source": "Nemeroff and Thase (2007)",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
-    "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4": {
+    "anxietyId": {
       "title": "Anxiety ADRs",
       "description": "Proportion of patients experiencing anxiety ADRs",
       "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0,
-              0.17
-            ],
+            "range": [0, 0.17],
             "direction": "decreasing",
             "type": "linear"
           },
           "id": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
           "source": "Nemeroff and Thase (2007)",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     }
   },
   "alternatives": {
-    "38deaf60-9014-4af9-997e-e5f08bc8c8ff": {
+    "placeboId": {
       "title": "Placebo"
     },
-    "a85db1a0-c045-46b4-958b-eddce3793420": {
+    "fluoxetineId": {
       "title": "Fluoxetine"
     },
-    "a266d343-4821-47dd-923f-6fff7c32f9fa": {
+    "venlafaxineId": {
       "title": "Venlafaxine"
     }
   },
   "performanceTable": [
     {
-      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
-      "criterion": "de14e778-f723-48d4-8f4e-1e589714f4f2",
+      "alternative": "placeboId",
+      "criterion": "treatmentRespondersId",
       "dataSource": "029909c4-cb8c-43cb-9816-e8550ef561be",
       "performance": {
         "effect": {
@@ -135,8 +111,8 @@
       }
     },
     {
-      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
-      "criterion": "de14e778-f723-48d4-8f4e-1e589714f4f2",
+      "alternative": "fluoxetineId",
+      "criterion": "treatmentRespondersId",
       "dataSource": "029909c4-cb8c-43cb-9816-e8550ef561be",
       "performance": {
         "effect": {
@@ -157,8 +133,8 @@
       }
     },
     {
-      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
-      "criterion": "de14e778-f723-48d4-8f4e-1e589714f4f2",
+      "alternative": "venlafaxineId",
+      "criterion": "treatmentRespondersId",
       "dataSource": "029909c4-cb8c-43cb-9816-e8550ef561be",
       "performance": {
         "effect": {
@@ -179,8 +155,8 @@
       }
     },
     {
-      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
-      "criterion": "5b99d1e1-116b-4b9f-9aa2-f81eb1976515",
+      "alternative": "placeboId",
+      "criterion": "nauseaId",
       "dataSource": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
       "performance": {
         "effect": {
@@ -201,8 +177,8 @@
       }
     },
     {
-      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
-      "criterion": "5b99d1e1-116b-4b9f-9aa2-f81eb1976515",
+      "alternative": "fluoxetineId",
+      "criterion": "nauseaId",
       "dataSource": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
       "performance": {
         "effect": {
@@ -223,8 +199,8 @@
       }
     },
     {
-      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
-      "criterion": "5b99d1e1-116b-4b9f-9aa2-f81eb1976515",
+      "alternative": "venlafaxineId",
+      "criterion": "nauseaId",
       "dataSource": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
       "performance": {
         "effect": {
@@ -245,8 +221,8 @@
       }
     },
     {
-      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
-      "criterion": "57711ccd-c57e-46fc-b63a-b1480ff0e2e7",
+      "alternative": "placeboId",
+      "criterion": "insomniaId",
       "dataSource": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
       "performance": {
         "effect": {
@@ -267,8 +243,8 @@
       }
     },
     {
-      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
-      "criterion": "57711ccd-c57e-46fc-b63a-b1480ff0e2e7",
+      "alternative": "fluoxetineId",
+      "criterion": "insomniaId",
       "dataSource": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
       "performance": {
         "effect": {
@@ -289,8 +265,8 @@
       }
     },
     {
-      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
-      "criterion": "57711ccd-c57e-46fc-b63a-b1480ff0e2e7",
+      "alternative": "venlafaxineId",
+      "criterion": "insomniaId",
       "dataSource": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
       "performance": {
         "effect": {
@@ -311,8 +287,8 @@
       }
     },
     {
-      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
-      "criterion": "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4",
+      "alternative": "placeboId",
+      "criterion": "anxietyId",
       "dataSource": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
       "performance": {
         "effect": {
@@ -333,8 +309,8 @@
       }
     },
     {
-      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
-      "criterion": "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4",
+      "alternative": "fluoxetineId",
+      "criterion": "anxietyId",
       "dataSource": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
       "performance": {
         "effect": {
@@ -355,8 +331,8 @@
       }
     },
     {
-      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
-      "criterion": "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4",
+      "alternative": "venlafaxineId",
+      "criterion": "anxietyId",
       "dataSource": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
       "performance": {
         "effect": {

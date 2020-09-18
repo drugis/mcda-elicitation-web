@@ -1,4 +1,5 @@
-import {Box, Grid} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import React, {useContext, useState} from 'react';
 import {ElicitationContextProviderComponent} from '../Elicitation/ElicitationContext';
@@ -23,7 +24,7 @@ export default function Preferences() {
       case 'preferences':
         document.title = preferencesTitle;
         return (
-          <>
+          <Grid container spacing={3}>
             <ScenarioSelection
               scenarios={scenarios}
               currentScenario={currentScenario}
@@ -31,7 +32,7 @@ export default function Preferences() {
             <ScenarioButtons />
             <PartialValueFunctions />
             <PreferencesWeights />
-          </>
+          </Grid>
         );
       case 'precise':
         document.title = 'Precise swing weighting';

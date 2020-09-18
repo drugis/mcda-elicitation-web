@@ -10,31 +10,26 @@ export default function PartialValueFunctions() {
   const {pvfs, criteria} = useContext(PreferencesContext);
 
   function getPartialValueFunctions(): JSX.Element[] {
-    return _.map(_.toArray(criteria), (criterion, index) => {
+    return _.map(criteria, (criterion) => {
       return (
         <Grid key={criterion.id} container item lg={3} md={4} xs={6}>
           <Grid item xs={12} style={{textAlign: 'center'}}>
             {criterion.title}
           </Grid>
-          <Grid item xs={12}>
-            {getPlotOrQuestionMark(criterion.id, index)}
+          <Grid container item xs={12} justify="center">
+            {getPlotOrQuestionMark(criterion.id)}
           </Grid>
           <Grid item xs={12} style={{textAlign: 'center'}}>
-            <PartialValueFunctionButtons
-              criterionId={criterion.id}
-              index={index}
-            />
+            <PartialValueFunctionButtons criterionId={criterion.id} />
           </Grid>
         </Grid>
       );
     });
   }
 
-  function getPlotOrQuestionMark(criterionId: string, index: number) {
+  function getPlotOrQuestionMark(criterionId: string) {
     if (pvfs[criterionId].direction) {
-      return (
-        <PartialValueFunctionPlot criterionId={criterionId} index={index} />
-      );
+      return <PartialValueFunctionPlot criterionId={criterionId} />;
     } else {
       return <div style={{fontSize: '144px', textAlign: 'center'}}>?</div>;
     }
@@ -42,13 +37,13 @@ export default function PartialValueFunctions() {
 
   return (
     <>
-      <Grid container id="partial-value-functions-block">
+      <Grid item container id="partial-value-functions-block">
         <Grid item xs={12}>
           <Typography id="partial-value-functions-header" variant="h4">
             Partial Value Functions
           </Typography>
         </Grid>
-        <Grid container item xs={12}>
+        <Grid container item xs={12} spacing={2}>
           {getPartialValueFunctions()}
         </Grid>
       </Grid>

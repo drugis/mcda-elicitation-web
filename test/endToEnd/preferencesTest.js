@@ -33,9 +33,9 @@ function resetWeights(browser) {
   browser
     .click('#reset-button')
     .assert.containsText('#elicitation-method', 'None')
-    .assert.containsText('#importance-criterion-0', '?')
-    .assert.containsText('#importance-criterion-1', '?')
-    .assert.containsText('#importance-criterion-2', '?');
+    .assert.containsText('#importance-criterion-OS', '?')
+    .assert.containsText('#importance-criterion-severe', '?')
+    .assert.containsText('#importance-criterion-moderate', '?');
 }
 
 function matchImportanceColumnContents(
@@ -48,9 +48,9 @@ function matchImportanceColumnContents(
   browser
     .waitForElementVisible('#perferences-weights-table')
     .assert.containsText('#elicitation-method', method)
-    .assert.containsText('#importance-criterion-0', value1)
-    .assert.containsText('#importance-criterion-1', value2)
-    .assert.containsText('#importance-criterion-2', value3);
+    .assert.containsText('#importance-criterion-OS', value1)
+    .assert.containsText('#importance-criterion-severe', value2)
+    .assert.containsText('#importance-criterion-moderate', value3);
 }
 
 function beforeEach(browser) {
@@ -69,9 +69,9 @@ function ranking(browser) {
   browser
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
-    .click('#criterion-option-0')
+    .click('#criterion-option-severe')
     .click('#save-button');
 
   matchImportanceColumnContents(browser, 'Ranking', 1, 2, 3);
@@ -83,7 +83,7 @@ function rankingGoBack(browser) {
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
     .assert.containsText('#step-counter', 'Step 1 of 2')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
     .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')
@@ -94,7 +94,7 @@ function matching(browser) {
   browser
     .click('#matching-button')
     .waitForElementVisible('#matching-title-header')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
     .click('#next-button')
     .click('#save-button');
@@ -108,7 +108,7 @@ function matchingGoBack(browser) {
     .click('#matching-button')
     .waitForElementVisible('#matching-title-header')
     .assert.containsText('#step-counter', 'Step 1 of 3')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
     .assert.containsText('#step-counter', 'Step 2 of 3')
     .click('#previous-button')
@@ -119,7 +119,7 @@ function preciseSwing(browser) {
   browser
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
     .click('#save-button');
 
@@ -138,7 +138,7 @@ function preciseSwingGoBack(browser) {
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
     .assert.containsText('#step-counter', 'Step 1 of 2')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
     .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')
@@ -149,7 +149,7 @@ function impreciseSwing(browser) {
   browser
     .click('#imprecise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
     .click('#save-button');
 
@@ -168,7 +168,7 @@ function impreciseSwingGoBack(browser) {
     .click('#imprecise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
     .assert.containsText('#step-counter', 'Step 1 of 2')
-    .click('#criterion-option-0')
+    .click('#criterion-option-OS')
     .click('#next-button')
     .assert.containsText('#step-counter', 'Step 2 of 2')
     .click('#previous-button')

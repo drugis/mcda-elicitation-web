@@ -7,11 +7,9 @@ import React, {useContext} from 'react';
 import {PreferencesContext} from '../../../PreferencesContext';
 
 export default function PartialValueFunctionButtons({
-  criterionId,
-  index
+  criterionId
 }: {
   criterionId: string;
-  index: number;
 }) {
   const {setLinearPvf, currentScenario} = useContext(PreferencesContext);
 
@@ -35,13 +33,13 @@ export default function PartialValueFunctionButtons({
     <ButtonGroup size="small">
       <Tooltip title="Set increasing PVF. Setting a PVF will reset all trade-off preferences.">
         <Button
-          id={`increasing-pvf-button-${index}`}
+          id={`increasing-pvf-button-${criterionId}`}
           variant="contained"
           color="primary"
           onClick={handleIncreasingClick}
         >
           <img
-            id={`pvf-questionmark-${index}`}
+            id={`pvf-questionmark-${criterionId}`}
             src="img/upchart.png"
             alt="increasing PVF"
             className="image-in-button"
@@ -51,7 +49,7 @@ export default function PartialValueFunctionButtons({
       </Tooltip>
       <Tooltip title="Set decreasing PVF. Setting a PVF will reset all trade-off preferences.">
         <Button
-          id={`decreasing-pvf-button-${index}`}
+          id={`decreasing-pvf-button-${criterionId}`}
           variant="contained"
           color="primary"
           onClick={handleDecreasingClick}
@@ -66,7 +64,7 @@ export default function PartialValueFunctionButtons({
       </Tooltip>
       <Tooltip title="Set linear of piece-wise PVF via guided process. Setting a PVF will reset all trade-off preferences.">
         <Button
-          id={`advanced-pvf-button-${index}`}
+          id={`advanced-pvf-button-${criterionId}`}
           variant="contained"
           color="primary"
           onClick={handleAdvancedClick}

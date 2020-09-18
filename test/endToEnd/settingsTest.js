@@ -369,7 +369,7 @@ function switchSettingsWhileSettingPVF(browser) {
       '#preferences-tab',
       '#partial-value-functions-header'
     )
-    .click('#advanced-pvf-button-0')
+    .click('#advanced-pvf-button-OS')
     .useXpath()
     .assert.containsText(lowestOption, '45 % is best');
 

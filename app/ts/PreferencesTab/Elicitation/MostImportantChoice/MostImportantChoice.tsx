@@ -50,14 +50,8 @@ export default function MostImportantChoice() {
           value={mostImportantCriterionId ? mostImportantCriterionId : ''}
           onChange={handleSelection}
         >
-          {_.map(_.toArray(criteria), (criterion, index) => {
-            return (
-              <CriterionChoice
-                key={criterion.id}
-                criterion={criterion}
-                index={index}
-              />
-            );
+          {_.map(criteria, (criterion) => {
+            return <CriterionChoice key={criterion.id} criterion={criterion} />;
           })}
         </RadioGroup>
       </Grid>

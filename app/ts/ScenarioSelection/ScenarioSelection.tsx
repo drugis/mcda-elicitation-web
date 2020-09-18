@@ -1,7 +1,7 @@
-import React, {ChangeEvent} from 'react';
+import {Grid, MenuItem, Select} from '@material-ui/core';
 import IScenario from '@shared/interface/Scenario/IScenario';
-import {Grid, Select, MenuItem} from '@material-ui/core';
 import _ from 'lodash';
+import React, {ChangeEvent} from 'react';
 import getScenarioLocation from './getScenarioLocation';
 
 export default function ScenarioSelection({
@@ -27,7 +27,7 @@ export default function ScenarioSelection({
   }
 
   return (
-    <Grid container>
+    <Grid item container>
       <Grid item xs={3}>
         Scenario:
       </Grid>

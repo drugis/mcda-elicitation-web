@@ -50,7 +50,7 @@ export default function PreferencesWeightsTable() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {_.map(_.toArray(criteria), (criterion, index) => {
+        {_.map(criteria, (criterion) => {
           return (
             <TableRow key={criterion.id}>
               <TableCell>{criterion.title}</TableCell>
@@ -58,10 +58,10 @@ export default function PreferencesWeightsTable() {
               <TableCell>{criterion.unitOfMeasurement.label}</TableCell>
               <TableCell>{getWorst(pvfs[criterion.id])}</TableCell>
               <TableCell>{getBest(pvfs[criterion.id])}</TableCell>
-              <TableCell id={`importance-criterion-${index}`}>
+              <TableCell id={`importance-criterion-${criterion.id}`}>
                 {importances[criterion.id]}
               </TableCell>
-              <TableCell id={`weight-criterion-${index}`}>
+              <TableCell id={`weight-criterion-${criterion.id}`}>
                 {getWeight(criterion.id)}
               </TableCell>
             </TableRow>

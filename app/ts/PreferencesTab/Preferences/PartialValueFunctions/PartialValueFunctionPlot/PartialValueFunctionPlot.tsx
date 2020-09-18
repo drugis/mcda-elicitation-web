@@ -1,3 +1,4 @@
+import Grid from '@material-ui/core/Grid';
 import {generate} from 'c3';
 import {format, selectAll} from 'd3';
 import React, {useContext, useEffect} from 'react';
@@ -5,11 +6,9 @@ import {PreferencesContext} from '../../../PreferencesContext';
 import {getPvfCoordinates} from '../PartialValueFunctionUtil';
 
 export default function PartialValueFunctionPlot({
-  criterionId,
-  index
+  criterionId
 }: {
   criterionId: string;
-  index: number;
 }) {
   const {getCriterion, getPvf} = useContext(PreferencesContext);
   const criterion = getCriterion(criterionId);
@@ -20,7 +19,7 @@ export default function PartialValueFunctionPlot({
   useEffect(() => {
     const values = getPvfCoordinates(pvf, criterion.title);
     const settings = {
-      bindto: `#pvfplot-${index}`,
+      bindto: `#pvfplot-${criterionId}`,
       data: {
         x: 'x',
         columns: values
@@ -71,5 +70,12 @@ export default function PartialValueFunctionPlot({
     selectAll('.c3-line').style('stroke-width', '2px');
   }, [pvf]);
 
-  return <div style={{width: width, height: height}} id={`pvfplot-${index}`} />;
+  return (
+    <Grid item>
+      <div
+        style={{width: width, height: height}}
+        id={`pvfplot-${criterionId}`}
+      />
+    </Grid>
+  );
 }

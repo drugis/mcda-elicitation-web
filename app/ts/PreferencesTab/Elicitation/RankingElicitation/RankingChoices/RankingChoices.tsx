@@ -34,14 +34,8 @@ export default function RankingChoices({
           value={selectedCriterionId}
           onChange={handleSelection}
         >
-          {_.map(filteredCriteria, (criterion, index) => {
-            return (
-              <CriterionChoice
-                key={criterion.id}
-                criterion={criterion}
-                index={index}
-              />
-            );
+          {_.map(filteredCriteria, (criterion) => {
+            return <CriterionChoice key={criterion.id} criterion={criterion} />;
           })}
         </RadioGroup>
       </Grid>

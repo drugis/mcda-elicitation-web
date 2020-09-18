@@ -90,9 +90,9 @@ function switchinPreferences(browser) {
     .waitForElementVisible('#add-scenario-title-button:enabled')
     .click('#add-scenario-title-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
-    .pause(100) //pause needed to not get 'stale element' error
     .click('#scenario-selector')
     .click('li.MuiButtonBase-root:nth-child(1)')
+    .pause(100) //pause needed to not get 'stale element' error
     .assert.containsText('#scenario-selector', 'Default');
 }
 

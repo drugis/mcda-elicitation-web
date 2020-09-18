@@ -20,7 +20,7 @@ export default function PreferencesWeights() {
   }
 
   return (
-    <Grid container>
+    <Grid item container>
       <Grid item xs={12}>
         <Typography variant="h4">Weights</Typography>
       </Grid>
@@ -29,15 +29,6 @@ export default function PreferencesWeights() {
           Elicitation method: {determineElicitationMethod()}
         </Typography>
       </Grid>
-      {displayPvfWarning ? (
-        <Grid item xs={12}>
-          <Typography id="not-all-pvfs-set-warning">
-            Not all partial value functions are defined
-          </Typography>
-        </Grid>
-      ) : (
-        <span></span>
-      )}
       <Grid item xs={12}>
         <PreferencesWeightsTable />
       </Grid>

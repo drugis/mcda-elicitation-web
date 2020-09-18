@@ -9,11 +9,9 @@ import {
 import {PreferencesContext} from '../../PreferencesContext';
 
 export default function CriterionChoice({
-  criterion,
-  index
+  criterion
 }: {
   criterion: IPreferencesCriterion;
-  index: number;
 }) {
   const {pvfs} = useContext(PreferencesContext);
   const pvf = pvfs[criterion.id];
@@ -25,7 +23,10 @@ export default function CriterionChoice({
         disableHoverListener={!criterion.description}
         title={criterion.description ? criterion.description : ''}
       >
-        <span id={`criterion-option-${index}`} className="criterion-title">
+        <span
+          id={`criterion-option-${criterion.id}`}
+          className="criterion-title"
+        >
           {criterion.title}
         </span>
       </Tooltip>

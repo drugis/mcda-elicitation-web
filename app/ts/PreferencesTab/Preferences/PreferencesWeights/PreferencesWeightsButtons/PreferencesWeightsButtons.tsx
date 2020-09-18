@@ -1,5 +1,5 @@
+import {ButtonGroup, Tooltip} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import React, {useContext} from 'react';
 
@@ -32,52 +32,62 @@ export default function PreferencesWeightsButtons() {
   }
 
   return (
-    <ButtonGroup>
-      <Button
-        id="reset-button"
-        onClick={handleResetClick}
-        color="secondary"
-        variant="contained"
-        disabled={disableWeightsButtons}
-      >
-        Reset Weights
-      </Button>
-      <Button
-        id="ranking-button"
-        onClick={handleRankingClick}
-        color="primary"
-        variant="contained"
-        disabled={disableWeightsButtons}
-      >
-        Ranking
-      </Button>
-      <Button
-        id="matching-button"
-        onClick={handleMatchingClick}
-        color="primary"
-        variant="contained"
-        disabled={disableWeightsButtons}
-      >
-        Matching
-      </Button>
-      <Button
-        id="precise-swing-button"
-        onClick={handlePreciseClick}
-        color="primary"
-        variant="contained"
-        disabled={disableWeightsButtons}
-      >
-        Precise Swing Weighting
-      </Button>
-      <Button
-        id="imprecise-swing-button"
-        onClick={handleImpreciseClick}
-        color="primary"
-        variant="contained"
-        disabled={disableWeightsButtons}
-      >
-        Imprecise Swing Weighting
-      </Button>
+    <ButtonGroup size="medium">
+      <Tooltip title="Reset all weight preferences">
+        <Button
+          id="reset-button"
+          onClick={handleResetClick}
+          color="secondary"
+          variant="contained"
+          disabled={disableWeightsButtons}
+        >
+          Reset Weights
+        </Button>
+      </Tooltip>
+      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+        <Button
+          id="ranking-button"
+          onClick={handleRankingClick}
+          color="primary"
+          variant="contained"
+          disabled={disableWeightsButtons}
+        >
+          Ranking
+        </Button>
+      </Tooltip>
+      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+        <Button
+          id="matching-button"
+          onClick={handleMatchingClick}
+          color="primary"
+          variant="contained"
+          disabled={disableWeightsButtons}
+        >
+          Matching
+        </Button>
+      </Tooltip>
+      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+        <Button
+          id="precise-swing-button"
+          onClick={handlePreciseClick}
+          color="primary"
+          variant="contained"
+          disabled={disableWeightsButtons}
+        >
+          Precise Swing Weighting
+        </Button>
+      </Tooltip>
+      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+        <Button
+          id="imprecise-swing-button"
+          onClick={handleImpreciseClick}
+          color="primary"
+          variant="contained"
+          disabled={disableWeightsButtons}
+        >
+          Imprecise Swing Weighting
+        </Button>
+      </Tooltip>
     </ButtonGroup>
   );
 }
