@@ -25,5 +25,4 @@ export default interface IPreferencesContext {
   resetPreferences: (scenario: IScenario) => void;
   setActiveView: (newView: TPreferencesView) => void;
   determineElicitationMethod: () => string;
-  areAllPvfsSet: (newPvfs: Record<string, IPvf>) => boolean;
 }

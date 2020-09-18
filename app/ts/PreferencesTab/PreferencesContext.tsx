@@ -246,8 +246,7 @@ export function PreferencesContextProviderComponent({
         setLinearPvf,
         resetPreferences,
         setActiveView,
-        determineElicitationMethod,
-        areAllPvfsSet
+        determineElicitationMethod
       }}
     >
       {children}

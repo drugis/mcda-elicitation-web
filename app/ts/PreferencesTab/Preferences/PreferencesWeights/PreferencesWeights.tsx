@@ -6,18 +6,7 @@ import PreferencesWeightsButtons from './PreferencesWeightsButtons/PreferencesWe
 import PreferencesWeightsTable from './PreferencesWeightsTable/PreferencesWeightsTable';
 
 export default function PreferencesWeights() {
-  const {determineElicitationMethod, pvfs, areAllPvfsSet} = useContext(
-    PreferencesContext
-  );
-  const [displayPvfWarning, setDisplayPvfWarning] = useState(
-    !areAllPvfsSet(pvfs)
-  );
-
-  useEffect(checkForPvfs, [pvfs]);
-
-  function checkForPvfs(): void {
-    setDisplayPvfWarning(!areAllPvfsSet(pvfs));
-  }
+  const {determineElicitationMethod} = useContext(PreferencesContext);
 
   return (
     <Grid item container>
