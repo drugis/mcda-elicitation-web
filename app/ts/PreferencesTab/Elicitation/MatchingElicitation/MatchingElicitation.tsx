@@ -12,6 +12,7 @@ import MatchingSetImportance from './MatchingSetImportance/MatchingSetImportance
 export default function MatchingElicitation() {
   const {currentStep} = useContext(ElicitationContext);
   const {criteria} = useContext(PreferencesContext);
+  const totalSteps = _.toArray(criteria).length;
 
   return (
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
@@ -32,7 +33,7 @@ export default function MatchingElicitation() {
       </Grid>
       <Grid item xs={3} container alignItems="center" justify="flex-end">
         <Grid item id="step-counter">
-          Step {currentStep} of {_.toArray(criteria).length}
+          Step {currentStep} of {totalSteps}
         </Grid>
       </Grid>
     </Grid>

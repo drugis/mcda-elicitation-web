@@ -73,7 +73,7 @@ export function PreferencesContextProviderComponent({
     let newPvfs = _.cloneDeep(pvfs);
     newPvfs[criterionId] = pvf;
     setPvfs(newPvfs);
-    const newScenario = createScenarioWithPVF(criterionId, direction);
+    const newScenario = createScenarioWithPvf(criterionId, direction);
     updateScenario(newScenario).then(() => {
       if (areAllPvfsSet(newPvfs)) {
         resetPreferences(newScenario);
@@ -87,7 +87,7 @@ export function PreferencesContextProviderComponent({
     });
   }
 
-  function createScenarioWithPVF(
+  function createScenarioWithPvf(
     criterionId: string,
     direction: TPvfDirection
   ) {

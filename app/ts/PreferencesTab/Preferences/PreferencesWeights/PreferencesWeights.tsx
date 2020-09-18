@@ -9,13 +9,14 @@ export default function PreferencesWeights() {
   const {determineElicitationMethod, pvfs, areAllPvfsSet} = useContext(
     PreferencesContext
   );
-  const [displayPVFwarning, setDisplayPVFwarning] = useState(
+  const [displayPvfWarning, setDisplayPvfWarning] = useState(
     !areAllPvfsSet(pvfs)
   );
-  useEffect(checkForPVFs, [pvfs]);
 
-  function checkForPVFs(): void {
-    setDisplayPVFwarning(!areAllPvfsSet(pvfs));
+  useEffect(checkForPvfs, [pvfs]);
+
+  function checkForPvfs(): void {
+    setDisplayPvfWarning(!areAllPvfsSet(pvfs));
   }
 
   return (
@@ -28,7 +29,7 @@ export default function PreferencesWeights() {
           Elicitation method: {determineElicitationMethod()}
         </Typography>
       </Grid>
-      {displayPVFwarning ? (
+      {displayPvfWarning ? (
         <Grid item xs={12}>
           <Typography id="not-all-pvfs-set-warning">
             Not all partial value functions are defined
