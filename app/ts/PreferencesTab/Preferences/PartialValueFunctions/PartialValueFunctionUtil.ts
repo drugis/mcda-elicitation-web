@@ -5,12 +5,10 @@ export function getPvfCoordinates(
   pvf: IPvf,
   criterionTitle: string
 ): [['x', ...number[]], [string, 1, ...number[]]] {
-  const pvfCoordinates = [getXValues(pvf), getYValues(pvf, criterionTitle)];
-  return pvfCoordinates as [['x', ...number[]], [string, 1, ...number[]]];
+  return [getXValues(pvf), getYValues(pvf, criterionTitle)];
 }
 
-function getXValues(pvf: IPvf) {
-  // Cannot type function because of smearing
+function getXValues(pvf: IPvf): ['x', ...number[]] {
   return ['x', getBest(pvf), ...intermediateX(pvf), getWorst(pvf)];
 }
 
@@ -18,8 +16,10 @@ function intermediateX(pvf: IPvf): number[] {
   return pvf.cutoffs ? pvf.cutoffs : [];
 }
 
-function getYValues(pvf: IPvf, criterionTitle: string) {
-  // Cannot type function because of smearing
+function getYValues(
+  pvf: IPvf,
+  criterionTitle: string
+): [string, 1, ...number[]] {
   return [criterionTitle, 1, ...intermediateY(pvf), 0];
 }
 
