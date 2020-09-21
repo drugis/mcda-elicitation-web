@@ -1,7 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import ICriterion from '@shared/interface/ICriterion';
-import { SettingsContext } from 'app/ts/Settings/SettingsContext';
-import React, { useContext } from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {useContext} from 'react';
 
 export default function EffectsTableCriterionDescriptionCell({
   criterion

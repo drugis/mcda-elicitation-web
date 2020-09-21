@@ -1,16 +1,16 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
-  describe('util', function() {
+define(['angular', 'angular-mocks', 'mcda/util'], function (angular) {
+  describe('util', function () {
     beforeEach(angular.mock.module('elicit.util'));
 
-    describe('intervalHull', function() {
+    describe('intervalHull', function () {
       var ih;
 
-      beforeEach(inject(function(intervalHull) {
+      beforeEach(inject(function (intervalHull) {
         ih = intervalHull;
       }));
 
-      it('should return min and max of the scale ranges', function() {
+      it('should return min and max of the scale ranges', function () {
         var ranges = {
           1: {
             '2.5%': 1,
@@ -26,7 +26,7 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return min and max of the effects', function() {
+      it('should return min and max of the effects', function () {
         var ranges = {};
         var effectValues = [5, 11];
         var result = ih(ranges, effectValues);
@@ -34,7 +34,7 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return min and max of the scale ranges and effects', function() {
+      it('should return min and max of the scale ranges and effects', function () {
         var ranges = {
           1: {
             '2.5%': 1,
@@ -51,7 +51,7 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         expect(result).toEqual(expectedResult);
       });
 
-      it('should work for ranges with no spread', function() {
+      it('should work for ranges with no spread', function () {
         var ranges = {
           1: {
             '2.5%': 1,
@@ -67,7 +67,7 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return min and max of the scale ranges and the range distributions', function() {
+      it('should return min and max of the scale ranges and the range distributions', function () {
         var ranges = {
           1: {
             '2.5%': 1,
@@ -79,48 +79,47 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
           }
         };
         var effectValues = [5, 6];
-        var rangeDistributionValues = [0,8];
+        var rangeDistributionValues = [0, 8];
         var result = ih(ranges, effectValues, rangeDistributionValues);
         var expectedResult = [0, 10];
         expect(result).toEqual(expectedResult);
       });
-
     });
 
-    describe('generateUuid', function() {
+    describe('generateUuid', function () {
       var gu;
 
-      beforeEach(inject(function(generateUuid) {
+      beforeEach(inject(function (generateUuid) {
         gu = generateUuid;
       }));
 
-      it('should generate a new uuid', function() {
+      it('should generate a new uuid', function () {
         var result = gu();
         expect(result).toBeDefined();
       });
     });
 
-    describe('swap', function() {
+    describe('swap', function () {
       var sw;
 
-      beforeEach(inject(function(swap) {
+      beforeEach(inject(function (swap) {
         sw = swap;
       }));
 
-      it('should swap 2 elements in an array', function() {
+      it('should swap 2 elements in an array', function () {
         var arr = [0, 1, 2];
         sw(arr, 0, 2);
         expect(arr).toEqual([2, 1, 0]);
       });
     });
 
-    describe('significantDigits', function() {
+    describe('significantDigits', function () {
       var sigDit;
-      beforeEach(inject(function(significantDigits) {
+      beforeEach(inject(function (significantDigits) {
         sigDit = significantDigits;
       }));
 
-      it('should round the input to have 3 significant digits', function() {
+      it('should round the input to have 3 significant digits', function () {
         expect(sigDit(0)).toBe(0);
         expect(sigDit(100)).toBe(100);
         expect(sigDit(0.00001)).toBe(0.00001);
@@ -131,34 +130,39 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         expect(sigDit(-12345)).toBe(-12345);
         expect(sigDit(-1.2345)).toBe(-1.234);
       });
-      it('should work for other precisions', function() {
+      it('should work for other precisions', function () {
         expect(sigDit(10.2345, 1)).toBe(10.2);
         expect(sigDit(10.2345, 5)).toBe(10.2345);
         expect(sigDit(10.2345123, 5)).toBe(10.23451);
-        expect(sigDit(10.23000000, 5)).toBe(10.23);
+        expect(sigDit(10.23, 5)).toBe(10.23);
       });
     });
 
-    describe('getDataSourcesById', function() {
+    describe('getDataSourcesById', function () {
       var getSources;
 
-      beforeEach(inject(function(getDataSourcesById) {
+      beforeEach(inject(function (getDataSourcesById) {
         getSources = getDataSourcesById;
       }));
 
-      it('should return all data sources on the criteria, keyed by their id', function() {
+      it('should return all data sources on the criteria, keyed by their id', function () {
         var criteria = {
           c1: {
-            dataSources: [{
-              id: 'ds1'
-            }, {
-              id: 'ds2'
-            }]
+            dataSources: [
+              {
+                id: 'ds1'
+              },
+              {
+                id: 'ds2'
+              }
+            ]
           },
           c2: {
-            dataSources: [{
-              id: 'ds3'
-            }]
+            dataSources: [
+              {
+                id: 'ds3'
+              }
+            ]
           }
         };
         var result = getSources(criteria);

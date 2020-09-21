@@ -18,7 +18,7 @@ function checkElementValueGreaterThan(browser, path, value) {
   browser
     .useXpath()
     .getLocationInView(path)
-    .getText(path, function(result) {
+    .getText(path, function (result) {
       chai.expect(parseFloat(result.value)).to.be.above(value);
     })
     .useCss();
@@ -27,20 +27,22 @@ function checkElementValueGreaterThan(browser, path, value) {
 function checkResetMeasurementValue(browser, path) {
   browser
     .useXpath()
-    .getText(path, function(result) {
+    .getText(path, function (result) {
       chai.expect(parseFloat(result.value)).to.be.below(60);
       chai.expect(parseFloat(result.value)).to.be.above(36);
     })
     .useCss();
 }
 
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const title =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
     .click('#deterministic-tab')
@@ -50,9 +52,7 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function results(browser) {
@@ -67,7 +67,8 @@ function results(browser) {
   const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
   const weightValuePath = '//*[@id="criterion-0-weight"]';
   const baseCaseValuePath = '//*[@id="alternative-0-base-case"]';
-  const baseCaseValueTablePath = '//*[@id="base-value-profile-table"]/tbody/tr[1]/td[2]';
+  const baseCaseValueTablePath =
+    '//*[@id="base-value-profile-table"]/tbody/tr[1]/td[2]';
 
   checkElementValueGreaterThan(browser, measurementValuePath, 30);
   checkElementValueGreaterThan(browser, weightValuePath, 0.2);
@@ -77,7 +78,8 @@ function results(browser) {
 
 function recalculatedResults(browser) {
   const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
-  const measurementValueInputPath = '//sensitivity-table//tr[2]/td[4]/sensitivity-input//div[2]/label/input';
+  const measurementValueInputPath =
+    '//sensitivity-table//tr[2]/td[4]/sensitivity-input//div[2]/label/input';
 
   browser
     .useXpath()
@@ -93,8 +95,10 @@ function recalculatedResults(browser) {
     .waitForElementVisible('//*[@id="recalculated-value-profile-table"]')
     .useCss();
 
-  const recalculatedCaseValuePath = '//*[@id="alternative-0-recalculated-case"]';
-  const recalculatedCaseValueTablePath = '//*[@id="recalculated-value-profile-table"]/tbody/tr[1]/td[2]';
+  const recalculatedCaseValuePath =
+    '//*[@id="alternative-0-recalculated-case"]';
+  const recalculatedCaseValueTablePath =
+    '//*[@id="recalculated-value-profile-table"]/tbody/tr[1]/td[2]';
   checkElementValueGreaterThan(browser, recalculatedCaseValuePath, 0.85);
   checkElementValueGreaterThan(browser, recalculatedCaseValueTablePath, 0.1);
 
@@ -102,8 +106,8 @@ function recalculatedResults(browser) {
 
   checkResetMeasurementValue(browser, measurementValuePath);
 
-  browser
-    .assert.not.elementPresent('#recalculated-case-table')
+  browser.assert.not
+    .elementPresent('#recalculated-case-table')
     .assert.not.elementPresent('#recalculated-case-plot')
     .assert.not.elementPresent('#recalculated-value-profile-table');
 }
@@ -115,13 +119,13 @@ function modifyMeasurementsPlot(browser) {
     .assert.containsText('#measurements-alternative-selector', 'Fluoxetine')
 
     .click('#measurements-criterion-selector')
-    .click('option[label="Nausea\ ADRs"]')
-    .assert.containsText('#measurements-criterion-selector', 'Nausea\ ADRs');
+    .click('option[label="Nausea ADRs"]')
+    .assert.containsText('#measurements-criterion-selector', 'Nausea ADRs');
 }
 
 function modifyPreferencesPlot(browser) {
   browser
     .click('#preferences-criterion-selector')
-    .click('option[label="Nausea\ ADRs"]')
-    .assert.containsText('#preferences-criterion-selector', 'Nausea\ ADRs');
+    .click('option[label="Nausea ADRs"]')
+    .assert.containsText('#preferences-criterion-selector', 'Nausea ADRs');
 }

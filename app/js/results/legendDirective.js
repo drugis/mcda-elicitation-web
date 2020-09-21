@@ -1,5 +1,5 @@
 'use strict';
-define(['jquery'], function($) {
+define(['jquery'], function ($) {
   var dependencies = [
     '$rootScope',
     '$stateParams',
@@ -7,7 +7,7 @@ define(['jquery'], function($) {
     'LegendService',
     'ScenarioResource'
   ];
-  var LegendDirective = function(
+  var LegendDirective = function (
     $rootScope,
     $stateParams,
     $modal,
@@ -16,19 +16,27 @@ define(['jquery'], function($) {
   ) {
     return {
       restrict: 'A',
-      link: function(scope, element) {
+      link: function (scope, element) {
         scope.editLegend = editLegend;
         createTooltip();
 
-        scope.$on('elicit.legendChanged', function(_event, newLegend) {
-          var btnElement = LegendService.createButtonElement(newLegend, scope.editMode.canEdit, scope);
+        scope.$on('elicit.legendChanged', function (_event, newLegend) {
+          var btnElement = LegendService.createButtonElement(
+            newLegend,
+            scope.editMode.canEdit,
+            scope
+          );
           $(element).siblings('.legend').replaceWith(btnElement);
         });
 
         function createTooltip() {
           var $element = $(element);
           $element.css('float', 'left');
-          var btnElement = LegendService.createButtonElement(scope.scenario.state.legend, scope.editMode.canEdit, scope);
+          var btnElement = LegendService.createButtonElement(
+            scope.scenario.state.legend,
+            scope.editMode.canEdit,
+            scope
+          );
           $element.after(btnElement);
         }
 
@@ -41,19 +49,21 @@ define(['jquery'], function($) {
             templateUrl: './editLegend.html',
             controller: 'EditLegendController',
             resolve: {
-              legend: function() {
+              legend: function () {
                 return scope.scenario.state.legend;
               },
-              alternatives: function() {
+              alternatives: function () {
                 return scope.alternatives;
               },
-              callback: function() {
-                return function(newLegend) {
+              callback: function () {
+                return function (newLegend) {
                   scope.scenario.state.legend = newLegend;
-                  ScenarioResource.save($stateParams, scope.scenario)
-                    .$promise.then(function() {
-                      broadcastEvent(newLegend);
-                    });
+                  ScenarioResource.save(
+                    $stateParams,
+                    scope.scenario
+                  ).$promise.then(function () {
+                    broadcastEvent(newLegend);
+                  });
                 };
               }
             }

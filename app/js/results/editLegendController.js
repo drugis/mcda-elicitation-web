@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash'], function (_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
     'callback'
   ];
 
-  var EditLegendController = function(
+  var EditLegendController = function (
     $scope,
     $modalInstance,
     LegendService,
@@ -32,7 +32,7 @@ define(['lodash'], function(_) {
     checkForMissingLabel();
 
     function checkForMissingLabel() {
-      $scope.isLabelMissing = _.find($scope.legend, function(legendEntry) {
+      $scope.isLabelMissing = _.find($scope.legend, function (legendEntry) {
         return !legendEntry.newTitle;
       });
     }
@@ -44,15 +44,14 @@ define(['lodash'], function(_) {
 
     function createSingleLetterLegend() {
       var letterValue = 65;
-      _.forEach($scope.legend, function(legendEntry) {
+      _.forEach($scope.legend, function (legendEntry) {
         legendEntry.newTitle = String.fromCharCode(letterValue++);
       });
     }
 
     function resetToBase() {
-       $scope.legend = LegendService.createBaseCase(alternatives);
+      $scope.legend = LegendService.createBaseCase(alternatives);
     }
-
   };
   return dependencies.concat(EditLegendController);
 });

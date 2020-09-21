@@ -1,20 +1,17 @@
 'use strict';
-define([
-  'lodash',
-  'angular',
-  'd3'
-], function(
-  _,
-  angular,
-  d3
-) {
+define(['lodash', 'angular', 'd3'], function (_, angular, d3) {
   var dependencies = ['PataviResultsService'];
 
-  var DeterministicResulstsService = function(PataviResultsService) {
+  var DeterministicResulstsService = function (PataviResultsService) {
     function run(inState) {
       var state = angular.copy(inState);
-      state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
-      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state));
+      state.problem.criteria = mergeDataSourceOntoCriterion(
+        state.problem.criteria
+      );
+      state.resultsPromise = PataviResultsService.postAndHandleResults(
+        state.problem,
+        _.partial(succesCallback, state)
+      );
       return state;
     }
 
@@ -24,9 +21,14 @@ define([
     }
 
     function mergeDataSourceOntoCriterion(criteria) {
-      return _.mapValues(criteria, function(criterion) {
+      return _.mapValues(criteria, function (criterion) {
         if (criterion.dataSources) {
-          return _.merge({}, _.omit(criterion, ['dataSources']), _.omit(criterion.dataSources[0]), []);
+          return _.merge(
+            {},
+            _.omit(criterion, ['dataSources']),
+            _.omit(criterion.dataSources[0]),
+            []
+          );
         }
         return criterion;
       });
@@ -34,7 +36,10 @@ define([
 
     function getProblem(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
+      newProblem.performanceTable = _.map(
+        problem.performanceTable,
+        createEntry
+      );
       return newProblem;
     }
 
@@ -50,41 +55,62 @@ define([
 
     function resetModifiableScales(observed, alternatives) {
       var modifiableScales = _.cloneDeep(observed);
-      modifiableScales = _.reduce(modifiableScales, function(accum, criterion, criterionKey) {
-        accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
-          if (alternatives[key]) {
-            accum[key] = scale;
-            return accum;
-          } else {
-            return accum;
-          }
-        }, {});
-        return accum;
-      }, {});
+      modifiableScales = _.reduce(
+        modifiableScales,
+        function (accum, criterion, criterionKey) {
+          accum[criterionKey] = _.reduce(
+            criterion,
+            function (accum, scale, key) {
+              if (alternatives[key]) {
+                accum[key] = scale;
+                return accum;
+              } else {
+                return accum;
+              }
+            },
+            {}
+          );
+          return accum;
+        },
+        {}
+      );
       return modifiableScales;
     }
 
-    function pataviResultToValueProfile(result, criteria, alternatives, legend) {
+    function pataviResultToValueProfile(
+      result,
+      criteria,
+      alternatives,
+      legend
+    ) {
       var plotValues = getAlternativesTitles(alternatives, legend);
-      return plotValues.concat(getProfilePlotValues(criteria, alternatives, result));
+      return plotValues.concat(
+        getProfilePlotValues(criteria, alternatives, result)
+      );
     }
 
     function getAlternativesTitles(alternatives, legend) {
-      return [['x'].concat(_.map(alternatives, function(alternative) {
-        return legend ? legend[alternative.id].newTitle : alternative.title;
-      }))];
+      return [
+        ['x'].concat(
+          _.map(alternatives, function (alternative) {
+            return legend ? legend[alternative.id].newTitle : alternative.title;
+          })
+        )
+      ];
     }
 
     function getProfilePlotValues(criteria, alternatives, result) {
-      return _.map(criteria, function(criterion) {
+      return _.map(criteria, function (criterion) {
         return getValueData(criterion, alternatives, result);
       });
     }
 
     function getValueData(criterion, alternatives, result) {
-      return [criterion.title].concat(_.map(alternatives, function(alternative) {
-        return result.value[alternative.id][criterion.id];
-      }));
+      return [criterion.title].concat(
+        _.map(alternatives, function (alternative) {
+          return result.value[alternative.id][criterion.id];
+        })
+      );
     }
 
     function pataviResultToLineValues(results, alternatives, legend) {
@@ -97,8 +123,10 @@ define([
     }
 
     function getLineYValues(alternatives, legend, results) {
-      return _.map(alternatives, function(alternative) {
-        return [legend ? legend[alternative.id].newTitle : alternative.title].concat(_.values(results.total[alternative.id]));
+      return _.map(alternatives, function (alternative) {
+        return [
+          legend ? legend[alternative.id].newTitle : alternative.title
+        ].concat(_.values(results.total[alternative.id]));
       });
     }
 
@@ -126,7 +154,11 @@ define([
       return run(nextState);
     }
 
-    function getMeasurementSensitivityResults(measurementsAlternativeId, measurementsCriterionId, state) {
+    function getMeasurementSensitivityResults(
+      measurementsAlternativeId,
+      measurementsCriterionId,
+      state
+    ) {
       var nextState = {
         problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
@@ -155,7 +187,7 @@ define([
 
     function percentifySensitivityResult(values) {
       var newValues = angular.copy(values);
-      newValues[0] = _.map(values[0], function(value) {
+      newValues[0] = _.map(values[0], function (value) {
         if (value === 'x') {
           return value;
         } else {
@@ -166,21 +198,26 @@ define([
     }
 
     function createDeterministicScales(performanceTable, smaaScales) {
-      return _.reduce(performanceTable, function(accum, entry) {
-        if (!accum[entry.dataSource]) {
-          accum[entry.dataSource] = {};
-        }
-        if (entry.performance.effect) {
-          accum[entry.dataSource][entry.alternative] = {
-            '50%': entry.performance.effect.value
-          };
-        } else if (entry.alternative) {
-          accum[entry.dataSource][entry.alternative] = smaaScales[entry.dataSource][entry.alternative];
-        } else {
-          accum[entry.dataSource] = smaaScales[entry.dataSource];
-        }
-        return accum;
-      }, {});
+      return _.reduce(
+        performanceTable,
+        function (accum, entry) {
+          if (!accum[entry.dataSource]) {
+            accum[entry.dataSource] = {};
+          }
+          if (entry.performance.effect) {
+            accum[entry.dataSource][entry.alternative] = {
+              '50%': entry.performance.effect.value
+            };
+          } else if (entry.alternative) {
+            accum[entry.dataSource][entry.alternative] =
+              smaaScales[entry.dataSource][entry.alternative];
+          } else {
+            accum[entry.dataSource] = smaaScales[entry.dataSource];
+          }
+          return accum;
+        },
+        {}
+      );
     }
 
     function getSensitivityLineChartSettings(root, values, options) {
@@ -232,26 +269,40 @@ define([
     }
 
     function getLineChartMin(xValues) {
-      return _.reduce(xValues, function(accum, value, idx) {
-        if (idx !== 0 && parseFloat(value) < parseFloat(accum)) {
-          return parseFloat(value);
-        } else {
-          return accum;
-        }
-      }, Infinity);
+      return _.reduce(
+        xValues,
+        function (accum, value, idx) {
+          if (idx !== 0 && parseFloat(value) < parseFloat(accum)) {
+            return parseFloat(value);
+          } else {
+            return accum;
+          }
+        },
+        Infinity
+      );
     }
 
     function getLineChartMax(xValues) {
-      return _.reduce(xValues, function(accum, value, idx) {
-        if (idx !== 0 && parseFloat(value) > parseFloat(accum)) {
-          return parseFloat(value);
-        } else {
-          return accum;
-        }
-      }, -Infinity);
+      return _.reduce(
+        xValues,
+        function (accum, value, idx) {
+          if (idx !== 0 && parseFloat(value) > parseFloat(accum)) {
+            return parseFloat(value);
+          } else {
+            return accum;
+          }
+        },
+        -Infinity
+      );
     }
 
-    function getValueProfilePlotSettings(results, criteria, alternatives, alternativesLegend, root) {
+    function getValueProfilePlotSettings(
+      results,
+      criteria,
+      alternatives,
+      alternativesLegend,
+      root
+    ) {
       var plotValues = pataviResultToValueProfile(
         results,
         criteria,
@@ -278,7 +329,7 @@ define([
             tick: {
               count: 5,
               format: d3.format(',.3g')
-            },
+            }
           }
         },
         grid: {

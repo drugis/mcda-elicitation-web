@@ -8,8 +8,11 @@
     <h4>
       Therapeutic context
       <inline-help help-key="therapeutic-context"></inline-help>
-      <a id="edit-therapeutic-context-button" ng-if="editMode.canEdit && isStandAlone"
-        ng-click="editTherapeuticContext()">
+      <a
+        id="edit-therapeutic-context-button"
+        ng-if="editMode.canEdit && isStandAlone"
+        ng-click="editTherapeuticContext()"
+      >
         <i class="fa fa-edit"></i>
       </a>
     </h4>
@@ -19,17 +22,26 @@
     <span ng-if="!problem.description">No description given.</span>
   </div>
   <div class="cell">
-    <h4>Criteria
+    <h4>
+      Criteria
       <inline-help help-key="criterion"></inline-help>
     </h4>
   </div>
   <div class="cell">
-    <criterion-list criteria="orderedCriteria" workspace="workspace" use-favorability="useFavorability"
-      edit-mode="editMode" scales="scales" alternatives="orderedAlternatives" effects-table-info="effectsTableInfo">
+    <criterion-list
+      criteria="orderedCriteria"
+      workspace="workspace"
+      use-favorability="useFavorability"
+      edit-mode="editMode"
+      scales="scales"
+      alternatives="orderedAlternatives"
+      effects-table-info="effectsTableInfo"
+    >
     </criterion-list>
   </div>
   <div class="cell">
-    <h4>Alternatives
+    <h4>
+      Alternatives
       <inline-help help-key="alternative"></inline-help>
     </h4>
   </div>
@@ -45,28 +57,44 @@
       <tbody>
         <tr ng-repeat="alternative in orderedAlternatives" class="text-center">
           <td ng-if="editMode.canEdit">
-            <div style="line-height: 10px; margin-bottom: 4px;">
-              <a id="move-up-alternative-{{ $index }}" ng-click="alternativeUp($index)" class="nav-arrow"
-                ng-if="$index !== 0">
-                <i style="line-height:0px;" class="fa fa-caret-up"></i>
+            <div style="line-height: 10px; margin-bottom: 4px">
+              <a
+                id="move-up-alternative-{{ $index }}"
+                ng-click="alternativeUp($index)"
+                class="nav-arrow"
+                ng-if="$index !== 0"
+              >
+                <i style="line-height: 0px" class="fa fa-caret-up"></i>
               </a>
-              <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+              <i
+                ng-if="$index === 0"
+                style="line-height: 0px; color: #bbb"
+                class="fa fa-caret-up"
+              ></i>
             </div>
-            <div style="line-height: 10px;">
-              <a id="move-down-alternative-{{ $index }}" ng-click="alternativeDown($index)" class="nav-arrow"
-                ng-if="$index !== orderedAlternatives.length-1">
-                <i style="line-height:0px;" class="fa fa-caret-down"></i>
+            <div style="line-height: 10px">
+              <a
+                id="move-down-alternative-{{ $index }}"
+                ng-click="alternativeDown($index)"
+                class="nav-arrow"
+                ng-if="$index !== orderedAlternatives.length-1"
+              >
+                <i style="line-height: 0px" class="fa fa-caret-down"></i>
               </a>
-              <i ng-if="$index === orderedAlternatives.length-1" style="line-height:0px; color:#bbb"
-                class="fa fa-caret-down"></i>
+              <i
+                ng-if="$index === orderedAlternatives.length-1"
+                style="line-height: 0px; color: #bbb"
+                class="fa fa-caret-down"
+              ></i>
             </div>
           </td>
-          <td id="alternative-title-{{ $index }}">
-            {{alternative.title}}
-          </td>
+          <td id="alternative-title-{{ $index }}">{{alternative.title}}</td>
           <td ng-if="editMode.canEdit && isStandAlone" class="text-center">
-            <a id="edit-alternative-{{ $index }}" ng-if="editMode.canEdit && isStandAlone"
-              ng-click="editAlternative(alternative)">
+            <a
+              id="edit-alternative-{{ $index }}"
+              ng-if="editMode.canEdit && isStandAlone"
+              ng-click="editAlternative(alternative)"
+            >
               <i class="fa fa-edit"></i>
             </a>
           </td>

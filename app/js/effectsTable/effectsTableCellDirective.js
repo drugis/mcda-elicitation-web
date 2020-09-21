@@ -1,12 +1,8 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash'], function (_) {
+  var dependencies = ['significantDigits', 'WorkspaceSettingsService'];
 
-  var dependencies = [
-    'significantDigits',
-    'WorkspaceSettingsService'
-  ];
-
-  var EffectsTableScalesCellDirective = function(
+  var EffectsTableScalesCellDirective = function (
     significantDigits,
     WorkspaceSettingsService
   ) {
@@ -19,11 +15,11 @@ define(['lodash'], function(_) {
         unitOfMeasurementType: '='
       },
       templateUrl: './effectsTableCellDirective.html',
-      link: function(scope) {
+      link: function (scope) {
         init();
         scope.$on('elicit.settingsChanged', init);
         scope.$watch('scales', init, true);
-        
+
         function init() {
           scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings();
           scope.isValueView = WorkspaceSettingsService.isValueView();
@@ -34,7 +30,10 @@ define(['lodash'], function(_) {
           scope.effectLabel = '';
           scope.distributionLabel = '';
           if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
-            var labelsAndUncertainty = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId];
+            var labelsAndUncertainty =
+              scope.effectsTableInfo.studyDataLabelsAndUncertainty[
+                scope.alternativeId
+              ];
             scope.effectLabel = labelsAndUncertainty.effectLabel;
             scope.distributionLabel = labelsAndUncertainty.distributionLabel;
             scope.effectValue = labelsAndUncertainty.effectValue;
@@ -50,10 +49,13 @@ define(['lodash'], function(_) {
         }
 
         function hasUncertainty(info) {
-          return info.hasUncertainty || info.studyDataLabelsAndUncertainty[scope.alternativeId].hasUncertainty;
+          return (
+            info.hasUncertainty ||
+            info.studyDataLabelsAndUncertainty[scope.alternativeId]
+              .hasUncertainty
+          );
         }
       }
-
     };
   };
   return dependencies.concat(EffectsTableScalesCellDirective);

@@ -8,9 +8,8 @@ webpackConfig.optimization = {
   runtimeChunk: false
 };
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-
     // base path, that will be used to resolve files and exclude
     basePath: '.',
 
@@ -20,21 +19,16 @@ module.exports = function(config) {
     },
 
     webpack: webpackConfig,
-    
+
     beforeMiddleware: ['webpackBlocker'],
 
     // frameworks to use
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
-    files: [
-      './frontend-test/test-problems.js',
-      './frontend-test/test-main.js',
-    ],
+    files: ['./frontend-test/test-problems.js', './frontend-test/test-main.js'],
 
-    exclude: [
-      'app/js/main.js',
-    ],
+    exclude: ['app/js/main.js'],
     reporters: ['progress', 'junit'],
     junitReporter: {
       outputFile: 'frontend-test/test-results.xml'

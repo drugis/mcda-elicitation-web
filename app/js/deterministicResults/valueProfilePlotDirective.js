@@ -1,14 +1,8 @@
 'use strict';
-define([
-  'd3',
-  'c3'
-], function(
-  d3,
-  c3
-) {
+define(['d3', 'c3'], function (d3, c3) {
   var dependencies = ['DeterministicResultsService'];
 
-  var ValueProfilePlot = function(DeterministicResultsService) {
+  var ValueProfilePlot = function (DeterministicResultsService) {
     return {
       restrict: 'E',
       scope: {
@@ -18,22 +12,21 @@ define([
         alternativesLegend: '='
       },
       template: '<div id="value-plot"></div>',
-      link: function(scope, element) {
-        scope.$watch('values', function(results) {
+      link: function (scope, element) {
+        scope.$watch('values', function (results) {
           if (!results) {
             return;
           } else {
             var root = d3.select(element[0]);
             root = root.select('#value-plot');
-            root
-              .style('width', '400px')
-              .style('height', '400px');
+            root.style('width', '400px').style('height', '400px');
             var settings = DeterministicResultsService.getValueProfilePlotSettings(
               results,
               scope.criteria,
               scope.alternatives,
               scope.alternativesLegend,
-              root);
+              root
+            );
             c3.generate(settings);
           }
         });

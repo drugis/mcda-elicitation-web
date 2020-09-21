@@ -5,21 +5,36 @@
         <h2>{{isAdding ? 'Add' : 'Edit'}} data source</h2>
       </div>
       <div class="cell">
-        <input-data-source source="dataSource" is-invalid-source-link="sourceLinkValidity" change-callback="checkErrors"></input-data-source>
+        <input-data-source
+          source="dataSource"
+          is-invalid-source-link="sourceLinkValidity"
+          change-callback="checkErrors"
+        ></input-data-source>
       </div>
       <div class="cell" ng-show="errors.length">
         <em ng-repeat="error in errors" class="alert">
           {{error}}
-          <br>
+          <br />
         </em>
       </div>
     </div>
     <div class="cell">
-      <button id="add-data-source-button" class="button success" type="submit" ng-disabled="errors.length">
+      <button
+        id="add-data-source-button"
+        class="button success"
+        type="submit"
+        ng-disabled="errors.length"
+      >
         {{isAdding ? 'Add' : 'Edit'}}
       </button>
     </div>
-    <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <button
+      id="close-modal-button"
+      ng-click="cancel()"
+      class="close-button"
+      aria-label="Close reveal"
+      type="button"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </form>

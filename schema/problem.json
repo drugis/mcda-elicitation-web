@@ -4,12 +4,7 @@
   "title": "MCDA problem schema",
   "description": "MCDA problem schema for uploaded JSON, version 1.4.4",
   "type": "object",
-  "required": [
-    "schemaVersion",
-    "criteria",
-    "alternatives",
-    "performanceTable"
-  ],
+  "required": ["schemaVersion", "criteria", "alternatives", "performanceTable"],
   "properties": {
     "schemaVersion": {
       "description": "The current version of the schema",
@@ -29,10 +24,7 @@
       "minProperties": 2,
       "additionalProperties": {
         "type": "object",
-        "required": [
-          "title",
-          "dataSources"
-        ],
+        "required": ["title", "dataSources"],
         "additionalProperties": false,
         "properties": {
           "title": {
@@ -64,9 +56,7 @@
       "minProperties": 2,
       "additionalProperties": {
         "type": "object",
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "additionalProperties": false,
         "properties": {
           "title": {

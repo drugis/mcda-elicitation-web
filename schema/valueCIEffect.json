@@ -3,29 +3,19 @@
   "$id": "https://mcda.drugis.org/valueCIEffect.json#",
   "title": "MCDA value, confidence interval effect for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "value",
-    "input"
-  ],
+  "required": ["type", "value", "input"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "exact"
-      ]
+      "enum": ["exact"]
     },
     "value": {
       "type": "number"
     },
     "input": {
       "type": "object",
-      "required": [
-        "value",
-        "lowerBound",
-        "upperBound"
-      ],
+      "required": ["value", "lowerBound", "upperBound"],
       "additionalProperties": false,
       "properties": {
         "value": {
@@ -38,9 +28,7 @@
             },
             {
               "type": "string",
-              "enum": [
-                "NE"
-              ]
+              "enum": ["NE"]
             }
           ]
         },
@@ -51,18 +39,13 @@
             },
             {
               "type": "string",
-              "enum": [
-                "NE"
-              ]
+              "enum": ["NE"]
             }
           ]
         },
         "scale": {
           "type": "string",
-          "enum": [
-            "percentage",
-            "decimal"
-          ]
+          "enum": ["percentage", "decimal"]
         }
       }
     }

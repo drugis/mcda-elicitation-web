@@ -4,9 +4,7 @@ const seleniumServer = require('selenium-server');
 const geckodriver = require('geckodriver');
 
 module.exports = {
-  src_folders: [
-    'test/endToEnd'
-  ],
+  src_folders: ['test/endToEnd'],
   selenium: {
     check_process_delay: 20000,
     start_process: true,

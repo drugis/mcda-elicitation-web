@@ -1,5 +1,5 @@
 export type AnalysisType = 'deterministic' | 'smaa';
-export type DisplayMode = 'enteredData' | 'values'
+export type DisplayMode = 'enteredData' | 'values';
 export type ScalesCalculationMethod = 'median' | 'mode';
 
 export default interface ISettings {

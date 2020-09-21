@@ -23,7 +23,7 @@ define([
   'angular',
   '../util',
   '../results/results'
-], function(
+], function (
   ChooseProblemController,
   CreateWorkspaceController,
   DeleteWorkspaceController,
@@ -45,25 +45,25 @@ define([
   InProgressWorkspaces,
   angular
 ) {
-    return angular.module('elicit.workspace', ['elicit.util', 'elicit.results'])
-      .controller('ChooseProblemController', ChooseProblemController)
-      .controller('CreateWorkspaceController', CreateWorkspaceController)
-      .controller('DeleteWorkspaceController', DeleteWorkspaceController)
-      .controller('DeleteInProgressController', DeleteInProgressController)
-      .controller('WorkspaceController', WorkspaceController)
-      .controller('WorkspaceSettingsController', WorkspaceSettingsController)
+  return angular
+    .module('elicit.workspace', ['elicit.util', 'elicit.results'])
+    .controller('ChooseProblemController', ChooseProblemController)
+    .controller('CreateWorkspaceController', CreateWorkspaceController)
+    .controller('DeleteWorkspaceController', DeleteWorkspaceController)
+    .controller('DeleteInProgressController', DeleteInProgressController)
+    .controller('WorkspaceController', WorkspaceController)
+    .controller('WorkspaceSettingsController', WorkspaceSettingsController)
 
-      .factory('WorkspaceService', WorkspaceService)
-      .factory('PerformanceTableService', PerformanceTableService)
-      .factory('OrderingService', OrderingService)
-      .factory('WorkspaceSettingsService', WorkspaceSettingService)
+    .factory('WorkspaceService', WorkspaceService)
+    .factory('PerformanceTableService', PerformanceTableService)
+    .factory('OrderingService', OrderingService)
+    .factory('WorkspaceSettingsService', WorkspaceSettingService)
 
-      .service('ExampleResource', ExampleResource)
-      .service('TutorialResource', TutorialResource)
+    .service('ExampleResource', ExampleResource)
+    .service('TutorialResource', TutorialResource)
 
-      .directive('fileReader', fileReaderDirective)
-      .directive('workspaceSettings', WorkspaceSettings)
-      .directive('workspaces', Workspaces)
-      .directive('inProgressWorkspaces', InProgressWorkspaces)
-      ;
-  });
+    .directive('fileReader', fileReaderDirective)
+    .directive('workspaceSettings', WorkspaceSettings)
+    .directive('workspaces', Workspaces)
+    .directive('inProgressWorkspaces', InProgressWorkspaces);
+});

@@ -3,26 +3,17 @@
   "$id": "https://mcda.drugis.org/survivalDistribution.json#",
   "title": "MCDA survival distribution for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "parameters"
-  ],
+  "required": ["type", "parameters"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "dsurv"
-      ]
+      "enum": ["dsurv"]
     },
     "parameters": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "alpha",
-        "beta",
-        "summaryMeasure"
-      ],
+      "required": ["alpha", "beta", "summaryMeasure"],
       "properties": {
         "alpha": {
           "type": "number"
@@ -32,11 +23,7 @@
         },
         "summaryMeasure": {
           "type": "string",
-          "enum": [
-            "mean",
-            "median",
-            "survivalAtTime"
-          ]
+          "enum": ["mean", "median", "survivalAtTime"]
         },
         "time": {
           "type": "number"

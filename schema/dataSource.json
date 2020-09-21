@@ -4,11 +4,7 @@
   "title": "MCDA problem schema",
   "description": "MCDA dataSource schema for uploaded JSON",
   "type": "object",
-  "required": [
-    "id",
-    "unitOfMeasurement",
-    "scale"
-  ],
+  "required": ["id", "unitOfMeasurement", "scale"],
   "additionalProperties": false,
   "properties": {
     "id": {
@@ -17,19 +13,12 @@
     },
     "unitOfMeasurement": {
       "type": "object",
-      "required": [
-        "type",
-        "label"
-      ],
+      "required": ["type", "label"],
       "additionalProperties": false,
       "properties": {
         "type": {
           "type": "string",
-          "enum": [
-            "custom",
-            "percentage",
-            "decimal"
-          ]
+          "enum": ["custom", "percentage", "decimal"]
         },
         "label": {
           "type": "string"
@@ -73,26 +62,16 @@
         {
           "description": "The partial value function",
           "type": "object",
-          "required": [
-            "direction",
-            "type",
-            "range"
-          ],
+          "required": ["direction", "type", "range"],
           "additionalProperties": false,
           "properties": {
             "direction": {
               "type": "string",
-              "enum": [
-                "increasing",
-                "decreasing"
-              ]
+              "enum": ["increasing", "decreasing"]
             },
             "type": {
               "type": "string",
-              "enum": [
-                "linear",
-                "piecewise-linear"
-              ]
+              "enum": ["linear", "piecewise-linear"]
             },
             "range": {
               "type": "array",

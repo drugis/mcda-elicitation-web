@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash'], function (_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -8,7 +8,7 @@ define(['lodash'], function(_) {
     'useFavorability',
     'callback'
   ];
-  var EditCriterionController = function(
+  var EditCriterionController = function (
     $scope,
     $modalInstance,
     oldCriterion,
@@ -42,7 +42,10 @@ define(['lodash'], function(_) {
 
     function isCreationBlocked() {
       $scope.blockedReasons = [];
-      if ($scope.criterion.title !== oldCriterion.title && isTitleDuplicate($scope.criterion.title)) {
+      if (
+        $scope.criterion.title !== oldCriterion.title &&
+        isTitleDuplicate($scope.criterion.title)
+      ) {
         $scope.blockedReasons.push('Duplicate title');
       }
       if (!$scope.criterion.title) {

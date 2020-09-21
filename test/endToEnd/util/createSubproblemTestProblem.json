@@ -7,10 +7,7 @@
       "dataSources": [
         {
           "id": "c27f83e0-a563-450d-9327-93fe823ed23f",
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "source": "ref1",
           "unitOfMeasurement": {
             "type": "custom",
@@ -19,10 +16,7 @@
         },
         {
           "id": "deselectionDataSourceId",
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "source": "ref2",
           "unitOfMeasurement": {
             "type": "custom",
@@ -36,10 +30,7 @@
       "dataSources": [
         {
           "id": "aa28d426-7f94-417e-9c93-e72389fc088c",
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "source": "ref3",
           "unitOfMeasurement": {
             "type": "custom",
@@ -53,10 +44,7 @@
       "dataSources": [
         {
           "id": "0e61c2c6-cf2f-463c-98ae-4edfc45722b6",
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "source": "ref4",
           "unitOfMeasurement": {
             "type": "custom",

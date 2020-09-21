@@ -1,13 +1,15 @@
 'use strict';
-define(['angular'], function(angular) {
-  var WorkspaceResource = function($resource) {
+define(['angular'], function (angular) {
+  var WorkspaceResource = function ($resource) {
     return $resource(
-      window.config.workspacesRepositoryUrl + ':workspaceId', {
+      window.config.workspacesRepositoryUrl + ':workspaceId',
+      {
         workspaceId: '@workspaceId'
-      }, {
+      },
+      {
         create: {
           method: 'POST',
-          transformRequest: function(problem) {
+          transformRequest: function (problem) {
             return angular.toJson({
               title: problem.title,
               problem: problem
@@ -17,6 +19,7 @@ define(['angular'], function(angular) {
       }
     );
   };
-  return angular.module('elicit.workspaceResource', ['ngResource'])
+  return angular
+    .module('elicit.workspaceResource', ['ngResource'])
     .factory('WorkspaceResource', ['$resource', WorkspaceResource]);
 });

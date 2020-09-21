@@ -1,5 +1,5 @@
 'use strict';
-define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
+define(['clipboard', 'lodash', 'angular'], function (Clipboard, _, angular) {
   var dependencies = [
     '$scope',
     '$state',
@@ -12,7 +12,7 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
     'WorkspaceSettingsService',
     'swap'
   ];
-  var EvidenceController = function(
+  var EvidenceController = function (
     $scope,
     $state,
     $stateParams,
@@ -34,31 +34,46 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
     // init
     $scope.problem = angular.copy($scope.workspace.problem);
     $scope.isStandAlone = isMcdaStandalone;
-    $scope.useFavorability = _.find($scope.problem.criteria, function(criterion) {
+    $scope.useFavorability = _.find($scope.problem.criteria, function (
+      criterion
+    ) {
       return criterion.hasOwnProperty('isFavorable');
     });
     $scope.showDecimal = false;
-    PageTitleService.setPageTitle('EvidenceController', ($scope.problem.title || $scope.workspace.title) + '\'s overview');
+    PageTitleService.setPageTitle(
+      'EvidenceController',
+      ($scope.problem.title || $scope.workspace.title) + "'s overview"
+    );
     $scope.scalesPromise.then(reloadOrderingsAndScales);
 
-    $scope.$on('elicit.settingsChanged', function() {
+    $scope.$on('elicit.settingsChanged', function () {
       reloadOrderingsAndScales();
     });
 
-    $scope.$watch('workspace.problem', function(){
-      $scope.problem = angular.copy($scope.workspace.problem);
-    }, true);
+    $scope.$watch(
+      'workspace.problem',
+      function () {
+        $scope.problem = angular.copy($scope.workspace.problem);
+      },
+      true
+    );
 
     new Clipboard('.clipboard-button');
 
     function reloadOrderingsAndScales() {
-      var problem = WorkspaceSettingsService.usePercentage() ? $scope.baseState.percentified.problem : $scope.baseState.dePercentified.problem;
-      OrderingService.getOrderedCriteriaAndAlternatives(problem, $stateParams).then(function(orderings) {
+      var problem = WorkspaceSettingsService.usePercentage()
+        ? $scope.baseState.percentified.problem
+        : $scope.baseState.dePercentified.problem;
+      OrderingService.getOrderedCriteriaAndAlternatives(
+        problem,
+        $stateParams
+      ).then(function (orderings) {
         $scope.orderedAlternatives = orderings.alternatives;
         $scope.orderedCriteria = orderings.criteria;
-        $scope.scalesPromise.then(function() {
-          $scope.scales = WorkspaceSettingsService.usePercentage() ?
-            $scope.workspace.scales.basePercentified : $scope.workspace.scales.base;
+        $scope.scalesPromise.then(function () {
+          $scope.scales = WorkspaceSettingsService.usePercentage()
+            ? $scope.workspace.scales.basePercentified
+            : $scope.workspace.scales.base;
         });
       });
     }
@@ -68,11 +83,11 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
         templateUrl: '../evidence/editTherapeuticContext.html',
         controller: 'EditTherapeuticContextController',
         resolve: {
-          therapeuticContext: function() {
+          therapeuticContext: function () {
             return $scope.problem.description;
           },
-          callback: function() {
-            return function(newTherapeuticContext) {
+          callback: function () {
+            return function (newTherapeuticContext) {
               $scope.workspace.problem.description = newTherapeuticContext;
               WorkspaceResource.save($stateParams, $scope.workspace);
             };
@@ -94,16 +109,20 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
         templateUrl: '../evidence/editAlternative.html',
         controller: 'EditAlternativeController',
         resolve: {
-          alternative: function() {
+          alternative: function () {
             return alternative;
           },
-          alternatives: function() {
+          alternatives: function () {
             return $scope.problem.alternatives;
           },
-          callback: function() {
-            return function(newAlternative) {
-              $scope.workspace.problem.alternatives[alternative.id].title = newAlternative.title;
-              WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
+          callback: function () {
+            return function (newAlternative) {
+              $scope.workspace.problem.alternatives[alternative.id].title =
+                newAlternative.title;
+              WorkspaceResource.save(
+                $stateParams,
+                $scope.workspace
+              ).$promise.then(function () {
                 $state.reload(); // workaround to not call reload with the argument passed to callback
               });
             };
@@ -115,14 +134,34 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
     function downloadWorkspace() {
       var link = document.createElement('a');
       link.download = 'problem' + $scope.workspace.id + '.json';
-      var problemWithTitle = _.merge({}, $scope.workspace.problem, { title: $scope.workspace.title });
-      var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
+      var problemWithTitle = _.merge({}, $scope.workspace.problem, {
+        title: $scope.workspace.title
+      });
+      var data =
+        'text/json;charset=utf-8,' +
+        encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
       link.href = 'data:' + data;
 
-      // let js simulate mouse click 
-      link.click = function() {
+      // let js simulate mouse click
+      link.click = function () {
         var evt = this.ownerDocument.createEvent('MouseEvents');
-        evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+        evt.initMouseEvent(
+          'click',
+          true,
+          true,
+          this.ownerDocument.defaultView,
+          1,
+          0,
+          0,
+          0,
+          0,
+          false,
+          false,
+          false,
+          false,
+          0,
+          null
+        );
         this.dispatchEvent(evt);
       };
       link.click();
@@ -131,7 +170,11 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
     // private
     function swapAndSave(array, idx, newIdx) {
       swap(array, idx, newIdx);
-      OrderingService.saveOrdering($stateParams, $scope.orderedCriteria, $scope.orderedAlternatives);
+      OrderingService.saveOrdering(
+        $stateParams,
+        $scope.orderedCriteria,
+        $scope.orderedAlternatives
+      );
     }
   };
   return dependencies.concat(EvidenceController);

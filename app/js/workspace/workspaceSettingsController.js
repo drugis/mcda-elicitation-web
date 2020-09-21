@@ -1,12 +1,12 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash'], function (_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
     'WorkspaceSettingsService',
     'callback'
   ];
-  var WorkspaceSettingsController = function(
+  var WorkspaceSettingsController = function (
     $scope,
     $modalInstance,
     WorkspaceSettingsService,
@@ -25,8 +25,10 @@ define(['lodash'], function(_) {
     $scope.warnings = WorkspaceSettingsService.getWarnings($scope.settings);
 
     function saveSettings() {
-      WorkspaceSettingsService.saveSettings($scope.settings, $scope.toggledColumns)
-        .then(callback);
+      WorkspaceSettingsService.saveSettings(
+        $scope.settings,
+        $scope.toggledColumns
+      ).then(callback);
       $modalInstance.close();
     }
 
@@ -38,9 +40,11 @@ define(['lodash'], function(_) {
     }
 
     function toggleSelection() {
-      var isAnyUnselected = false === _.find($scope.toggledColumns, function(isSelected) {
-        return !isSelected;
-      });
+      var isAnyUnselected =
+        false ===
+        _.find($scope.toggledColumns, function (isSelected) {
+          return !isSelected;
+        });
       if (isAnyUnselected) {
         selectAll();
       } else {
@@ -51,7 +55,7 @@ define(['lodash'], function(_) {
     function checkForWarnings() {
       $scope.warnings = WorkspaceSettingsService.getWarnings($scope.settings);
     }
-    
+
     function selectAll() {
       setAllTo(true);
     }
@@ -61,11 +65,10 @@ define(['lodash'], function(_) {
     }
 
     function setAllTo(newValue) {
-      $scope.toggledColumns = _.mapValues($scope.toggledColumns, function() {
+      $scope.toggledColumns = _.mapValues($scope.toggledColumns, function () {
         return newValue;
       });
     }
-
   };
   return dependencies.concat(WorkspaceSettingsController);
 });

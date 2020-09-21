@@ -13,7 +13,7 @@ define([
 
   'angular',
   'angular-patavi-client'
-], function(
+], function (
   SmaaResultsController,
 
   centralWeightsDirective,
@@ -27,7 +27,8 @@ define([
 
   angular
 ) {
-  return angular.module('elicit.smaaResults', ['patavi', 'elicit.results'])
+  return angular
+    .module('elicit.smaaResults', ['patavi', 'elicit.results'])
     .controller('SmaaResultsController', SmaaResultsController)
 
     .directive('centralWeights', centralWeightsDirective)
@@ -37,6 +38,5 @@ define([
     .directive('rankPlot', rankPlotDirective)
     .directive('smaaWeightsTable', smaaWeightsTableDirective)
 
-    .factory('SmaaResultsService', SmaaResultsService)
-    ;
+    .factory('SmaaResultsService', SmaaResultsService);
 });

@@ -1,13 +1,13 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import { Distribution } from '@shared/interface/IDistribution';
-import { Effect } from '@shared/interface/IEffect';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import _ from 'lodash';
-import { hasInvalidCell } from '../CellValidityService/CellValidityService';
+import {hasInvalidCell} from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
 
 export function createDistributions(

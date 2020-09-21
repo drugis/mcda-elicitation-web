@@ -3,10 +3,7 @@
     "http://trials.drugis.org/concepts/4b0ae085-c78d-4476-be98-4ec39f012c01": {
       "title": "HAM-D Responders",
       "unitOfMeasurement": "proportion",
-      "scale": [
-        0,
-        1
-      ],
+      "scale": [0, 1],
       "dataSources": [
         {
           "pvf": null,
@@ -17,10 +14,7 @@
     "http://trials.drugis.org/concepts/4823a767-b5d2-4bb4-a4dc-c2698712e1cd": {
       "title": "CGI Severity Change",
       "unitOfMeasurement": null,
-      "scale": [
-        null,
-        null
-      ],
+      "scale": [null, null],
       "dataSources": [
         {
           "pvf": null,
@@ -61,23 +55,11 @@
               "738": 0
             },
             "cov": {
-              "rownames": [
-                "738",
-                "737"
-              ],
-              "colnames": [
-                "738",
-                "737"
-              ],
+              "rownames": ["738", "737"],
+              "colnames": ["738", "737"],
               "data": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  0,
-                  0.017123
-                ]
+                [0, 0],
+                [0, 0.017123]
               ]
             }
           }

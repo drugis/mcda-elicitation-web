@@ -1,7 +1,7 @@
 import ISettings from '@shared/interface/ISettings';
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
-import React, { createContext } from 'react';
+import React, {createContext} from 'react';
 import ISettingsContext from './ISettingsContext';
 
 export const SettingsContext = createContext<ISettingsContext>(
@@ -17,9 +17,11 @@ export function SettingsContextProviderComponent({
   settings: ISettings;
   toggledColumns: IToggledColumns;
 }) {
-  const numberOfToggledColumns = 1 + _.filter(
-    _.pick(toggledColumns, ['description', 'units', 'references', 'strength'])
-  ).length;
+  const numberOfToggledColumns =
+    1 +
+    _.filter(
+      _.pick(toggledColumns, ['description', 'units', 'references', 'strength'])
+    ).length;
   return (
     <SettingsContext.Provider
       value={{

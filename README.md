@@ -1,5 +1,4 @@
-mcda-elicitation-web
-====================
+# mcda-elicitation-web
 
 This tool provides a web interface for Multiple Criteria Decision
 Analysis preference elicitation. Currently, it supports eliciting the
@@ -18,8 +17,7 @@ after the preference elicitation process.
 mcda-elicitation-web is a component of the [drugis.org][drugis] ADDIS 2
 project. For more information on all components of the drugis project, please refer to the OVERALL-README.md in the root folder of the ADDIS-CORE project.
 
-Prerequisites for running mcda-web
------------------------------------
+## Prerequisites for running mcda-web
 
 - A PostgreSQL instance with an initialised database. You can create one in a docker container by running the `setup-db.sh` script. Make sure to change the passwords from the default.
 
@@ -41,11 +39,9 @@ Create the schema (shell script)
 
 - At least one smaa patavi worker, started by executing the `run-worker.sh` script.
 
-Running as Docker container
-===========================
+# Running as Docker container
 
-Building the image (optional)
------------------------------
+## Building the image (optional)
 
 You can build a new local image by executing the `build-docker.sh` script. This would be required for example if you wish to change the default SSL keys. Note that this script assumes that your keys are present in an `ssl` subdirectory of the main mcda directory. Also note that, if your patavi server presents a certificate that is not trusted by default, there should be a CA certificate for the signing certificate authority of your patavi container in this directory. The default patavi server image presents a certificate signed by the Drugis [self-signed certificate authority](https://drugis.org/files/ca-crt.pem)
 
@@ -59,14 +55,14 @@ For local signin, there are several further dependencies (assuming a version of 
 
 After installing these dependencies, you can add users for the `LOCAL` signin method by using the `add-user.sh` script.
 
-Running the container
----------------------
+## Running the container
 
 Execute the `run-mcda-docker.sh` script.
 
 If you built the container with a specific login method arugment, you should run the `run-mcda-docker.sh` script with the same one.
 
 e.g.:
+
 ```
 ./build-docker.sh LOCAL
 ./run-mcda-docker.sh LOCAL
@@ -76,18 +72,15 @@ e.g.:
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
-Running as standalone application
-=================================
+# Running as standalone application
 
-Setting up the database
------------------------
+## Setting up the database
 
 `sudo -u postgres psql -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"`
 `sudo -u postgres psql -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"`
 `psql -d mcdaweb -U mcdaweb -f database.pg.sql`
 
-Running
--------
+## Running
 
 Set environment variables:
 
@@ -119,8 +112,7 @@ Running the application:
 
 `node index.js` or `npm start`
 
-Running the patavi worker
--------------------------
+## Running the patavi worker
 
 As a prerequisite, build the patavi worker image from the patavi repository.
 
@@ -132,11 +124,9 @@ Run the worker:
 
     docker run -d --link <rabbitmq-container-name>:rabbit --name patavi-smaa_v2 patavi/worker-smaa_v2
 
-Development
-===========
+# Development
 
-Tests
------
+## Tests
 
 Executing tests (front-end unit tests, back-end, and R unit tests):
 
@@ -147,11 +137,11 @@ Executing end-to-end tests:
     npm run test-end-to-end
 
 Requirements for end-to-end tests:
- 
- - a local login build
- - a test user with credentials user/password
- - a running server (on http://localhost:3002, can be changed in test/endToEnd/util/constants.js'http://localhost:3002')
- - a Firefox browser (tested on 69.0.2)
+
+- a local login build
+- a test user with credentials user/password
+- a running server (on http://localhost:3002, can be changed in test/endToEnd/util/constants.js'http://localhost:3002')
+- a Firefox browser (tested on 69.0.2)
 
 Building the frontend with inline source maps for faster debugging:
 
@@ -165,17 +155,14 @@ Building a local login version:
 
     npm run build-local-login
 
-
-Initialize submodules (only needed for CSS rebuilding)
-------------------------------------------------------
+## Initialize submodules (only needed for CSS rebuilding)
 
 ```
 git submodule init
 git submodule update
 ```
 
-Compiling the CSS
------------------
+## Compiling the CSS
 
 Using compass (through `config.rb`):
 
@@ -190,9 +177,7 @@ node-sass --include-path sass-shared sass/mcda-plain.scss app/css/mcda-plain.css
 node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.css
 ```
 
-
-License
--------
+## License
 
 mcda-elicitation-web is open source, and licensed under [GPLv3][gpl-3].
 See [LICENSE.txt](LICENSE.txt) for more information.

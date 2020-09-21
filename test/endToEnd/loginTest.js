@@ -11,13 +11,12 @@ const errorService = require('./util/errorService.js');
 function login(browser) {
   loginService.login(browser);
   errorService.isErrorBarHidden(browser);
-  browser
-    .waitForElementVisible('#workspaces-header')
-    .end();
+  browser.waitForElementVisible('#workspaces-header').end();
 }
 
 function loginFail(browser) {
-  loginService.login(browser, 'wrong name', 'wrong password')
+  loginService
+    .login(browser, 'wrong name', 'wrong password')
     .waitForElementVisible('#loginWarning')
     .end();
 }

@@ -16,7 +16,7 @@ define([
 
   'angular',
   'angular-patavi-client'
-], function(
+], function (
   DeterministicResultsController,
 
   deterministicWeightsTableDirective,
@@ -33,8 +33,12 @@ define([
 
   angular
 ) {
-  return angular.module('elicit.deterministicResults', ['patavi', 'elicit.results'])
-    .controller('DeterministicResultsController', DeterministicResultsController)
+  return angular
+    .module('elicit.deterministicResults', ['patavi', 'elicit.results'])
+    .controller(
+      'DeterministicResultsController',
+      DeterministicResultsController
+    )
 
     .directive('deterministicWeightsTable', deterministicWeightsTableDirective)
     .directive('lineChart', lineChartDirective)
@@ -46,6 +50,5 @@ define([
     .directive('valueProfilePlot', valueProfilePlotDirective)
     .directive('valueProfiles', valueProfilesDirective)
 
-    .factory('DeterministicResultsService', DeterministicResultsService)
-    ;
+    .factory('DeterministicResultsService', DeterministicResultsService);
 });

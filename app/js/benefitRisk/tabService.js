@@ -1,14 +1,13 @@
 'use strict';
-define(['lodash'], function(_) {
-  var dependencies = [
-    'WorkspaceService'
-  ];
-  var TabService = function(
-    WorkspaceService
-  ) {
+define(['lodash'], function (_) {
+  var dependencies = ['WorkspaceService'];
+  var TabService = function (WorkspaceService) {
     function getTabStatus(stateName, aggregateState, tasksAccessibility) {
-      var hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable(aggregateState.problem.performanceTable);
-      var hasTooManyCriteria = _.keys(aggregateState.problem.criteria).length > 12;
+      var hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable(
+        aggregateState.problem.performanceTable
+      );
+      var hasTooManyCriteria =
+        _.keys(aggregateState.problem.criteria).length > 12;
       return {
         overview: {
           enabled: true,
@@ -18,14 +17,38 @@ define(['lodash'], function(_) {
           enabled: true,
           active: stateName === 'problem'
         },
-        preferences: getPreferencesTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility),
-        deterministic: getDeterministicTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility),
-        smaa: getSmaaTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility)
+        preferences: getPreferencesTabStatus(
+          stateName,
+          hasMissingValues,
+          hasTooManyCriteria,
+          tasksAccessibility
+        ),
+        deterministic: getDeterministicTabStatus(
+          stateName,
+          hasMissingValues,
+          hasTooManyCriteria,
+          tasksAccessibility
+        ),
+        smaa: getSmaaTabStatus(
+          stateName,
+          hasMissingValues,
+          hasTooManyCriteria,
+          tasksAccessibility
+        )
       };
     }
 
-    function getSmaaTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
-      var status = getSmaaEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility);
+    function getSmaaTabStatus(
+      stateName,
+      hasMissingValues,
+      hasTooManyCriteria,
+      tasksAccessibility
+    ) {
+      var status = getSmaaEnabledStatus(
+        hasMissingValues,
+        hasTooManyCriteria,
+        tasksAccessibility
+      );
       return {
         enabled: status.enabled,
         tooltip: status.tooltip,
@@ -33,26 +56,34 @@ define(['lodash'], function(_) {
       };
     }
 
-    function getSmaaEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
+    function getSmaaEnabledStatus(
+      hasMissingValues,
+      hasTooManyCriteria,
+      tasksAccessibility
+    ) {
       if (hasMissingValues) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because the effects table contains missing values.'
+          tooltip:
+            'Cannot perform analysis because the effects table contains missing values.'
         };
       } else if (hasTooManyCriteria) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because the effects table contains more than 12 criteria.'
+          tooltip:
+            'Cannot perform analysis because the effects table contains more than 12 criteria.'
         };
       } else if (!tasksAccessibility.preferences) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because the problem has multiple datasources per criterion.'
+          tooltip:
+            'Cannot perform analysis because the problem has multiple datasources per criterion.'
         };
       } else if (!tasksAccessibility.results) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because not all partial value functions are set.'
+          tooltip:
+            'Cannot perform analysis because not all partial value functions are set.'
         };
       } else {
         return {
@@ -61,8 +92,17 @@ define(['lodash'], function(_) {
       }
     }
 
-    function getDeterministicTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
-      var status = getDeterministicEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility);
+    function getDeterministicTabStatus(
+      stateName,
+      hasMissingValues,
+      hasTooManyCriteria,
+      tasksAccessibility
+    ) {
+      var status = getDeterministicEnabledStatus(
+        hasMissingValues,
+        hasTooManyCriteria,
+        tasksAccessibility
+      );
       return {
         enabled: status.enabled,
         tooltip: status.tooltip,
@@ -70,26 +110,34 @@ define(['lodash'], function(_) {
       };
     }
 
-    function getDeterministicEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
+    function getDeterministicEnabledStatus(
+      hasMissingValues,
+      hasTooManyCriteria,
+      tasksAccessibility
+    ) {
       if (hasMissingValues) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because the effects table contains missing values.'
+          tooltip:
+            'Cannot perform analysis because the effects table contains missing values.'
         };
       } else if (hasTooManyCriteria) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because the effects table contains more than 12 criteria.'
+          tooltip:
+            'Cannot perform analysis because the effects table contains more than 12 criteria.'
         };
       } else if (!tasksAccessibility.preferences) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because the problem has multiple datasources per criterion.'
+          tooltip:
+            'Cannot perform analysis because the problem has multiple datasources per criterion.'
         };
       } else if (!tasksAccessibility.results) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because not all partial value functions are set.'
+          tooltip:
+            'Cannot perform analysis because not all partial value functions are set.'
         };
       } else {
         return {
@@ -98,8 +146,17 @@ define(['lodash'], function(_) {
       }
     }
 
-    function getPreferencesTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
-      var status = getPreferencesEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility);
+    function getPreferencesTabStatus(
+      stateName,
+      hasMissingValues,
+      hasTooManyCriteria,
+      tasksAccessibility
+    ) {
+      var status = getPreferencesEnabledStatus(
+        hasMissingValues,
+        hasTooManyCriteria,
+        tasksAccessibility
+      );
       return {
         enabled: status.enabled,
         tooltip: status.tooltip,
@@ -107,21 +164,28 @@ define(['lodash'], function(_) {
       };
     }
 
-    function getPreferencesEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
+    function getPreferencesEnabledStatus(
+      hasMissingValues,
+      hasTooManyCriteria,
+      tasksAccessibility
+    ) {
       if (hasMissingValues) {
         return {
           enabled: false,
-          tooltip: 'Cannot elicit preferences because the effects table contains missing values.'
+          tooltip:
+            'Cannot elicit preferences because the effects table contains missing values.'
         };
       } else if (hasTooManyCriteria) {
         return {
           enabled: false,
-          tooltip: 'Cannot elicit preferences because the effects table contains more than 12 criteria.'
+          tooltip:
+            'Cannot elicit preferences because the effects table contains more than 12 criteria.'
         };
       } else if (!tasksAccessibility.preferences) {
         return {
           enabled: false,
-          tooltip: 'Cannot elicit preferences because the problem has multiple datasources per criterion.'
+          tooltip:
+            'Cannot elicit preferences because the problem has multiple datasources per criterion.'
         };
       } else {
         return {
@@ -131,16 +195,19 @@ define(['lodash'], function(_) {
     }
 
     function isPreferencesTab(stateName) {
-      return _.some([
-        'preferences',
-        'partial-value-function',
-        'ordinal-swing',
-        'matching',
-        'swing-weighting',
-        'imprecise-swing-weighting'
-      ], function(name) {
-        return name === stateName;
-      });
+      return _.some(
+        [
+          'preferences',
+          'partial-value-function',
+          'ordinal-swing',
+          'matching',
+          'swing-weighting',
+          'imprecise-swing-weighting'
+        ],
+        function (name) {
+          return name === stateName;
+        }
+      );
     }
 
     return {

@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
   var dependencies = [
     '$modal',
     '$state',
@@ -7,7 +7,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'WorkspaceResource',
     'swap'
   ];
-  var CriterionListDirective = function(
+  var CriterionListDirective = function (
     $modal,
     $state,
     OrderingService,
@@ -17,18 +17,18 @@ define(['lodash', 'angular'], function(_, angular) {
     return {
       restrict: 'E',
       scope: {
-        'alternatives': '=',
-        'criteria': '=',
-        'editMode': '=',
-        'effectsTableInfo': '=',
-        'inputData': '=',
-        'isInput': '=',
-        'scales': '=',
-        'useFavorability': '=',
-        'workspace': '='
+        alternatives: '=',
+        criteria: '=',
+        editMode: '=',
+        effectsTableInfo: '=',
+        inputData: '=',
+        isInput: '=',
+        scales: '=',
+        useFavorability: '=',
+        workspace: '='
       },
       templateUrl: '../effectsTable/criterionListDirective.html',
-      link: function(scope) {
+      link: function (scope) {
         scope.goUp = goUp;
         scope.goDown = goDown;
         scope.removeCriterion = removeCriterion;
@@ -62,11 +62,11 @@ define(['lodash', 'angular'], function(_, angular) {
             templateUrl: '../evidence/editCriterion.html',
             controller: 'EditCriterionController',
             resolve: {
-              criteria: function() {
+              criteria: function () {
                 return scope.criteria;
               },
-              callback: function() {
-                return function(newCriterion) {
+              callback: function () {
+                return function (newCriterion) {
                   if (!scope.isInput) {
                     saveWorkspace(newCriterion, criterion.id);
                   } else {
@@ -75,14 +75,14 @@ define(['lodash', 'angular'], function(_, angular) {
                   }
                 };
               },
-              oldCriterion: function() {
+              oldCriterion: function () {
                 if (scope.isInput) {
                   return criterion;
                 } else {
                   return scope.workspace.problem.criteria[criterion.id];
                 }
               },
-              useFavorability: function() {
+              useFavorability: function () {
                 return scope.useFavorability;
               }
             }
@@ -91,7 +91,8 @@ define(['lodash', 'angular'], function(_, angular) {
 
         function replaceOrderedCriterion(criterionId, newCriterion) {
           var criterionIndex = _.findIndex(scope.criteria, ['id', criterionId]);
-          scope.criteria[criterionIndex] = _.merge({},
+          scope.criteria[criterionIndex] = _.merge(
+            {},
             _.find(scope.criteria, ['id', criterionId]),
             newCriterion
           );
@@ -109,9 +110,11 @@ define(['lodash', 'angular'], function(_, angular) {
           var newCriterion = angular.copy(criterion);
           delete newCriterion.id;
           scope.workspace.problem.criteria[criterionId] = newCriterion;
-          WorkspaceResource.save($state.params, scope.workspace).$promise.then(function() {
-            $state.reload(); // workaround to not call reload with the argument passed to callback
-          });
+          WorkspaceResource.save($state.params, scope.workspace).$promise.then(
+            function () {
+              $state.reload(); // workaround to not call reload with the argument passed to callback
+            }
+          );
         }
 
         function initializeCriteriaLists() {

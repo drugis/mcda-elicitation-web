@@ -4,8 +4,9 @@ const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
 
 module.exports = {
-  'Delete a workspace': function(browser) {
-    const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+  'Delete a workspace': function (browser) {
+    const title =
+      'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
     loginService.login(browser);
     workspaceService.cleanList(browser);

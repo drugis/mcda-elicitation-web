@@ -1,7 +1,7 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
   function intervalHull() {
-    return function(scaleRanges, effects, rangeDistributions) {
+    return function (scaleRanges, effects, rangeDistributions) {
       var minHullValues = [];
       var maxHullValues = [];
       if (scaleRanges) {
@@ -28,24 +28,34 @@ define(['lodash', 'angular'], function(_, angular) {
 
   function getMinEffect(effects) {
     var effectValues = removeUndefinedValues(effects);
-    return _.reduce(effectValues, function(minimum, effect) {
-      return minimum < effect ? minimum : effect;
-    }, effectValues[0]);
+    return _.reduce(
+      effectValues,
+      function (minimum, effect) {
+        return minimum < effect ? minimum : effect;
+      },
+      effectValues[0]
+    );
   }
 
   function getMaxEffect(effects) {
     var effectValues = removeUndefinedValues(effects);
-    return _.reduce(effectValues, function(maximum, effect) {
-      return maximum > effect ? maximum : effect;
-    }, effectValues[0]);
+    return _.reduce(
+      effectValues,
+      function (maximum, effect) {
+        return maximum > effect ? maximum : effect;
+      },
+      effectValues[0]
+    );
   }
 
   function removeUndefinedValues(effects) {
-    return _.reject(effects, function(effect) {
-      return effect === undefined ||
+    return _.reject(effects, function (effect) {
+      return (
+        effect === undefined ||
         effect === null ||
         isNaN(effect) ||
-        typeof (effect) === 'string';
+        typeof effect === 'string'
+      );
     });
   }
 
@@ -66,19 +76,19 @@ define(['lodash', 'angular'], function(_, angular) {
   }
 
   function generateUuid() {
-    return function() {
+    return function () {
       var pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-      return pattern.replace(/[xy]/g, function(c) {
+      return pattern.replace(/[xy]/g, function (c) {
         /*jslint bitwise: true */
-        var r = Math.random() * 16 | 0;
-        var v = c === 'x' ? r : (r & 0x3 | 0x8);
+        var r = (Math.random() * 16) | 0;
+        var v = c === 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(16);
       });
     };
   }
 
   function swap() {
-    return function(array, fromIdx, toIdx) {
+    return function (array, fromIdx, toIdx) {
       var mem = array[fromIdx];
       array[fromIdx] = array[toIdx];
       array[toIdx] = mem;
@@ -86,7 +96,7 @@ define(['lodash', 'angular'], function(_, angular) {
   }
 
   function significantDigits() {
-    return function(x, precision) {
+    return function (x, precision) {
       if (precision !== 0 && !precision) {
         precision = 3;
       }
@@ -101,9 +111,9 @@ define(['lodash', 'angular'], function(_, angular) {
   }
 
   function getDataSourcesById() {
-    return function(criteria) {
+    return function (criteria) {
       return _(criteria)
-        .map(function(criterion) {
+        .map(function (criterion) {
           return criterion.dataSources;
         }, [])
         .flatten()
@@ -112,11 +122,11 @@ define(['lodash', 'angular'], function(_, angular) {
     };
   }
 
-  return angular.module('elicit.util', [])
+  return angular
+    .module('elicit.util', [])
     .factory('intervalHull', intervalHull)
     .factory('generateUuid', generateUuid)
     .factory('swap', swap)
     .factory('significantDigits', significantDigits)
-    .factory('getDataSourcesById', getDataSourcesById)
-    ;
+    .factory('getDataSourcesById', getDataSourcesById);
 });

@@ -17,10 +17,7 @@
             "type": "custom",
             "label": ""
           },
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ],
       "isFavorable": true
@@ -39,10 +36,7 @@
             "type": "custom",
             "label": ""
           },
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ],
       "isFavorable": true

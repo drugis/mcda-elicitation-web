@@ -1,15 +1,11 @@
 <div ng-if="analysisType === 'deterministic'">
   <div ng-if="displayMode === 'enteredData'">
     {{effectLabel}}
-    <span ng-if="effectLabel === ''" tooltip="No values entered">
-      &nbsp;
-    </span>
+    <span ng-if="effectLabel === ''" tooltip="No values entered"> &nbsp; </span>
   </div>
 
   <div ng-if="displayMode === 'values'">
-    <div ng-if="effectValue !== ''">
-      {{effectValue}}
-    </div>
+    <div ng-if="effectValue !== ''">{{effectValue}}</div>
     <div ng-if="effectValue === ''">
       <effects-table-scales-cell scales="scales" uncertainty="false">
       </effects-table-scales-cell>

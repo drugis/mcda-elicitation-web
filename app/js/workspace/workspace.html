@@ -2,7 +2,11 @@
   <div class="cell large-10">
     <h3 ng-if="!isEditTitleVisible" class="subheader">
       <span id="workspace-title" ng-bind="workspace.problem.title"></span>
-      <a tooltip="Edit title" tooltip-append-to-body="true" ng-click="editTitle()">
+      <a
+        tooltip="Edit title"
+        tooltip-append-to-body="true"
+        ng-click="editTitle()"
+      >
         <i id="edit-workspace-title-button" class="fa fa-edit"></i>
       </a>
     </h3>
@@ -10,11 +14,27 @@
       <div class="cell large-8 small-12">
         <div class="grid-x large-collapse">
           <div class="cell small-8">
-            <input id="workspace-title-input" type="text" ng-model="workspace.title">
+            <input
+              id="workspace-title-input"
+              type="text"
+              ng-model="workspace.title"
+            />
           </div>
           <div class="cell small-2 button-group expanded">
-            <button id="save-workspace-title-button" class="button postfix success" ng-click="saveTitle()">Edit</button>
-            <button id="cancel-workspace-title-button" class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
+            <button
+              id="save-workspace-title-button"
+              class="button postfix success"
+              ng-click="saveTitle()"
+            >
+              Edit
+            </button>
+            <button
+              id="cancel-workspace-title-button"
+              class="button secondary postfix"
+              ng-click="cancelTitle()"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>

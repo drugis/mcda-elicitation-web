@@ -1,22 +1,24 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
   var dependencies = [];
 
   var scaleRanges = {
-    isPresent: function(state) {
-      var hasScale = function(criterion) {
-        return criterion.dataSources.length === 1 &&
+    isPresent: function (state) {
+      var hasScale = function (criterion) {
+        return (
+          criterion.dataSources.length === 1 &&
           criterion.dataSources[0].pvf &&
           criterion.dataSources[0].pvf.range &&
           criterion.dataSources[0].pvf.range[0] !== null &&
-          criterion.dataSources[0].pvf.range[1] !== null;
+          criterion.dataSources[0].pvf.range[1] !== null
+        );
       };
       return _.every(state.problem.criteria, hasScale);
     },
-    remove: function(state) {
+    remove: function (state) {
       var newState = angular.copy(state);
       var criteria = newState.problem.criteria;
-      _.each(criteria, function(criterion) {
+      _.each(criteria, function (criterion) {
         if (criterion.dataSources[0].pvf) {
           delete criterion.dataSources[0].pvf.range;
         }
@@ -27,20 +29,23 @@ define(['lodash', 'angular'], function(_, angular) {
   };
 
   var partialValueFunctions = {
-    isPresent: function(state) {
+    isPresent: function (state) {
       var criteria = state.problem.criteria;
-      return _.every(criteria, function(criterion) {
+      return _.every(criteria, function (criterion) {
         var pvf = criterion.dataSources[0].pvf;
         return pvf && pvf.direction && pvf.type;
       });
     },
-    remove: function(state) {
+    remove: function (state) {
       var newState = angular.copy(state);
       var criteria = newState.problem.criteria;
-      _.each(criteria, function(criterion) {
+      _.each(criteria, function (criterion) {
         var remove = ['type', 'direction', 'cutoffs', 'values'];
         if (criterion.dataSources[0].pvf) {
-          criterion.dataSources[0].pvf = _.omit(criterion.dataSources[0].pvf, remove);
+          criterion.dataSources[0].pvf = _.omit(
+            criterion.dataSources[0].pvf,
+            remove
+          );
         }
       });
       return newState;
@@ -49,21 +54,21 @@ define(['lodash', 'angular'], function(_, angular) {
   };
 
   var criteriaTradeOffs = {
-    isPresent: function(state) {
+    isPresent: function (state) {
       return !_.isEmpty(state.prefs);
     },
-    remove: function(state) {
+    remove: function (state) {
       return _.omit(angular.copy(state), 'prefs');
     },
     title: 'all criteria trade-off preferences'
   };
 
   function PreferenceFilter(test, title) {
-    this.isPresent = function(state) {
+    this.isPresent = function (state) {
       return _.some(state.prefs, test);
     };
 
-    this.remove = function(state) {
+    this.remove = function (state) {
       var newState = angular.copy(state);
       newState.prefs = _.reject(state.prefs, test);
       return newState;
@@ -73,17 +78,15 @@ define(['lodash', 'angular'], function(_, angular) {
     return this;
   }
 
-  var nonOrdinalPreferences = new PreferenceFilter(
-    function(pref) {
-      return pref.type !== 'ordinal';
-    }, 'non-ordinal preferences');
+  var nonOrdinalPreferences = new PreferenceFilter(function (pref) {
+    return pref.type !== 'ordinal';
+  }, 'non-ordinal preferences');
 
   // This heuristic is not complete; it only checks whether there are ordinal preferences at all.
   // Currently, there is no way to create ordinal preferences that are not a complete ranking.
-  var completeCriteriaRanking = new PreferenceFilter(
-    function(pref) {
-      return pref.type === 'ordinal';
-    }, 'complete criteria ranking');
+  var completeCriteriaRanking = new PreferenceFilter(function (pref) {
+    return pref.type === 'ordinal';
+  }, 'complete criteria ranking');
 
   function TaskDependencies() {
     var definitions = {
@@ -95,16 +98,20 @@ define(['lodash', 'angular'], function(_, angular) {
     };
 
     function remove(task, state) {
-      return _.reduce(task.resets, function(memo, reset) {
-        return definitions[reset].remove(memo);
-      }, state);
+      return _.reduce(
+        task.resets,
+        function (memo, reset) {
+          return definitions[reset].remove(memo);
+        },
+        state
+      );
     }
 
     function isAccessible(task, state) {
       if (!state || !state.problem) {
         return false;
       }
-      var requires = _.filter(task.requires, function(require) {
+      var requires = _.filter(task.requires, function (require) {
         return !definitions[require].isPresent(state);
       });
       return {
@@ -114,7 +121,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isSafe(task, state) {
-      var resets = _.filter(task.resets, function(reset) {
+      var resets = _.filter(task.resets, function (reset) {
         return definitions[reset].isPresent(state);
       });
       return {
@@ -128,7 +135,7 @@ define(['lodash', 'angular'], function(_, angular) {
       isAccessible: isAccessible,
       isSafe: isSafe,
       remove: remove,
-      extendTaskDefinition: function(task) {
+      extendTaskDefinition: function (task) {
         return _.extend(task, {
           clean: _.partial(remove, task),
           isAccessible: _.partial(isAccessible, task),
@@ -138,5 +145,7 @@ define(['lodash', 'angular'], function(_, angular) {
     };
   }
 
-  return angular.module('elicit.taskDependencies', dependencies).factory('TaskDependencies', TaskDependencies);
+  return angular
+    .module('elicit.taskDependencies', dependencies)
+    .factory('TaskDependencies', TaskDependencies);
 });

@@ -12,10 +12,7 @@
             "type": "decimal",
             "label": "Proportion"
           },
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -29,10 +26,7 @@
             "type": "custom",
             "label": ""
           },
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -46,10 +40,7 @@
             "type": "percentage",
             "label": "%"
           },
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -63,10 +54,7 @@
             "type": "decimal",
             "label": "Proportion"
           },
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -80,10 +68,7 @@
             "type": "custom",
             "label": ""
           },
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -97,10 +82,7 @@
             "type": "custom",
             "label": ""
           },
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     }
@@ -576,9 +558,9 @@
             "scale": "percentage"
           }
         },
-        "distribution":{
+        "distribution": {
           "type": "range",
-          "parameters":{
+          "parameters": {
             "lowerBound": 10,
             "upperBound": 15
           }

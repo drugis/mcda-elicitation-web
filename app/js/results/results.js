@@ -9,7 +9,7 @@ define([
 
   'angular',
   'angular-patavi-client'
-], function(
+], function (
   EditLegendController,
 
   legendDirective,
@@ -19,12 +19,12 @@ define([
 
   angular
 ) {
-  return angular.module('elicit.results', ['patavi'])
+  return angular
+    .module('elicit.results', ['patavi'])
     .controller('EditLegendController', EditLegendController)
 
     .directive('legend', legendDirective)
 
     .factory('LegendService', LegendService)
-    .factory('PataviResultsService', PataviResultsService)
-    ;
+    .factory('PataviResultsService', PataviResultsService);
 });

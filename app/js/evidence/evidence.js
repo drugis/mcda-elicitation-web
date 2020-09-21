@@ -7,7 +7,7 @@ define([
   './editDataSourceController',
   'angular',
   'angular-resource'
-], function(
+], function (
   EvidenceController,
   EditAlternativeController,
   EditCriterionController,
@@ -15,11 +15,14 @@ define([
   EditDataSourceController,
   angular
 ) {
-    return angular.module('elicit.evidence', [])
-      .controller('EvidenceController', EvidenceController)
-      .controller('EditAlternativeController', EditAlternativeController)
-      .controller('EditCriterionController', EditCriterionController)
-      .controller('EditTherapeuticContextController', EditTherapeuticContextController)
-      .controller('EditDataSourceController', EditDataSourceController)
-      ;
-  });
+  return angular
+    .module('elicit.evidence', [])
+    .controller('EvidenceController', EvidenceController)
+    .controller('EditAlternativeController', EditAlternativeController)
+    .controller('EditCriterionController', EditCriterionController)
+    .controller(
+      'EditTherapeuticContextController',
+      EditTherapeuticContextController
+    )
+    .controller('EditDataSourceController', EditDataSourceController);
+});

@@ -13,7 +13,7 @@ export function buildDBUrl(): string {
   return url;
 }
 
-export function buildDBConfig():DBConfig {
+export function buildDBConfig(): DBConfig {
   const env = process.env;
   return {
     host: env.MCDAWEB_DB_HOST,

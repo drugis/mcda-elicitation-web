@@ -1,23 +1,23 @@
 'use strict';
-define([], function() {
+define([], function () {
   var ESC = 27;
   var ENTER = 13;
 
   var dependencies = ['$timeout'];
 
-  var SensitivityInputDirective = function($timeout) {
+  var SensitivityInputDirective = function ($timeout) {
     return {
       restrict: 'E',
       scope: {
-        'row': '=',
-        'alternative': '=',
-        'originalValue': '=',
-        'currentValue': '=',
-        'changeCallback': '=',
-        'isEditing': '='
+        row: '=',
+        alternative: '=',
+        originalValue: '=',
+        currentValue: '=',
+        changeCallback: '=',
+        isEditing: '='
       },
       templateUrl: './sensitivityInputDirective.html',
-      link: function(scope) {
+      link: function (scope) {
         // functions
         scope.keyCheck = keyCheck;
         scope.checkInput = checkInput;
@@ -28,25 +28,25 @@ define([], function() {
         scope.newValue = scope.currentValue;
         initSlider();
 
-        scope.$on('open.af.dropdownToggle', function() {
+        scope.$on('open.af.dropdownToggle', function () {
           scope.isEditing(true);
           isEscPressed = false;
         });
 
-        scope.$on('close.af.dropdownToggle', function() {
+        scope.$on('close.af.dropdownToggle', function () {
           scope.isEditing(false);
           if (!isEscPressed) {
             closeAndSave();
           }
         });
 
-        scope.$watch('currentValue', function() {
+        scope.$watch('currentValue', function () {
           scope.newValue = scope.currentValue; //needed for reset button
         });
 
         function showSlider() {
           initSlider();
-          $timeout(function() {
+          $timeout(function () {
             scope.$broadcast('rzSliderForceRender');
             scope.$broadcast('reCalcViewDimensions');
           });
@@ -73,10 +73,14 @@ define([], function() {
         }
 
         function closeAndSave() {
-          $timeout(function() {
+          $timeout(function () {
             if (!isNaN(scope.slider.value)) {
               scope.newValue = scope.slider.value;
-              scope.changeCallback(scope.newValue, scope.row, scope.alternative);
+              scope.changeCallback(
+                scope.newValue,
+                scope.row,
+                scope.alternative
+              );
             }
           });
         }

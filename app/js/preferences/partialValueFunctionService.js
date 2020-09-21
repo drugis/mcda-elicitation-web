@@ -1,11 +1,13 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
   var dependencies = [];
-  var PartialValueFunctionService = function() {
+  var PartialValueFunctionService = function () {
     function inv(criterion) {
       var f = pvf(criterion);
-      return function(v) {
-        var idx = !f.isIncreasing ? findIndexOfFirstSmallerElement(f.values, v) : findIndexOfFirstLargerElement(f.values, v);
+      return function (v) {
+        var idx = !f.isIncreasing
+          ? findIndexOfFirstSmallerElement(f.values, v)
+          : findIndexOfFirstLargerElement(f.values, v);
         var i = f.atIndex(idx);
         return i.x0 + (v - i.v0) * ((i.x1 - i.x0) / (i.v1 - i.v0));
       };
@@ -16,15 +18,19 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function best(dataSource) {
-      return isIncreasing(dataSource) ? dataSource.pvf.range[1] : dataSource.pvf.range[0];
+      return isIncreasing(dataSource)
+        ? dataSource.pvf.range[1]
+        : dataSource.pvf.range[0];
     }
 
     function worst(dataSource) {
-      return isIncreasing(dataSource) ? dataSource.pvf.range[0] : dataSource.pvf.range[1];
+      return isIncreasing(dataSource)
+        ? dataSource.pvf.range[0]
+        : dataSource.pvf.range[1];
     }
 
     function getBounds(dataSource) {
-      return [worst(dataSource), best(dataSource)].sort(function(a, b) {
+      return [worst(dataSource), best(dataSource)].sort(function (a, b) {
         return a - b;
       });
     }
@@ -95,15 +101,25 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function findIndexOfFirstLargerElement(arr, val) {
-      return _.indexOf(arr, _.find(arr, function(elm) {
-        return elm >= val;
-      })) || 1;
+      return (
+        _.indexOf(
+          arr,
+          _.find(arr, function (elm) {
+            return elm >= val;
+          })
+        ) || 1
+      );
     }
 
     function findIndexOfFirstSmallerElement(arr, val) {
-      return _.indexOf(arr, _.find(arr, function(elm) {
-        return elm <= val;
-      })) || 1;
+      return (
+        _.indexOf(
+          arr,
+          _.find(arr, function (elm) {
+            return elm <= val;
+          })
+        ) || 1
+      );
     }
 
     function pvf(criterion) {
@@ -119,18 +135,18 @@ define(['lodash', 'angular'], function(_, angular) {
 
       function atIndex(idx) {
         return {
-          'x0': cutoffs[idx - 1],
-          'x1': cutoffs[idx],
-          'v0': values[idx - 1],
-          'v1': values[idx]
+          x0: cutoffs[idx - 1],
+          x1: cutoffs[idx],
+          v0: values[idx - 1],
+          v1: values[idx]
         };
       }
 
       return {
-        'isIncreasing': increasing,
-        'values': values,
-        'cutoffs': cutoffs,
-        'atIndex': atIndex
+        isIncreasing: increasing,
+        values: values,
+        cutoffs: cutoffs,
+        atIndex: atIndex
       };
     }
 
@@ -153,12 +169,14 @@ define(['lodash', 'angular'], function(_, angular) {
         }
       };
       newState.problem.criteria[criterion.id] = {
-        dataSources: [{
-          pvf: {
-            direction: direction,
-            type: 'linear'
+        dataSources: [
+          {
+            pvf: {
+              direction: direction,
+              type: 'linear'
+            }
           }
-        }]
+        ]
       };
       return _.merge({}, existingState, newState);
     }

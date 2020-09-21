@@ -3,26 +3,17 @@
   "$id": "https://mcda.drugis.org/tDistribution.json#",
   "title": "MCDA student's t distribution for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "parameters"
-  ],
+  "required": ["type", "parameters"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "dt"
-      ]
+      "enum": ["dt"]
     },
     "parameters": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "mu",
-        "stdErr",
-        "dof"
-      ],
+      "required": ["mu", "stdErr", "dof"],
       "properties": {
         "mu": {
           "type": "number"
@@ -37,11 +28,7 @@
     },
     "input": {
       "type": "object",
-      "required": [
-        "mu",
-        "sigma",
-        "sampleSize"
-      ],
+      "required": ["mu", "sigma", "sampleSize"],
       "additionalProperties": false,
       "properties": {
         "mu": {

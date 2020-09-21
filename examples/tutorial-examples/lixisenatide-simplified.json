@@ -11,10 +11,7 @@
         {
           "id": "306ffddd-8dbe-4f01-8a7b-cf52632e2bf3",
           "source": "Pooled data from EFC6014 and EFC10743",
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "unitOfMeasurement": {
             "label": "Percentage point",
             "type": "custom"
@@ -23,10 +20,7 @@
         {
           "id": "a68b474c-e9a6-4d55-8127-2955cb287699",
           "source": "EFC6015",
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "unitOfMeasurement": {
             "label": "Percentage point",
             "type": "custom"
@@ -35,10 +29,7 @@
         {
           "id": "10bb124a-bdb1-4c7b-9765-55a728c22037",
           "source": "EFC6019",
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "unitOfMeasurement": {
             "label": "Percentage point",
             "type": "custom"
@@ -54,10 +45,7 @@
         {
           "id": "cb7d0f38-fcff-4157-b475-3047fb065cab",
           "source": "Pooled data from all phase 2/3 controlled studies.",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": {
             "label": "%",
             "type": "percentage"
@@ -73,10 +61,7 @@
         {
           "id": "e7d26ce8-7e6c-47d1-9cee-c1aa7981f0dc",
           "source": "Pooled data from EFC6014 and EFC10743",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": {
             "label": "%",
             "type": "percentage"
@@ -85,10 +70,7 @@
         {
           "id": "d1687834-dcfe-40ad-a090-0985cea33752",
           "source": "EFC6015",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": {
             "label": "%",
             "type": "percentage"
@@ -97,10 +79,7 @@
         {
           "id": "cf2b6919-6a3b-4eaf-9b32-aadec41937d9",
           "source": "EFC6019",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": {
             "label": "%",
             "type": "percentage"

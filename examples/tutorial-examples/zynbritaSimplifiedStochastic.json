@@ -12,10 +12,7 @@
           "id": "8a872088-b886-4cf4-ad70-065a802e5519",
           "source": "Study 205MS301",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -28,10 +25,7 @@
           "id": "fd8239c1-8a28-4084-b548-26a0ca908a12",
           "source": "Study 205MS301",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": "%"
         }
       ]
@@ -45,10 +39,7 @@
           "id": "e8211eb0-9ccf-4138-b138-fa653927f1bf",
           "source": "Study 205MS301",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": "%"
         }
       ]
@@ -62,10 +53,7 @@
           "id": "9c61243f-a42f-49f9-b9b8-bfcba8ac3fda",
           "source": "Study 206MS301",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": "%"
         }
       ]
@@ -143,7 +131,7 @@
           "value": 0.16,
           "input": {
             "value": 16,
-            "sampleSize":919,
+            "sampleSize": 919,
             "scale": "percentage"
           }
         }
@@ -166,7 +154,7 @@
           "value": 0.14,
           "input": {
             "value": 14,
-            "sampleSize":922,
+            "sampleSize": 922,
             "scale": "percentage"
           }
         }

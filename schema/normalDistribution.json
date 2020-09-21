@@ -3,25 +3,17 @@
   "$id": "https://mcda.drugis.org/normalDistribution.json#",
   "title": "MCDA normal distribution for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "parameters"
-  ],
+  "required": ["type", "parameters"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "dnorm"
-      ]
+      "enum": ["dnorm"]
     },
     "parameters": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "mu",
-        "sigma"
-      ],
+      "required": ["mu", "sigma"],
       "properties": {
         "mu": {
           "type": "number"
@@ -60,10 +52,7 @@
         },
         "scale": {
           "type": "string",
-          "enum": [
-            "percentage",
-            "decimal"
-          ]
+          "enum": ["percentage", "decimal"]
         }
       }
     }

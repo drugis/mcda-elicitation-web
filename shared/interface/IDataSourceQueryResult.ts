@@ -1,4 +1,4 @@
-import { UnitOfMeasurementType } from './IUnitOfMeasurement';
+import {UnitOfMeasurementType} from './IUnitOfMeasurement';
 
 export default interface IDataSourceQueryResult {
   id: string;

@@ -11,7 +11,8 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const _ = require('lodash');
 
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const title =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 const placeboLabelInput = '#label-input-0';
 const fluoxLabelInput = '#label-input-1';
@@ -42,23 +43,25 @@ function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
   workspaceService.cleanList(browser);
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 }
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function changeAlternativeLabels(browser) {
   const legendButton = '//*[@id="value-profile-container"]/div[2]/button';
-  const firstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
-  const secondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
-  const thirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
+  const firstAlternative =
+    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+  const secondAlternative =
+    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+  const thirdAlternative =
+    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
 
   browser
     .click('#deterministic-tab')
@@ -84,9 +87,12 @@ function changeAlternativeLabels(browser) {
 
 function reset(browser) {
   const legendButton = '//*[@id="value-profile-container"]/div[2]/button';
-  const firstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
-  const secondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
-  const thirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
+  const firstAlternative =
+    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+  const secondAlternative =
+    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+  const thirdAlternative =
+    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
 
   browser
     .click('#deterministic-tab')

@@ -3,131 +3,157 @@ define([
   'angular',
   'angular-mocks',
   'mcda/effectsTable/effectsTable'
-], function(angular) {
-  describe('EffectsTableService', function() {
+], function (angular) {
+  describe('EffectsTableService', function () {
     var effectsTableService;
-    var significantDigitsMock = function(value) {
+    var significantDigitsMock = function (value) {
       return value;
     };
-    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['setWorkspaceSettings']);
+    var workspaceSettingsServiceMock = jasmine.createSpyObj(
+      'WorkspaceSettingsService',
+      ['setWorkspaceSettings']
+    );
 
-    beforeEach(angular.mock.module('elicit.effectsTable', function($provide) {
-      $provide.value('significantDigits', significantDigitsMock);
-      $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
-    }));
+    beforeEach(
+      angular.mock.module('elicit.effectsTable', function ($provide) {
+        $provide.value('significantDigits', significantDigitsMock);
+        $provide.value(
+          'WorkspaceSettingsService',
+          workspaceSettingsServiceMock
+        );
+      })
+    );
 
-    beforeEach(inject(function(EffectsTableService) {
+    beforeEach(inject(function (EffectsTableService) {
       effectsTableService = EffectsTableService;
     }));
 
-    describe('EffectsTableService', function() {
-      describe('buildEffectsTable', function() {
-        it('should return the order of the criterion in the effectstable including the favorability headers if needed', function() {
-          var criteria = [{
-            id: 'crit1',
-            isFavorable: false,
-            dataSources: [{
-              id: 'ds1id',
-              unitOfMeasurement: {
-                label: 'label',
-                type: 'custom'
-              },
-              scale: [0, 1]
-            }]
-          }, {
-            id: 'crit2',
-            isFavorable: true,
-            dataSources: [{
-              id: 'ds2id',
-              unitOfMeasurement: {
-                label: 'label',
-                type: 'custom'
-              },
-              scale: [0, 1]
-            }]
-          }, {
-            id: 'crit3',
-            isFavorable: true,
-            dataSources: [{
-              id: 'ds3id',
-              unitOfMeasurement: {
-                label: 'label',
-                type: 'custom'
-              },
-              scale: [0, 1]
-            }]
-          }];
-          var result = effectsTableService.buildEffectsTable(criteria);
-          var expectedResult = [{
-            isHeaderRow: true,
-            headerText: 'Favorable effects'
-          }, {
-            criterion: {
-              id: 'crit2',
-              numberOfDataSources: 1,
-              isFavorable: true,
-            },
-            dataSource: {
-              id: 'ds2id',
-              unitOfMeasurement: {
-                label: 'label',
-                type: 'custom'
-              },
-              scale: [0, 1]
-            },
-            isFirstRow: true,
-          }, {
-            criterion: {
-              id: 'crit3',
-              numberOfDataSources: 1,
-              isFavorable: true,
-            },
-            dataSource: {
-              id: 'ds3id',
-              unitOfMeasurement: {
-                label: 'label',
-                type: 'custom'
-              },
-              scale: [0, 1]
-            },
-            isFirstRow: true,
-          },
-          {
-            isHeaderRow: true,
-            headerText: 'Unfavorable effects'
-          }, {
-            criterion: {
+    describe('EffectsTableService', function () {
+      describe('buildEffectsTable', function () {
+        it('should return the order of the criterion in the effectstable including the favorability headers if needed', function () {
+          var criteria = [
+            {
               id: 'crit1',
-              numberOfDataSources: 1,
               isFavorable: false,
+              dataSources: [
+                {
+                  id: 'ds1id',
+                  unitOfMeasurement: {
+                    label: 'label',
+                    type: 'custom'
+                  },
+                  scale: [0, 1]
+                }
+              ]
             },
-            dataSource: {
-              id: 'ds1id',
-              unitOfMeasurement: {
-                label: 'label',
-                type: 'custom'
+            {
+              id: 'crit2',
+              isFavorable: true,
+              dataSources: [
+                {
+                  id: 'ds2id',
+                  unitOfMeasurement: {
+                    label: 'label',
+                    type: 'custom'
+                  },
+                  scale: [0, 1]
+                }
+              ]
+            },
+            {
+              id: 'crit3',
+              isFavorable: true,
+              dataSources: [
+                {
+                  id: 'ds3id',
+                  unitOfMeasurement: {
+                    label: 'label',
+                    type: 'custom'
+                  },
+                  scale: [0, 1]
+                }
+              ]
+            }
+          ];
+          var result = effectsTableService.buildEffectsTable(criteria);
+          var expectedResult = [
+            {
+              isHeaderRow: true,
+              headerText: 'Favorable effects'
+            },
+            {
+              criterion: {
+                id: 'crit2',
+                numberOfDataSources: 1,
+                isFavorable: true
               },
-              scale: [0, 1]
+              dataSource: {
+                id: 'ds2id',
+                unitOfMeasurement: {
+                  label: 'label',
+                  type: 'custom'
+                },
+                scale: [0, 1]
+              },
+              isFirstRow: true
             },
-            isFirstRow: true,
-          }
+            {
+              criterion: {
+                id: 'crit3',
+                numberOfDataSources: 1,
+                isFavorable: true
+              },
+              dataSource: {
+                id: 'ds3id',
+                unitOfMeasurement: {
+                  label: 'label',
+                  type: 'custom'
+                },
+                scale: [0, 1]
+              },
+              isFirstRow: true
+            },
+            {
+              isHeaderRow: true,
+              headerText: 'Unfavorable effects'
+            },
+            {
+              criterion: {
+                id: 'crit1',
+                numberOfDataSources: 1,
+                isFavorable: false
+              },
+              dataSource: {
+                id: 'ds1id',
+                unitOfMeasurement: {
+                  label: 'label',
+                  type: 'custom'
+                },
+                scale: [0, 1]
+              },
+              isFirstRow: true
+            }
           ];
           expect(result).toEqual(expectedResult);
         });
       });
 
-      describe('createEffectsTableInfo', function() {
-        it('should build NA labels for relative entries', function() {
-          var performanceTable = [{
-            criterion: 'criterionId1',
-            dataSource: 'dsId1',
-            performance: {
-              distribution: {
-                type: 'relative'
+      describe('createEffectsTableInfo', function () {
+        it('should build NA labels for relative entries', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId1',
+              dataSource: 'dsId1',
+              performance: {
+                distribution: {
+                  type: 'relative'
+                }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId1: {
               isAbsolute: false,
@@ -137,19 +163,23 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an effect without input data', function() {
-          var performanceTable = [{
-            criterion: 'criterionId2',
-            alternative: 'alternativeId2',
-            dataSource: 'dsId2',
-            performance: {
-              effect: {
-                type: 'exact',
-                value: 1
+        it('should make a label for an effect without input data', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId2',
+              alternative: 'alternativeId2',
+              dataSource: 'dsId2',
+              performance: {
+                effect: {
+                  type: 'exact',
+                  value: 1
+                }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -166,23 +196,27 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an effect with standard error input data', function() {
-          var performanceTable = [{
-            criterion: 'criterionId2',
-            alternative: 'alternativeId2',
-            dataSource: 'dsId2',
-            performance: {
-              effect: {
-                type: 'exact',
-                value: 1,
-                input: {
+        it('should make a label for an effect with standard error input data', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId2',
+              alternative: 'alternativeId2',
+              dataSource: 'dsId2',
+              performance: {
+                effect: {
+                  type: 'exact',
                   value: 1,
-                  stdErr: 0.5
+                  input: {
+                    value: 1,
+                    stdErr: 0.5
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -199,24 +233,28 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an effect with lower and upper bounds input data', function() {
-          var performanceTable = [{
-            criterion: 'criterionId2',
-            alternative: 'alternativeId2',
-            dataSource: 'dsId2',
-            performance: {
-              effect: {
-                type: 'exact',
-                value: 1,
-                input: {
+        it('should make a label for an effect with lower and upper bounds input data', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId2',
+              alternative: 'alternativeId2',
+              dataSource: 'dsId2',
+              performance: {
+                effect: {
+                  type: 'exact',
                   value: 1,
-                  lowerBound: 0.5,
-                  upperBound: 2
+                  input: {
+                    value: 1,
+                    lowerBound: 0.5,
+                    upperBound: 2
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -233,23 +271,27 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an effect with value and sample size input data', function() {
-          var performanceTable = [{
-            criterion: 'criterionId2',
-            alternative: 'alternativeId2',
-            dataSource: 'dsId2',
-            performance: {
-              effect: {
-                type: 'exact',
-                value: 2,
-                input: {
-                  value: 1,
-                  sampleSize: 10
+        it('should make a label for an effect with value and sample size input data', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId2',
+              alternative: 'alternativeId2',
+              dataSource: 'dsId2',
+              performance: {
+                effect: {
+                  type: 'exact',
+                  value: 2,
+                  input: {
+                    value: 1,
+                    sampleSize: 10
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -266,23 +308,27 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an effect with events and sample size input data', function() {
-          var performanceTable = [{
-            criterion: 'criterionId2',
-            alternative: 'alternativeId2',
-            dataSource: 'dsId2',
-            performance: {
-              effect: {
-                type: 'exact',
-                value: 1,
-                input: {
-                  events: 10,
-                  sampleSize: 100
+        it('should make a label for an effect with events and sample size input data', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId2',
+              alternative: 'alternativeId2',
+              dataSource: 'dsId2',
+              performance: {
+                effect: {
+                  type: 'exact',
+                  value: 1,
+                  input: {
+                    events: 10,
+                    sampleSize: 100
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -299,23 +345,27 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a students t distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId3',
-            alternative: 'alternativeId3',
-            dataSource: 'dsId3',
-            performance: {
-              distribution: {
-                type: 'dt',
-                parameters: {
-                  mu: 5,
-                  stdErr: 1,
-                  dof: 10
+        it('should make a label for a students t distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId3',
+              alternative: 'alternativeId3',
+              dataSource: 'dsId3',
+              performance: {
+                distribution: {
+                  type: 'dt',
+                  parameters: {
+                    mu: 5,
+                    stdErr: 1,
+                    dof: 10
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId3: {
               isAbsolute: true,
@@ -323,7 +373,7 @@ define([
                 alternativeId3: {
                   effectLabel: '',
                   effectValue: '',
-                  distributionLabel: 'Student\'s t(5, 1, 10)',
+                  distributionLabel: "Student's t(5, 1, 10)",
                   hasUncertainty: true
                 }
               }
@@ -332,22 +382,26 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a non percentage normal distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId4',
-            alternative: 'alternativeId4',
-            dataSource: 'dsId4',
-            performance: {
-              distribution: {
-                type: 'dnorm',
-                parameters: {
-                  mu: 6,
-                  sigma: 2
+        it('should make a label for a non percentage normal distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId4',
+              alternative: 'alternativeId4',
+              dataSource: 'dsId4',
+              performance: {
+                distribution: {
+                  type: 'dnorm',
+                  parameters: {
+                    mu: 6,
+                    sigma: 2
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId4: {
               isAbsolute: true,
@@ -364,27 +418,31 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a percentage normal distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId4',
-            alternative: 'alternativeId4',
-            dataSource: 'dsId4',
-            performance: {
-              distribution: {
-                type: 'dnorm',
-                parameters: {
-                  mu: 0.06,
-                  sigma: 0.02
-                },
-                input:{
-                  mu: 6,
-                  sigma: 2,
-                  scale: 'percentage'
+        it('should make a label for a percentage normal distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId4',
+              alternative: 'alternativeId4',
+              dataSource: 'dsId4',
+              performance: {
+                distribution: {
+                  type: 'dnorm',
+                  parameters: {
+                    mu: 0.06,
+                    sigma: 0.02
+                  },
+                  input: {
+                    mu: 6,
+                    sigma: 2,
+                    scale: 'percentage'
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId4: {
               isAbsolute: true,
@@ -401,27 +459,31 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a non percentage distribution label if the input is value samplesize', function(){
-          var performanceTable = [{
-            criterion: 'criterionId4',
-            alternative: 'alternativeId4',
-            dataSource: 'dsId4',
-            performance: {
-              distribution: {
-                type: 'dnorm',
-                parameters: {
-                  mu: 0.06,
-                  sigma: 0.02
-                },
-                input:{
-                  value: 6,
-                  sampleSize: 2,
-                  scale: 'percentage'
+        it('should make a non percentage distribution label if the input is value samplesize', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId4',
+              alternative: 'alternativeId4',
+              dataSource: 'dsId4',
+              performance: {
+                distribution: {
+                  type: 'dnorm',
+                  parameters: {
+                    mu: 0.06,
+                    sigma: 0.02
+                  },
+                  input: {
+                    value: 6,
+                    sampleSize: 2,
+                    scale: 'percentage'
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId4: {
               isAbsolute: true,
@@ -438,22 +500,26 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a beta distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId5',
-            alternative: 'alternativeId5',
-            dataSource: 'dsId5',
-            performance: {
-              distribution: {
-                type: 'dbeta',
-                parameters: {
-                  alpha: 5,
-                  beta: 11
+        it('should make a label for a beta distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId5',
+              alternative: 'alternativeId5',
+              dataSource: 'dsId5',
+              performance: {
+                distribution: {
+                  type: 'dbeta',
+                  parameters: {
+                    alpha: 5,
+                    beta: 11
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId5: {
               isAbsolute: true,
@@ -470,22 +536,26 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a survival distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId5',
-            alternative: 'alternativeId5',
-            dataSource: 'dsId5',
-            performance: {
-              distribution: {
-                type: 'dsurv',
-                parameters: {
-                  alpha: 10,
-                  beta: 12344321
+        it('should make a label for a survival distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId5',
+              alternative: 'alternativeId5',
+              dataSource: 'dsId5',
+              performance: {
+                distribution: {
+                  type: 'dsurv',
+                  parameters: {
+                    alpha: 10,
+                    beta: 12344321
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId5: {
               isAbsolute: true,
@@ -502,19 +572,23 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an non-percentage exact distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId5',
-            alternative: 'alternativeId5',
-            dataSource: 'dsId5',
-            performance: {
-              distribution: {
-                type: 'exact',
-                value: 42
+        it('should make a label for an non-percentage exact distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId5',
+              alternative: 'alternativeId5',
+              dataSource: 'dsId5',
+              performance: {
+                distribution: {
+                  type: 'exact',
+                  value: 42
+                }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId5: {
               isAbsolute: true,
@@ -531,23 +605,27 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an percentage exact distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId5',
-            alternative: 'alternativeId5',
-            dataSource: 'dsId5',
-            performance: {
-              distribution: {
-                type: 'exact',
-                value: 42,
-                input: {
-                  scale: 'percentage',
-                  value: 42
+        it('should make a label for an percentage exact distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId5',
+              alternative: 'alternativeId5',
+              dataSource: 'dsId5',
+              performance: {
+                distribution: {
+                  type: 'exact',
+                  value: 42,
+                  input: {
+                    scale: 'percentage',
+                    value: 42
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId5: {
               isAbsolute: true,
@@ -564,18 +642,22 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an empty distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              distribution: {
-                type: 'empty'
+        it('should make a label for an empty distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId8',
+              alternative: 'alternativeId8',
+              dataSource: 'dsId8',
+              performance: {
+                distribution: {
+                  type: 'empty'
+                }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -592,19 +674,23 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an empty distribution with a value', function() {
-          var performanceTable = [{
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              distribution: {
-                type: 'empty',
-                value: 'text'
+        it('should make a label for an empty distribution with a value', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId8',
+              alternative: 'alternativeId8',
+              dataSource: 'dsId8',
+              performance: {
+                distribution: {
+                  type: 'empty',
+                  value: 'text'
+                }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -621,23 +707,27 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a non-percentage range effect', function() {
-          var performanceTable = [{
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              effect: {
-                type: 'exact',
-                value: 15,
-                input: {
-                  lowerBound: 10,
-                  upperBound: 20
+        it('should make a label for a non-percentage range effect', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId8',
+              alternative: 'alternativeId8',
+              dataSource: 'dsId8',
+              performance: {
+                effect: {
+                  type: 'exact',
+                  value: 15,
+                  input: {
+                    lowerBound: 10,
+                    upperBound: 20
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -654,24 +744,28 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a percentage range effect', function() {
-          var performanceTable = [{
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              effect: {
-                type: 'exact',
-                value: 0.15,
-                input: {
-                  scale: 'percentage',
-                  lowerBound: 10,
-                  upperBound: 20
+        it('should make a label for a percentage range effect', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId8',
+              alternative: 'alternativeId8',
+              dataSource: 'dsId8',
+              performance: {
+                effect: {
+                  type: 'exact',
+                  value: 0.15,
+                  input: {
+                    scale: 'percentage',
+                    lowerBound: 10,
+                    upperBound: 20
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -688,22 +782,26 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a range distribution', function() {
-          var performanceTable = [{
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              distribution: {
-                type: 'range',
-                parameters: {
-                  lowerBound: 10,
-                  upperBound: 20
+        it('should make a label for a range distribution', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId8',
+              alternative: 'alternativeId8',
+              dataSource: 'dsId8',
+              performance: {
+                distribution: {
+                  type: 'range',
+                  parameters: {
+                    lowerBound: 10,
+                    upperBound: 20
+                  }
                 }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -720,18 +818,22 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an empty effect', function() {
-          var performanceTable = [{
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              effect: {
-                type: 'empty'
+        it('should make a label for an empty effect', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId8',
+              alternative: 'alternativeId8',
+              dataSource: 'dsId8',
+              performance: {
+                effect: {
+                  type: 'empty'
+                }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -748,19 +850,23 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an empty effect with a value', function() {
-          var performanceTable = [{
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              effect: {
-                type: 'empty',
-                value: 'text'
+        it('should make a label for an empty effect with a value', function () {
+          var performanceTable = [
+            {
+              criterion: 'criterionId8',
+              alternative: 'alternativeId8',
+              dataSource: 'dsId8',
+              performance: {
+                effect: {
+                  type: 'empty',
+                  value: 'text'
+                }
               }
             }
-          }];
-          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          ];
+          var result = effectsTableService.createEffectsTableInfo(
+            performanceTable
+          );
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -778,162 +884,188 @@ define([
         });
       });
 
-      describe('buildTableRows', function() {
-        it('should create one row for each dataSource of each criterion ', function() {
-          var criteria = [{
-            id: 'crit1',
-            isFavorable: true,
-            dataSources: [{
-              foo: 'bar',
-              unitOfMeasurement: {
-                label: 'not perc',
-                type: 'custom'
-              },
-              scale: [0, 100]
-            }]
-          }, {
-            id: 'crit2',
-            isFavorable: false,
-            dataSources: [{
-              foo: 'qux',
-              unitOfMeasurement: {
-                label: 'not Proportion',
-                type: 'custom'
-              },
-              scale: [0, 1]
-            }, {
-              zoq: 'fot',
-              unitOfMeasurement: {
-                label: 'not Proportion',
-                type: 'custom'
-              },
-              scale: [0, 1]
-            }]
-          }];
-
-          var expectedResult = [{
-            isFirstRow: true,
-            criterion: {
+      describe('buildTableRows', function () {
+        it('should create one row for each dataSource of each criterion ', function () {
+          var criteria = [
+            {
               id: 'crit1',
               isFavorable: true,
-              numberOfDataSources: 1
+              dataSources: [
+                {
+                  foo: 'bar',
+                  unitOfMeasurement: {
+                    label: 'not perc',
+                    type: 'custom'
+                  },
+                  scale: [0, 100]
+                }
+              ]
             },
-            dataSource: {
-              foo: 'bar',
-              unitOfMeasurement: {
-                label: 'not perc',
-                type: 'custom'
-              },
-              scale: [0, 100]
-            }
-          }, {
-            isFirstRow: true,
-            criterion: {
+            {
               id: 'crit2',
               isFavorable: false,
-              numberOfDataSources: 2
-            },
-            dataSource: {
-              foo: 'qux',
-              unitOfMeasurement: {
-                label: 'not Proportion',
-                type: 'custom'
-              },
-              scale: [0, 1]
+              dataSources: [
+                {
+                  foo: 'qux',
+                  unitOfMeasurement: {
+                    label: 'not Proportion',
+                    type: 'custom'
+                  },
+                  scale: [0, 1]
+                },
+                {
+                  zoq: 'fot',
+                  unitOfMeasurement: {
+                    label: 'not Proportion',
+                    type: 'custom'
+                  },
+                  scale: [0, 1]
+                }
+              ]
             }
-          }, {
-            isFirstRow: false,
-            criterion: {
-              id: 'crit2',
-              isFavorable: false,
-              numberOfDataSources: 2
-            },
-            dataSource: {
-              zoq: 'fot',
-              unitOfMeasurement: {
-                label: 'not Proportion',
-                type: 'custom'
+          ];
+
+          var expectedResult = [
+            {
+              isFirstRow: true,
+              criterion: {
+                id: 'crit1',
+                isFavorable: true,
+                numberOfDataSources: 1
               },
-              scale: [0, 1]
+              dataSource: {
+                foo: 'bar',
+                unitOfMeasurement: {
+                  label: 'not perc',
+                  type: 'custom'
+                },
+                scale: [0, 100]
+              }
+            },
+            {
+              isFirstRow: true,
+              criterion: {
+                id: 'crit2',
+                isFavorable: false,
+                numberOfDataSources: 2
+              },
+              dataSource: {
+                foo: 'qux',
+                unitOfMeasurement: {
+                  label: 'not Proportion',
+                  type: 'custom'
+                },
+                scale: [0, 1]
+              }
+            },
+            {
+              isFirstRow: false,
+              criterion: {
+                id: 'crit2',
+                isFavorable: false,
+                numberOfDataSources: 2
+              },
+              dataSource: {
+                zoq: 'fot',
+                unitOfMeasurement: {
+                  label: 'not Proportion',
+                  type: 'custom'
+                },
+                scale: [0, 1]
+              }
             }
-          }];
+          ];
 
           var result = effectsTableService.buildTableRows(criteria);
           expect(result).toEqual(expectedResult);
         });
 
-        it('should substiute null scales to -/+ infinity', function() {
-          var criteria = [{
-            id: 'crit1',
-            isFavorable: true,
-            dataSources: [{
-              foo: 'bar',
-              unitOfMeasurement: {
-                label: 'not perc',
-                type: 'custom'
-              },
-              scale: [null, null]
-            }]
-          }, {
-            id: 'crit2',
-            isFavorable: false,
-            dataSources: [{
-              foo: 'qux',
-              unitOfMeasurement: {
-                label: 'not Proportion',
-                type: 'custom'
-              },
-              scale: [0, null]
-            }]
-          }];
-
-          var expectedResult = [{
-            isFirstRow: true,
-            criterion: {
+        it('should substiute null scales to -/+ infinity', function () {
+          var criteria = [
+            {
               id: 'crit1',
               isFavorable: true,
-              numberOfDataSources: 1
+              dataSources: [
+                {
+                  foo: 'bar',
+                  unitOfMeasurement: {
+                    label: 'not perc',
+                    type: 'custom'
+                  },
+                  scale: [null, null]
+                }
+              ]
             },
-            dataSource: {
-              foo: 'bar',
-              unitOfMeasurement: {
-                label: 'not perc',
-                type: 'custom'
-              },
-              scale: [-Infinity, Infinity]
-            }
-          }, {
-            isFirstRow: true,
-            criterion: {
+            {
               id: 'crit2',
               isFavorable: false,
-              numberOfDataSources: 1
-            },
-            dataSource: {
-              foo: 'qux',
-              unitOfMeasurement: {
-                label: 'not Proportion',
-                type: 'custom'
-              },
-              scale: [0, Infinity]
+              dataSources: [
+                {
+                  foo: 'qux',
+                  unitOfMeasurement: {
+                    label: 'not Proportion',
+                    type: 'custom'
+                  },
+                  scale: [0, null]
+                }
+              ]
             }
-          }];
+          ];
+
+          var expectedResult = [
+            {
+              isFirstRow: true,
+              criterion: {
+                id: 'crit1',
+                isFavorable: true,
+                numberOfDataSources: 1
+              },
+              dataSource: {
+                foo: 'bar',
+                unitOfMeasurement: {
+                  label: 'not perc',
+                  type: 'custom'
+                },
+                scale: [-Infinity, Infinity]
+              }
+            },
+            {
+              isFirstRow: true,
+              criterion: {
+                id: 'crit2',
+                isFavorable: false,
+                numberOfDataSources: 1
+              },
+              dataSource: {
+                foo: 'qux',
+                unitOfMeasurement: {
+                  label: 'not Proportion',
+                  type: 'custom'
+                },
+                scale: [0, Infinity]
+              }
+            }
+          ];
 
           var result = effectsTableService.buildTableRows(criteria);
           expect(result).toEqual(expectedResult);
         });
       });
 
-      describe('createIsCellAnalysisViable', function() {
-        it('should set cells with a value label to true', function() {
-          var rows = [{
-            dataSource: {
-              id: 'ds1'
+      describe('createIsCellAnalysisViable', function () {
+        it('should set cells with a value label to true', function () {
+          var rows = [
+            {
+              dataSource: {
+                id: 'ds1'
+              }
             }
-          }];
-          var alternatives = [{
-            id: 'alt1'
-          }];
+          ];
+          var alternatives = [
+            {
+              id: 'alt1'
+            }
+          ];
           var effectsTableInfo = {
             ds1: {
               isAbsolute: true,
@@ -945,7 +1077,12 @@ define([
             }
           };
           var scales;
-          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(
+            rows,
+            alternatives,
+            effectsTableInfo,
+            scales
+          );
           var expectedResult = {
             ds1: {
               alt1: true
@@ -954,34 +1091,50 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should ignore headerRows', function() {
+        it('should ignore headerRows', function () {
           var scales;
           var effectsTableInfo = {};
           var alternatives = [];
-          var rows = [{
-            isHeaderRow: true
-          }];
-          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var rows = [
+            {
+              isHeaderRow: true
+            }
+          ];
+          var result = effectsTableService.createIsCellAnalysisViable(
+            rows,
+            alternatives,
+            effectsTableInfo,
+            scales
+          );
           var expectedResult = {};
           expect(result).toEqual(expectedResult);
         });
 
-        it('should set relative cells to true', function() {
-          var rows = [{
-            dataSource: {
-              id: 'ds1'
+        it('should set relative cells to true', function () {
+          var rows = [
+            {
+              dataSource: {
+                id: 'ds1'
+              }
             }
-          }];
+          ];
           var scales;
           var effectsTableInfo = {
             ds1: {
               isAbsolute: false
             }
           };
-          var alternatives = [{
-            id: 'alt1'
-          }];
-          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var alternatives = [
+            {
+              id: 'alt1'
+            }
+          ];
+          var result = effectsTableService.createIsCellAnalysisViable(
+            rows,
+            alternatives,
+            effectsTableInfo,
+            scales
+          );
           var expectedResult = {
             ds1: {
               alt1: true
@@ -990,15 +1143,19 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should set cells without a value label to false', function() {
-          var rows = [{
-            dataSource: {
-              id: 'ds1'
+        it('should set cells without a value label to false', function () {
+          var rows = [
+            {
+              dataSource: {
+                id: 'ds1'
+              }
             }
-          }];
-          var alternatives = [{
-            id: 'alt1'
-          }];
+          ];
+          var alternatives = [
+            {
+              id: 'alt1'
+            }
+          ];
           var effectsTableInfo = {
             ds1: {
               isAbsolute: true,
@@ -1010,7 +1167,12 @@ define([
             }
           };
           var scales;
-          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(
+            rows,
+            alternatives,
+            effectsTableInfo,
+            scales
+          );
           var expectedResult = {
             ds1: {
               alt1: false
@@ -1019,15 +1181,19 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should set cells without a value label, but with scale values to true', function() {
-          var rows = [{
-            dataSource: {
-              id: 'ds1'
+        it('should set cells without a value label, but with scale values to true', function () {
+          var rows = [
+            {
+              dataSource: {
+                id: 'ds1'
+              }
             }
-          }];
-          var alternatives = [{
-            id: 'alt1'
-          }];
+          ];
+          var alternatives = [
+            {
+              id: 'alt1'
+            }
+          ];
           var effectsTableInfo = {
             ds1: {
               isAbsolute: true,
@@ -1045,7 +1211,12 @@ define([
               }
             }
           };
-          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(
+            rows,
+            alternatives,
+            effectsTableInfo,
+            scales
+          );
           var expectedResult = {
             ds1: {
               alt1: true
@@ -1055,23 +1226,23 @@ define([
         });
       });
 
-      describe('getRoundedValue', function() {
-        it('should return  the input value rounded on 3 digits for values', function() {
-          var value = 0.4567890;
+      describe('getRoundedValue', function () {
+        it('should return  the input value rounded on 3 digits for values', function () {
+          var value = 0.456789;
           var result = effectsTableService.getRoundedValue(value);
           var expectedResult = '0.457';
           expect(result).toEqual(expectedResult);
         });
 
-        it('should return null if the value is null', function() {
+        it('should return null if the value is null', function () {
           var value = null;
           var result = effectsTableService.getRoundedValue(value);
           expect(result).toBeNull();
         });
       });
 
-      describe('getRoundedScales', function() {
-        it('should return rounded scales', function() {
+      describe('getRoundedScales', function () {
+        it('should return rounded scales', function () {
           var scales = {
             dataSourceId: {
               alternativeId: {
@@ -1097,13 +1268,15 @@ define([
         });
       });
 
-      describe('getMedian', function() {
-        beforeEach(function() {
+      describe('getMedian', function () {
+        beforeEach(function () {
           workspaceSettingsServiceMock.setWorkspaceSettings.calls.reset();
-          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'median' });
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({
+            calculationMethod: 'median'
+          });
         });
 
-        it('should return the median value', function() {
+        it('should return the median value', function () {
           var scales = {
             '50%': 0.4
           };
@@ -1112,8 +1285,10 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should return the mode', function() {
-          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+        it('should return the mode', function () {
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({
+            calculationMethod: 'mode'
+          });
           var scales = {
             mode: 0.05
           };
@@ -1122,8 +1297,10 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should return \'NA\' if the mode is NULL', function() {
-          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+        it("should return 'NA' if the mode is NULL", function () {
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({
+            calculationMethod: 'mode'
+          });
           var scales = {
             mode: null
           };
@@ -1132,8 +1309,10 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should return \'NA\' if the mode is UNDEFINED', function() {
-          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+        it("should return 'NA' if the mode is UNDEFINED", function () {
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({
+            calculationMethod: 'mode'
+          });
           var scales = {
             mode: undefined
           };

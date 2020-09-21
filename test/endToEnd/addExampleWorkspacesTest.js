@@ -16,12 +16,14 @@ module.exports = {
   },
 
   'Add Antidepressants (Tervonen) example': function (browser) {
-    const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+    const title =
+      'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
     testExample(browser, title);
   },
 
   'Add Antidepressants (Van Valkenhoef) example': function (browser) {
-    const title = 'Antidepressants - relative effectiveness analysis (Van Valkenhoef et al, J Clin Epi, 2012)';
+    const title =
+      'Antidepressants - relative effectiveness analysis (Van Valkenhoef et al, J Clin Epi, 2012)';
     testExample(browser, title);
   },
 

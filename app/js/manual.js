@@ -8,11 +8,12 @@ define([
   '../../public/css/mcda-drugis.css',
   'font-awesome/css/font-awesome.min.css',
   'katex/dist/katex.min.css'
-], function($, bowser, katex, renderMathInElement, scrollToTop) {
+], function ($, bowser, katex, renderMathInElement, scrollToTop) {
   window.bowser = bowser;
   window.sharedHtml = require('../manual/shared.html');
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('mcda-shared-content').innerHTML = window.sharedHtml;
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('mcda-shared-content').innerHTML =
+      window.sharedHtml;
 
     window.katex = katex;
     renderMathInElement(document.body);
@@ -29,10 +30,14 @@ define([
     });
     scrollToTop.addBackToTop();
     if (window.location.hash) {
-      setTimeout(function() { // wait for reflows to finish
-        $('html, body').animate({
-          scrollTop: $(window.location.hash).offset().top
-        }, 1000);
+      setTimeout(function () {
+        // wait for reflows to finish
+        $('html, body').animate(
+          {
+            scrollTop: $(window.location.hash).offset().top
+          },
+          1000
+        );
       }, 1);
     }
   });

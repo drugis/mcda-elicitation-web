@@ -1,7 +1,8 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(angular) {
-  describe('Edit Legend controller', function() {
-
+define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function (
+  angular
+) {
+  describe('Edit Legend controller', function () {
     var scope,
       legend,
       alternatives = {
@@ -18,7 +19,7 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
 
     beforeEach(angular.mock.module('elicit.results'));
 
-    beforeEach(inject(function($controller, $rootScope) {
+    beforeEach(inject(function ($controller, $rootScope) {
       scope = $rootScope.$new();
 
       $controller('EditLegendController', {
@@ -31,8 +32,8 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         callback: callback
       });
     }));
-    describe('initially', function() {
-      it('scope should be initialised', function() {
+    describe('initially', function () {
+      it('scope should be initialised', function () {
         expect(scope.saveLegend).toBeDefined();
         expect(scope.isLabelMissing).toBeFalsy();
         expect(scope.close).toBe('closeMock');
@@ -42,25 +43,25 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         expect(scope.legend).toEqual({
           alt1: {
             baseTitle: 'alternative 1',
-            newTitle: 'alternative 1',
+            newTitle: 'alternative 1'
           },
           alt2: {
             baseTitle: 'alternative 2',
-            newTitle: 'alternative 2',
+            newTitle: 'alternative 2'
           }
         });
       });
     });
-    describe('checkForMissingLabel', function() {
-      it('should be truthy if a label is missing', function() {
+    describe('checkForMissingLabel', function () {
+      it('should be truthy if a label is missing', function () {
         delete scope.legend.alt1.newTitle;
         scope.checkForMissingLabel();
         expect(scope.isLabelMissing).toBeTruthy();
         scope.legend.alt1.newTitle = 'alternative 1';
       });
     });
-    describe('createSingleLetterLegend', function() {
-      it('should set labels to single letters', function() {
+    describe('createSingleLetterLegend', function () {
+      it('should set labels to single letters', function () {
         scope.createSingleLetterLegend();
         expect(scope.legend).toEqual({
           alt1: {
@@ -74,8 +75,8 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         });
       });
     });
-    describe('resetToBase', function() {
-      it('should reset labels to their base', function() {
+    describe('resetToBase', function () {
+      it('should reset labels to their base', function () {
         scope.legend.alt1.newTitle = 'foo';
         scope.legend.alt2.newTitle = 'bar';
         scope.resetToBase();

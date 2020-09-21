@@ -8,17 +8,11 @@
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0.45,
-              0.65
-            ],
+            "range": [0.45, 0.65],
             "type": "linear",
             "direction": "increasing"
           },
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "id": "c4607341-6760-4653-8587-7bd4847f0e4e",
           "unitOfMeasurement": {
             "type": "percentage",
@@ -34,17 +28,11 @@
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0,
-              0.8
-            ],
+            "range": [0, 0.8],
             "type": "linear",
             "direction": "decreasing"
           },
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "id": "c27f66c0-8f2b-4592-98d1-29719d2f0242",
           "unitOfMeasurement": {
             "type": "percentage",
@@ -60,17 +48,11 @@
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0,
-              0.4
-            ],
+            "range": [0, 0.4],
             "type": "linear",
             "direction": "decreasing"
           },
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "id": "a9e5b4fd-bae8-4d1a-b44d-608f5ebac80c",
           "unitOfMeasurement": {
             "type": "percentage",

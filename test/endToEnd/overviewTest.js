@@ -26,7 +26,8 @@ const proximalDVTCriterionDescription = '#criterion-description-0';
 const heparinAlternative = '#alternative-title-0';
 
 function loadTestWorkspace(browser, title) {
-  workspaceService.addExample(browser, title)
+  workspaceService
+    .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
   return errorService.isErrorBarHidden(browser);
@@ -40,19 +41,21 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function assertContents(browser) {
-  const firstDistalDVTValue = '//*[@id="c-1-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
+  const firstDistalDVTValue =
+    '//*[@id="c-1-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
 
   loadTestWorkspace(browser, title)
     .assert.containsText('#therapeutic-context', 'No description given.')
     .assert.containsText(proximalDVTCriterionTitle, 'Proximal DVT')
     .assert.containsText(heparinAlternative, 'Heparin')
-    .assert.containsText(proximalDVTCriterionDescription, 'Proximal deep vein thrombolytic events, often associated with serious complications.')
+    .assert.containsText(
+      proximalDVTCriterionDescription,
+      'Proximal deep vein thrombolytic events, often associated with serious complications.'
+    )
     .useXpath()
     .assert.containsText(firstDistalDVTValue, '40 / 136')
     .useCss();
@@ -127,7 +130,10 @@ function editDataSource(browser) {
 
     .click('#edit-data-source-button')
     .assert.containsText('#linked-data-source-reference-0-0', newReference)
-    .assert.containsText('#soe-unc-0-0', 'SoE: ' + newStrength + '\nUnc: ' + newUncertainties)
+    .assert.containsText(
+      '#soe-unc-0-0',
+      'SoE: ' + newStrength + '\nUnc: ' + newUncertainties
+    )
     .assert.containsText('#unit-of-measurement-0-0', newUnit);
 }
 
@@ -179,14 +185,17 @@ function reorderAlternatives(browser) {
 }
 
 function reorderDataSources(browser) {
-  workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
+  workspaceService.uploadTestWorkspace(
+    browser,
+    '/createSubproblemTestProblem.json'
+  );
 
   const firstReference = '#data-source-reference-0-0';
   const ref1Down = '#move-down-data-source-0-0';
   const ref1Up = '#move-up-data-source-0-1';
 
-  browser
-    .assert.containsText(firstReference, 'ref1')
+  browser.assert
+    .containsText(firstReference, 'ref1')
     .click(ref1Down)
     .assert.containsText(firstReference, 'ref2')
     .click(ref1Up)

@@ -1,7 +1,19 @@
 'use strict';
-define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'subProblem','subProblems', 'callback'];
-  var EditSubProblemTitleController = function($scope, $modalInstance, subProblem, subProblems, callback) {
+define(['lodash'], function (_) {
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    'subProblem',
+    'subProblems',
+    'callback'
+  ];
+  var EditSubProblemTitleController = function (
+    $scope,
+    $modalInstance,
+    subProblem,
+    subProblems,
+    callback
+  ) {
     // functions
     $scope.cancel = cancel;
     $scope.save = save;
@@ -10,7 +22,7 @@ define(['lodash'], function(_) {
     // init
     $scope.subProblem = _.cloneDeep(subProblem);
     $scope.subProblems = subProblems;
-   
+
     function save() {
       callback($scope.subProblem.title);
       $modalInstance.close();
@@ -21,8 +33,13 @@ define(['lodash'], function(_) {
     }
 
     function checkDuplicateSubProblemTitle() {
-      $scope.isDuplicateSubProblemTitle = _.find($scope.subProblems, function(subProblem) {
-        return subProblem.id !== $scope.subProblem.id && subProblem.title === $scope.subProblem.title;
+      $scope.isDuplicateSubProblemTitle = _.find($scope.subProblems, function (
+        subProblem
+      ) {
+        return (
+          subProblem.id !== $scope.subProblem.id &&
+          subProblem.title === $scope.subProblem.title
+        );
       });
     }
   };

@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define([], function () {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -9,7 +9,7 @@ define([], function() {
     'callback'
   ];
 
-  var DeleteInProgressController = function(
+  var DeleteInProgressController = function (
     $scope,
     $modalInstance,
     InProgressResource,
@@ -22,7 +22,8 @@ define([], function() {
     $scope.close = $modalInstance.close;
 
     // init
-    $scope.workspace = { // to be able to share deleteWorkspace.html
+    $scope.workspace = {
+      // to be able to share deleteWorkspace.html
       title: title
     };
     $scope.inProgressId = inProgressId;
@@ -30,7 +31,7 @@ define([], function() {
     function deleteWorkspace() {
       InProgressResource.delete({
         inProgressId: inProgressId
-      }).$promise.then(function() {
+      }).$promise.then(function () {
         callback();
       });
       $scope.close();
