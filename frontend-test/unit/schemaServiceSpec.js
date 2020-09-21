@@ -4,22 +4,24 @@ define([
   'lodash',
   'angular-mocks',
   'mcda/benefitRisk/benefitRisk'
-], function(angular, _) {
+], function (angular, _) {
   var getDataSourcesByIdMock = jasmine.createSpy();
-  var generateUuidMock = function() {
+  var generateUuidMock = function () {
     return 'uuid';
   };
   var currentSchemaVersion = '1.4.4';
   var schemaService;
 
-  describe('The SchemaService', function() {
-    beforeEach(angular.mock.module('elicit.benefitRisk', function($provide) {
-      $provide.value('generateUuid', generateUuidMock);
-      $provide.value('currentSchemaVersion', currentSchemaVersion);
-      $provide.value('getDataSourcesById', getDataSourcesByIdMock);
-    }));
+  describe('The SchemaService', function () {
+    beforeEach(
+      angular.mock.module('elicit.benefitRisk', function ($provide) {
+        $provide.value('generateUuid', generateUuidMock);
+        $provide.value('currentSchemaVersion', currentSchemaVersion);
+        $provide.value('getDataSourcesById', getDataSourcesByIdMock);
+      })
+    );
 
-    beforeEach(inject(function(SchemaService) {
+    beforeEach(inject(function (SchemaService) {
       schemaService = SchemaService;
     }));
 
@@ -31,12 +33,12 @@ define([
       }
     };
 
-    describe('updateWorkspaceToCurrentSchema', function() {
-      beforeEach(function() {
+    describe('updateWorkspaceToCurrentSchema', function () {
+      beforeEach(function () {
         getDataSourcesByIdMock.calls.reset();
       });
 
-      it('should do nothing to a workspace of the current version', function() {
+      it('should do nothing to a workspace of the current version', function () {
         var workspace = {
           problem: exampleProblem()
         };
@@ -44,7 +46,7 @@ define([
         expect(result).toEqual(workspace);
       });
 
-      it('should update a workspace of version 1.3.4 to the current version and divide the distribution exact value by 100 if unit of measurement is percentage', function() {
+      it('should update a workspace of version 1.3.4 to the current version and divide the distribution exact value by 100 if unit of measurement is percentage', function () {
         const dataSourcesById = {
           d1: _.merge(exampleProblem134().criteria.c1.dataSources[0], {
             unitOfMeasurement: {
@@ -66,15 +68,24 @@ define([
         };
         var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
         var expectedResult = angular.copy(workspace);
-        expectedResult.problem.criteria.c1.dataSources[0].unitOfMeasurement = { type: 'percentage', label: '%' };
-        expectedResult.problem.criteria.c2.dataSources[0].unitOfMeasurement = { type: 'decimal', label: '' };
+        expectedResult.problem.criteria.c1.dataSources[0].unitOfMeasurement = {
+          type: 'percentage',
+          label: '%'
+        };
+        expectedResult.problem.criteria.c2.dataSources[0].unitOfMeasurement = {
+          type: 'decimal',
+          label: ''
+        };
         expectedResult.problem.performanceTable[0].performance.distribution.value = 0.5;
-        expectedResult.problem.performanceTable[0].performance.distribution.input = { value: 50, scale: 'percentage' };
+        expectedResult.problem.performanceTable[0].performance.distribution.input = {
+          value: 50,
+          scale: 'percentage'
+        };
         expectedResult.problem.schemaVersion = currentSchemaVersion;
         expect(result).toEqual(expectedResult);
       });
 
-      it('should update a workspace without schemaversion to the current version', function() {
+      it('should update a workspace without schemaversion to the current version', function () {
         const dataSourcesById = {
           uuid: {}
         };
@@ -108,24 +119,28 @@ define([
                 title: 'alt2'
               }
             },
-            performanceTable: [{
-              criterion: 'crit1',
-              alternative: 'alt1',
-              performance: normalPerformance
-            }, {
-              criterionUri: 'crit2',
-              alternative: 'alt1',
-              performance: normalPerformance
-            },
-            {
-              criterion: 'crit1',
-              alternative: 'alt2',
-              performance: normalPerformance
-            }, {
-              criterionUri: 'crit2',
-              alternative: 'alt2',
-              performance: normalPerformance
-            }]
+            performanceTable: [
+              {
+                criterion: 'crit1',
+                alternative: 'alt1',
+                performance: normalPerformance
+              },
+              {
+                criterionUri: 'crit2',
+                alternative: 'alt1',
+                performance: normalPerformance
+              },
+              {
+                criterion: 'crit1',
+                alternative: 'alt2',
+                performance: normalPerformance
+              },
+              {
+                criterionUri: 'crit2',
+                alternative: 'alt2',
+                performance: normalPerformance
+              }
+            ]
           }
         };
         var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
@@ -136,30 +151,34 @@ define([
               crit1: {
                 title: 'criterion 1',
                 description: 'desc',
-                dataSources: [{
-                  id: 'uuid',
-                  unitOfMeasurement: {
-                    label: 'ms',
-                    type: 'custom'
-                  },
-                  uncertainties: 'unc',
-                  source: 'source1',
-                  scale: [-Infinity, Infinity]
-                }]
+                dataSources: [
+                  {
+                    id: 'uuid',
+                    unitOfMeasurement: {
+                      label: 'ms',
+                      type: 'custom'
+                    },
+                    uncertainties: 'unc',
+                    source: 'source1',
+                    scale: [-Infinity, Infinity]
+                  }
+                ]
               },
               crit2: {
                 title: 'criterion 2',
                 description: 'desc',
-                dataSources: [{
-                  id: 'uuid',
-                  unitOfMeasurement: {
-                    label: 'ms',
-                    type: 'custom'
-                  },
-                  uncertainties: 'unc',
-                  source: 'source2',
-                  scale: [-Infinity, Infinity]
-                }]
+                dataSources: [
+                  {
+                    id: 'uuid',
+                    unitOfMeasurement: {
+                      label: 'ms',
+                      type: 'custom'
+                    },
+                    uncertainties: 'unc',
+                    source: 'source2',
+                    scale: [-Infinity, Infinity]
+                  }
+                ]
               }
             },
             alternatives: {
@@ -170,42 +189,47 @@ define([
                 title: 'alt2'
               }
             },
-            performanceTable: [{
-              criterion: 'crit1',
-              alternative: 'alt1',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
+            performanceTable: [
+              {
+                criterion: 'crit1',
+                alternative: 'alt1',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
+              },
+              {
+                criterion: 'crit2',
+                alternative: 'alt1',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
+              },
+              {
+                criterion: 'crit1',
+                alternative: 'alt2',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
+              },
+              {
+                criterion: 'crit2',
+                alternative: 'alt2',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
               }
-            }, {
-              criterion: 'crit2',
-              alternative: 'alt1',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
-              }
-            }, {
-              criterion: 'crit1',
-              alternative: 'alt2',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
-              }
-            }, {
-              criterion: 'crit2',
-              alternative: 'alt2',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
-              }
-            }],
+            ],
             schemaVersion: currentSchemaVersion
-          },
+          }
         };
         expect(result).toEqual(expectedResult);
       });
 
-      it('should update a workspace of version 1.0.0 to the current version', function() {
+      it('should update a workspace of version 1.0.0 to the current version', function () {
         const dataSourcesById = {
           uuid: {}
         };
@@ -237,31 +261,39 @@ define([
                 title: 'alt2'
               }
             },
-            performanceTable: [{
-              criterion: 'crit1',
-              alternative: 'alt1',
-              performance: normalPerformance
-            }, {
-              criterion: 'crit2',
-              alternative: 'alt1',
-              performance: normalPerformance
-            }, {
-              criterion: 'crit1',
-              alternative: 'alt2',
-              performance: normalPerformance
-            }, {
-              criterion: 'crit2',
-              alternative: 'alt2',
-              performance: normalPerformance
-            }],
+            performanceTable: [
+              {
+                criterion: 'crit1',
+                alternative: 'alt1',
+                performance: normalPerformance
+              },
+              {
+                criterion: 'crit2',
+                alternative: 'alt1',
+                performance: normalPerformance
+              },
+              {
+                criterion: 'crit1',
+                alternative: 'alt2',
+                performance: normalPerformance
+              },
+              {
+                criterion: 'crit2',
+                alternative: 'alt2',
+                performance: normalPerformance
+              }
+            ],
             valueTree: {
-              children: [{
-                children: {
-                  criteria: ['crit1', 'crit2']
+              children: [
+                {
+                  children: {
+                    criteria: ['crit1', 'crit2']
+                  }
+                },
+                {
+                  criteria: []
                 }
-              }, {
-                criteria: []
-              }]
+              ]
             }
           }
         };
@@ -274,31 +306,35 @@ define([
                 title: 'criterion 1',
                 description: 'desc',
                 isFavorable: true,
-                dataSources: [{
-                  id: 'uuid',
-                  unitOfMeasurement: {
-                    label: 'ms',
-                    type: 'custom'
-                  },
-                  uncertainties: 'unc',
-                  source: 'source',
-                  scale: [-Infinity, Infinity]
-                }]
+                dataSources: [
+                  {
+                    id: 'uuid',
+                    unitOfMeasurement: {
+                      label: 'ms',
+                      type: 'custom'
+                    },
+                    uncertainties: 'unc',
+                    source: 'source',
+                    scale: [-Infinity, Infinity]
+                  }
+                ]
               },
               crit2: {
                 title: 'criterion 2',
                 description: 'desc',
                 isFavorable: true,
-                dataSources: [{
-                  id: 'uuid',
-                  unitOfMeasurement: {
-                    label: 'ms',
-                    type: 'custom'
-                  },
-                  uncertainties: 'unc',
-                  source: 'source',
-                  scale: [-Infinity, Infinity]
-                }]
+                dataSources: [
+                  {
+                    id: 'uuid',
+                    unitOfMeasurement: {
+                      label: 'ms',
+                      type: 'custom'
+                    },
+                    uncertainties: 'unc',
+                    source: 'source',
+                    scale: [-Infinity, Infinity]
+                  }
+                ]
               }
             },
             alternatives: {
@@ -309,46 +345,51 @@ define([
                 title: 'alt2'
               }
             },
-            performanceTable: [{
-              criterion: 'crit1',
-              alternative: 'alt1',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
+            performanceTable: [
+              {
+                criterion: 'crit1',
+                alternative: 'alt1',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
+              },
+              {
+                criterion: 'crit2',
+                alternative: 'alt1',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
+              },
+              {
+                criterion: 'crit1',
+                alternative: 'alt2',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
+              },
+              {
+                criterion: 'crit2',
+                alternative: 'alt2',
+                dataSource: 'uuid',
+                performance: {
+                  distribution: normalPerformance
+                }
               }
-            }, {
-              criterion: 'crit2',
-              alternative: 'alt1',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
-              }
-            }, {
-              criterion: 'crit1',
-              alternative: 'alt2',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
-              }
-            }, {
-              criterion: 'crit2',
-              alternative: 'alt2',
-              dataSource: 'uuid',
-              performance: {
-                distribution: normalPerformance
-              }
-            }],
+            ],
             schemaVersion: currentSchemaVersion
-          },
+          }
         };
         expect(result).toEqual(expectedResult);
       });
 
-      it('should update a problem of schema version 1.1.0 to the current version', function() {
+      it('should update a problem of schema version 1.1.0 to the current version', function () {
         const dataSourcesById = {
           proxDvtDS: exampleProblem().criteria['Prox DVT'].dataSources[0],
           distDvtDS: exampleProblem().criteria['Dist DVT'].dataSources[0],
-          bleedDS: exampleProblem().criteria.Bleed.dataSources[0],
+          bleedDS: exampleProblem().criteria.Bleed.dataSources[0]
         };
         getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var workspace = {
@@ -361,11 +402,11 @@ define([
         expect(result).toEqual(expectedResult);
       });
 
-      it('should update a problem of schema version 1.2.2 to the current version', function() {
+      it('should update a problem of schema version 1.2.2 to the current version', function () {
         const dataSourcesById = {
           proxDvtDS: exampleProblem().criteria['Prox DVT'].dataSources[0],
           distDvtDS: exampleProblem().criteria['Dist DVT'].dataSources[0],
-          bleedDS: exampleProblem().criteria.Bleed.dataSources[0],
+          bleedDS: exampleProblem().criteria.Bleed.dataSources[0]
         };
         getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var workspace = {
@@ -379,43 +420,43 @@ define([
       });
     });
 
-    describe('updateProblemToCurrentSchema', function() {
-      it('should throw an error if the final schema version is not the current version', function() {
+    describe('updateProblemToCurrentSchema', function () {
+      it('should throw an error if the final schema version is not the current version', function () {
         const funkyProblem = {
           schemaVersion: 'can.never.happen'
         };
-        const error = 'Configured current schema version is not the same as the updated schema version';
+        const error =
+          'Configured current schema version is not the same as the updated schema version';
 
-        expect(function() {
+        expect(function () {
           schemaService.updateProblemToCurrentSchema(funkyProblem);
         }).toThrow(error);
       });
     });
 
-    describe('validateProblem', function() {
-      beforeEach(function() {
+    describe('validateProblem', function () {
+      beforeEach(function () {
         getDataSourcesByIdMock.calls.reset();
       });
 
-      it('should throw no errors if the JSON file passed to the function is valid according to the schema', function() {
+      it('should throw no errors if the JSON file passed to the function is valid according to the schema', function () {
         var inputJSON = require('./test.json');
-        expect(function() {
+        expect(function () {
           schemaService.validateProblem(inputJSON);
         }).not.toThrow();
       });
 
-      it('should throw no errors if the JSON file passed to the function contains correct relative data', function() {
+      it('should throw no errors if the JSON file passed to the function contains correct relative data', function () {
         var inputJSON = require('./hansen-updated.json');
         const dataSourcesById = createHansenDataSourcesById(inputJSON);
         getDataSourcesByIdMock.and.returnValue(dataSourcesById);
-        expect(function() {
+        expect(function () {
           schemaService.validateProblem(inputJSON);
         }).not.toThrow();
       });
 
       function createHansenDataSourcesById(inputJSON) {
-        var dataSourcesById = {
-        };
+        var dataSourcesById = {};
         var proportionUnit = {
           unitOfMeasurement: {
             type: 'decimal',
@@ -423,24 +464,36 @@ define([
           }
         };
         var criteria = inputJSON.criteria;
-        dataSourcesById[criteria['HAM-D'].dataSources[0].id] =
-          _.merge(dataSourcesById[criteria['HAM-D'].dataSources[0].id], proportionUnit);
-        dataSourcesById[criteria.Diarrhea.dataSources[0].id] =
-          _.merge(dataSourcesById[criteria.Diarrhea.dataSources[0].id], proportionUnit);
-        dataSourcesById[criteria.Dizziness.dataSources[0].id] =
-          _.merge(dataSourcesById[criteria.Dizziness.dataSources[0].id], proportionUnit);
-        dataSourcesById[criteria.Headache.dataSources[0].id] =
-          _.merge(dataSourcesById[criteria.Headache.dataSources[0].id], proportionUnit);
-        dataSourcesById[criteria.Insomnia.dataSources[0].id] =
-          _.merge(dataSourcesById[criteria.Insomnia.dataSources[0].id], proportionUnit);
-        dataSourcesById[criteria.Nausea.dataSources[0].id] =
-          _.merge(dataSourcesById[criteria.Nausea.dataSources[0].id], proportionUnit);
+        dataSourcesById[criteria['HAM-D'].dataSources[0].id] = _.merge(
+          dataSourcesById[criteria['HAM-D'].dataSources[0].id],
+          proportionUnit
+        );
+        dataSourcesById[criteria.Diarrhea.dataSources[0].id] = _.merge(
+          dataSourcesById[criteria.Diarrhea.dataSources[0].id],
+          proportionUnit
+        );
+        dataSourcesById[criteria.Dizziness.dataSources[0].id] = _.merge(
+          dataSourcesById[criteria.Dizziness.dataSources[0].id],
+          proportionUnit
+        );
+        dataSourcesById[criteria.Headache.dataSources[0].id] = _.merge(
+          dataSourcesById[criteria.Headache.dataSources[0].id],
+          proportionUnit
+        );
+        dataSourcesById[criteria.Insomnia.dataSources[0].id] = _.merge(
+          dataSourcesById[criteria.Insomnia.dataSources[0].id],
+          proportionUnit
+        );
+        dataSourcesById[criteria.Nausea.dataSources[0].id] = _.merge(
+          dataSourcesById[criteria.Nausea.dataSources[0].id],
+          proportionUnit
+        );
         return dataSourcesById;
       }
 
-      it('should return true if the JSON file passed to the function is not valid according to the schema', function() {
+      it('should return true if the JSON file passed to the function is not valid according to the schema', function () {
         var inputJSON = require('./test-false.json');
-        expect(function() {
+        expect(function () {
           schemaService.validateProblem(inputJSON);
         }).toThrow();
       });

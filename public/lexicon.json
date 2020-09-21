@@ -224,7 +224,7 @@
     "text": "The theoretically maximal range in which effect sizes can lie",
     "link": "/manual.html#mcda-value-tradeoffs."
   },
-  "toggled-columns":{
+  "toggled-columns": {
     "title": "Toggled columns",
     "text": "Select which columns to show/hide in the effects table.",
     "link": "/manual.html#"

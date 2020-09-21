@@ -3,18 +3,12 @@
   "$id": "https://mcda.drugis.org/rangeEffect.json#",
   "title": "MCDA range distribution for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "input",
-    "value"
-  ],
+  "required": ["type", "input", "value"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "exact"
-      ]
+      "enum": ["exact"]
     },
     "value": {
       "type": "number"
@@ -22,10 +16,7 @@
     "input": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "lowerBound",
-        "upperBound"
-      ],
+      "required": ["lowerBound", "upperBound"],
       "properties": {
         "lowerBound": {
           "type": "number"
@@ -35,9 +26,7 @@
         },
         "scale": {
           "type": "string",
-          "enum": [
-            "percentage"
-          ]
+          "enum": ["percentage"]
         }
       }
     }

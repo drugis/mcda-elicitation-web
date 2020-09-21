@@ -13,14 +13,11 @@ module.exports = {
 };
 
 function beforeEach(browser) {
-  loginService.login(browser)
-    .waitForElementVisible('#workspaces-header');
+  loginService.login(browser).waitForElementVisible('#workspaces-header');
 }
 
 function afterEach(browser) {
-  browser
-    .waitForElementVisible('#signinButton')
-    .end();
+  browser.waitForElementVisible('#signinButton').end();
 }
 
 function logoutViaName(browser) {
@@ -38,8 +35,7 @@ function sameUserLogoutLogin(browser) {
   browser
     .url(constants.TEST_URL + '/logout')
     .waitForElementVisible('#signinButton');
-  loginService.login(browser)
-    .waitForElementVisible('#workspaces-header');
+  loginService.login(browser).waitForElementVisible('#workspaces-header');
   browser.url(constants.TEST_URL + '/logout');
 }
 
@@ -48,7 +44,8 @@ function logoutLoginOtherUser(browser) {
     .url(constants.TEST_URL + '/logout')
     .waitForElementVisible('#signinButton');
 
-  loginService.login(browser, 'user2')
+  loginService
+    .login(browser, 'user2')
     .waitForElementVisible('#workspaces-header')
     .url(constants.TEST_URL + '/logout');
 }

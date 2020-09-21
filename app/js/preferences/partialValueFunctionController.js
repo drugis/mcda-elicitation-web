@@ -1,5 +1,9 @@
 'use strict';
-define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wizard) {
+define(['angular', 'lodash', '../controllers/wizard'], function (
+  angular,
+  _,
+  Wizard
+) {
   var dependencies = [
     '$scope',
     '$timeout',
@@ -14,7 +18,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     'numberFilter'
   ];
 
-  var PartialValueFunctionController = function(
+  var PartialValueFunctionController = function (
     $scope,
     $timeout,
     $state,
@@ -40,7 +44,9 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     $scope.scalesPromise.then(resetWizard);
 
     function updatePlot(criterion) {
-      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinatesForCriterion(criterion);
+      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinatesForCriterion(
+        criterion
+      );
     }
 
     function initialize(state, problem) {
@@ -49,10 +55,17 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
       if (!criterion) {
         return {};
       }
-      $scope.unitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement(criterion);
-      PageTitleService.setPageTitle('PartialValueFunctionController', criterion.title + '\'s partial value function');
+      $scope.unitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement(
+        criterion
+      );
+      PageTitleService.setPageTitle(
+        'PartialValueFunctionController',
+        criterion.title + "'s partial value function"
+      );
       // set defaults
-      criterion.dataSources[0].pvf = criterion.dataSources[0].pvf ? criterion.dataSources[0].pvf : {};
+      criterion.dataSources[0].pvf = criterion.dataSources[0].pvf
+        ? criterion.dataSources[0].pvf
+        : {};
       criterion.dataSources[0].pvf.direction = 'decreasing';
       criterion.dataSources[0].pvf.type = 'linear';
       criterion.dataSources[0].pvf.cutoffs = undefined;
@@ -73,7 +86,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
 
       initial.criterion.id = criterionId;
 
-      $timeout(function() {
+      $timeout(function () {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
       return _.extend(state, initial);
@@ -120,10 +133,10 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
             precision: 10,
             step: Math.abs(to - from) / 100,
             rightToLeft: to < from,
-            translate: function(value) {
+            translate: function (value) {
               return numberFilter(value);
             },
-            onChange: function() {
+            onChange: function () {
               updatePlot($scope.state.criterion);
             }
           }
@@ -134,8 +147,12 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
 
     function save(state) {
       var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
-      var standardizedDataSource = PartialValueFunctionService.standardizeDataSource(state.choice);
-      var criteria = currentScenario.state.problem ? angular.copy(currentScenario.state.problem.criteria) : {};
+      var standardizedDataSource = PartialValueFunctionService.standardizeDataSource(
+        state.choice
+      );
+      var criteria = currentScenario.state.problem
+        ? angular.copy(currentScenario.state.problem.criteria)
+        : {};
       criteria[criterionId] = {
         dataSources: [standardizedDataSource]
       };
@@ -145,7 +162,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
           criteria: criteria
         }
       };
-      currentScenario.$save($stateParams, function(scenario) {
+      currentScenario.$save($stateParams, function (scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
@@ -178,18 +195,28 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     }
 
     function resetWizard() {
-      var problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
-      $injector.invoke(Wizard, {}, {
-        $scope: $scope,
-        handler: {
-          fields: ['type', 'choice', 'bisections', 'ref', 'criterion'],
-          validChoice: isValid,
-          nextState: nextState,
-          initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state), problem),
-          standardize: _.identity,
-          updatePlot: updatePlot
+      var problem = WorkspaceSettingsService.usePercentage()
+        ? $scope.aggregateState.percentified.problem
+        : $scope.aggregateState.dePercentified.problem;
+      $injector.invoke(
+        Wizard,
+        {},
+        {
+          $scope: $scope,
+          handler: {
+            fields: ['type', 'choice', 'bisections', 'ref', 'criterion'],
+            validChoice: isValid,
+            nextState: nextState,
+            initialize: _.partial(
+              initialize,
+              taskDefinition.clean(currentScenario.state),
+              problem
+            ),
+            standardize: _.identity,
+            updatePlot: updatePlot
+          }
         }
-      });
+      );
     }
   };
   return dependencies.concat(PartialValueFunctionController);

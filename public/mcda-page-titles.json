@@ -1,16 +1,16 @@
 {
   "choose-problem": "ChooseProblemController",
-  "deterministic-results":"DeterministicResultsController",
+  "deterministic-results": "DeterministicResultsController",
   "evidence": "EvidenceController",
   "imprecise-swing-weighting": "ImpreciseSwingWeightingController",
-  "manualInput":"ManualInputController",
-  "manualInputInProgress":"ManualInputController",
+  "manualInput": "ManualInputController",
+  "manualInputInProgress": "ManualInputController",
   "ordinal-swing": "OrdinalSwingController",
   "precise-swing-weighting": "SwingWeightingController",
   "preferences": "PreferencesController",
-  "problem":"SubProblemController",
+  "problem": "SubProblemController",
   "smaa-results": "SmaaResultsController",
   "swing-weighting": "SwingWeightingController",
   "matching": "MatchingElicitationController",
-  "partial-value-function":"PartialValueFunctionController"
+  "partial-value-function": "PartialValueFunctionController"
 }

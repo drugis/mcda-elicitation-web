@@ -2,8 +2,8 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import TableCell from '@material-ui/core/TableCell';
 import IDataSource from '@shared/interface/IDataSource';
-import { SettingsContext } from 'app/ts/Settings/SettingsContext';
-import React, { useContext } from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {useContext} from 'react';
 
 export default function EffectsTableStrengthsAndUncertainties({
   dataSource

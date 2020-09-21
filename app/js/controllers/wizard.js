@@ -1,17 +1,8 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
+  var dependencies = ['$scope', '$timeout', 'handler'];
 
-  var dependencies = [
-    '$scope',
-    '$timeout',
-    'handler'
-  ];
-
-  function wizard(
-    $scope,
-    $timeout,
-    handler
-  ) {
+  function wizard($scope, $timeout, handler) {
     // functions
     $scope.canProceed = canProceed;
     $scope.canReturn = canReturn;
@@ -52,13 +43,19 @@ define(['lodash', 'angular'], function(_, angular) {
 
       if (nextStates.length) {
         var nextState = nextStates.pop();
-        if (currentChoice === nextState.previousChoice || currentChoice === nextState.mostImportantCriterionId) {
+        if (
+          currentChoice === nextState.previousChoice ||
+          currentChoice === nextState.mostImportantCriterionId
+        ) {
           $scope.state = nextState;
           return true;
         }
       }
       $scope.nextStates = [];
-      var newState = _.pick(_.cloneDeep(state), PERSISTENT_FIELDS.concat(handler.fields));
+      var newState = _.pick(
+        _.cloneDeep(state),
+        PERSISTENT_FIELDS.concat(handler.fields)
+      );
       newState.previousChoice = currentChoice;
       newState.intermediate = handler.standardize(newState);
       $scope.state = handler.nextState(newState);
@@ -92,18 +89,17 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function updateRankingCriterion() {
-      var choiceCriterion = _.find($scope.criteria, function(criterion) {
+      var choiceCriterion = _.find($scope.criteria, function (criterion) {
         return criterion.id === $scope.state.choice;
       });
       choiceCriterion.alreadyChosen = false;
     }
 
     function updateSwingSliders() {
-      $timeout(function() {
+      $timeout(function () {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
     }
-
   }
   return dependencies.concat(wizard);
 });

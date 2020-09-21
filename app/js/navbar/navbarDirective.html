@@ -10,7 +10,11 @@
     <div class="top-bar-right">
       <ul class="dropdown menu" data-dropdown-menu>
         <li>
-          <a class="manual" href="http://drugis.org/services/index" target="_blank">
+          <a
+            class="manual"
+            href="http://drugis.org/services/index"
+            target="_blank"
+          >
             <i id="services" class="fa fa-users"> </i>
             Services
           </a>
@@ -23,7 +27,7 @@
         </li>
         <li>
           <a href="#" id="user-image-link">
-            <img class="user-image" ng-src="{{user.userPicture}}">
+            <img class="user-image" ng-src="{{user.userPicture}}" />
             <span ng-show="!navSettings.isHidden">{{user.name}}</span>
           </a>
           <ul class="menu vertical">

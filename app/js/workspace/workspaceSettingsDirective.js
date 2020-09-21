@@ -1,19 +1,16 @@
 'use strict';
-define([], function() {
-  var dependencies = [
-    '$modal'
-  ];
-  var WorkspaceSettingsDirective = function(
-    $modal
-  ) {
+define([], function () {
+  var dependencies = ['$modal'];
+  var WorkspaceSettingsDirective = function ($modal) {
     return {
       restrict: 'E',
       scope: {
         callback: '=',
         editMode: '='
       },
-      template: '<button id="settings-button" class="button right" style="margin-bottom: 0;" type="button" ng-if="editMode.canEdit" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
-      link: function(scope) {
+      template:
+        '<button id="settings-button" class="button right" style="margin-bottom: 0;" type="button" ng-if="editMode.canEdit" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
+      link: function (scope) {
         // functions
         scope.openSettingsModal = openSettingsModal;
         // init
@@ -22,7 +19,7 @@ define([], function() {
             templateUrl: './workspaceSettings.html',
             controller: 'WorkspaceSettingsController',
             resolve: {
-              callback: function() {
+              callback: function () {
                 return scope.callback;
               }
             }

@@ -13,10 +13,7 @@
           "source": "Study 205MS301",
           "unitOfMeasurement": "Annual rate",
           "strengthOfEvidence": "A similar effect was found for the number of new/newly enlarging MRI T2 lesions (2.16 for DAC HYP vs 3.84 for IFN beta)",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -28,10 +25,7 @@
         {
           "id": "075e2861-d701-4039-85a8-2bf821e86cb1",
           "source": "Study 205MS301",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -45,10 +39,7 @@
           "source": "Study 205MS301",
           "uncertainties": "Data on disability was the least robust of endpoints",
           "unitOfMeasurement": "%",
-          "scale": [
-            0,
-            100
-          ]
+          "scale": [0, 100]
         }
       ]
     },
@@ -62,10 +53,7 @@
           "source": "Study 205MS301",
           "uncertainties": "PRO data also with great variability, significant uncertainty",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -79,10 +67,7 @@
           "source": "Study 205MS301",
           "uncertainties": "Serious GI <1% IFN beta vs. 1% DAC HYP",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -96,10 +81,7 @@
           "source": "Study 205MS301",
           "uncertainties": "Most serious hepatic events occured with DAC HYP. 1 fatal liver event with DAC HYP early in the clinical development program",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -113,10 +95,7 @@
           "source": "Study 205MS301",
           "uncertainties": "Serious cutaneous <1% IFN beta vs. 2% DAC HYP",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -129,10 +108,7 @@
           "id": "b561ab13-75a4-4508-91d0-8932dbc2d502",
           "source": "Study 205MS301",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -146,10 +122,7 @@
           "source": "Hypothetical scenario",
           "sourceLink": "",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     }

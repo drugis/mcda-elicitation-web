@@ -14,8 +14,6 @@ module.exports = {
     workspaceService.uploadTestWorkspace(browser, workspacePath);
     browser.assert.containsText('#workspace-title', title);
     util.delayedClick(browser, '#logo', '#workspaces-header');
-    workspaceService
-      .deleteFromList(browser, 0)
-      .end();
-  },
+    workspaceService.deleteFromList(browser, 0).end();
+  }
 };

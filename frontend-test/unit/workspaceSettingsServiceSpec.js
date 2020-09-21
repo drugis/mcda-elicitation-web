@@ -1,6 +1,8 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angular) {
-  describe('the WorkspaceSettingsService', function() {
+define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function (
+  angular
+) {
+  describe('the WorkspaceSettingsService', function () {
     var workspaceSettingsService, q, scope;
     const state = {
       params: {
@@ -26,21 +28,29 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       changed: false,
       randomSeed: 1234
     };
-    var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'put']);
+    var workspaceSettingsResourceMock = jasmine.createSpyObj(
+      'WorkspaceSettingsResource',
+      ['get', 'put']
+    );
 
-    beforeEach(angular.mock.module('elicit.workspace', function($provide) {
-      $provide.value('$state', state);
-      $provide.value('WorkspaceSettingsResource', workspaceSettingsResourceMock);
-    }));
+    beforeEach(
+      angular.mock.module('elicit.workspace', function ($provide) {
+        $provide.value('$state', state);
+        $provide.value(
+          'WorkspaceSettingsResource',
+          workspaceSettingsResourceMock
+        );
+      })
+    );
 
-    beforeEach(inject(function($q, $rootScope, WorkspaceSettingsService) {
+    beforeEach(inject(function ($q, $rootScope, WorkspaceSettingsService) {
       q = $q;
       scope = $rootScope;
       workspaceSettingsService = WorkspaceSettingsService;
     }));
 
-    describe('getDefaults', function() {
-      it('should get the defaults', function() {
+    describe('getDefaults', function () {
+      it('should get the defaults', function () {
         var defaults = {
           settings: DEFAULT_SETTINGS,
           toggledColumns: DEFAULT_TOGGLED_COLUMNS
@@ -49,8 +59,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expect(result).toEqual(defaults);
       });
 
-      it('should get the default for a relative problem', function() {
-        const performanceTable = [{ performance: {} }];
+      it('should get the default for a relative problem', function () {
+        const performanceTable = [{performance: {}}];
         workspaceSettingsService.setWorkspaceSettings(performanceTable);
         const result = workspaceSettingsService.getDefaults();
         const expectedResult = angular.copy({
@@ -65,13 +75,15 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expect(result).toEqual(expectedResult);
       });
 
-      it('should get the default for a problem without effects', function() {
-        const performanceTable = [{
-          alternative: 'alt1',
-          performance: {
-            distribution: {}
+      it('should get the default for a problem without effects', function () {
+        const performanceTable = [
+          {
+            alternative: 'alt1',
+            performance: {
+              distribution: {}
+            }
           }
-        }];
+        ];
         workspaceSettingsService.setWorkspaceSettings(performanceTable);
         const result = workspaceSettingsService.getDefaults();
         const expectedResult = angular.copy({
@@ -84,34 +96,38 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       });
     });
 
-    describe('loadWorkspaceSettings', function() {
+    describe('loadWorkspaceSettings', function () {
       var loadedPromise;
       var loadResolved = false;
       var resultsDefer;
 
-      beforeEach(function() {
+      beforeEach(function () {
         resultsDefer = q.defer();
         workspaceSettingsResourceMock.get.and.returnValue({
           $promise: resultsDefer.promise
         });
-        loadedPromise = workspaceSettingsService.loadWorkspaceSettings(state.params);
-        loadedPromise.then(function() {
+        loadedPromise = workspaceSettingsService.loadWorkspaceSettings(
+          state.params
+        );
+        loadedPromise.then(function () {
           loadResolved = true;
         });
       });
 
-      afterEach(function() {
+      afterEach(function () {
         loadResolved = false;
       });
 
-      it('should return a promise and not change settings until the new ones are loaded', function() {
-        expect(workspaceSettingsResourceMock.get).toHaveBeenCalledWith(state.params);
+      it('should return a promise and not change settings until the new ones are loaded', function () {
+        expect(workspaceSettingsResourceMock.get).toHaveBeenCalledWith(
+          state.params
+        );
         expect(loadResolved).toBe(false);
         expectToGetDefaultValues();
       });
 
-      describe('after load has resolved with values', function() {
-        beforeEach(function() {
+      describe('after load has resolved with values', function () {
+        beforeEach(function () {
           resultsDefer.resolve({
             settings: DEFAULT_SETTINGS,
             toggledColumns: 'toggledColumns'
@@ -119,14 +135,18 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
           scope.$apply();
         });
 
-        it('should resolve the loadSettings promise and set the loaded values', function() {
+        it('should resolve the loadSettings promise and set the loaded values', function () {
           expect(loadResolved).toBe(true);
-          expect(workspaceSettingsService.getToggledColumns()).toEqual('toggledColumns');
-          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(DEFAULT_SETTINGS);
+          expect(workspaceSettingsService.getToggledColumns()).toEqual(
+            'toggledColumns'
+          );
+          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(
+            DEFAULT_SETTINGS
+          );
         });
 
-        describe('then a new load has resolved without values (so new workspace)', function() {
-          beforeEach(function() {
+        describe('then a new load has resolved without values (so new workspace)', function () {
+          beforeEach(function () {
             var emptyResultsDefer = q.defer();
             workspaceSettingsResourceMock.get.and.returnValue({
               $promise: emptyResultsDefer.promise
@@ -136,18 +156,21 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
             scope.$apply();
           });
 
-          it('should set default values', function() {
+          it('should set default values', function () {
             expectToGetDefaultValues();
           });
         });
       });
 
-      describe('without loading new settings', function() {
-        it('the service should return the default values', expectToGetDefaultValues);
+      describe('without loading new settings', function () {
+        it(
+          'the service should return the default values',
+          expectToGetDefaultValues
+        );
       });
     });
 
-    describe('saveSettings', function() {
+    describe('saveSettings', function () {
       var savedPromise;
       var saveResolved = false;
       var saveDefer;
@@ -158,22 +181,28 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       var deregisterChangeListener;
       var settingsChanged = false;
 
-      beforeEach(function() {
+      beforeEach(function () {
         saveDefer = q.defer();
         workspaceSettingsResourceMock.put.and.returnValue({
           $promise: saveDefer.promise
         });
 
-        savedPromise = workspaceSettingsService.saveSettings(angular.copy(newSettings), newToggledColumns);
-        savedPromise.then(function() {
+        savedPromise = workspaceSettingsService.saveSettings(
+          angular.copy(newSettings),
+          newToggledColumns
+        );
+        savedPromise.then(function () {
           saveResolved = true;
         });
-        deregisterChangeListener = scope.$on('elicit.settingsChanged', function() {
-          settingsChanged = true;
-        });
+        deregisterChangeListener = scope.$on(
+          'elicit.settingsChanged',
+          function () {
+            settingsChanged = true;
+          }
+        );
       });
 
-      afterEach(function() {
+      afterEach(function () {
         deregisterChangeListener();
         saveResolved = false;
         newSettings = {
@@ -183,39 +212,47 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         settingsChanged = false;
       });
 
-      it('should call the save function of the settings resource and return a promise', function() {
-        expect(workspaceSettingsResourceMock.put).toHaveBeenCalledWith(state.params, {
-          settings: { changed: true, randomSeed: 1234 }, toggledColumns: newToggledColumns
-        });
+      it('should call the save function of the settings resource and return a promise', function () {
+        expect(workspaceSettingsResourceMock.put).toHaveBeenCalledWith(
+          state.params,
+          {
+            settings: {changed: true, randomSeed: 1234},
+            toggledColumns: newToggledColumns
+          }
+        );
         expect(saveResolved).toBe(false);
         expect(settingsChanged).toBe(false);
         expectToGetDefaultValues();
       });
 
-      describe('after save has resolved', function() {
-        beforeEach(function() {
+      describe('after save has resolved', function () {
+        beforeEach(function () {
           saveDefer.resolve();
           scope.$apply();
         });
 
-        it('should resolve the saveSettings promise and set the saved values', function() {
+        it('should resolve the saveSettings promise and set the saved values', function () {
           var expectedSettings = {
             randomSeed: 1234,
             changed: true
           };
           expect(saveResolved).toBe(true);
-          expect(workspaceSettingsService.getToggledColumns()).toEqual(newToggledColumns);
-          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(expectedSettings);
+          expect(workspaceSettingsService.getToggledColumns()).toEqual(
+            newToggledColumns
+          );
+          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(
+            expectedSettings
+          );
         });
 
-        it('should broadcast that the settings have changed.', function() {
+        it('should broadcast that the settings have changed.', function () {
           expect(settingsChanged).toBe(true);
         });
       });
     });
 
-    describe('saveSettings with new random seed', function() {
-      it('should reload state if random seed has changed', function() {
+    describe('saveSettings with new random seed', function () {
+      it('should reload state if random seed has changed', function () {
         var newSettings = {
           randomSeed: 1337
         };
@@ -226,8 +263,11 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
           $promise: saveDefer.promise
         });
 
-        var savedPromise = workspaceSettingsService.saveSettings(angular.copy(newSettings), {});
-        savedPromise.then(function() {
+        var savedPromise = workspaceSettingsService.saveSettings(
+          angular.copy(newSettings),
+          {}
+        );
+        savedPromise.then(function () {
           saveResolved = true;
         });
 
@@ -239,16 +279,20 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       });
     });
 
-    describe('setWorkspaceSettings', function() {
-      it('should return workspace settings and change the display to SMAA if there are no effects in the performance table', function() {
-        var performanceTable = [{
-          alternative: 'alternativeId',
-          performance: {
-            distribution: {}
+    describe('setWorkspaceSettings', function () {
+      it('should return workspace settings and change the display to SMAA if there are no effects in the performance table', function () {
+        var performanceTable = [
+          {
+            alternative: 'alternativeId',
+            performance: {
+              distribution: {}
+            }
           }
-        }];
+        ];
 
-        var result = workspaceSettingsService.setWorkspaceSettings(performanceTable);
+        var result = workspaceSettingsService.setWorkspaceSettings(
+          performanceTable
+        );
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
         expectedResult.analysisType = 'smaa';
@@ -256,35 +300,43 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return workspace settings and keep the display as "deterministic" if there are effects in the performance table', function() {
-        var performanceTable = [{
-          alternative: 'alternativeId',
-          performance: {
-            effect: {}
+      it('should return workspace settings and keep the display as "deterministic" if there are effects in the performance table', function () {
+        var performanceTable = [
+          {
+            alternative: 'alternativeId',
+            performance: {
+              effect: {}
+            }
           }
-        }];
+        ];
 
-        var result = workspaceSettingsService.setWorkspaceSettings(performanceTable);
+        var result = workspaceSettingsService.setWorkspaceSettings(
+          performanceTable
+        );
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
         expectedResult.hasNoDistributions = true;
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return workspace settings and keep the display as "deterministic" if there is no performance table', function() {
+      it('should return workspace settings and keep the display as "deterministic" if there is no performance table', function () {
         var result = workspaceSettingsService.setWorkspaceSettings();
         var expectedResult = DEFAULT_SETTINGS;
         expect(result).toEqual(expectedResult);
       });
 
-      it('should set the isRelativeProblem parameter to TRUE if the problem is purely relative, and set the display to smaa values if the display mode is on entered data', function() {
-        var performanceTable = [{
-          performance: {
-            effect: {}
+      it('should set the isRelativeProblem parameter to TRUE if the problem is purely relative, and set the display to smaa values if the display mode is on entered data', function () {
+        var performanceTable = [
+          {
+            performance: {
+              effect: {}
+            }
           }
-        }];
+        ];
 
-        var result = workspaceSettingsService.setWorkspaceSettings(performanceTable);
+        var result = workspaceSettingsService.setWorkspaceSettings(
+          performanceTable
+        );
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
         expectedResult.isRelativeProblem = true;
@@ -293,11 +345,10 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expectedResult.hasNoDistributions = true;
         expect(result).toEqual(expectedResult);
       });
-
     });
 
-    describe('getWarnings', function() {
-      it('should return an empty array if there are no warnings', function() {
+    describe('getWarnings', function () {
+      it('should return an empty array if there are no warnings', function () {
         const settings = {
           isRelativeProblem: false,
           hasNoDistributions: false,
@@ -310,7 +361,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return an array with a no entered data warning if the problem is relative', function() {
+      it('should return an array with a no entered data warning if the problem is relative', function () {
         const settings = {
           isRelativeProblem: true,
           hasNoDistributions: false,
@@ -323,7 +374,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return an array with a no entered data for deterministic analysis warning if there are no entered effects', function() {
+      it('should return an array with a no entered data for deterministic analysis warning if there are no entered effects', function () {
         const settings = {
           isRelativeProblem: false,
           hasNoDistributions: false,
@@ -332,11 +383,13 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
           analysisType: 'deterministic'
         };
         const result = workspaceSettingsService.getWarnings(settings);
-        const expectedResult = ['No entered data available for deterministic analysis.'];
+        const expectedResult = [
+          'No entered data available for deterministic analysis.'
+        ];
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return an array with a no entered data for smaa analysis if there are no entered distribtions', function() {
+      it('should return an array with a no entered data for smaa analysis if there are no entered distribtions', function () {
         const settings = {
           isRelativeProblem: false,
           hasNoDistributions: true,
@@ -350,8 +403,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       });
     });
 
-    describe('getRandomSeed', function() {
-      it('should resturn the random seed', function() {
+    describe('getRandomSeed', function () {
+      it('should resturn the random seed', function () {
         const result = workspaceSettingsService.getRandomSeed();
         const expectedResult = 1234;
         expect(result).toEqual(expectedResult);
@@ -359,8 +412,12 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
     });
 
     function expectToGetDefaultValues() {
-      expect(workspaceSettingsService.getToggledColumns()).toEqual(DEFAULT_TOGGLED_COLUMNS);
-      expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(DEFAULT_SETTINGS);
+      expect(workspaceSettingsService.getToggledColumns()).toEqual(
+        DEFAULT_TOGGLED_COLUMNS
+      );
+      expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(
+        DEFAULT_SETTINGS
+      );
     }
   });
 });

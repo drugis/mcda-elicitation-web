@@ -7,7 +7,7 @@ define([
   './subProblemService',
   './scaleRangeService',
   'angular'
-], function(
+], function (
   SubProblemController,
   CreateSubProblemController,
   EditSubProblemTitleController,
@@ -16,12 +16,12 @@ define([
   ScaleRangeService,
   angular
 ) {
-    return angular.module('elicit.subProblem', [])
-      .controller('SubProblemController', SubProblemController)
-      .controller('CreateSubProblemController', CreateSubProblemController)
-      .controller('EditSubProblemTitleController', EditSubProblemTitleController)
-      .controller('DeleteSubproblemController', DeleteSubproblemController)
-      .factory('SubProblemService', SubProblemService)
-      .factory('ScaleRangeService', ScaleRangeService)
-      ;
-  });
+  return angular
+    .module('elicit.subProblem', [])
+    .controller('SubProblemController', SubProblemController)
+    .controller('CreateSubProblemController', CreateSubProblemController)
+    .controller('EditSubProblemTitleController', EditSubProblemTitleController)
+    .controller('DeleteSubproblemController', DeleteSubproblemController)
+    .factory('SubProblemService', SubProblemService)
+    .factory('ScaleRangeService', ScaleRangeService);
+});

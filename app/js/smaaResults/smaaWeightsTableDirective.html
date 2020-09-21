@@ -1,10 +1,14 @@
 <div class="grid-x underlined-div">
   <div class="cell large-8 medium-8">
-    <h4> Weights <inline-help help-key="representative-weights"></inline-help>
+    <h4>
+      Weights <inline-help help-key="representative-weights"></inline-help>
     </h4>
   </div>
   <div class="cell large-4 medium-4">
-    <button class="button small info clipboard-button right" data-clipboard-target="#smaa-weights-table">
+    <button
+      class="button small info clipboard-button right"
+      data-clipboard-target="#smaa-weights-table"
+    >
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
@@ -16,10 +20,11 @@
       <tbody>
         <tr>
           <td class="text-centered" ng-repeat="criterion in criteria">
-            <div>
-              {{weights['mean'][criterion.id] | number}}</div>
+            <div>{{weights['mean'][criterion.id] | number}}</div>
             <div class="uncertain">
-              {{weights['2.5%'][criterion.id] | number}}, {{weights['97.5%'][criterion.id] | number}}</div>
+              {{weights['2.5%'][criterion.id] | number}},
+              {{weights['97.5%'][criterion.id] | number}}
+            </div>
           </td>
         </tr>
       </tbody>

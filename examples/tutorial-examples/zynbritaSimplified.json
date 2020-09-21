@@ -12,10 +12,7 @@
           "id": "57951383-f578-481b-864c-314960bd4b71",
           "source": "Study 205MS301",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -28,10 +25,7 @@
           "id": "80ee675f-e946-4b89-90bd-45d16864ce27",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
           "source": "Study 205MS301",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": "%"
         }
       ]
@@ -45,10 +39,7 @@
           "id": "58a6f5aa-58c8-4b7f-8021-70fcd7485f31",
           "source": "Study 205MS301",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": "%"
         }
       ]
@@ -62,10 +53,7 @@
           "id": "a837d09a-1abb-47e0-bbf6-fffff76384d5",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
           "source": "Study 206MS301",
-          "scale": [
-            0,
-            100
-          ],
+          "scale": [0, 100],
           "unitOfMeasurement": "%"
         }
       ]

@@ -13,6 +13,6 @@ module.exports = merge.smart(prod, {
       inject: 'head',
       chunks: ['signin'],
       signin: fs.readFileSync(require.resolve('signin/localSignin.html'))
-    }),
+    })
   ]
 });

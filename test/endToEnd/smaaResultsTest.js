@@ -32,11 +32,13 @@ function checkRankTable(browser) {
 
 module.exports = {
   'SMAA results': function (browser) {
-    const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+    const title =
+      'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
     loginService.login(browser);
     workspaceService.cleanList(browser);
-    workspaceService.addExample(browser, title)
+    workspaceService
+      .addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#smaa-tab')
@@ -55,8 +57,6 @@ module.exports = {
     checkRankTable(browser);
 
     browser.click('#logo');
-    workspaceService
-      .deleteFromList(browser, 0)
-      .end();
+    workspaceService.deleteFromList(browser, 0).end();
   }
 };

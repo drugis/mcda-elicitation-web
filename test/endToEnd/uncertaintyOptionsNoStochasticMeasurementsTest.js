@@ -9,7 +9,8 @@ module.exports = {
 
     loginService.login(browser);
     workspaceService.cleanList(browser);
-    workspaceService.addExample(browser, title)
+    workspaceService
+      .addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#smaa-tab')
@@ -17,8 +18,6 @@ module.exports = {
       .assert.containsText('#warning-0', 'Measurements are not stochastic');
 
     browser.click('#logo');
-    workspaceService
-      .deleteFromList(browser, 0)
-      .end();
+    workspaceService.deleteFromList(browser, 0).end();
   }
 };

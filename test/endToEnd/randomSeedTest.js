@@ -10,7 +10,8 @@ module.exports = {
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService');
 
-const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+const title =
+  'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function beforeEach(browser) {
   loginService.login(browser);
@@ -27,12 +28,8 @@ function beforeEach(browser) {
 }
 
 function afterEach(browser) {
-  browser
-    .click('#close-modal-button')
-    .click('#logo');
-  workspaceService
-    .deleteFromList(browser, 0)
-    .end();
+  browser.click('#close-modal-button').click('#logo');
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function set(browser) {

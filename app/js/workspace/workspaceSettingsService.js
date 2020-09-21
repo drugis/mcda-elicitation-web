@@ -1,12 +1,8 @@
 'use strict';
 
-define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = [
-    '$rootScope',
-    '$state',
-    'WorkspaceSettingsResource'
-  ];
-  var WorkspaceSettingsService = function(
+define(['angular', 'lodash'], function (angular, _) {
+  var dependencies = ['$rootScope', '$state', 'WorkspaceSettingsResource'];
+  var WorkspaceSettingsService = function (
     $rootScope,
     $state,
     WorkspaceSettingsResource
@@ -35,13 +31,17 @@ define(['angular', 'lodash'], function(angular, _) {
     var toggledColumns = angular.copy(DEFAULT_TOGGLED_COLUMNS);
 
     function loadWorkspaceSettings(params) {
-      return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
+      return WorkspaceSettingsResource.get(params).$promise.then(function (
+        result
+      ) {
         if (result.settings) {
           workspaceSettings = _.merge({}, DEFAULT_SETTINGS, result.settings);
         } else {
           workspaceSettings = angular.copy(DEFAULT_SETTINGS);
         }
-        toggledColumns = result.toggledColumns ? result.toggledColumns : angular.copy(DEFAULT_TOGGLED_COLUMNS);
+        toggledColumns = result.toggledColumns
+          ? result.toggledColumns
+          : angular.copy(DEFAULT_TOGGLED_COLUMNS);
       });
     }
 
@@ -58,7 +58,10 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function setHasNoEffects(performanceTable) {
       if (performanceTable && !hasEffect(performanceTable)) {
-        if (!workspaceSettings.changed && workspaceSettings.analysisType === 'deterministic') {
+        if (
+          !workspaceSettings.changed &&
+          workspaceSettings.analysisType === 'deterministic'
+        ) {
           workspaceSettings.analysisType = 'smaa';
           workspaceSettings.displayMode = 'enteredData';
         }
@@ -73,13 +76,13 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function hasEffect(performanceTable) {
-      return _.some(performanceTable, function(entry) {
+      return _.some(performanceTable, function (entry) {
         return entry.performance.effect;
       });
     }
 
     function hasDistribution(performanceTable) {
-      return _.some(performanceTable, function(entry) {
+      return _.some(performanceTable, function (entry) {
         return entry.performance.distribution;
       });
     }
@@ -87,7 +90,10 @@ define(['angular', 'lodash'], function(angular, _) {
     function setIsRelativeProblem(performanceTable) {
       if (performanceTable && !hasAlternative(performanceTable)) {
         workspaceSettings.isRelativeProblem = true;
-        if (!workspaceSettings.changed && workspaceSettings.displayMode === 'enteredData') {
+        if (
+          !workspaceSettings.changed &&
+          workspaceSettings.displayMode === 'enteredData'
+        ) {
           workspaceSettings.analysisType = 'smaa';
           workspaceSettings.displayMode = 'values';
         }
@@ -95,7 +101,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function hasAlternative(performanceTable) {
-      return _.some(performanceTable, function(entry) {
+      return _.some(performanceTable, function (entry) {
         return entry.alternative;
       });
     }
@@ -106,8 +112,13 @@ define(['angular', 'lodash'], function(angular, _) {
         toggledColumns: newToggledColumns
       };
       newSettings.settings.changed = true;
-      return WorkspaceSettingsResource.put($state.params, newSettings).$promise.then(function() {
-        var randomSeedChanged = hasRandomSeedChanged(newWorkspaceSettings.randomSeed);
+      return WorkspaceSettingsResource.put(
+        $state.params,
+        newSettings
+      ).$promise.then(function () {
+        var randomSeedChanged = hasRandomSeedChanged(
+          newWorkspaceSettings.randomSeed
+        );
         workspaceSettings = newWorkspaceSettings;
         toggledColumns = newToggledColumns;
         if (randomSeedChanged) {
@@ -126,7 +137,11 @@ define(['angular', 'lodash'], function(angular, _) {
       var defaultSettings = _.merge(
         {},
         angular.copy(DEFAULT_SETTINGS),
-        _.pick(workspaceSettings, ['isRelativeProblem', 'hasNoEffects', 'hasNoDistributions'])
+        _.pick(workspaceSettings, [
+          'isRelativeProblem',
+          'hasNoEffects',
+          'hasNoDistributions'
+        ])
       );
 
       if (defaultSettings.isRelativeProblem) {
@@ -163,19 +178,25 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function hasNoEnteredData(settings) {
-      return settings.isRelativeProblem && settings.displayMode === 'enteredData';
+      return (
+        settings.isRelativeProblem && settings.displayMode === 'enteredData'
+      );
     }
 
     function hasNoEnteredEffect(settings) {
-      return settings.hasNoEffects &&
+      return (
+        settings.hasNoEffects &&
         settings.displayMode === 'enteredData' &&
-        settings.analysisType === 'deterministic';
+        settings.analysisType === 'deterministic'
+      );
     }
 
     function hasNoEnteredDistribution(settings) {
-      return settings.hasNoDistributions &&
+      return (
+        settings.hasNoDistributions &&
         settings.displayMode === 'enteredData' &&
-        settings.analysisType === 'smaa';
+        settings.analysisType === 'smaa'
+      );
     }
 
     function getRandomSeed() {

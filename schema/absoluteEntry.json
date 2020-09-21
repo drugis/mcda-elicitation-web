@@ -3,12 +3,7 @@
   "$id": "https://mcda.drugis.org/absoluteEntry.json#",
   "title": "MCDA performance table entry for absolute data",
   "type": "object",
-  "required": [
-    "criterion",
-    "dataSource",
-    "alternative",
-    "performance"
-  ],
+  "required": ["criterion", "dataSource", "alternative", "performance"],
   "properties": {
     "alternative": {
       "type": "string"

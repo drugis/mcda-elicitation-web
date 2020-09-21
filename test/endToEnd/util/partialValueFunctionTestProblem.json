@@ -11,10 +11,7 @@
             "type": "custom",
             "label": ""
           },
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "source": "ref1"
         }
       ]
@@ -28,10 +25,7 @@
             "type": "custom",
             "label": ""
           },
-          "scale": [
-            null,
-            null
-          ],
+          "scale": [null, null],
           "source": "ref2"
         }
       ]

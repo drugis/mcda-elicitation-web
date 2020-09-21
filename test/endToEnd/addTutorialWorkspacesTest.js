@@ -12,21 +12,23 @@ function testTutorial(browser, title) {
 }
 
 module.exports = {
-  afterEach: function(browser) {
+  afterEach: function (browser) {
     browser.end();
   },
 
-  'Add Lixisenatide simplified tutorial': function(browser) {
+  'Add Lixisenatide simplified tutorial': function (browser) {
     const title = 'Lixisenatide simplified';
     testTutorial(browser, title);
   },
 
-  'Add Zinbryta initial assessment simplified tutorial': function(browser) {
+  'Add Zinbryta initial assessment simplified tutorial': function (browser) {
     const title = 'Zinbryta initial assessment simplified';
     testTutorial(browser, title);
   },
 
-  'Add Zinbryta initial assessment simplified, stochastic tutorial': function(browser) {
+  'Add Zinbryta initial assessment simplified, stochastic tutorial': function (
+    browser
+  ) {
     const title = 'Zinbryta initial assessment simplified, stochastic';
     testTutorial(browser, title);
   }

@@ -3,25 +3,17 @@
   "$id": "https://mcda.drugis.org/rangeDistribution.json#",
   "title": "MCDA range distribution for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "parameters"
-  ],
+  "required": ["type", "parameters"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "range"
-      ]
+      "enum": ["range"]
     },
     "parameters": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "lowerBound",
-        "upperBound"
-      ],
+      "required": ["lowerBound", "upperBound"],
       "properties": {
         "lowerBound": {
           "type": "number"

@@ -15,19 +15,31 @@
       <tbody>
         <tr ng-repeat="workspace in workspacesList | orderBy:'title'">
           <td>
-            <a id="workspace-{{ $index }}"
-              ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})">
+            <a
+              id="workspace-{{ $index }}"
+              ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})"
+            >
               {{workspace.title}}
             </a>
           </td>
           <td class="text-center">
-            <a id="copy-workspace-{{ $index }}" class="fa fa-copy" style="color : black"
-              ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">
+            <a
+              id="copy-workspace-{{ $index }}"
+              class="fa fa-copy"
+              style="color: black"
+              ng-click="copyWorkspace(workspace)"
+              tooltip="Copy workspace"
+            >
             </a>
           </td>
           <td class="text-center">
-            <a id="delete-workspace-{{ $index }}" class="fa fa-trash" style="color: red;"
-              ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">
+            <a
+              id="delete-workspace-{{ $index }}"
+              class="fa fa-trash"
+              style="color: red"
+              ng-click="deleteWorkspace(workspace)"
+              tooltip="Delete workspace"
+            >
             </a>
           </td>
         </tr>

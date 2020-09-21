@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash'], function (_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -8,7 +8,7 @@ define(['lodash'], function(_) {
     'callback',
     'generateUuid'
   ];
-  var EditDataSourceController = function(
+  var EditDataSourceController = function (
     $scope,
     $modalInstance,
     dataSources,
@@ -59,16 +59,26 @@ define(['lodash'], function(_) {
     }
 
     function checkUrl() {
-      var regex = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
-      if ($scope.dataSource.sourceLink && !$scope.dataSource.sourceLink.match(regex)) {
+      var regex = new RegExp(
+        /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
+      );
+      if (
+        $scope.dataSource.sourceLink &&
+        !$scope.dataSource.sourceLink.match(regex)
+      ) {
         $scope.errors.push('Invalid URL');
       }
     }
 
     function checkDuplicateReference() {
-      if (_.find(dataSources, function(dataSource) {
-        return dataSource.id !== $scope.dataSource.id && dataSource.source === $scope.dataSource.source;
-      })) {
+      if (
+        _.find(dataSources, function (dataSource) {
+          return (
+            dataSource.id !== $scope.dataSource.id &&
+            dataSource.source === $scope.dataSource.source
+          );
+        })
+      ) {
         $scope.errors.push('Duplicate reference');
       }
     }

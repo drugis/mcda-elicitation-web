@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -7,7 +7,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'alternatives',
     'callback'
   ];
-  var EditAlternativeController = function(
+  var EditAlternativeController = function (
     $scope,
     $modalInstance,
     alternative,
@@ -43,8 +43,11 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function titleAlreadyExists() {
-      return _.some($scope.alternatives, function(alternative) {
-        return alternative.title === $scope.alternative.title && $scope.originalTitle !== $scope.alternative.title;
+      return _.some($scope.alternatives, function (alternative) {
+        return (
+          alternative.title === $scope.alternative.title &&
+          $scope.originalTitle !== $scope.alternative.title
+        );
       });
     }
   };

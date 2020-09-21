@@ -19,10 +19,7 @@
           "uncertainties": "For several subgroups and only slightly better with sema 1.0 mg vs. 0.5 mg",
           "strengthOfEvidence": "Sema 0.5 mg - Sitagliptin -2.35 [-3.06 ; -1.63] <.0001 Sema 1.0 mg - Sitagliptin -4.20 [-4.91 ; -3.49] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "383604ae-7230-4039-8ad3-9b6048591bd3",
@@ -33,10 +30,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 1.0 mg - Exenatide ER -0.62 [-0.80;-0.44] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "a8a41675-2824-4175-99f7-33a4c3de0470",
@@ -47,10 +41,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 0.5 mg - IGlar -0.38 [-0.52 ; -0.24] <.0001 Sema 1.0 mg - IGlar -0.81 [-0.96 ; -0.67] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
@@ -61,10 +52,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 0.5 mg - Placebo -1.35 [-1.61 ; -1.10] <.0001 Sema 1.0 mg - Placebo -1.75 [-2.01 ; -1.50] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "0651023a-303f-4ae5-a27d-9e869492e579",
@@ -75,10 +63,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 0.5 mg - Placebo 0.5 mg -0.66 [-0.80 ; -0.52] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "f91b8480-4809-4509-8944-553e889872af",
@@ -90,10 +75,7 @@
           "uncertainties": "",
           "strengthOfEvidence": "Sema 1.0 mg - Placebo 1.0 mg -1.05 [-1.19 ; -0.91] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
@@ -105,10 +87,7 @@
           "uncertainties": "For several subgroups and only slightly better with sema 1.0 mg vs. 0.5 mg",
           "strengthOfEvidence": "Sema 0.5 mg - Sitagliptin -2.35 [-3.06 ; -1.63] <.0001 Sema 1.0 mg - Sitagliptin -4.20 [-4.91 ; -3.49] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "03b09922-ceda-42c7-a22e-261813a3d49b",
@@ -119,10 +98,7 @@
           "sourceLink": "https://addis.drugis.org/#/users/6/projects/838/nma/1843/models/2191",
           "inputMethod": "assistedDistribution",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -141,10 +117,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 0.5 mg - Sitagliptin -2.35 [-3.06 ; -1.63] <.0001 Sema 1.0 mg - Sitagliptin -4.20 [-4.91 ; -3.49] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "5dd78436-26c9-4507-a028-246a177b17df",
@@ -155,10 +128,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 1.0 mg - Exenatide ER -3.78 [-4.58;-2.98] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
@@ -169,10 +139,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 0.5 mg - IGlar -4.62 [-5.27 ; -3.96] <.0001 Sema 1.0 mg - IGlar -6.33 [-6.99 ; -5.67] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
@@ -183,10 +150,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 0.5 mg - Placebo -2.31 [-3.33 ; -1.29] <.0001 Sema 1.0 mg - Placebo -5.06 [-6.08 ; -4.04] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
@@ -197,10 +161,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Sema 0.5 mg - Placebo -2.95 [-3.47 ; -2.44] <.0001 Sema 1.0 mg - Placebo -4.27 [-4.78 ; -3.75] <.0001",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         },
         {
           "id": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
@@ -211,10 +172,7 @@
           "sourceLink": "https://addis.drugis.org/#/users/6/projects/838/nma/1844/models/2194",
           "inputMethod": "assistedDistribution",
           "parameterOfInterest": "mean",
-          "scale": [
-            null,
-            null
-          ]
+          "scale": [null, null]
         }
       ]
     },
@@ -234,10 +192,7 @@
           "uncertainties": "Obtained in population at high CV risk. For a drug that is intended for long term diabetes treatment, the duration of the CVOT (2 years) is relatively short (also in comparison to several other cardiovascular outcome trials). The difference in MACE is primarily driven by a difference in the rate of strokes.",
           "strengthOfEvidence": "Sema 0.5 mg vs placebo 0.5 mg and Sema 1.0 mg versus placebo 1.0 mg risk reductions to placebo, Sema 1.0 mg (HR: 0.71 [0.49; 1.02]) compared with Sema 0.5 mg (HR: 0.77 mg (HR: 0.77 [0.55; 1.08]); Sema groups combined Hazard ratio (95% CI): 0.74 (0.58–0.95). Non-inferiority of semaglutide versus placebo was confirmed.",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -255,10 +210,7 @@
           "inputMethod": "assistedDistribution",
           "uncertainties": "The occurrence of CV death was similar with semaglutide and placebo.",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -276,10 +228,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Semaglutide had a favourable effect on events of non-fatal MI and non-fatal stroke.",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -297,10 +246,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "Semaglutide had a favourable effect on events of non-fatal MI and non-fatal stroke.",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -320,10 +266,7 @@
           "uncertainties": "",
           "strengthOfEvidence": "Across all treatment groups, approximately 20% of the subjects reported one or more ‘severe or BG confirmed symptomatic’ episodes",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -343,10 +286,7 @@
           "uncertainties": "Negative effect of semaglutide was absent in individuals without retinopathy at baseline",
           "strengthOfEvidence": "Although not observed in the preclinical studies, a significantly increased risk of EAC-confirmed events of diabetic retinopathy complications was observed with semaglutide (50 [3.0%] patients) as compared with placebo (29 [1.8%] patients) (HR: 1.76 [1.11; 2.78]95%CI) in the CVOT.",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -366,10 +306,7 @@
           "uncertainties": "",
           "strengthOfEvidence": "More GI side effects with sema 1.0 mg vs. 0.5 mg",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         },
         {
           "id": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
@@ -380,10 +317,7 @@
           "sourceLink": "https://addis.drugis.org/#/users/6/projects/838/nma/1845/models/2192",
           "inputMethod": "assistedDistribution",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -402,10 +336,7 @@
           "uncertainties": "For a drug that is intended for long term diabetes treatment, the duration of the CVOT (2 years) is relatively short ). Longer term safety is uncertain",
           "strengthOfEvidence": "No obvious differences",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -423,10 +354,7 @@
           "inputMethod": "assistedDistribution",
           "strengthOfEvidence": "GI disorders were the most frequently reported AEs (GIAEs) in this trial. A higher proportion of subjects treated with semaglutide (0.5 mg and 1.0 mg) reported GIAEs during the trial compared with placebo treated subjects, including the only other GLP-1 RA studied.",
           "parameterOfInterest": "eventProbability",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     }

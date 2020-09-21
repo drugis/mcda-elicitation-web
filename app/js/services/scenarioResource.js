@@ -1,15 +1,17 @@
 'use strict';
-define(['angular'], function(angular) {
-
+define(['angular'], function (angular) {
   var dependencies = ['ngResource'];
 
-  var ScenarioResource = function($resource) {
+  var ScenarioResource = function ($resource) {
     return $resource(
-      window.config.workspacesRepositoryUrl + ':workspaceId/problems/:problemId/scenarios/:id', {
+      window.config.workspacesRepositoryUrl +
+        ':workspaceId/problems/:problemId/scenarios/:id',
+      {
         id: '@id',
         workspaceId: '@workspaceId',
         problemId: '@problemId'
-      }, {
+      },
+      {
         query: {
           method: 'GET',
           isArray: true
@@ -20,9 +22,11 @@ define(['angular'], function(angular) {
         save: {
           method: 'POST'
         }
-      });
+      }
+    );
   };
 
-  return angular.module('elicit.scenarioResource', dependencies)
+  return angular
+    .module('elicit.scenarioResource', dependencies)
     .factory('ScenarioResource', ['$resource', ScenarioResource]);
 });

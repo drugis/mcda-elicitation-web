@@ -3,25 +3,17 @@
   "$id": "https://mcda.drugis.org/betaDistribution.json#",
   "title": "MCDA beta distribution for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "parameters"
-  ],
+  "required": ["type", "parameters"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "dbeta"
-      ]
+      "enum": ["dbeta"]
     },
     "parameters": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "alpha",
-        "beta"
-      ],
+      "required": ["alpha", "beta"],
       "properties": {
         "alpha": {
           "type": "number"
@@ -32,10 +24,7 @@
       }
     },
     "input": {
-      "required": [
-        "events",
-        "sampleSize"
-      ],
+      "required": ["events", "sampleSize"],
       "additionalProperties": false,
       "properties": {
         "events": {

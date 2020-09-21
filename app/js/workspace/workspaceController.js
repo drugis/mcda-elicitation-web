@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function(angular) {
+define(['angular'], function (angular) {
   var dependencies = [
     '$scope',
     '$cookies',
@@ -10,7 +10,7 @@ define(['angular'], function(angular) {
     'currentWorkspace',
     'currentSchemaVersion'
   ];
-  var WorkspaceController = function(
+  var WorkspaceController = function (
     $scope,
     $cookies,
     $stateParams,
@@ -31,7 +31,9 @@ define(['angular'], function(angular) {
       canEdit: user ? currentWorkspace.owner === user.id : false
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
-      $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);
+      $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(
+        currentWorkspace
+      );
       SchemaService.validateProblem($scope.workspace.problem);
       WorkspaceResource.save($stateParams, $scope.workspace);
     } else {
@@ -43,7 +45,9 @@ define(['angular'], function(angular) {
 
     function getWorkspaceSettings() {
       $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-      $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings($scope.workspace.problem.performanceTable);
+      $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings(
+        $scope.workspace.problem.performanceTable
+      );
     }
 
     function editTitle() {

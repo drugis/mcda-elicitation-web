@@ -8,19 +8,13 @@
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0,
-              0.25
-            ],
+            "range": [0, 0.25],
             "type": "linear",
             "direction": "decreasing"
           },
           "id": "7370712d-d283-4cf4-98e5-b0b5786a6840",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -30,19 +24,13 @@
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0.15,
-              0.4
-            ],
+            "range": [0.15, 0.4],
             "type": "linear",
             "direction": "decreasing"
           },
           "id": "b978521f-0132-446f-8589-c5f3dd260a0a",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     },
@@ -52,19 +40,13 @@
       "dataSources": [
         {
           "pvf": {
-            "range": [
-              0,
-              0.1
-            ],
+            "range": [0, 0.1],
             "type": "linear",
             "direction": "decreasing"
           },
           "id": "d387cf1e-e9c7-4cdc-92e8-7180395790f2",
           "unitOfMeasurement": "Proportion",
-          "scale": [
-            0,
-            1
-          ]
+          "scale": [0, 1]
         }
       ]
     }

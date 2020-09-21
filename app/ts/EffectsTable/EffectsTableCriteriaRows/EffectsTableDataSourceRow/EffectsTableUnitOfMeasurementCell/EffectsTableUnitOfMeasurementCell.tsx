@@ -1,8 +1,10 @@
 import TableCell from '@material-ui/core/TableCell';
 import IDataSource from '@shared/interface/IDataSource';
-import IUnitOfMeasurement, { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
-import { SettingsContext } from 'app/ts/Settings/SettingsContext';
-import React, { useContext } from 'react';
+import IUnitOfMeasurement, {
+  UnitOfMeasurementType
+} from '@shared/interface/IUnitOfMeasurement';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {useContext} from 'react';
 
 export default function EffectsTableUnitOfMeasurementCell({
   dataSource
@@ -20,7 +22,9 @@ export default function EffectsTableUnitOfMeasurementCell({
   }
 
   return showUnitsOfMeasurement ? (
-    <TableCell id={`unit-cell-${dataSource.id}`}>{getUnitLabel(dataSource.unitOfMeasurement)}</TableCell>
+    <TableCell id={`unit-cell-${dataSource.id}`}>
+      {getUnitLabel(dataSource.unitOfMeasurement)}
+    </TableCell>
   ) : (
     <></>
   );

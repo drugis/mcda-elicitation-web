@@ -1,4 +1,2 @@
 'use strict';
-define(  ['../../public/css/mcda-drugis.css'],  function(){
-  }
-);
+define(['../../public/css/mcda-drugis.css'], function () {});

@@ -3,8 +3,8 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Cancel adding a workspace':  cancelAdding,
-  'Cancel deleting a workspace':  cancelDeleting
+  'Cancel adding a workspace': cancelAdding,
+  'Cancel deleting a workspace': cancelDeleting
 };
 
 const loginService = require('./util/loginService');
@@ -27,9 +27,7 @@ function afterEach(browser) {
 }
 
 function cancelAdding(browser) {
-  browser
-    .click('#create-workspace-button')
-    .click(closeModalButton);
+  browser.click('#create-workspace-button').click(closeModalButton);
 }
 
 function cancelDeleting(browser) {
@@ -38,10 +36,14 @@ function cancelDeleting(browser) {
     .click('#add-workspace-button')
     .waitForElementVisible('#workspace-title');
 
-  util.delayedClick(browser, '#logo', deleteWorkspaceButton)
+  util
+    .delayedClick(browser, '#logo', deleteWorkspaceButton)
     .click(deleteWorkspaceButton)
     .click(closeModalButton)
-    .assert.containsText('#workspace-0', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
+    .assert.containsText(
+      '#workspace-0',
+      'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)'
+    )
     .click(deleteWorkspaceButton)
     .click('#delete-workspace-confirm-button');
 }

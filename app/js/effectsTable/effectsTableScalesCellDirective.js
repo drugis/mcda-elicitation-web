@@ -1,29 +1,28 @@
 'use strict';
-define([], function() {
+define([], function () {
+  var dependencies = ['EffectsTableService'];
 
-  var dependencies = [
-    'EffectsTableService'
-  ];
-
-  var EffectsTableScalesCellDirective = function(
-    EffectsTableService
-  ) {
+  var EffectsTableScalesCellDirective = function (EffectsTableService) {
     return {
       restrict: 'E',
       scope: {
-        'scales': '=',
-        'uncertainty': '='
+        scales: '=',
+        uncertainty: '='
       },
       templateUrl: './effectsTableScalesCellDirective.html',
-      link: function(scope) {
+      link: function (scope) {
         scope.$watch('scales', initScales);
         scope.$on('elicit.settingsChanged', initScales);
 
         function initScales() {
           if (scope.scales) {
-            scope.lowerBound = EffectsTableService.getRoundedValue(scope.scales['2.5%']);
+            scope.lowerBound = EffectsTableService.getRoundedValue(
+              scope.scales['2.5%']
+            );
             scope.median = EffectsTableService.getMedian(scope.scales);
-            scope.upperBound = EffectsTableService.getRoundedValue(scope.scales['97.5%']);
+            scope.upperBound = EffectsTableService.getRoundedValue(
+              scope.scales['97.5%']
+            );
           }
         }
       }

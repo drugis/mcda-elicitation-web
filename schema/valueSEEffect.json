@@ -3,28 +3,19 @@
   "$id": "https://mcda.drugis.org/valueSEEffect.json#",
   "title": "MCDA value, standard error effect for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "value",
-    "input"
-  ],
+  "required": ["type", "value", "input"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "exact"
-      ]
+      "enum": ["exact"]
     },
     "value": {
       "type": "number"
     },
     "input": {
       "type": "object",
-      "required": [
-        "value",
-        "stdErr"
-      ],
+      "required": ["value", "stdErr"],
       "additionalProperties": false,
       "properties": {
         "value": {
@@ -35,10 +26,7 @@
         },
         "scale": {
           "type": "string",
-          "enum": [
-            "percentage",
-            "decimal"
-          ]
+          "enum": ["percentage", "decimal"]
         }
       }
     }

@@ -3,11 +3,7 @@
   "$id": "https://mcda.drugis.org/relativeEntry.json#",
   "title": "MCDA performance table entry for relative data",
   "type": "object",
-  "required": [
-    "criterion",
-    "dataSource",
-    "performance"
-  ],
+  "required": ["criterion", "dataSource", "performance"],
   "properties": {
     "criterion": {
       "type": "string"
@@ -17,16 +13,11 @@
     },
     "performance": {
       "type": "object",
-      "required": [
-        "distribution"
-      ],
+      "required": ["distribution"],
       "properties": {
         "distribution": {
           "type": "object",
-          "required": [
-            "type",
-            "parameters"
-          ],
+          "required": ["type", "parameters"],
           "properties": {
             "type": {
               "type": "string",
@@ -42,17 +33,11 @@
             },
             "parameters": {
               "type": "object",
-              "required": [
-                "baseline",
-                "relative"
-              ],
+              "required": ["baseline", "relative"],
               "properties": {
                 "baseline": {
                   "type": "object",
-                  "required": [
-                    "type",
-                    "name"
-                  ],
+                  "required": ["type", "name"],
                   "additionalProperties": false,
                   "properties": {
                     "type": {
@@ -81,11 +66,7 @@
                     },
                     "distribution": {
                       "type": "string",
-                      "enum": [
-                        "Normal",
-                        "Beta",
-                        "Gamma"
-                      ]
+                      "enum": ["Normal", "Beta", "Gamma"]
                     },
                     "title": {
                       "type": "string"
@@ -106,12 +87,7 @@
                     },
                     "summaryMeasure": {
                       "type": "string",
-                      "enum": [
-                        "none",
-                        "median",
-                        "mean",
-                        "survivalAtTime"
-                      ]
+                      "enum": ["none", "median", "mean", "survivalAtTime"]
                     },
                     "survivalAtTime": {
                       "type": "number"
@@ -142,17 +118,11 @@
                 },
                 "relative": {
                   "type": "object",
-                  "required": [
-                    "mu",
-                    "cov",
-                    "type"
-                  ],
+                  "required": ["mu", "cov", "type"],
                   "properties": {
                     "type": {
                       "type": "string",
-                      "enum": [
-                        "dmnorm"
-                      ]
+                      "enum": ["dmnorm"]
                     },
                     "mu": {
                       "type": "object",
@@ -162,11 +132,7 @@
                     },
                     "cov": {
                       "type": "object",
-                      "required": [
-                        "colnames",
-                        "rownames",
-                        "data"
-                      ],
+                      "required": ["colnames", "rownames", "data"],
                       "properties": {
                         "colnames": {
                           "type": "array",

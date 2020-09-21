@@ -3,28 +3,19 @@
   "$id": "https://mcda.drugis.org/eventsSampleSizeEffect.json#",
   "title": "MCDA events, sample size effect for the performance table entry of absolute data",
   "type": "object",
-  "required": [
-    "type",
-    "value",
-    "input"
-  ],
+  "required": ["type", "value", "input"],
   "additionalProperties": false,
   "properties": {
     "type": {
       "type": "string",
-      "enum": [
-        "exact"
-      ]
+      "enum": ["exact"]
     },
     "value": {
       "type": "number"
     },
     "input": {
       "type": "object",
-      "required": [
-        "events",
-        "sampleSize"
-      ],
+      "required": ["events", "sampleSize"],
       "additionalProperties": false,
       "properties": {
         "events": {

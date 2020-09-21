@@ -1,6 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
-
+define(['lodash', 'angular'], function (_, angular) {
   var dependencies = [
     '$scope',
     '$stateParams',
@@ -22,7 +21,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'effectsTableInfo',
     'callback'
   ];
-  var CreateSubProblemController = function(
+  var CreateSubProblemController = function (
     $scope,
     $stateParams,
     $modalInstance,
@@ -56,17 +55,22 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.originalScales = scales;
     getWorkspaceSettings();
     initSubProblem(subProblem, problem);
-    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
+    $scope.isBaseline = SubProblemService.determineBaseline(
+      $scope.problem.performanceTable,
+      $scope.problem.alternatives
+    );
     $scope.effectsTableInfo = effectsTableInfo;
     $scope.editMode = editMode;
     var orderedCriteria;
 
-    $scope.$on('elicit.settingsChanged', function() {
+    $scope.$on('elicit.settingsChanged', function () {
       getWorkspaceSettings();
       setProblem();
       setTableRows();
       initializeScales();
-      $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource($scope.problem.criteria);
+      $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource(
+        $scope.problem.criteria
+      );
     });
 
     function getWorkspaceSettings() {
@@ -76,16 +80,25 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createProblemConfiguration() {
-      var subProblemCommand = SubProblemService.createSubProblemCommand($scope.subProblemState, $scope.choices, $scope.problem, problem);
-      SubProblemResource.save(_.omit($stateParams, ['id', 'problemId', 'userUid']), subProblemCommand)
-        .$promise.then(function(newProblem) {
-          ScenarioResource.query(_.extend({}, _.omit($stateParams, 'id'), {
+      var subProblemCommand = SubProblemService.createSubProblemCommand(
+        $scope.subProblemState,
+        $scope.choices,
+        $scope.problem,
+        problem
+      );
+      SubProblemResource.save(
+        _.omit($stateParams, ['id', 'problemId', 'userUid']),
+        subProblemCommand
+      ).$promise.then(function (newProblem) {
+        ScenarioResource.query(
+          _.extend({}, _.omit($stateParams, 'id'), {
             problemId: newProblem.id
-          })).$promise.then(function(scenarios) {
-            callback(newProblem.id, scenarios[0].id);
-            $modalInstance.close();
-          });
+          })
+        ).$promise.then(function (scenarios) {
+          callback(newProblem.id, scenarios[0].id);
+          $modalInstance.close();
         });
+      });
     }
 
     function initSubProblem(subProblem, problem) {
@@ -99,13 +112,24 @@ define(['lodash', 'angular'], function(_, angular) {
       }).problem;
       setProblem();
 
-      $scope.orderingPromise = OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
+      $scope.orderingPromise = OrderingService.getOrderedCriteriaAndAlternatives(
+        $scope.problem,
+        $stateParams
+      ).then(function (orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.nrAlternatives = _.keys($scope.alternatives).length;
         orderedCriteria = getCriteria(orderings.criteria);
-        $scope.tableRows = EffectsTableService.buildEffectsTable(getCriteria(orderedCriteria));
-        $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource(orderedCriteria);
-        $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, orderedCriteria);
+        $scope.tableRows = EffectsTableService.buildEffectsTable(
+          getCriteria(orderedCriteria)
+        );
+        $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource(
+          orderedCriteria
+        );
+        $scope.subProblemState = SubProblemService.createSubProblemState(
+          $scope.problem,
+          newSubProblem,
+          orderedCriteria
+        );
 
         updateInclusions();
         checkDuplicateTitle($scope.subProblemState.title);
@@ -120,52 +144,92 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function setProblem() {
-      $scope.problem = $scope.workspaceSettings.showPercentages ?
-        $scope.percentifiedProblem :
-        $scope.dePercentifiedProblem;
+      $scope.problem = $scope.workspaceSettings.showPercentages
+        ? $scope.percentifiedProblem
+        : $scope.dePercentifiedProblem;
     }
 
     function setTableRows() {
-      $scope.orderingPromise.then(function() {
-        $scope.tableRows = EffectsTableService.buildEffectsTable(getCriteria(orderedCriteria));
+      $scope.orderingPromise.then(function () {
+        $scope.tableRows = EffectsTableService.buildEffectsTable(
+          getCriteria(orderedCriteria)
+        );
       });
     }
 
     function getCriteria(orderedCriteria) {
-      return _.map(orderedCriteria, function(criterion) {
-        return _.merge({}, $scope.problem.criteria[criterion.id], { id: criterion.id });
+      return _.map(orderedCriteria, function (criterion) {
+        return _.merge({}, $scope.problem.criteria[criterion.id], {
+          id: criterion.id
+        });
       });
     }
 
     function updateInclusions() {
       $scope.subProblemState.dataSourceInclusions = SubProblemService.excludeDataSourcesForExcludedCriteria(
-        $scope.problem.criteria, $scope.subProblemState);
-      $scope.subProblemState.numberOfCriteriaSelected = _.filter($scope.subProblemState.criterionInclusions).length;
-      $scope.subProblemState.numberOfAlternativesSelected = _.filter($scope.subProblemState.alternativeInclusions).length;
-      $scope.subProblemState.numberOfDataSourcesPerCriterion = SubProblemService.getNumberOfDataSourcesPerCriterion($scope.problem.criteria, $scope.subProblemState.dataSourceInclusions);
-      $scope.missingValueWarnings = SubProblemService.getMissingValueWarnings($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
-      $scope.scaleBlockingWarnings = SubProblemService.getScaleBlockingWarnings($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
+        $scope.problem.criteria,
+        $scope.subProblemState
+      );
+      $scope.subProblemState.numberOfCriteriaSelected = _.filter(
+        $scope.subProblemState.criterionInclusions
+      ).length;
+      $scope.subProblemState.numberOfAlternativesSelected = _.filter(
+        $scope.subProblemState.alternativeInclusions
+      ).length;
+      $scope.subProblemState.numberOfDataSourcesPerCriterion = SubProblemService.getNumberOfDataSourcesPerCriterion(
+        $scope.problem.criteria,
+        $scope.subProblemState.dataSourceInclusions
+      );
+      $scope.missingValueWarnings = SubProblemService.getMissingValueWarnings(
+        $scope.subProblemState,
+        $scope.scales,
+        $scope.problem.performanceTable
+      );
+      $scope.scaleBlockingWarnings = SubProblemService.getScaleBlockingWarnings(
+        $scope.subProblemState,
+        $scope.scales,
+        $scope.problem.performanceTable
+      );
       $scope.scalesDataSources = getDataSourcesForScaleSliders();
       initializeScales();
-      $timeout(function() {
+      $timeout(function () {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
     }
 
     function getDataSourcesForScaleSliders() {
-      return $scope.scaleBlockingWarnings.length ? [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
+      return $scope.scaleBlockingWarnings.length
+        ? []
+        : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
     }
 
     function initializeScales() {
-      $scope.scales =  $scope.workspaceSettings.showPercentages ?  angular.copy($scope.originalScales.basePercentified) : angular.copy($scope.originalScales.base);
-      var filteredPerformanceTable = SubProblemService.excludeDeselectedAlternatives($scope.problem.performanceTable, $scope.subProblemState.alternativeInclusions);
-      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.scales, $scope.problem.criteria, filteredPerformanceTable);
+      $scope.scales = $scope.workspaceSettings.showPercentages
+        ? angular.copy($scope.originalScales.basePercentified)
+        : angular.copy($scope.originalScales.base);
+      var filteredPerformanceTable = SubProblemService.excludeDeselectedAlternatives(
+        $scope.problem.performanceTable,
+        $scope.subProblemState.alternativeInclusions
+      );
+      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices(
+        $scope.scales,
+        $scope.problem.criteria,
+        filteredPerformanceTable
+      );
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 
-      $scope.$watch('choices', function() {
-        $scope.invalidSlider = SubProblemService.hasInvalidSlider($scope.scalesDataSources, $scope.choices, $scope.scalesState);
-      }, true);
+      $scope.$watch(
+        'choices',
+        function () {
+          $scope.invalidSlider = SubProblemService.hasInvalidSlider(
+            $scope.scalesDataSources,
+            $scope.choices,
+            $scope.scalesState
+          );
+        },
+        true
+      );
     }
 
     function reset() {
@@ -184,7 +248,6 @@ define(['lodash', 'angular'], function(_, angular) {
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
     }
-
   };
   return dependencies.concat(CreateSubProblemController);
 });

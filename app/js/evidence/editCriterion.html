@@ -8,34 +8,68 @@
         <label>Name</label>
       </div>
       <div class="cell">
-        <input id="criterion-title-input" type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
+        <input
+          id="criterion-title-input"
+          type="text"
+          ng-model="criterion.title"
+          ng-change="isCreationBlocked()"
+        />
       </div>
       <div class="cell">
         <label>Description</label>
       </div>
       <div class="cell">
-        <textarea id="criterion-description-input" rows="4" ng-model="criterion.description"></textarea>
+        <textarea
+          id="criterion-description-input"
+          rows="4"
+          ng-model="criterion.description"
+        ></textarea>
       </div>
       <div class="cell" ng-if="useFavorability">
-        <label>Favorability
+        <label
+          >Favorability
           <inline-help help-key="favorability"></inline-help>
         </label>
-        <input id="favorability-selector-favorable" type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
+        <input
+          id="favorability-selector-favorable"
+          type="radio"
+          ng-model="criterion.isFavorable"
+          ng-value="true"
+          id="favorable"
+        />
         <label for="favorability-selector-favorable">Favorable</label>
-        <input id="favorability-selector-unfavorable" type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
+        <input
+          id="favorability-selector-unfavorable"
+          type="radio"
+          ng-model="criterion.isFavorable"
+          ng-value="false"
+          id="not-favorable"
+        />
         <label for="favorability-selector-unfavorable">Not favorable</label>
       </div>
       <div class="cell">
-        <button id="add-criterion-confirm-button" class="button success" type="submit" ng-disabled="blockedReasons.length">
+        <button
+          id="add-criterion-confirm-button"
+          class="button success"
+          type="submit"
+          ng-disabled="blockedReasons.length"
+        >
           {{addOrEdit}}
         </button>
       </div>
       <div class="cell" ng-when="blockedReasons.length">
-        <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}
-          <br>
+        <em ng-repeat="blockedReason in blockedReasons" class="alert"
+          >{{blockedReason}}
+          <br />
         </em>
       </div>
-      <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <button
+        id="close-modal-button"
+        ng-click="cancel()"
+        class="close-button"
+        aria-label="Close reveal"
+        type="button"
+      >
         <span aria-hidden="true">&times;</span>
       </button>
     </div>

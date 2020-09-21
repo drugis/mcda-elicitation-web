@@ -1,10 +1,7 @@
 'use strict';
-define(['lodash'], function(_) {
-  var dependencies = [
-    'EffectsTableService',
-    'WorkspaceSettingsService'
-  ];
-  var SmaaTableDirective = function(
+define(['lodash'], function (_) {
+  var dependencies = ['EffectsTableService', 'WorkspaceSettingsService'];
+  var SmaaTableDirective = function (
     EffectsTableService,
     WorkspaceSettingsService
   ) {
@@ -19,7 +16,7 @@ define(['lodash'], function(_) {
       },
 
       templateUrl: './smaaTableDirective.html',
-      link: function(scope) {
+      link: function (scope) {
         roundScales();
         setProblem();
 
@@ -28,16 +25,24 @@ define(['lodash'], function(_) {
 
         scope.$on('elicit.settingsChanged', setProblem);
         scope.$watch('scales', roundScales, true);
-        scope.$watch('toggledColumns', function() {
-          scope.numberOfColumns = _.filter(scope.toggledColumns).length;
-        }, true);
-        
+        scope.$watch(
+          'toggledColumns',
+          function () {
+            scope.numberOfColumns = _.filter(scope.toggledColumns).length;
+          },
+          true
+        );
+
         function setProblem() {
-          scope.problem = WorkspaceSettingsService.usePercentage() ? scope.state.percentified.problem : scope.state.dePercentified.problem;
+          scope.problem = WorkspaceSettingsService.usePercentage()
+            ? scope.state.percentified.problem
+            : scope.state.dePercentified.problem;
         }
 
         function roundScales() {
-          scope.scalesRounded = EffectsTableService.getRoundedScales(scope.scales);
+          scope.scalesRounded = EffectsTableService.getRoundedScales(
+            scope.scales
+          );
         }
       }
     };

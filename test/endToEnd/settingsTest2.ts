@@ -1,5 +1,5 @@
-import { NightwatchBrowser } from 'nightwatch';
-import { TEST_URL } from './util/constants';
+import {NightwatchBrowser} from 'nightwatch';
+import {TEST_URL} from './util/constants';
 import loginService from './util/loginService';
 import workspaceService from './util/workspaceService';
 

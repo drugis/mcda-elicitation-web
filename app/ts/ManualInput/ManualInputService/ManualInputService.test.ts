@@ -1,10 +1,10 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import { Distribution } from '@shared/interface/IDistribution';
-import { Effect } from '@shared/interface/IEffect';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
-import { UnitOfMeasurementType } from '@shared/interface/IUnitOfMeasurement';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import {
