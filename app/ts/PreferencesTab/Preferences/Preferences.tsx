@@ -19,7 +19,7 @@ export default function Preferences() {
   );
   const [preferencesTitle] = useState(document.title);
 
-  function showView(): JSX.Element {
+  function renderView(): JSX.Element {
     switch (activeView) {
       case 'preferences':
         document.title = preferencesTitle;
@@ -73,5 +73,5 @@ export default function Preferences() {
     }
   }
 
-  return showView();
+  return renderView();
 }

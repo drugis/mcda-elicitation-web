@@ -45,7 +45,7 @@ export default function PreferencesWeightsButtons() {
           Reset Weights
         </Button>
       </Tooltip>
-      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+      <Tooltip title="Saving this preference will reset all criteria trade-off preferences">
         <Button
           id="ranking-button"
           onClick={handleRankingClick}
@@ -56,7 +56,7 @@ export default function PreferencesWeightsButtons() {
           Ranking
         </Button>
       </Tooltip>
-      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+      <Tooltip title="Saving this preference will reset all criteria trade-off preferences">
         <Button
           id="matching-button"
           onClick={handleMatchingClick}
@@ -67,7 +67,7 @@ export default function PreferencesWeightsButtons() {
           Matching
         </Button>
       </Tooltip>
-      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+      <Tooltip title="Saving this preference will reset all criteria trade-off preferences">
         <Button
           id="precise-swing-button"
           onClick={handlePreciseClick}
@@ -78,7 +78,7 @@ export default function PreferencesWeightsButtons() {
           Precise Swing Weighting
         </Button>
       </Tooltip>
-      <Tooltip title="Saving this preferece will reset all criteria trade-off preferences">
+      <Tooltip title="Saving this preference will reset all criteria trade-off preferences">
         <Button
           id="imprecise-swing-button"
           onClick={handleImpreciseClick}

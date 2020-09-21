@@ -139,10 +139,10 @@ export default function WorkspaceHandler(db: IDB) {
     callback: (error: Error, workspaceId?: string, scenarioId?: number) => void
   ): void {
     logger.debug('creating scenario');
-    const preferenes = request.body.problem.preferences;
+    const preferences = request.body.problem.preferences;
     const state = {
       problem: reduceProblem(request.body.problem),
-      prefs: _.isEmpty(preferenes) ? [] : preferenes
+      prefs: _.isEmpty(preferences) ? [] : preferences
     };
     scenarioRepository.createInTransaction(
       client,

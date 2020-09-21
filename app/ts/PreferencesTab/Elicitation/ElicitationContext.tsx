@@ -14,11 +14,9 @@ export const ElicitationContext = createContext<IElicitationContext>(
 
 export function ElicitationContextProviderComponent({
   elicitationMethod,
-
   children
 }: {
   elicitationMethod: TElicitationMethod;
-
   children: any;
 }) {
   const {criteria} = useContext(PreferencesContext);
@@ -31,7 +29,7 @@ export function ElicitationContextProviderComponent({
     Record<string, IExactSwingRatio> | Record<string, IRatioBoundConstraint>
   >({});
 
-  function setMostImportantCriterionIdWrapper(criterionId: string) {
+  function setMostImportantCriterionAndPreferences(criterionId: string) {
     if (elicitationMethod === 'precise') {
       setPreferences(buildInitialPrecisePreferences(criteria, criterionId));
     } else if (elicitationMethod === 'imprecise') {
@@ -77,7 +75,7 @@ export function ElicitationContextProviderComponent({
         elicitationMethod,
         setCurrentStep,
         setIsNextDisabled,
-        setMostImportantCriterionId: setMostImportantCriterionIdWrapper,
+        setMostImportantCriterionId: setMostImportantCriterionAndPreferences,
         setPreference,
         setBoundPreference,
         setPreferences

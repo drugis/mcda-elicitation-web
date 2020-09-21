@@ -11,21 +11,21 @@ const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title1',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
+    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: 'kg'},
     dataSourceId: 'ds1',
     description: 'description'
   },
   critId2: {
     id: 'critId2',
     title: 'title2',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
+    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: 'kg'},
     dataSourceId: 'ds2',
     description: 'description'
   },
   critId3: {
     id: 'critId3',
     title: 'title3',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
+    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: 'kg'},
     dataSourceId: 'ds3',
     description: 'description'
   }
@@ -37,7 +37,7 @@ describe('getSwingStatement', () => {
     const result: string = getSwingStatement(criteria['critId1'], pvf);
 
     const expectedResult =
-      "You've indicated that improving title1 from 0  to 1  is the most important (i.e. it has 100% importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement using the sliders below.";
+      "You've indicated that improving title1 from 0 kg to 1 kg is the most important (i.e. it has 100% importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement using the sliders below.";
     expect(result).toEqual(expectedResult);
   });
 });

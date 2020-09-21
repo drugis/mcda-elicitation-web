@@ -1,10 +1,10 @@
-import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import Tooltip from '@material-ui/core/Tooltip';
 import TrendingUp from '@material-ui/icons/TrendingUp';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../../PreferencesContext';
+import {getPvfLocation} from '../PartialValueFunctionUtil';
 
 export default function PartialValueFunctionButtons({
   criterionId
@@ -22,11 +22,7 @@ export default function PartialValueFunctionButtons({
   }
 
   function handleAdvancedClick(): void {
-    const newLocation =
-      _.split(window.location.toString(), 'preferences')[0] +
-      'partial-value-function/' +
-      criterionId;
-    window.location.assign(newLocation);
+    window.location.assign(getPvfLocation(criterionId));
   }
 
   return (

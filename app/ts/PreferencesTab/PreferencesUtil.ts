@@ -18,7 +18,7 @@ export function initPvfs(
 function getScenarioPvf(
   criterionId: string,
   currentScenario: IScenario
-): IScenarioPvf {
+): IScenarioPvf | undefined {
   if (
     currentScenario.state.problem &&
     currentScenario.state.problem.criteria[criterionId] &&
@@ -26,6 +26,8 @@ function getScenarioPvf(
   ) {
     return currentScenario.state.problem.criteria[criterionId].dataSources[0]
       .pvf;
+  } else {
+    return undefined;
   }
 }
 

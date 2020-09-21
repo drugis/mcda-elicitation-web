@@ -1,5 +1,12 @@
 import IPvf from '@shared/interface/Problem/IPvf';
-import {getBest, getPvfCoordinates, getWorst} from './PartialValueFunctionUtil';
+import {ChartConfiguration} from 'c3';
+import {
+  generatePlotSettings,
+  getBest,
+  getPvfCoordinates,
+  getPvfLocation,
+  getWorst
+} from './PartialValueFunctionUtil';
 
 describe('getPvfCoordinates', () => {
   it('should return pvf coordinates for the plot without cutoffs', () => {
@@ -74,5 +81,38 @@ describe('getWorst', () => {
     };
     const result = getWorst(pvf);
     expect(result).toEqual(100);
+  });
+});
+
+describe('generatePlotSettings', () => {
+  it('should return settings for generating a c3 plot', () => {
+    const criterionId = 'critId';
+    const values: [['x', ...number[]], [string, 1, ...number[]]] = [
+      ['x', 100, 80, 70, 60, 10],
+      ['crit', 1, 0.9, 0.8, 0.7, 0]
+    ];
+    const result: ChartConfiguration = generatePlotSettings(
+      criterionId,
+      values
+    );
+    expect(result.bindto).toEqual('#pvfplot-critId');
+    expect(result.axis.x.min).toEqual(100);
+    expect(result.axis.x.max).toEqual(10);
+  });
+});
+
+describe('getPvfLocation', () => {
+  it('shoud return a url for the provided scenario id while preserving the tab', () => {
+    const location = new URL(
+      'https://mcda-test.drugis.org/#!/workspaces/1/problems/1/scenarios/1/preferences'
+    );
+    Object.defineProperty(window, 'location', {
+      value: location
+    });
+
+    const result = getPvfLocation('critId');
+    const expectedResult =
+      'https://mcda-test.drugis.org/#!/workspaces/1/problems/1/scenarios/1/partial-value-function/critId';
+    expect(result).toEqual(expectedResult);
   });
 });
