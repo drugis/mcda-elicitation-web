@@ -63,7 +63,7 @@ describe('The utility', () => {
             title: 'crit 1 title'
           }
         },
-        prefs: problem.prefs
+        prefs: problem.preferences
       };
       expect(expectedResult).toEqual(result);
     });
@@ -114,7 +114,7 @@ describe('The utility', () => {
         message: error.message
       };
       expect(next.mock.calls.length).toBe(1);
-      expect(next.mock.calls[0][0]).toEqual(expectedResult)
+      expect(next.mock.calls[0][0]).toEqual(expectedResult);
     });
   });
 });

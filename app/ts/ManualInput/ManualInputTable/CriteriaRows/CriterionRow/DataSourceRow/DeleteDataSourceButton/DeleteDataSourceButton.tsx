@@ -1,4 +1,5 @@
-import {IconButton, Tooltip} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import Delete from '@material-ui/icons/Delete';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../../../../ManualInputContext';

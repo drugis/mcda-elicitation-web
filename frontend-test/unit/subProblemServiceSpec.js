@@ -1,17 +1,20 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angular) {
+define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function (
+  angular
+) {
   describe('The SubProblemService', () => {
     var subProblemService;
     var getDataSourcesByIdMock = jasmine.createSpy();
 
-    beforeEach(angular.mock.module('elicit.subProblem', function($provide) {
-      $provide.value('getDataSourcesById', getDataSourcesByIdMock);
-    }));
+    beforeEach(
+      angular.mock.module('elicit.subProblem', function ($provide) {
+        $provide.value('getDataSourcesById', getDataSourcesByIdMock);
+      })
+    );
 
-    beforeEach(inject(function(SubProblemService) {
+    beforeEach(inject(function (SubProblemService) {
       subProblemService = SubProblemService;
     }));
-
 
     describe('createSubProblemCommand', () => {
       it('should create a command ready for the backend to store', () => {
@@ -61,7 +64,11 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             to: 2
           }
         };
-        var result = subProblemService.createSubProblemCommand(subProblemState, choices, problem);
+        var result = subProblemService.createSubProblemCommand(
+          subProblemState,
+          choices,
+          problem
+        );
         var expectedResult = {
           definition: {
             ranges: {
@@ -77,15 +84,14 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
           },
           title: 'subProblemTitle',
           scenarioState: {
-            prefs: {
-              headacheId: {}
-            }
+            problem: {criteria: {}},
+            prefs: []
           }
         };
         expect(result).toEqual(expectedResult);
       });
 
-      it('should the scale ranges which are percentage to decimals', function() {
+      it('should the scale ranges which are percentage to decimals', function () {
         const dataSourcesById = {
           ds1: {
             id: 'ds1',
@@ -106,7 +112,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             }
           }
         };
-        getDataSourcesByIdMock.and.returnValue(dataSourcesById); var problem = {
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
+        var problem = {
           criteria: {
             headacheId: {
               dataSources: [
@@ -148,8 +155,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
               pvf: {
                 range: [0.01, 0.02]
               }
-            },
-
+            }
           }
         };
 
@@ -168,7 +174,11 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
           }
         };
 
-        var result = subProblemService.createSubProblemCommand(subProblemState, choices, problem);
+        var result = subProblemService.createSubProblemCommand(
+          subProblemState,
+          choices,
+          problem
+        );
 
         var expectedResult = {
           definition: {
@@ -195,9 +205,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
           },
           title: 'subProblemTitle',
           scenarioState: {
-            prefs: {
-              headacheId: {}
-            }
+            problem: {criteria: {}},
+            prefs: []
           }
         };
         expect(result).toEqual(expectedResult);
@@ -206,24 +215,29 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
 
     describe('determineBaseline', () => {
       it('should determine the baseline alternative', () => {
-        var performanceTable = [{
-          performance: {
-            parameters: {
-              baseline: {
-                name: 'placebo'
+        var performanceTable = [
+          {
+            performance: {
+              parameters: {
+                baseline: {
+                  name: 'placebo'
+                }
               }
             }
           }
-        }];
+        ];
         var alternatives = {
-          placebo: { title: 'Placebo' },
-          fluox: { title: 'Fluoxitine' },
-          parox: { title: 'Paroxitine' }
+          placebo: {title: 'Placebo'},
+          fluox: {title: 'Fluoxitine'},
+          parox: {title: 'Paroxitine'}
         };
         var expectedResult = {
           placebo: true
         };
-        var result = subProblemService.determineBaseline(performanceTable, alternatives);
+        var result = subProblemService.determineBaseline(
+          performanceTable,
+          alternatives
+        );
         expect(result).toEqual(expectedResult);
       });
     });
@@ -232,20 +246,13 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       it('should exclude data sources when their criterion is excluded', () => {
         var criteria = {
           crit1: {
-            dataSources: [
-              { id: 'ds1' },
-            ]
+            dataSources: [{id: 'ds1'}]
           },
           crit2: {
-            dataSources: [
-              { id: 'ds2' }
-            ]
+            dataSources: [{id: 'ds2'}]
           },
           crit3: {
-            dataSources: [
-              { id: 'ds3' },
-              { id: 'ds4' }
-            ]
+            dataSources: [{id: 'ds3'}, {id: 'ds4'}]
           }
         };
         var subProblemState = {
@@ -261,7 +268,10 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             ds4: false
           }
         };
-        var result = subProblemService.excludeDataSourcesForExcludedCriteria(criteria, subProblemState);
+        var result = subProblemService.excludeDataSourcesForExcludedCriteria(
+          criteria,
+          subProblemState
+        );
         var expectedResult = {
           ds1: true,
           ds2: false,
@@ -272,80 +282,100 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('getMissingValueWarnings', function() {
+    describe('getMissingValueWarnings', function () {
       var subProblemState = {
-        dataSourceInclusions: { 'ds1': true },
-        alternativeInclusions: { 'alt1': true }
+        dataSourceInclusions: {ds1: true},
+        alternativeInclusions: {alt1: true}
       };
-      var noSMAAWarning = 'Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).';
-      var noDeterministicWarning = 'Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).';
+      var noSMAAWarning =
+        'Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).';
+      var noDeterministicWarning =
+        'Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).';
 
-      it('should return no warnings if all values are present', function() {
+      it('should return no warnings if all values are present', function () {
         var scales = {
           ds1: {
-            alt1: { '50%': 10 }
+            alt1: {'50%': 10}
           }
         };
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'value',
-              value: 10
+        var performanceTable = [
+          {
+            alternative: 'alt1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'value',
+                value: 10
+              }
             }
           }
-        }];
-        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+        ];
+        var warnings = subProblemService.getMissingValueWarnings(
+          subProblemState,
+          scales,
+          performanceTable
+        );
 
         var expectedWarnings = [];
         expect(warnings).toEqual(expectedWarnings);
       });
 
-      it('should warn about missing SMAA values when Deterministic values are present', function() {
+      it('should warn about missing SMAA values when Deterministic values are present', function () {
         var scales = {
           ds1: {
-            alt1: { '50%': null }
+            alt1: {'50%': null}
           }
         };
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'value',
-              value: 10
+        var performanceTable = [
+          {
+            alternative: 'alt1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'value',
+                value: 10
+              }
             }
           }
-        }];
-        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+        ];
+        var warnings = subProblemService.getMissingValueWarnings(
+          subProblemState,
+          scales,
+          performanceTable
+        );
 
         var expectedWarnings = [noSMAAWarning];
         expect(warnings).toEqual(expectedWarnings);
       });
 
-      it('should warn about missing deterministic values when SMAA values are present', function() {
+      it('should warn about missing deterministic values when SMAA values are present', function () {
         var scales = {
           ds1: {
-            alt1: { '50%': 10 }
+            alt1: {'50%': 10}
           }
         };
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'empty'
+        var performanceTable = [
+          {
+            alternative: 'alt1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'empty'
+              }
             }
           }
-        }];
-        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+        ];
+        var warnings = subProblemService.getMissingValueWarnings(
+          subProblemState,
+          scales,
+          performanceTable
+        );
 
         var expectedWarnings = [noDeterministicWarning];
         expect(warnings).toEqual(expectedWarnings);
       });
 
-      it('should warn about missing deterministic and SMAA values', function() {
+      it('should warn about missing deterministic and SMAA values', function () {
         var subProblemStateExtended = {
           dataSourceInclusions: {
             ds1: true
@@ -357,29 +387,36 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         };
         var scales = {
           ds1: {
-            alt1: { '50%': 10 },
-            alt2: { '50%': null }
+            alt1: {'50%': 10},
+            alt2: {'50%': null}
           }
         };
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'empty'
+        var performanceTable = [
+          {
+            alternative: 'alt1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'empty'
+              }
+            }
+          },
+          {
+            alternative: 'alt2',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'value',
+                value: 10
+              }
             }
           }
-        }, {
-          alternative: 'alt2',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'value',
-              value: 10
-            }
-          }
-        }];
-        var warnings = subProblemService.getMissingValueWarnings(subProblemStateExtended, scales, performanceTable);
+        ];
+        var warnings = subProblemService.getMissingValueWarnings(
+          subProblemStateExtended,
+          scales,
+          performanceTable
+        );
 
         var expectedWarnings = [noDeterministicWarning, noSMAAWarning];
         expect(warnings).toEqual(expectedWarnings);
@@ -405,7 +442,11 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             }
           }
         };
-        var result = subProblemService.hasInvalidSlider(scalesDataSources, choices, scalesState);
+        var result = subProblemService.hasInvalidSlider(
+          scalesDataSources,
+          choices,
+          scalesState
+        );
         expect(result).toBeTruthy();
       });
       it('should return truthy if if both choices are the same', () => {
@@ -426,7 +467,11 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             }
           }
         };
-        var result = subProblemService.hasInvalidSlider(scalesDataSources, choices, scalesState);
+        var result = subProblemService.hasInvalidSlider(
+          scalesDataSources,
+          choices,
+          scalesState
+        );
         expect(result).toBeTruthy();
       });
       it('should return falsy if all values are within their correct ranges', () => {
@@ -447,7 +492,11 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             }
           }
         };
-        var result = subProblemService.hasInvalidSlider(scalesDataSources, choices, scalesState);
+        var result = subProblemService.hasInvalidSlider(
+          scalesDataSources,
+          choices,
+          scalesState
+        );
         expect(result).toBeFalsy();
       });
     });
@@ -456,14 +505,10 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       it('should return the number of included datasources per criteria', () => {
         var criteria = {
           crit1: {
-            dataSources: [
-              { id: 'ds1' },
-              { id: 'ds2' },
-              { id: 'notIncluded' }
-            ]
+            dataSources: [{id: 'ds1'}, {id: 'ds2'}, {id: 'notIncluded'}]
           },
           crit2: {
-            dataSources: [{ id: 'ds3' }]
+            dataSources: [{id: 'ds3'}]
           }
         };
         var dataSourceInclusions = {
@@ -471,7 +516,10 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
           ds2: true,
           ds3: true
         };
-        var result = subProblemService.getNumberOfDataSourcesPerCriterion(criteria, dataSourceInclusions);
+        var result = subProblemService.getNumberOfDataSourcesPerCriterion(
+          criteria,
+          dataSourceInclusions
+        );
         var expectedResult = {
           crit1: 2,
           crit2: 1
@@ -482,13 +530,16 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
 
     describe('getCriteriaByDataSource', () => {
       it('should return the criterion ids keyed by their datasource ids', () => {
-        var criteria = [{
-          id: 'crit1',
-          dataSources: [{ id: 'ds1.1' }, { id: 'ds1.2' }]
-        }, {
-          id: 'crit2',
-          dataSources: [{ id: 'ds2' }]
-        }];
+        var criteria = [
+          {
+            id: 'crit1',
+            dataSources: [{id: 'ds1.1'}, {id: 'ds1.2'}]
+          },
+          {
+            id: 'crit2',
+            dataSources: [{id: 'ds2'}]
+          }
+        ];
         var result = subProblemService.getCriteriaByDataSource(criteria);
         var expectedResult = {
           'ds1.1': criteria[0],
@@ -504,20 +555,13 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var problem = {
           criteria: {
             crit1: {
-              dataSources: [
-                { id: 'ds1' }
-              ]
+              dataSources: [{id: 'ds1'}]
             },
             crit2: {
-              dataSources: [
-                { id: 'ds2' },
-                { id: 'ds3' }
-              ]
+              dataSources: [{id: 'ds2'}, {id: 'ds3'}]
             },
             crit3: {
-              dataSources: [
-                { id: 'ds4' }
-              ]
+              dataSources: [{id: 'ds4'}]
             }
           },
           alternatives: {
@@ -538,14 +582,22 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             }
           }
         };
-        var criteria = [{
-          id: 'crit1'
-        }, {
-          id: 'crit2'
-        }, {
-          id: 'crit3'
-        }];
-        var result = subProblemService.createSubProblemState(problem, subProblem, criteria);
+        var criteria = [
+          {
+            id: 'crit1'
+          },
+          {
+            id: 'crit2'
+          },
+          {
+            id: 'crit3'
+          }
+        ];
+        var result = subProblemService.createSubProblemState(
+          problem,
+          subProblem,
+          criteria
+        );
         var expectedResult = {
           criterionInclusions: {
             crit1: true,
@@ -573,47 +625,59 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('excludeDeselectedAlternatives', function() {
-      it('should return a performance table without the deselected alternatives', function() {
+    describe('excludeDeselectedAlternatives', function () {
+      it('should return a performance table without the deselected alternatives', function () {
         var alternativeInclusions = {
           a1: true,
           a2: false
         };
-        var performanceTable = [{
-          alternative: 'a1'
-        }, {
-          alternative: 'a2'
-        }];
+        var performanceTable = [
+          {
+            alternative: 'a1'
+          },
+          {
+            alternative: 'a2'
+          }
+        ];
 
-        var result = subProblemService.excludeDeselectedAlternatives(performanceTable, alternativeInclusions);
+        var result = subProblemService.excludeDeselectedAlternatives(
+          performanceTable,
+          alternativeInclusions
+        );
 
-        var expectedResult = [{
-          alternative: 'a1'
-        }];
+        var expectedResult = [
+          {
+            alternative: 'a1'
+          }
+        ];
         expect(result).toEqual(expectedResult);
       });
     });
 
     describe('areTooManyDataSourcesIncluded', () => {
       it('return truthy if there is atleast one criterion with multiple selected datasources', () => {
-        var criteria = [{
-          dataSources: [{}, {}]
-        }];
+        var criteria = [
+          {
+            dataSources: [{}, {}]
+          }
+        ];
         var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
         expect(result).toBeTruthy();
       });
 
       it('should return falsy if there is no criterion with multiple dataSources selected', () => {
-        var criteria = [{
-          dataSources: [{}]
-        }];
+        var criteria = [
+          {
+            dataSources: [{}]
+          }
+        ];
         var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
         expect(result).toBeFalsy();
       });
     });
 
-    describe('findRowWithoutValues', function() {
-      it('should return false if there is no row without valid values', function() {
+    describe('findRowWithoutValues', function () {
+      it('should return false if there is no row without valid values', function () {
         var effectsTableInfo = {
           ds1: {
             alt1: {
@@ -642,11 +706,14 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             }
           }
         };
-        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        var result = subProblemService.findRowWithoutValues(
+          effectsTableInfo,
+          scales
+        );
         expect(result).toBeFalsy();
       });
 
-      it('should return true if there is at least one row without valid values', function() {
+      it('should return true if there is at least one row without valid values', function () {
         var effectsTableInfo = {
           ds1: {
             alt1: {
@@ -655,19 +722,22 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
           }
         };
         var scales = {};
-        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        var result = subProblemService.findRowWithoutValues(
+          effectsTableInfo,
+          scales
+        );
         expect(result).toBeFalsy();
       });
     });
 
-    describe('getScaleBlockingWarnings', function() {
+    describe('getScaleBlockingWarnings', function () {
       var subProblemState;
       var missingValuesWarning = 'Effects table contains missing values';
 
-      beforeEach(function() {
+      beforeEach(function () {
         subProblemState = {
-          dataSourceInclusions: { 'ds1': true },
-          alternativeInclusions: { 'alt1': true },
+          dataSourceInclusions: {ds1: true},
+          alternativeInclusions: {alt1: true},
           numberOfDataSourcesPerCriterion: {
             crit1: 0,
             crit2: 1,
@@ -682,7 +752,10 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             alt1: {}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales
+        );
         var expectedResult = [missingValuesWarning];
         expect(result).toEqual(expectedResult);
       });
@@ -690,10 +763,13 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       it('should return a warning if there is a NaN scale for the included datasources+alternatives', () => {
         var scales = {
           ds1: {
-            alt1: { '50%': NaN }
+            alt1: {'50%': NaN}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales
+        );
         var expectedResult = [missingValuesWarning];
         expect(result).toEqual(expectedResult);
       });
@@ -701,10 +777,13 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       it('should return a warning if there is a null scale for the included datasources+alternatives', () => {
         var scales = {
           ds1: {
-            alt1: { '50%': null }
+            alt1: {'50%': null}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales
+        );
         var expectedResult = [missingValuesWarning];
         expect(result).toEqual(expectedResult);
       });
@@ -712,94 +791,123 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       it('should return no warnings if there are no missing or invalid values', () => {
         var scales = {
           ds1: {
-            alt1: { '50%': 5 }
+            alt1: {'50%': 5}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales
+        );
         var expectedResult = [];
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return no warnings if the distribution is missing, but there is an effect value', function() {
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'value',
-              value: 10
+      it('should return no warnings if the distribution is missing, but there is an effect value', function () {
+        var performanceTable = [
+          {
+            alternative: 'alt1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'value',
+                value: 10
+              }
             }
           }
-        }];
+        ];
         var scales = {
           ds1: {
-            alt1: { '50%': null }
+            alt1: {'50%': null}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales, performanceTable);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales,
+          performanceTable
+        );
         var expectedResult = [];
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return no warnings if the effect is missing, but there is an distribution value', function() {
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'empty'
+      it('should return no warnings if the effect is missing, but there is an distribution value', function () {
+        var performanceTable = [
+          {
+            alternative: 'alt1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'empty'
+              }
             }
           }
-        }];
+        ];
         var scales = {
           ds1: {
-            alt1: { '50%': 5 }
+            alt1: {'50%': 5}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales, performanceTable);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales,
+          performanceTable
+        );
         var expectedResult = [];
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return a warning if both the distribution and effect value are missing', function() {
-        var performanceTable = [{
-          alternative: 'alt1',
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              type: 'empty'
+      it('should return a warning if both the distribution and effect value are missing', function () {
+        var performanceTable = [
+          {
+            alternative: 'alt1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                type: 'empty'
+              }
             }
           }
-        }];
+        ];
         var scales = {
           ds1: {
-            alt1: { '50%': null }
+            alt1: {'50%': null}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales, performanceTable);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales,
+          performanceTable
+        );
         var expectedResult = [missingValuesWarning];
         expect(result).toEqual(expectedResult);
       });
 
-      it('return a warning if there is atleast one criterion with multiple selected datasources', function() {
+      it('return a warning if there is atleast one criterion with multiple selected datasources', function () {
         var scales = {
           ds1: {
-            alt1: { '50%': 5 }
+            alt1: {'50%': 5}
           }
         };
         subProblemState.numberOfDataSourcesPerCriterion.crit1 = 3;
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
-        var expectedResult = ['Effects table contains multiple data sources per criterion'];
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales
+        );
+        var expectedResult = [
+          'Effects table contains multiple data sources per criterion'
+        ];
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return no warnings if there is no criterion with multiple datasources selected', function() {
+      it('should return no warnings if there is no criterion with multiple datasources selected', function () {
         var scales = {
           ds1: {
-            alt1: { '50%': 5 }
+            alt1: {'50%': 5}
           }
         };
-        var result = subProblemService.getScaleBlockingWarnings(subProblemState, scales);
+        var result = subProblemService.getScaleBlockingWarnings(
+          subProblemState,
+          scales
+        );
         var expectedResult = [];
         expect(result).toEqual(expectedResult);
       });

@@ -1,4 +1,4 @@
-import {TextField} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import _ from 'lodash';
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import {ManualInputContext} from '../ManualInputContext';

@@ -46,7 +46,7 @@ function deleteFromList(browser, index) {
   browser
     .click('#delete-workspace-' + index)
     .click('#delete-workspace-confirm-button');
-  return errorService.isErrorBarHidden(browser);
+  return browser;
 }
 
 function uploadTestWorkspace(browser, path) {

@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function (_, angular) {
   var dependencies = [
     '$q',
     'PataviResultsService',
@@ -7,7 +7,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'significantDigits'
   ];
 
-  var WorkspaceService = function(
+  var WorkspaceService = function (
     $q,
     PataviResultsService,
     PerformanceTableService,
@@ -15,7 +15,9 @@ define(['lodash', 'angular'], function(_, angular) {
   ) {
     function getObservedScales(problem) {
       var newProblem = createProblem(problem);
-      return newProblem ? PataviResultsService.postAndHandleResults(newProblem) : $q.resolve(undefined);
+      return newProblem
+        ? PataviResultsService.postAndHandleResults(newProblem)
+        : $q.resolve(undefined);
     }
 
     function createProblem(problem) {
@@ -23,40 +25,67 @@ define(['lodash', 'angular'], function(_, angular) {
       var dataSources = getDataSources(newProblem.criteria);
       newProblem.criteria = _.keyBy(dataSources, 'id');
 
-      newProblem.performanceTable = createPerformanceTable(newProblem.performanceTable);
+      newProblem.performanceTable = createPerformanceTable(
+        newProblem.performanceTable
+      );
       newProblem.method = 'scales';
       return newProblem;
     }
 
     function createPerformanceTable(performanceTable) {
-      return _.map(performanceTable, function(entry) {
+      return _.map(performanceTable, function (entry) {
         entry.criterion = entry.dataSource;
-        entry.performance = entry.performance.distribution ? entry.performance.distribution : entry.performance.effect;
+        entry.performance = entry.performance.distribution
+          ? entry.performance.distribution
+          : entry.performance.effect;
         return entry;
       });
     }
 
     function getDataSources(criteria) {
-      return _.reduce(criteria, function(accum, criterion) {
-        return accum.concat(criterion.dataSources);
-      }, []);
+      return _.reduce(
+        criteria,
+        function (accum, criterion) {
+          return accum.concat(criterion.dataSources);
+        },
+        []
+      );
     }
 
     function percentifyScales(criteria, observedScales) {
-      var dataSources = _.keyBy(_.reduce(criteria, function(accum, criterion) {
-        return accum.concat(criterion.dataSources);
-      }, []), 'id');
+      var dataSources = _.keyBy(
+        _.reduce(
+          criteria,
+          function (accum, criterion) {
+            return accum.concat(criterion.dataSources);
+          },
+          []
+        ),
+        'id'
+      );
 
-      return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
-        if (dataSources[datasourceId]) {
-          accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
-            var usePercentage = dataSources[datasourceId].unitOfMeasurement.type === 'percentage';
-            accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
-            return accum;
-          }, {});
-        }
-        return accum;
-      }, {});
+      return _.reduce(
+        observedScales,
+        function (accum, scaleRow, datasourceId) {
+          if (dataSources[datasourceId]) {
+            accum[datasourceId] = _.reduce(
+              scaleRow,
+              function (accum, scaleCell, alternativeId) {
+                var usePercentage =
+                  dataSources[datasourceId].unitOfMeasurement.type ===
+                  'percentage';
+                accum[alternativeId] = usePercentage
+                  ? _.mapValues(scaleCell, times100)
+                  : scaleCell;
+                return accum;
+              },
+              {}
+            );
+          }
+          return accum;
+        },
+        {}
+      );
     }
 
     function addTheoreticalScales(criteria) {
@@ -64,7 +93,10 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function percentifyCriteria(baseState) {
-      var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, percentifyDataSource);
+      var criteriaWithUpdatedDataSources = updateDataSources(
+        baseState.problem.criteria,
+        percentifyDataSource
+      );
       return _.merge({}, baseState, {
         problem: {
           criteria: criteriaWithUpdatedDataSources
@@ -73,14 +105,17 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function percentifyProblem(problem) {
-      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, percentifyDataSource);
+      var criteriaWithUpdatedDataSources = updateDataSources(
+        problem.criteria,
+        percentifyDataSource
+      );
       return _.merge({}, problem, {
         criteria: criteriaWithUpdatedDataSources
       });
     }
 
     function updateDataSources(criteria, fn) {
-      return _.mapValues(criteria, function(criterion) {
+      return _.mapValues(criteria, function (criterion) {
         return _.extend({}, criterion, {
           dataSources: _.map(criterion.dataSources, fn)
         });
@@ -135,7 +170,10 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function dePercentifyCriteria(baseState) {
-      var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, dePercentifyDataSource);
+      var criteriaWithUpdatedDataSources = updateDataSources(
+        baseState.problem.criteria,
+        dePercentifyDataSource
+      );
       return _.merge({}, baseState, {
         problem: {
           criteria: criteriaWithUpdatedDataSources
@@ -144,7 +182,10 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function dePercentifyProblem(problem) {
-      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, dePercentifyDataSource);
+      var criteriaWithUpdatedDataSources = updateDataSources(
+        problem.criteria,
+        dePercentifyDataSource
+      );
       return _.merge({}, problem, {
         criteria: criteriaWithUpdatedDataSources
       });
@@ -163,54 +204,71 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function times100(value) {
-      if (value === null) { return; } //prevent empty cells from becoming 0
+      if (value === null) {
+        return;
+      } //prevent empty cells from becoming 0
       return significantDigits(value * 100, 1);
     }
 
-    function reduceProblem(problem) {
-      var criteria = _.reduce(problem.criteria, function(accum, criterion, key) {
-        accum[key] = _.pick(criterion, ['scale', 'pvf']);
-        return accum;
-      }, {});
-      return {
-        criteria: criteria
-      };
-    }
-
     function buildAggregateState(baseProblem, subProblem, scenario) {
-      var newState = _.merge({}, {
-        problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
-      }, scenario.state);
+      var newState = _.merge(
+        {},
+        {
+          problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
+        },
+        scenario.state
+      );
       newState.problem.preferences = scenario.state.prefs;
-      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, criterionId) {
-        return _.merge({}, criterion, _.omit(baseProblem.criteria[criterionId], ['pvf', 'dataSources']));
-        // omit because we don't want the base problem pvf to overwrite the current one
-      });
-      newState.problem.alternatives = _.mapValues(newState.problem.alternatives, function(alternative, key) {
-        return _.merge({}, alternative, baseProblem.alternatives[key]);
-      });
-      newState.problem.criteria = addTheoreticalScales(newState.problem.criteria);
+      newState.problem.criteria = _.mapValues(
+        newState.problem.criteria,
+        function (criterion, criterionId) {
+          return _.merge(
+            {},
+            criterion,
+            _.omit(baseProblem.criteria[criterionId], ['pvf', 'dataSources'])
+          );
+          // omit because we don't want the base problem pvf to overwrite the current one
+        }
+      );
+      newState.problem.alternatives = _.mapValues(
+        newState.problem.alternatives,
+        function (alternative, key) {
+          return _.merge({}, alternative, baseProblem.alternatives[key]);
+        }
+      );
+      newState.problem.criteria = addTheoreticalScales(
+        newState.problem.criteria
+      );
       return newState;
     }
 
     function setDefaultObservedScales(problem, observedScales) {
       var newProblem = _.cloneDeep(problem);
-      _.forEach(newProblem.criteria, function(criterion) {
+      _.forEach(newProblem.criteria, function (criterion) {
         var scale = observedScales[criterion.dataSources[0].id];
-        var effects = PerformanceTableService.getEffectValues(problem.performanceTable, criterion.dataSources[0]);
-        var rangeDistributionValues = PerformanceTableService.getRangeDistributionValues(problem.performanceTable, criterion.dataSources[0]);
+        var effects = PerformanceTableService.getEffectValues(
+          problem.performanceTable,
+          criterion.dataSources[0]
+        );
+        var rangeDistributionValues = PerformanceTableService.getRangeDistributionValues(
+          problem.performanceTable,
+          criterion.dataSources[0]
+        );
 
-        criterion.dataSources[0].pvf = _.merge({
-          range: getMinMax(scale, effects.concat(rangeDistributionValues))
-        }, criterion.dataSources[0].pvf);
+        criterion.dataSources[0].pvf = _.merge(
+          {
+            range: getMinMax(scale, effects.concat(rangeDistributionValues))
+          },
+          criterion.dataSources[0].pvf
+        );
       });
       return newProblem;
     }
 
     function getMinMax(scalesByAlternative, effectAndRangeDistributionValues) {
       var allValues = [].concat(effectAndRangeDistributionValues);
-      _.forEach(scalesByAlternative, function(scale) {
-        _.forEach(scale, function(value) {
+      _.forEach(scalesByAlternative, function (scale) {
+        _.forEach(scale, function (value) {
           if (value !== null) {
             allValues.push(value);
           }
@@ -230,35 +288,62 @@ define(['lodash', 'angular'], function(_, angular) {
     function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
       var newProblem = _.cloneDeep(baseProblem);
       if (subProblemDefinition.excludedCriteria) {
-        newProblem.criteria = _.omit(newProblem.criteria, subProblemDefinition.excludedCriteria);
-        newProblem.performanceTable = filterExcludedCriteriaEntries(newProblem, subProblemDefinition.excludedCriteria);
+        newProblem.criteria = _.omit(
+          newProblem.criteria,
+          subProblemDefinition.excludedCriteria
+        );
+        newProblem.performanceTable = filterExcludedCriteriaEntries(
+          newProblem,
+          subProblemDefinition.excludedCriteria
+        );
       }
 
       if (subProblemDefinition.excludedAlternatives) {
-        newProblem.alternatives = filterExcludedAlternatives(newProblem, subProblemDefinition.excludedAlternatives);
-        newProblem.performanceTable = filterExcludedAlternativesEntries(newProblem, subProblemDefinition.excludedAlternatives);
-        newProblem.performanceTable = updateIncludedEntries(newProblem, subProblemDefinition);
+        newProblem.alternatives = filterExcludedAlternatives(
+          newProblem,
+          subProblemDefinition.excludedAlternatives
+        );
+        newProblem.performanceTable = filterExcludedAlternativesEntries(
+          newProblem,
+          subProblemDefinition.excludedAlternatives
+        );
+        newProblem.performanceTable = updateIncludedEntries(
+          newProblem,
+          subProblemDefinition
+        );
       }
 
       if (subProblemDefinition.excludedDataSources) {
-        newProblem.criteria = updateCriterionDataSources(newProblem, subProblemDefinition.excludedDataSources);
-        newProblem.performanceTable = filterExcludedDataSourceEntries(newProblem, subProblemDefinition.excludedDataSources);
+        newProblem.criteria = updateCriterionDataSources(
+          newProblem,
+          subProblemDefinition.excludedDataSources
+        );
+        newProblem.performanceTable = filterExcludedDataSourceEntries(
+          newProblem,
+          subProblemDefinition.excludedDataSources
+        );
       }
 
-      newProblem.criteria = createCriteriaWithRanges(newProblem, subProblemDefinition.ranges);
+      newProblem.criteria = createCriteriaWithRanges(
+        newProblem,
+        subProblemDefinition.ranges
+      );
       return newProblem;
     }
 
     function createCriteriaWithRanges(problem, ranges) {
-      return _.mapValues(problem.criteria, function(criterion) {
+      return _.mapValues(problem.criteria, function (criterion) {
         var newCriterion = _.cloneDeep(criterion);
-        newCriterion.dataSources = createDataSourcesWithRanges(newCriterion, ranges);
+        newCriterion.dataSources = createDataSourcesWithRanges(
+          newCriterion,
+          ranges
+        );
         return newCriterion;
       });
     }
 
     function createDataSourcesWithRanges(criterion, ranges) {
-      return _.map(criterion.dataSources, function(dataSource) {
+      return _.map(criterion.dataSources, function (dataSource) {
         var rangesForDataSource = getRanges(dataSource.id, ranges);
         return _.merge({}, dataSource, rangesForDataSource);
       });
@@ -273,29 +358,35 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function filterExcludedDataSourceEntries(problem, excludedDataSources) {
-      return _.reject(problem.performanceTable, function(tableEntry) {
+      return _.reject(problem.performanceTable, function (tableEntry) {
         return _.includes(excludedDataSources, tableEntry.dataSource);
       });
     }
 
     function updateCriterionDataSources(problem, excludedDataSources) {
-      return _.mapValues(problem.criteria, function(criterion) {
+      return _.mapValues(problem.criteria, function (criterion) {
         var newCriterion = angular.copy(criterion);
-        newCriterion.dataSources = filterDataSources(newCriterion.dataSources, excludedDataSources);
+        newCriterion.dataSources = filterDataSources(
+          newCriterion.dataSources,
+          excludedDataSources
+        );
         return newCriterion;
       });
     }
 
     function filterDataSources(dataSources, excludedDataSources) {
-      return _.filter(dataSources, function(dataSource) {
+      return _.filter(dataSources, function (dataSource) {
         return !_.includes(excludedDataSources, dataSource.id);
       });
     }
 
     function updateIncludedEntries(problem, subProblemDefinition) {
-      return _.map(problem.performanceTable, function(entry) {
+      return _.map(problem.performanceTable, function (entry) {
         if (!isAbsolutePerformance(entry)) {
-          entry.performance.distribution.parameters.relative = updateRelative(entry.performance.distribution.parameters.relative, subProblemDefinition.excludedAlternatives);
+          entry.performance.distribution.parameters.relative = updateRelative(
+            entry.performance.distribution.parameters.relative,
+            subProblemDefinition.excludedAlternatives
+          );
         }
         return entry;
       });
@@ -309,27 +400,29 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function filterExcludedCriteriaEntries(problem, excludedCriteria) {
-      return _.reject(problem.performanceTable, function(tableEntry) {
-        return _.includes(excludedCriteria, tableEntry.criterionUri) ||
-          _.includes(excludedCriteria, tableEntry.criterion); // addis/mcda standalone difference
+      return _.reject(problem.performanceTable, function (tableEntry) {
+        return (
+          _.includes(excludedCriteria, tableEntry.criterionUri) ||
+          _.includes(excludedCriteria, tableEntry.criterion)
+        ); // addis/mcda standalone difference
       });
     }
 
     function filterExcludedAlternativesEntries(problem, excludedAlternative) {
-      return _.reject(problem.performanceTable, function(tableEntry) {
+      return _.reject(problem.performanceTable, function (tableEntry) {
         return _.includes(excludedAlternative, tableEntry.alternative);
       });
     }
 
     function filterExcludedAlternatives(problem, excludedAlternatives) {
-      return _.pickBy(problem.alternatives, function(alternative, id) {
+      return _.pickBy(problem.alternatives, function (alternative, id) {
         return !_.includes(excludedAlternatives, id);
       });
     }
 
     function reduceCov(oldCov, names) {
       var newCov = _.cloneDeep(oldCov);
-      _.forEach(names, function(name) {
+      _.forEach(names, function (name) {
         var idx = newCov.colnames.indexOf(name);
         newCov.colnames.splice(idx, 1);
         newCov.rownames.splice(idx, 1);
@@ -341,32 +434,46 @@ define(['lodash', 'angular'], function(_, angular) {
     function reduceMatrix(cov, idx) {
       var newCov = _.cloneDeep(cov);
       newCov.splice(idx, 1);
-      _.forEach(newCov, function(row) {
+      _.forEach(newCov, function (row) {
         row = row.splice(idx, 1);
       });
       return newCov;
     }
 
     function reduceMu(mu, excludedAlternatives) {
-      return _.reduce(mu, function(accum, muValue, key) {
-        if (!_.includes(excludedAlternatives, key)) {
-          accum[key] = muValue;
-        }
-        return accum;
-      }, {});
+      return _.reduce(
+        mu,
+        function (accum, muValue, key) {
+          if (!_.includes(excludedAlternatives, key)) {
+            accum[key] = muValue;
+          }
+          return accum;
+        },
+        {}
+      );
     }
 
-    function filterScenariosWithResults(baseProblem, currentSubProblem, scenarios) {
-      return _.filter(scenarios, function(scenario) {
-        var state = buildAggregateState(baseProblem, currentSubProblem, scenario);
-        return !_.some(state.problem.criteria, function(criterion) {
+    function filterScenariosWithResults(
+      baseProblem,
+      currentSubProblem,
+      scenarios
+    ) {
+      return _.filter(scenarios, function (scenario) {
+        var state = buildAggregateState(
+          baseProblem,
+          currentSubProblem,
+          scenario
+        );
+        return !_.some(state.problem.criteria, function (criterion) {
           return hasPVFDirection(criterion);
         });
       });
     }
 
     function hasPVFDirection(criterion) {
-      return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
+      return (
+        !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction
+      );
     }
     /*
      * workspace should have:
@@ -398,19 +505,22 @@ define(['lodash', 'angular'], function(_, angular) {
       ];
       var triggeredConstraint;
       try {
-        triggeredConstraint = _.find(constraints, function(constraint) {
+        triggeredConstraint = _.find(constraints, function (constraint) {
           return constraint(workspace);
         });
       } catch (exception) {
         console.log(exception);
         return {
           isValid: false,
-          errorMessage: 'Exception while reading problem. Please make sure the file follows the specifications as laid out in the manual'
+          errorMessage:
+            'Exception while reading problem. Please make sure the file follows the specifications as laid out in the manual'
         };
       }
       return {
         isValid: !triggeredConstraint,
-        errorMessage: triggeredConstraint ? triggeredConstraint(workspace) : undefined
+        errorMessage: triggeredConstraint
+          ? triggeredConstraint(workspace)
+          : undefined
       };
     }
 
@@ -422,7 +532,7 @@ define(['lodash', 'angular'], function(_, angular) {
         'performanceTable'
       ];
 
-      var missingProperties = _.reject(requiredProperties, function(property) {
+      var missingProperties = _.reject(requiredProperties, function (property) {
         return workspace[property];
       });
 
@@ -446,54 +556,84 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function performanceTableWithInvalidAlternative(workspace) {
-      var entry = _.find(workspace.performanceTable, function(tableEntry) {
-        return isAbsolutePerformance(tableEntry) && !workspace.alternatives[tableEntry.alternative];
+      var entry = _.find(workspace.performanceTable, function (tableEntry) {
+        return (
+          isAbsolutePerformance(tableEntry) &&
+          !workspace.alternatives[tableEntry.alternative]
+        );
       });
       if (entry) {
-        return 'Performance table contains data for nonexistent alternative: "' + entry.alternative + '"';
+        return (
+          'Performance table contains data for nonexistent alternative: "' +
+          entry.alternative +
+          '"'
+        );
       }
     }
 
     function performanceTableWithInvalidCriterion(workspace) {
-      var entry = _.find(workspace.performanceTable, function(tableEntry) {
+      var entry = _.find(workspace.performanceTable, function (tableEntry) {
         return !workspace.criteria[tableEntry.criterion];
       });
       if (entry) {
-        return 'Performance table contains data for nonexistent criterion: "' + entry.criterion + '"';
+        return (
+          'Performance table contains data for nonexistent criterion: "' +
+          entry.criterion +
+          '"'
+        );
       }
     }
 
     function performanceTableWithMissingData(workspace) {
       var alternatives = _.keys(workspace.alternatives);
       var criteria = _.keys(workspace.criteria);
-      var criteriaWithAbsolutePerformance = _.filter(criteria, function(criterion) {
-        return _.find(workspace.performanceTable, function(tableEntry) {
-          return tableEntry.criterion === criterion && isAbsolutePerformance(tableEntry);
+      var criteriaWithAbsolutePerformance = _.filter(criteria, function (
+        criterion
+      ) {
+        return _.find(workspace.performanceTable, function (tableEntry) {
+          return (
+            tableEntry.criterion === criterion &&
+            isAbsolutePerformance(tableEntry)
+          );
         });
       });
-      var critAltCombinations = _.reduce(criteriaWithAbsolutePerformance, function(acc, criterion) {
-        return acc.concat(_.map(alternatives, function(alternative) {
-          return {
-            criterion: criterion,
-            alternative: alternative
-          };
-        }));
-      }, []);
-      var missingPair = _.find(critAltCombinations, function(critAltCombo) {
-        return !_.find(workspace.performanceTable, function(tableEntry) {
-          return tableEntry.alternative === critAltCombo.alternative && tableEntry.criterion === critAltCombo.criterion;
+      var critAltCombinations = _.reduce(
+        criteriaWithAbsolutePerformance,
+        function (acc, criterion) {
+          return acc.concat(
+            _.map(alternatives, function (alternative) {
+              return {
+                criterion: criterion,
+                alternative: alternative
+              };
+            })
+          );
+        },
+        []
+      );
+      var missingPair = _.find(critAltCombinations, function (critAltCombo) {
+        return !_.find(workspace.performanceTable, function (tableEntry) {
+          return (
+            tableEntry.alternative === critAltCombo.alternative &&
+            tableEntry.criterion === critAltCombo.criterion
+          );
         });
       });
       if (missingPair) {
-        return 'Performance table is missing data for criterion "' + missingPair.criterion +
-          '" and alternative "' + missingPair.alternative + '"';
+        return (
+          'Performance table is missing data for criterion "' +
+          missingPair.criterion +
+          '" and alternative "' +
+          missingPair.alternative +
+          '"'
+        );
       }
     }
 
     function preferencesWithUnfoundCriterion(workspace) {
       var crit;
-      _.find(workspace.preferences, function(preference) {
-        return _.find(preference.criteria, function(criterion) {
+      _.find(workspace.preferences, function (preference) {
+        return _.find(preference.criteria, function (criterion) {
           if (!workspace.criteria[criterion]) {
             crit = criterion;
             return true;
@@ -503,7 +643,9 @@ define(['lodash', 'angular'], function(_, angular) {
         });
       });
       if (crit) {
-        return 'Preferences contain data for nonexistent criterion: "' + crit + '"';
+        return (
+          'Preferences contain data for nonexistent criterion: "' + crit + '"'
+        );
       }
     }
 
@@ -512,9 +654,11 @@ define(['lodash', 'angular'], function(_, angular) {
         return;
       }
       var firstType = workspace.preferences[0].type;
-      if (_.some(workspace.preferences, function(preference) {
-        return preference.type !== firstType;
-      })) {
+      if (
+        _.some(workspace.preferences, function (preference) {
+          return preference.type !== firstType;
+        })
+      ) {
         return 'Preferences should all be the same type';
       }
     }
@@ -540,15 +684,24 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasBadCoverage(visitCount) {
-      return _.reduce(visitCount, function(accum, visits) {
-        return accum || !((visits.to === 0 && visits.from === 1) ||
-          (visits.to === 1 && visits.from === 1) ||
-          (visits.to === 1 && visits.from === 0));
-      }, false);
+      return _.reduce(
+        visitCount,
+        function (accum, visits) {
+          return (
+            accum ||
+            !(
+              (visits.to === 0 && visits.from === 1) ||
+              (visits.to === 1 && visits.from === 1) ||
+              (visits.to === 1 && visits.from === 0)
+            )
+          );
+        },
+        false
+      );
     }
 
     function createVisitCounts(workspace) {
-      var visitCount = _.mapValues(workspace.criteria, function() {
+      var visitCount = _.mapValues(workspace.criteria, function () {
         return {
           from: 0,
           to: 0
@@ -558,20 +711,25 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function countVisits(workspace, visitCount) {
-      return _.reduce(workspace.preferences, function(accum, preference) {
-        var origin = preference.criteria[0];
-        var destination = preference.criteria[1];
-        ++accum[origin].from;
-        ++accum[destination].to;
-        return accum;
-      }, visitCount);
+      return _.reduce(
+        workspace.preferences,
+        function (accum, preference) {
+          var origin = preference.criteria[0];
+          var destination = preference.criteria[1];
+          ++accum[origin].from;
+          ++accum[destination].to;
+          return accum;
+        },
+        visitCount
+      );
     }
 
     function hasBadPath(workspace) {
-      return _.find(workspace.preferences, function(preference, index) {
+      return _.find(workspace.preferences, function (preference, index) {
         var origin = preference.criteria[0];
         if (index > 0) {
-          var previousDestination = workspace.preferences[index - 1].criteria[1];
+          var previousDestination =
+            workspace.preferences[index - 1].criteria[1];
           return origin !== previousDestination;
         }
       });
@@ -580,23 +738,30 @@ define(['lodash', 'angular'], function(_, angular) {
     function createVisitCombinationCounts(visitCount) {
       var counts = {
         first: 0,
-        last: 0,
+        last: 0
       };
-      return _.reduce(visitCount, function(accum, visits) {
-        if (visits.to === 0 && visits.from === 1) {
-          ++accum.first;
-        } else if (visits.to === 1 && visits.from === 0) {
-          ++accum.last;
-        }
-        return accum;
-      }, counts);
-
+      return _.reduce(
+        visitCount,
+        function (accum, visits) {
+          if (visits.to === 0 && visits.from === 1) {
+            ++accum.first;
+          } else if (visits.to === 1 && visits.from === 0) {
+            ++accum.last;
+          }
+          return accum;
+        },
+        counts
+      );
     }
 
     function hasNoOrdinalPreferences(workspace) {
-      return !workspace.preferences || _.isEmpty(workspace.preferences) || _.find(workspace.preferences, function(preference) {
-        return preference.type !== 'ordinal';
-      });
+      return (
+        !workspace.preferences ||
+        _.isEmpty(workspace.preferences) ||
+        _.find(workspace.preferences, function (preference) {
+          return preference.type !== 'ordinal';
+        })
+      );
     }
 
     function hasWrongNumberOfPreferences(workspace) {
@@ -604,17 +769,24 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function inconsistentExactPreferences(workspace) {
-      if (hasNoPreferences(workspace) || workspace.preferences[0].type !== 'exact swing') {
+      if (
+        hasNoPreferences(workspace) ||
+        workspace.preferences[0].type !== 'exact swing'
+      ) {
         return;
       }
 
       var first = workspace.preferences[0].criteria[0];
-      if (_.find(workspace.preferences, function(preference) {
-        return preference.criteria[0] !== first ||
-          preference.criteria[0] === preference.criteria[1] ||
-          preference.ratio > 1 ||
-          preference.ratio <= 0;
-      })) {
+      if (
+        _.find(workspace.preferences, function (preference) {
+          return (
+            preference.criteria[0] !== first ||
+            preference.criteria[0] === preference.criteria[1] ||
+            preference.ratio > 1 ||
+            preference.ratio <= 0
+          );
+        })
+      ) {
         return 'Inconsistent exact weighting preferences';
       }
     }
@@ -624,14 +796,16 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isAbsolutePerformance(tableEntry) {
-      return tableEntry.performance.effect ||
+      return (
+        tableEntry.performance.effect ||
         (tableEntry.performance.distribution &&
-          tableEntry.performance.distribution.type.indexOf('relative') < 0);
+          tableEntry.performance.distribution.type.indexOf('relative') < 0)
+      );
     }
 
     function criterionLackingTitle(workspace) {
       var key;
-      var crit = _.find(workspace.criteria, function(criterion, critKey) {
+      var crit = _.find(workspace.criteria, function (criterion, critKey) {
         key = critKey;
         return !criterion.title;
       });
@@ -642,7 +816,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function alternativeLackingTitle(workspace) {
       var key;
-      var alt = _.find(workspace.alternatives, function(alternative, critKey) {
+      var alt = _.find(workspace.alternatives, function (alternative, critKey) {
         key = critKey;
         return !alternative.title;
       });
@@ -652,62 +826,119 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function relativePerformanceLackingBaseline(workspace) {
-      var entryLackingBaseline = _.find(workspace.performanceTable, function(tableEntry) {
-        return !isAbsolutePerformance(tableEntry) && !tableEntry.performance.distribution.parameters.baseline;
+      var entryLackingBaseline = _.find(workspace.performanceTable, function (
+        tableEntry
+      ) {
+        return (
+          !isAbsolutePerformance(tableEntry) &&
+          !tableEntry.performance.distribution.parameters.baseline
+        );
       });
       if (entryLackingBaseline) {
-        return 'Missing baseline for criterion: "' + entryLackingBaseline.criterion + '"';
+        return (
+          'Missing baseline for criterion: "' +
+          entryLackingBaseline.criterion +
+          '"'
+        );
       }
     }
 
     function relativePerformanceWithBadMu(workspace) {
       var missingAlternativeId;
-      var entryWithBadMu = _.find(workspace.performanceTable, function(tableEntry) {
-        return !isAbsolutePerformance(tableEntry) && _.find(_.keys(tableEntry.performance.distribution.parameters.relative.mu), function(alternativeId) {
-          missingAlternativeId = alternativeId;
-          return !workspace.alternatives[alternativeId];
-        });
+      var entryWithBadMu = _.find(workspace.performanceTable, function (
+        tableEntry
+      ) {
+        return (
+          !isAbsolutePerformance(tableEntry) &&
+          _.find(
+            _.keys(tableEntry.performance.distribution.parameters.relative.mu),
+            function (alternativeId) {
+              missingAlternativeId = alternativeId;
+              return !workspace.alternatives[alternativeId];
+            }
+          )
+        );
       });
       if (entryWithBadMu) {
-        return 'The mu of the performance of criterion: "' + entryWithBadMu.criterion + '" refers to nonexistent alternative: "' + missingAlternativeId + '"';
+        return (
+          'The mu of the performance of criterion: "' +
+          entryWithBadMu.criterion +
+          '" refers to nonexistent alternative: "' +
+          missingAlternativeId +
+          '"'
+        );
       }
     }
 
     function relativePerformanceWithBadCov(workspace) {
       var alternativeKey;
-      var entryWithBadCov = _.find(workspace.performanceTable, function(tableEntry) {
-        return !isAbsolutePerformance(tableEntry) && (_.find(tableEntry.performance.distribution.parameters.relative.cov.rownames, function(rowVal) {
-          alternativeKey = rowVal;
-          return !workspace.alternatives[rowVal];
-        }) || _.find(tableEntry.performance.distribution.parameters.relative.cov.colnames, function(colVal) {
-          alternativeKey = colVal;
-          return !workspace.alternatives[colVal];
-        }));
+      var entryWithBadCov = _.find(workspace.performanceTable, function (
+        tableEntry
+      ) {
+        return (
+          !isAbsolutePerformance(tableEntry) &&
+          (_.find(
+            tableEntry.performance.distribution.parameters.relative.cov
+              .rownames,
+            function (rowVal) {
+              alternativeKey = rowVal;
+              return !workspace.alternatives[rowVal];
+            }
+          ) ||
+            _.find(
+              tableEntry.performance.distribution.parameters.relative.cov
+                .colnames,
+              function (colVal) {
+                alternativeKey = colVal;
+                return !workspace.alternatives[colVal];
+              }
+            ))
+        );
       });
       if (entryWithBadCov) {
-        return 'The covariance matrix of criterion: "' + entryWithBadCov.criterion + '" refers to nonexistent alternative: "' + alternativeKey + '"';
+        return (
+          'The covariance matrix of criterion: "' +
+          entryWithBadCov.criterion +
+          '" refers to nonexistent alternative: "' +
+          alternativeKey +
+          '"'
+        );
       }
     }
 
     function checkForMissingValuesInPerformanceTable(performanceTable) {
-      return _.some(performanceTable, function(entry) {
-        return hasTextEffectWithoutDistribution(entry.performance) ||
+      return _.some(performanceTable, function (entry) {
+        return (
+          hasTextEffectWithoutDistribution(entry.performance) ||
           hasTextDistributionWithoutEffect(entry.performance) ||
-          hasTextDistributionAndEffect(entry.performance);
+          hasTextDistributionAndEffect(entry.performance)
+        );
       });
     }
 
     function hasTextEffectWithoutDistribution(performance) {
-      return performance.effect && performance.effect.type === 'empty' && !performance.distribution;
+      return (
+        performance.effect &&
+        performance.effect.type === 'empty' &&
+        !performance.distribution
+      );
     }
 
     function hasTextDistributionWithoutEffect(performance) {
-      return performance.distribution && performance.distribution.type === 'empty' && !performance.effect;
+      return (
+        performance.distribution &&
+        performance.distribution.type === 'empty' &&
+        !performance.effect
+      );
     }
 
     function hasTextDistributionAndEffect(performance) {
-      return performance.effect && performance.effect.type === 'empty' &&
-        performance.distribution && performance.distribution.type === 'empty';
+      return (
+        performance.effect &&
+        performance.effect.type === 'empty' &&
+        performance.distribution &&
+        performance.distribution.type === 'empty'
+      );
     }
 
     return {
@@ -722,7 +953,6 @@ define(['lodash', 'angular'], function(_, angular) {
       percentifyCriteria: percentifyCriteria,
       percentifyProblem: percentifyProblem,
       percentifyScales: percentifyScales,
-      reduceProblem: reduceProblem,
       setDefaultObservedScales: setDefaultObservedScales,
       validateWorkspace: validateWorkspace
     };

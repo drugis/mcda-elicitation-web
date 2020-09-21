@@ -140,7 +140,7 @@ function smaaResults(browser) {
 function partialValueFunction(browser) {
   loginService.login(browser);
   goToPreferences(browser)
-    .click('#criterion-0-pvf-button')
+    .click('#advanced-pvf-button-treatmentRespondersId')
     .pause(2000)
     .getTitle(function (result) {
       browser.assert.equal(

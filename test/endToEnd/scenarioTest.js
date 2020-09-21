@@ -4,7 +4,7 @@ module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Creating a new scenario': create,
-  // 'Editing the title': edit,
+  'Editing the title': edit,
   'Copying the scenario': copy,
   'Switching scenario in the preferences tab': switchinPreferences,
   'Switching scenario in the deterministic results tab': switchInDeterministic,
@@ -32,7 +32,7 @@ function beforeEach(browser) {
   errorService
     .isErrorBarHidden(browser)
     .click('#preferences-tab')
-    .pause(50)
+    .pause(100)
     .waitForElementVisible('#partial-value-functions-block');
 }
 
@@ -43,16 +43,16 @@ function afterEach(browser) {
 
 function create(browser) {
   browser
-    .click('#create-scenario-button')
-    .waitForElementVisible('#create-new-scenario-button:disabled')
+    .click('#add-scenario-button')
+    .waitForElementVisible('#add-scenario-title-button:disabled')
     .setValue('#new-scenario-title', 'Default')
-    .waitForElementVisible('#create-new-scenario-button:disabled')
-    .waitForElementVisible('#duplicate-title-alert')
+    .waitForElementVisible('#add-scenario-title-button:disabled')
+    .assert.containsText('#error-0', 'Duplicate title')
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#create-new-scenario-button:enabled')
-    .click('#create-new-scenario-button')
-    .pause(50)
+    .waitForElementVisible('#add-scenario-title-button:enabled')
+    .click('#add-scenario-title-button')
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
 
@@ -65,6 +65,7 @@ function edit(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .pause(250)
     .click('#edit-scenario-title-button')
+    .pause(100)
     .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
@@ -73,35 +74,35 @@ function copy(browser) {
   browser.assert
     .containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
-    .waitForElementVisible('#create-new-scenario-button:disabled')
+    .waitForElementVisible('#copy-scenario-title-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#create-new-scenario-button:enabled')
-    .click('#create-new-scenario-button')
-    .pause(50) //pause needed to not get 'stale element' error
+    .waitForElementVisible('#copy-scenario-title-button:enabled')
+    .click('#copy-scenario-title-button')
+    .pause(100) //pause needed to not get 'stale element' error
     .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
 
 function switchinPreferences(browser) {
   browser
-    .click('#create-scenario-button')
+    .click('#add-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#create-new-scenario-button:enabled')
-    .click('#create-new-scenario-button')
-    .pause(50)
+    .waitForElementVisible('#add-scenario-title-button:enabled')
+    .click('#add-scenario-title-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
-    .click('option[label="Default"]')
+    .click('li.MuiButtonBase-root:nth-child(1)')
+    .pause(100) //pause needed to not get 'stale element' error
     .assert.containsText('#scenario-selector', 'Default');
 }
 
 function switchInDeterministic(browser) {
   browser
-    .click('#create-scenario-button')
+    .click('#add-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#create-new-scenario-button:enabled')
-    .click('#create-new-scenario-button')
-    .pause(50)
+    .waitForElementVisible('#add-scenario-title-button:enabled')
+    .click('#add-scenario-title-button')
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#deterministic-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
@@ -112,11 +113,11 @@ function switchInDeterministic(browser) {
 
 function switchInSmaa(browser) {
   browser
-    .click('#create-scenario-button')
+    .click('#add-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#create-new-scenario-button:enabled')
-    .click('#create-new-scenario-button')
-    .pause(50)
+    .waitForElementVisible('#add-scenario-title-button:enabled')
+    .click('#add-scenario-title-button')
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#smaa-tab')
     .waitForElementVisible('#smaa-measurements-header')
@@ -126,35 +127,35 @@ function switchInSmaa(browser) {
 }
 function deleteScenario(browser) {
   browser
-    .waitForElementVisible('#delete-scenario-disabled')
+    .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
-    .waitForElementVisible('#create-new-scenario-button:disabled')
+    .waitForElementVisible('#copy-scenario-title-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#create-new-scenario-button:enabled')
-    .click('#create-new-scenario-button')
-    .pause(50) //pause needed to not get 'stale element' error
+    .waitForElementVisible('#copy-scenario-title-button:enabled')
+    .click('#copy-scenario-title-button')
+    .pause(100) //pause needed to not get 'stale element' error
     .waitForElementVisible('#delete-scenario-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#delete-scenario-button')
-    .waitForElementVisible('#delete-scenario-header')
+    .waitForElementVisible('#dialog-title')
     .click('#delete-scenario-confirm-button')
-    .waitForElementVisible('#delete-scenario-disabled')
+    .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default');
 }
 
 function cancelDeleteScenario(browser) {
   browser
-    .waitForElementVisible('#delete-scenario-disabled')
+    .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
-    .waitForElementVisible('#create-new-scenario-button:disabled')
+    .waitForElementVisible('#copy-scenario-title-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#create-new-scenario-button:enabled')
-    .click('#create-new-scenario-button')
-    .pause(50) //pause needed to not get 'stale element' error
+    .waitForElementVisible('#copy-scenario-title-button:enabled')
+    .click('#copy-scenario-title-button')
+    .pause(100) //pause needed to not get 'stale element' error
     .click('#delete-scenario-button')
-    .waitForElementVisible('#delete-scenario-header')
+    .waitForElementVisible('#dialog-title')
     .click('#close-modal-button')
     .waitForElementVisible('#delete-scenario-button')
     .assert.containsText('#scenario-selector', scenarioTitle);

@@ -29,7 +29,7 @@ const util = require('./util/util');
 const title =
   'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const preferenceTabPath = '#preferences-tab';
-const importanceCellPath = '#importance-criterion-0';
+const importanceCellPath = '#importance-criterion-treatmentRespondersId';
 const closeModalButtonPath = '#close-modal-button';
 
 function cancelAction(browser, paths, expectedValue) {
@@ -145,7 +145,7 @@ function cancelCreatingSubproblem(browser) {
 function cancelSettingPartialValueFunction(browser) {
   var paths = {
     tab: preferenceTabPath,
-    actionButton: '#criterion-0-pvf-button',
+    actionButton: `#advanced-pvf-button-treatmentRespondersId`,
     cancelButton: '#cancel-button',
     content: '#partial-value-functions-header'
   };
@@ -207,7 +207,7 @@ function cancelEditingScenario(browser) {
 function cancelCreatingScenario(browser) {
   var paths = {
     tab: preferenceTabPath,
-    actionButton: '#create-scenario-button',
+    actionButton: '#add-scenario-button',
     cancelButton: closeModalButtonPath,
     content: '#scenario-selector'
   };

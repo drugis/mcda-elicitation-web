@@ -1,4 +1,6 @@
-import {Grid, TableCell, Tooltip} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import TableCell from '@material-ui/core/TableCell';
+import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
