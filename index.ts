@@ -26,12 +26,12 @@ import InProgressWorkspaceRepository from './node-backend/inProgressRepository';
 import InProgressRouter from './node-backend/inProgressRouter';
 import logger from './node-backend/logger';
 import OrderingRouter from './node-backend/orderingRouter';
+import PataviRouter from './node-backend/pataviRouter';
 import ScenarioRouter from './node-backend/scenarioRouter';
 import SubproblemRouter from './node-backend/subproblemRouter';
 import WorkspaceRepository from './node-backend/workspaceRepository';
 import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
-import PataviRouter from './node-backend/pataviRouter';
 
 const db = DB(buildDBConfig());
 
@@ -136,8 +136,11 @@ function initApp(): void {
   });
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
-  app.use('/examples', express.static('examples'));
-  app.use('/tutorials', express.static('examples/tutorial-examples'));
+  app.use('/examples', express.static('examples', {index: 'index.json'}));
+  app.use(
+    '/tutorials',
+    express.static('examples/tutorial-examples', {index: 'index.json'})
+  );
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
   app.use(rightsManagement.expressMiddleware);
 
