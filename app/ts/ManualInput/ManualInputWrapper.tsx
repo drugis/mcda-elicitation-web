@@ -3,6 +3,7 @@ import Axios, {AxiosResponse} from 'axios';
 import React, {useEffect, useState} from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
+import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import ManualInput from './ManualInput';
 import {ManualInputContextProviderComponent} from './ManualInputContext';
 
@@ -26,12 +27,14 @@ export default function ManualInputWrapper() {
     <ErrorContextProviderComponent>
       <ErrorHandler>
         {isLoaded ? (
-          <ManualInputContextProviderComponent
-            inProgressId={inProgressId}
-            message={message}
-          >
-            <ManualInput />
-          </ManualInputContextProviderComponent>
+          <HelpContextProviderComponent>
+            <ManualInputContextProviderComponent
+              inProgressId={inProgressId}
+              message={message}
+            >
+              <ManualInput />
+            </ManualInputContextProviderComponent>
+          </HelpContextProviderComponent>
         ) : (
           <span>...loading</span>
         )}

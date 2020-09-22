@@ -1,6 +1,8 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import React, {useEffect} from 'react';
+import InlineHelp from '../InlineHelp/InlineHelp';
 import DoneButton from './DoneButton/DoneButton';
 import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
 import Favourability from './Favourability/Favourability';
@@ -21,13 +23,18 @@ export default function ManualInput() {
     <Grid container justify="center">
       <Grid container item spacing={2} xs={12} component={Paper}>
         <Grid item xs={12}>
-          <h3 id="manual-input-header-step1">Create workspace manually</h3>
+          <Typography id="manual-input-header-step1" variant="h3">
+            Create workspace manually
+          </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={11}>
           <Title />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={11}>
           <TherapeuticContext />
+        </Grid>
+        <Grid item xs={1}>
+          <InlineHelp helpId="therapeutic-context" />
         </Grid>
         <Grid item xs={12}>
           <Favourability />
