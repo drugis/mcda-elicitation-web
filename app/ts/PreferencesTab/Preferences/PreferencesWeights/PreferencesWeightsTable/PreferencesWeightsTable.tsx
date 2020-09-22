@@ -4,6 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import _ from 'lodash';
@@ -40,13 +41,21 @@ export default function PreferencesWeightsTable() {
     <Table id="perferences-weights-table">
       <TableHead>
         <TableRow>
-          <TableCell>Criterion</TableCell>
+          <TableCell>
+            Criterion <InlineHelp helpId="criterion" />
+          </TableCell>
           <TableCell>Description</TableCell>
-          <TableCell>Unit</TableCell>
+          <TableCell>
+            Unit <InlineHelp helpId="unit-of-measurement" />
+          </TableCell>
           <TableCell>Best</TableCell>
           <TableCell>Worst</TableCell>
-          <TableCell>Importance</TableCell>
-          <TableCell>Weight</TableCell>
+          <TableCell>
+            Importance <InlineHelp helpId="importance" />
+          </TableCell>
+          <TableCell>
+            Weight <InlineHelp helpId="representative-weights" />
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

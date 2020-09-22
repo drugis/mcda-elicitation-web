@@ -2,13 +2,14 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import IAlternative from '@shared/interface/IAlternative';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 import AddAlternativeButton from './AddAlternativeButton/AddAlternativeButton';
 import AlternativeHeader from './AlternativeHeader/AlternativeHeader';
 import CriteriaRows from './CriteriaRows/CriteriaRows';
-import IAlternative from '@shared/interface/IAlternative';
 
 export default function ManualInputTable() {
   const {alternatives} = useContext(ManualInputContext);
@@ -33,7 +34,7 @@ export default function ManualInputTable() {
       <TableHead>
         <TableRow>
           <TableCell align="center" colSpan={3}>
-            Criterion
+            Criterion <InlineHelp helpId="criterion" />
           </TableCell>
           <TableCell align="center">Description</TableCell>
           <TableCell align="center"></TableCell>
@@ -42,11 +43,17 @@ export default function ManualInputTable() {
           {createAlternativeHeaders()}
           <TableCell align="center">
             <AddAlternativeButton />
+            <InlineHelp helpId="alternative" />
           </TableCell>
           <TableCell align="center">
-            Strength of evidence / Uncertainties
+            Strength of evidence
+            <InlineHelp helpId="strength-of-evidence" />
+            and Uncertainties
+            <InlineHelp helpId="uncertainties" />
           </TableCell>
-          <TableCell align="center">Reference</TableCell>
+          <TableCell align="center">
+            Reference <InlineHelp helpId="reference" />
+          </TableCell>
         </TableRow>
       </TableHead>
       <CriteriaRows />

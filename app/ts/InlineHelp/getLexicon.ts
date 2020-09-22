@@ -44,13 +44,7 @@ export default function getLexicon(): Record<string, IHelpInfo> {
         'A criterion is an outcome of interest to be used in a benefit-risk analysis, e.g. "mood improvement" or "nausea".',
       link: '/manual.html#mcda-manual-entry'
     },
-    'criterion-data-source': {
-      title: 'Criterion data source',
-      text:
-        'Criterion data can be entered as either study data, or an exact-value distribution.',
-      link: '/manual.html#mcda-manual-entry'
-    },
-    'criterion-source': {
+    reference: {
       title: 'Reference',
       text:
         'An optional indication of where the data for this criterion comes from.',
@@ -62,7 +56,7 @@ export default function getLexicon(): Record<string, IHelpInfo> {
         "An optional hyperlink that leads to the source of this criterion's data. This link should start with http:// or https://",
       link: '/manual.html#mcda-manual-entry'
     },
-    'criterion-unit': {
+    'unit-of-measurement': {
       title: 'Unit of measurement',
       text:
         'In which unit of measurement the criterion\'s data are reported (e.g. "proportion", "gram")',
@@ -79,12 +73,6 @@ export default function getLexicon(): Record<string, IHelpInfo> {
       text:
         'The effects table shows the size of the effects on each criterion for each alternative. In the case of a known distribution of an effect the values shown are the median value and the 95% credible interval. If the effect is an exact distribution value only that value is shown.',
       link: '/manual.html#mcda-running-example'
-    },
-    'exact-matching': {
-      title: 'Exact Matching',
-      text:
-        "Elicitation of the user's exact trade-off weights between the different criteria. This results in exact weight ratios between all the criteria, e.g. increasing effectiveness by 5% is equally desirable to decreasing mortality by 10%.",
-      link: '/manual.html#mcda-value-tradeoffs'
     },
     favorability: {
       title: 'Favorability',
@@ -114,12 +102,6 @@ export default function getLexicon(): Record<string, IHelpInfo> {
       text:
         'Elicitation of the criteria weights through a series of matching questions. This method sets weights by asking users to specify how much the performance with respect to one criterion needs to improve to compensate for a worsening in the performance with respect to another criterion.',
       link: '/manual.html#mcda-value-tradeofffs'
-    },
-    'mcda-input-method': {
-      title: 'Input method',
-      text:
-        'In mcda, it is possible to input data directly as a distribution of the effects for the treatment for a criterion, or to input the data measured in a study, after which the application will calculate the corresponding distribution automatically.',
-      link: '/manual.html#mcda-preparing-dataset'
     },
     'measurements-display-mode': {
       title: 'Measurements display mode',
@@ -234,22 +216,6 @@ export default function getLexicon(): Record<string, IHelpInfo> {
         'Statements regarding the strength of evidence of the treatment effect estimates displayed in a row of the effects table.',
       link: '/manual.html#mcda-running-example'
     },
-    'survival-summary-measure': {
-      title: 'Survival summary measure',
-      text:
-        'Which specific aspect of survival is reported, i.e. mean, median, or at a specific moment.',
-      link: '/manual.html#mcda-manual-entry'
-    },
-    'survival-time-point-of-interest': {
-      title: 'Survival summary measure',
-      text: 'At which specific moment in time the survival data is reported.',
-      link: '/manual.html#mcda-manual-entry'
-    },
-    'survival-time-scale': {
-      title: 'Survival time scale',
-      text: 'On which time scale the survival data are reported.',
-      link: '/manual.html#mcda-manual-entry'
-    },
     'swing-weighting': {
       title: 'Swing Weighting',
       text:
@@ -307,12 +273,6 @@ export default function getLexicon(): Record<string, IHelpInfo> {
       text:
         'Some preference scenarios may include uncertainty for example when alternatives are ranked, or no preference is expressed. SMAA can take this uncertainty into account when calculating the rank acceptiblities.',
       link: '/manual.html#mcda-smaa-analysis'
-    },
-    'willingness-to-trade-off': {
-      title: 'Willingness to trade off chart',
-      text:
-        'This chart allows exploration of how the chosen weights and partial value functions shape the indifference curve that goes through a user selected point on the graph representing different levels of achievement with respect to the chosen criteria.',
-      link: '/manual.html#mcda-value-tradeoffs'
     },
     workspace: {
       title: 'Workspace',

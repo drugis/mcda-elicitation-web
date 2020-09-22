@@ -4,16 +4,20 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISettings from '@shared/interface/ISettings';
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
 import React from 'react';
+import ClipboardButton from '../ClipboardButton/ClipboardButton';
+import {ErrorContextProviderComponent} from '../Error/ErrorContext';
+import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
+import InlineHelp from '../InlineHelp/InlineHelp';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
-import ClipboardButton from '../ClipboardButton/ClipboardButton';
 
 export default function EffectsTable({
   oldWorkspace,
@@ -66,7 +70,7 @@ export default function EffectsTable({
   function renderCriteriaHeader(): JSX.Element {
     return (
       <TableCell id="column-criterion" align="center">
-        Criterion
+        Criterion <InlineHelp helpId="criterion" />
       </TableCell>
     );
   }
@@ -87,7 +91,7 @@ export default function EffectsTable({
     if (toggledColumns.units) {
       return (
         <TableCell id="column-unit-of-measurement" align="center">
-          Unit of measurement
+          Unit of measurement <InlineHelp helpId="unit-of-measurement" />
         </TableCell>
       );
     } else {
@@ -99,7 +103,8 @@ export default function EffectsTable({
     if (toggledColumns.strength) {
       return (
         <TableCell align="center">
-          Strength of evidence / Uncertainties
+          Strength of evidence <InlineHelp helpId="strength-of-evidence" /> and
+          Uncertainties <InlineHelp helpId="uncertainties" />
         </TableCell>
       );
     } else {
@@ -109,37 +114,47 @@ export default function EffectsTable({
 
   function renderReferenceHeader(): JSX.Element {
     if (toggledColumns.references) {
-      return <TableCell align="center">Reference</TableCell>;
+      return (
+        <TableCell align="center">
+          Reference <InlineHelp helpId="reference" />
+        </TableCell>
+      );
     } else {
       return <></>;
     }
   }
 
   return scales ? (
-    <SettingsContextProviderComponent
-      settings={settings}
-      toggledColumns={toggledColumns}
-    >
-      <EffectsTableContextProviderComponent
-        oldWorkspace={oldWorkspace}
-        scales={scales}
-      >
-        <Grid container>
-          <Grid item xs={9} id="effects-table-header">
-            <h4>Effects Table</h4>
-          </Grid>
-          <Grid item container xs={3} justify="flex-end">
-            <ClipboardButton targetId="#effects-table" />
-          </Grid>
-          <Grid item xs={12}>
-            <Table size="small" id="effects-table">
-              {renderTableHeaders()}
-              <EffectsTableCriteriaRows />
-            </Table>
-          </Grid>
-        </Grid>
-      </EffectsTableContextProviderComponent>
-    </SettingsContextProviderComponent>
+    <ErrorContextProviderComponent>
+      <HelpContextProviderComponent>
+        <SettingsContextProviderComponent
+          settings={settings}
+          toggledColumns={toggledColumns}
+        >
+          <EffectsTableContextProviderComponent
+            oldWorkspace={oldWorkspace}
+            scales={scales}
+          >
+            <Grid container>
+              <Grid item xs={9} id="effects-table-header">
+                <Typography variant={'h5'}>
+                  Effects Table <InlineHelp helpId="effects-table" />
+                </Typography>
+              </Grid>
+              <Grid item container xs={3} justify="flex-end">
+                <ClipboardButton targetId="#effects-table" />
+              </Grid>
+              <Grid item xs={12}>
+                <Table size="small" id="effects-table">
+                  {renderTableHeaders()}
+                  <EffectsTableCriteriaRows />
+                </Table>
+              </Grid>
+            </Grid>
+          </EffectsTableContextProviderComponent>
+        </SettingsContextProviderComponent>
+      </HelpContextProviderComponent>
+    </ErrorContextProviderComponent>
   ) : (
     <CircularProgress />
   );

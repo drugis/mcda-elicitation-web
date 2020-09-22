@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -18,7 +19,7 @@ export default function MatchingElicitation() {
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
       <Grid item xs={12}>
         <Typography id="matching-title-header" variant="h4">
-          Matching
+          Matching <InlineHelp helpId="matching" />
         </Typography>
       </Grid>
       <Grid item xs={12}>
