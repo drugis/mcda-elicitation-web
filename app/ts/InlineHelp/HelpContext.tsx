@@ -3,13 +3,12 @@ import IHelpContext from './IHelpContext';
 import IHelpInfo from './IHelpInfo';
 import React from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
-import getLexicon from './getLexicon';
+import {lexicon} from './lexicon';
 
 export const HelpContext = createContext<IHelpContext>({} as IHelpContext);
 
 export function HelpContextProviderComponent({children}: {children: any}) {
   const {setError} = useContext(ErrorContext);
-  const lexicon = getLexicon();
 
   function getHelpInfo(id: string): IHelpInfo {
     if (lexicon[id]) {
