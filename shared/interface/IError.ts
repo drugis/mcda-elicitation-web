@@ -1,4 +1,4 @@
-export type Error = IError | null;
+export type OurError = IError | null;
 
 export default interface IError {
   type?: string;

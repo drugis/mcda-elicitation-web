@@ -1,4 +1,4 @@
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import bodyParser from 'body-parser';
 import csurf from 'csurf';
 import express, {Request, Response} from 'express';
@@ -68,7 +68,7 @@ app.use(
 );
 server = http.createServer(app);
 
-startupDiagnostics.runStartupDiagnostics((errorBody: Error): void => {
+startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
   if (errorBody) {
     initError(errorBody);
   } else {
@@ -165,7 +165,7 @@ function initApp(): void {
 }
 
 function errorHandler(
-  error: Error,
+  error: OurError,
   request: Request,
   response: Response,
   next: any
@@ -232,7 +232,7 @@ function rightsCallback(
   response: Response,
   next: any,
   userId: number,
-  error: Error,
+  error: OurError,
   result: any
 ): void {
   if (error) {
@@ -255,7 +255,7 @@ function useSSLLogin(): void {
     const emailRegex = /emailAddress=([^,]*)/;
     const email = clientString.match(emailRegex)[1];
     if (email) {
-      signin.findUserByEmail(email, (error: Error, result: any) => {
+      signin.findUserByEmail(email, (error: OurError, result: any) => {
         if (error) {
           logger.error(error);
         } else {

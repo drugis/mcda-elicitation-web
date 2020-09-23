@@ -2,7 +2,7 @@ import IAlternativeCommand from '@shared/interface/IAlternativeCommand';
 import ICellCommand from '@shared/interface/ICellCommand';
 import ICriterionCommand from '@shared/interface/ICriterionCommand';
 import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
@@ -66,7 +66,7 @@ export default function InProgressHandler(db: IDB) {
   function createCallback(
     response: Response,
     next: () => void,
-    error: Error,
+    error: OurError,
     createdId: string
   ) {
     if (error) {
@@ -79,7 +79,7 @@ export default function InProgressHandler(db: IDB) {
 
   function buildInProgress(
     workspace: IOldWorkspace,
-    callback: (error: Error, inProgressCopy: IWorkspace) => void
+    callback: (error: OurError, inProgressCopy: IWorkspace) => void
   ): void {
     callback(null, buildInProgressCopy(workspace));
   }
@@ -87,7 +87,7 @@ export default function InProgressHandler(db: IDB) {
   function createNew(
     userId: string,
     inProgressCopy: IWorkspace,
-    callback: (error: Error, createdId: string) => void
+    callback: (error: OurError, createdId: string) => void
   ): void {
     inProgressWorkspaceRepository.create(userId, inProgressCopy, callback);
   }
@@ -258,7 +258,7 @@ export default function InProgressHandler(db: IDB) {
         buildProblemFromInProgress,
         _.partial(createInTransaction, request.user, inProgressId)
       ],
-      (error: Error, createdWorkspaceInfo: IWorkspaceInfo): void => {
+      (error: OurError, createdWorkspaceInfo: IWorkspaceInfo): void => {
         if (error) {
           logger.debug('error creating workspace from in progress ' + error);
           next(error);
@@ -282,7 +282,7 @@ export default function InProgressHandler(db: IDB) {
     inProgressId: string,
     problem: IProblem,
     overallCallback: (
-      error: Error,
+      error: OurError,
       createdWorkspaceInfo?: IWorkspaceInfo
     ) => void
   ): void {
@@ -297,7 +297,7 @@ export default function InProgressHandler(db: IDB) {
       (
         client: PoolClient,
         transactionCallback: (
-          error: Error,
+          error: OurError,
           createdWorkspaceInfo?: IWorkspaceInfo
         ) => void
       ): void => {
@@ -314,7 +314,7 @@ export default function InProgressHandler(db: IDB) {
           transactionCallback
         );
       },
-      (error: Error, createdWorkspaceInfo?: IWorkspaceInfo): void => {
+      (error: OurError, createdWorkspaceInfo?: IWorkspaceInfo): void => {
         overallCallback(error, error ? null : createdWorkspaceInfo);
       }
     );
@@ -324,12 +324,12 @@ export default function InProgressHandler(db: IDB) {
     client: PoolClient,
     inProgressId: string,
     createdWorkspaceInfo: IWorkspaceInfo,
-    callback: (error: Error, createWorkspaceInfo?: IWorkspaceInfo) => void
+    callback: (error: OurError, createWorkspaceInfo?: IWorkspaceInfo) => void
   ): void {
     inProgressWorkspaceRepository.deleteInTransaction(
       client,
       inProgressId,
-      (error: Error): void => {
+      (error: OurError): void => {
         callback(error, error ? null : createdWorkspaceInfo);
       }
     );
@@ -338,7 +338,7 @@ export default function InProgressHandler(db: IDB) {
   function insertOrdering(
     client: PoolClient,
     createdWorkspaceInfo: IWorkspaceInfo,
-    callback: (error: Error, createdWorkspaceInfo?: IWorkspaceInfo) => void
+    callback: (error: OurError, createdWorkspaceInfo?: IWorkspaceInfo) => void
   ): void {
     const ordering = createOrdering(
       createdWorkspaceInfo.problem.criteria,
@@ -348,7 +348,7 @@ export default function InProgressHandler(db: IDB) {
       client,
       createdWorkspaceInfo.id.toString(),
       ordering,
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           callback(error);
         } else {
@@ -361,7 +361,7 @@ export default function InProgressHandler(db: IDB) {
   function query(request: Request, response: Response, next: () => {}): void {
     inProgressWorkspaceRepository.query(
       getUser(request).id,
-      (error: Error, results: any[]): void => {
+      (error: OurError, results: any[]): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -374,7 +374,7 @@ export default function InProgressHandler(db: IDB) {
   function del(request: Request, response: Response, next: () => {}): void {
     inProgressWorkspaceRepository.deleteDirectly(
       request.params.id,
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           handleError(error, next);
         } else {

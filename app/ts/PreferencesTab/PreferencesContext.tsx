@@ -1,4 +1,4 @@
-import IError from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
 import IWorkspaceSettings from '@shared/interface/IWorkspaceSettings';
 import IProblem from '@shared/interface/Problem/IProblem';
@@ -201,7 +201,7 @@ export function PreferencesContextProviderComponent({
       .catch(errorCallback);
   }
 
-  function errorCallback(error: IError) {
+  function errorCallback(error: OurError) {
     setError(error.message);
   }
 

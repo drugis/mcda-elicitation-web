@@ -1,5 +1,5 @@
 'use strict';
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import {waterfall} from 'async';
@@ -22,7 +22,7 @@ export default function WorkspaceHandler(db: IDB) {
   function query(request: Request, response: Response, next: any): void {
     workspaceRepository.query(
       getUser(request).id,
-      (error: Error, result: IOldWorkspace[]): void => {
+      (error: OurError, result: IOldWorkspace[]): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -35,7 +35,7 @@ export default function WorkspaceHandler(db: IDB) {
   function create(request: Request, response: Response, next: any): void {
     db.runInTransaction(
       _.partial(createWorkspaceTransaction, request),
-      (error: Error, workspaceInfo: IWorkspaceInfo): void => {
+      (error: OurError, workspaceInfo: IWorkspaceInfo): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -49,7 +49,10 @@ export default function WorkspaceHandler(db: IDB) {
   function createWorkspaceTransaction(
     request: Request,
     client: PoolClient,
-    transactionCallback: (error: Error, workspaceInfo: IWorkspaceInfo) => void
+    transactionCallback: (
+      error: OurError,
+      workspaceInfo: IWorkspaceInfo
+    ) => void
   ): void {
     waterfall(
       [
@@ -67,7 +70,7 @@ export default function WorkspaceHandler(db: IDB) {
   function createNewWorkspace(
     client: PoolClient,
     request: Request,
-    callback: (error: Error, id: string) => void
+    callback: (error: OurError, id: string) => void
   ): void {
     logger.debug('creating new workspace');
 
@@ -82,7 +85,7 @@ export default function WorkspaceHandler(db: IDB) {
     request: Request,
     workspaceId: string,
     callback: (
-      error: Error,
+      error: OurError,
       workspaceId?: string,
       subproblemId?: number
     ) => void
@@ -96,7 +99,7 @@ export default function WorkspaceHandler(db: IDB) {
       workspaceId,
       'Default',
       definition,
-      (error: Error, subproblemId: number): void => {
+      (error: OurError, subproblemId: number): void => {
         if (error) {
           callback(error);
         } else {
@@ -111,7 +114,7 @@ export default function WorkspaceHandler(db: IDB) {
     workspaceId: string,
     subproblemId: number,
     callback: (
-      error: Error,
+      error: OurError,
       workspaceId?: string,
       subproblemId?: number
     ) => void
@@ -121,7 +124,7 @@ export default function WorkspaceHandler(db: IDB) {
       client,
       workspaceId,
       subproblemId,
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           callback(error);
         } else {
@@ -136,7 +139,11 @@ export default function WorkspaceHandler(db: IDB) {
     request: Request,
     workspaceId: string,
     subproblemId: number,
-    callback: (error: Error, workspaceId?: string, scenarioId?: number) => void
+    callback: (
+      error: OurError,
+      workspaceId?: string,
+      scenarioId?: number
+    ) => void
   ): void {
     logger.debug('creating scenario');
     const preferences = request.body.problem.preferences;
@@ -150,7 +157,7 @@ export default function WorkspaceHandler(db: IDB) {
       subproblemId,
       'Default',
       state,
-      (error: Error, scenarioId: number): void => {
+      (error: OurError, scenarioId: number): void => {
         if (error) {
           callback(error);
         } else {
@@ -164,14 +171,14 @@ export default function WorkspaceHandler(db: IDB) {
     client: PoolClient,
     workspaceId: string,
     scenarioId: number,
-    callback: (error: Error, workspaceId?: string) => void
+    callback: (error: OurError, workspaceId?: string) => void
   ): void {
     logger.debug('setting default scenario');
     workspaceRepository.setDefaultScenario(
       client,
       workspaceId,
       scenarioId,
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           callback(error);
         } else {
@@ -184,7 +191,7 @@ export default function WorkspaceHandler(db: IDB) {
   function get(request: Request, response: Response, next: any): void {
     workspaceRepository.get(
       request.params.id,
-      (error: Error, result: IOldWorkspace): void => {
+      (error: OurError, result: IOldWorkspace): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -199,7 +206,7 @@ export default function WorkspaceHandler(db: IDB) {
       request.body.problem.title,
       request.body.problem,
       request.params.id,
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -210,7 +217,7 @@ export default function WorkspaceHandler(db: IDB) {
   }
 
   function del(request: Request, response: Response, next: any): void {
-    workspaceRepository.delete(request.params.id, (error: Error): void => {
+    workspaceRepository.delete(request.params.id, (error: OurError): void => {
       if (error) {
         handleError(error, next);
       } else {

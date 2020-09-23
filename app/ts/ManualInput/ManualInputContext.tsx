@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
-import IError from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IManualInputContext from '@shared/interface/IManualInputContext';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
@@ -105,7 +105,7 @@ export function ManualInputContextProviderComponent({
         inProgressWorkspaceId: inProgressId,
         orderIndex: orderIndex
       }
-    ).catch((error: IError) => {
+    ).catch((error: OurError) => {
       setError(error.message + ', ' + error.response.data);
     });
   }
@@ -123,7 +123,7 @@ export function ManualInputContextProviderComponent({
         inProgressWorkspaceId: inProgressId,
         orderIndex: orderIndex
       }
-    ).catch((error: IError) => {
+    ).catch((error: OurError) => {
       setError(error.message + ', ' + error.response.data);
     });
   }
@@ -182,7 +182,7 @@ export function ManualInputContextProviderComponent({
   function deleteCriterionFromDatabase(criterionId: string) {
     Axios.delete(
       `/api/v2/inProgress/${inProgressId}/criteria/${criterionId}`
-    ).catch((error: IError) => {
+    ).catch((error: OurError) => {
       setError(error.message + ', ' + error.response.data);
     });
   }
@@ -207,7 +207,7 @@ export function ManualInputContextProviderComponent({
         inProgressWorkspaceId: inProgressId,
         orderIndex: orderIndex
       }
-    ).catch((error: IError) => {
+    ).catch((error: OurError) => {
       setError(error.message + ', ' + error.response.data);
     });
   }
@@ -244,7 +244,7 @@ export function ManualInputContextProviderComponent({
   function deleteAlternativeFromDatabase(alternativeId: string) {
     Axios.delete(
       `/api/v2/inProgress/${inProgressId}/alternatives/${alternativeId}`
-    ).catch((error: IError) => {
+    ).catch((error: OurError) => {
       setError(error.message + ', ' + error.response.data);
     });
   }
@@ -308,7 +308,7 @@ export function ManualInputContextProviderComponent({
   ) {
     Axios.delete(
       `/api/v2/inProgress/${inProgressId}/criteria/${criterionId}/dataSources/${dataSourceId}`
-    ).catch((error: IError) => {
+    ).catch((error: OurError) => {
       setError(error.message + ', ' + error.response.data);
     });
   }
@@ -388,7 +388,7 @@ export function ManualInputContextProviderComponent({
       ...cell,
       inProgressWorkspaceId: inProgressId,
       cellType: cellType
-    }).catch((error: IError) => {
+    }).catch((error: OurError) => {
       setError(error.message + ', ' + error.response.data);
     });
   }
@@ -471,7 +471,7 @@ export function ManualInputContextProviderComponent({
       useFavourability: useFavourability
     };
     Axios.put(`/api/v2/inProgress/${inProgressId}`, workspace).catch(
-      (error: IError) => {
+      (error: OurError) => {
         setError(error.message + ', ' + error.response.data);
       }
     );

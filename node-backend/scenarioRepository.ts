@@ -1,4 +1,4 @@
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
@@ -12,7 +12,7 @@ export default function ScenarioRepository(db: IDB) {
     subproblemId: number,
     title: string,
     state: any,
-    callback: (error: Error, id?: number) => void
+    callback: (error: OurError, id?: number) => void
   ): void {
     create(client, workspaceId, subproblemId, title, state, callback);
   }
@@ -22,7 +22,7 @@ export default function ScenarioRepository(db: IDB) {
     subproblemId: number,
     title: string,
     state: any,
-    callback: (error: Error, id?: number) => void
+    callback: (error: OurError, id?: number) => void
   ): void {
     create(db, workspaceId, subproblemId, title, state, callback);
   }
@@ -33,7 +33,7 @@ export default function ScenarioRepository(db: IDB) {
     subproblemId: number,
     title: string,
     state: any,
-    callback: (error: Error, id?: number) => void
+    callback: (error: OurError, id?: number) => void
   ): void {
     logger.debug('Creating scenario');
     const query =
@@ -41,7 +41,7 @@ export default function ScenarioRepository(db: IDB) {
     clientOrDB.query(
       query,
       [workspaceId, subproblemId, title, state],
-      (error: Error, result: QueryResult<{id: number}>) => {
+      (error: OurError, result: QueryResult<{id: number}>) => {
         if (error) {
           callback(error);
         } else {
@@ -53,7 +53,7 @@ export default function ScenarioRepository(db: IDB) {
 
   function query(
     workspaceId: string,
-    callback: (error: Error, scenarios?: any[]) => void
+    callback: (error: OurError, scenarios?: any[]) => void
   ): void {
     logger.debug('Getting scenarios for workspace: ' + workspaceId);
     const query =
@@ -64,7 +64,7 @@ export default function ScenarioRepository(db: IDB) {
   function queryForSubProblem(
     workspaceId: string,
     subproblemId: number,
-    callback: (error: Error, scenarios?: any[]) => void
+    callback: (error: OurError, scenarios?: any[]) => void
   ) {
     logger.debug(
       'getting /workspaces/' +
@@ -83,8 +83,8 @@ export default function ScenarioRepository(db: IDB) {
   }
 
   function resultsCallback(
-    callback: (error: Error, result?: any) => void,
-    error: Error,
+    callback: (error: OurError, result?: any) => void,
+    error: OurError,
     result: QueryResult<any>
   ): void {
     if (error) {
@@ -95,30 +95,34 @@ export default function ScenarioRepository(db: IDB) {
   }
   function get(
     scenarioId: string,
-    callback: (error: Error, scenario?: any) => void
+    callback: (error: OurError, scenario?: any) => void
   ): void {
     logger.debug('Getting scenario: ' + scenarioId);
     const query =
       'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
-    db.query(query, [scenarioId], (error: Error, result: QueryResult<any>) => {
-      if (error) {
-        callback(error);
-      } else if (!result.rows.length) {
-        callback({
-          message: 'No scenario with ID ' + scenarioId + ' found.',
-          statusCode: 404
-        });
-      } else {
-        callback(null, result.rows[0]);
+    db.query(
+      query,
+      [scenarioId],
+      (error: OurError, result: QueryResult<any>) => {
+        if (error) {
+          callback(error);
+        } else if (!result.rows.length) {
+          callback({
+            message: 'No scenario with ID ' + scenarioId + ' found.',
+            statusCode: 404
+          });
+        } else {
+          callback(null, result.rows[0]);
+        }
       }
-    });
+    );
   }
 
   function update(
     state: IScenarioState,
     title: string,
     scenarioId: string,
-    callback: (error: Error) => void
+    callback: (error: OurError) => void
   ): void {
     logger.debug('updating scenario:' + scenarioId);
     const query = 'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
@@ -142,7 +146,7 @@ export default function ScenarioRepository(db: IDB) {
   function deleteScenario(
     client: PoolClient,
     subproblemId: number,
-    callback: (error: Error) => void
+    callback: (error: OurError) => void
   ): void {
     const query = 'DELETE FROM scenario WHERE id = $1';
     client.query(query, [subproblemId], callback);
@@ -150,14 +154,14 @@ export default function ScenarioRepository(db: IDB) {
 
   function getScenarioIdsForSubproblem(
     subproblemId: number,
-    callback: (error: Error, scenarioIds?: number[]) => void
+    callback: (error: OurError, scenarioIds?: number[]) => void
   ): void {
     logger.debug('Getting scenario ids for: ' + subproblemId);
     const query = 'SELECT id FROM scenario WHERE subproblemId = $1';
     db.query(
       query,
       [subproblemId],
-      (error: Error, result: QueryResult<{id: number}>) => {
+      (error: OurError, result: QueryResult<{id: number}>) => {
         if (error) {
           callback(error);
         } else {
