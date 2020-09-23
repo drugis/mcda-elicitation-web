@@ -11,7 +11,7 @@ import IDataSourceCommand from '@shared/interface/IDataSourceCommand';
 import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
@@ -91,7 +91,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client: PoolClient,
     effects: Effect[],
     inProgressworkspaceId: number,
-    callback: (error: Error, inProgressworkspaceId: number) => void
+    callback: (error: OurError, inProgressworkspaceId: number) => void
   ): void {
     if (effects.length) {
       const cellCommands = mapToCellCommands(
@@ -114,7 +114,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client: PoolClient,
     distributions: Distribution[],
     inProgressworkspaceId: number,
-    callback: (error: Error, inProgressworkspaceId: number) => void
+    callback: (error: OurError, inProgressworkspaceId: number) => void
   ): void {
     if (distributions.length) {
       const cellCommands = mapToCellCommands(
@@ -137,7 +137,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client: PoolClient,
     ownerId: string,
     toCreate: IWorkspaceProperties,
-    callback: (error: Error, createdId: string) => void
+    callback: (error: OurError, createdId: string) => void
   ): void {
     const query = `INSERT INTO inProgressWorkspace (owner, state, useFavourability, 
         title, therapeuticContext) 
@@ -520,7 +520,7 @@ export default function InProgressWorkspaceRepository(db: IDB) {
 
   function upsertCellsDirectly(
     cellCommands: ICellCommand[],
-    callback: (error: Error) => void
+    callback: (error: OurError) => void
   ): void {
     const query = buildUpsertCellsQuery(cellCommands);
     db.query(query, [], callback);
@@ -530,10 +530,10 @@ export default function InProgressWorkspaceRepository(db: IDB) {
     client: PoolClient,
     cellCommands: ICellCommand[],
     inProgressworkspaceId: number,
-    callback: (error: Error, inProgressworkspaceId: number) => void
+    callback: (error: OurError, inProgressworkspaceId: number) => void
   ): void {
     const query = buildUpsertCellsQuery(cellCommands);
-    client.query(query, [], (error: Error): void => {
+    client.query(query, [], (error: OurError): void => {
       callback(error, error ? null : inProgressworkspaceId);
     });
   }
@@ -656,13 +656,13 @@ export default function InProgressWorkspaceRepository(db: IDB) {
 
   function query(
     ownerId: number,
-    callback: (error: Error, result: IWorkspaceProperties[]) => void
+    callback: (error: OurError, result: IWorkspaceProperties[]) => void
   ): void {
     const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
     db.query(
       query,
       [ownerId],
-      (error: Error, result: QueryResult<IWorkspaceProperties>): void => {
+      (error: OurError, result: QueryResult<IWorkspaceProperties>): void => {
         callback(error, error ? null : result.rows);
       }
     );

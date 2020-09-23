@@ -1,14 +1,14 @@
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
+import IWeights from '@shared/interface/IWeights';
 import IProblem from '@shared/interface/Problem/IProblem';
+import Axios, {AxiosError, AxiosResponse} from 'axios';
 import fs from 'fs';
 import {IncomingMessage} from 'http';
 import httpStatus from 'http-status-codes';
 import https from 'https';
 import _ from 'lodash';
-import logger from './logger';
-import Axios, {AxiosResponse, AxiosError} from 'axios';
 import {client as WebSocketClient, connection, IMessage} from 'websocket';
-import IWeights from '@shared/interface/IWeights';
+import logger from './logger';
 
 const {
   PATAVI_HOST,
@@ -36,7 +36,7 @@ const httpsAgent = new https.Agent({...httpsOptions, path: pataviTaskUrl});
 
 export default function createPataviTask(
   problem: IProblem,
-  callback: (error: Error, location?: string) => void
+  callback: (error: OurError, location?: string) => void
 ): void {
   logger.debug('pataviTaskRepository.createPataviTask');
   const requestOptions = {
@@ -68,7 +68,7 @@ export default function createPataviTask(
 
 export function postAndHandleResults(
   problem: IProblem,
-  callback: (error: Error, result?: IWeights) => void
+  callback: (error: OurError, result?: IWeights) => void
 ) {
   Axios.post(pataviTaskUrl, problem, {httpsAgent})
     .then((pataviResponse: AxiosResponse) => {
@@ -92,7 +92,7 @@ export function postAndHandleResults(
 
 function handleUpdateResponse(
   pataviResponse: AxiosResponse,
-  callback: (error: Error, result?: IWeights) => void
+  callback: (error: OurError, result?: IWeights) => void
 ) {
   if (
     pataviResponse.data &&
@@ -108,8 +108,8 @@ function handleUpdateResponse(
 }
 
 function failedConnectionCallback(
-  callback: (error: Error) => void,
-  error: Error
+  callback: (error: OurError) => void,
+  error: OurError
 ) {
   errorHandler(
     `Websocket connection to Patavi failed with error: ${error.message}`,

@@ -1,8 +1,8 @@
-import logger from './logger';
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import _ from 'lodash';
-import IDB from './interface/IDB';
 import {PoolClient, QueryResult} from 'pg';
+import IDB from './interface/IDB';
+import logger from './logger';
 
 export default function SubproblemRepository(db: IDB) {
   function create(
@@ -10,7 +10,7 @@ export default function SubproblemRepository(db: IDB) {
     workspaceId: string,
     title: string,
     definition: any,
-    callback: (error: Error, subproblemId?: number) => void
+    callback: (error: OurError, subproblemId?: number) => void
   ): void {
     logger.debug('creating subproblem');
     const query =
@@ -18,7 +18,7 @@ export default function SubproblemRepository(db: IDB) {
     client.query(
       query,
       [workspaceId, title, definition],
-      (error: Error, result: QueryResult<{id: number}>): void => {
+      (error: OurError, result: QueryResult<{id: number}>): void => {
         if (error) {
           callback(error);
         } else {
@@ -31,7 +31,7 @@ export default function SubproblemRepository(db: IDB) {
   function get(
     workspaceId: string,
     subproblemId: number,
-    callback: (error: Error, subproblem?: any) => void
+    callback: (error: OurError, subproblem?: any) => void
   ): void {
     logger.debug('retrieving subproblem ' + subproblemId);
     const query =
@@ -39,7 +39,7 @@ export default function SubproblemRepository(db: IDB) {
     db.query(
       query,
       [workspaceId, subproblemId],
-      (error: Error, result: QueryResult<any>) => {
+      (error: OurError, result: QueryResult<any>) => {
         if (error) {
           callback(error);
         } else {
@@ -51,25 +51,29 @@ export default function SubproblemRepository(db: IDB) {
 
   function query(
     workspaceId: string,
-    callback: (error: Error, subproblems?: any[]) => void
+    callback: (error: OurError, subproblems?: any[]) => void
   ): void {
     logger.debug('retrieving subproblems for workspace: ' + workspaceId);
     const query =
       'SELECT id, workspaceId AS "workspaceId", title, definition FROM subproblem WHERE workspaceId = $1';
-    db.query(query, [workspaceId], (error: Error, result: QueryResult<any>) => {
-      if (error) {
-        callback(error);
-      } else {
-        callback(null, result.rows);
+    db.query(
+      query,
+      [workspaceId],
+      (error: OurError, result: QueryResult<any>) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, result.rows);
+        }
       }
-    });
+    );
   }
 
   function update(
     definition: any,
     title: string,
     subproblemId: string,
-    callback: (error: Error, result: any) => void
+    callback: (error: OurError, result: any) => void
   ): void {
     logger.debug('updating subproblem: ' + subproblemId);
     const query =
@@ -80,7 +84,7 @@ export default function SubproblemRepository(db: IDB) {
   function deleteSubproblem(
     client: PoolClient,
     subproblemId: number,
-    callback: (error: Error) => void
+    callback: (error: OurError) => void
   ): void {
     logger.debug('deleting subproblem: ' + subproblemId);
     const query = 'DELETE FROM subproblem WHERE id = $1';
@@ -89,12 +93,12 @@ export default function SubproblemRepository(db: IDB) {
 
   function getSubproblemIds(
     workspaceId: string,
-    callback: (error: Error, subproblemIds?: string[]) => void
+    callback: (error: OurError, subproblemIds?: string[]) => void
   ): void {
     logger.debug('Getting subproblem ids for workspace: ' + workspaceId);
     const query = 'SELECT id FROM subproblem WHERE workspaceid = $1';
     db.query(query, [workspaceId], function (
-      error: Error,
+      error: OurError,
       result: QueryResult<{id: string}>
     ): void {
       if (error) {

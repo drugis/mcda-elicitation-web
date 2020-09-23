@@ -1,18 +1,18 @@
-import {Error} from '@shared/interface/IError';
-import logger from './logger';
-import IDB, {ClientOrDB} from './interface/IDB';
+import {OurError} from '@shared/interface/IError';
 import {PoolClient, QueryResult} from 'pg';
+import IDB, {ClientOrDB} from './interface/IDB';
+import logger from './logger';
 
 export default function OrderingRepository(db: IDB) {
   function get(
     workspaceId: string,
-    callback: (error: Error, result?: any) => void
+    callback: (error: OurError, result?: any) => void
   ): void {
     logger.debug('getting /workspaces/' + workspaceId + '/ordering');
     db.query(
       'SELECT workspaceId AS "workspaceId", ordering FROM ordering WHERE workspaceId = $1',
       [workspaceId],
-      (error: Error, result: QueryResult<any>): void => {
+      (error: OurError, result: QueryResult<any>): void => {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {
@@ -27,7 +27,7 @@ export default function OrderingRepository(db: IDB) {
   function updateDirect(
     workspaceId: string,
     ordering: any,
-    callback: (error: Error, result?: any) => void
+    callback: (error: OurError, result?: any) => void
   ): void {
     update(db, workspaceId, ordering, callback);
   }
@@ -36,7 +36,7 @@ export default function OrderingRepository(db: IDB) {
     client: PoolClient,
     workspaceId: string,
     ordering: any,
-    callback: (error: Error, result?: any) => void
+    callback: (error: OurError, result?: any) => void
   ): void {
     update(client, workspaceId, ordering, callback);
   }
@@ -45,7 +45,7 @@ export default function OrderingRepository(db: IDB) {
     dbOrClient: ClientOrDB,
     workspaceId: string,
     ordering: any,
-    callback: (error: Error, result?: any) => void
+    callback: (error: OurError, result?: any) => void
   ): void {
     logger.debug('setting /workspaces/' + workspaceId + '/ordering/');
     dbOrClient.query(

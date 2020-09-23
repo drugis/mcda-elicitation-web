@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import IError from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import Axios, {AxiosResponse} from 'axios';
 import React, {useContext} from 'react';
@@ -17,7 +17,7 @@ export default function DoneButton() {
         const url = `/#!/workspaces/${workspaceInfo.id}/problems/${workspaceInfo.defaultSubProblemId}/scenarios/${workspaceInfo.defaultScenarioId}/evidence`;
         window.location.assign(url);
       })
-      .catch((error: IError) => {
+      .catch((error: OurError) => {
         setError(error.message + ', ' + error.response.data);
       });
   }

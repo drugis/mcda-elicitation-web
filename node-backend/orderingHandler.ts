@@ -1,9 +1,9 @@
+import {OurError} from '@shared/interface/IError';
 import {Request, Response} from 'express';
-import {Error} from '@shared/interface/IError';
-import {handleError} from './util';
 import {OK} from 'http-status-codes';
-import OrderingRepository from './orderingRepository';
 import IDB from './interface/IDB';
+import OrderingRepository from './orderingRepository';
+import {handleError} from './util';
 
 export default function OrderingHandler(db: IDB) {
   const orderingRepository = OrderingRepository(db);
@@ -11,7 +11,7 @@ export default function OrderingHandler(db: IDB) {
   function get(request: Request, response: Response, next: any): void {
     orderingRepository.get(
       request.params.workspaceId,
-      (error: Error, result: any): void => {
+      (error: OurError, result: any): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -27,7 +27,7 @@ export default function OrderingHandler(db: IDB) {
     orderingRepository.updateDirect(
       request.params.workspaceId,
       request.body,
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           handleError(error, next);
         } else {

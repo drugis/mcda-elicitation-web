@@ -1,8 +1,8 @@
-import IError, {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
+import {apply, AsyncResultCallback, waterfall} from 'async';
 import _ from 'lodash';
 import pg, {PoolClient} from 'pg';
 import logger from './logger';
-import {waterfall, apply, AsyncResultCallback} from 'async';
 let pool: pg.Pool;
 
 export default function DB(connectionInfo: pg.PoolConfig) {
@@ -14,13 +14,13 @@ export default function DB(connectionInfo: pg.PoolConfig) {
     client: PoolClient,
     done: (release?: any) => void,
     callback: (
-      error: Error,
+      error: OurError,
       client: PoolClient,
       done: (release?: any) => void
     ) => void
   ): void {
     logger.debug('START TRANSACTION');
-    client.query('START TRANSACTION', function (error: Error) {
+    client.query('START TRANSACTION', function (error: OurError) {
       callback(error, client, done);
     });
   }
@@ -30,21 +30,21 @@ export default function DB(connectionInfo: pg.PoolConfig) {
     done: (release?: any) => void,
     results: any[],
     callback: (
-      error: Error,
+      error: OurError,
       client: PoolClient,
       done: (release?: any) => void,
       results: any[]
     ) => void
   ): void {
     logger.debug('COMMIT');
-    client.query('COMMIT', (error: Error): void => {
+    client.query('COMMIT', (error: OurError): void => {
       callback(error, client, done, results);
     });
   }
 
   function rollback(client: PoolClient, done: (release?: any) => void): void {
     logger.debug('ROLLBACK');
-    client.query('ROLLBACK', (error: Error): void => {
+    client.query('ROLLBACK', (error: OurError): void => {
       done(error);
     });
   }
@@ -52,13 +52,13 @@ export default function DB(connectionInfo: pg.PoolConfig) {
   function runInTransaction(
     functionsToExecute: (
       client: PoolClient,
-      callback: (error: Error, result?: any) => void
+      callback: (error: OurError, result?: any) => void
     ) => void,
-    callback: AsyncResultCallback<any, IError>
+    callback: AsyncResultCallback<any, OurError>
   ): void {
     pool.connect(
       (
-        error: Error,
+        error: OurError,
         client: PoolClient,
         done: (release?: any) => void
       ): void => {
@@ -80,8 +80,8 @@ export default function DB(connectionInfo: pg.PoolConfig) {
   }
 
   function waterfallCallback(
-    callback: (error: Error, result?: any) => void,
-    error: Error,
+    callback: (error: OurError, result?: any) => void,
+    error: OurError,
     client?: PoolClient,
     done?: any,
     result?: any
@@ -99,18 +99,18 @@ export default function DB(connectionInfo: pg.PoolConfig) {
   function executeFunctions(
     functionsToExecute: (
       client: PoolClient,
-      callback: (error: Error, result: any) => void
+      callback: (error: OurError, result: any) => void
     ) => void,
     client: PoolClient,
     done: (release?: any) => void,
     callback: (
-      error: Error,
+      error: OurError,
       client: PoolClient,
       done: (release?: any) => void,
       result: any
     ) => void
   ): void {
-    functionsToExecute(client, (error: Error, result: any): void => {
+    functionsToExecute(client, (error: OurError, result: any): void => {
       callback(error, client, done, result);
     });
   }
@@ -118,7 +118,7 @@ export default function DB(connectionInfo: pg.PoolConfig) {
   function query(
     text: string,
     values: any,
-    callback: (error: Error, result?: any) => void
+    callback: (error: OurError, result?: any) => void
   ): void {
     logger.debug('db.query; text: ' + text + ' values: ' + values);
     pool.connect((error, client, done): void => {

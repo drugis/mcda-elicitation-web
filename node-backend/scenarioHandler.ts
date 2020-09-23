@@ -1,14 +1,14 @@
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
 import _ from 'lodash';
+import {PoolClient} from 'pg';
+import IDB from './interface/IDB';
 import logger from './logger';
+import ScenarioRepository from './scenarioRepository';
 import {handleError} from './util';
 import WorkspaceRepository from './workspaceRepository';
-import ScenarioRepository from './scenarioRepository';
-import IDB from './interface/IDB';
-import {PoolClient} from 'pg';
 
 export default function ScenarioHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
@@ -44,7 +44,7 @@ export default function ScenarioHandler(db: IDB) {
   function defaultCallback(
     response: Response,
     next: any,
-    error: Error,
+    error: OurError,
     result: any
   ): void {
     if (error) {
@@ -63,7 +63,7 @@ export default function ScenarioHandler(db: IDB) {
         problem: request.body.state.problem,
         prefs: request.body.state.prefs
       },
-      (error: Error, id?: number): void => {
+      (error: OurError, id?: number): void => {
         if (error) {
           next(error);
         } else {
@@ -79,7 +79,7 @@ export default function ScenarioHandler(db: IDB) {
       request.body.state,
       request.body.title,
       request.body.id,
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           next(error);
         } else {
@@ -110,7 +110,7 @@ export default function ScenarioHandler(db: IDB) {
         Number.parseInt(subproblemId),
         Number.parseInt(scenarioId)
       ),
-      (error: Error): void => {
+      (error: OurError): void => {
         if (error) {
           handleError(error, next);
         } else {
@@ -126,7 +126,7 @@ export default function ScenarioHandler(db: IDB) {
     subproblemId: number,
     scenarioId: number,
     client: PoolClient,
-    transactionCallback: (error: Error) => void
+    transactionCallback: (error: OurError) => void
   ): void {
     waterfall(
       [
@@ -143,7 +143,7 @@ export default function ScenarioHandler(db: IDB) {
     workspaceId: string,
     scenarioIds: string[],
     callback: (
-      error: Error,
+      error: OurError,
       defaultScenarioId?: string,
       scenarioIds?: string[]
     ) => void
@@ -153,7 +153,7 @@ export default function ScenarioHandler(db: IDB) {
     } else {
       workspaceRepository.getDefaultScenarioId(
         workspaceId,
-        (error: Error, defaultScenarioId: string): void => {
+        (error: OurError, defaultScenarioId: string): void => {
           callback(error, defaultScenarioId, scenarioIds);
         }
       );
@@ -166,7 +166,7 @@ export default function ScenarioHandler(db: IDB) {
     scenarioId: number,
     defaultScenarioId: number,
     scenarioIds: number[],
-    callback: (error?: Error) => void
+    callback: (error?: OurError) => void
   ): void {
     if (defaultScenarioId === scenarioId) {
       const newDefaultScenario = getNewDefaultScenario(scenarioIds, scenarioId);

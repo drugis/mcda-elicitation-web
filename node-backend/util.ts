@@ -1,4 +1,4 @@
-import {Error} from '@shared/interface/IError';
+import {OurError} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {Request} from 'express';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
@@ -19,7 +19,7 @@ export function getUser(request: Request) {
   }
 }
 
-export function handleError(error: Error, next: any): void {
+export function handleError(error: OurError, next: any): void {
   logger.error(JSON.stringify(error, null, 2));
   next({
     statusCode: error.statusCode || INTERNAL_SERVER_ERROR,
