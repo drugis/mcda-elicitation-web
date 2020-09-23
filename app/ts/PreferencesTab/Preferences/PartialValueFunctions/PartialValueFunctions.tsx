@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -41,6 +42,7 @@ export default function PartialValueFunctions() {
         <Grid item xs={12}>
           <Typography id="partial-value-functions-header" variant="h4">
             Partial Value Functions
+            <InlineHelp helpId="partial-value-function" />
           </Typography>
         </Grid>
         <Grid container item xs={12} spacing={2}>

@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext, useState} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -23,7 +24,7 @@ export default function RankingElicitation() {
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
       <Grid item xs={12}>
         <Typography id="ranking-title-header" variant="h4">
-          Ranking
+          Ranking <InlineHelp helpId="ranking" />
         </Typography>
       </Grid>
       <Grid item xs={12}>

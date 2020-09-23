@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../ElicitationContext';
 import MostImportantChoice from '../MostImportantChoice/MostImportantChoice';
@@ -14,7 +15,7 @@ export default function ImpreciseSwingWeighting() {
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
       <Grid item xs={12}>
         <Typography id="swing-weighting-title-header" variant="h4">
-          Imprecise swing weighting
+          Imprecise swing weighting <InlineHelp helpId="swing-weighting" />
         </Typography>
       </Grid>
       <Grid item xs={12}>

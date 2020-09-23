@@ -1,7 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DUMMY_ID} from '../../../../constants';
@@ -19,7 +21,6 @@ import MoveDataSourceButtons from './MoveDataSourceButtons/MoveDataSourceButtons
 import ReferenceCell from './ReferenceCell/ReferenceCell';
 import SoEUncertaintyCell from './SoEUncertaintyCell/SoEUncertaintyCell';
 import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
-import IAlternative from '@shared/interface/IAlternative';
 
 export default function DataSourceRow({
   dataSource,
@@ -36,6 +37,7 @@ export default function DataSourceRow({
   const dataSourceCells = dataSource.id.startsWith(DUMMY_ID) ? (
     <TableCell colSpan={numberOfColumns} align="center">
       <AddDataSourceButton criterion={criterion} />
+      <InlineHelp helpId="reference" />
     </TableCell>
   ) : (
     createDataSourceCells()

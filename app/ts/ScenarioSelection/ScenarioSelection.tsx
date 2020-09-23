@@ -4,6 +4,7 @@ import Select from '@material-ui/core/Select';
 import IScenario from '@shared/interface/Scenario/IScenario';
 import _ from 'lodash';
 import React, {ChangeEvent} from 'react';
+import InlineHelp from '../InlineHelp/InlineHelp';
 import getScenarioLocation from './getScenarioLocation';
 
 export default function ScenarioSelection({
@@ -42,6 +43,7 @@ export default function ScenarioSelection({
         >
           {getScenarioOptions()}
         </Select>
+        <InlineHelp helpId="scenario" />
       </Grid>
     </Grid>
   );
