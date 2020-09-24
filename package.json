@@ -22,6 +22,7 @@
     "test-end-to-end": "tsc -p ts-end2end-config.json && nightwatch -c nightwatch.local.conf.js"
   },
   "resolutions": {
+    "@types/react": "^16.9.44",
     "js-yaml": "3.13.1",
     "lodash": "4.17.19",
     "minimist": "1.2.5",
