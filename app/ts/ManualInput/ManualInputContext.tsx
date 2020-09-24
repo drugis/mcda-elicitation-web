@@ -106,7 +106,7 @@ export function ManualInputContextProviderComponent({
         orderIndex: orderIndex
       }
     ).catch((error: OurError) => {
-      error.message + ', ' + error.response.data;
+      setError(error);
     });
   }
 
