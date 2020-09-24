@@ -115,7 +115,7 @@ define([
 
       // Default route
       $stateProvider
-        .state('choose-problem', {
+        .state('analyses', {
           url: '/choose-problem',
           templateUrl: './workspace/chooseProblem.html',
           controller: 'ChooseProblemController'

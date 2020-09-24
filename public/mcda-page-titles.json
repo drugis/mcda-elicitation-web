@@ -1,5 +1,5 @@
 {
-  "choose-problem": "ChooseProblemController",
+  "analyses": "ChooseProblemController",
   "deterministic-results": "DeterministicResultsController",
   "evidence": "EvidenceController",
   "imprecise-swing-weighting": "ImpreciseSwingWeightingController",
