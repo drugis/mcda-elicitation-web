@@ -106,7 +106,7 @@ export function ManualInputContextProviderComponent({
         orderIndex: orderIndex
       }
     ).catch((error: OurError) => {
-      setError(error.message + ', ' + error.response.data);
+      error.message + ', ' + error.response.data;
     });
   }
 
@@ -124,7 +124,7 @@ export function ManualInputContextProviderComponent({
         orderIndex: orderIndex
       }
     ).catch((error: OurError) => {
-      setError(error.message + ', ' + error.response.data);
+      setError(error);
     });
   }
 
@@ -183,7 +183,7 @@ export function ManualInputContextProviderComponent({
     Axios.delete(
       `/api/v2/inProgress/${inProgressId}/criteria/${criterionId}`
     ).catch((error: OurError) => {
-      setError(error.message + ', ' + error.response.data);
+      setError(error);
     });
   }
 
@@ -208,7 +208,7 @@ export function ManualInputContextProviderComponent({
         orderIndex: orderIndex
       }
     ).catch((error: OurError) => {
-      setError(error.message + ', ' + error.response.data);
+      setError(error);
     });
   }
 
@@ -245,7 +245,7 @@ export function ManualInputContextProviderComponent({
     Axios.delete(
       `/api/v2/inProgress/${inProgressId}/alternatives/${alternativeId}`
     ).catch((error: OurError) => {
-      setError(error.message + ', ' + error.response.data);
+      setError(error);
     });
   }
 
@@ -309,7 +309,7 @@ export function ManualInputContextProviderComponent({
     Axios.delete(
       `/api/v2/inProgress/${inProgressId}/criteria/${criterionId}/dataSources/${dataSourceId}`
     ).catch((error: OurError) => {
-      setError(error.message + ', ' + error.response.data);
+      setError(error);
     });
   }
 
@@ -389,7 +389,7 @@ export function ManualInputContextProviderComponent({
       inProgressWorkspaceId: inProgressId,
       cellType: cellType
     }).catch((error: OurError) => {
-      setError(error.message + ', ' + error.response.data);
+      setError(error);
     });
   }
 
@@ -472,7 +472,7 @@ export function ManualInputContextProviderComponent({
     };
     Axios.put(`/api/v2/inProgress/${inProgressId}`, workspace).catch(
       (error: OurError) => {
-        setError(error.message + ', ' + error.response.data);
+        setError(error);
       }
     );
   }

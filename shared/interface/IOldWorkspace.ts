@@ -4,6 +4,6 @@ export default interface IOldWorkspace {
   id: number;
   owner: number;
   problem: IProblem;
-  defaultSubproblemId: number;
-  defaultScenarioId: number;
+  defaultSubproblemId: string;
+  defaultScenarioId: string;
 }

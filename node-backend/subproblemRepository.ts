@@ -10,7 +10,7 @@ export default function SubproblemRepository(db: IDB) {
     workspaceId: string,
     title: string,
     definition: any,
-    callback: (error: OurError, subproblemId?: number) => void
+    callback: (error: OurError, subproblemId?: string) => void
   ): void {
     logger.debug('creating subproblem');
     const query =
@@ -18,7 +18,7 @@ export default function SubproblemRepository(db: IDB) {
     client.query(
       query,
       [workspaceId, title, definition],
-      (error: OurError, result: QueryResult<{id: number}>): void => {
+      (error: OurError, result: QueryResult<{id: string}>): void => {
         if (error) {
           callback(error);
         } else {
@@ -30,7 +30,7 @@ export default function SubproblemRepository(db: IDB) {
 
   function get(
     workspaceId: string,
-    subproblemId: number,
+    subproblemId: string,
     callback: (error: OurError, subproblem?: any) => void
   ): void {
     logger.debug('retrieving subproblem ' + subproblemId);
@@ -83,7 +83,7 @@ export default function SubproblemRepository(db: IDB) {
 
   function deleteSubproblem(
     client: PoolClient,
-    subproblemId: number,
+    subproblemId: string,
     callback: (error: OurError) => void
   ): void {
     logger.debug('deleting subproblem: ' + subproblemId);

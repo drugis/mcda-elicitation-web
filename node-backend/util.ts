@@ -1,5 +1,6 @@
 import {OurError} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
 import {Request} from 'express';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
@@ -42,10 +43,10 @@ export function getRanges(problem: IProblem): Record<string, [number, number]> {
   );
 }
 
-export function reduceProblem(problem: IProblem): Record<string, any> {
+export function reduceProblem(problem: IProblem): IScenarioProblem {
   const criteria = _.reduce(
     problem.criteria,
-    function (accum: Record<string, any>, criterion, key): Record<string, any> {
+    (accum: Record<string, any>, criterion, key): Record<string, any> => {
       accum[key] = _.pick(criterion, ['scale', 'pvf', 'title']);
       return accum;
     },

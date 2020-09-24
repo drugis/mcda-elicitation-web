@@ -33,7 +33,7 @@ function determineRank(preferences: IRanking[], criterionId: string) {
 function buildCriterionImportance(
   preferences: IExactSwingRatio[] | IRatioBoundConstraint[],
   criterionId: string
-) {
+): string {
   const preference = _.find(
     preferences,
     (preference: IExactSwingRatio | IRatioBoundConstraint) => {

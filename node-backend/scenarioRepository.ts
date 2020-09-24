@@ -1,4 +1,5 @@
 import {OurError} from '@shared/interface/IError';
+import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
@@ -8,39 +9,35 @@ import logger from './logger';
 export default function ScenarioRepository(db: IDB) {
   function createInTransaction(
     client: PoolClient,
-    workspaceId: string,
-    subproblemId: number,
-    title: string,
-    state: any,
+    scenario: IScenarioCommand,
     callback: (error: OurError, id?: number) => void
   ): void {
-    create(client, workspaceId, subproblemId, title, state, callback);
+    create(client, scenario, callback);
   }
 
   function createDirectly(
-    workspaceId: string,
-    subproblemId: number,
-    title: string,
-    state: any,
+    scenario: IScenarioCommand,
     callback: (error: OurError, id?: number) => void
   ): void {
-    create(db, workspaceId, subproblemId, title, state, callback);
+    create(db, scenario, callback);
   }
 
   function create(
     clientOrDB: ClientOrDB,
-    workspaceId: string,
-    subproblemId: number,
-    title: string,
-    state: any,
+    scenario: IScenarioCommand,
     callback: (error: OurError, id?: number) => void
   ): void {
     logger.debug('Creating scenario');
     const query =
-      'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
+      'INSERT INTO scenario (workspace, subproblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
     clientOrDB.query(
       query,
-      [workspaceId, subproblemId, title, state],
+      [
+        scenario.workspaceId,
+        scenario.subproblemId,
+        scenario.title,
+        scenario.state
+      ],
       (error: OurError, result: QueryResult<{id: number}>) => {
         if (error) {
           callback(error);
@@ -63,13 +60,13 @@ export default function ScenarioRepository(db: IDB) {
 
   function queryForSubProblem(
     workspaceId: string,
-    subproblemId: number,
+    subproblemId: string,
     callback: (error: OurError, scenarios?: any[]) => void
   ) {
     logger.debug(
       'getting /workspaces/' +
         workspaceId +
-        '/subProblem/' +
+        '/subproblem/' +
         subproblemId +
         '/scenarios'
     );
@@ -145,7 +142,7 @@ export default function ScenarioRepository(db: IDB) {
 
   function deleteScenario(
     client: PoolClient,
-    subproblemId: number,
+    subproblemId: string,
     callback: (error: OurError) => void
   ): void {
     const query = 'DELETE FROM scenario WHERE id = $1';
@@ -153,15 +150,15 @@ export default function ScenarioRepository(db: IDB) {
   }
 
   function getScenarioIdsForSubproblem(
-    subproblemId: number,
-    callback: (error: OurError, scenarioIds?: number[]) => void
+    subproblemId: string,
+    callback: (error: OurError, scenarioIds?: string[]) => void
   ): void {
     logger.debug('Getting scenario ids for: ' + subproblemId);
     const query = 'SELECT id FROM scenario WHERE subproblemId = $1';
     db.query(
       query,
       [subproblemId],
-      (error: OurError, result: QueryResult<{id: number}>) => {
+      (error: OurError, result: QueryResult<{id: string}>) => {
         if (error) {
           callback(error);
         } else {

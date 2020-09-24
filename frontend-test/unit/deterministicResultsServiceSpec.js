@@ -69,7 +69,7 @@ define([
           }
         ]
       },
-      prefs: {},
+      prefs: [],
       weights: {}
     };
 

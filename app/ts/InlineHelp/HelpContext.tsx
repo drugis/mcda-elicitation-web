@@ -8,13 +8,13 @@ import {lexicon} from './lexicon';
 export const HelpContext = createContext<IHelpContext>({} as IHelpContext);
 
 export function HelpContextProviderComponent({children}: {children: any}) {
-  const {setError} = useContext(ErrorContext);
+  const {setErrorMessage} = useContext(ErrorContext);
 
   function getHelpInfo(id: string): IHelpInfo {
     if (lexicon[id]) {
       return lexicon[id];
     } else {
-      setError(`Unrecognized help ID: ${id}`);
+      setErrorMessage(`Unrecognized help ID: ${id}`);
     }
   }
 

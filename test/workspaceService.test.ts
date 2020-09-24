@@ -91,8 +91,8 @@ describe('buildWorkspace', () => {
     id: 37,
     owner: 1,
     problem: problem,
-    defaultSubproblemId: 2,
-    defaultScenarioId: 3
+    defaultSubproblemId: '2',
+    defaultScenarioId: '3'
   };
 
   it('should be able to copy a workspace', () => {

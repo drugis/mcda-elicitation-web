@@ -2,6 +2,7 @@
 import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
+import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
@@ -87,10 +88,10 @@ export default function WorkspaceHandler(db: IDB) {
     callback: (
       error: OurError,
       workspaceId?: string,
-      subproblemId?: number
+      subproblemId?: string
     ) => void
   ): void {
-    logger.debug('creating subProblem');
+    logger.debug('creating subproblem');
     const definition = {
       ranges: getRanges(request.body.problem)
     };
@@ -99,7 +100,7 @@ export default function WorkspaceHandler(db: IDB) {
       workspaceId,
       'Default',
       definition,
-      (error: OurError, subproblemId: number): void => {
+      (error: OurError, subproblemId: string): void => {
         if (error) {
           callback(error);
         } else {
@@ -112,14 +113,14 @@ export default function WorkspaceHandler(db: IDB) {
   function setDefaultSubProblem(
     client: PoolClient,
     workspaceId: string,
-    subproblemId: number,
+    subproblemId: string,
     callback: (
       error: OurError,
       workspaceId?: string,
-      subproblemId?: number
+      subproblemId?: string
     ) => void
   ): void {
-    logger.debug('setting default subProblem');
+    logger.debug('setting default subproblem');
     workspaceRepository.setDefaultSubProblem(
       client,
       workspaceId,
@@ -138,7 +139,7 @@ export default function WorkspaceHandler(db: IDB) {
     client: PoolClient,
     request: Request,
     workspaceId: string,
-    subproblemId: number,
+    subproblemId: string,
     callback: (
       error: OurError,
       workspaceId?: string,
@@ -146,17 +147,18 @@ export default function WorkspaceHandler(db: IDB) {
     ) => void
   ): void {
     logger.debug('creating scenario');
-    const preferences = request.body.problem.preferences;
-    const state = {
-      problem: reduceProblem(request.body.problem),
-      prefs: _.isEmpty(preferences) ? [] : preferences
+    const scenario: IScenarioCommand = {
+      title: 'Default',
+      subproblemId: subproblemId,
+      workspaceId: workspaceId,
+      state: {
+        problem: reduceProblem(request.body.problem),
+        prefs: []
+      }
     };
     scenarioRepository.createInTransaction(
       client,
-      workspaceId,
-      subproblemId,
-      'Default',
-      state,
+      scenario,
       (error: OurError, scenarioId: number): void => {
         if (error) {
           callback(error);
@@ -170,7 +172,7 @@ export default function WorkspaceHandler(db: IDB) {
   function setDefaultScenario(
     client: PoolClient,
     workspaceId: string,
-    scenarioId: number,
+    scenarioId: string,
     callback: (error: OurError, workspaceId?: string) => void
   ): void {
     logger.debug('setting default scenario');

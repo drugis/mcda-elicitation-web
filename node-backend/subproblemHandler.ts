@@ -1,4 +1,5 @@
 import {OurError} from '@shared/interface/IError';
+import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
@@ -41,7 +42,7 @@ export default function SubproblemHandler(db: IDB) {
     logger.debug('GET /workspaces/:id/problems/:subproblemId');
     subproblemRepository.get(
       workspaceId,
-      Number.parseInt(subproblemId),
+      subproblemId,
       _.partial(defaultCallback, response, next)
     );
   }
@@ -57,7 +58,7 @@ export default function SubproblemHandler(db: IDB) {
 
   function createTransactionCallback(
     error: OurError,
-    subproblemId: number,
+    subproblemId: string,
     response: Response,
     next: any,
     workspaceId: string
@@ -91,14 +92,14 @@ export default function SubproblemHandler(db: IDB) {
   function subproblemTransaction(
     request: Request,
     client: PoolClient,
-    transactionCallback: (error: OurError, newSubproblemId?: number) => void
+    transactionCallback: (error: OurError, newSubproblemId?: string) => void
   ): void {
     waterfall(
       [
         _.partial(createSubProblem, client, request),
         _.partial(createScenario, client, request)
       ],
-      (error: OurError, newSubproblemId?: number) => {
+      (error: OurError, newSubproblemId?: string) => {
         transactionCallback(error, newSubproblemId);
       }
     );
@@ -110,7 +111,7 @@ export default function SubproblemHandler(db: IDB) {
     callback: (
       error: OurError,
       workspaceId?: string,
-      newSubproblemId?: number
+      newSubproblemId?: string
     ) => void
   ): void {
     logger.debug('creating subproblem');
@@ -121,7 +122,7 @@ export default function SubproblemHandler(db: IDB) {
       workspaceId,
       title,
       definition,
-      (error: OurError, newSubproblemId: number) => {
+      (error: OurError, newSubproblemId: string) => {
         if (error) {
           callback(error);
         } else {
@@ -136,8 +137,8 @@ export default function SubproblemHandler(db: IDB) {
     client: PoolClient,
     request: Request,
     workspaceId: string,
-    subproblemId: number,
-    callback: (error: OurError, subproblemId?: number) => void
+    subproblemId: string,
+    callback: (error: OurError, subproblemId?: string) => void
   ): void {
     logger.debug(
       'creating scenario; workspaceid: ' +
@@ -146,25 +147,24 @@ export default function SubproblemHandler(db: IDB) {
         subproblemId
     );
     const state = request.body.scenarioState;
-    scenarioRepository.createInTransaction(
-      client,
-      workspaceId,
-      subproblemId,
-      'Default',
-      state,
-      (error) => {
-        if (error) {
-          callback(error);
-        } else {
-          callback(null, subproblemId);
-        }
+    const scenario: IScenarioCommand = {
+      title: 'Default',
+      state: state,
+      workspaceId: workspaceId,
+      subproblemId: subproblemId
+    };
+    scenarioRepository.createInTransaction(client, scenario, (error) => {
+      if (error) {
+        callback(error);
+      } else {
+        callback(null, subproblemId);
       }
-    );
+    });
   }
 
   function retrieveSubProblem(
     workspaceId: string,
-    subproblemId: number,
+    subproblemId: string,
     callback: (error: OurError, subproblem?: any) => void
   ): void {
     logger.debug('retrieving subproblem');
@@ -201,12 +201,11 @@ export default function SubproblemHandler(db: IDB) {
     next: any
   ): void {
     const {workspaceId, subproblemId} = request.params;
-    const subproblemIdNumber = Number.parseInt(subproblemId);
     logger.debug(
       'Deleting workspace/' + workspaceId + '/problem/' + subproblemId
     );
     db.runInTransaction(
-      _.partial(deleteTransaction, workspaceId, subproblemIdNumber),
+      _.partial(deleteTransaction, workspaceId, subproblemId),
       (error: OurError) => {
         if (error) {
           handleError(error, next);
@@ -220,7 +219,7 @@ export default function SubproblemHandler(db: IDB) {
 
   function deleteTransaction(
     workspaceId: string,
-    subproblemId: number,
+    subproblemId: string,
     client: PoolClient,
     transactionCallback: (error: OurError) => void
   ): void {
@@ -283,9 +282,9 @@ export default function SubproblemHandler(db: IDB) {
 
   function setDefaultSubproblem(
     client: PoolClient,
-    subproblemId: number,
+    subproblemId: string,
     workspaceId: string,
-    subproblemIds: number[],
+    subproblemIds: string[],
     defaultId: number,
     callback: (error: OurError) => void
   ): void {
@@ -304,9 +303,9 @@ export default function SubproblemHandler(db: IDB) {
 
   function setNewDefaultSubproblem(
     client: PoolClient,
-    subproblemId: number,
+    subproblemId: string,
     workspaceId: string,
-    subproblemIds: number[],
+    subproblemIds: string[],
     callback: (error: OurError) => void
   ): void {
     const newDefault = getNewDefaultSubproblemId(subproblemId, subproblemIds);
@@ -330,17 +329,17 @@ export default function SubproblemHandler(db: IDB) {
   }
 
   function getNewDefaultSubproblemId(
-    subproblemId: number,
-    subproblemIds: number[]
-  ): number {
-    return _.find(subproblemIds, (id: number) => {
+    subproblemId: string,
+    subproblemIds: string[]
+  ): string {
+    return _.find(subproblemIds, (id: string) => {
       return id !== subproblemId;
     });
   }
 
   function determineAndSetNewDefaultScenario(
     client: PoolClient,
-    subproblemId: number,
+    subproblemId: string,
     workspaceId: string,
     callback: (error: OurError) => void
   ): void {
@@ -360,7 +359,7 @@ export default function SubproblemHandler(db: IDB) {
   function setDefaultScenario(
     client: PoolClient,
     workspaceId: string,
-    newDefaultScenario: number,
+    newDefaultScenario: string,
     callback: (error: OurError) => void
   ): void {
     workspaceRepository.setDefaultScenario(
@@ -375,7 +374,7 @@ export default function SubproblemHandler(db: IDB) {
 
   function deleteSubproblemAction(
     client: PoolClient,
-    subproblemId: number,
+    subproblemId: string,
     callback: (error: OurError) => void
   ): void {
     subproblemRepository.delete(client, subproblemId, (error: OurError) => {

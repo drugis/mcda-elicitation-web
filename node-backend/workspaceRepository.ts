@@ -58,7 +58,7 @@ export default function WorkspaceRepository(db: IDB) {
   function setDefaultSubProblem(
     client: PoolClient,
     workspaceId: string,
-    subproblemId: number,
+    subproblemId: string,
     callback: (error: OurError) => void
   ) {
     logger.debug('setting default subproblem for: ' + workspaceId);
@@ -88,7 +88,7 @@ export default function WorkspaceRepository(db: IDB) {
   function setDefaultScenario(
     client: PoolClient,
     workspaceId: string,
-    scenarioId: number,
+    scenarioId: string,
     callback: (error: OurError) => void
   ) {
     logger.debug(

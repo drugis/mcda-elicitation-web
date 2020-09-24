@@ -1,5 +1,4 @@
 import {getStringForValue} from './ValueCellService';
-import {use} from 'chai';
 
 describe('ValueCellService', () => {
   describe('getStringForvalue', () => {

@@ -22,7 +22,7 @@ export default function ValueCell({
 }) {
   const {workspace, scales, canBePercentage} = useContext(EffectsTableContext);
   const {analysisType, showPercentages} = useContext(SettingsContext);
-  const {setError} = useContext(ErrorContext);
+  const {setErrorMessage} = useContext(ErrorContext);
 
   const usePercentage = canBePercentage(dataSourceId) && showPercentages;
   const effect = findValue(workspace.effects, dataSourceId, alternativeId);
@@ -88,7 +88,7 @@ export default function ValueCell({
         />
       );
     } else {
-      setError('No values to display for current view settings');
+      setErrorMessage('No values to display for current view settings');
     }
   }
 
@@ -113,7 +113,7 @@ export default function ValueCell({
         />
       );
     } else {
-      setError('No values to display for current view settings');
+      setErrorMessage('No values to display for current view settings');
     }
   }
 

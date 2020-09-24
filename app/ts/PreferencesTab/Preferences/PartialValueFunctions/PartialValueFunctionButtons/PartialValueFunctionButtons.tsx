@@ -11,7 +11,7 @@ export default function PartialValueFunctionButtons({
 }: {
   criterionId: string;
 }) {
-  const {setLinearPvf, currentScenario} = useContext(PreferencesContext);
+  const {setLinearPvf} = useContext(PreferencesContext);
 
   function handleIncreasingClick(): void {
     setLinearPvf(criterionId, 'increasing');

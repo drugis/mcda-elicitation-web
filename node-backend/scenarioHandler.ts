@@ -1,4 +1,5 @@
 import {OurError} from '@shared/interface/IError';
+import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
@@ -29,7 +30,7 @@ export default function ScenarioHandler(db: IDB) {
     const {workspaceId, subproblemId} = request.params;
     scenarioRepository.queryForSubProblem(
       workspaceId,
-      Number.parseInt(subproblemId),
+      subproblemId,
       _.partial(defaultCallback, response, next)
     );
   }
@@ -55,14 +56,14 @@ export default function ScenarioHandler(db: IDB) {
   }
 
   function create(request: Request, response: Response, next: any): void {
+    const scenario: IScenarioCommand = {
+      workspaceId: request.params.workspaceId,
+      subproblemId: request.params.subproblemId,
+      title: request.body.title,
+      state: request.body.state
+    };
     scenarioRepository.createDirectly(
-      request.params.workspaceId,
-      Number.parseInt(request.params.subproblemId),
-      request.body.title,
-      {
-        problem: request.body.state.problem,
-        prefs: request.body.state.prefs
-      },
+      scenario,
       (error: OurError, id?: number): void => {
         if (error) {
           next(error);
@@ -104,12 +105,7 @@ export default function ScenarioHandler(db: IDB) {
         scenarioId
     );
     db.runInTransaction(
-      _.partial(
-        deleteTransaction,
-        workspaceId,
-        Number.parseInt(subproblemId),
-        Number.parseInt(scenarioId)
-      ),
+      _.partial(deleteTransaction, workspaceId, subproblemId, scenarioId),
       (error: OurError): void => {
         if (error) {
           handleError(error, next);
@@ -123,8 +119,8 @@ export default function ScenarioHandler(db: IDB) {
 
   function deleteTransaction(
     workspaceId: string,
-    subproblemId: number,
-    scenarioId: number,
+    subproblemId: string,
+    scenarioId: string,
     client: PoolClient,
     transactionCallback: (error: OurError) => void
   ): void {
@@ -163,9 +159,9 @@ export default function ScenarioHandler(db: IDB) {
   function setDefaultScenario(
     client: PoolClient,
     workspaceId: string,
-    scenarioId: number,
-    defaultScenarioId: number,
-    scenarioIds: number[],
+    scenarioId: string,
+    defaultScenarioId: string,
+    scenarioIds: string[],
     callback: (error?: OurError) => void
   ): void {
     if (defaultScenarioId === scenarioId) {
@@ -185,10 +181,10 @@ export default function ScenarioHandler(db: IDB) {
   }
 
   function getNewDefaultScenario(
-    scenarioIds: number[],
-    currentDefaultScenarioId: number
-  ): number {
-    return _.reject(scenarioIds, (id: number): boolean => {
+    scenarioIds: string[],
+    currentDefaultScenarioId: string
+  ): string {
+    return _.reject(scenarioIds, (id: string): boolean => {
       return id === currentDefaultScenarioId;
     })[0];
   }

@@ -202,7 +202,7 @@ export function PreferencesContextProviderComponent({
   }
 
   function errorCallback(error: OurError) {
-    setError(error.message);
+    setError(error);
   }
 
   function getCriterion(id: string): IProblemCriterion {

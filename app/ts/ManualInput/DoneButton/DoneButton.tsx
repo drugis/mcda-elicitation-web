@@ -18,7 +18,7 @@ export default function DoneButton() {
         window.location.assign(url);
       })
       .catch((error: OurError) => {
-        setError(error.message + ', ' + error.response.data);
+        setError(error);
       });
   }
 
