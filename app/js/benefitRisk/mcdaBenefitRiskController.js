@@ -160,7 +160,7 @@ define(['lodash', 'angular'], function (_, angular) {
               id: scenario.id,
               title: scenario.title,
               state: scenario.state,
-              subproblemId: scenario.subproblemId
+              subproblemId: scenario.subProblemId
             };
           });
           $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(

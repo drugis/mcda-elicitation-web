@@ -44,14 +44,14 @@ function afterEach(browser) {
 function create(browser) {
   browser
     .click('#add-scenario-button')
-    .waitForElementVisible('#add-scenario-title-button:disabled')
+    .waitForElementVisible('#add-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', 'Default')
-    .waitForElementVisible('#add-scenario-title-button:disabled')
+    .waitForElementVisible('#add-scenario-confirm-button:disabled')
     .assert.containsText('#error-0', 'Duplicate title')
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-title-button:enabled')
-    .click('#add-scenario-title-button')
+    .waitForElementVisible('#add-scenario-confirm-button:enabled')
+    .click('#add-scenario-confirm-button')
     .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
@@ -64,7 +64,7 @@ function edit(browser) {
     .pause(250)
     .setValue('#new-scenario-title', scenarioTitle)
     .pause(250)
-    .click('#edit-scenario-title-button')
+    .click('#edit-scenario-confirm-button')
     .pause(100)
     .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
@@ -74,10 +74,10 @@ function copy(browser) {
   browser.assert
     .containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
-    .waitForElementVisible('#copy-scenario-title-button:disabled')
+    .waitForElementVisible('#copy-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#copy-scenario-title-button:enabled')
-    .click('#copy-scenario-title-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
     .pause(100) //pause needed to not get 'stale element' error
     .waitForElementVisible('#scenario-selector')
     .assert.containsText('#scenario-selector', scenarioTitle);
@@ -87,8 +87,8 @@ function switchinPreferences(browser) {
   browser
     .click('#add-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-title-button:enabled')
-    .click('#add-scenario-title-button')
+    .waitForElementVisible('#add-scenario-confirm-button:enabled')
+    .click('#add-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
     .click('li.MuiButtonBase-root:nth-child(1)')
@@ -100,8 +100,8 @@ function switchInDeterministic(browser) {
   browser
     .click('#add-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-title-button:enabled')
-    .click('#add-scenario-title-button')
+    .waitForElementVisible('#add-scenario-confirm-button:enabled')
+    .click('#add-scenario-confirm-button')
     .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#deterministic-tab')
@@ -115,8 +115,8 @@ function switchInSmaa(browser) {
   browser
     .click('#add-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-title-button:enabled')
-    .click('#add-scenario-title-button')
+    .waitForElementVisible('#add-scenario-confirm-button:enabled')
+    .click('#add-scenario-confirm-button')
     .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#smaa-tab')
@@ -130,10 +130,10 @@ function deleteScenario(browser) {
     .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
-    .waitForElementVisible('#copy-scenario-title-button:disabled')
+    .waitForElementVisible('#copy-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#copy-scenario-title-button:enabled')
-    .click('#copy-scenario-title-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
     .pause(100) //pause needed to not get 'stale element' error
     .waitForElementVisible('#delete-scenario-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
@@ -149,10 +149,10 @@ function cancelDeleteScenario(browser) {
     .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default')
     .click('#copy-scenario-button')
-    .waitForElementVisible('#copy-scenario-title-button:disabled')
+    .waitForElementVisible('#copy-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#copy-scenario-title-button:enabled')
-    .click('#copy-scenario-title-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
     .pause(100) //pause needed to not get 'stale element' error
     .click('#delete-scenario-button')
     .waitForElementVisible('#dialog-title')

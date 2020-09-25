@@ -62,7 +62,7 @@ export default function ScenarioActionButton({
 
   return (
     <>
-      <Tooltip title={action + ' scenario title'}>
+      <Tooltip title={action + ' scenario'}>
         <IconButton
           id={action.toLowerCase() + '-scenario-button'}
           onClick={openDialog}
@@ -77,7 +77,7 @@ export default function ScenarioActionButton({
         maxWidth={'sm'}
       >
         <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-          {action} scenario title
+          {action} scenario
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
@@ -97,7 +97,7 @@ export default function ScenarioActionButton({
         </DialogContent>
         <DialogActions>
           <Button
-            id={action.toLowerCase() + '-scenario-title-button'}
+            id={action.toLowerCase() + '-scenario-confirm-button'}
             variant="contained"
             color="primary"
             onClick={handleButtonClick}
