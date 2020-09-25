@@ -1,5 +1,5 @@
 import {OurError} from '@shared/interface/IError';
-import IScenario from '@shared/interface/Scenario/IScenario';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import _ from 'lodash';
@@ -51,7 +51,7 @@ export default function ScenarioRepository(db: IDB) {
 
   function query(
     workspaceId: string,
-    callback: (error: OurError, scenarios?: IScenario[]) => void
+    callback: (error: OurError, scenarios?: IMcdaScenario[]) => void
   ): void {
     logger.debug('Getting scenarios for workspace: ' + workspaceId);
     const query =
@@ -62,7 +62,7 @@ export default function ScenarioRepository(db: IDB) {
   function queryForSubProblem(
     workspaceId: string,
     subproblemId: string,
-    callback: (error: OurError, scenarios?: IScenario[]) => void
+    callback: (error: OurError, scenarios?: IMcdaScenario[]) => void
   ) {
     logger.debug(
       'getting /workspaces/' +
@@ -94,7 +94,7 @@ export default function ScenarioRepository(db: IDB) {
 
   function get(
     scenarioId: string,
-    callback: (error: OurError, scenario?: IScenario) => void
+    callback: (error: OurError, scenario?: IMcdaScenario) => void
   ): void {
     logger.debug('Getting scenario: ' + scenarioId);
     const query =
@@ -102,7 +102,7 @@ export default function ScenarioRepository(db: IDB) {
     db.query(
       query,
       [scenarioId],
-      (error: OurError, result: QueryResult<IScenario>) => {
+      (error: OurError, result: QueryResult<IMcdaScenario>) => {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {

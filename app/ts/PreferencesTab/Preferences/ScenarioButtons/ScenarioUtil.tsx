@@ -1,11 +1,11 @@
-import IScenario from '@shared/interface/Scenario/IScenario';
-import _ from 'lodash';
 import Grid from '@material-ui/core/Grid';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import _ from 'lodash';
 import React from 'react';
 
 export function checkScenarioTitleErrors(
   newTitle: string,
-  scenarios: Record<string, IScenario>,
+  scenarios: Record<string, IMcdaScenario>,
   currentScenarioId?: string
 ): string[] {
   const errors = [];
@@ -22,7 +22,7 @@ export function checkScenarioTitleErrors(
 
 function isDuplicate(
   title: string,
-  scenarios: Record<string, IScenario>,
+  scenarios: Record<string, IMcdaScenario>,
   currentScenarioId: string
 ): boolean {
   return _.some(scenarios, (scenario) => {

@@ -14,7 +14,7 @@ export default function RankingElicitation() {
   const [selectedCriterionId, setSelectedCriterionId] = useState('');
   const {currentStep} = useContext(RankingElicitationContext);
   const {criteria} = useContext(PreferencesContext);
-  const totalSteps = _.toArray(criteria).length - 1;
+  const totalSteps = _.size(criteria) - 1;
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
     setSelectedCriterionId(event.target.value);

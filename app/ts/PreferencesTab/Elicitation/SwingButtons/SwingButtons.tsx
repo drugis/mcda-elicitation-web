@@ -1,10 +1,9 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
+import {buildScenarioWithPreferences} from '../../PreferencesUtil';
 import {ElicitationContext} from '../ElicitationContext';
-import _ from 'lodash';
 
 export default function SwingButtons() {
   const {currentStep, setCurrentStep, isNextDisabled, preferences} = useContext(
@@ -27,12 +26,9 @@ export default function SwingButtons() {
   }
 
   function handleSaveButtonClick() {
-    const newPreferences = Object.values(preferences);
-    const newState: IScenarioState = {
-      ..._.omit(currentScenario.state, ['weights', 'prefs']),
-      prefs: newPreferences
-    };
-    updateScenario({..._.omit(currentScenario, ['state']), state: newState});
+    updateScenario(
+      buildScenarioWithPreferences(currentScenario, Object.values(preferences))
+    );
     setActiveView('preferences');
   }
 

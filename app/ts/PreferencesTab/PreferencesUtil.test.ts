@@ -2,8 +2,14 @@ import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
-import IScenario from '@shared/interface/Scenario/IScenario';
-import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import IWeights from '@shared/interface/Scenario/IWeights';
+import {TPreferences} from '@shared/types/Preferences';
+import {
+  buildScenarioWithPreferences,
+  createPreferencesCriteria,
+  initPvfs
+} from './PreferencesUtil';
 
 const criterion1: IProblemCriterion = {
   description: '',
@@ -46,7 +52,7 @@ describe('PreferencesUtil', () => {
         critId2: criterion2
       };
 
-      const currentScenario: IScenario = {
+      const currentScenario: IMcdaScenario = {
         id: 'scenarioId1',
         title: 'scenario 1',
         state: {
@@ -82,6 +88,51 @@ describe('PreferencesUtil', () => {
           unitOfMeasurement: criterion1.dataSources[0].unitOfMeasurement,
           id: 'critId1',
           dataSourceId: criterion1.dataSources[0].id
+        }
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('buildScenarioWithPreferences', () => {
+    it('should put preferenes on the scenario state and remove the weights', () => {
+      const scenario: IMcdaScenario = {
+        id: '1',
+        title: 'scenario',
+        subproblemId: '10',
+        workspaceId: '100',
+        state: {
+          prefs: [
+            {
+              elicitationMethod: 'ranking',
+              criteria: ['critId1', 'critdI2'],
+              type: 'ordinal'
+            }
+          ],
+          problem: {criteria: {}},
+          weights: {} as IWeights
+        }
+      };
+      const preferences: TPreferences = [
+        {
+          elicitationMethod: 'matching',
+          type: 'exact swing',
+          criteria: ['critId1', 'critdI2'],
+          ratio: 1
+        }
+      ];
+      const result: IMcdaScenario = buildScenarioWithPreferences(
+        scenario,
+        preferences
+      );
+      const expectedResult: IMcdaScenario = {
+        id: '1',
+        title: 'scenario',
+        subproblemId: '10',
+        workspaceId: '100',
+        state: {
+          prefs: preferences,
+          problem: {criteria: {}}
         }
       };
       expect(result).toEqual(expectedResult);

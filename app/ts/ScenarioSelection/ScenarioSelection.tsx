@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import IScenario from '@shared/interface/Scenario/IScenario';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import _ from 'lodash';
 import React, {ChangeEvent} from 'react';
 import InlineHelp from '../InlineHelp/InlineHelp';
@@ -11,8 +11,8 @@ export default function ScenarioSelection({
   scenarios,
   currentScenario
 }: {
-  scenarios: Record<string, IScenario>;
-  currentScenario: IScenario;
+  scenarios: Record<string, IMcdaScenario>;
+  currentScenario: IMcdaScenario;
 }) {
   function handleScenarioChanged(event: ChangeEvent<{value: string}>): void {
     const newScenarioId = scenarios[event.target.value].id;
@@ -20,7 +20,7 @@ export default function ScenarioSelection({
   }
 
   function getScenarioOptions(): JSX.Element[] {
-    return _.map(scenarios, (scenario: IScenario) => {
+    return _.map(scenarios, (scenario: IMcdaScenario) => {
       return (
         <MenuItem value={scenario.id} key={scenario.id}>
           {scenario.title}

@@ -1,6 +1,7 @@
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {buildScenarioWithPreferences} from 'app/ts/PreferencesTab/PreferencesUtil';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
@@ -22,12 +23,9 @@ export default function MatchingButtons() {
   }
 
   function handleSaveButtonclick(): void {
-    const newPreferences = Object.values(preferences);
-    const newState = {
-      ..._.omit(currentScenario.state, ['weights', 'prefs']),
-      prefs: newPreferences
-    };
-    updateScenario({..._.omit(currentScenario, ['state']), state: newState});
+    updateScenario(
+      buildScenarioWithPreferences(currentScenario, Object.values(preferences))
+    );
     setActiveView('preferences');
   }
 
@@ -36,7 +34,7 @@ export default function MatchingButtons() {
   }
 
   function isLastStep() {
-    return currentStep === _.toArray(criteria).length;
+    return currentStep === _.size(criteria);
   }
 
   function handlePreviousClick(): void {

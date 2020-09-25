@@ -3,6 +3,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {UNRANKED} from 'app/ts/PreferencesTab/Elicitation/elicitationConstants';
 import IRankingAnswer from 'app/ts/PreferencesTab/Elicitation/Interface/IRankingAnswer';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {buildScenarioWithPreferences} from 'app/ts/PreferencesTab/PreferencesUtil';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {RankingElicitationContext} from '../RankingElicitationContext';
@@ -43,11 +44,7 @@ export default function RankingButtons({
       criteria
     );
     const preferences = buildRankingPreferences(_.toArray(finishedRankings));
-    const newState = {
-      ..._.omit(currentScenario.state, ['weights', 'prefs']),
-      prefs: preferences
-    };
-    updateScenario({..._.omit(currentScenario, ['state']), state: newState});
+    updateScenario(buildScenarioWithPreferences(currentScenario, preferences));
     setActiveView('preferences');
   }
 
@@ -66,7 +63,7 @@ export default function RankingButtons({
   }
 
   function isLastStep(): boolean {
-    return currentStep === _.toArray(criteria).length - 1;
+    return currentStep === _.size(criteria) - 1;
   }
 
   function cancel() {

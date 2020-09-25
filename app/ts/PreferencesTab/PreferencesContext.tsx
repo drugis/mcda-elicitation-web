@@ -4,7 +4,7 @@ import IWorkspaceSettings from '@shared/interface/IWorkspaceSettings';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
-import IScenario from '@shared/interface/Scenario/IScenario';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {TPreferences} from '@shared/types/Preferences';
 import {TPvfDirection} from '@shared/types/PvfTypes';
@@ -31,19 +31,19 @@ export function PreferencesContextProviderComponent({
   updateAngularScenario
 }: {
   children: any;
-  scenarios: IScenario[];
+  scenarios: IMcdaScenario[];
   currentScenarioId: string;
   workspaceId: string;
   problem: IProblem;
   settings: IWorkspaceSettings;
-  updateAngularScenario: (scenario: IScenario) => void;
+  updateAngularScenario: (scenario: IMcdaScenario) => void;
 }) {
   const {setError} = useContext(ErrorContext);
-  const [contextScenarios, setScenarios] = useState<Record<string, IScenario>>(
-    _.keyBy(scenarios, 'id')
-  );
+  const [contextScenarios, setScenarios] = useState<
+    Record<string, IMcdaScenario>
+  >(_.keyBy(scenarios, 'id'));
 
-  const [currentScenario, setCurrentScenario] = useState<IScenario>(
+  const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
     _.find(contextScenarios, ['id', currentScenarioId]) // TODO: take the one who's id is in the url instead
   );
   const criteria = createPreferencesCriteria(problem.criteria);
@@ -91,7 +91,7 @@ export function PreferencesContextProviderComponent({
     criterionId: string,
     direction: TPvfDirection
   ) {
-    let newScenario: IScenario = _.cloneDeep(currentScenario);
+    let newScenario: IMcdaScenario = _.cloneDeep(currentScenario);
     if (!newScenario.state.problem) {
       newScenario.state.problem = {criteria: {}};
     }
@@ -101,7 +101,7 @@ export function PreferencesContextProviderComponent({
     return newScenario;
   }
 
-  function resetPreferences(scenario: IScenario) {
+  function resetPreferences(scenario: IMcdaScenario) {
     const newScenario = {
       ...scenario,
       state: {
@@ -112,7 +112,7 @@ export function PreferencesContextProviderComponent({
     getWeights(newScenario);
   }
 
-  function getWeights(scenario: IScenario) {
+  function getWeights(scenario: IMcdaScenario) {
     const postProblem = _.merge(
       {},
       _.omit(problem, 'preferences'),
@@ -137,7 +137,7 @@ export function PreferencesContextProviderComponent({
     );
   }
 
-  function updateScenario(newScenario: IScenario): Promise<void> {
+  function updateScenario(newScenario: IMcdaScenario): Promise<void> {
     return Axios.post(
       `/workspaces/${workspaceId}/problems/${subproblemId}/scenarios/${newScenario.id}`,
       newScenario
@@ -146,8 +146,8 @@ export function PreferencesContextProviderComponent({
       .catch(errorCallback);
   }
 
-  function updateScenarioCallback(scenario: IScenario) {
-    let scenarioToAdd: Record<string, IScenario> = {};
+  function updateScenarioCallback(scenario: IMcdaScenario) {
+    let scenarioToAdd: Record<string, IMcdaScenario> = {};
     scenarioToAdd[scenario.id] = scenario;
     setScenarios({...contextScenarios, ...scenarioToAdd});
     setCurrentScenario(scenario);

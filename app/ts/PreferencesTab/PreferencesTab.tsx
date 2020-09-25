@@ -1,6 +1,6 @@
 import IWorkspaceSettings from '@shared/interface/IWorkspaceSettings';
 import IProblem from '@shared/interface/Problem/IProblem';
-import IScenario from '@shared/interface/Scenario/IScenario';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
@@ -15,12 +15,12 @@ export default function PreferencesTab({
   settings,
   updateAngularScenario
 }: {
-  scenarios: IScenario[];
+  scenarios: IMcdaScenario[];
   currentScenarioId: string;
   workspaceId: string;
   problem: IProblem;
   settings: IWorkspaceSettings;
-  updateAngularScenario: (scenario: IScenario) => void;
+  updateAngularScenario: (scenario: IMcdaScenario) => void;
 }) {
   return scenarios && problem ? (
     <ErrorContextProviderComponent>

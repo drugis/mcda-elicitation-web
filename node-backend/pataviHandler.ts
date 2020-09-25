@@ -1,5 +1,5 @@
 import IWeights from '@shared/interface/IWeights';
-import IScenario from '@shared/interface/Scenario/IScenario';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED} from 'http-status-codes';
@@ -51,7 +51,7 @@ export default function PataviHandler(db: IDB) {
   }
 
   function saveScenario(
-    scenario: IScenario,
+    scenario: IMcdaScenario,
     weights: IWeights,
     callback: (error: Error, weights?: IWeights) => void
   ) {

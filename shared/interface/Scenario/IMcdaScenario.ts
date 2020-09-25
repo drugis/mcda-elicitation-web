@@ -1,5 +1,5 @@
 import IScenarioCommand from './IScenarioCommand';
 
-export default interface IScenario extends IScenarioCommand {
+export default interface IMcdaScenario extends IScenarioCommand {
   id: string;
 }
