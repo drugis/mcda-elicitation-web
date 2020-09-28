@@ -3,7 +3,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import {Effect, effectType} from '@shared/interface/IEffect';
 import IEmptyEffect from '@shared/interface/IEmptyEffect';
@@ -120,16 +119,17 @@ export default function EffectCellDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              native
               id="input-parameters-selector"
               value={inputType}
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
             >
-              <MenuItem value="value">Value</MenuItem>
-              <MenuItem value="valueCI">Value, 95% C.I.</MenuItem>
-              <MenuItem value="range">Range</MenuItem>
-              <MenuItem value="empty">Empty cell</MenuItem>
-              <MenuItem value="text">Text</MenuItem>
+              <option value="value">Value</option>
+              <option value="valueCI">Value, 95% C.I.</option>
+              <option value="range">Range</option>
+              <option value="empty">Empty cell</option>
+              <option value="text">Text</option>
             </Select>
           </Grid>
           <EffectInputFields

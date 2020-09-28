@@ -334,7 +334,7 @@ function moveDataSource(browser) {
 }
 
 function setUnitOfMeaurementToPercentage(browser) {
-  const percentagePath = '//*[@id="menu-"]/div[3]/ul/li[3]';
+  const percentagePath = '//*[@id="unit-type-selector"]/option[3]';
   browser.perform(() => {
     browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
       const dataSourceId = result.value.split('-').slice(2).join('-');
@@ -354,7 +354,7 @@ function setUnitOfMeaurementToPercentage(browser) {
 }
 
 function setUnitOfMeaurementToDecimal(browser) {
-  const decimalPath = '//*[@id="menu-"]/div[3]/ul/li[2]';
+  const decimalPath = '//*[@id="unit-type-selector"]/option[2]';
   browser.perform(() => {
     browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
       const dataSourceId = result.value.split('-').slice(2).join('-');
@@ -374,8 +374,8 @@ function setUnitOfMeaurementToDecimal(browser) {
 }
 
 function setUnitOfMeaurementToCustom(browser) {
-  const lowerBoundChoicePath = '//*[@id="menu-"]/div[3]/ul/li[2]';
-  const upperBoundChoicePath = '//*[@id="menu-"]/div[3]/ul/li[2]';
+  const lowerBoundChoicePath = '//*[@id="unit-lower-bound-selector"]/option[2]';
+  const upperBoundChoicePath = '//*[@id="unit-upper-bound-selector"]/option[2]';
   const unitLabelInput = '//*[@id="unit-label"]/div/div/input';
   browser.perform(() => {
     browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
@@ -613,10 +613,10 @@ function enterEffects(browser) {
   const firstCell = '//tbody/tr[2]/td[8]/span';
   const editEffectCell = '//*[@id="edit-effect-cell"]';
   const typeSelector = '//*[@id="input-parameters-selector"]';
-  const valueCI = '//*[@id="menu-"]/div[3]/ul/li[2]';
-  const range = '//*[@id="menu-"]/div[3]/ul/li[3]';
-  const empty = '//*[@id="menu-"]/div[3]/ul/li[4]';
-  const text = '//*[@id="menu-"]/div[3]/ul/li[5]';
+  const valueCI = '//*[@id="input-parameters-selector"]/option[2]';
+  const range = '//*[@id="input-parameters-selector"]/option[3]';
+  const empty = '//*[@id="input-parameters-selector"]/option[4]';
+  const text = '//*[@id="input-parameters-selector"]/option[5]';
   const valueInput = '//*[@id="value-input"]';
   const lowerBoundInput = '//*[@id="lower-bound-input"]';
   const upperBoundInput = '//*[@id="upper-bound-input"]';
@@ -666,12 +666,12 @@ function enterDistributions(browser) {
   const firstCell = '//tbody/tr[2]/td[8]/span';
   const editDistributionCell = '//*[@id="edit-distribution-cell"]';
   const typeSelector = '//*[@id="input-parameters-selector"]';
-  const beta = '//*[@id="menu-"]/div[3]/ul/li[2]';
-  const gamma = '//*[@id="menu-"]/div[3]/ul/li[3]';
-  const value = '//*[@id="menu-"]/div[3]/ul/li[4]';
-  const range = '//*[@id="menu-"]/div[3]/ul/li[5]';
-  const empty = '//*[@id="menu-"]/div[3]/ul/li[6]';
-  const text = '//*[@id="menu-"]/div[3]/ul/li[7]';
+  const beta = '//*[@id="input-parameters-selector"]/option[2]';
+  const gamma = '//*[@id="input-parameters-selector"]/option[3]';
+  const value = '//*[@id="input-parameters-selector"]/option[4]';
+  const range = '//*[@id="input-parameters-selector"]/option[5]';
+  const empty = '//*[@id="input-parameters-selector"]/option[6]';
+  const text = '//*[@id="input-parameters-selector"]/option[7]';
   const meanInput = '//*[@id="mean-input"]';
   const standardErrorInput = '//*[@id="standard-error-input"]';
   const alphaInput = '//*[@id="alpha-input"]';
@@ -683,7 +683,7 @@ function enterDistributions(browser) {
   browser
     .useXpath()
     .click('//*[@id="table-input-mode-selector"]')
-    .click('//*[@id="menu-"]/div[3]/ul/li[2]')
+    .click('//*[@id="table-input-mode-selector"]/option[2]')
     .pause(100)
     .click(firstCell)
     .setValue(meanInput, 1)

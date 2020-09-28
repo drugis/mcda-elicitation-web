@@ -91,7 +91,7 @@ function switchinPreferences(browser) {
     .click('#add-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
-    .click('li.MuiButtonBase-root:nth-child(1)')
+    .click('#scenario-selector > option:nth-child(1)')
     .pause(100) //pause needed to not get 'stale element' error
     .assert.containsText('#scenario-selector', 'Default');
 }
