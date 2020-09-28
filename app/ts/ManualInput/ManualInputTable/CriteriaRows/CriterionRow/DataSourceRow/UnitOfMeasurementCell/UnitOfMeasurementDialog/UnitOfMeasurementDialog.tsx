@@ -3,7 +3,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import IUnitOfMeasurement, {
@@ -113,14 +112,15 @@ export default function UnitOfMeasurementDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              native
               id="unit-type-selector"
               value={unitType}
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
             >
-              <MenuItem value={custom}>custom</MenuItem>
-              <MenuItem value={decimal}>Proportion (decimal)</MenuItem>
-              <MenuItem value={percentage}>Proportion (percentage)</MenuItem>
+              <option value={custom}>custom</option>
+              <option value={decimal}>Proportion (decimal)</option>
+              <option value={percentage}>Proportion (percentage)</option>
             </Select>
           </Grid>
           <Grid item xs={6}>
@@ -139,6 +139,7 @@ export default function UnitOfMeasurementDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              native
               id="unit-lower-bound-selector"
               value={lowerBound}
               onChange={handleLowerBoundChange}
@@ -147,9 +148,9 @@ export default function UnitOfMeasurementDialog({
             >
               {_.map(lowerBoundOptions, (option) => {
                 return (
-                  <MenuItem key={option} value={option}>
+                  <option key={option} value={option}>
                     {option}
-                  </MenuItem>
+                  </option>
                 );
               })}
             </Select>
@@ -159,6 +160,7 @@ export default function UnitOfMeasurementDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              native
               id="unit-upper-bound-selector"
               value={upperBound}
               onChange={handleUpperBoundChange}
@@ -167,9 +169,9 @@ export default function UnitOfMeasurementDialog({
             >
               {_.map(upperBoundOptions, (option) => {
                 return (
-                  <MenuItem key={option} value={option}>
+                  <option key={option} value={option}>
                     {option}
-                  </MenuItem>
+                  </option>
                 );
               })}
             </Select>

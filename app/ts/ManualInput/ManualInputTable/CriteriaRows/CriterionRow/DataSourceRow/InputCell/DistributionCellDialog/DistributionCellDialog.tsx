@@ -3,7 +3,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import IBetaDistribution from '@shared/interface/IBetaDistribution';
 import IDistribution, {distributionType} from '@shared/interface/IDistribution';
@@ -143,18 +142,19 @@ export default function DistributionCellDialog({
           </Grid>
           <Grid item xs={6}>
             <Select
+              native
               id="input-parameters-selector"
               value={inputType}
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
             >
-              <MenuItem value="normal">Normal</MenuItem>
-              <MenuItem value="beta">Beta</MenuItem>
-              <MenuItem value="gamma">Gamma</MenuItem>
-              <MenuItem value="value">Value</MenuItem>
-              <MenuItem value="range">Range</MenuItem>
-              <MenuItem value="empty">Empty cell</MenuItem>
-              <MenuItem value="text">Text</MenuItem>
+              <option value="normal">Normal</option>
+              <option value="beta">Beta</option>
+              <option value="gamma">Gamma</option>
+              <option value="value">Value</option>
+              <option value="range">Range</option>
+              <option value="empty">Empty cell</option>
+              <option value="text">Text</option>
             </Select>
           </Grid>
           <DistributionInputFields
