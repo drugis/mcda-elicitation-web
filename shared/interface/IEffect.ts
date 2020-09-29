@@ -1,6 +1,7 @@
 import IEmptyEffect from './IEmptyEffect';
 import IRangeEffect from './IRangeEffect';
 import ITextEffect from './ITextEffect';
+import {UnitOfMeasurementType} from './IUnitOfMeasurement';
 import IValueCIEffect from './IValueCIEffect';
 import IValueEffect from './IValueEffect';
 export type Effect =
@@ -16,4 +17,5 @@ export default interface IEffect {
   alternativeId: string;
   dataSourceId: string;
   criterionId: string;
+  unitOfMeasurementType?: UnitOfMeasurementType;
 }

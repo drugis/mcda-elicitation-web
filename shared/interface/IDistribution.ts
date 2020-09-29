@@ -4,6 +4,7 @@ import IGammaDistribution from './IGammaDistribution';
 import INormalDistribution from './INormalDistribution';
 import IRangeEffect from './IRangeEffect';
 import ITextEffect from './ITextEffect';
+import {UnitOfMeasurementType} from './IUnitOfMeasurement';
 import IValueEffect from './IValueEffect';
 
 export type Distribution =
@@ -28,4 +29,5 @@ export default interface IDistribution {
   alternativeId: string;
   dataSourceId: string;
   criterionId: string;
+  unitOfMeasurementType?: UnitOfMeasurementType;
 }

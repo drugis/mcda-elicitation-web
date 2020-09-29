@@ -9,6 +9,7 @@ import IEmptyEffect from './interface/IEmptyEffect';
 import IOldWorkspace from './interface/IOldWorkspace';
 import IRangeEffect from './interface/IRangeEffect';
 import ITextEffect from './interface/ITextEffect';
+import {UnitOfMeasurementType} from './interface/IUnitOfMeasurement';
 import IValueCIEffect from './interface/IValueCIEffect';
 import IValueEffect from './interface/IValueEffect';
 import IWorkspace from './interface/IWorkspace';
@@ -62,7 +63,7 @@ export function buildNewStyleCopy<T>(
   idMapper: (id: string) => string,
   title: string
 ): IWorkspace {
-  const isPercentageMap = buildPercentageMap(workspace.problem.criteria);
+  const unitTypeMap = buildUnitTypeMap(workspace.problem.criteria);
 
   return {
     properties: buildWorkspaceProperties(workspace, title),
@@ -74,34 +75,37 @@ export function buildNewStyleCopy<T>(
     effects: buildWorkspaceEffects(
       workspace.problem.performanceTable,
       idMapper,
-      isPercentageMap
+      unitTypeMap
     ),
     distributions: buildWorkspaceDistributions(
       workspace.problem.performanceTable,
       idMapper,
-      isPercentageMap
+      unitTypeMap
     )
   };
 }
 
-export function buildPercentageMap(
+export function buildUnitTypeMap(
   criteria: Record<string, IProblemCriterion>
-): Record<string, boolean> {
+): Record<string, UnitOfMeasurementType> {
   const values = _.flatMap(criteria, (criterion: IProblemCriterion): [
     string,
-    boolean
+    UnitOfMeasurementType
   ][] => {
-    return _.map(criterion.dataSources, (dataSource: IProblemDataSource): [
-      string,
-      boolean
-    ] => {
-      return [
-        dataSource.id,
-        dataSource.unitOfMeasurement.type === 'percentage'
-      ];
-    });
+    return buildDataSourcePercentageMap(criterion);
   });
   return _.fromPairs(values);
+}
+
+function buildDataSourcePercentageMap(
+  criterion: IProblemCriterion
+): [string, UnitOfMeasurementType][] {
+  return _.map(criterion.dataSources, (dataSource: IProblemDataSource): [
+    string,
+    UnitOfMeasurementType
+  ] => {
+    return [dataSource.id, dataSource.unitOfMeasurement.type];
+  });
 }
 
 export function buildIdMap(
@@ -224,13 +228,13 @@ export function buildWorkspaceAlternatives(
 export function buildWorkspaceEffects(
   performanceTable: IPerformanceTableEntry[],
   idMapper: (id: string) => string,
-  isPercentageMap: Record<string, boolean>
+  unitTypeMap: Record<string, UnitOfMeasurementType>
 ): Effect[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
       return isNotNMAEntry(entry) && 'effect' in entry.performance;
     })
-    .map(_.partial(buildEffect, idMapper, isPercentageMap))
+    .map(_.partial(buildEffect, idMapper, unitTypeMap))
     .value();
 }
 
@@ -240,16 +244,17 @@ export function isNotNMAEntry(entry: IPerformanceTableEntry) {
 
 export function buildEffect(
   idMapper: (id: string) => string,
-  isPercentageMap: Record<string, boolean>,
+  unitTypeMap: Record<string, UnitOfMeasurementType>,
   entry: IPerformanceTableEntry
 ): Effect {
   const performance = entry.performance as IEffectPerformance;
   const effectPerformance = performance.effect;
-  const modifier = isPercentageMap[entry.dataSource] ? 100 : 1;
+  const modifier = unitTypeMap[entry.dataSource] === 'percentage' ? 100 : 1;
   const effectBase = {
     alternativeId: idMapper(entry.alternative),
     dataSourceId: idMapper(entry.dataSource),
-    criterionId: idMapper(entry.criterion)
+    criterionId: idMapper(entry.criterion),
+    unitOfMeasurementType: unitTypeMap[idMapper(entry.dataSource)]
   };
   if (effectPerformance.type === 'empty') {
     return createEmptyOrTextEffect(effectPerformance, effectBase);
@@ -324,27 +329,28 @@ export function createBoundEffect(
 export function buildWorkspaceDistributions(
   performanceTable: IPerformanceTableEntry[],
   idMapper: (id: string) => string,
-  isPercentageMap: Record<string, boolean>
+  unitTypeMap: Record<string, UnitOfMeasurementType>
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
       return isNotNMAEntry(entry) && 'distribution' in entry.performance;
     })
-    .map(_.partial(buildDistribution, idMapper, isPercentageMap))
+    .map(_.partial(buildDistribution, idMapper, unitTypeMap))
     .value();
 }
 
 export function buildDistribution(
   idMapper: (id: string) => string,
-  isPercentageMap: Record<string, boolean>,
+  unitTypeMap: Record<string, UnitOfMeasurementType>,
   entry: IPerformanceTableEntry
 ): Distribution {
   const performance = entry.performance as IDistributionPerformance;
-  const modifier = isPercentageMap[entry.dataSource] ? 100 : 1;
+  const modifier = unitTypeMap[entry.dataSource] === 'percentage' ? 100 : 1;
   const distributionBase = {
     alternativeId: idMapper(entry.alternative),
     dataSourceId: idMapper(entry.dataSource),
-    criterionId: idMapper(entry.criterion)
+    criterionId: idMapper(entry.criterion),
+    unitOfMeasurementType: unitTypeMap[idMapper(entry.dataSource)]
   };
   return finishDistributionCreation(
     performance.distribution,
