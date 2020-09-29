@@ -33,10 +33,10 @@ export function EffectsTableContextProviderComponent({
   return (
     <EffectsTableContext.Provider
       value={{
-        workspace: workspace,
+        workspace,
         alternatives: workspace.alternatives,
-        scales: scales,
-        canBePercentage: canBePercentage
+        scales,
+        canBePercentage
       }}
     >
       {children}

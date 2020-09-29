@@ -122,6 +122,11 @@ define(['lodash', 'angular'], function (_, angular) {
         currentSubProblem,
         scenario
       );
+      $scope.problemForReact = WorkspaceService.buildAggregateState(
+        baseProblem,
+        currentSubProblem,
+        scenario
+      );
       var stateCopy = angular.copy(aggregateState);
       aggregateState.percentified = WorkspaceService.percentifyCriteria(
         stateCopy
