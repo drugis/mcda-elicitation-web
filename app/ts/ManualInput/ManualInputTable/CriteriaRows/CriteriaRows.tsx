@@ -72,7 +72,7 @@ export default function CriteriaRows() {
         <TableRow>
           <TableCell colSpan={10 + alternatives.length}>
             <Box p={1}>
-              <Typography id="favourable-criteria-label" variant="caption">
+              <Typography id="favourable-criteria-label" variant="h6">
                 Favourable criteria
               </Typography>
             </Box>
@@ -92,7 +92,7 @@ export default function CriteriaRows() {
         <TableRow>
           <TableCell colSpan={10 + alternatives.length}>
             <Box p={1}>
-              <Typography id="unfavourable-criteria-label" variant="caption">
+              <Typography id="unfavourable-criteria-label" variant="h6">
                 Unfavourable criteria
               </Typography>
             </Box>
