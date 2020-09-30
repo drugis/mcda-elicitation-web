@@ -92,12 +92,12 @@ export function buildUnitTypeMap(
     string,
     UnitOfMeasurementType
   ][] => {
-    return buildDataSourcePercentageMap(criterion);
+    return buildDataSourceIdMeasurementTypePairs(criterion);
   });
   return _.fromPairs(values);
 }
 
-function buildDataSourcePercentageMap(
+function buildDataSourceIdMeasurementTypePairs(
   criterion: IProblemCriterion
 ): [string, UnitOfMeasurementType][] {
   return _.map(criterion.dataSources, (dataSource: IProblemDataSource): [

@@ -1,10 +1,10 @@
 import {Effect} from '@shared/interface/IEffect';
-import {DisplayMode} from '@shared/interface/ISettings';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import IRangeEffect from '@shared/interface/IRangeEffect';
-import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IScale from '@shared/interface/IScale';
+import {DisplayMode} from '@shared/interface/ISettings';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 
 export function renderEffect(
   effect: Effect,
@@ -48,11 +48,11 @@ function getStringForValue(
   unitOfMeasurementType: UnitOfMeasurementType
 ): string {
   if (usePercentage) {
-    const modifer = unitOfMeasurementType === 'decimal' ? 100 : 1;
-    return significantDigits(value * modifer) + '%';
+    const modifier = unitOfMeasurementType === 'decimal' ? 100 : 1;
+    return significantDigits(value * modifier) + '%';
   } else {
     const modifier = unitOfMeasurementType === 'percentage' ? 0.01 : 1;
-    return significantDigits(modifier * value).toString();
+    return significantDigits(value * modifier).toString();
   }
 }
 
