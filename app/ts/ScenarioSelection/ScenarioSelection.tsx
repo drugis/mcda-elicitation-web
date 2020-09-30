@@ -1,5 +1,4 @@
 import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import _ from 'lodash';
@@ -22,9 +21,9 @@ export default function ScenarioSelection({
   function getScenarioOptions(): JSX.Element[] {
     return _.map(scenarios, (scenario: IMcdaScenario) => {
       return (
-        <MenuItem value={scenario.id} key={scenario.id}>
+        <option value={scenario.id} key={scenario.id}>
           {scenario.title}
-        </MenuItem>
+        </option>
       );
     });
   }
@@ -36,6 +35,7 @@ export default function ScenarioSelection({
       </Grid>
       <Grid item xs={9}>
         <Select
+          native
           id="scenario-selector"
           value={currentScenario.id}
           onChange={handleScenarioChanged}

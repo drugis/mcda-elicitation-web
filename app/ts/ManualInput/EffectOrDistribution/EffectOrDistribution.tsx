@@ -1,5 +1,4 @@
 import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import React, {ChangeEvent, useContext} from 'react';
 import {TableInputMode} from '../../type/TableInputMode';
@@ -22,13 +21,14 @@ export default function EffectOrDistribution() {
       <Grid item>Table input mode</Grid>
       <Grid item>
         <Select
+          native
           id="table-input-mode-selector"
           value={tableInputMode}
           onChange={handleChange}
           style={{minWidth: '150px'}}
         >
-          <MenuItem value="effect">Effect</MenuItem>
-          <MenuItem value="distribution">Distribution</MenuItem>
+          <option value="effect">Effect</option>
+          <option value="distribution">Distribution</option>
         </Select>
       </Grid>
     </>

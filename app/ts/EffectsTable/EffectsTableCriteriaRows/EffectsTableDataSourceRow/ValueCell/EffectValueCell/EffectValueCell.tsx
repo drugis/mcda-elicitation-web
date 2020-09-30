@@ -3,21 +3,17 @@ import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
-import {renderEffect} from './EffectValueCellService';
 import EmptyCell from '../EmptyCell/EmptyCell';
+import {renderEffect} from './EffectValueCellService';
 
 export default function EffectValueCell({
   effect,
   scale,
-  usePercentage,
-  dataSourceId,
-  alternativeId
+  usePercentage
 }: {
   effect: Effect;
   scale: IScale;
   usePercentage: boolean;
-  dataSourceId: string;
-  alternativeId: string;
 }) {
   const {displayMode} = useContext(SettingsContext);
 
@@ -28,10 +24,13 @@ export default function EffectValueCell({
     scale
   );
   return renderedEffect ? (
-    <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
+    <TableCell id={`value-cell-${effect.dataSourceId}-${effect.alternativeId}`}>
       <div className="text-centered">{renderedEffect}</div>
     </TableCell>
   ) : (
-    <EmptyCell dataSourceId={dataSourceId} alternativeId={alternativeId} />
+    <EmptyCell
+      dataSourceId={effect.dataSourceId}
+      alternativeId={effect.alternativeId}
+    />
   );
 }

@@ -42,7 +42,7 @@ import {
   buildIdMap,
   buildInProgressCopy,
   buildInProgressIdMapper,
-  buildPercentageMap,
+  buildUnitTypeMap,
   buildWorkspaceAlternatives,
   buildWorkspaceCriteria,
   buildWorkspaceDataSources,
@@ -65,16 +65,20 @@ const emptyEffect: IEmptyEffect = {
   type: 'empty',
   alternativeId: alternative1Id,
   criterionId: criterion1Id,
-  dataSourceId: dataSource1Id
+  dataSourceId: dataSource1Id,
+  unitOfMeasurementType: UnitOfMeasurementType.percentage
 };
 
 const effectBase = {
   alternativeId: alternative1Id,
   criterionId: criterion1Id,
-  dataSourceId: dataSource1Id
+  dataSourceId: dataSource1Id,
+  unitOfMeasurementType: UnitOfMeasurementType.percentage
 };
 
-const isPercentageMap: Record<string, boolean> = {ds1Id: true};
+const unitTypeMap: Record<string, UnitOfMeasurementType> = {
+  ds1Id: UnitOfMeasurementType.percentage
+};
 const idMapper: (id: string) => string = _.identity;
 
 describe('buildWorkspace', () => {
@@ -225,7 +229,7 @@ describe('buildWorkspace', () => {
 
   describe('buildWorkspaceEffects', () => {
     it('should filter out non effect entries', () => {
-      const isPercentageMap: Record<string, boolean> = {};
+      const unitTypeMap: Record<string, UnitOfMeasurementType> = {};
       const performanceTable: IPerformanceTableEntry[] = [
         {
           alternative: alternative1Id,
@@ -237,11 +241,12 @@ describe('buildWorkspace', () => {
       const result = buildWorkspaceEffects(
         performanceTable,
         idMapper,
-        isPercentageMap
+        unitTypeMap
       );
       expect(result.length).toBe(0);
     });
   });
+
   describe('isNotNMAEntry', () => {
     it('should return true if the entry has an alternative property', () => {
       const entry = {alternative: alternative1Id} as IPerformanceTableEntry;
@@ -266,7 +271,7 @@ describe('buildWorkspace', () => {
           effect: {type: 'empty'}
         }
       };
-      const result = buildEffect(idMapper, isPercentageMap, entry);
+      const result = buildEffect(idMapper, unitTypeMap, entry);
 
       expect(result).toEqual(emptyEffect);
     });
@@ -280,13 +285,14 @@ describe('buildWorkspace', () => {
           effect: {type: 'exact', value: 37}
         }
       };
-      const result = buildEffect(idMapper, isPercentageMap, entry);
+      const result = buildEffect(idMapper, unitTypeMap, entry);
       const expectedResult: IValueEffect = {
         type: 'value',
         value: 3700,
         alternativeId: alternative1Id,
         criterionId: criterion1Id,
-        dataSourceId: dataSource1Id
+        dataSourceId: dataSource1Id,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -302,7 +308,7 @@ describe('buildWorkspace', () => {
             effect: {type: unknown}
           }
         } as IPerformanceTableEntry;
-        buildEffect(idMapper, isPercentageMap, entry);
+        buildEffect(idMapper, unitTypeMap, entry);
       } catch (error) {
         expect(error).toBe('unknown effect type');
       }
@@ -327,7 +333,8 @@ describe('buildWorkspace', () => {
         alternativeId: alternative1Id,
         criterionId: criterion1Id,
         dataSourceId: dataSource1Id,
-        text: 'some text'
+        text: 'some text',
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -344,7 +351,8 @@ describe('buildWorkspace', () => {
       const expectedResult: IValueEffect = {
         ...effectBase,
         type: 'value',
-        value: 37
+        value: 37,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -368,7 +376,8 @@ describe('buildWorkspace', () => {
         isNotEstimableLowerBound: false,
         isNotEstimableUpperBound: false,
         lowerBound: 20,
-        upperBound: 40
+        upperBound: 40,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -384,7 +393,8 @@ describe('buildWorkspace', () => {
       const expectedResult: IValueEffect = {
         ...effectBase,
         type: 'value',
-        value: 37
+        value: 37,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -405,7 +415,8 @@ describe('buildWorkspace', () => {
         isNotEstimableLowerBound: false,
         isNotEstimableUpperBound: false,
         lowerBound: 20,
-        upperBound: 40
+        upperBound: 40,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -424,7 +435,8 @@ describe('buildWorkspace', () => {
         isNotEstimableLowerBound: true,
         isNotEstimableUpperBound: true,
         lowerBound: undefined,
-        upperBound: undefined
+        upperBound: undefined,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -432,7 +444,7 @@ describe('buildWorkspace', () => {
 
   describe('buildWorkspaceDistributions', () => {
     it('should filter out non distribution entries', () => {
-      const isPercentageMap: Record<string, boolean> = {};
+      const unitTypeMap: Record<string, UnitOfMeasurementType> = {};
       const performanceTable: IPerformanceTableEntry[] = [
         {
           alternative: alternative1Id,
@@ -444,7 +456,7 @@ describe('buildWorkspace', () => {
       const result = buildWorkspaceDistributions(
         performanceTable,
         idMapper,
-        isPercentageMap
+        unitTypeMap
       );
       expect(result.length).toBe(0);
     });
@@ -458,7 +470,7 @@ describe('buildWorkspace', () => {
         dataSource: dataSource1Id,
         performance: {distribution: {type: 'empty'}}
       };
-      const result = buildDistribution(idMapper, isPercentageMap, entry);
+      const result = buildDistribution(idMapper, unitTypeMap, entry);
       expect(result).toEqual(emptyEffect);
     });
   });
@@ -475,7 +487,8 @@ describe('buildWorkspace', () => {
       const expectedResult: IValueEffect = {
         ...effectBase,
         type: 'value',
-        value: 37
+        value: 37,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -549,7 +562,8 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'range',
         upperBound: 42,
-        lowerBound: 37
+        lowerBound: 37,
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -563,7 +577,8 @@ describe('buildWorkspace', () => {
       );
       const expectedResult: IEmptyEffect = {
         ...effectBase,
-        type: 'empty'
+        type: 'empty',
+        unitOfMeasurementType: UnitOfMeasurementType.percentage
       };
       expect(result).toEqual(expectedResult);
     });
@@ -623,8 +638,8 @@ describe('buildWorkspace', () => {
     });
   });
 
-  describe('buildPercentageMap', () => {
-    it('should return a map of data source ids to a boolean that indicates if it is a percentage', () => {
+  describe('buildUnitTypeMap', () => {
+    it('should return a map of data source ids to its unit of measurement type', () => {
       const criteria: Record<string, IProblemCriterion> = {
         crit1Id: {
           title: 'criterion 1',
@@ -663,10 +678,10 @@ describe('buildWorkspace', () => {
           ]
         }
       };
-      const result = buildPercentageMap(criteria);
-      const expectedResult: Record<string, boolean> = {
-        ds1Id: true,
-        ds2Id: false
+      const result = buildUnitTypeMap(criteria);
+      const expectedResult: Record<string, UnitOfMeasurementType> = {
+        ds1Id: UnitOfMeasurementType.percentage,
+        ds2Id: UnitOfMeasurementType.decimal
       };
       expect(result).toEqual(expectedResult);
     });

@@ -16,6 +16,11 @@ export default function EffectsTableUnitOfMeasurementCell({
   function getUnitLabel(unit: IUnitOfMeasurement): string {
     if (showPercentages && unit.type === UnitOfMeasurementType.decimal) {
       return '%';
+    } else if (
+      !showPercentages &&
+      unit.type === UnitOfMeasurementType.percentage
+    ) {
+      return '';
     } else {
       return unit.label;
     }
