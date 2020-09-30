@@ -48,8 +48,8 @@ export default function PreferencesWeightsTable() {
           <TableCell>
             Unit <InlineHelp helpId="unit-of-measurement" />
           </TableCell>
-          <TableCell>Best</TableCell>
           <TableCell>Worst</TableCell>
+          <TableCell>Best</TableCell>
           <TableCell>
             Importance <InlineHelp helpId="importance" />
           </TableCell>
