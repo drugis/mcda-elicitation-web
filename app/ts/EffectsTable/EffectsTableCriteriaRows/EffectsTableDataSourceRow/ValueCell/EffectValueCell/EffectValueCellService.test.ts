@@ -74,7 +74,7 @@ describe('EffectValueCellService', () => {
         isNotEstimableUpperBound: false
       };
       const result = renderEffect(effect, displayMode, usePercentage, scale);
-      expect(result).toBe('2 (1, 3)');
+      expect(result).toBe('2\n(1, 3)');
     });
 
     it('should return a string for a confidence interval effect with not estimable bounds', () => {
@@ -89,7 +89,7 @@ describe('EffectValueCellService', () => {
         isNotEstimableUpperBound: true
       };
       const result = renderEffect(effect, displayMode, usePercentage, scale);
-      expect(result).toBe('2 (NE, NE)');
+      expect(result).toBe('2\n(NE, NE)');
     });
 
     it('should get the value string for a range effect', () => {

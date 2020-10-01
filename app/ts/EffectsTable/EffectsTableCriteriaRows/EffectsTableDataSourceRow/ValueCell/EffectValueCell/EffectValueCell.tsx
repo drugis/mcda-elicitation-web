@@ -25,7 +25,12 @@ export default function EffectValueCell({
   );
   return renderedEffect ? (
     <TableCell id={`value-cell-${effect.dataSourceId}-${effect.alternativeId}`}>
-      <div className="text-centered">{renderedEffect}</div>
+      <div
+        className="text-centered"
+        style={{whiteSpace: 'pre-wrap', minWidth: '6rem'}}
+      >
+        {renderedEffect}
+      </div>
     </TableCell>
   ) : (
     <EmptyCell

@@ -41,36 +41,39 @@ export default function AlternativeHeader({
 
   return (
     <TableCell id={`alternative-${alternative.id}`} align="center">
-      <Button
-        id={`move-alternative-left-${alternative.id}`}
-        disabled={!previousAlternative}
-        onClick={moveLeft}
-      >
-        <ArrowLeft />
-      </Button>
       <InlineEditor
         value={alternative.title}
         callback={handleChange}
         tooltipText={'Edit alternative title'}
         errorOnEmpty={true}
       />
-      <Tooltip title="Delete alternative">
-        <IconButton
-          id={`delete-alternative-${alternative.id}`}
-          size="small"
-          color="secondary"
-          onClick={handleDelete}
+      <div>
+        <Button
+          id={`move-alternative-left-${alternative.id}`}
+          disabled={!previousAlternative}
+          onClick={moveLeft}
         >
-          <Delete fontSize={'small'} />
-        </IconButton>
-      </Tooltip>
-      <Button
-        id={`move-alternative-right-${alternative.id}`}
-        disabled={!nextAlternative}
-        onClick={moveRight}
-      >
-        <ArrowRight />
-      </Button>
+          <ArrowLeft />
+        </Button>
+
+        <Tooltip title="Delete alternative">
+          <IconButton
+            id={`delete-alternative-${alternative.id}`}
+            size="small"
+            color="secondary"
+            onClick={handleDelete}
+          >
+            <Delete fontSize={'small'} />
+          </IconButton>
+        </Tooltip>
+        <Button
+          id={`move-alternative-right-${alternative.id}`}
+          disabled={!nextAlternative}
+          onClick={moveRight}
+        >
+          <ArrowRight />
+        </Button>
+      </div>
     </TableCell>
   );
 }

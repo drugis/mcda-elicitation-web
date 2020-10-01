@@ -90,7 +90,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
       const upperBound = effect.isNotEstimableUpperBound
         ? 'NE'
         : `${effect.upperBound}`;
-      return `${effect.value} (${lowerBound}, ${upperBound})`;
+      return `${effect.value}\n(${lowerBound}, ${upperBound})`;
     }
   }
 
@@ -119,7 +119,10 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
   return (
     <TableCell align="center">
       <Tooltip title="Edit effect">
-        <span onClick={openDialog} style={{cursor: 'pointer'}}>
+        <span
+          onClick={openDialog}
+          style={{cursor: 'pointer', whiteSpace: 'pre-wrap', minWidth: '6rem'}}
+        >
           {label}
         </span>
       </Tooltip>

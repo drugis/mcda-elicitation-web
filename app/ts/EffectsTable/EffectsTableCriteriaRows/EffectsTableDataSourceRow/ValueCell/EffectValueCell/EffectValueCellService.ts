@@ -47,7 +47,9 @@ function getStringForValue(
   usePercentage: boolean,
   unitOfMeasurementType: UnitOfMeasurementType
 ): string {
-  if (usePercentage) {
+  if (value === undefined) {
+    return 'No value entered';
+  } else if (usePercentage) {
     const modifier = unitOfMeasurementType === 'decimal' ? 100 : 1;
     return significantDigits(value * modifier) + '%';
   } else {
@@ -88,7 +90,7 @@ function renderValueCI(effect: IValueCIEffect, usePercentage: boolean): string {
     usePercentage,
     effect.unitOfMeasurementType
   );
-  return `${value} (${lowerBound}, ${upperBound})`;
+  return `${value}\n(${lowerBound}, ${upperBound})`;
 }
 
 function getBound(

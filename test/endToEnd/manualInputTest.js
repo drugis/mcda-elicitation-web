@@ -485,7 +485,7 @@ function addAlternative(browser) {
 }
 
 function deleteAlternative(browser) {
-  const deleteAlternative = '//thead/tr/th[7]/button[2]';
+  const deleteAlternative = '//thead/tr/th[7]/div/button[2]';
   browser
     .useXpath()
     .click(deleteAlternative)
@@ -636,7 +636,7 @@ function enterEffects(browser) {
     .setValue(lowerBoundInput, 1)
     .setValue(upperBoundInput, 3)
     .click(editEffectCell)
-    .assert.containsText(firstCell, '2 (1, 3)')
+    .assert.containsText(firstCell, '2\n(1, 3)')
     .click(firstCell)
     .click(typeSelector)
     .click(range)
