@@ -13,17 +13,25 @@ export function renderEffect(
   scale: IScale
 ): string {
   if (displayMode === 'enteredData') {
-    return renderEnteredValues(effect, usePercentage);
+    return renderEnteredValues(effect, usePercentage, false);
   } else {
     return renderValuesForAnalysis(effect, usePercentage, scale);
   }
 }
 
-function renderEnteredValues(effect: Effect, usePercentage: boolean): string {
+export function renderInputEffect(effect: Effect, usePercentage: boolean) {
+  return renderEnteredValues(effect, usePercentage, true);
+}
+
+function renderEnteredValues(
+  effect: Effect,
+  usePercentage: boolean,
+  isInput: boolean
+): string {
   if (effect) {
     switch (effect.type) {
       case 'empty':
-        return '';
+        return isInput ? 'Empty' : '';
       case 'range':
         return renderRange(effect, usePercentage);
       case 'text':
