@@ -7,26 +7,20 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
-import ISettings from '@shared/interface/ISettings';
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
 import React from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
-import {ErrorContextProviderComponent} from '../Error/ErrorContext';
-import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import InlineHelp from '../InlineHelp/InlineHelp';
-import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 
 export default function EffectsTable({
   oldWorkspace,
-  settings,
   scales,
   toggledColumns
 }: {
   oldWorkspace: IOldWorkspace;
-  settings: ISettings;
   scales: Record<string, Record<string, IScale>>;
   toggledColumns: IToggledColumns;
 }) {
@@ -125,36 +119,27 @@ export default function EffectsTable({
   }
 
   return scales ? (
-    <ErrorContextProviderComponent>
-      <HelpContextProviderComponent>
-        <SettingsContextProviderComponent
-          settings={settings}
-          toggledColumns={toggledColumns}
-        >
-          <EffectsTableContextProviderComponent
-            oldWorkspace={oldWorkspace}
-            scales={scales}
-          >
-            <Grid container>
-              <Grid item xs={9} id="effects-table-header">
-                <Typography variant={'h5'}>
-                  Effects Table <InlineHelp helpId="effects-table" />
-                </Typography>
-              </Grid>
-              <Grid item container xs={3} justify="flex-end">
-                <ClipboardButton targetId="#effects-table" />
-              </Grid>
-              <Grid item xs={12}>
-                <Table size="small" id="effects-table">
-                  {renderTableHeaders()}
-                  <EffectsTableCriteriaRows />
-                </Table>
-              </Grid>
-            </Grid>
-          </EffectsTableContextProviderComponent>
-        </SettingsContextProviderComponent>
-      </HelpContextProviderComponent>
-    </ErrorContextProviderComponent>
+    <EffectsTableContextProviderComponent
+      oldWorkspace={oldWorkspace}
+      scales={scales}
+    >
+      <Grid container>
+        <Grid item xs={9} id="effects-table-header">
+          <Typography variant={'h5'}>
+            Effects Table <InlineHelp helpId="effects-table" />
+          </Typography>
+        </Grid>
+        <Grid item container xs={3} justify="flex-end">
+          <ClipboardButton targetId="#effects-table" />
+        </Grid>
+        <Grid item xs={12}>
+          <Table size="small" id="effects-table">
+            {renderTableHeaders()}
+            <EffectsTableCriteriaRows />
+          </Table>
+        </Grid>
+      </Grid>
+    </EffectsTableContextProviderComponent>
   ) : (
     <CircularProgress />
   );
