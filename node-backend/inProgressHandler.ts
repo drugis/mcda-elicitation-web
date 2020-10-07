@@ -385,18 +385,18 @@ export default function InProgressHandler(db: IDB) {
   }
 
   return {
-    createEmpty: createEmpty,
-    createCopy: createCopy,
-    get: get,
-    updateWorkspace: updateWorkspace,
-    updateCriterion: updateCriterion,
-    deleteCriterion: deleteCriterion,
-    updateDataSource: updateDataSource,
-    deleteDataSource: deleteDataSource,
-    updateAlternative: updateAlternative,
-    deleteAlternative: deleteAlternative,
-    updateCell: updateCell,
-    createWorkspace: createWorkspace,
+    createEmpty,
+    createCopy,
+    get,
+    updateWorkspace,
+    updateCriterion,
+    deleteCriterion,
+    updateDataSource,
+    deleteDataSource,
+    updateAlternative,
+    deleteAlternative,
+    updateCell,
+    createWorkspace,
     query: query,
     delete: del
   };

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mcda.drugis.org/problem.json#",
   "title": "MCDA problem schema",
-  "description": "MCDA problem schema for uploaded JSON, version 1.4.4",
+  "description": "MCDA problem schema for uploaded JSON, version 1.4.5",
   "type": "object",
   "required": ["schemaVersion", "criteria", "alternatives", "performanceTable"],
   "properties": {
@@ -24,11 +24,15 @@
       "minProperties": 2,
       "additionalProperties": {
         "type": "object",
-        "required": ["title", "dataSources"],
+        "required": ["id", "title", "dataSources"],
         "additionalProperties": false,
         "properties": {
           "title": {
             "description": "Title of the criterion",
+            "type": "string"
+          },
+          "id": {
+            "description": "Id of the criterion",
             "type": "string"
           },
           "isFavorable": {
@@ -56,11 +60,15 @@
       "minProperties": 2,
       "additionalProperties": {
         "type": "object",
-        "required": ["title"],
+        "required": ["title", "id"],
         "additionalProperties": false,
         "properties": {
           "title": {
             "description": "Title of the alternative",
+            "type": "string"
+          },
+          "id": {
+            "description": "Id of the alternative",
             "type": "string"
           }
         }

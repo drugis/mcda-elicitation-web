@@ -9,7 +9,7 @@ define([
   var generateUuidMock = function () {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.4.4';
+  var currentSchemaVersion = '1.4.5';
   var schemaService;
 
   describe('The SchemaService', function () {
@@ -68,6 +68,10 @@ define([
         };
         var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
         var expectedResult = angular.copy(workspace);
+        expectedResult.problem.criteria.c1.id = 'c1';
+        expectedResult.problem.criteria.c2.id = 'c2';
+        expectedResult.problem.alternatives.a1.id = 'a1';
+        expectedResult.problem.alternatives.a2.id = 'a2';
         expectedResult.problem.criteria.c1.dataSources[0].unitOfMeasurement = {
           type: 'percentage',
           label: '%'
@@ -149,6 +153,7 @@ define([
             title: 'problem title',
             criteria: {
               crit1: {
+                id: 'crit1',
                 title: 'criterion 1',
                 description: 'desc',
                 dataSources: [
@@ -165,6 +170,7 @@ define([
                 ]
               },
               crit2: {
+                id: 'crit2',
                 title: 'criterion 2',
                 description: 'desc',
                 dataSources: [
@@ -183,9 +189,11 @@ define([
             },
             alternatives: {
               alt1: {
+                id: 'alt1',
                 title: 'alt1'
               },
               alt2: {
+                id: 'alt2',
                 title: 'alt2'
               }
             },
@@ -303,6 +311,7 @@ define([
             title: 'problem title',
             criteria: {
               crit1: {
+                id: 'crit1',
                 title: 'criterion 1',
                 description: 'desc',
                 isFavorable: true,
@@ -320,6 +329,7 @@ define([
                 ]
               },
               crit2: {
+                id: 'crit2',
                 title: 'criterion 2',
                 description: 'desc',
                 isFavorable: true,
@@ -339,9 +349,11 @@ define([
             },
             alternatives: {
               alt1: {
+                id: 'alt1',
                 title: 'alt1'
               },
               alt2: {
+                id: 'alt2',
                 title: 'alt2'
               }
             },

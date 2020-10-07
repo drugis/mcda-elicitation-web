@@ -1,8 +1,9 @@
 {
-  "schemaVersion": "1.4.4",
+  "schemaVersion": "1.4.5",
   "title": "Test workspace",
   "criteria": {
     "c4a470d2-b457-4f65-9b8d-5e22741c24a6": {
+      "id": "c4a470d2-b457-4f65-9b8d-5e22741c24a6",
       "title": "c1",
       "dataSources": [
         {
@@ -26,6 +27,7 @@
       ]
     },
     "8172c3ac-9488-41ff-adc2-44d2d557d08b": {
+      "id": "8172c3ac-9488-41ff-adc2-44d2d557d08b",
       "title": "c2",
       "dataSources": [
         {
@@ -40,6 +42,7 @@
       ]
     },
     "deselectionCriterionId": {
+      "id": "deselectionCriterionId",
       "title": "c3",
       "dataSources": [
         {
@@ -56,12 +59,15 @@
   },
   "alternatives": {
     "cd174c10-32b0-4a0b-b914-dc6271bfbc0e": {
+      "id": "cd174c10-32b0-4a0b-b914-dc6271bfbc0e",
       "title": "a1"
     },
     "785c281d-c66a-48a7-8cfa-4aeb8899a2b7": {
+      "id": "785c281d-c66a-48a7-8cfa-4aeb8899a2b7",
       "title": "a2"
     },
     "deselectionAlternativeId": {
+      "id": "deselectionAlternativeId",
       "title": "a3"
     }
   },

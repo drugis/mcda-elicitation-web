@@ -12,6 +12,7 @@ import {
 } from './PreferencesUtil';
 
 const criterion1: IProblemCriterion = {
+  id: 'crit1Id',
   description: '',
   title: 'criterion1',
   dataSources: [
@@ -28,6 +29,7 @@ const criterion1: IProblemCriterion = {
   ]
 };
 const criterion2: IProblemCriterion = {
+  id: 'crit2Id',
   description: '',
   title: 'criterion2',
   dataSources: [

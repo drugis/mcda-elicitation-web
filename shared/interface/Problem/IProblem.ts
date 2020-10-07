@@ -1,6 +1,6 @@
+import {TPreferences} from '@shared/types/Preferences';
 import {IPerformanceTableEntry} from './IPerformanceTableEntry';
 import IProblemCriterion from './IProblemCriterion';
-import {TPreferences} from '@shared/types/Preferences';
 
 export default interface IProblem {
   schemaVersion: string;

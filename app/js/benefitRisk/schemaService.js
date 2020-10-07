@@ -28,6 +28,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
      * 1.4.2 Add possibility to make constrained normal distributions
      * 1.4.3 Allow numbers on text cells
      * 1.4.4 Set proportion, decimal unit of measurement to empty label
+     * 1.4.5 Put id on alternatives and criteria
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -89,6 +90,10 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.4.3') {
         newProblem = updateToVersion144(newProblem);
+      }
+
+      if (newProblem.schemaVersion === '1.4.4') {
+        newProblem = updateToVersion145(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -441,6 +446,24 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       });
       newProblem.schemaVersion = '1.4.4';
       return newProblem;
+    }
+
+    function updateToVersion145(problem) {
+      const criteria = _.mapValues(problem.criteria, (criterion, id) => {
+        return {...criterion, id: id};
+      });
+      const alternatives = _.mapValues(
+        problem.alternatives,
+        (alternative, id) => {
+          return {...alternative, id: id};
+        }
+      );
+      return {
+        ...problem,
+        alternatives: alternatives,
+        criteria: criteria,
+        schemaVersion: '1.4.5'
+      };
     }
 
     return {

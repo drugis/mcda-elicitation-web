@@ -351,7 +351,7 @@ export function buildProblem(inProgressMessage: IInProgressMessage): IProblem {
       inProgressMessage.criteria,
       inProgressMessage.workspace.useFavourability
     ),
-    alternatives: buildAlternatives(inProgressMessage.alternatives),
+    alternatives: _.keyBy(inProgressMessage.alternatives, 'id'),
     performanceTable: buildPerformanceTable(inProgressMessage)
   };
 }
@@ -360,22 +360,22 @@ function buildCriteria(
   criteria: ICriterion[],
   useFavourability: boolean
 ): Record<string, IProblemCriterion> {
-  const newCriteria = _.map(criteria, (criterion: ICriterion) => {
-    const newCriterion = {
-      title: criterion.title,
-      description: criterion.description,
-      dataSources: _.map(criterion.dataSources, buildDataSource)
-    };
-    if (useFavourability) {
-      return [
-        criterion.id,
-        {...newCriterion, isFavorable: criterion.isFavourable}
-      ];
-    } else {
-      return [criterion.id, newCriterion];
-    }
-  });
-  return _.fromPairs(newCriteria);
+  return _(criteria)
+    .keyBy('id')
+    .mapValues((criterion: ICriterion) => {
+      const newCriterion = {
+        id: criterion.id,
+        title: criterion.title,
+        description: criterion.description,
+        dataSources: _.map(criterion.dataSources, buildDataSource)
+      };
+      if (useFavourability) {
+        return {...newCriterion, isFavorable: criterion.isFavourable};
+      } else {
+        return newCriterion;
+      }
+    })
+    .value();
 }
 
 function buildDataSource(dataSource: IDataSource): IProblemDataSource {
@@ -398,17 +398,6 @@ function buildDataSource(dataSource: IDataSource): IProblemDataSource {
         : dataSource.unitOfMeasurement.upperBound
     ]
   };
-}
-
-function buildAlternatives(
-  alternatives: IAlternative[]
-): Record<string, {title: string}> {
-  return _(alternatives)
-    .keyBy('id')
-    .mapValues((alternative) => {
-      return _.pick(alternative, ['title']);
-    })
-    .value();
 }
 
 function buildPerformanceTable(

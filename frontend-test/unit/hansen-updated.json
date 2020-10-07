@@ -3,6 +3,7 @@
   "description": "Based on Hansen et al. (2005), \"Efficacy and Safety of Second-Generation Antidepressants in the Treatment of Major Depressive Disorder\"",
   "criteria": {
     "HAM-D": {
+      "id": "HAM-D",
       "title": "HAM-D",
       "description": "Responders on the HAM-D rating scale",
       "dataSources": [
@@ -22,6 +23,7 @@
       ]
     },
     "Diarrhea": {
+      "id": "Diarrhea",
       "title": "Diarrhea",
       "dataSources": [
         {
@@ -40,6 +42,7 @@
       ]
     },
     "Dizziness": {
+      "id": "Dizziness",
       "title": "Dizziness",
       "dataSources": [
         {
@@ -58,6 +61,7 @@
       ]
     },
     "Headache": {
+      "id": "Headache",
       "title": "Headache",
       "dataSources": [
         {
@@ -76,6 +80,7 @@
       ]
     },
     "Insomnia": {
+      "id": "Insomnia",
       "title": "Insomnia",
       "dataSources": [
         {
@@ -94,6 +99,7 @@
       ]
     },
     "Nausea": {
+      "id": "Nausea",
       "title": "Nausea",
       "dataSources": [
         {
@@ -113,21 +119,11 @@
     }
   },
   "alternatives": {
-    "Placebo": {
-      "title": "Placebo"
-    },
-    "Fluox": {
-      "title": "Fluoxetine"
-    },
-    "Parox": {
-      "title": "Paroxetine"
-    },
-    "Sertra": {
-      "title": "Sertraline"
-    },
-    "Venla": {
-      "title": "Venlafaxine"
-    }
+    "Placebo": {"id": "Placebo", "title": "Placebo"},
+    "Fluox": {"id": "Fluox", "title": "Fluoxetine"},
+    "Parox": {"id": "Parox", "title": "Paroxetine"},
+    "Sertra": {"id": "Sertra", "title": "Sertraline"},
+    "Venla": {"id": "Venla", "title": "Venlafaxine"}
   },
   "performanceTable": [
     {
@@ -359,6 +355,5 @@
       "dataSource": "f869b968-2e1f-4106-a8a6-6b09be8e7f9e"
     }
   ],
-  "preferences": {},
-  "schemaVersion": "1.4.4"
+  "schemaVersion": "1.4.5"
 }

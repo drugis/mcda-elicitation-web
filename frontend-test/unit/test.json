@@ -1,8 +1,9 @@
 {
-  "schemaVersion": "1.4.4",
+  "schemaVersion": "1.4.5",
   "title": "Harmonisation (test all inputs)",
   "criteria": {
     "0b4613f7-61a9-4be8-85e6-1a6283cfbffd": {
+      "id": "0b4613f7-61a9-4be8-85e6-1a6283cfbffd",
       "title": "Assisted distribution dich",
       "isFavorable": false,
       "dataSources": [
@@ -17,6 +18,7 @@
       ]
     },
     "cf8e6f52-ed8f-478d-8f6f-929ba600b27d": {
+      "id": "cf8e6f52-ed8f-478d-8f6f-929ba600b27d",
       "title": "Assisted distribution cont",
       "isFavorable": false,
       "dataSources": [
@@ -31,6 +33,7 @@
       ]
     },
     "4e61c7a8-1969-428b-a00c-e9fb0caca3d9": {
+      "id": "4e61c7a8-1969-428b-a00c-e9fb0caca3d9",
       "title": "Manual distribution",
       "isFavorable": false,
       "dataSources": [
@@ -45,6 +48,7 @@
       ]
     },
     "65ac9511-c97c-47d8-9321-7d83db6ad760": {
+      "id": "65ac9511-c97c-47d8-9321-7d83db6ad760",
       "title": "effect dich",
       "isFavorable": false,
       "dataSources": [
@@ -59,6 +63,7 @@
       ]
     },
     "d4476dfa-bddf-45f4-9ec0-7b5d0aee12b6": {
+      "id": "d4476dfa-bddf-45f4-9ec0-7b5d0aee12b6",
       "title": "Effect cont",
       "isFavorable": false,
       "dataSources": [
@@ -73,6 +78,7 @@
       ]
     },
     "b7346861-483a-44ef-b44d-d9c7aefbf6c6": {
+      "id": "b7346861-483a-44ef-b44d-d9c7aefbf6c6",
       "title": "Effect other",
       "isFavorable": false,
       "dataSources": [
@@ -89,18 +95,23 @@
   },
   "alternatives": {
     "76e5d7e1-a456-438c-975e-7c98d5fae6c0": {
+      "id": "76e5d7e1-a456-438c-975e-7c98d5fae6c0",
       "title": "Alt 1"
     },
     "8ae37bf2-2b3e-4713-ba38-1fd44152b6fb": {
+      "id": "8ae37bf2-2b3e-4713-ba38-1fd44152b6fb",
       "title": "Alt2"
     },
     "2d9cd4db-cdc5-4d37-ac25-94b53005644d": {
+      "id": "2d9cd4db-cdc5-4d37-ac25-94b53005644d",
       "title": "Alt3"
     },
     "6233250c-3783-45a8-9d95-d46a4826099a": {
+      "id": "6233250c-3783-45a8-9d95-d46a4826099a",
       "title": "Alt 4"
     },
     "45db1f04-94c1-4c18-a100-a5a4a9164ed9": {
+      "id": "45db1f04-94c1-4c18-a100-a5a4a9164ed9",
       "title": "Alt 5"
     }
   },

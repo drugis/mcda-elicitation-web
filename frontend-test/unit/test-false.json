@@ -1,8 +1,9 @@
 {
-  "schemaVersion": "1.4.4",
+  "schemaVersion": "1.4.5",
   "title": "Harmonisation (test all inputs)",
   "criteria": {
     "0b4613f7-61a9-4be8-85e6-1a6283cfbffd": {
+      "id": "0b4613f7-61a9-4be8-85e6-1a6283cfbffd",
       "title": "Assisted distribution dich",
       "isFavorable": false,
       "dataSources": [
