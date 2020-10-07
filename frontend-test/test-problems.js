@@ -4,6 +4,7 @@ function exampleProblem() {
     title: 'Thrombolytics Example',
     criteria: {
       'Prox DVT': {
+        id: 'Prox DVT',
         title: 'Proximal DVT',
         dataSources: [
           {
@@ -22,6 +23,7 @@ function exampleProblem() {
         ]
       },
       'Dist DVT': {
+        id: 'Dist DVT',
         title: 'Distal DVT',
         dataSources: [
           {
@@ -40,6 +42,7 @@ function exampleProblem() {
         ]
       },
       Bleed: {
+        id: 'Bleed',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -58,6 +61,7 @@ function exampleProblem() {
         ]
       },
       Bleed2: {
+        id: 'Bleed2',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -76,6 +80,7 @@ function exampleProblem() {
         ]
       },
       Bleed3: {
+        id: 'Bleed3',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -94,6 +99,7 @@ function exampleProblem() {
         ]
       },
       null2Infinity: {
+        id: 'null2Infinity',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -114,9 +120,11 @@ function exampleProblem() {
     },
     alternatives: {
       Hep: {
+        id: 'Hep',
         title: 'Heparin'
       },
       Enox: {
+        id: 'Enox',
         title: 'Enoxaparin'
       }
     },
@@ -188,7 +196,7 @@ function exampleProblem() {
         }
       }
     ],
-    schemaVersion: '1.4.4'
+    schemaVersion: '1.4.5'
   };
 }
 
@@ -284,6 +292,7 @@ function ordinalTestProblem() {
     title: 'Thrombolytics Example',
     criteria: {
       'Prox DVT': {
+        id: 'Prox DVT',
         title: 'Proximal DVT',
         dataSources: [
           {
@@ -302,6 +311,7 @@ function ordinalTestProblem() {
         ]
       },
       'Dist DVT': {
+        id: 'Dist DVT',
         title: 'Distal DVT',
         dataSources: [
           {
@@ -320,6 +330,7 @@ function ordinalTestProblem() {
         ]
       },
       Bleed: {
+        id: 'Bleed',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -338,6 +349,7 @@ function ordinalTestProblem() {
         ]
       },
       Bleed2: {
+        id: 'Bleed2',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -356,6 +368,7 @@ function ordinalTestProblem() {
         ]
       },
       Bleed3: {
+        id: 'Bleed3',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -374,6 +387,7 @@ function ordinalTestProblem() {
         ]
       },
       null2Infinity: {
+        id: 'null2Infinity',
         title: 'Major bleeding',
         dataSources: [
           {
@@ -394,9 +408,11 @@ function ordinalTestProblem() {
     },
     alternatives: {
       Hep: {
+        id: 'Hep',
         title: 'Heparin'
       },
       Enox: {
+        id: 'Enox',
         title: 'Enoxaparin'
       }
     },
@@ -468,7 +484,7 @@ function ordinalTestProblem() {
         }
       }
     ],
-    schemaVersion: '1.4.4'
+    schemaVersion: '1.4.5'
   };
 }
 

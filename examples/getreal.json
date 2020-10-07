@@ -3,6 +3,7 @@
   "description": "Hypothetical new cancer treatment example.",
   "criteria": {
     "OS": {
+      "id": "OS",
       "title": "2-year survival",
       "description": "Proportion of patients surviving for 2 years or longer",
       "dataSources": [
@@ -23,6 +24,7 @@
       "isFavorable": true
     },
     "severe": {
+      "id": "severe",
       "title": "Severe toxicity",
       "description": "Proportion of patients experiencing severe side-effects",
       "dataSources": [
@@ -43,6 +45,7 @@
       "isFavorable": false
     },
     "moderate": {
+      "id": "moderate",
       "title": "Moderate toxicity",
       "description": "Proportion of patients experiencing long-lasting moderate side-effects",
       "dataSources": [
@@ -65,9 +68,11 @@
   },
   "alternatives": {
     "alt1": {
+      "id": "alt1",
       "title": "New treatment"
     },
     "alt2": {
+      "id": "alt2",
       "title": "Control"
     }
   },
@@ -164,5 +169,5 @@
     }
   ],
   "preferences": {},
-  "schemaVersion": "1.4.4"
+  "schemaVersion": "1.4.5"
 }

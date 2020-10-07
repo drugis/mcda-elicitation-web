@@ -120,6 +120,7 @@ describe('buildWorkspace', () => {
     it('should return the workspace properties and check for favourability', () => {
       const criteria: Record<string, IProblemCriterion> = {
         crit1Id: {
+          id: 'crit1Id',
           title: 'criterion 1',
           description: '',
           isFavorable: false,
@@ -147,6 +148,7 @@ describe('buildWorkspace', () => {
     it('should return the transformed criteria', () => {
       const criteria: Record<string, IProblemCriterion> = {
         crit1Id: {
+          id: 'crit1Id',
           dataSources: [],
           isFavorable: true,
           description: 'hello',
@@ -171,6 +173,7 @@ describe('buildWorkspace', () => {
   describe('buildWorkspaceDataSources', () => {
     it('should return all the transformed data sources', () => {
       const criterion: IProblemCriterion = {
+        id: 'crit1Id',
         title: 'criterion 1',
         description: '',
         dataSources: [
@@ -606,6 +609,7 @@ describe('buildWorkspace', () => {
     it('should return a map from old to new ids', () => {
       const criteria: Record<string, IProblemCriterion> = {
         crit1Id: {
+          id: 'crit1Id',
           title: 'criterion 1',
           description: '',
           isFavorable: false,
@@ -642,6 +646,7 @@ describe('buildWorkspace', () => {
     it('should return a map of data source ids to its unit of measurement type', () => {
       const criteria: Record<string, IProblemCriterion> = {
         crit1Id: {
+          id: 'crit1Id',
           title: 'criterion 1',
           dataSources: [
             {
@@ -660,6 +665,7 @@ describe('buildWorkspace', () => {
           description: ''
         },
         crit2Id: {
+          id: 'crit1Id',
           title: 'criterion 2',
           description: '',
           dataSources: [

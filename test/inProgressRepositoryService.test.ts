@@ -703,6 +703,7 @@ describe('inProgressRepositoryService', () => {
 
       const expectedCriteria: Record<string, IProblemCriterion> = {
         crit1Id: {
+          id: 'crit1Id',
           title: criteria[0].title,
           description: criteria[0].description,
           dataSources: [
@@ -724,26 +725,33 @@ describe('inProgressRepositoryService', () => {
           ]
         }
       };
-      const expectedAlternatives: Record<string, {title: string}> = {
+      const expectedAlternatives: Record<string, IAlternative> = {
         alt1Id: {
+          id: 'alt1Id',
           title: alternatives[0].title
         },
         alt2Id: {
+          id: 'alt2Id',
           title: alternatives[1].title
         },
         alt3Id: {
+          id: 'alt3Id',
           title: alternatives[2].title
         },
         alt4Id: {
+          id: 'alt4Id',
           title: alternatives[3].title
         },
         alt5Id: {
+          id: 'alt5Id',
           title: alternatives[4].title
         },
         alt6Id: {
+          id: 'alt6Id',
           title: alternatives[5].title
         },
         alt7Id: {
+          id: 'alt7Id',
           title: alternatives[6].title
         }
       };
@@ -906,6 +914,7 @@ describe('inProgressRepositoryService', () => {
     it('should create ordering', () => {
       const criteria: Record<string, IProblemCriterion> = {
         crit1Id: {
+          id: 'crit1Id',
           title: 'title',
           description: 'description',
           isFavorable: false,
@@ -925,6 +934,7 @@ describe('inProgressRepositoryService', () => {
           ]
         },
         crit2Id: {
+          id: 'crit2Id',
           title: 'title',
           description: 'description',
           isFavorable: false,
@@ -944,8 +954,9 @@ describe('inProgressRepositoryService', () => {
           ]
         }
       };
-      const alternatives: Record<string, {title: string}> = {
+      const alternatives: Record<string, IAlternative> = {
         alt1Id: {
+          id: 'alt1Id',
           title: 'alternative'
         }
       };

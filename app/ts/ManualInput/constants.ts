@@ -1,2 +1,2 @@
 export const DUMMY_ID: string = 'add datasource';
-export const CURRENT_SCHEMA_VERSION = '1.4.4';
+export const CURRENT_SCHEMA_VERSION = '1.4.5';

@@ -1,8 +1,9 @@
 {
-  "schemaVersion": "1.4.4",
+  "schemaVersion": "1.4.5",
   "title": "Test workspace",
   "criteria": {
     "c1": {
+      "id": "c1",
       "title": "c1",
       "dataSources": [
         {
@@ -17,6 +18,7 @@
       ]
     },
     "c2": {
+      "id": "c2",
       "title": "c2",
       "dataSources": [
         {
@@ -33,9 +35,11 @@
   },
   "alternatives": {
     "8d4025a0-d702-4f31-8918-b4d9b998f353": {
+      "id": "a1",
       "title": "a1"
     },
     "9829e5a6-8448-4574-84e1-d430a2b43ded": {
+      "id": "a2",
       "title": "a2"
     }
   },

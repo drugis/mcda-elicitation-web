@@ -1,9 +1,10 @@
 {
-  "schemaVersion": "1.4.4",
+  "schemaVersion": "1.4.5",
   "title": "Lixisenatide simplified",
   "description": "Assessment of lixisenatide for the treatment of adults with type 2 diabetes mellitus to achieve glycaemic control in patients not adequately controlled on oral antidiabetics.",
   "criteria": {
     "2d70ae4e-df39-47ac-8a30-a311a36238f6": {
+      "id": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
       "title": "HbA1c",
       "description": "Mean change in HbA1c from baseline",
       "isFavorable": true,
@@ -38,6 +39,7 @@
       ]
     },
     "141e96d5-93f9-4cc5-ba61-b508a81debfc": {
+      "id": "141e96d5-93f9-4cc5-ba61-b508a81debfc",
       "title": "Nausea",
       "description": "Incidence of nausea",
       "isFavorable": false,
@@ -54,6 +56,7 @@
       ]
     },
     "2663228e-529d-485d-a8e1-38b6b8084117": {
+      "id": "2663228e-529d-485d-a8e1-38b6b8084117",
       "title": "Hypoglycaemia",
       "description": "Incidence of hypoglycaemia",
       "isFavorable": false,
@@ -90,12 +93,15 @@
   },
   "alternatives": {
     "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159": {
+      "id": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
       "title": "Lixisenatide"
     },
     "a5e80a8e-314a-400d-b696-243446de43a2": {
+      "id": "a5e80a8e-314a-400d-b696-243446de43a2",
       "title": "Exenatide"
     },
     "c52b2906-765d-4801-8223-05fa230419ed": {
+      "id": "c52b2906-765d-4801-8223-05fa230419ed",
       "title": "Placebo"
     }
   },

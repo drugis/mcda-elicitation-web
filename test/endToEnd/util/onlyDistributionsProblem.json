@@ -1,9 +1,10 @@
 {
-  "schemaVersion": "1.4.4",
+  "schemaVersion": "1.4.5",
   "title": "only distributions",
   "description": "",
   "criteria": {
     "147ea7ec-9fdf-4964-93e6-80200f82655e": {
+      "id": "147ea7ec-9fdf-4964-93e6-80200f82655e",
       "title": "criterion 1",
       "description": "",
       "dataSources": [
@@ -23,6 +24,7 @@
       "isFavorable": true
     },
     "86a1e25c-6050-4980-86dc-3425eea03ffe": {
+      "id": "86a1e25c-6050-4980-86dc-3425eea03ffe",
       "title": "criterion 2",
       "description": "",
       "dataSources": [
@@ -44,9 +46,11 @@
   },
   "alternatives": {
     "0eabd978-d69d-4034-8711-1da52a1e4562": {
+      "id": "0eabd978-d69d-4034-8711-1da52a1e4562",
       "title": "alternative 1"
     },
     "1d909410-eee5-4c68-98b2-9bb5b93afa52": {
+      "id": "1d909410-eee5-4c68-98b2-9bb5b93afa52",
       "title": "alternative 2"
     }
   },
