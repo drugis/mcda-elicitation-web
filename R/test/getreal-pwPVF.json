@@ -111,7 +111,6 @@
       }
     }
   ],
-  "preferences": {},
   "sensitivityAnalysis": {
     "alternative": "alt1",
     "criterion": "OS"
