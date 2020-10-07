@@ -75,11 +75,11 @@ export default function WorkspaceRepository(db: IDB) {
     db.query(
       query,
       [workspaceId],
-      (error: OurError, result: QueryResult<{defaultsubproblemid: string}>) => {
+      (error: OurError, result: QueryResult<{defaultsubproblemid: number}>) => {
         if (error) {
           callback(error);
         } else {
-          callback(error, result.rows[0].defaultsubproblemid);
+          callback(error, result.rows[0].defaultsubproblemid.toString());
         }
       }
     );

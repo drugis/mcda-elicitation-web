@@ -285,10 +285,10 @@ export default function SubproblemHandler(db: IDB) {
     subproblemId: string,
     workspaceId: string,
     subproblemIds: string[],
-    defaultId: number,
+    defaultId: string,
     callback: (error: OurError) => void
   ): void {
-    if (subproblemId + '' === defaultId + '') {
+    if (subproblemId === defaultId) {
       setNewDefaultSubproblem(
         client,
         subproblemId,
