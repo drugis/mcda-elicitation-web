@@ -9,6 +9,7 @@ module.exports = {
   'Reset during subproblem creation': reset,
   'Interact with scale sliders': changeScale,
   Deleting: deleteSubproblem,
+  'Deleting the default subproblem': deleteDefaultSubproblem,
   'Cancel deleting': cancelDeleteSubproblem,
   'Create non-analyzable problem': createNonAnalyzableProblem
 };
@@ -146,6 +147,23 @@ function deleteSubproblem(browser) {
     .click('#delete-subproblem-confirm-button')
     .waitForElementVisible('#delete-subproblem-disabled')
     .assert.containsText('#subproblem-selector', 'Default');
+}
+
+function deleteDefaultSubproblem(browser) {
+  browser.waitForElementVisible('#delete-subproblem-disabled');
+  setupSubProblem(browser)
+    .click('#create-new-subproblem-button')
+    .assert.containsText('#subproblem-selector', subproblem1.title)
+    .click('#subproblem-selector')
+    .click('option[label="Default"]')
+    .assert.containsText('#subproblem-selector', 'Default')
+    .waitForElementVisible('#delete-subproblem-button')
+    .click('#delete-subproblem-button')
+    .waitForElementVisible('#delete-subproblem-header')
+    .pause(5000) //needed for the test to pass on github
+    .click('#delete-subproblem-confirm-button')
+    .waitForElementVisible('#delete-subproblem-disabled')
+    .assert.containsText('#subproblem-selector', subproblem1.title);
 }
 
 function cancelDeleteSubproblem(browser) {

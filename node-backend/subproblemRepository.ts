@@ -99,12 +99,17 @@ export default function SubproblemRepository(db: IDB) {
     const query = 'SELECT id FROM subproblem WHERE workspaceid = $1';
     db.query(query, [workspaceId], function (
       error: OurError,
-      result: QueryResult<{id: string}>
+      result: QueryResult<{id: number}>
     ): void {
       if (error) {
         callback(error);
       } else {
-        callback(null, _.map(result.rows, 'id'));
+        callback(
+          null,
+          _.map(result.rows, (row) => {
+            return row.id.toString();
+          })
+        );
       }
     });
   }
