@@ -13,6 +13,7 @@ import _ from 'lodash';
 import React from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
+import ErrorHandler from '../Error/ErrorHandler';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import InlineHelp from '../InlineHelp/InlineHelp';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
@@ -126,34 +127,36 @@ export default function EffectsTable({
 
   return scales ? (
     <ErrorContextProviderComponent>
-      <HelpContextProviderComponent>
-        <SettingsContextProviderComponent
-          settings={settings}
-          toggledColumns={toggledColumns}
-        >
-          <EffectsTableContextProviderComponent
-            oldWorkspace={oldWorkspace}
-            scales={scales}
+      <ErrorHandler>
+        <HelpContextProviderComponent>
+          <SettingsContextProviderComponent
+            settings={settings}
+            toggledColumns={toggledColumns}
           >
-            <Grid container>
-              <Grid item xs={9} id="effects-table-header">
-                <Typography variant={'h5'}>
-                  Effects Table <InlineHelp helpId="effects-table" />
-                </Typography>
+            <EffectsTableContextProviderComponent
+              oldWorkspace={oldWorkspace}
+              scales={scales}
+            >
+              <Grid container>
+                <Grid item xs={9} id="effects-table-header">
+                  <Typography variant={'h5'}>
+                    Effects Table <InlineHelp helpId="effects-table" />
+                  </Typography>
+                </Grid>
+                <Grid item container xs={3} justify="flex-end">
+                  <ClipboardButton targetId="#effects-table" />
+                </Grid>
+                <Grid item xs={12}>
+                  <Table size="small" id="effects-table">
+                    {renderTableHeaders()}
+                    <EffectsTableCriteriaRows />
+                  </Table>
+                </Grid>
               </Grid>
-              <Grid item container xs={3} justify="flex-end">
-                <ClipboardButton targetId="#effects-table" />
-              </Grid>
-              <Grid item xs={12}>
-                <Table size="small" id="effects-table">
-                  {renderTableHeaders()}
-                  <EffectsTableCriteriaRows />
-                </Table>
-              </Grid>
-            </Grid>
-          </EffectsTableContextProviderComponent>
-        </SettingsContextProviderComponent>
-      </HelpContextProviderComponent>
+            </EffectsTableContextProviderComponent>
+          </SettingsContextProviderComponent>
+        </HelpContextProviderComponent>
+      </ErrorHandler>
     </ErrorContextProviderComponent>
   ) : (
     <CircularProgress />

@@ -1,21 +1,28 @@
-import React, {useContext, useState} from 'react';
-import Popover from '@material-ui/core/Popover';
-import Help from '@material-ui/icons/Help';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Popover from '@material-ui/core/Popover';
+import Typography from '@material-ui/core/Typography';
+import Help from '@material-ui/icons/Help';
+import React, {MouseEvent, useContext, useEffect, useState} from 'react';
 import {HelpContext} from './HelpContext';
-import {Box} from '@material-ui/core';
 
 export default function InlineHelp({helpId}: {helpId: string}) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
+  const [title, setTitle] = useState<string>();
+  const [text, setText] = useState<string>();
+  const [link, setLink] = useState<string>();
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const {getHelpInfo} = useContext(HelpContext);
-  const {title, text, link} = getHelpInfo(helpId);
 
-  function openPopover(event: React.MouseEvent<HTMLButtonElement>) {
+  useEffect(() => {
+    const {title, text, link} = getHelpInfo(helpId);
+    setTitle(title);
+    setText(text);
+    setLink(link);
+  });
+
+  function openPopover(event: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
   }
 
