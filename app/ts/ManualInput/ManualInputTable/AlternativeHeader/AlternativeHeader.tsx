@@ -12,7 +12,7 @@ import {ManualInputContext} from '../../ManualInputContext';
 import InlineEditor from '../InlineEditor/InlineEditor';
 
 const useStyles = makeStyles({
-  root: {
+  alternativeHeaderArrow: {
     padding: 0,
     minWidth: '10px'
   }
@@ -58,7 +58,7 @@ export default function AlternativeHeader({
       />
       <div>
         <Button
-          className={classes.root}
+          className={classes.alternativeHeaderArrow}
           id={`move-alternative-left-${alternative.id}`}
           disabled={!previousAlternative}
           onClick={moveLeft}
@@ -77,7 +77,7 @@ export default function AlternativeHeader({
           </IconButton>
         </Tooltip>
         <Button
-          className={classes.root}
+          className={classes.alternativeHeaderArrow}
           id={`move-alternative-right-${alternative.id}`}
           disabled={!nextAlternative}
           onClick={moveRight}
