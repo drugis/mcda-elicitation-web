@@ -1,3 +1,4 @@
+import {makeStyles} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,6 +10,13 @@ import IAlternative from '@shared/interface/IAlternative';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../ManualInputContext';
 import InlineEditor from '../InlineEditor/InlineEditor';
+
+const useStyles = makeStyles({
+  root: {
+    padding: 0,
+    minWidth: '10px'
+  }
+});
 
 export default function AlternativeHeader({
   alternative,
@@ -22,6 +30,7 @@ export default function AlternativeHeader({
   const {deleteAlternative, setAlternative, swapAlternatives} = useContext(
     ManualInputContext
   );
+  const classes = useStyles();
 
   function handleDelete() {
     deleteAlternative(alternative.id);
@@ -49,6 +58,7 @@ export default function AlternativeHeader({
       />
       <div>
         <Button
+          className={classes.root}
           id={`move-alternative-left-${alternative.id}`}
           disabled={!previousAlternative}
           onClick={moveLeft}
@@ -67,6 +77,7 @@ export default function AlternativeHeader({
           </IconButton>
         </Tooltip>
         <Button
+          className={classes.root}
           id={`move-alternative-right-${alternative.id}`}
           disabled={!nextAlternative}
           onClick={moveRight}
