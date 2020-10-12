@@ -45,8 +45,8 @@ export default function InlineHelp({helpId}: {helpId: string}) {
         }}
         anchorEl={anchorEl}
       >
-        <Grid container component={Box} p={2} maxWidth="300px" spacing={2}>
-          <Grid item xs={12}>
+        <Grid container component={Box} p={2} maxWidth="300px">
+          <Grid item xs={12} style={{marginBottom: '10px'}}>
             <Typography variant="h5">{title}</Typography>
           </Grid>
           <Grid item xs={12}>
