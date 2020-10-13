@@ -56,7 +56,7 @@ export default function AlternativeHeader({
         tooltipText={'Edit alternative title'}
         errorOnEmpty={true}
       />
-      <div>
+      <div style={{minWidth: '74px'}}>
         <Button
           className={classes.alternativeHeaderArrow}
           id={`move-alternative-left-${alternative.id}`}
