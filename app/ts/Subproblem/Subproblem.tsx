@@ -1,3 +1,4 @@
+import {CircularProgress} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISettings from '@shared/interface/ISettings';
@@ -34,7 +35,11 @@ export default function Subproblem({
               scales={scales}
               toggledColumns={toggledColumns}
             />
-            <ScalesTable oldWorkspace={problem} scales={scales} />
+            {scales && problem ? (
+              <ScalesTable oldWorkspace={problem} scales={scales} />
+            ) : (
+              <CircularProgress />
+            )}
           </ErrorHandler>
         </SettingsContextProviderComponent>
       </HelpContextProviderComponent>
