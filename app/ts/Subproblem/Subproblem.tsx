@@ -1,4 +1,3 @@
-import {CircularProgress} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISettings from '@shared/interface/ISettings';
@@ -9,7 +8,7 @@ import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
-import ScalesTable from './ScalesTable/ScalesTable';
+import ScaleRanges from './ScaleRanges/ScaleRanges';
 
 export default function Subproblem({
   problem,
@@ -35,11 +34,7 @@ export default function Subproblem({
               scales={scales}
               toggledColumns={toggledColumns}
             />
-            {scales && problem ? (
-              <ScalesTable oldWorkspace={problem} scales={scales} />
-            ) : (
-              <CircularProgress />
-            )}
+            <ScaleRanges problem={problem} scales={scales} />
           </ErrorHandler>
         </SettingsContextProviderComponent>
       </HelpContextProviderComponent>
