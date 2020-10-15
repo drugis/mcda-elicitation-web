@@ -99,7 +99,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       if (newProblem.schemaVersion === currentSchemaVersion) {
         return newProblem;
       } else {
-        throw 'Configured current schema version is not the same as the updated schema version';
+        throw `Configured current schema version (${currentSchemaVersion}) is not the same as the updated schema version ${newProblem.schemaVersion}`;
       }
     }
 

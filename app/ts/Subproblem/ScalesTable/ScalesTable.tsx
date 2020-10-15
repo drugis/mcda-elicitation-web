@@ -25,70 +25,98 @@ export default function ScalesTable({
   const observedRanges: Record<
     string,
     [number, number]
-  > = calculateObservedRanges(scales, oldWorkspace.problem.performanceTable);
+  > = calculateObservedRanges(
+    scales,
+    oldWorkspace.problem.criteria,
+    oldWorkspace.problem.performanceTable
+  );
 
   return (
-    // warnings when no scales
     <Grid container>
       <Grid item xs={9} id="effects-table-header">
         <Typography variant={'h5'}>
           Scale ranges <InlineHelp helpId="scale-ranges" />
         </Typography>
       </Grid>
-      <Grid item container xs={3} justify="flex-end">
-        <ClipboardButton targetId="#scales-table" />
-      </Grid>
-      <Grid item xs={12}>
-        <Table size="small" id="scales-table">
-          <TableHead>
-            <TableRow>
-              <TableCell id="scales-table-criterion" align="center">
-                Criterion <InlineHelp helpId="criterion" />
-              </TableCell>
-              <TableCell id="theoretical-range" align="center">
-                Theoretical Range <InlineHelp helpId="theoretical-range" />
-              </TableCell>
-              <TableCell id="observed-range" align="center">
-                Observed Range <InlineHelp helpId="observed-range" />
-              </TableCell>
-              <TableCell id="configured-range" align="center">
-                Configured Range <InlineHelp helpId="configured-range" />
-              </TableCell>
-              <TableCell id="scales-table-unit-of-measurement" align="center">
-                Units <InlineHelp helpId="criterion-unit" />
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {_.map(
-              oldWorkspace.problem.criteria,
-              (criterion: IProblemCriterion) => {
-                return (
-                  <TableRow>
-                    <TableCell id={`scales-table-criterion-${criterion.id}`}>
-                      {criterion.title}
-                    </TableCell>
-                    <TableCell id={`theoretical-range-${criterion.id}`}>
-                      {`${significantDigits(
-                        criterion.dataSources[0].scale[0]
-                      )}, ${significantDigits(
-                        criterion.dataSources[0].scale[1]
-                      )}`}
-                    </TableCell>
-                    <TableCell id={`theoretical-range-${criterion.id}`}>
-                      {`${significantDigits(
-                        criterion.dataSources[0].scale[0]
-                      )}, ${significantDigits(
-                        criterion.dataSources[0].scale[1]
-                      )}`}
-                    </TableCell>
-                  </TableRow>
-                );
-              }
-            )}
-          </TableBody>
-        </Table>
-      </Grid>
+      {scales ? (
+        <>
+          <Grid item container xs={3} justify="flex-end">
+            <ClipboardButton targetId="#scales-table" />
+          </Grid>
+          <Grid item xs={12}>
+            <Table size="small" id="scales-table">
+              <TableHead>
+                <TableRow>
+                  <TableCell id="scales-table-criterion" align="center">
+                    Criterion <InlineHelp helpId="criterion" />
+                  </TableCell>
+                  <TableCell id="theoretical-range" align="center">
+                    Theoretical Range <InlineHelp helpId="theoretical-range" />
+                  </TableCell>
+                  <TableCell id="observed-range" align="center">
+                    Observed Range <InlineHelp helpId="observed-range" />
+                  </TableCell>
+                  <TableCell id="configured-range" align="center">
+                    Configured Range <InlineHelp helpId="configured-range" />
+                  </TableCell>
+                  <TableCell
+                    id="scales-table-unit-of-measurement"
+                    align="center"
+                  >
+                    Units <InlineHelp helpId="criterion-unit" />
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {_.map(
+                  oldWorkspace.problem.criteria,
+                  (criterion: IProblemCriterion) => {
+                    return (
+                      <TableRow>
+                        <TableCell
+                          id={`scales-table-criterion-${criterion.id}`}
+                        >
+                          {criterion.title}
+                        </TableCell>
+                        <TableCell id={`theoretical-range-${criterion.id}`}>
+                          {`${significantDigits(
+                            criterion.dataSources[0].scale[0]
+                          )}, ${significantDigits(
+                            criterion.dataSources[0].scale[1]
+                          )}`}
+                        </TableCell>
+                        <TableCell id={`observed-range-${criterion.id}`}>
+                          {`${significantDigits(
+                            criterion.dataSources[0].scale[0]
+                          )}, ${significantDigits(
+                            criterion.dataSources[0].scale[1]
+                          )}`}
+                        </TableCell>
+                        <TableCell id={`configured-range-${criterion.id}`}>
+                          {`${significantDigits(
+                            criterion.dataSources[0].scale[0]
+                          )}, ${significantDigits(
+                            criterion.dataSources[0].scale[1]
+                          )}`}
+                        </TableCell>
+                        <TableCell id={`unit-${criterion.id}`}>
+                          {criterion.dataSources[0].unitOfMeasurement.label}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                )}
+              </TableBody>
+            </Table>
+          </Grid>
+        </>
+      ) : (
+        <Grid item xs={12}>
+          {/* FIXME */}
+          /!\ Problem contains multiple data sources or missing values,
+          therefore no scales van be set.
+        </Grid>
+      )}
     </Grid>
   );
 }
