@@ -1,4 +1,3 @@
-import ICriterion from '@shared/interface/ICriterion';
 import IScale from '@shared/interface/IScale';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -26,10 +25,10 @@ export function calculateObservedRanges(
 
     var minHullValues: number[] = [];
     var maxHullValues: number[] = [];
-    if (scaleRanges) {
-      minHullValues = getHull(scaleRanges, '2.5%');
-      maxHullValues = getHull(scaleRanges, '97.5%');
-    }
+
+    minHullValues = getHull(scaleRanges, '2.5%');
+    maxHullValues = getHull(scaleRanges, '97.5%');
+
     if (effects && effects.length) {
       minHullValues = minHullValues.concat(getMinEffect(effects));
       maxHullValues = maxHullValues.concat(getMaxEffect(effects));
