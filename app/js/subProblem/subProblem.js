@@ -31,7 +31,7 @@ define([
     .component(
       'subproblem',
       react2angular.react2angular(Subproblem.default, [
-        'problem',
+        'workspace',
         'settings',
         'scales',
         'toggledColumns'

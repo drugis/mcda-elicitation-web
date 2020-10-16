@@ -11,12 +11,12 @@ import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import ScaleRanges from './ScaleRanges/ScaleRanges';
 
 export default function Subproblem({
-  problem,
+  workspace,
   scales,
   settings,
   toggledColumns
 }: {
-  problem: IOldWorkspace;
+  workspace: IOldWorkspace;
   scales: Record<string, Record<string, IScale>>;
   settings: ISettings;
   toggledColumns: IToggledColumns;
@@ -30,11 +30,11 @@ export default function Subproblem({
         >
           <ErrorHandler>
             <EffectsTable
-              oldWorkspace={problem}
+              oldWorkspace={workspace}
               scales={scales}
               toggledColumns={toggledColumns}
             />
-            <ScaleRanges problem={problem} scales={scales} />
+            <ScaleRanges workspace={workspace} scales={scales} />
           </ErrorHandler>
         </SettingsContextProviderComponent>
       </HelpContextProviderComponent>
