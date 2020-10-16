@@ -1,15 +1,11 @@
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
-import IProblem from '@shared/interface/Problem/IProblem';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React from 'react';
-import {
-  areTooManyDataSourcesIncluded,
-  findRowWithoutValues
-} from './ScaleRangesUtil';
+import {getScaleRangeWarnings} from './ScaleRangesUtil';
 import ScalesTable from './ScalesTable/ScalesTable';
 
 export default function ScaleRanges({
@@ -19,9 +15,9 @@ export default function ScaleRanges({
   workspace: IOldWorkspace;
   scales: Record<string, Record<string, IScale>>;
 }) {
-  function renderWarnings() {
-    const warnings: string[] = getWarnings(workspace.problem);
+  const warnings: string[] = getScaleRangeWarnings(workspace.problem);
 
+  function renderWarnings() {
     return _.map(warnings, (warning, index) => {
       return (
         <div key={index} id={`no-scales-warning-${index}`}>
@@ -29,21 +25,6 @@ export default function ScaleRanges({
         </div>
       );
     });
-  }
-
-  function getWarnings(problem: IProblem): string[] {
-    let warnings: string[] = [];
-    if (areTooManyDataSourcesIncluded(problem.criteria)) {
-      warnings.push(
-        'Multiple data sources selected for at least one criterion, therefore no scales can be set.'
-      );
-    }
-    if (findRowWithoutValues(problem.criteria, problem.performanceTable)) {
-      warnings.push(
-        'Criterion with only missing or text values selected, therefore no scales can be set.'
-      );
-    }
-    return warnings;
   }
 
   return scales && workspace ? (
