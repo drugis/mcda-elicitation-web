@@ -19,7 +19,17 @@ export default function ScaleRanges({
   workspace: IOldWorkspace;
   scales: Record<string, Record<string, IScale>>;
 }) {
-  const warnings: string[] = getWarnings(workspace.problem);
+  function renderWarnings() {
+    const warnings: string[] = getWarnings(workspace.problem);
+
+    return _.map(warnings, (warning, index) => {
+      return (
+        <div key={index} id={`no-scales-warning-${index}`}>
+          {warning}
+        </div>
+      );
+    });
+  }
 
   function getWarnings(problem: IProblem): string[] {
     let warnings: string[] = [];
@@ -34,16 +44,6 @@ export default function ScaleRanges({
       );
     }
     return warnings;
-  }
-
-  function renderWarnings() {
-    return _.map(warnings, (warning, index) => {
-      return (
-        <div key={index} id={`no-scales-warning-${index}`}>
-          {warning}
-        </div>
-      );
-    });
   }
 
   return scales && workspace ? (
