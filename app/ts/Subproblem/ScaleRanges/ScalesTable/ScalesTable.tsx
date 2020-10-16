@@ -7,7 +7,6 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
 import React from 'react';
 import {calculateObservedRanges} from './ScalesTableUtil';

@@ -1,4 +1,6 @@
-import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
