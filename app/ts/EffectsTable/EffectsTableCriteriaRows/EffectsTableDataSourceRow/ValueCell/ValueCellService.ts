@@ -5,7 +5,7 @@ export function getStringForInputValue(
   usePercentage: boolean
 ): string {
   if (usePercentage) {
-    return significantDigits(significantDigits(value) * 100) + '%';
+    return significantDigits(significantDigits(value) * 100).toString();
   } else {
     return significantDigits(value).toString();
   }

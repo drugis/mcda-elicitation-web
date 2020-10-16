@@ -37,8 +37,8 @@ export function findRowWithoutValues(
         performanceTable,
         ['dataSource', dataSource.id]
       );
-      return _.some(entriesForDataSource, (entry: IPerformanceTableEntry) => {
-        return !(hasNoEmptyEffect(entry) || hasNoEmptyDistribution(entry));
+      return !_.some(entriesForDataSource, (entry: IPerformanceTableEntry) => {
+        return hasNoEmptyEffect(entry) || hasNoEmptyDistribution(entry);
       });
     });
   });

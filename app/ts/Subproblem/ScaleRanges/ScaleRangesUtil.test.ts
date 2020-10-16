@@ -54,6 +54,30 @@ describe('ScaleRangesUtil', () => {
       expect(result).toBeFalsy();
     });
 
+    it('should return false if there is a row with empty effect and non-empty effect', () => {
+      const criteria: Record<string, IProblemCriterion> = {
+        crit1Id: {
+          dataSources: [{id: 'ds1Id'} as IProblemDataSource]
+        } as IProblemCriterion
+      };
+      const performanceTable: IPerformanceTableEntry[] = [
+        {
+          criterion: 'crit1Id',
+          dataSource: 'ds1Id',
+          alternative: 'alt1Id',
+          performance: {effect: {type: 'exact', value: 37}}
+        },
+        {
+          criterion: 'crit1Id',
+          dataSource: 'ds1Id',
+          alternative: 'alt2Id',
+          performance: {effect: {type: 'empty', value: '37'}}
+        }
+      ];
+      const result = findRowWithoutValues(criteria, performanceTable);
+      expect(result).toBeFalsy();
+    });
+
     it('should return true if there is at least one row without valid values', function () {
       const criteria: Record<string, IProblemCriterion> = {
         crit1Id: {

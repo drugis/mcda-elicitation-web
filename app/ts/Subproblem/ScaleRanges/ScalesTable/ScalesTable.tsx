@@ -11,6 +11,7 @@ import {getStringForValue} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/Ef
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {calculateObservedRanges} from './ScalesTableUtil';
@@ -77,7 +78,10 @@ export default function ScalesTable({
               {getConfiguredRange(criterion)}
             </TableCell>
             <TableCell id={`unit-${criterion.id}`}>
-              {criterion.dataSources[0].unitOfMeasurement.label}
+              {getUnitLabel(
+                criterion.dataSources[0].unitOfMeasurement,
+                showPercentages
+              )}
             </TableCell>
           </TableRow>
         );
@@ -91,7 +95,7 @@ export default function ScalesTable({
     unit: UnitOfMeasurementType
   ): string {
     if (showPercentages && (unit === 'decimal' || unit === 'percentage')) {
-      return significantDigits(value * 100) + '%';
+      return significantDigits(value * 100).toString();
     } else {
       return value.toString();
     }
