@@ -50,7 +50,7 @@ function renderEnteredValues(
   }
 }
 
-function getStringForValue(
+export function getStringForValue(
   value: number,
   usePercentage: boolean,
   unitOfMeasurementType: UnitOfMeasurementType

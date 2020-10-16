@@ -1,7 +1,7 @@
 import {Distribution} from '@shared/interface/IDistribution';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
-import {getStringForValue} from '../ValueCellService';
+import {getStringForInputValue} from '../ValueCellService';
 
 export function renderDistribution(
   distribution: Distribution,
@@ -24,7 +24,7 @@ export function renderDistribution(
       case 'text':
         return distribution.text;
       case 'value':
-        return getStringForValue(distribution.value, usePercentage);
+        return getStringForInputValue(distribution.value, usePercentage);
     }
   }
 }
@@ -33,18 +33,18 @@ function renderRangeDistribution(
   distribution: IRangeEffect,
   usePercentage: boolean
 ): string {
-  return `[${getStringForValue(
+  return `[${getStringForInputValue(
     distribution.lowerBound,
     usePercentage
-  )}, ${getStringForValue(distribution.upperBound, usePercentage)}]`;
+  )}, ${getStringForInputValue(distribution.upperBound, usePercentage)}]`;
 }
 
 function renderNormalDistribution(
   distribution: INormalDistribution,
   usePercentage: boolean
 ): string {
-  return `Normal(${getStringForValue(
+  return `Normal(${getStringForInputValue(
     distribution.mean,
     usePercentage
-  )}, ${getStringForValue(distribution.standardError, usePercentage)})`;
+  )}, ${getStringForInputValue(distribution.standardError, usePercentage)})`;
 }

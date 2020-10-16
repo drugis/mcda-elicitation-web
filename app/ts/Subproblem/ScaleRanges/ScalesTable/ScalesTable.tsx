@@ -5,12 +5,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import {getStringForValue} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
-import React from 'react';
+import React, {useContext} from 'react';
 import {calculateObservedRanges} from './ScalesTableUtil';
-
 export default function ScalesTable({
   scales,
   oldWorkspace
@@ -18,6 +21,9 @@ export default function ScalesTable({
   scales: Record<string, Record<string, IScale>>;
   oldWorkspace: IOldWorkspace;
 }) {
+  const {showPercentages} = useContext(SettingsContext);
+  const {decimal, percentage} = UnitOfMeasurementType;
+
   const observedRanges: Record<
     string,
     [number, number]
@@ -31,18 +37,41 @@ export default function ScalesTable({
     return _.map(
       oldWorkspace.problem.criteria,
       (criterion: IProblemCriterion) => {
+        const unit = criterion.dataSources[0].unitOfMeasurement.type;
+        const theoreticalValues = [
+          getStringForValue(
+            criterion.dataSources[0].scale[0],
+            showPercentages,
+            unit
+          ),
+          getStringForValue(
+            criterion.dataSources[0].scale[1],
+            showPercentages,
+            unit
+          )
+        ];
+        const observedValues = [
+          getObservedOrPvfValue(
+            observedRanges[criterion.id][0],
+            showPercentages,
+            unit
+          ),
+          getObservedOrPvfValue(
+            observedRanges[criterion.id][1],
+            showPercentages,
+            unit
+          )
+        ];
         return (
           <TableRow key={criterion.id}>
             <TableCell id={`scales-table-criterion-${criterion.id}`}>
               {criterion.title}
             </TableCell>
             <TableCell id={`theoretical-range-${criterion.id}`}>
-              {`${criterion.dataSources[0].scale[0]}, ${criterion.dataSources[0].scale[1]}`}
+              {`${theoreticalValues[0]}, ${theoreticalValues[1]}`}
             </TableCell>
             <TableCell id={`observed-range-${criterion.id}`}>
-              {`${observedRanges[criterion.id][0]}, ${
-                observedRanges[criterion.id][1]
-              }`}
+              {`${observedValues[0]}, ${observedValues[1]}`}
             </TableCell>
             <TableCell id={`configured-range-${criterion.id}`}>
               {getConfiguredRange(criterion)}
@@ -56,13 +85,40 @@ export default function ScalesTable({
     );
   }
 
+  function getObservedOrPvfValue(
+    value: number,
+    showPercentages: boolean,
+    unit: UnitOfMeasurementType
+  ): string {
+    if (showPercentages && (unit === 'decimal' || unit === 'percentage')) {
+      return significantDigits(value * 100) + '%';
+    } else {
+      return value.toString();
+    }
+  }
+
   function getConfiguredRange(criterion: IProblemCriterion) {
     const pvf = criterion.dataSources[0].pvf;
+    const unit = criterion.dataSources[0].unitOfMeasurement.type;
     if (pvf) {
-      return pvf.range[0] + ', ' + pvf.range[1];
+      return (
+        getObservedOrPvfValue(pvf.range[0], showPercentages, unit) +
+        ', ' +
+        getObservedOrPvfValue(pvf.range[1], showPercentages, unit)
+      );
     } else {
       return (
-        observedRanges[criterion.id][0] + ', ' + observedRanges[criterion.id][1]
+        getObservedOrPvfValue(
+          observedRanges[criterion.id][0],
+          showPercentages,
+          unit
+        ) +
+        ', ' +
+        getObservedOrPvfValue(
+          observedRanges[criterion.id][1],
+          showPercentages,
+          unit
+        )
       );
     }
   }

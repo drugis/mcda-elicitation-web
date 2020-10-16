@@ -2,7 +2,7 @@ import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import IScale from '@shared/interface/IScale';
 import UncertainValue from '../UncertainValue/UncertainValue';
-import {getStringForValue} from '../ValueCellService';
+import {getStringForInputValue} from '../ValueCellService';
 
 export default function NMACell({
   dataSourceId,
@@ -19,9 +19,9 @@ export default function NMACell({
     <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
       <div className="text-centered">
         <UncertainValue
-          value={getStringForValue(scale['50%'], usePercentage)}
-          lowerBound={getStringForValue(scale['2.5%'], usePercentage)}
-          upperBound={getStringForValue(scale['97.5%'], usePercentage)}
+          value={getStringForInputValue(scale['50%'], usePercentage)}
+          lowerBound={getStringForInputValue(scale['2.5%'], usePercentage)}
+          upperBound={getStringForInputValue(scale['97.5%'], usePercentage)}
         />
       </div>
     </TableCell>

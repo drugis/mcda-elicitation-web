@@ -1,6 +1,6 @@
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 
-export function getStringForValue(
+export function getStringForInputValue(
   value: number,
   usePercentage: boolean
 ): string {
