@@ -160,11 +160,16 @@ export default function ScenarioRepository(db: IDB) {
     db.query(
       query,
       [subproblemId],
-      (error: OurError, result: QueryResult<{id: string}>) => {
+      (error: OurError, result: QueryResult<{id: number}>) => {
         if (error) {
           callback(error);
         } else {
-          callback(null, _.map(result.rows, 'id'));
+          callback(
+            null,
+            _.map(result.rows, (row) => {
+              return row.id.toString();
+            })
+          );
         }
       }
     );
