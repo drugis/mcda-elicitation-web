@@ -106,12 +106,12 @@ export default function WorkspaceRepository(db: IDB) {
     const query = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
     db.query(query, [workspaceId], function (
       error: OurError,
-      result: QueryResult<{defaultscenarioid: string}>
+      result: QueryResult<{defaultscenarioid: number}>
     ) {
       if (error) {
         callback(error);
       } else {
-        callback(error, result.rows[0].defaultscenarioid);
+        callback(error, result.rows[0].defaultscenarioid.toString());
       }
     });
   }
