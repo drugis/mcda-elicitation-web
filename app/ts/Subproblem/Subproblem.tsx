@@ -44,6 +44,8 @@ export default function Subproblem({
           currentAngularSubproblem={currentSubproblem}
           workspaceId={workspaceId}
           subproblemChanged={subproblemChanged}
+          scales={scales}
+          createSubProblemDialogCallback={createDialogCallback}
         >
           <SettingsContextProviderComponent
             settings={settings}
@@ -51,13 +53,9 @@ export default function Subproblem({
           >
             <ErrorHandler>
               <SubproblemSelection subproblemChanged={subproblemChanged} />
-              <SubproblemButtons createDialogCallback={createDialogCallback} />
-              <EffectsTable
-                oldWorkspace={workspace}
-                scales={scales}
-                toggledColumns={toggledColumns}
-              />
-              <ScaleRanges workspace={workspace} scales={scales} />
+              <SubproblemButtons />
+              <EffectsTable toggledColumns={toggledColumns} />
+              <ScaleRanges />
             </ErrorHandler>
           </SettingsContextProviderComponent>
         </WorkspaceContextProviderComponent>

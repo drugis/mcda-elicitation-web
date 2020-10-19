@@ -1,8 +1,15 @@
 import IScale from '@shared/interface/IScale';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
-import {calculateObservedRanges} from './ScalesTableUtil';
+import {
+  calculateObservedRanges,
+  getConfiguredRange,
+  getPercentifiedValue
+} from './ScalesTableUtil';
+
+const {decimal, percentage, custom} = UnitOfMeasurementType;
 
 describe('ScalesTableUtil', () => {
   describe('calculateObservedRanges', () => {
@@ -154,6 +161,74 @@ describe('ScalesTableUtil', () => {
         crit3Id: [0.1, 1]
       };
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getConfiguredRange', () => {
+    const observedRanges: Record<string, [number, number]> = {
+      crit1Id: [37, 42]
+    };
+    const showPercentages = false;
+
+    it('should return the range values set on the pvf', () => {
+      const criterion: IProblemCriterion = {
+        dataSources: [
+          {
+            pvf: {range: [0, 1]},
+            unitOfMeasurement: {type: 'custom'}
+          } as IProblemDataSource
+        ],
+        title: 'crit1',
+        description: 'desc',
+        id: 'crit1Id'
+      };
+      const result = getConfiguredRange(
+        criterion,
+        observedRanges,
+        showPercentages
+      );
+      const expectedResult = '0, 1';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the observed values if there is no range on the pvf', () => {
+      const criterion: IProblemCriterion = {
+        dataSources: [
+          {unitOfMeasurement: {type: 'custom'}} as IProblemDataSource
+        ],
+        title: 'crit1',
+        description: 'desc',
+        id: 'crit1Id'
+      };
+      const result = getConfiguredRange(
+        criterion,
+        observedRanges,
+        showPercentages
+      );
+      const expectedResult = '37, 42';
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getPercentifiedValue', () => {
+    const showPercentages = true;
+
+    it('should return a percentified value if the unit is decimal and it should show percentages', () => {
+      const value = 1;
+      const result = getPercentifiedValue(value, showPercentages, decimal);
+      expect(result).toEqual('100');
+    });
+
+    it('should return a percentified value if the unit is percentage and it should show percentages', () => {
+      const value = 0.010001;
+      const result = getPercentifiedValue(value, showPercentages, percentage);
+      expect(result).toEqual('1');
+    });
+
+    it('should not return a percentified value if the unit is custom and it should show percentages', () => {
+      const value = 1;
+      const result = getPercentifiedValue(value, showPercentages, custom);
+      expect(result).toEqual('1');
     });
   });
 });

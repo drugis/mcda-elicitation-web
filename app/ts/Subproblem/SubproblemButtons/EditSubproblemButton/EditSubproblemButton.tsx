@@ -79,7 +79,7 @@ export default function EditSubproblemButton({}: {}) {
             <Grid item xs={12}>
               <TextField
                 label="new title"
-                id="new-subproblem-title"
+                id="subproblem-title-input"
                 value={title}
                 onChange={titleChanged}
                 onKeyDown={handleKey}

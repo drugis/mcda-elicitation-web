@@ -1,22 +1,16 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import IScale from '@shared/interface/IScale';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
-import React from 'react';
+import React, {useContext} from 'react';
 import {getScaleRangeWarnings} from './ScaleRangesUtil';
 import ScalesTable from './ScalesTable/ScalesTable';
 
-export default function ScaleRanges({
-  workspace,
-  scales
-}: {
-  workspace: IOldWorkspace;
-  scales: Record<string, Record<string, IScale>>;
-}) {
+export default function ScaleRanges({}: {}) {
+  const {workspace, scales} = useContext(WorkspaceContext);
   const warnings: string[] = getScaleRangeWarnings(workspace.problem);
 
   function renderWarnings() {
@@ -40,11 +34,7 @@ export default function ScaleRanges({
         <ClipboardButton targetId="#scales-table" />
       </Grid>
       <Grid item xs={12}>
-        {warnings.length ? (
-          renderWarnings()
-        ) : (
-          <ScalesTable oldWorkspace={workspace} scales={scales} />
-        )}
+        {warnings.length ? renderWarnings() : <ScalesTable />}
       </Grid>
     </Grid>
   ) : (

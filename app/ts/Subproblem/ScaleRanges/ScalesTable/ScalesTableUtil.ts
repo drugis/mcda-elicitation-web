@@ -1,8 +1,11 @@
 import IScale from '@shared/interface/IScale';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
+
+const {decimal, percentage} = UnitOfMeasurementType;
 
 export function calculateObservedRanges(
   scales: Record<string, Record<string, IScale>>,
@@ -76,6 +79,7 @@ function hasRangeDistribution(entry: any, dataSourceId: string): boolean {
     entry.performance.distribution.type === 'range'
   );
 }
+
 function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
   return _(scaleRanges)
     .values()
@@ -84,4 +88,50 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
     })
     .filter(filterUndefined)
     .value();
+}
+
+export function getConfiguredRange(
+  criterion: IProblemCriterion,
+  observedRanges: Record<string, [number, number]>,
+  showPercentages: boolean
+) {
+  const pvf = criterion.dataSources[0].pvf;
+  const unit = criterion.dataSources[0].unitOfMeasurement.type;
+  if (pvf) {
+    const lowerValue = getPercentifiedValue(
+      pvf.range[0],
+      showPercentages,
+      unit
+    );
+    const upperValue = getPercentifiedValue(
+      pvf.range[1],
+      showPercentages,
+      unit
+    );
+    return `${lowerValue}, ${upperValue}`;
+  } else {
+    const lowerValue = getPercentifiedValue(
+      observedRanges[criterion.id][0],
+      showPercentages,
+      unit
+    );
+    const upperValue = getPercentifiedValue(
+      observedRanges[criterion.id][1],
+      showPercentages,
+      unit
+    );
+    return `${lowerValue}, ${upperValue}`;
+  }
+}
+
+export function getPercentifiedValue(
+  value: number,
+  showPercentages: boolean,
+  unit: UnitOfMeasurementType
+): string {
+  if (showPercentages && (unit === decimal || unit === percentage)) {
+    return significantDigits(value * 100).toString();
+  } else {
+    return value.toString();
+  }
 }

@@ -31,7 +31,7 @@ export default function SubproblemSelection({
   return currentSubproblem ? (
     <Grid item container>
       <Grid item xs={3}>
-        Subproblem:
+        Problem:
       </Grid>
       <Grid item xs={9}>
         <Select

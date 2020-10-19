@@ -92,7 +92,6 @@ describe('buildWorkspace', () => {
     criteria: {}
   };
   const oldWorkspace: IOldWorkspace = {
-    id: 37,
     owner: 1,
     problem: problem,
     defaultSubproblemId: '2',

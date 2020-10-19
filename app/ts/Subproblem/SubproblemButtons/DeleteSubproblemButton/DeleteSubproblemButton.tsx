@@ -50,7 +50,10 @@ export default function DeleteSubproblemButton() {
         fullWidth
         maxWidth={'sm'}
       >
-        <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
+        <DialogTitleWithCross
+          id="delete-subproblem-header"
+          onClose={closeDialog}
+        >
           Delete subproblem
         </DialogTitleWithCross>
         <DialogContent>

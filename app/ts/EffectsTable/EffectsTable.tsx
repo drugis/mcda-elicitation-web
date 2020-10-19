@@ -5,27 +5,24 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import IScale from '@shared/interface/IScale';
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
-import React from 'react';
+import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
+import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 
 export default function EffectsTable({
-  oldWorkspace,
-  scales,
   toggledColumns
 }: {
-  oldWorkspace: IOldWorkspace;
-  scales: Record<string, Record<string, IScale>>;
   toggledColumns: IToggledColumns;
 }) {
+  const {workspace, scales} = useContext(WorkspaceContext);
+
   function renderAlternativeHeaders(): JSX.Element[] {
-    return _(oldWorkspace.problem.alternatives)
+    return _(workspace.problem.alternatives)
       .toPairs()
       .map(createAlternativeHeader)
       .value();
@@ -120,7 +117,7 @@ export default function EffectsTable({
 
   return scales ? (
     <EffectsTableContextProviderComponent
-      oldWorkspace={oldWorkspace}
+      oldWorkspace={workspace}
       scales={scales}
     >
       <Grid container>

@@ -1,6 +1,7 @@
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import IScale from '@shared/interface/IScale';
 import Axios from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
@@ -17,7 +18,9 @@ export function WorkspaceContextProviderComponent({
   oldSubproblems,
   currentAngularSubproblem,
   workspaceId,
-  subproblemChanged
+  subproblemChanged,
+  scales,
+  createSubProblemDialogCallback
 }: {
   children: any;
   workspace: IOldWorkspace;
@@ -25,6 +28,8 @@ export function WorkspaceContextProviderComponent({
   currentAngularSubproblem: IOldSubproblem;
   workspaceId: string;
   subproblemChanged: (subproblem: IOldSubproblem) => void;
+  scales: Record<string, Record<string, IScale>>;
+  createSubProblemDialogCallback: () => void;
 }) {
   const {setError} = useContext(ErrorContext);
   const [subproblems, setSubproblems] = useState<
@@ -36,10 +41,6 @@ export function WorkspaceContextProviderComponent({
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};
-    setCurrentSubproblem(newSubproblem);
-    let newSubproblems = _.cloneDeep(subproblems);
-    newSubproblems[currentSubproblem.id] = newSubproblem;
-    setSubproblems(newSubproblems);
     Axios.post(
       `/workspaces/${workspaceId}/problems/${currentSubproblem.id}`,
       newSubproblem
@@ -71,7 +72,15 @@ export function WorkspaceContextProviderComponent({
 
   return (
     <WorkspaceContext.Provider
-      value={{subproblems, currentSubproblem, editTitle, deleteSubproblem}}
+      value={{
+        subproblems,
+        currentSubproblem,
+        editTitle,
+        deleteSubproblem,
+        workspace,
+        scales,
+        createSubProblemDialogCallback
+      }}
     >
       {children}
     </WorkspaceContext.Provider>
