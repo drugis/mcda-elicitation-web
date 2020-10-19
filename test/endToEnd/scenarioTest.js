@@ -10,6 +10,7 @@ module.exports = {
   'Switching scenario in the deterministic results tab': switchInDeterministic,
   'Switching scenario in the SMAA results tab': switchInSmaa,
   'Delete scenario': deleteScenario,
+  'Deleting the default scenario': deleteDefaultScenario,
   'Cancel deleting': cancelDeleteScenario
 };
 
@@ -142,6 +143,29 @@ function deleteScenario(browser) {
     .click('#delete-scenario-confirm-button')
     .waitForElementVisible('#delete-scenario-button:disabled')
     .assert.containsText('#scenario-selector', 'Default');
+}
+
+function deleteDefaultScenario(browser) {
+  browser
+    .waitForElementVisible('#delete-scenario-button:disabled')
+    .assert.containsText('#scenario-selector', 'Default')
+    .click('#copy-scenario-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:disabled')
+    .setValue('#new-scenario-title', scenarioTitle)
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
+    .pause(100) //pause needed to not get 'stale element' error
+    .waitForElementVisible('#delete-scenario-button')
+    .assert.containsText('#scenario-selector', scenarioTitle)
+    .click('#scenario-selector')
+    .click('#scenario-selector > option:nth-child(1)')
+    .pause(100) //pause needed to not get 'stale element' error
+    .assert.containsText('#scenario-selector', 'Default')
+    .click('#delete-scenario-button')
+    .waitForElementVisible('#dialog-title')
+    .click('#delete-scenario-confirm-button')
+    .waitForElementVisible('#delete-scenario-button:disabled')
+    .assert.containsText('#scenario-selector', scenarioTitle);
 }
 
 function cancelDeleteScenario(browser) {
