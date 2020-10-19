@@ -23,20 +23,16 @@ define(['lodash', 'angular'], function (_) {
   ) {
     // functions
     $scope.openCreateDialog = openCreateDialog;
-    $scope.subproblemChanged = subProblemChanged;
+    $scope.subproblemChanged = subproblemChanged;
 
     // init
-    $scope.scalesPromise.then(function () {
+    $scope.scalesPromise.then(() => {
       $scope.subProblems = subProblems;
       $scope.scales = $scope.workspace.scales;
-      $scope.isBaseline = SubProblemService.determineBaseline(
-        $scope.aggregateState.problem.table,
-        $scope.aggregateState.problem.alternatives
-      );
       PageTitleService.setPageTitle(
         'SubProblemController',
         ($scope.aggregateState.problem.title || $scope.workspace.title) +
-          "'s problem definition"
+          `'s problem definition`
       );
     });
 
@@ -56,10 +52,10 @@ define(['lodash', 'angular'], function (_) {
       true
     );
 
-    function subProblemChanged(newSubProblem) {
+    function subproblemChanged(newSubProblem) {
       var coords = _.omit($stateParams, 'id');
       coords.problemId = newSubProblem.id;
-      ScenarioResource.query(coords).$promise.then(function (scenarios) {
+      ScenarioResource.query(coords).$promise.then((scenarios) => {
         $state.go('problem', {
           workspaceId: $scope.workspace.id,
           problemId: newSubProblem.id,

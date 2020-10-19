@@ -2,8 +2,6 @@
 define([
   './subProblemController',
   './createSubProblemController',
-  './editSubProblemTitleController',
-  './deleteSubproblemController',
   './subProblemService',
   './scaleRangeService',
   '../../ts/Subproblem/Subproblem',
@@ -12,8 +10,6 @@ define([
 ], function (
   SubProblemController,
   CreateSubProblemController,
-  EditSubProblemTitleController,
-  DeleteSubproblemController,
   SubProblemService,
   ScaleRangeService,
   Subproblem,
@@ -24,8 +20,6 @@ define([
     .module('elicit.subProblem', [])
     .controller('SubProblemController', SubProblemController)
     .controller('CreateSubProblemController', CreateSubProblemController)
-    .controller('EditSubProblemTitleController', EditSubProblemTitleController)
-    .controller('DeleteSubproblemController', DeleteSubproblemController)
     .factory('SubProblemService', SubProblemService)
     .factory('ScaleRangeService', ScaleRangeService)
     .component(
