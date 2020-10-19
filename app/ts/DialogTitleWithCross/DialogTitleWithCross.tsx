@@ -1,32 +1,32 @@
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
-import {Theme, WithStyles} from '@material-ui/core/styles';
-import withStyles from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import React from 'react';
+import React, {ReactNode} from 'react';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    closeButton: {
-      position: 'absolute',
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-      color: theme.palette.grey[500]
-    }
-  });
+const theme = createMuiTheme();
+const useStyles = makeStyles({
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500]
+  }
+});
 
-export interface DialogTitleProps extends WithStyles<typeof styles> {
-  id: string;
-  children: React.ReactNode;
+export default function DialogTitleWithCross({
+  children,
+  onClose,
+  id
+}: {
+  children: ReactNode;
   onClose: () => void;
-}
-
-const DialogTitleWithCross = withStyles(styles)((props: DialogTitleProps) => {
-  const {children, classes, onClose, ...other} = props;
+  id: string;
+}) {
+  const classes = useStyles();
   return (
-    <MuiDialogTitle disableTypography {...other}>
+    <MuiDialogTitle disableTypography id={id}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton
@@ -40,6 +40,4 @@ const DialogTitleWithCross = withStyles(styles)((props: DialogTitleProps) => {
       ) : null}
     </MuiDialogTitle>
   );
-});
-
-export default DialogTitleWithCross;
+}
