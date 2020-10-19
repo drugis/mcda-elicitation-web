@@ -5,6 +5,7 @@ define(['lodash', 'angular'], function (_) {
     '$stateParams',
     '$modal',
     '$state',
+    'ScenarioResource',
     'subProblems',
     'SubProblemService',
     'PageTitleService'
@@ -15,12 +16,14 @@ define(['lodash', 'angular'], function (_) {
     $stateParams,
     $modal,
     $state,
+    ScenarioResource,
     subProblems,
     SubProblemService,
     PageTitleService
   ) {
     // functions
     $scope.openCreateDialog = openCreateDialog;
+    $scope.subproblemChanged = subProblemChanged;
 
     // init
     $scope.scalesPromise.then(function () {
@@ -52,6 +55,18 @@ define(['lodash', 'angular'], function (_) {
       },
       true
     );
+
+    function subProblemChanged(newSubProblem) {
+      var coords = _.omit($stateParams, 'id');
+      coords.problemId = newSubProblem.id;
+      ScenarioResource.query(coords).$promise.then(function (scenarios) {
+        $state.go('problem', {
+          workspaceId: $scope.workspace.id,
+          problemId: newSubProblem.id,
+          id: scenarios[0].id
+        });
+      });
+    }
 
     function openCreateDialog() {
       $modal.open({

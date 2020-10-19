@@ -1,3 +1,4 @@
+import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISettings from '@shared/interface/ISettings';
@@ -8,35 +9,58 @@ import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
+import {WorkspaceContextProviderComponent} from '../Workspace/WorkspaceContext';
 import ScaleRanges from './ScaleRanges/ScaleRanges';
+import SubproblemButtons from './SubproblemButtons/SubproblemButtons';
+import SubproblemSelection from './SubproblemSelection/SubproblemSelection';
 
 export default function Subproblem({
   workspace,
   scales,
   settings,
-  toggledColumns
+  toggledColumns,
+  subproblems,
+  currentSubproblem,
+  subproblemChanged,
+  createDialogCallback,
+  workspaceId
 }: {
   workspace: IOldWorkspace;
   scales: Record<string, Record<string, IScale>>;
   settings: ISettings;
   toggledColumns: IToggledColumns;
+  subproblems: IOldSubproblem[];
+  currentSubproblem: IOldSubproblem;
+  subproblemChanged: (subproblem: IOldSubproblem) => void;
+  createDialogCallback: () => void;
+  workspaceId: string;
 }) {
   return (
     <ErrorContextProviderComponent>
       <HelpContextProviderComponent>
-        <SettingsContextProviderComponent
-          settings={settings}
-          toggledColumns={toggledColumns}
+        <WorkspaceContextProviderComponent
+          workspace={workspace}
+          oldSubproblems={subproblems}
+          currentAngularSubproblem={currentSubproblem}
+          workspaceId={workspaceId}
+          subproblemChanged={subproblemChanged}
         >
-          <ErrorHandler>
-            <EffectsTable
-              oldWorkspace={workspace}
-              scales={scales}
-              toggledColumns={toggledColumns}
-            />
-            <ScaleRanges workspace={workspace} scales={scales} />
-          </ErrorHandler>
-        </SettingsContextProviderComponent>
+          <SettingsContextProviderComponent
+            settings={settings}
+            toggledColumns={toggledColumns}
+          >
+            <ErrorHandler>
+              <SubproblemSelection subproblemChanged={subproblemChanged} />
+              <SubproblemButtons createDialogCallback={createDialogCallback} />
+              <EffectsTable
+                oldWorkspace={workspace}
+                scales={scales}
+                toggledColumns={toggledColumns}
+              />
+              <ScaleRanges workspace={workspace} scales={scales} />
+            </ErrorHandler>
+          </SettingsContextProviderComponent>
+        </WorkspaceContextProviderComponent>
       </HelpContextProviderComponent>
     </ErrorContextProviderComponent>
   );

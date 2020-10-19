@@ -1,7 +1,12 @@
 <subproblem
   ng-if="problemForReact"
   workspace="problemForReact"
+  subproblems="subProblems"
   settings="workspaceSettings"
   scales="workspace.scales.base"
   toggled-columns="toggledColumns"
+  current-subproblem="subProblem"
+  subproblem-changed="subproblemChanged"
+  create-dialog-callback="openCreateDialog"
+  workspace-id="workspace.id"
 ></subproblem>

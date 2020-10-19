@@ -34,7 +34,12 @@ define([
         'workspace',
         'settings',
         'scales',
-        'toggledColumns'
+        'toggledColumns',
+        'subproblems',
+        'currentSubproblem',
+        'subproblemChanged',
+        'createDialogCallback',
+        'workspaceId'
       ])
     );
 });
