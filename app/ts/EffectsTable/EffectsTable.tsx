@@ -13,6 +13,11 @@ import {SettingsContext} from '../Settings/SettingsContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
+import CriteriaHeader from './EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
+import DescriptionHeader from './EffectsTableHeaders/DescriptionHeader/DescriptionHeader';
+import ReferencesHeader from './EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
+import SoEUncHeader from './EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
+import UnitsHeader from './EffectsTableHeaders/UnitsHeader/UnitsHeader';
 
 export default function EffectsTable() {
   const {workspace, scales} = useContext(WorkspaceContext);
@@ -49,72 +54,15 @@ export default function EffectsTable() {
     return (
       <TableHead>
         <TableRow>
-          {renderCriteriaHeader()}
-          {renderDescriptionHeader()}
-          {renderUnitOfMeasurementHeader()}
+          <CriteriaHeader />
+          <DescriptionHeader />
+          <UnitsHeader />
           {renderAlternativeHeaders()}
-          {renderStrengthAndUncertaintyHeader()}
-          {renderReferenceHeader()}
+          <SoEUncHeader />
+          <ReferencesHeader />
         </TableRow>
       </TableHead>
     );
-  }
-
-  function renderCriteriaHeader(): JSX.Element {
-    return (
-      <TableCell id="column-criterion" align="center">
-        Criterion <InlineHelp helpId="criterion" />
-      </TableCell>
-    );
-  }
-
-  function renderDescriptionHeader(): JSX.Element {
-    if (showDescriptions) {
-      return (
-        <TableCell id="column-description" align="center">
-          Description
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
-  function renderUnitOfMeasurementHeader(): JSX.Element {
-    if (showUnitsOfMeasurement) {
-      return (
-        <TableCell id="column-unit-of-measurement" align="center">
-          Units <InlineHelp helpId="unit-of-measurement" />
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
-  function renderStrengthAndUncertaintyHeader(): JSX.Element {
-    if (showStrengthsAndUncertainties) {
-      return (
-        <TableCell align="center">
-          Strength of evidence <InlineHelp helpId="strength-of-evidence" /> and
-          Uncertainties <InlineHelp helpId="uncertainties" />
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
-  function renderReferenceHeader(): JSX.Element {
-    if (showRefereces) {
-      return (
-        <TableCell align="center">
-          Reference <InlineHelp helpId="reference" />
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
   }
 
   return scales ? (

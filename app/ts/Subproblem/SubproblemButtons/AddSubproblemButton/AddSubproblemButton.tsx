@@ -8,11 +8,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Add from '@material-ui/icons/Add';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import {showErrors} from 'app/ts/PreferencesTab/Preferences/ScenarioButtons/ScenarioUtil';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import React, {useContext, useState} from 'react';
 import {AddSubproblemContext} from './AddSubproblemContext';
 import SubproblemTitle from './SubproblemTitle/SubproblemTitle';
+import _ from 'lodash';
+import AddSubproblemEffectsTable from './AddSubproblemEffectsTable/AddSubproblemEffectsTable';
 
 export default function AddSubproblemButton() {
   const {errors} = useContext(AddSubproblemContext);
@@ -37,11 +38,21 @@ export default function AddSubproblemButton() {
     return errors.length > 0;
   }
 
+  function showErrors(): JSX.Element[] {
+    return _.map(errors, (error, index) => {
+      return (
+        <Grid item xs={12} key={`error-${index}`} className="alert">
+          {error}
+        </Grid>
+      );
+    });
+  }
+
   return (
     <>
-      <Tooltip title={'Create new problem'}>
+      <Tooltip title={'Add a new problem'}>
         <IconButton
-          id={'create-subproblem-button'}
+          id={'add-subproblem-button'}
           color={'primary'}
           onClick={openDialog}
         >
@@ -55,29 +66,33 @@ export default function AddSubproblemButton() {
         maxWidth={'lg'}
       >
         <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-          Create new problem <InlineHelp helpId="create-subproblem" />
+          Add new problem <InlineHelp helpId="add-subproblem" />
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
-            <Grid item xs={12}></Grid>
-            <Grid item xs={12}>
-              reset button
-            </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={9}>
               <SubproblemTitle handleKeyCallback={handleKey} />
             </Grid>
-            {showErrors(errors)}
+            <Grid item xs={12}>
+              <Button variant="contained" color="primary">
+                Reset to default
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <AddSubproblemEffectsTable />
+            </Grid>
+            {showErrors()}
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button
-            id={'edit-subproblem-confirm-button'}
+            id={'add-subproblem-confirm-button'}
             variant="contained"
             color="primary"
             onClick={handleButtonClick}
             disabled={isDisabled()}
           >
-            Create
+            Add
           </Button>
         </DialogActions>
       </Dialog>

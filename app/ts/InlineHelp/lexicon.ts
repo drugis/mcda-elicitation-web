@@ -1,6 +1,12 @@
 import IHelpInfo from './IHelpInfo';
 
 export const lexicon: Record<string, IHelpInfo> = {
+  'add-subproblem': {
+    title: 'Adding a new problem',
+    text:
+      'Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with different scale ranges.',
+    link: '/manual.html#mcda-problem-definition'
+  },
   alternative: {
     title: 'Alternative',
     text:
@@ -36,12 +42,6 @@ export const lexicon: Record<string, IHelpInfo> = {
     text:
       'Which range the user has actually configured to be used. Without user intervention the default scales are the observed ranges.',
     link: '/manual.html#mcda-preparing-dataset'
-  },
-  'create-subproblem': {
-    title: 'Creating a new problem',
-    text:
-      'Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with different scale ranges.',
-    link: '/manual.html#mcda-problem-definition'
   },
   criterion: {
     title: 'Criterion',

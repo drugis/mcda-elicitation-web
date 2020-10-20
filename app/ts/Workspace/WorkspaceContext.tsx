@@ -39,6 +39,7 @@ export function WorkspaceContextProviderComponent({
   const [currentSubproblem, setCurrentSubproblem] = useState<IOldSubproblem>(
     currentAngularSubproblem
   );
+
   const observedRanges: Record<
     string,
     [number, number]
@@ -82,6 +83,7 @@ export function WorkspaceContextProviderComponent({
   return (
     <WorkspaceContext.Provider
       value={{
+        alternatives: workspace.problem.alternatives,
         currentSubproblem,
         observedRanges,
         scales,
