@@ -107,8 +107,7 @@ define(['lodash', 'angular'], function (_, angular) {
         }
 
         function saveWorkspace(criterion, criterionId) {
-          var newCriterion = angular.copy(criterion);
-          delete newCriterion.id;
+          const newCriterion = angular.copy(criterion);
           scope.workspace.problem.criteria[criterionId] = newCriterion;
           WorkspaceResource.save($state.params, scope.workspace).$promise.then(
             function () {
