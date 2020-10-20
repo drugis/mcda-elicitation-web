@@ -7,6 +7,6 @@ export function getPercentifiedValue(
   if (showPercentages) {
     return significantDigits(value * 100).toString();
   } else {
-    return value.toString();
+    return significantDigits(value).toString();
   }
 }
