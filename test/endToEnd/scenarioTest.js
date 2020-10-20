@@ -48,7 +48,7 @@ function create(browser) {
     .waitForElementVisible('#add-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', 'Default')
     .waitForElementVisible('#add-scenario-confirm-button:disabled')
-    .assert.containsText('#error-0', 'Duplicate title')
+    .assert.containsText('#title-error', 'Duplicate title')
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#add-scenario-confirm-button:enabled')
@@ -90,6 +90,7 @@ function switchinPreferences(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#add-scenario-confirm-button:enabled')
     .click('#add-scenario-confirm-button')
+    .pause(100) //pause needed to not get 'stale element' error
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
     .click('#scenario-selector > option:nth-child(1)')
