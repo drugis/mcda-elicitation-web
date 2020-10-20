@@ -5,21 +5,23 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
+import {SettingsContext} from '../Settings/SettingsContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 
-export default function EffectsTable({
-  toggledColumns
-}: {
-  toggledColumns: IToggledColumns;
-}) {
+export default function EffectsTable() {
   const {workspace, scales} = useContext(WorkspaceContext);
+  const {
+    showDescriptions,
+    showUnitsOfMeasurement,
+    showRefereces,
+    showStrengthsAndUncertainties
+  } = useContext(SettingsContext);
 
   function renderAlternativeHeaders(): JSX.Element[] {
     return _(workspace.problem.alternatives)
@@ -67,7 +69,7 @@ export default function EffectsTable({
   }
 
   function renderDescriptionHeader(): JSX.Element {
-    if (toggledColumns.description) {
+    if (showDescriptions) {
       return (
         <TableCell id="column-description" align="center">
           Description
@@ -79,7 +81,7 @@ export default function EffectsTable({
   }
 
   function renderUnitOfMeasurementHeader(): JSX.Element {
-    if (toggledColumns.units) {
+    if (showUnitsOfMeasurement) {
       return (
         <TableCell id="column-unit-of-measurement" align="center">
           Units <InlineHelp helpId="unit-of-measurement" />
@@ -91,7 +93,7 @@ export default function EffectsTable({
   }
 
   function renderStrengthAndUncertaintyHeader(): JSX.Element {
-    if (toggledColumns.strength) {
+    if (showStrengthsAndUncertainties) {
       return (
         <TableCell align="center">
           Strength of evidence <InlineHelp helpId="strength-of-evidence" /> and
@@ -104,7 +106,7 @@ export default function EffectsTable({
   }
 
   function renderReferenceHeader(): JSX.Element {
-    if (toggledColumns.references) {
+    if (showRefereces) {
       return (
         <TableCell align="center">
           Reference <InlineHelp helpId="reference" />

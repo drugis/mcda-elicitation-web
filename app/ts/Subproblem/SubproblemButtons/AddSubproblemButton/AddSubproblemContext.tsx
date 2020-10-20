@@ -11,13 +11,11 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const {currentSubproblem, subproblems} = useContext(WorkspaceContext);
   const [title, setTitle] = useState<string>('');
   const [errors, setErrors] = useState<string[]>(
-    checkSubproblemTitleErrors(title, subproblems, currentSubproblem.id)
+    checkSubproblemTitleErrors(title, subproblems)
   );
 
   useEffect(() => {
-    setErrors(
-      checkSubproblemTitleErrors(title, subproblems, currentSubproblem.id)
-    );
+    setErrors(checkSubproblemTitleErrors(title, subproblems));
   }, [title]);
 
   useEffect(() => {
@@ -25,7 +23,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   }, []);
 
   return (
-    <AddSubproblemContext.Provider value={{errors}}>
+    <AddSubproblemContext.Provider value={{title, errors, setTitle}}>
       {props.children}
     </AddSubproblemContext.Provider>
   );

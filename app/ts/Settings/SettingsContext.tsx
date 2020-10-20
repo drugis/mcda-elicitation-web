@@ -38,7 +38,7 @@ export function SettingsContextProviderComponent({
         showUnitsOfMeasurement: toggledColumns.units,
         showRefereces: toggledColumns.references,
         showStrengthsAndUncertainties: toggledColumns.strength,
-        numberOfToggledColumns: numberOfToggledColumns
+        numberOfToggledColumns
       }}
     >
       {children}

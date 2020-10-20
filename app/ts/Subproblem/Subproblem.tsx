@@ -54,7 +54,7 @@ export default function Subproblem({
             <ErrorHandler>
               <SubproblemSelection subproblemChanged={subproblemChanged} />
               <SubproblemButtons />
-              <EffectsTable toggledColumns={toggledColumns} />
+              <EffectsTable />
               <ScaleRanges />
             </ErrorHandler>
           </SettingsContextProviderComponent>
