@@ -2,6 +2,7 @@ import IScale from '@shared/interface/IScale';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
 
@@ -27,9 +28,10 @@ export function calculateObservedRanges(
       ...rangeDistributionValues
     ];
 
-    const minHullValue = Math.min.apply(null, allValues);
-    const maxHullValue = Math.max.apply(null, allValues);
-    return [significantDigits(minHullValue), significantDigits(maxHullValue)];
+    return [
+      significantDigits(_.min(allValues)),
+      significantDigits(_.max(allValues))
+    ];
   });
 }
 
@@ -97,41 +99,21 @@ export function getConfiguredRange(
 ) {
   const pvf = criterion.dataSources[0].pvf;
   const unit = criterion.dataSources[0].unitOfMeasurement.type;
+  const doPercentification =
+    showPercentages && (unit === decimal || unit === percentage);
   if (pvf) {
-    const lowerValue = getPercentifiedValue(
-      pvf.range[0],
-      showPercentages,
-      unit
-    );
-    const upperValue = getPercentifiedValue(
-      pvf.range[1],
-      showPercentages,
-      unit
-    );
+    const lowerValue = getPercentifiedValue(pvf.range[0], doPercentification);
+    const upperValue = getPercentifiedValue(pvf.range[1], doPercentification);
     return `${lowerValue}, ${upperValue}`;
   } else {
     const lowerValue = getPercentifiedValue(
       observedRanges[criterion.id][0],
-      showPercentages,
-      unit
+      doPercentification
     );
     const upperValue = getPercentifiedValue(
       observedRanges[criterion.id][1],
-      showPercentages,
-      unit
+      doPercentification
     );
     return `${lowerValue}, ${upperValue}`;
-  }
-}
-
-export function getPercentifiedValue(
-  value: number,
-  showPercentages: boolean,
-  unit: UnitOfMeasurementType
-): string {
-  if (showPercentages && (unit === decimal || unit === percentage)) {
-    return significantDigits(value * 100).toString();
-  } else {
-    return value.toString();
   }
 }

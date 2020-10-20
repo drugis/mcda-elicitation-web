@@ -6,6 +6,7 @@ import Axios from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
+import {calculateObservedRanges} from '../Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import IWorkspaceContext from './IWorkspaceContext';
 
 export const WorkspaceContext = createContext<IWorkspaceContext>(
@@ -37,6 +38,14 @@ export function WorkspaceContextProviderComponent({
   >(_.keyBy(oldSubproblems, 'id'));
   const [currentSubproblem, setCurrentSubproblem] = useState<IOldSubproblem>(
     currentAngularSubproblem
+  );
+  const observedRanges: Record<
+    string,
+    [number, number]
+  > = calculateObservedRanges(
+    scales,
+    workspace.problem.criteria,
+    workspace.problem.performanceTable
   );
 
   function editTitle(newTitle: string): void {
@@ -73,13 +82,14 @@ export function WorkspaceContextProviderComponent({
   return (
     <WorkspaceContext.Provider
       value={{
-        subproblems,
         currentSubproblem,
-        editTitle,
-        deleteSubproblem,
-        workspace,
+        observedRanges,
         scales,
-        createSubProblemDialogCallback
+        subproblems,
+        workspace,
+        createSubProblemDialogCallback,
+        deleteSubproblem,
+        editTitle
       }}
     >
       {children}

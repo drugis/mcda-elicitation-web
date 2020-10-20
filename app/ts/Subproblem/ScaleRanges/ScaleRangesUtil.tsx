@@ -3,6 +3,7 @@ import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import _ from 'lodash';
+import React from 'react';
 
 export function getScaleRangeWarnings(problem: IProblem): string[] {
   let warnings: string[] = [];
@@ -53,4 +54,14 @@ function hasNoEmptyDistribution(entry: any): boolean {
     entry.performance.distribution &&
     entry.performance.distribution.type !== 'empty'
   );
+}
+
+export function renderScaleRangeWarnings(warnings: string[]) {
+  return _.map(warnings, (warning, index) => {
+    return (
+      <div key={index} id={`no-scales-warning-${index}`}>
+        {warning}
+      </div>
+    );
+  });
 }

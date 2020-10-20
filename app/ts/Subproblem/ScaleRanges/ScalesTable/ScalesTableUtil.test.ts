@@ -1,15 +1,8 @@
 import IScale from '@shared/interface/IScale';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
-import {
-  calculateObservedRanges,
-  getConfiguredRange,
-  getPercentifiedValue
-} from './ScalesTableUtil';
-
-const {decimal, percentage, custom} = UnitOfMeasurementType;
+import {calculateObservedRanges, getConfiguredRange} from './ScalesTableUtil';
 
 describe('ScalesTableUtil', () => {
   describe('calculateObservedRanges', () => {
@@ -207,28 +200,6 @@ describe('ScalesTableUtil', () => {
       );
       const expectedResult = '37, 42';
       expect(result).toEqual(expectedResult);
-    });
-  });
-
-  describe('getPercentifiedValue', () => {
-    const showPercentages = true;
-
-    it('should return a percentified value if the unit is decimal and it should show percentages', () => {
-      const value = 1;
-      const result = getPercentifiedValue(value, showPercentages, decimal);
-      expect(result).toEqual('100');
-    });
-
-    it('should return a percentified value if the unit is percentage and it should show percentages', () => {
-      const value = 0.010001;
-      const result = getPercentifiedValue(value, showPercentages, percentage);
-      expect(result).toEqual('1');
-    });
-
-    it('should not return a percentified value if the unit is custom and it should show percentages', () => {
-      const value = 1;
-      const result = getPercentifiedValue(value, showPercentages, custom);
-      expect(result).toEqual('1');
     });
   });
 });

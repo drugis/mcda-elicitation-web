@@ -8,9 +8,9 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
-import {checkScenarioTitleErrors, showErrors} from '../ScenarioUtil';
 
 export default function ScenarioActionButton({
   action,
@@ -26,14 +26,12 @@ export default function ScenarioActionButton({
   const {currentScenario, scenarios} = useContext(PreferencesContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [title, setTitle] = useState<string>('');
-  const [errors, setErrors] = useState<string[]>(
-    checkScenarioTitleErrors(title, scenarios, idOfScenarioBeingEdited)
+  const [error, setError] = useState<string>(
+    checkTitleErrors(title, scenarios, idOfScenarioBeingEdited)
   );
 
   useEffect(() => {
-    setErrors(
-      checkScenarioTitleErrors(title, scenarios, idOfScenarioBeingEdited)
-    );
+    setError(checkTitleErrors(title, scenarios, idOfScenarioBeingEdited));
   }, [title]);
 
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
@@ -57,7 +55,7 @@ export default function ScenarioActionButton({
   }
 
   function isDisabled(): boolean {
-    return errors.length > 0;
+    return !!error;
   }
 
   return (
@@ -92,7 +90,16 @@ export default function ScenarioActionButton({
                 fullWidth
               />
             </Grid>
-            {showErrors(errors)}
+            <Grid
+              id={`title-error`}
+              item
+              container
+              xs={12}
+              justify="flex-end"
+              className="alert"
+            >
+              {error}
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
