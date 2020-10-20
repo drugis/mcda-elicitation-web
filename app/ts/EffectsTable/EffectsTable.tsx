@@ -82,7 +82,7 @@ export default function EffectsTable({
     if (toggledColumns.units) {
       return (
         <TableCell id="column-unit-of-measurement" align="center">
-          Unit of measurement <InlineHelp helpId="unit-of-measurement" />
+          Units <InlineHelp helpId="unit-of-measurement" />
         </TableCell>
       );
     } else {
