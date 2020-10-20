@@ -6,7 +6,8 @@ import {getUnitLabel} from './getUnitLabel';
 describe('getUnitLabel', () => {
   it('should return % if showing percentages and unit type is decimal', () => {
     const unit = {type: UnitOfMeasurementType.decimal} as IUnitOfMeasurement;
-    const result = getUnitLabel(unit, true);
+    const showPercentages = true;
+    const result = getUnitLabel(unit, showPercentages);
     expect(result).toEqual('%');
   });
 
@@ -15,7 +16,8 @@ describe('getUnitLabel', () => {
       type: UnitOfMeasurementType.percentage,
       label: '%'
     } as IUnitOfMeasurement;
-    const result = getUnitLabel(unit, true);
+    const showPercentages = true;
+    const result = getUnitLabel(unit, showPercentages);
     expect(result).toEqual('%');
   });
 
@@ -24,7 +26,8 @@ describe('getUnitLabel', () => {
       type: UnitOfMeasurementType.custom,
       label: 'custom'
     } as IUnitOfMeasurement;
-    const result = getUnitLabel(unit, true);
+    const showPercentages = true;
+    const result = getUnitLabel(unit, showPercentages);
     expect(result).toEqual('custom');
   });
 
@@ -32,7 +35,8 @@ describe('getUnitLabel', () => {
     const unit = {
       type: UnitOfMeasurementType.percentage
     } as IUnitOfMeasurement;
-    const result = getUnitLabel(unit, false);
+    const showPercentages = false;
+    const result = getUnitLabel(unit, showPercentages);
     expect(result).toEqual('');
   });
 
@@ -41,7 +45,8 @@ describe('getUnitLabel', () => {
       type: UnitOfMeasurementType.percentage,
       label: ''
     } as IUnitOfMeasurement;
-    const result = getUnitLabel(unit, false);
+    const showPercentages = false;
+    const result = getUnitLabel(unit, showPercentages);
     expect(result).toEqual('');
   });
 });

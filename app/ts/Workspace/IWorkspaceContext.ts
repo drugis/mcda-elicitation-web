@@ -10,4 +10,5 @@ export default interface IWorkspaceContext {
   workspace: IOldWorkspace;
   scales: Record<string, Record<string, IScale>>;
   createSubProblemDialogCallback: () => void;
+  observedRanges: Record<string, [number, number]>;
 }

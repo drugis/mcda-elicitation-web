@@ -8,11 +8,10 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {showErrors} from 'app/ts/PreferencesTab/Preferences/ScenarioButtons/ScenarioUtil';
+import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
-import {checkSubproblemTitleErrors} from '../../SubproblemUtil';
 
 export default function EditSubproblemButton({}: {}) {
   const {currentSubproblem, subproblems, editTitle} = useContext(
@@ -20,14 +19,12 @@ export default function EditSubproblemButton({}: {}) {
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [title, setTitle] = useState<string>('');
-  const [errors, setErrors] = useState<string[]>(
-    checkSubproblemTitleErrors(title, subproblems, currentSubproblem.id)
+  const [error, setError] = useState<string>(
+    checkTitleErrors(title, subproblems, currentSubproblem.id)
   );
 
   useEffect(() => {
-    setErrors(
-      checkSubproblemTitleErrors(title, subproblems, currentSubproblem.id)
-    );
+    setError(checkTitleErrors(title, subproblems, currentSubproblem.id));
   }, [title]);
 
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
@@ -51,7 +48,7 @@ export default function EditSubproblemButton({}: {}) {
   }
 
   function isDisabled(): boolean {
-    return errors.length > 0;
+    return !!error;
   }
 
   return (
@@ -87,7 +84,16 @@ export default function EditSubproblemButton({}: {}) {
                 fullWidth
               />
             </Grid>
-            {showErrors(errors)}
+            <Grid
+              id={`title-error`}
+              item
+              container
+              xs={12}
+              justify="flex-end"
+              className="alert"
+            >
+              {error}
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
