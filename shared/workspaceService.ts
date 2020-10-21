@@ -24,10 +24,7 @@ import {
 import {IPerformanceTableEntry} from './interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
-import {
-  IProblemRelativePerformance,
-  TRelativePerformance
-} from './interface/Problem/IProblemRelativePerformance';
+import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
@@ -221,7 +218,7 @@ export function buildWorkspaceDataSources(
 }
 
 export function buildWorkspaceAlternatives(
-  alternatives: Record<string, {title: string}>,
+  alternatives: Record<string, IAlternative>,
   idMapper: (id: string) => string
 ): IAlternative[] {
   return _.map(

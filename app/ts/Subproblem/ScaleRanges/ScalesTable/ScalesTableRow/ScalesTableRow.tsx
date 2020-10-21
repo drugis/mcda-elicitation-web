@@ -1,7 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import ICriterion from '@shared/interface/ICriterion';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {getStringForValue} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
@@ -10,13 +10,9 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';
 import {getConfiguredRange} from '../ScalesTableUtil';
 
-export default function ScalesTableRow({
-  criterion
-}: {
-  criterion: IProblemCriterion;
-}) {
+export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
-  const {observedRanges} = useContext(WorkspaceContext);
+  const {observedRanges, currentSubproblem} = useContext(WorkspaceContext);
 
   const {decimal, percentage} = UnitOfMeasurementType;
 
@@ -24,8 +20,16 @@ export default function ScalesTableRow({
   const doPercentification =
     showPercentages && (unit === decimal || unit === percentage);
   const theoreticalValues = [
-    getStringForValue(criterion.dataSources[0].scale[0], showPercentages, unit),
-    getStringForValue(criterion.dataSources[0].scale[1], showPercentages, unit)
+    getStringForValue(
+      criterion.dataSources[0].unitOfMeasurement.lowerBound,
+      showPercentages,
+      unit
+    ),
+    getStringForValue(
+      criterion.dataSources[0].unitOfMeasurement.upperBound,
+      showPercentages,
+      unit
+    )
   ];
   const observedValues = [
     getPercentifiedValue(observedRanges[criterion.id][0], doPercentification),
@@ -43,7 +47,12 @@ export default function ScalesTableRow({
         {`${observedValues[0]}, ${observedValues[1]}`}
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
-        {getConfiguredRange(criterion, observedRanges, showPercentages)}
+        {getConfiguredRange(
+          criterion,
+          observedRanges,
+          showPercentages,
+          currentSubproblem.definition.ranges
+        )}
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>
         {getUnitLabel(

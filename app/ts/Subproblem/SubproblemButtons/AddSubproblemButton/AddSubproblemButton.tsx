@@ -9,11 +9,11 @@ import Add from '@material-ui/icons/Add';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {AddSubproblemContext} from './AddSubproblemContext';
-import SubproblemTitle from './SubproblemTitle/SubproblemTitle';
-import _ from 'lodash';
 import AddSubproblemEffectsTable from './AddSubproblemEffectsTable/AddSubproblemEffectsTable';
+import SubproblemTitle from './SubproblemTitle/SubproblemTitle';
 
 export default function AddSubproblemButton() {
   const {errors} = useContext(AddSubproblemContext);
@@ -69,7 +69,7 @@ export default function AddSubproblemButton() {
           Add new problem <InlineHelp helpId="add-subproblem" />
         </DialogTitleWithCross>
         <DialogContent>
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid item xs={9}>
               <SubproblemTitle handleKeyCallback={handleKey} />
             </Grid>

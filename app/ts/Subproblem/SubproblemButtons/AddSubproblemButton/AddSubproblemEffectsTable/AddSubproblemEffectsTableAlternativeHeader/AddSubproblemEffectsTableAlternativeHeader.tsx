@@ -1,4 +1,5 @@
-import {Checkbox, TableCell} from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
+import TableCell from '@material-ui/core/TableCell';
 import IAlternative from '@shared/interface/IAlternative';
 import React, {useContext, useState} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';

@@ -10,7 +10,6 @@ import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
-import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 import CriteriaHeader from './EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
 import DescriptionHeader from './EffectsTableHeaders/DescriptionHeader/DescriptionHeader';
@@ -56,24 +55,22 @@ export default function EffectsTable() {
   }
 
   return scales ? (
-    <EffectsTableContextProviderComponent>
-      <Grid container>
-        <Grid item xs={9} id="effects-table-header">
-          <Typography variant={'h5'}>
-            Effects Table <InlineHelp helpId="effects-table" />
-          </Typography>
-        </Grid>
-        <Grid item container xs={3} justify="flex-end">
-          <ClipboardButton targetId="#effects-table" />
-        </Grid>
-        <Grid item xs={12}>
-          <Table size="small" id="effects-table">
-            {renderTableHeaders()}
-            <EffectsTableCriteriaRows />
-          </Table>
-        </Grid>
+    <Grid container>
+      <Grid item xs={9} id="effects-table-header">
+        <Typography variant={'h5'}>
+          Effects Table <InlineHelp helpId="effects-table" />
+        </Typography>
       </Grid>
-    </EffectsTableContextProviderComponent>
+      <Grid item container xs={3} justify="flex-end">
+        <ClipboardButton targetId="#effects-table" />
+      </Grid>
+      <Grid item xs={12}>
+        <Table size="small" id="effects-table">
+          {renderTableHeaders()}
+          <EffectsTableCriteriaRows />
+        </Table>
+      </Grid>
+    </Grid>
   ) : (
     <CircularProgress />
   );

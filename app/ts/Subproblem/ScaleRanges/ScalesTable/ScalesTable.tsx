@@ -3,7 +3,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
@@ -14,7 +14,7 @@ export default function ScalesTable({}: {}) {
   const {workspace} = useContext(WorkspaceContext);
 
   function createScaleTableRows() {
-    return _.map(workspace.criteria, (criterion: IProblemCriterion) => {
+    return _.map(workspace.criteria, (criterion: ICriterion) => {
       return <ScalesTableRow key={criterion.id} criterion={criterion} />;
     });
   }

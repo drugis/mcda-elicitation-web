@@ -15,16 +15,7 @@ export default function EffectsTableCriteriaRows() {
   const {numberOfToggledColumns} = useContext(SettingsContext);
   const useFavourability = workspace.properties.useFavourability;
   const numberOfColumns =
-    numberOfToggledColumns + workspace.alternatives.length;
-
-  const favourableCriteria = _.filter(workspace.criteria, [
-    'isFavourable',
-    true
-  ]);
-  const unfavourableCriteria = _.filter(workspace.criteria, [
-    'isFavourable',
-    false
-  ]);
+    numberOfToggledColumns + _.size(workspace.alternatives);
 
   function createCriteriaRows(criteria: ICriterion[]): JSX.Element[][] {
     return _.map(criteria, buildDataSourceRows);
@@ -44,6 +35,15 @@ export default function EffectsTableCriteriaRows() {
   }
 
   if (useFavourability) {
+    const favourableCriteria = _.filter(workspace.criteria, [
+      'isFavourable',
+      true
+    ]);
+    const unfavourableCriteria = _.filter(workspace.criteria, [
+      'isFavourable',
+      false
+    ]);
+
     return (
       <TableBody>
         <TableRow>

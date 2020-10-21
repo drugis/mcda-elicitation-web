@@ -219,8 +219,8 @@ describe('buildWorkspace', () => {
 
   describe('buildWorkspaceAlternatives', () => {
     it('should return the transformed alternatives', () => {
-      const alternatives: Record<string, {title: string}> = {
-        alt1Id: {title: 'alternative 1'}
+      const alternatives: Record<string, IAlternative> = {
+        alt1Id: {title: 'alternative 1', id: 'alt1Id'}
       };
       const result = buildWorkspaceAlternatives(alternatives, idMapper);
       const expectedAlternatives: IAlternative[] = [

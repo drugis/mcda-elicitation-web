@@ -1,31 +1,59 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import IAddSubproblemContext from './IAddSubproblemContext';
-import _ from 'lodash';
-import IAlternative from '@shared/interface/IAlternative';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import {Distribution} from '@shared/interface/IDistribution';
 
 export const AddSubproblemContext = createContext<IAddSubproblemContext>(
   {} as IAddSubproblemContext
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
-  const {currentSubproblem, subproblems, alternatives, workspace} = useContext(
-    WorkspaceContext
-  );
+  const {
+    currentSubproblem,
+    subproblems,
+    alternatives,
+    workspace,
+    criteria
+  } = useContext(WorkspaceContext);
   const [title, setTitle] = useState<string>('');
   const [errors, setErrors] = useState<string[]>(getErrors());
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
-  >(initAlternativeInclusions());
-  const baselineMap = getBaselineMap(alternatives, workspace.distributions);
+  >(initInclusions(alternatives));
+  const baselineMap = getBaselineMap(
+    alternatives,
+    workspace.relativePerformances
+  );
+  const [criterionInclusions, setCriterionInclusions] = useState<
+    Record<string, boolean>
+  >(initInclusions(criteria));
 
-  function initAlternativeInclusions(): Record<string, boolean> {
-    return _.mapValues(alternatives, () => {
+  const [dataSourceInclusions, setDataSourceInclusions] = useState<
+    Record<string, boolean>
+  >(initDataSourceInclusions(criteria));
+
+  function initInclusions(
+    items: Record<string, ICriterion> | Record<string, IAlternative>
+  ): Record<string, boolean> {
+    return _.mapValues(items, () => {
       return true;
     });
+  }
+
+  function initDataSourceInclusions(
+    criteria: Record<string, ICriterion>
+  ): Record<string, boolean> {
+    return _(criteria)
+      .flatMap('dataSources')
+      .keyBy('id')
+      .mapValues(() => {
+        return true;
+      })
+      .value();
   }
 
   function getErrors(): string[] {
@@ -55,23 +83,45 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     return _.filter(alternativeInclusions).length < 3 || isBaseline(id);
   }
 
+  function updateCriterionInclusion(id: string, newValue: boolean) {
+    let newInclusions = {...criterionInclusions};
+    newInclusions[id] = newValue;
+    setCriterionInclusions(newInclusions);
+  }
+
   function isBaseline(id: string) {
     return baselineMap[id];
   }
 
   function getBaselineMap(
     alternatives: Record<string, IAlternative>,
-    distributions: Distribution[]
-  ) {
+    relativePerformances: IRelativePerformance[]
+  ): Record<string, boolean> {
     return _.mapValues(alternatives, (alternative) => {
-      return _.some(distributions, (distribution) => {
-        return true; //(
-        // !distribution.alternative &&
-        // alternative.id ===
-        //   distribution.performance.distribution.parameters.baseline.name
-        //);
+      return _.some(relativePerformances, (relativePerformance) => {
+        return alternative.id === relativePerformance.baseline.id;
       });
     });
+  }
+
+  function updateDataSourceInclusion(id: string, newValue: boolean): void {
+    let newInclusions = {...dataSourceInclusions};
+    newInclusions[id] = newValue;
+    setDataSourceInclusions(newInclusions);
+  }
+
+  function isDataSourceDeselectionDisabled(criterionId: string): boolean {
+    const criterion = criteria[criterionId];
+    const someNumber = _.countBy(criterion.dataSources, (dataSource) => {
+      return dataSourceInclusions[dataSource.id];
+    }).true;
+    return someNumber < 2;
+  }
+
+  function isRowExcluded(criterionId: string, dataSourceId: string): boolean {
+    return (
+      !criterionInclusions[criterionId] || !dataSourceInclusions[dataSourceId]
+    );
   }
 
   return (
@@ -79,9 +129,15 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       value={{
         title,
         errors,
+        isCriterionDeselectionDisabled:
+          _.filter(criterionInclusions).length < 3,
+        isRowExcluded,
         setTitle,
         updateAlternativeInclusion,
-        isAlternativeDisabled
+        updateCriterionInclusion,
+        updateDataSourceInclusion,
+        isAlternativeDisabled,
+        isDataSourceDeselectionDisabled
       }}
     >
       {props.children}

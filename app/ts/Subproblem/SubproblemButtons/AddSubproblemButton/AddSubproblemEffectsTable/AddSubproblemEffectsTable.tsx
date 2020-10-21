@@ -1,4 +1,11 @@
-import {Grid, Table, TableHead, TableRow, Typography} from '@material-ui/core';
+import {
+  Grid,
+  Table,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography
+} from '@material-ui/core';
 import CriteriaHeader from 'app/ts/EffectsTable/EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
 import DescriptionHeader from 'app/ts/EffectsTable/EffectsTableHeaders/DescriptionHeader/DescriptionHeader';
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
@@ -18,8 +25,10 @@ export default function AddSubproblemEffectsTable() {
     return (
       <TableHead>
         <TableRow>
+          <TableCell />
           <CriteriaHeader />
           <DescriptionHeader />
+          <TableCell />
           <UnitsHeader />
           {renderAlternativeHeaders()}
           <SoEUncHeader />

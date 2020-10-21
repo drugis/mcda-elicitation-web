@@ -1,3 +1,4 @@
+import ICriterion from '@shared/interface/ICriterion';
 import IScale from '@shared/interface/IScale';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
@@ -93,17 +94,18 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
 }
 
 export function getConfiguredRange(
-  criterion: IProblemCriterion,
+  criterion: ICriterion,
   observedRanges: Record<string, [number, number]>,
-  showPercentages: boolean
-) {
-  const pvf = criterion.dataSources[0].pvf;
+  showPercentages: boolean,
+  configuredRanges: Record<string, [number, number]>
+): string {
+  const range = configuredRanges[criterion.dataSources[0].id];
   const unit = criterion.dataSources[0].unitOfMeasurement.type;
   const doPercentification =
     showPercentages && (unit === decimal || unit === percentage);
-  if (pvf) {
-    const lowerValue = getPercentifiedValue(pvf.range[0], doPercentification);
-    const upperValue = getPercentifiedValue(pvf.range[1], doPercentification);
+  if (range) {
+    const lowerValue = getPercentifiedValue(range[0], doPercentification);
+    const upperValue = getPercentifiedValue(range[1], doPercentification);
     return `${lowerValue}, ${upperValue}`;
   } else {
     const lowerValue = getPercentifiedValue(

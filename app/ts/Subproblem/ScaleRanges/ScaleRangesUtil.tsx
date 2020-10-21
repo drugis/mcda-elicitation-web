@@ -32,19 +32,19 @@ export function findRowWithoutValues(workspace: IWorkspace): boolean {
   return _.some(workspace.criteria, (criterion: IProblemCriterion) => {
     return _.some(criterion.dataSources, (dataSource: IProblemDataSource) => {
       const effectsForDataSource = _.filter(workspace.effects, [
-        'dataSource',
+        'dataSourceId',
         dataSource.id
       ]);
       const distributionsForDataSource = _.filter(workspace.distributions, [
-        'dataSource',
+        'dataSourceId',
         dataSource.id
       ]);
       const relativesForDataSource = _.filter(workspace.relativePerformances, [
-        'dataSource',
+        'dataSourceId',
         dataSource.id
       ]);
 
-      return (
+      return !(
         hasNonEmptyPerformance(effectsForDataSource) ||
         hasNonEmptyPerformance(distributionsForDataSource) ||
         relativesForDataSource.length

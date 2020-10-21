@@ -6,7 +6,7 @@ import IWorkspace from '@shared/interface/IWorkspace';
 
 export default interface IWorkspaceContext {
   alternatives: Record<string, IAlternative>;
-  criteria: ICriterion[];
+  criteria: Record<string, ICriterion>;
   currentSubproblem: IOldSubproblem;
   observedRanges: Record<string, [number, number]>;
   scales: Record<string, Record<string, IScale>>;

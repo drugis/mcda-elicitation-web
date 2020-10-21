@@ -8,21 +8,13 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import AddSubproblemEffectsTableDataSourceRow from './AddSubproblemEffectsTableDataSourceRow/AddSubproblemEffectsTableDataSourceRow';
 
 export default function AddSubproblemEffectsTableCriteriaRows() {
   const {workspace} = useContext(WorkspaceContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
   const numberOfColumns =
-    numberOfToggledColumns + workspace.alternatives.length;
-
-  const favourableCriteria = _.filter(workspace.criteria, [
-    'isFavorable',
-    true
-  ]);
-  const unfavourableCriteria = _.filter(workspace.criteria, [
-    'isFavorable',
-    false
-  ]);
+    numberOfToggledColumns + workspace.alternatives.length + 2; //+2 for criteria and data source checkbox
 
   function createCriteriaRows(criteria: ICriterion[]): JSX.Element[][] {
     return _.map(criteria, buildDataSourceRows);
@@ -31,44 +23,52 @@ export default function AddSubproblemEffectsTableCriteriaRows() {
   function buildDataSourceRows(criterion: ICriterion): JSX.Element[] {
     return _.map(criterion.dataSources, (dataSource, rowIndex) => {
       return (
-        <></>
-        // <EffectsTableDataSourceRow
-        //   key={dataSource.id}
-        //   criterion={criterion}
-        //   dataSource={dataSource}
-        //   rowIndex={rowIndex}
-        // />
+        <AddSubproblemEffectsTableDataSourceRow
+          key={dataSource.id}
+          criterion={criterion}
+          dataSource={dataSource}
+          rowIndex={rowIndex}
+        />
       );
     });
   }
 
-  // if (useFavourability) {
-  return (
-    <TableBody>
-      <TableRow>
-        <TableCell colSpan={numberOfColumns}>
-          <Box p={1}>
-            <Typography id="favourable-criteria-label" variant="h6">
-              Favourable criteria
-            </Typography>
-          </Box>
-        </TableCell>
-      </TableRow>
-      {createCriteriaRows(favourableCriteria)}
+  if (workspace.properties.useFavourability) {
+    const favourableCriteria = _.filter(workspace.criteria, [
+      'isFavourable',
+      true
+    ]);
+    const unfavourableCriteria = _.filter(workspace.criteria, [
+      'isFavourable',
+      false
+    ]);
 
-      <TableRow>
-        <TableCell colSpan={numberOfColumns}>
-          <Box p={1}>
-            <Typography id="unfavourable-criteria-label" variant="h6">
-              Unfavourable criteria
-            </Typography>
-          </Box>
-        </TableCell>
-      </TableRow>
-      {createCriteriaRows(unfavourableCriteria)}
-    </TableBody>
-  );
-  // } else {
-  //   return <TableBody>{createCriteriaRows(workspace.criteria)}</TableBody>;
-  // }
+    return (
+      <TableBody>
+        <TableRow>
+          <TableCell colSpan={numberOfColumns}>
+            <Box p={1}>
+              <Typography id="favourable-criteria-label" variant="h6">
+                Favourable criteria
+              </Typography>
+            </Box>
+          </TableCell>
+        </TableRow>
+        {createCriteriaRows(favourableCriteria)}
+
+        <TableRow>
+          <TableCell colSpan={numberOfColumns}>
+            <Box p={1}>
+              <Typography id="unfavourable-criteria-label" variant="h6">
+                Unfavourable criteria
+              </Typography>
+            </Box>
+          </TableCell>
+        </TableRow>
+        {createCriteriaRows(unfavourableCriteria)}
+      </TableBody>
+    );
+  } else {
+    return <TableBody>{createCriteriaRows(workspace.criteria)}</TableBody>;
+  }
 }

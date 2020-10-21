@@ -86,8 +86,8 @@ export function WorkspaceContextProviderComponent({
   return (
     <WorkspaceContext.Provider
       value={{
-        alternatives: oldWorkspace.problem.alternatives,
-        criteria: workspace.criteria,
+        alternatives: _.keyBy(workspace.alternatives, 'id'),
+        criteria: _.keyBy(workspace.criteria, 'id'),
         currentSubproblem,
         observedRanges,
         scales,
