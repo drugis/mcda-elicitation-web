@@ -8,6 +8,7 @@ import {Effect} from './interface/IEffect';
 import IEmptyEffect from './interface/IEmptyEffect';
 import IOldWorkspace from './interface/IOldWorkspace';
 import IRangeEffect from './interface/IRangeEffect';
+import IRelativePerformance from './interface/IRelativePerformance';
 import ITextEffect from './interface/ITextEffect';
 import {UnitOfMeasurementType} from './interface/IUnitOfMeasurement';
 import IValueCIEffect from './interface/IValueCIEffect';
@@ -23,6 +24,10 @@ import {
 import {IPerformanceTableEntry} from './interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
+import {
+  IProblemRelativePerformance,
+  TRelativePerformance
+} from './interface/Problem/IProblemRelativePerformance';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
@@ -78,6 +83,11 @@ export function buildNewStyleCopy<T>(
       unitTypeMap
     ),
     distributions: buildWorkspaceDistributions(
+      workspace.problem.performanceTable,
+      idMapper,
+      unitTypeMap
+    ),
+    relativePerformances: buildWorkspaceRelativePerformances(
       workspace.problem.performanceTable,
       idMapper,
       unitTypeMap
@@ -216,9 +226,9 @@ export function buildWorkspaceAlternatives(
 ): IAlternative[] {
   return _.map(
     alternatives,
-    (alternative: {title: string}, oldId: string): IAlternative => {
+    (alternative: IAlternative): IAlternative => {
       return {
-        id: idMapper(oldId),
+        id: idMapper(alternative.id),
         title: alternative.title
       };
     }
@@ -232,13 +242,13 @@ export function buildWorkspaceEffects(
 ): Effect[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
-      return isNotNMAEntry(entry) && 'effect' in entry.performance;
+      return hasAlternativeId(entry) && 'effect' in entry.performance;
     })
     .map(_.partial(buildEffect, idMapper, unitTypeMap))
     .value();
 }
 
-export function isNotNMAEntry(entry: IPerformanceTableEntry) {
+export function hasAlternativeId(entry: IPerformanceTableEntry) {
   return 'alternative' in entry;
 }
 
@@ -333,7 +343,7 @@ export function buildWorkspaceDistributions(
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
-      return isNotNMAEntry(entry) && 'distribution' in entry.performance;
+      return hasAlternativeId(entry) && 'distribution' in entry.performance;
     })
     .map(_.partial(buildDistribution, idMapper, unitTypeMap))
     .value();
@@ -404,4 +414,41 @@ export function finishDistributionCreation(
     case 'empty':
       return createEmptyOrTextEffect(performance, distributionBase);
   }
+}
+
+function buildWorkspaceRelativePerformances(
+  performanceTable: IPerformanceTableEntry[],
+  idMapper: (id: string) => string,
+  unitTypeMap: Record<string, UnitOfMeasurementType>
+): IRelativePerformance[] {
+  return _(performanceTable)
+    .filter((entry: IPerformanceTableEntry): boolean => {
+      return !hasAlternativeId(entry);
+    })
+    .map(_.partial(buildRelative, idMapper, unitTypeMap))
+    .value();
+}
+
+function buildRelative(
+  idMapper: (id: string) => string,
+  unitTypeMap: Record<string, UnitOfMeasurementType>,
+  entry: IPerformanceTableEntry
+): IRelativePerformance {
+  const performance = entry.performance as IProblemRelativePerformance;
+  const base = {
+    dataSourceId: idMapper(entry.dataSource),
+    criterionId: idMapper(entry.criterion),
+    unitOfMeasurementType: unitTypeMap[idMapper(entry.dataSource)]
+  };
+  const distribution = performance.distribution;
+  const parameters = distribution.parameters;
+  return {
+    ...base,
+    type: distribution.type,
+    baseline: {
+      ..._.omit(parameters.baseline, name),
+      id: parameters.baseline.name
+    },
+    relative: parameters.relative
+  };
 }

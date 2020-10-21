@@ -9,6 +9,7 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import AddSubproblemEffectsTableAlternativeHeader from './AddSubproblemEffectsTableAlternativeHeader/AddSubproblemEffectsTableAlternativeHeader';
+import AddSubproblemEffectsTableCriteriaRows from './AddSubproblemEffectsTableCriteriaRows/AddSubproblemEffectsTableCriteriaRows';
 
 export default function AddSubproblemEffectsTable() {
   const {alternatives} = useContext(WorkspaceContext);

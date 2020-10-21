@@ -14,7 +14,7 @@ export default function ScalesTable({}: {}) {
   const {workspace} = useContext(WorkspaceContext);
 
   function createScaleTableRows() {
-    return _.map(workspace.problem.criteria, (criterion: IProblemCriterion) => {
+    return _.map(workspace.criteria, (criterion: IProblemCriterion) => {
       return <ScalesTableRow key={criterion.id} criterion={criterion} />;
     });
   }

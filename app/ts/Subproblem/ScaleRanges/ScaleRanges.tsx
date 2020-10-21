@@ -13,7 +13,7 @@ import ScalesTable from './ScalesTable/ScalesTable';
 
 export default function ScaleRanges({}: {}) {
   const {workspace, scales} = useContext(WorkspaceContext);
-  const warnings: string[] = getScaleRangeWarnings(workspace.problem);
+  const warnings: string[] = getScaleRangeWarnings(workspace);
 
   return scales && workspace ? (
     <Grid container>

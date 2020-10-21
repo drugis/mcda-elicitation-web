@@ -39,13 +39,13 @@ export default function Subproblem({
     <ErrorContextProviderComponent>
       <HelpContextProviderComponent>
         <WorkspaceContextProviderComponent
-          workspace={workspace}
+          oldWorkspace={workspace}
           oldSubproblems={subproblems}
           currentAngularSubproblem={currentSubproblem}
           workspaceId={workspaceId}
           subproblemChanged={subproblemChanged}
           scales={scales}
-          createSubProblemDialogCallback={createDialogCallback}
+          createSubproblemDialogCallback={createDialogCallback}
         >
           <SettingsContextProviderComponent
             settings={settings}

@@ -1029,7 +1029,8 @@ describe('inProgressRepositoryService', () => {
           {id: 'unique_uuid', title: 'alternative 2'}
         ],
         effects: [],
-        distributions: []
+        distributions: [],
+        relativePerformances: []
       };
       expect(result).toEqual(expectedResult);
     });

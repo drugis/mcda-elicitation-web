@@ -15,11 +15,11 @@ export default function AddSubproblemEffectsTableCriteriaRows() {
   const numberOfColumns =
     numberOfToggledColumns + workspace.alternatives.length;
 
-  const favourableCriteria = _.filter(workspace.problem.criteria, [
+  const favourableCriteria = _.filter(workspace.criteria, [
     'isFavorable',
     true
   ]);
-  const unfavourableCriteria = _.filter(workspace.problem.criteria, [
+  const unfavourableCriteria = _.filter(workspace.criteria, [
     'isFavorable',
     false
   ]);
@@ -42,33 +42,33 @@ export default function AddSubproblemEffectsTableCriteriaRows() {
     });
   }
 
-  if (useFavourability) {
-    return (
-      <TableBody>
-        <TableRow>
-          <TableCell colSpan={numberOfColumns}>
-            <Box p={1}>
-              <Typography id="favourable-criteria-label" variant="h6">
-                Favourable criteria
-              </Typography>
-            </Box>
-          </TableCell>
-        </TableRow>
-        {createCriteriaRows(favourableCriteria)}
+  // if (useFavourability) {
+  return (
+    <TableBody>
+      <TableRow>
+        <TableCell colSpan={numberOfColumns}>
+          <Box p={1}>
+            <Typography id="favourable-criteria-label" variant="h6">
+              Favourable criteria
+            </Typography>
+          </Box>
+        </TableCell>
+      </TableRow>
+      {createCriteriaRows(favourableCriteria)}
 
-        <TableRow>
-          <TableCell colSpan={numberOfColumns}>
-            <Box p={1}>
-              <Typography id="unfavourable-criteria-label" variant="h6">
-                Unfavourable criteria
-              </Typography>
-            </Box>
-          </TableCell>
-        </TableRow>
-        {createCriteriaRows(unfavourableCriteria)}
-      </TableBody>
-    );
-  } else {
-    return <TableBody>{createCriteriaRows(workspace.criteria)}</TableBody>;
-  }
+      <TableRow>
+        <TableCell colSpan={numberOfColumns}>
+          <Box p={1}>
+            <Typography id="unfavourable-criteria-label" variant="h6">
+              Unfavourable criteria
+            </Typography>
+          </Box>
+        </TableCell>
+      </TableRow>
+      {createCriteriaRows(unfavourableCriteria)}
+    </TableBody>
+  );
+  // } else {
+  //   return <TableBody>{createCriteriaRows(workspace.criteria)}</TableBody>;
+  // }
 }

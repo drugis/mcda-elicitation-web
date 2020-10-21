@@ -636,7 +636,8 @@ export function buildEmptyInProgress(): IWorkspace {
     criteria: criteria,
     alternatives: alternatives,
     effects: [],
-    distributions: []
+    distributions: [],
+    relativePerformances: []
   };
 }
 

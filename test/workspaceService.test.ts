@@ -53,7 +53,7 @@ import {
   createEmptyOrTextEffect,
   createExactEffect,
   finishDistributionCreation,
-  isNotNMAEntry
+  hasAlternativeId
 } from '@shared/workspaceService';
 import _ from 'lodash';
 
@@ -110,6 +110,7 @@ describe('buildWorkspace', () => {
       criteria: [],
       distributions: [],
       effects: [],
+      relativePerformances: [],
       properties: expectedWorkspace
     };
     expect(result).toEqual(expectedResult);
@@ -252,13 +253,13 @@ describe('buildWorkspace', () => {
   describe('isNotNMAEntry', () => {
     it('should return true if the entry has an alternative property', () => {
       const entry = {alternative: alternative1Id} as IPerformanceTableEntry;
-      const result = isNotNMAEntry(entry);
+      const result = hasAlternativeId(entry);
       expect(result).toBe(true);
     });
 
     it('should return false if the entry has no alternative property', () => {
       const entry = {} as IPerformanceTableEntry;
-      const result = isNotNMAEntry(entry);
+      const result = hasAlternativeId(entry);
       expect(result).toBe(false);
     });
   });

@@ -2,6 +2,8 @@ import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
+import IWorkspace from '@shared/interface/IWorkspace';
+import {buildWorkspace} from '@shared/workspaceService';
 import Axios from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
@@ -15,22 +17,22 @@ export const WorkspaceContext = createContext<IWorkspaceContext>(
 
 export function WorkspaceContextProviderComponent({
   children,
-  workspace,
+  oldWorkspace,
   oldSubproblems,
   currentAngularSubproblem,
   workspaceId,
   subproblemChanged,
   scales,
-  createSubProblemDialogCallback
+  createSubproblemDialogCallback
 }: {
   children: any;
-  workspace: IOldWorkspace;
+  oldWorkspace: IOldWorkspace;
   oldSubproblems: IOldSubproblem[];
   currentAngularSubproblem: IOldSubproblem;
   workspaceId: string;
   subproblemChanged: (subproblem: IOldSubproblem) => void;
   scales: Record<string, Record<string, IScale>>;
-  createSubProblemDialogCallback: () => void;
+  createSubproblemDialogCallback: () => void;
 }) {
   const {setError} = useContext(ErrorContext);
   const [subproblems, setSubproblems] = useState<
@@ -40,13 +42,14 @@ export function WorkspaceContextProviderComponent({
     currentAngularSubproblem
   );
 
+  const workspace: IWorkspace = buildWorkspace(oldWorkspace);
   const observedRanges: Record<
     string,
     [number, number]
   > = calculateObservedRanges(
     scales,
-    workspace.problem.criteria,
-    workspace.problem.performanceTable
+    oldWorkspace.problem.criteria,
+    oldWorkspace.problem.performanceTable
   );
 
   function editTitle(newTitle: string): void {
@@ -83,13 +86,14 @@ export function WorkspaceContextProviderComponent({
   return (
     <WorkspaceContext.Provider
       value={{
-        alternatives: workspace.problem.alternatives,
+        alternatives: oldWorkspace.problem.alternatives,
+        criteria: workspace.criteria,
         currentSubproblem,
         observedRanges,
         scales,
         subproblems,
         workspace,
-        createSubProblemDialogCallback,
+        createSubproblemDialogCallback,
         deleteSubproblem,
         editTitle
       }}

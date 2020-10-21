@@ -9,7 +9,6 @@ import _ from 'lodash';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
-import {SettingsContext} from '../Settings/SettingsContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
@@ -20,19 +19,10 @@ import SoEUncHeader from './EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from './EffectsTableHeaders/UnitsHeader/UnitsHeader';
 
 export default function EffectsTable() {
-  const {workspace, scales} = useContext(WorkspaceContext);
-  const {
-    showDescriptions,
-    showUnitsOfMeasurement,
-    showRefereces,
-    showStrengthsAndUncertainties
-  } = useContext(SettingsContext);
+  const {alternatives, scales} = useContext(WorkspaceContext);
 
   function renderAlternativeHeaders(): JSX.Element[] {
-    return _(workspace.problem.alternatives)
-      .toPairs()
-      .map(createAlternativeHeader)
-      .value();
+    return _(alternatives).toPairs().map(createAlternativeHeader).value();
   }
 
   function createAlternativeHeader(
@@ -66,10 +56,7 @@ export default function EffectsTable() {
   }
 
   return scales ? (
-    <EffectsTableContextProviderComponent
-      oldWorkspace={workspace}
-      scales={scales}
-    >
+    <EffectsTableContextProviderComponent>
       <Grid container>
         <Grid item xs={9} id="effects-table-header">
           <Typography variant={'h5'}>

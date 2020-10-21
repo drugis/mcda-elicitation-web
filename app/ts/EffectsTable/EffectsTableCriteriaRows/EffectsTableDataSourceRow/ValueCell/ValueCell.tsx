@@ -5,6 +5,7 @@ import {AnalysisType} from '@shared/interface/ISettings';
 import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext/EffectsTableContext';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
@@ -18,7 +19,8 @@ export default function ValueCell({
   alternativeId: string;
   dataSourceId: string;
 }) {
-  const {workspace, scales, canBePercentage} = useContext(EffectsTableContext);
+  const {workspace, scales} = useContext(WorkspaceContext);
+  const {canBePercentage} = useContext(EffectsTableContext);
   const {analysisType, showPercentages} = useContext(SettingsContext);
   const {setErrorMessage} = useContext(ErrorContext);
 

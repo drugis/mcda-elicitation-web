@@ -1,18 +1,20 @@
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import IProblem from '@shared/interface/Problem/IProblem';
+import ICriterion from '@shared/interface/ICriterion';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import _ from 'lodash';
 import React from 'react';
 
-export function getScaleRangeWarnings(problem: IProblem): string[] {
+export function getScaleRangeWarnings(workspace: IWorkspace): string[] {
   let warnings: string[] = [];
-  if (areTooManyDataSourcesIncluded(problem.criteria)) {
+  if (areTooManyDataSourcesIncluded(workspace.criteria)) {
     warnings.push(
       'Multiple data sources selected for at least one criterion, therefore no scales can be set.'
     );
   }
-  if (findRowWithoutValues(problem.criteria, problem.performanceTable)) {
+  if (findRowWithoutValues(workspace)) {
     warnings.push(
       'Criterion with only missing or text values selected, therefore no scales can be set.'
     );
@@ -20,40 +22,41 @@ export function getScaleRangeWarnings(problem: IProblem): string[] {
   return warnings;
 }
 
-export function areTooManyDataSourcesIncluded(
-  criteria: Record<string, IProblemCriterion>
-): boolean {
+export function areTooManyDataSourcesIncluded(criteria: ICriterion[]): boolean {
   return _.some(criteria, function (criterion: IProblemCriterion) {
     return criterion.dataSources.length > 1;
   });
 }
 
-export function findRowWithoutValues(
-  criteria: Record<string, IProblemCriterion>,
-  performanceTable: IPerformanceTableEntry[]
-): boolean {
-  return _.some(criteria, (criterion: IProblemCriterion) => {
+export function findRowWithoutValues(workspace: IWorkspace): boolean {
+  return _.some(workspace.criteria, (criterion: IProblemCriterion) => {
     return _.some(criterion.dataSources, (dataSource: IProblemDataSource) => {
-      const entriesForDataSource: IPerformanceTableEntry[] = _.filter(
-        performanceTable,
-        ['dataSource', dataSource.id]
+      const effectsForDataSource = _.filter(workspace.effects, [
+        'dataSource',
+        dataSource.id
+      ]);
+      const distributionsForDataSource = _.filter(workspace.distributions, [
+        'dataSource',
+        dataSource.id
+      ]);
+      const relativesForDataSource = _.filter(workspace.relativePerformances, [
+        'dataSource',
+        dataSource.id
+      ]);
+
+      return (
+        hasNonEmptyPerformance(effectsForDataSource) ||
+        hasNonEmptyPerformance(distributionsForDataSource) ||
+        relativesForDataSource.length
       );
-      return !_.some(entriesForDataSource, (entry: IPerformanceTableEntry) => {
-        return hasNoEmptyEffect(entry) || hasNoEmptyDistribution(entry);
-      });
     });
   });
 }
 
-function hasNoEmptyEffect(entry: any): boolean {
-  return entry.performance.effect && entry.performance.effect.type !== 'empty';
-}
-
-function hasNoEmptyDistribution(entry: any): boolean {
-  return (
-    entry.performance.distribution &&
-    entry.performance.distribution.type !== 'empty'
-  );
+function hasNonEmptyPerformance(effects: Effect[] | Distribution[]): boolean {
+  return _.some(effects, (effect: Effect | Distribution) => {
+    return effect.type !== 'text' && effect.type !== 'empty';
+  });
 }
 
 export function renderScaleRangeWarnings(warnings: string[]) {

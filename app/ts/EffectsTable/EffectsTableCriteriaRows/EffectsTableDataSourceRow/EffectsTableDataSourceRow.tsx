@@ -2,10 +2,9 @@ import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {EffectsTableContext} from '../../EffectsTableContext/EffectsTableContext';
 import EffectsTableCriterionDescriptionCell from './EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
 import EffectsTableCriterionTitleCell from './EffectsTableCriterionTitleCell/EffectsTableCriterionTitleCell';
 import EffectsTableReferenceCell from './EffectsTableReferenceCell/EffectsTableReferenceCell';
@@ -22,10 +21,7 @@ export default function EffectsTableDataSourceRow({
   dataSource: IDataSource;
   rowIndex: number;
 }) {
-  const {alternatives} = useContext(EffectsTableContext);
-  const {showStrengthsAndUncertainties, showRefereces} = useContext(
-    SettingsContext
-  );
+  const {alternatives} = useContext(WorkspaceContext);
 
   function renderDataSourceCells(): JSX.Element {
     return (

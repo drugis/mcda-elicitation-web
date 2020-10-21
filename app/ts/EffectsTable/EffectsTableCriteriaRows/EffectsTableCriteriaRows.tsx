@@ -5,13 +5,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {EffectsTableContext} from '../EffectsTableContext/EffectsTableContext';
 import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableDataSourceRow';
 
 export default function EffectsTableCriteriaRows() {
-  const {workspace} = useContext(EffectsTableContext);
+  const {workspace} = useContext(WorkspaceContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
   const useFavourability = workspace.properties.useFavourability;
   const numberOfColumns =

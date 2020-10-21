@@ -5,6 +5,7 @@ import IAddSubproblemContext from './IAddSubproblemContext';
 import _ from 'lodash';
 import IAlternative from '@shared/interface/IAlternative';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import {Distribution} from '@shared/interface/IDistribution';
 
 export const AddSubproblemContext = createContext<IAddSubproblemContext>(
   {} as IAddSubproblemContext
@@ -19,10 +20,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
   >(initAlternativeInclusions());
-  const baselineMap = getBaselineMap(
-    alternatives,
-    workspace.problem.performanceTable
-  );
+  const baselineMap = getBaselineMap(alternatives, workspace.distributions);
 
   function initAlternativeInclusions(): Record<string, boolean> {
     return _.mapValues(alternatives, () => {
@@ -63,15 +61,15 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   function getBaselineMap(
     alternatives: Record<string, IAlternative>,
-    performanceTable: IPerformanceTableEntry[]
+    distributions: Distribution[]
   ) {
     return _.mapValues(alternatives, (alternative) => {
-      return _.some(performanceTable, (entry: any) => {
-        return (
-          !entry.alternative &&
-          alternative.id ===
-            entry.performance.distribution.parameters.baseline.name
-        );
+      return _.some(distributions, (distribution) => {
+        return true; //(
+        // !distribution.alternative &&
+        // alternative.id ===
+        //   distribution.performance.distribution.parameters.baseline.name
+        //);
       });
     });
   }
