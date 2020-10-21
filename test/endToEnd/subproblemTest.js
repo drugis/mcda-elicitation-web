@@ -76,7 +76,7 @@ function switchSubproblem(browser) {
     .click('#create-new-subproblem-button')
     .assert.containsText('#subproblem-selector', subproblem1.title)
     .click('#subproblem-selector')
-    .click('option[label="Default"]')
+    .click('#subproblem-selector > option:nth-child(1)')
     .assert.containsText('#subproblem-selector', 'Default');
 }
 
@@ -86,9 +86,9 @@ function edit(browser) {
     .waitForElementVisible('#effects-table-header')
     .click('#edit-subproblem-button')
     .clearValue('#subproblem-title-input')
-    .waitForElementVisible('#save-subproblem-button:disabled')
+    .waitForElementVisible('#edit-subproblem-confirm-button:disabled')
     .setValue('#subproblem-title-input', newTitle)
-    .click('#save-subproblem-button')
+    .click('#edit-subproblem-confirm-button')
     .waitForElementVisible('#effects-table-header')
     .assert.containsText('#subproblem-selector', newTitle);
 }
@@ -137,7 +137,7 @@ function changeScale(browser) {
 }
 
 function deleteSubproblem(browser) {
-  browser.waitForElementVisible('#delete-subproblem-disabled');
+  browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
     .click('#create-new-subproblem-button')
     .waitForElementVisible('#delete-subproblem-button')
@@ -145,29 +145,29 @@ function deleteSubproblem(browser) {
     .waitForElementVisible('#delete-subproblem-header')
     .pause(5000) //needed for the test to pass on github
     .click('#delete-subproblem-confirm-button')
-    .waitForElementVisible('#delete-subproblem-disabled')
+    .waitForElementVisible('#delete-subproblem-button:disabled')
     .assert.containsText('#subproblem-selector', 'Default');
 }
 
 function deleteDefaultSubproblem(browser) {
-  browser.waitForElementVisible('#delete-subproblem-disabled');
+  browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
     .click('#create-new-subproblem-button')
     .assert.containsText('#subproblem-selector', subproblem1.title)
     .click('#subproblem-selector')
-    .click('option[label="Default"]')
+    .click('#subproblem-selector > option:nth-child(1)')
     .assert.containsText('#subproblem-selector', 'Default')
     .waitForElementVisible('#delete-subproblem-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
     .pause(5000) //needed for the test to pass on github
     .click('#delete-subproblem-confirm-button')
-    .waitForElementVisible('#delete-subproblem-disabled')
+    .waitForElementVisible('#delete-subproblem-button:disabled')
     .assert.containsText('#subproblem-selector', subproblem1.title);
 }
 
 function cancelDeleteSubproblem(browser) {
-  browser.waitForElementVisible('#delete-subproblem-disabled');
+  browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
     .click('#create-new-subproblem-button')
     .click('#delete-subproblem-button')
