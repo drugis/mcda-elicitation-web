@@ -5,6 +5,7 @@ import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
+import {getMissingValueWarnings} from './AddSubproblemUtil';
 import IAddSubproblemContext from './IAddSubproblemContext';
 
 export const AddSubproblemContext = createContext<IAddSubproblemContext>(
@@ -17,10 +18,15 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     subproblems,
     alternatives,
     workspace,
-    criteria
+    criteria,
+    scales
   } = useContext(WorkspaceContext);
   const [title, setTitle] = useState<string>('');
   const [errors, setErrors] = useState<string[]>(getErrors());
+  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>(
+    getScaleRangesWarnings()
+  );
+
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
   >(initInclusions(alternatives));
@@ -35,6 +41,15 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [dataSourceInclusions, setDataSourceInclusions] = useState<
     Record<string, boolean>
   >(initDataSourceInclusions(criteria));
+
+  const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
+    getMissingValueWarnings(
+      dataSourceInclusions,
+      alternativeInclusions,
+      scales,
+      workspace
+    )
+  );
 
   function initInclusions(
     items: Record<string, ICriterion> | Record<string, IAlternative>
@@ -63,6 +78,11 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     } else {
       return [];
     }
+  }
+
+  function getScaleRangesWarnings(): string[] {
+    // FIXME
+    return [];
   }
 
   useEffect(() => {
@@ -137,6 +157,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         errors,
         isCriterionDeselectionDisabled:
           _.filter(criterionInclusions).length < 3,
+        scaleRangesWarnings,
+        missingValueWarnings,
         isCriterionExcluded,
         isDataSourceExcluded,
         isAlternativeExcluded,

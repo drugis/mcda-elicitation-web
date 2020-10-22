@@ -12,9 +12,11 @@ import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/References
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {displayWarnings} from 'app/ts/util/displayWarnings';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTableAlternativeHeader from './AddSubproblemEffectsTableAlternativeHeader/AddSubproblemEffectsTableAlternativeHeader';
 import AddSubproblemEffectsTableCriteriaRows from './AddSubproblemEffectsTableCriteriaRows/AddSubproblemEffectsTableCriteriaRows';
 
@@ -22,6 +24,7 @@ export const deselectedCellStyle = {backgroundColor: '#e9e9e9'};
 
 export default function AddSubproblemEffectsTable() {
   const {alternatives} = useContext(WorkspaceContext);
+  const {missingValueWarnings} = useContext(AddSubproblemContext);
 
   function renderTableHeaders(): JSX.Element {
     return (
@@ -64,6 +67,8 @@ export default function AddSubproblemEffectsTable() {
           <AddSubproblemEffectsTableCriteriaRows />
         </Table>
       </Grid>
+
+      {displayWarnings(missingValueWarnings)}
     </Grid>
   );
 }

@@ -13,6 +13,7 @@ import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {AddSubproblemContext} from './AddSubproblemContext';
 import AddSubproblemEffectsTable from './AddSubproblemEffectsTable/AddSubproblemEffectsTable';
+import AddSubproblemScaleRanges from './AddSubproblemScaleRanges/AddSubproblemScaleRanges';
 import SubproblemTitle from './SubproblemTitle/SubproblemTitle';
 
 export default function AddSubproblemButton() {
@@ -80,6 +81,9 @@ export default function AddSubproblemButton() {
             </Grid>
             <Grid item xs={12}>
               <AddSubproblemEffectsTable />
+            </Grid>
+            <Grid item xs={12}>
+              <AddSubproblemScaleRanges />
             </Grid>
             {showErrors()}
           </Grid>

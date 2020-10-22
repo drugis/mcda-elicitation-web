@@ -2,6 +2,8 @@ export default interface IAddSubproblemContext {
   title: string;
   errors: string[];
   isCriterionDeselectionDisabled: boolean;
+  scaleRangesWarnings: string[];
+  missingValueWarnings: string[];
   isCriterionExcluded: (criterionId: string) => boolean;
   isDataSourceExcluded: (dataSourceId: string) => boolean;
   isAlternativeExcluded: (alternativeId: string) => boolean;
