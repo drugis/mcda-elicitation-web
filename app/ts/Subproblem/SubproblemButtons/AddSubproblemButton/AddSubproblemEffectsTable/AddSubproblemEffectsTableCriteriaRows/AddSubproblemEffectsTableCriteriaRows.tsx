@@ -14,7 +14,7 @@ export default function AddSubproblemEffectsTableCriteriaRows() {
   const {workspace} = useContext(WorkspaceContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
   const numberOfColumns =
-    numberOfToggledColumns + workspace.alternatives.length + 2; //+2 for criteria and data source checkbox
+    numberOfToggledColumns + workspace.alternatives.length + 2; //+2 for criterion and data source checkbox
 
   function createCriteriaRows(criteria: ICriterion[]): JSX.Element[][] {
     return _.map(criteria, buildDataSourceRows);

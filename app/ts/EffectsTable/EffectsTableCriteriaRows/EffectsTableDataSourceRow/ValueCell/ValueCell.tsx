@@ -14,10 +14,12 @@ import NMACell from './NMACell/NMACell';
 
 export default function ValueCell({
   alternativeId,
-  dataSourceId
+  dataSourceId,
+  isExcluded
 }: {
   alternativeId: string;
   dataSourceId: string;
+  isExcluded?: boolean;
 }) {
   const {workspace, scales} = useContext(WorkspaceContext);
   const {analysisType, showPercentages} = useContext(SettingsContext);
@@ -74,6 +76,7 @@ export default function ValueCell({
           effect={effect}
           scale={scale}
           usePercentage={usePercentage}
+          isExcluded={isExcluded}
         />
       );
     } else if (hasScaleValues) {
@@ -83,6 +86,7 @@ export default function ValueCell({
           alternativeId={alternativeId}
           scale={scale}
           usePercentage={usePercentage}
+          isExcluded={isExcluded}
         />
       );
     } else {
@@ -99,6 +103,7 @@ export default function ValueCell({
           usePercentage={usePercentage}
           dataSourceId={dataSourceId}
           alternativeId={alternativeId}
+          isExcluded={isExcluded}
         />
       );
     } else if (hasScaleValues) {
@@ -108,6 +113,7 @@ export default function ValueCell({
           alternativeId={alternativeId}
           scale={scale}
           usePercentage={usePercentage}
+          isExcluded={isExcluded}
         />
       );
     } else {

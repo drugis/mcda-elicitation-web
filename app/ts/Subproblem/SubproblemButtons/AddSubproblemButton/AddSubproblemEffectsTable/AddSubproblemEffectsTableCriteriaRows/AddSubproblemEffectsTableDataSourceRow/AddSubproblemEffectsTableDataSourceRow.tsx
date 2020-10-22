@@ -29,8 +29,13 @@ export default function AddSubproblemEffectsTableDataSourceRow({
     isCriterionDeselectionDisabled,
     isDataSourceDeselectionDisabled,
     updateDataSourceInclusion,
-    isRowExcluded
+    isCriterionExcluded,
+    isDataSourceExcluded,
+    isAlternativeExcluded
   } = useContext(AddSubproblemContext);
+
+  const areCriterionCellsExcluded = isCriterionExcluded(criterion.id);
+  const areDataSourceCellsExcluded = isDataSourceExcluded(dataSource.id);
 
   function renderDataSourceCells(): JSX.Element {
     return (
@@ -40,12 +45,22 @@ export default function AddSubproblemEffectsTableDataSourceRow({
           updateInclusion={updateDataSourceInclusion}
           isDeselectionDisabled={isDataSourceDeselectionDisabled(criterion.id)}
           rowSpan={1}
+          isExcluded={areCriterionCellsExcluded || areDataSourceCellsExcluded}
         />
-        <EffectsTableUnitOfMeasurementCell dataSource={dataSource} />
+        <EffectsTableUnitOfMeasurementCell
+          dataSource={dataSource}
+          isExcluded={areCriterionCellsExcluded || areDataSourceCellsExcluded}
+        />
 
         {renderCells()}
-        <EffectsTableStrengthsAndUncertainties dataSource={dataSource} />
-        <EffectsTableReferenceCell dataSource={dataSource} />
+        <EffectsTableStrengthsAndUncertainties
+          dataSource={dataSource}
+          isExcluded={areCriterionCellsExcluded || areDataSourceCellsExcluded}
+        />
+        <EffectsTableReferenceCell
+          dataSource={dataSource}
+          isExcluded={areCriterionCellsExcluded || areDataSourceCellsExcluded}
+        />
       </>
     );
   }
@@ -57,6 +72,11 @@ export default function AddSubproblemEffectsTableDataSourceRow({
           key={alternative.id}
           alternativeId={alternative.id}
           dataSourceId={dataSource.id}
+          isExcluded={
+            areCriterionCellsExcluded ||
+            areDataSourceCellsExcluded ||
+            isAlternativeExcluded(alternative.id)
+          }
         />
       );
     });
@@ -71,12 +91,17 @@ export default function AddSubproblemEffectsTableDataSourceRow({
             updateInclusion={updateCriterionInclusion}
             isDeselectionDisabled={isCriterionDeselectionDisabled}
             rowSpan={criterion.dataSources.length}
+            isExcluded={areCriterionCellsExcluded}
           />
           <EffectsTableCriterionTitleCell
             rowIndex={rowIndex}
             criterion={criterion}
+            isExcluded={areCriterionCellsExcluded}
           />
-          <EffectsTableCriterionDescriptionCell criterion={criterion} />
+          <EffectsTableCriterionDescriptionCell
+            criterion={criterion}
+            isExcluded={areCriterionCellsExcluded}
+          />
         </>
       );
     } else {
@@ -85,14 +110,7 @@ export default function AddSubproblemEffectsTableDataSourceRow({
   }
 
   return (
-    <TableRow
-      id={`criterion-row-${criterion.id}`}
-      style={
-        isRowExcluded(criterion.id, dataSource.id)
-          ? {backgroundColor: 'gray'}
-          : {}
-      }
-    >
+    <TableRow id={`criterion-row-${criterion.id}`}>
       {renderCriterionCells()}
       {renderDataSourceCells()}
     </TableRow>

@@ -18,6 +18,8 @@ import React, {useContext} from 'react';
 import AddSubproblemEffectsTableAlternativeHeader from './AddSubproblemEffectsTableAlternativeHeader/AddSubproblemEffectsTableAlternativeHeader';
 import AddSubproblemEffectsTableCriteriaRows from './AddSubproblemEffectsTableCriteriaRows/AddSubproblemEffectsTableCriteriaRows';
 
+export const deselectedCellStyle = {backgroundColor: '#e9e9e9'};
+
 export default function AddSubproblemEffectsTable() {
   const {alternatives} = useContext(WorkspaceContext);
 
@@ -25,8 +27,7 @@ export default function AddSubproblemEffectsTable() {
     return (
       <TableHead>
         <TableRow>
-          <TableCell />
-          <CriteriaHeader />
+          <CriteriaHeader colSpan={2} />
           <DescriptionHeader />
           <TableCell />
           <UnitsHeader />

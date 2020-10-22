@@ -115,13 +115,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     const someNumber = _.countBy(criterion.dataSources, (dataSource) => {
       return dataSourceInclusions[dataSource.id];
     }).true;
-    return someNumber < 2;
+    return someNumber < 2 || !criterionInclusions[criterionId];
   }
 
-  function isRowExcluded(criterionId: string, dataSourceId: string): boolean {
-    return (
-      !criterionInclusions[criterionId] || !dataSourceInclusions[dataSourceId]
-    );
+  function isCriterionExcluded(criterionId: string): boolean {
+    return !criterionInclusions[criterionId];
+  }
+
+  function isDataSourceExcluded(dataSourceId: string): boolean {
+    return !dataSourceInclusions[dataSourceId];
+  }
+
+  function isAlternativeExcluded(alternativeId: string): boolean {
+    return !alternativeInclusions[alternativeId];
   }
 
   return (
@@ -131,7 +137,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         errors,
         isCriterionDeselectionDisabled:
           _.filter(criterionInclusions).length < 3,
-        isRowExcluded,
+        isCriterionExcluded,
+        isDataSourceExcluded,
+        isAlternativeExcluded,
         setTitle,
         updateAlternativeInclusion,
         updateCriterionInclusion,

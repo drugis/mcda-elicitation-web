@@ -43,7 +43,7 @@ export default function EffectsTable() {
     return (
       <TableHead>
         <TableRow>
-          <CriteriaHeader />
+          <CriteriaHeader colSpan={1} />
           <DescriptionHeader />
           <UnitsHeader />
           {renderAlternativeHeaders()}

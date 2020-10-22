@@ -3,6 +3,7 @@ import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/AddSubproblemEffectsTable';
 import React, {useContext} from 'react';
 import EmptyCell from '../EmptyCell/EmptyCell';
 import UncertainValue from '../UncertainValue/UncertainValue';
@@ -13,15 +14,18 @@ export default function DistributionValueCell({
   scale,
   usePercentage,
   dataSourceId,
-  alternativeId
+  alternativeId,
+  isExcluded
 }: {
   distribution: Distribution;
   scale: IScale;
   usePercentage: boolean;
   dataSourceId: string;
   alternativeId: string;
+  isExcluded?: boolean;
 }): JSX.Element {
   const {displayMode, scalesCalculationMethod} = useContext(SettingsContext);
+  const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function render(): JSX.Element | string {
     if (displayMode === 'enteredData') {
@@ -52,10 +56,17 @@ export default function DistributionValueCell({
   }
   const renderedDistribution = render();
   return renderedDistribution ? (
-    <TableCell id={`value-cell-${dataSourceId}-${alternativeId}`}>
+    <TableCell
+      id={`value-cell-${dataSourceId}-${alternativeId}`}
+      style={cellStyle}
+    >
       <div className="text-centered">{renderedDistribution} </div>
     </TableCell>
   ) : (
-    <EmptyCell dataSourceId={dataSourceId} alternativeId={alternativeId} />
+    <EmptyCell
+      dataSourceId={dataSourceId}
+      alternativeId={alternativeId}
+      isExcluded={isExcluded}
+    />
   );
 }
