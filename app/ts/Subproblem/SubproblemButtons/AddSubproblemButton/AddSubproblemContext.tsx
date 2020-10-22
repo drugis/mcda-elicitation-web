@@ -5,7 +5,10 @@ import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {getMissingValueWarnings} from './AddSubproblemUtil';
+import {
+  getMissingValueWarnings,
+  getScaleBlockingWarnings
+} from './AddSubproblemUtil';
 import IAddSubproblemContext from './IAddSubproblemContext';
 
 export const AddSubproblemContext = createContext<IAddSubproblemContext>(
@@ -23,9 +26,6 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   } = useContext(WorkspaceContext);
   const [title, setTitle] = useState<string>('');
   const [errors, setErrors] = useState<string[]>(getErrors());
-  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>(
-    getScaleRangesWarnings()
-  );
 
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
@@ -41,6 +41,15 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [dataSourceInclusions, setDataSourceInclusions] = useState<
     Record<string, boolean>
   >(initDataSourceInclusions(criteria));
+
+  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>(
+    getScaleBlockingWarnings(
+      criterionInclusions,
+      dataSourceInclusions,
+      alternativeInclusions,
+      workspace
+    )
+  );
 
   const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
     getMissingValueWarnings(
@@ -80,14 +89,20 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     }
   }
 
-  function getScaleRangesWarnings(): string[] {
-    // FIXME
-    return [];
-  }
-
   useEffect(() => {
     setErrors(getErrors());
   }, [title]);
+
+  useEffect(() => {
+    setScaleRangesWarnings(
+      getScaleBlockingWarnings(
+        criterionInclusions,
+        dataSourceInclusions,
+        alternativeInclusions,
+        workspace
+      )
+    );
+  }, [dataSourceInclusions, criterionInclusions, alternativeInclusions]);
 
   useEffect(() => {
     // take selections from currentSubproblem
@@ -132,10 +147,13 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   function isDataSourceDeselectionDisabled(criterionId: string): boolean {
     const criterion = criteria[criterionId];
-    const someNumber = _.countBy(criterion.dataSources, (dataSource) => {
-      return dataSourceInclusions[dataSource.id];
-    }).true;
-    return someNumber < 2 || !criterionInclusions[criterionId];
+    const numberOfSelectedDataSources = _.countBy(
+      criterion.dataSources,
+      (dataSource) => {
+        return dataSourceInclusions[dataSource.id];
+      }
+    ).true;
+    return numberOfSelectedDataSources < 2 || !criterionInclusions[criterionId];
   }
 
   function isCriterionExcluded(criterionId: string): boolean {

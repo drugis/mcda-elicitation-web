@@ -1,13 +1,35 @@
+import {Grid, Typography} from '@material-ui/core';
 import {displayWarnings} from 'app/ts/util/displayWarnings';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
 import React, {useContext} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
+import ScalesSlider from './ScalesSlider/ScalesSlider';
 
 export default function AddSubproblemScaleRanges() {
-  const {scaleRangesWarnings} = useContext(AddSubproblemContext);
+  const {criteria} = useContext(WorkspaceContext);
+  const {scaleRangesWarnings, isCriterionExcluded} = useContext(
+    AddSubproblemContext
+  );
 
-  return scaleRangesWarnings.length > 0 ? (
-    <>{displayWarnings(scaleRangesWarnings)}</>
-  ) : (
-    <span></span>
+  function renderSliders() {
+    return _.map(criteria, (criterion) => {
+      if (!isCriterionExcluded(criterion.id)) {
+        return <ScalesSlider key={criterion.id} criterion={criterion} />;
+      }
+    });
+  }
+
+  return (
+    <>
+      <Typography variant={'h5'}>Scale ranges</Typography>
+      {scaleRangesWarnings.length > 0 ? (
+        <>{displayWarnings(scaleRangesWarnings)}</>
+      ) : (
+        <Grid container item xs={12} spacing={4}>
+          {renderSliders()}
+        </Grid>
+      )}
+    </>
   );
 }
