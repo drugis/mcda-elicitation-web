@@ -1,13 +1,9 @@
-import ICriterion from '@shared/interface/ICriterion';
 import IScale from '@shared/interface/IScale';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
-
-const {decimal, percentage} = UnitOfMeasurementType;
 
 export function calculateObservedRanges(
   scales: Record<string, Record<string, IScale>>,
@@ -94,26 +90,28 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
 }
 
 export function getConfiguredRange(
-  criterion: ICriterion,
-  observedRanges: Record<string, [number, number]>,
-  showPercentages: boolean,
-  configuredRanges: Record<string, [number, number]>
+  doPercentification: boolean,
+  [lowerObservedRange, upperObservedRange]: [number, number],
+  configuredRange?: [number, number]
 ): string {
-  const range = configuredRanges[criterion.dataSources[0].id];
-  const unit = criterion.dataSources[0].unitOfMeasurement.type;
-  const doPercentification =
-    showPercentages && (unit === decimal || unit === percentage);
-  if (range) {
-    const lowerValue = getPercentifiedValue(range[0], doPercentification);
-    const upperValue = getPercentifiedValue(range[1], doPercentification);
-    return `${lowerValue}, ${upperValue}`;
-  } else {
+  if (configuredRange) {
+    const [lowerConfiguredRange, upperConfiguredRange] = configuredRange;
     const lowerValue = getPercentifiedValue(
-      observedRanges[criterion.id][0],
+      lowerConfiguredRange,
       doPercentification
     );
     const upperValue = getPercentifiedValue(
-      observedRanges[criterion.id][1],
+      upperConfiguredRange,
+      doPercentification
+    );
+    return `${lowerValue}, ${upperValue}`;
+  } else {
+    const lowerValue = getPercentifiedValue(
+      lowerObservedRange,
+      doPercentification
+    );
+    const upperValue = getPercentifiedValue(
+      upperObservedRange,
       doPercentification
     );
     return `${lowerValue}, ${upperValue}`;

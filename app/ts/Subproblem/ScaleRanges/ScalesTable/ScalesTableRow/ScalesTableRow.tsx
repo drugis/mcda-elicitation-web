@@ -48,10 +48,10 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
         {getConfiguredRange(
-          criterion,
-          observedRanges,
-          showPercentages,
-          currentSubproblem.definition.ranges
+          doPercentification,
+          observedRanges[criterion.id],
+          currentSubproblem.definition.ranges[criterion.dataSources[0].id].pvf
+            .range
         )}
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>

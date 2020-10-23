@@ -1,5 +1,3 @@
-import ICriterion from '@shared/interface/ICriterion';
-import IDataSource from '@shared/interface/IDataSource';
 import IScale from '@shared/interface/IScale';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -169,45 +167,21 @@ describe('ScalesTableUtil', () => {
       const configuredRanges: Record<string, [number, number]> = {
         ds1Id: [0, 1]
       };
-      const criterion: ICriterion = {
-        dataSources: [
-          {
-            id: 'ds1Id',
-            unitOfMeasurement: {type: 'custom'}
-          } as IDataSource
-        ],
-        title: 'crit1',
-        description: 'desc',
-        id: 'crit1Id'
-      } as ICriterion;
+      const doPercentification = false;
       const result = getConfiguredRange(
-        criterion,
-        observedRanges,
-        showPercentages,
-        configuredRanges
+        doPercentification,
+        observedRanges['crit1Id'],
+        configuredRanges['ds1Id']
       );
       const expectedResult = '0, 1';
       expect(result).toEqual(expectedResult);
     });
 
     it('should return the observed ranges if there are no configured ranges', () => {
-      const configuredRanges: Record<string, [number, number]> = {};
-      const criterion: ICriterion = {
-        dataSources: [
-          {
-            id: 'ds1Id',
-            unitOfMeasurement: {type: 'custom'}
-          } as IDataSource
-        ],
-        title: 'crit1',
-        description: 'desc',
-        id: 'crit1Id'
-      } as ICriterion;
+      const doPercentification = false;
       const result = getConfiguredRange(
-        criterion,
-        observedRanges,
-        showPercentages,
-        configuredRanges
+        doPercentification,
+        observedRanges['crit1Id']
       );
       const expectedResult = '37, 42';
       expect(result).toEqual(expectedResult);

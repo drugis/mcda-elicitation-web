@@ -1,4 +1,4 @@
-import {Grid, IconButton, Slider, Tooltip} from '@material-ui/core';
+import {Grid, IconButton, Mark, Slider, Tooltip} from '@material-ui/core';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import ICriterion from '@shared/interface/ICriterion';
@@ -12,8 +12,9 @@ import React, {useContext, useState} from 'react';
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
   const {observedRanges} = useContext(WorkspaceContext);
-  const lowestObservedValue = observedRanges[criterion.id][0];
-  const highestObservedValue = observedRanges[criterion.id][1];
+  const [lowestObservedValue, highestObservedValue] = observedRanges[
+    criterion.id
+  ];
 
   const lowestRangeValue = lowestObservedValue - 0.1; //FIXME
   const highestRangeValue = highestObservedValue + 0.1;
@@ -28,7 +29,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const doPercentification =
     showPercentages && (unit === decimal || unit === percentage);
 
-  const limits = [
+  const limits: Mark[] = [
     {
       value: lowestObservedValue,
       label: getPercentifiedValue(lowestObservedValue, doPercentification)

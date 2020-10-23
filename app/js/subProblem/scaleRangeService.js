@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function (_, angular) {
+define(['lodash'], function (_) {
   var dependencies = [
     'PerformanceTableService',
     'intervalHull',
@@ -203,7 +203,6 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     return {
-      nice: nice,
       niceTo: niceTo,
       niceFrom: niceFrom,
       calculateScales: calculateScales,

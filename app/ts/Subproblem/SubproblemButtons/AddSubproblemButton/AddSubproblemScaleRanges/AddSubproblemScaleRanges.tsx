@@ -1,4 +1,4 @@
-import {Grid, Typography} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 import {displayWarnings} from 'app/ts/util/displayWarnings';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
@@ -22,7 +22,6 @@ export default function AddSubproblemScaleRanges() {
 
   return (
     <>
-      <Typography variant={'h5'}>Scale ranges</Typography>
       {scaleRangesWarnings.length > 0 ? (
         <>{displayWarnings(scaleRangesWarnings)}</>
       ) : (
