@@ -58,6 +58,18 @@ export function getMissingValueWarnings(
 //   });
 // }
 
+export function initDataSourceInclusions(
+  criteria: Record<string, ICriterion>
+): Record<string, boolean> {
+  return _(criteria)
+    .flatMap('dataSources')
+    .keyBy('id')
+    .mapValues(() => {
+      return true;
+    })
+    .value();
+}
+
 export function getScaleBlockingWarnings(
   criterionInclusions: Record<string, boolean>,
   dataSourceInclusions: Record<string, boolean>,

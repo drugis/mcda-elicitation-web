@@ -35,6 +35,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
     getPercentifiedValue(observedRanges[criterion.id][0], doPercentification),
     getPercentifiedValue(observedRanges[criterion.id][1], doPercentification)
   ];
+  const rangeDefinition = currentSubproblem.definition.ranges[criterion.id];
   return (
     <TableRow key={criterion.id}>
       <TableCell id={`scales-table-criterion-${criterion.id}`}>
@@ -50,8 +51,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
         {getConfiguredRange(
           doPercentification,
           observedRanges[criterion.id],
-          currentSubproblem.definition.ranges[criterion.dataSources[0].id].pvf
-            .range
+          rangeDefinition.pvf ? rangeDefinition.pvf.range : undefined
         )}
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>

@@ -67,6 +67,7 @@ define(['lodash'], function (_) {
       var restrictedRangeFrom = criterionRange[0];
       var restrictedRangeTo = criterionRange[1];
       if (restrictedRangeFrom === restrictedRangeTo) {
+        // dumb corner case
         restrictedRangeFrom -= Math.abs(restrictedRangeFrom) * 0.001;
         restrictedRangeTo += Math.abs(restrictedRangeTo) * 0.001;
       }

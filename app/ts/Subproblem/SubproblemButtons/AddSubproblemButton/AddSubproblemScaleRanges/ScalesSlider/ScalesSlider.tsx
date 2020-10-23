@@ -8,6 +8,7 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext, useState} from 'react';
+import {AddSubproblemContext} from '../../AddSubproblemContext';
 
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
@@ -15,7 +16,8 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const [lowestObservedValue, highestObservedValue] = observedRanges[
     criterion.id
   ];
-
+  const {getIncludedDataSourceForCriterion} = useContext(AddSubproblemContext);
+  const includedDataSource = getIncludedDataSourceForCriterion(criterion);
   const lowestRangeValue = lowestObservedValue - 0.1; //FIXME
   const highestRangeValue = highestObservedValue + 0.1;
 
@@ -25,7 +27,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   ]);
 
   const {decimal, percentage} = UnitOfMeasurementType;
-  const unit = criterion.dataSources[0].unitOfMeasurement.type;
+  const unit = includedDataSource.unitOfMeasurement.type;
   const doPercentification =
     showPercentages && (unit === decimal || unit === percentage);
 
@@ -64,11 +66,11 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   }
 
   function renderUnitLabel(): string {
-    const unit = getUnitLabel(
-      criterion.dataSources[0].unitOfMeasurement,
+    const unitLabel = getUnitLabel(
+      includedDataSource.unitOfMeasurement,
       showPercentages
     );
-    return unit.length > 0 ? `(${unit})` : '';
+    return unitLabel ? `(${unitLabel})` : '';
   }
 
   return (

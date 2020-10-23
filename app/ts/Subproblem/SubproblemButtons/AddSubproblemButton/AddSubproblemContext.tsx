@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
@@ -7,7 +8,8 @@ import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
   getMissingValueWarnings,
-  getScaleBlockingWarnings
+  getScaleBlockingWarnings,
+  initDataSourceInclusions
 } from './AddSubproblemUtil';
 import IAddSubproblemContext from './IAddSubproblemContext';
 
@@ -16,16 +18,12 @@ export const AddSubproblemContext = createContext<IAddSubproblemContext>(
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
-  const {
-    currentSubproblem,
-    subproblems,
-    alternatives,
-    workspace,
-    criteria,
-    scales
-  } = useContext(WorkspaceContext);
+  const {subproblems, alternatives, workspace, criteria, scales} = useContext(
+    WorkspaceContext
+  );
   const [title, setTitle] = useState<string>('');
   const [errors, setErrors] = useState<string[]>(getErrors());
+  // const dataSourcesById = _(criteria).flatMap('dataSources').keyBy('id');
 
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
@@ -60,24 +58,12 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     )
   );
 
-  function initInclusions(
-    items: Record<string, ICriterion> | Record<string, IAlternative>
+  function initInclusions<T>(
+    items: Record<string, T>
   ): Record<string, boolean> {
     return _.mapValues(items, () => {
       return true;
     });
-  }
-
-  function initDataSourceInclusions(
-    criteria: Record<string, ICriterion>
-  ): Record<string, boolean> {
-    return _(criteria)
-      .flatMap('dataSources')
-      .keyBy('id')
-      .mapValues(() => {
-        return true;
-      })
-      .value();
   }
 
   function getErrors(): string[] {
@@ -105,7 +91,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   }, [dataSourceInclusions, criterionInclusions, alternativeInclusions]);
 
   useEffect(() => {
-    // take selections from currentSubproblem
+    // FIXME: take selections from currentSubproblem
   }, []);
 
   function updateAlternativeInclusion(id: string, newValue: boolean) {
@@ -124,7 +110,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     setCriterionInclusions(newInclusions);
   }
 
-  function isBaseline(id: string) {
+  function isBaseline(id: string): boolean {
     return baselineMap[id];
   }
 
@@ -168,6 +154,14 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     return !alternativeInclusions[alternativeId];
   }
 
+  function getIncludedDataSourceForCriterion(
+    criterion: ICriterion
+  ): IDataSource {
+    return _.find(criterion.dataSources, (dataSource: IDataSource) => {
+      return dataSourceInclusions[dataSource.id];
+    });
+  }
+
   return (
     <AddSubproblemContext.Provider
       value={{
@@ -177,6 +171,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
           _.filter(criterionInclusions).length < 3,
         scaleRangesWarnings,
         missingValueWarnings,
+        getIncludedDataSourceForCriterion,
         isCriterionExcluded,
         isDataSourceExcluded,
         isAlternativeExcluded,

@@ -10,26 +10,35 @@ export function calculateObservedRanges(
   criteria: Record<string, IProblemCriterion>,
   performanceTable: IPerformanceTableEntry[]
 ): Record<string, [number, number]> {
-  return _.mapValues(criteria, (criterion): [number, number] => {
-    const dataSourceId = criterion.dataSources[0].id;
-    const effectValues = getEffectValues(performanceTable, dataSourceId);
-    const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
-    const rangeDistributionValues = getRangeDistributionValues(
-      performanceTable,
-      dataSourceId
-    );
+  return _.mapValues(
+    criteria,
+    _.partial(calculateObservedRange, scales, performanceTable)
+  );
+}
 
-    const allValues = [
-      ...effectValues,
-      ...scaleRangesValues,
-      ...rangeDistributionValues
-    ];
+function calculateObservedRange(
+  scales: Record<string, Record<string, IScale>>,
+  performanceTable: IPerformanceTableEntry[],
+  criterion: IProblemCriterion
+): [number, number] {
+  const dataSourceId = criterion.dataSources[0].id;
+  const effectValues = getEffectValues(performanceTable, dataSourceId);
+  const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
+  const rangeDistributionValues = getRangeDistributionValues(
+    performanceTable,
+    dataSourceId
+  );
 
-    return [
-      significantDigits(_.min(allValues)),
-      significantDigits(_.max(allValues))
-    ];
-  });
+  const allValues = [
+    ...effectValues,
+    ...scaleRangesValues,
+    ...rangeDistributionValues
+  ];
+
+  return [
+    significantDigits(_.min(allValues)),
+    significantDigits(_.max(allValues))
+  ];
 }
 
 function getEffectValues(
