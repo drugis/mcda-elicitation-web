@@ -5,6 +5,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext, useState} from 'react';
 
@@ -61,12 +62,20 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     return Math.pow(10, magnitude - 1);
   }
 
+  function renderUnitLabel(): string {
+    const unit = getUnitLabel(
+      criterion.dataSources[0].unitOfMeasurement,
+      showPercentages
+    );
+    return unit.length > 0 ? `(${unit})` : '';
+  }
+
   return (
     <Grid container item xs={12} spacing={4}>
       <Grid item xs={12}>
-        {criterion.title} (units)
+        {`${criterion.title} ${renderUnitLabel()}`}
       </Grid>
-      <Grid item xs={1}>
+      <Grid item xs={1} justify="center">
         <Tooltip title="Extend the range">
           <IconButton>
             <ChevronLeft color="primary" />
@@ -87,7 +96,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           marks={limits}
         />
       </Grid>
-      <Grid item xs={1}>
+      <Grid item xs={1} justify="center">
         <Tooltip title="Extend the range">
           <IconButton>
             <ChevronRight color="primary" />
