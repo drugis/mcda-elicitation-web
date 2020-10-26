@@ -39,20 +39,16 @@ export default function MatchingSlider({
     getBest(pvfs[mostImportantCriterionId], usePercentage)
   );
   const [stepSize, setStepSize] = useState<number>();
-  const [min, setMin] = useState<number>();
-  const [max, setMax] = useState<number>();
 
   useEffect(() => {
-    const sliderValue = getBest(pvfs[mostImportantCriterionId], usePercentage);
+    const sliderValue = getBest(pvfs[mostImportantCriterionId], false);
     setSliderValue(sliderValue);
     setPreference(currentCriterionId, calculateImportance(sliderValue, range));
-  }, [currentStep, showPercentages]);
+  }, [currentStep]);
 
   useEffect(() => {
     setStepSize(determineStepSize(range));
-    setMin(getPercentifiedNumber(range[0], usePercentage));
-    setMax(getPercentifiedNumber(range[1], usePercentage));
-  }, [showPercentages]);
+  }, []);
 
   function handleSliderChanged(
     event: React.ChangeEvent<any>,
@@ -60,18 +56,24 @@ export default function MatchingSlider({
   ) {
     setSliderValue(newValue);
     setIsNextDisabled(
-      newValue === getWorst(pvfs[mostImportantCriterion.id], usePercentage)
+      newValue === getWorst(pvfs[mostImportantCriterion.id], false)
     );
     setPreference(currentCriterionId, calculateImportance(newValue, range));
   }
 
+  function displayValue() {
+    return usePercentage
+      ? significantDigits(sliderValue * 100)
+      : significantDigits(sliderValue);
+  }
+
   return (
     <>
-      {significantDigits(sliderValue)}
+      {displayValue()}
       <Slider
         value={sliderValue}
-        min={min}
-        max={max}
+        min={range[0]}
+        max={range[1]}
         onChange={handleSliderChanged}
         step={stepSize}
       />
