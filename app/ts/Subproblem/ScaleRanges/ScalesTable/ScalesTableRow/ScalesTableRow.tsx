@@ -21,15 +21,15 @@ export default function ScalesTableRow({
   const {decimal, percentage} = UnitOfMeasurementType;
 
   const unit = criterion.dataSources[0].unitOfMeasurement.type;
-  const doPercentification =
+  const usePercentages =
     showPercentages && (unit === decimal || unit === percentage);
   const theoreticalValues = [
     getStringForValue(criterion.dataSources[0].scale[0], showPercentages, unit),
     getStringForValue(criterion.dataSources[0].scale[1], showPercentages, unit)
   ];
   const observedValues = [
-    getPercentifiedValue(observedRanges[criterion.id][0], doPercentification),
-    getPercentifiedValue(observedRanges[criterion.id][1], doPercentification)
+    getPercentifiedValue(observedRanges[criterion.id][0], usePercentages),
+    getPercentifiedValue(observedRanges[criterion.id][1], usePercentages)
   ];
   return (
     <TableRow key={criterion.id}>

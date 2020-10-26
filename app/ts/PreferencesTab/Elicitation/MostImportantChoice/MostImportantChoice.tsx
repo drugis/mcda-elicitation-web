@@ -2,6 +2,8 @@ import Grid from '@material-ui/core/Grid';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 import {getWorst} from '../../Preferences/PartialValueFunctions/PartialValueFunctionUtil';
@@ -16,6 +18,7 @@ export default function MostImportantChoice() {
     setMostImportantCriterionId,
     setIsNextDisabled
   } = useContext(ElicitationContext);
+  const {showPercentages} = useContext(SettingsContext);
   const {criteria, pvfs} = useContext(PreferencesContext);
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
@@ -30,11 +33,14 @@ export default function MostImportantChoice() {
       </Grid>
       <Grid item xs={12}>
         {_.map(criteria, (criterion: IPreferencesCriterion) => {
+          const usePercentage =
+            showPercentages &&
+            canBePercentage(criterion.unitOfMeasurement.type);
           return (
             <CriterionSituation
               key={criterion.id}
               criterion={criterion}
-              displayValue={getWorst(pvfs[criterion.id])}
+              displayValue={getWorst(pvfs[criterion.id], usePercentage)}
             />
           );
         })}

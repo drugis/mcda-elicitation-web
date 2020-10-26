@@ -1,20 +1,35 @@
 import Grid from '@material-ui/core/Grid';
 import {ElicitationContext} from 'app/ts/PreferencesTab/Elicitation/ElicitationContext';
-import React, {useContext} from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {useContext, useEffect, useState} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
 import {getSwingStatement} from '../PreciseSwingElicitation/PreciseSwingElicitationUtil';
 import OverviewTable from './OverviewTable/OverviewTable';
 
 export default function SwingSetWeights() {
+  const {showPercentages} = useContext(SettingsContext);
   const {mostImportantCriterionId, elicitationMethod} = useContext(
     ElicitationContext
   );
   const {criteria, pvfs} = useContext(PreferencesContext);
 
-  const statement = getSwingStatement(
-    criteria[mostImportantCriterionId],
-    pvfs[mostImportantCriterionId]
+  const [statement, setStatement] = useState<string>(
+    getSwingStatement(
+      criteria[mostImportantCriterionId],
+      pvfs[mostImportantCriterionId],
+      showPercentages
+    )
   );
+
+  useEffect(() => {
+    setStatement(
+      getSwingStatement(
+        criteria[mostImportantCriterionId],
+        pvfs[mostImportantCriterionId],
+        showPercentages
+      )
+    );
+  }, [showPercentages]);
 
   return (
     <Grid container item spacing={2}>

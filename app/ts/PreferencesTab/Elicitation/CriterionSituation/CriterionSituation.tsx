@@ -1,6 +1,8 @@
 import Tooltip from '@material-ui/core/Tooltip';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
-import React from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import React, {useContext} from 'react';
 
 export default function CriterionSituation({
   criterion,
@@ -9,6 +11,8 @@ export default function CriterionSituation({
   criterion: IPreferencesCriterion;
   displayValue: number;
 }) {
+  const {showPercentages} = useContext(SettingsContext);
+
   return (
     <ul key={criterion.id}>
       <li>
@@ -18,7 +22,8 @@ export default function CriterionSituation({
         >
           <span className="criterion-title">{criterion.title}</span>
         </Tooltip>
-        : {displayValue} {criterion.unitOfMeasurement.label}
+        : {displayValue}{' '}
+        {getUnitLabel(criterion.unitOfMeasurement, showPercentages)}
       </li>
     </ul>
   );

@@ -4,7 +4,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {
+  canBePercentage,
+  getPercentifiedValue
+} from 'app/ts/DisplayUtil/DisplayUtil';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
@@ -66,8 +69,7 @@ export default function PreferencesWeightsTable() {
         {_.map(criteria, (criterion) => {
           const usePercentage =
             showPercentages &&
-            (criterion.unitOfMeasurement.type === 'percentage' ||
-              criterion.unitOfMeasurement.type === 'decimal');
+            canBePercentage(criterion.unitOfMeasurement.type);
           return (
             <TableRow key={criterion.id}>
               <TableCell>{criterion.title}</TableCell>
@@ -76,16 +78,10 @@ export default function PreferencesWeightsTable() {
                 {getUnitLabel(criterion.unitOfMeasurement, showPercentages)}
               </TableCell>
               <TableCell id={`worst-${criterion.id}`}>
-                {getPercentifiedValue(
-                  getWorst(pvfs[criterion.id]),
-                  usePercentage
-                )}
+                {getWorst(pvfs[criterion.id], usePercentage)}
               </TableCell>
               <TableCell id={`best-${criterion.id}`}>
-                {getPercentifiedValue(
-                  getBest(pvfs[criterion.id]),
-                  usePercentage
-                )}
+                {getBest(pvfs[criterion.id], usePercentage)}
               </TableCell>
               <TableCell id={`importance-criterion-${criterion.id}`}>
                 {importances[criterion.id]}

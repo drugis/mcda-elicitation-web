@@ -64,42 +64,70 @@ describe('getPvfCoordinates', () => {
 
 describe('getBest', () => {
   it('should return the largest value from pvf range if pvf is increasing', () => {
+    const usePercentage = false;
     const pvf: IPvf = {
       range: [10, 100],
       direction: 'increasing',
       type: 'linear'
     };
-    const result = getBest(pvf);
+    const result = getBest(pvf, usePercentage);
     expect(result).toEqual(100);
   });
+
   it('should return the smallest value from pvf range if pvf is decreasing', () => {
+    const usePercentage = false;
     const pvf: IPvf = {
       range: [10, 100],
       direction: 'decreasing',
       type: 'linear'
     };
-    const result = getBest(pvf);
+    const result = getBest(pvf, usePercentage);
+    expect(result).toEqual(10);
+  });
+
+  it('should return percentified values if usePercentage is true', () => {
+    const usePercentage = true;
+    const pvf: IPvf = {
+      range: [0.1, 1],
+      direction: 'decreasing',
+      type: 'linear'
+    };
+    const result = getBest(pvf, usePercentage);
     expect(result).toEqual(10);
   });
 });
 
 describe('getWorst', () => {
   it('should return the smallest value from pvf range if pvf is increasing', () => {
+    const usePercentage = false;
     const pvf: IPvf = {
       range: [10, 100],
       direction: 'increasing',
       type: 'linear'
     };
-    const result = getWorst(pvf);
+    const result = getWorst(pvf, usePercentage);
     expect(result).toEqual(10);
   });
+
   it('should return the largest value from pvf range if pvf is decreasing', () => {
+    const usePercentage = false;
     const pvf: IPvf = {
       range: [10, 100],
       direction: 'decreasing',
       type: 'linear'
     };
-    const result = getWorst(pvf);
+    const result = getWorst(pvf, usePercentage);
+    expect(result).toEqual(100);
+  });
+
+  it('should return percentified values if usePercentage is true', () => {
+    const usePercentage = true;
+    const pvf: IPvf = {
+      range: [0.1, 1],
+      direction: 'decreasing',
+      type: 'linear'
+    };
+    const result = getWorst(pvf, usePercentage);
     expect(result).toEqual(100);
   });
 });
