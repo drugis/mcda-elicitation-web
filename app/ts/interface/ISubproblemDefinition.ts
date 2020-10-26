@@ -1,4 +1,4 @@
-import ISubproblemRange from './ISubproblemRange';
+import ISubproblemRange from '../../../shared/interface/ISubproblemRange';
 
 export default interface ISubproblemDefinition {
   ranges: Record<string, ISubproblemRange>;

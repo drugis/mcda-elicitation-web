@@ -15,6 +15,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
   const {observedRanges, currentSubproblem} = useContext(WorkspaceContext);
 
   const {decimal, percentage} = UnitOfMeasurementType;
+  const dataSourceId = criterion.dataSources[0].id;
 
   const unit = criterion.dataSources[0].unitOfMeasurement.type;
   const doPercentification =
@@ -32,10 +33,10 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
     )
   ];
   const observedValues = [
-    getPercentifiedValue(observedRanges[criterion.id][0], doPercentification),
-    getPercentifiedValue(observedRanges[criterion.id][1], doPercentification)
+    getPercentifiedValue(observedRanges[dataSourceId][0], doPercentification),
+    getPercentifiedValue(observedRanges[dataSourceId][1], doPercentification)
   ];
-  const rangeDefinition = currentSubproblem.definition.ranges[criterion.id];
+  const rangeDefinition = currentSubproblem.definition.ranges[dataSourceId];
   return (
     <TableRow key={criterion.id}>
       <TableCell id={`scales-table-criterion-${criterion.id}`}>
@@ -50,7 +51,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
       <TableCell id={`configured-range-${criterion.id}`}>
         {getConfiguredRange(
           doPercentification,
-          observedRanges[criterion.id],
+          observedRanges[dataSourceId],
           rangeDefinition.pvf ? rangeDefinition.pvf.range : undefined
         )}
       </TableCell>

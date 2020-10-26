@@ -1,9 +1,9 @@
 import {OurError} from '@shared/interface/IError';
-import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {buildWorkspace} from '@shared/workspaceService';
+import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
 import Axios from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';

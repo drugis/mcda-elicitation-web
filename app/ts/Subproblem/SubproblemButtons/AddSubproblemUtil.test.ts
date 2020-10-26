@@ -1,35 +1,38 @@
-import ICriterion from '@shared/interface/ICriterion';
-import IDataSource from '@shared/interface/IDataSource';
-import {initDataSourceInclusions} from './AddSubproblemButton/AddSubproblemUtil';
+import {initInclusions} from './AddSubproblemButton/AddSubproblemUtil';
 
 describe('AddSubproblemUtil', () => {
-  describe('initDataSourceInclusions', () => {
-    it('should make a nice object with data source ids and happy little true values', () => {
-      const criteria: Record<string, ICriterion> = {
+  describe('initInclusions', () => {
+    it('should initialise everything to true if there are no exclusions', () => {
+      const criteria = {
         crit1Id: {
-          dataSources: [
-            {
-              id: 'ds1'
-            } as IDataSource,
-            {
-              id: 'ds2'
-            } as IDataSource
-          ]
-        } as ICriterion,
+          id: 'crit1Id'
+        },
         crit2Id: {
-          dataSources: [
-            {
-              id: 'ds3'
-            } as IDataSource
-          ]
-        } as ICriterion
+          id: 'crit2Id'
+        }
       };
       const expectedResult = {
-        ds1: true,
-        ds2: true,
-        ds3: true
+        crit1Id: true,
+        crit2Id: true
       };
-      const result = initDataSourceInclusions(criteria);
+      const result = initInclusions(criteria);
+      expect(result).toEqual(expectedResult);
+    });
+    it('should initialise inclusions to false if they are excluded', () => {
+      const criteria = {
+        crit1Id: {
+          id: 'crit1Id'
+        },
+        crit2Id: {
+          id: 'crit2Id'
+        }
+      };
+      const exclusions = ['crit2Id'];
+      const expectedResult = {
+        crit1Id: true,
+        crit2Id: false
+      };
+      const result = initInclusions(criteria, exclusions);
       expect(result).toEqual(expectedResult);
     });
   });

@@ -1,6 +1,7 @@
 import IScale from '@shared/interface/IScale';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
@@ -10,18 +11,19 @@ export function calculateObservedRanges(
   criteria: Record<string, IProblemCriterion>,
   performanceTable: IPerformanceTableEntry[]
 ): Record<string, [number, number]> {
-  return _.mapValues(
-    criteria,
-    _.partial(calculateObservedRange, scales, performanceTable)
-  );
+  return _(criteria)
+    .flatMap('dataSources')
+    .keyBy('id')
+    .mapValues(_.partial(calculateObservedRange, scales, performanceTable))
+    .value();
 }
 
 function calculateObservedRange(
   scales: Record<string, Record<string, IScale>>,
   performanceTable: IPerformanceTableEntry[],
-  criterion: IProblemCriterion
+  dataSource: IProblemDataSource
 ): [number, number] {
-  const dataSourceId = criterion.dataSources[0].id;
+  const dataSourceId = dataSource.id;
   const effectValues = getEffectValues(performanceTable, dataSourceId);
   const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
   const rangeDistributionValues = getRangeDistributionValues(

@@ -149,9 +149,9 @@ describe('ScalesTableUtil', () => {
         performanceTable
       );
       const expectedResult: Record<string, [number, number]> = {
-        crit1Id: [0.1, 0.9],
-        crit2Id: [0, 1],
-        crit3Id: [0.1, 1]
+        ds1Id: [0.1, 0.9],
+        ds2Id: [0, 1],
+        ds3Id: [0.1, 1]
       };
       expect(result).toEqual(expectedResult);
     });

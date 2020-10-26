@@ -1,3 +1,6 @@
+import {Mark} from '@material-ui/core';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import ISliderLimits from 'app/ts/interface/ISliderLimits';
 import _ from 'lodash';
 
 function log10(x: number) {
@@ -56,69 +59,58 @@ function getMargin(from: number, to: number): number {
   return 0.5 * (to - from);
 }
 
-export function calculateScales(
+export function getSliderLimits(
   [theoreticalLower, theoreticalUpper]: [number, number],
-  from: number,
-  to: number,
+  [configuredLower, configuredUpper]: [number, number],
   [observedLower, observedUpper]: [number, number]
-) {
+): ISliderLimits {
   if (observedLower === observedUpper) {
     // dumb corner case
     observedLower -= Math.abs(observedLower) * 0.001;
     observedUpper += Math.abs(observedUpper) * 0.001;
   }
 
-  // var boundFrom = function (val: number) {
-  //   return val < theoreticalLower ? theoreticalLower : val;
-  // };
-
-  // var boundTo = function (val: number) {
-  //   return val > theoreticalUpper ? theoreticalUpper : val;
-  // };
-
-  if (from === to) {
-    from *= 0.95;
-    to *= 1.05;
+  if (configuredLower === configuredUpper) {
+    configuredLower *= 0.95;
+    configuredUpper *= 1.05;
   }
 
   theoreticalLower = _.isNull(theoreticalLower) ? -Infinity : theoreticalLower;
   theoreticalUpper = _.isNull(theoreticalUpper) ? Infinity : theoreticalUpper;
 
-  var floor = getFloor(from, observedLower);
-  var ceil = getCeil(to, observedUpper);
+  var floor = getFloor(configuredLower, observedLower);
+  var ceil = getCeil(configuredUpper, observedUpper);
 
-  var margin = getMargin(from, to);
+  var margin = getMargin(configuredLower, configuredUpper);
 
-  // return {
-  //   increaseFrom: function () {
-  //     this.sliderOptions.floor = niceFrom(
-  //       boundFrom(this.sliderOptions.floor - margin)
-  //     );
-  //   },
-  //   increaseTo: function () {
-  //     this.sliderOptions.ceil = niceTo(
-  //       boundTo(this.sliderOptions.ceil + margin)
-  //     );
-  //   },
-  //   sliderOptions: {
-  //     restrictedRange: {
-  //       from: observedLower,
-  //       to: observedUpper
-  //     },
-  //     min: floor,
-  //     max: ceil,
-  //     step: Math.abs(niceTo(to) - niceFrom(from)) / 100,
-  //     translate: function (value) {
-  //       return numberFilter(value);
-  //     }
-  //   }
-  // };
+  function determineStepSize() {
+    const interval = observedUpper - observedLower;
+    const magnitude = Math.floor(Math.log10(interval));
+    return Math.pow(10, magnitude - 1);
+  }
 
   return {
     min: floor,
     max: ceil,
     minRestricted: observedLower,
     maxRestricted: observedUpper,
-    step: Math.abs(niceTo(to) - niceFrom(from)) / 100
+    step: determineStepSize()
+  };
+}
+
+export function createMarks(
+  {min, max, minRestricted, maxRestricted}: ISliderLimits,
+  doPercentification: boolean
+): Mark[] {
+  return _.map(
+    [min, minRestricted, maxRestricted, max],
+    _.partial(buildMark, doPercentification)
+  );
+}
+
+function buildMark(doPercentification: boolean, value: number): Mark {
+  return {
+    value: value,
+    label: getPercentifiedValue(value, doPercentification)
   };
 }

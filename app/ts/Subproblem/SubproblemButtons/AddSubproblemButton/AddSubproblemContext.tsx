@@ -9,7 +9,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
   getMissingValueWarnings,
   getScaleBlockingWarnings,
-  initDataSourceInclusions
+  initInclusions
 } from './AddSubproblemUtil';
 import IAddSubproblemContext from './IAddSubproblemContext';
 
@@ -18,27 +18,45 @@ export const AddSubproblemContext = createContext<IAddSubproblemContext>(
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
-  const {subproblems, alternatives, workspace, criteria, scales} = useContext(
-    WorkspaceContext
-  );
+  const {
+    subproblems,
+    alternatives,
+    workspace,
+    criteria,
+    scales,
+    currentSubproblem
+  } = useContext(WorkspaceContext);
   const [title, setTitle] = useState<string>('');
   const [errors, setErrors] = useState<string[]>(getErrors());
-  // const dataSourcesById = _(criteria).flatMap('dataSources').keyBy('id');
+  const dataSourcesById: Record<string, IDataSource> = _(criteria)
+    .flatMap('dataSources')
+    .keyBy('id')
+    .value();
 
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
-  >(initInclusions(alternatives));
+  >(
+    initInclusions(
+      alternatives,
+      currentSubproblem.definition.excludedAlternatives
+    )
+  );
+  const [criterionInclusions, setCriterionInclusions] = useState<
+    Record<string, boolean>
+  >(initInclusions(criteria, currentSubproblem.definition.excludedCriteria));
+  const [dataSourceInclusions, setDataSourceInclusions] = useState<
+    Record<string, boolean>
+  >(
+    initInclusions(
+      dataSourcesById,
+      currentSubproblem.definition.excludedDataSources
+    )
+  );
+
   const baselineMap = getBaselineMap(
     alternatives,
     workspace.relativePerformances
   );
-  const [criterionInclusions, setCriterionInclusions] = useState<
-    Record<string, boolean>
-  >(initInclusions(criteria));
-
-  const [dataSourceInclusions, setDataSourceInclusions] = useState<
-    Record<string, boolean>
-  >(initDataSourceInclusions(criteria));
 
   const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>(
     getScaleBlockingWarnings(
@@ -57,14 +75,6 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       workspace
     )
   );
-
-  function initInclusions<T>(
-    items: Record<string, T>
-  ): Record<string, boolean> {
-    return _.mapValues(items, () => {
-      return true;
-    });
-  }
 
   function getErrors(): string[] {
     const titleError = checkTitleErrors(title, subproblems);
@@ -89,10 +99,6 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       )
     );
   }, [dataSourceInclusions, criterionInclusions, alternativeInclusions]);
-
-  useEffect(() => {
-    // FIXME: take selections from currentSubproblem
-  }, []);
 
   function updateAlternativeInclusion(id: string, newValue: boolean) {
     let newInclusions = {...alternativeInclusions};

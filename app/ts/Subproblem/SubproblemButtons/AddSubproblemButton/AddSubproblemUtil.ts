@@ -58,16 +58,13 @@ export function getMissingValueWarnings(
 //   });
 // }
 
-export function initDataSourceInclusions(
-  criteria: Record<string, ICriterion>
+export function initInclusions<T extends {id: string}>(
+  items: Record<string, T>,
+  exclusions?: string[]
 ): Record<string, boolean> {
-  return _(criteria)
-    .flatMap('dataSources')
-    .keyBy('id')
-    .mapValues(() => {
-      return true;
-    })
-    .value();
+  return _.mapValues(items, (item: T) => {
+    return !exclusions || !_.includes(exclusions, item.id);
+  });
 }
 
 export function getScaleBlockingWarnings(
@@ -145,6 +142,7 @@ function areValuesMissingInEffectsTable(
 function hasEmptyEffect(effect: Effect): boolean {
   return !effect || effect.type === 'empty' || effect.type === 'text';
 }
+
 function hasEmptyDistribution(distribution: Distribution): boolean {
   return (
     !distribution ||

@@ -1,4 +1,4 @@
-import {Grid, IconButton, Mark, Slider, Tooltip} from '@material-ui/core';
+import {Grid, IconButton, Slider, Tooltip} from '@material-ui/core';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import ICriterion from '@shared/interface/ICriterion';
@@ -9,61 +9,45 @@ import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext, useState} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
+import {createMarks, getSliderLimits} from '../AddSubproblemScaleRangesUtil';
 
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
   const {observedRanges} = useContext(WorkspaceContext);
-  const [lowestObservedValue, highestObservedValue] = observedRanges[
-    criterion.id
-  ];
   const {getIncludedDataSourceForCriterion} = useContext(AddSubproblemContext);
   const includedDataSource = getIncludedDataSourceForCriterion(criterion);
-  const lowestRangeValue = lowestObservedValue - 0.1; //FIXME
-  const highestRangeValue = highestObservedValue + 0.1;
 
-  const [value, setValue] = useState<number[]>([
-    lowestObservedValue,
-    highestObservedValue
-  ]);
+  // ranges
+  const observedRange = observedRanges[includedDataSource.id];
+  const [lowestObservedValue, highestObservedValue] = observedRange;
+  const theoreticalRange: [number, number] = [
+    includedDataSource.unitOfMeasurement.lowerBound,
+    includedDataSource.unitOfMeasurement.upperBound
+  ];
+  const [configuredValues, setConfiguredValues] = useState<[number, number]>(
+    observedRange
+  );
 
+  // units
   const {decimal, percentage} = UnitOfMeasurementType;
   const unit = includedDataSource.unitOfMeasurement.type;
   const doPercentification =
     showPercentages && (unit === decimal || unit === percentage);
 
-  const limits: Mark[] = [
-    {
-      value: lowestObservedValue,
-      label: getPercentifiedValue(lowestObservedValue, doPercentification)
-    },
-    {
-      value: highestObservedValue,
-      label: getPercentifiedValue(highestObservedValue, doPercentification)
-    },
-    {
-      value: lowestRangeValue,
-      label: getPercentifiedValue(lowestRangeValue, doPercentification)
-    },
-    {
-      value: highestRangeValue,
-      label: getPercentifiedValue(highestRangeValue, doPercentification)
-    }
-  ];
+  const sliderLimits = getSliderLimits(
+    theoreticalRange,
+    observedRange,
+    configuredValues
+  );
 
-  const handleChange = (event: any, newValue: number[]) => {
+  const handleChange = (event: any, newValue: [number, number]) => {
     if (
       newValue[0] <= lowestObservedValue &&
       newValue[1] >= highestObservedValue
     ) {
-      setValue(newValue);
+      setConfiguredValues(newValue);
     }
   };
-
-  function determineStepSize() {
-    const interval = highestObservedValue - lowestObservedValue;
-    const magnitude = Math.floor(Math.log10(interval));
-    return Math.pow(10, magnitude - 1);
-  }
 
   function renderUnitLabel(): string {
     const unitLabel = getUnitLabel(
@@ -74,11 +58,11 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   }
 
   return (
-    <Grid container item xs={12} spacing={4}>
+    <Grid container item xs={12} spacing={4} justify="center">
       <Grid item xs={12}>
         {`${criterion.title} ${renderUnitLabel()}`}
       </Grid>
-      <Grid item xs={1} justify="center">
+      <Grid item xs={1}>
         <Tooltip title="Extend the range">
           <IconButton>
             <ChevronLeft color="primary" />
@@ -87,19 +71,19 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       </Grid>
       <Grid item xs={10}>
         <Slider
-          value={value}
+          value={configuredValues}
           onChange={handleChange}
           valueLabelDisplay="on"
           valueLabelFormat={(x: number) => {
             return getPercentifiedValue(x, doPercentification);
           }}
-          min={lowestRangeValue}
-          max={highestRangeValue}
-          step={determineStepSize()}
-          marks={limits}
+          min={sliderLimits.min}
+          max={sliderLimits.max}
+          step={sliderLimits.step}
+          marks={createMarks(sliderLimits, doPercentification)}
         />
       </Grid>
-      <Grid item xs={1} justify="center">
+      <Grid item xs={1}>
         <Tooltip title="Extend the range">
           <IconButton>
             <ChevronRight color="primary" />

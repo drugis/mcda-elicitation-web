@@ -1,8 +1,8 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IScale from '@shared/interface/IScale';
 import IWorkspace from '@shared/interface/IWorkspace';
+import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
 
 export default interface IWorkspaceContext {
   alternatives: Record<string, IAlternative>;
