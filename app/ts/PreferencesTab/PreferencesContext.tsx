@@ -1,6 +1,6 @@
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
-import IWorkspaceSettings from '@shared/interface/IWorkspaceSettings';
+import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
@@ -13,6 +13,7 @@ import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
+import {SettingsContext} from '../Settings/SettingsContext';
 import IPreferencesContext from './IPreferencesContext';
 import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
 import {TPreferencesView} from './TPreferencesView';
@@ -27,7 +28,6 @@ export function PreferencesContextProviderComponent({
   currentScenarioId,
   workspaceId,
   problem,
-  settings,
   updateAngularScenario
 }: {
   children: any;
@@ -35,18 +35,21 @@ export function PreferencesContextProviderComponent({
   currentScenarioId: string;
   workspaceId: string;
   problem: IProblem;
-  settings: IWorkspaceSettings;
   updateAngularScenario: (scenario: IMcdaScenario) => void;
 }) {
   const {setError} = useContext(ErrorContext);
+  const {randomSeed} = useContext(SettingsContext);
   const [contextScenarios, setScenarios] = useState<
     Record<string, IMcdaScenario>
   >(_.keyBy(scenarios, 'id'));
 
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
-    _.find(contextScenarios, ['id', currentScenarioId]) // TODO: take the one who's id is in the url instead
+    _.find(contextScenarios, ['id', currentScenarioId]) // FIXMEWW: take the one who's id is in the url instead
   );
-  const criteria = createPreferencesCriteria(problem.criteria);
+  const criteria: Record<
+    string,
+    IPreferencesCriterion
+  > = createPreferencesCriteria(problem.criteria);
   const [pvfs, setPvfs] = useState<Record<string, IPvf>>(
     initPvfs(problem.criteria, currentScenario)
   );
@@ -120,7 +123,7 @@ export function PreferencesContextProviderComponent({
       {
         preferences: scenario.state.prefs,
         method: 'representativeWeights',
-        seed: settings.randomSeed
+        seed: randomSeed
       }
     );
     const postCommand = {
@@ -205,8 +208,8 @@ export function PreferencesContextProviderComponent({
     setError(error);
   }
 
-  function getCriterion(id: string): IProblemCriterion {
-    return problem.criteria[id];
+  function getCriterion(id: string): IPreferencesCriterion {
+    return criteria[id];
   }
 
   function determineElicitationMethod(): string {

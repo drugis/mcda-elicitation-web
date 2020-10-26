@@ -34,7 +34,8 @@ define([
         'workspaceId',
         'problem',
         'settings',
-        'updateAngularScenario'
+        'updateAngularScenario',
+        'toggledColumns'
       ])
     )
     .controller(

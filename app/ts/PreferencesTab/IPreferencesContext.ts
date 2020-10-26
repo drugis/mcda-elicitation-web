@@ -19,7 +19,7 @@ export default interface IPreferencesContext {
   deleteScenario: (id: string) => void;
   copyScenario: (newTitle: string) => void;
   addScenario: (newTitle: string) => void;
-  getCriterion: (id: string) => IProblemCriterion;
+  getCriterion: (id: string) => IPreferencesCriterion;
   getPvf: (criterionId: string) => IPvf;
   setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
   resetPreferences: (scenario: IMcdaScenario) => void;

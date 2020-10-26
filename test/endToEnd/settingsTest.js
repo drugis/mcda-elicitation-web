@@ -18,7 +18,7 @@ module.exports = {
   'Unselecting reference column in deterministic results tab': unselectReferenceInDeterministic,
   'Switching between median and mode in deterministic tab': switchMedianInDeterministic,
   'Switching settings in the overview tab': switchSettingsInOverview,
-  // 'Switching settings in the preferences tab': switchSettingsInPreferences, //FIXME:  does not use view settings at all atm
+  'Switching settings in the preferences tab': switchSettingsInPreferences,
   'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF
   // 'Switching settings while setting the weights': switchSettingsWhileSettingWeights //FIXME: does not use view settings at all atm
 };
@@ -322,8 +322,8 @@ function switchSettingsInOverview(browser) {
 }
 
 function switchSettingsInPreferences(browser) {
-  var effectCellPath = '//*[@id="perferences-weights-table"]/tbody/tr[1]/td[4]';
-  var unitsCellPath = '//*[@id="perferences-weights-table"]/tbody/tr[1]/td[3]';
+  var effectCellPath = '//*[@id="worst-OS"]';
+  var unitsCellPath = '//*[@id="unit-OS"]';
 
   util
     .delayedClick(

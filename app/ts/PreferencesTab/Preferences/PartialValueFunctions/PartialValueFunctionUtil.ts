@@ -6,17 +6,37 @@ import _ from 'lodash';
 
 export function getPvfCoordinates(
   pvf: IPvf,
-  criterionTitle: string
+  criterionTitle: string,
+  usePercentage: boolean
 ): [['x', ...number[]], [string, 1, ...number[]]] {
-  return [getXValues(pvf), getYValues(pvf, criterionTitle)];
+  return [getXValues(pvf, usePercentage), getYValues(pvf, criterionTitle)];
 }
 
-function getXValues(pvf: IPvf): ['x', ...number[]] {
-  return ['x', getBest(pvf), ...intermediateX(pvf), getWorst(pvf)];
+function getXValues(pvf: IPvf, usePercentage: boolean): ['x', ...number[]] {
+  return [
+    'x',
+    getPercentifiedNumber(getBest(pvf), usePercentage),
+    ...intermediateX(pvf, usePercentage),
+    getPercentifiedNumber(getWorst(pvf), usePercentage)
+  ];
 }
 
-function intermediateX(pvf: IPvf): number[] {
-  return pvf.cutoffs ? pvf.cutoffs : [];
+function getPercentifiedNumber(value: number, usePercentage: boolean): number {
+  if (usePercentage) {
+    return significantDigits(value * 100);
+  } else {
+    return significantDigits(value);
+  }
+}
+
+function intermediateX(pvf: IPvf, usePercentage: boolean): number[] {
+  if (pvf.cutoffs) {
+    return _.map(pvf.cutoffs, (value: number) => {
+      return getPercentifiedNumber(value, usePercentage);
+    });
+  } else {
+    return [];
+  }
 }
 
 function getYValues(
