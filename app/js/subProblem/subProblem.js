@@ -2,26 +2,38 @@
 define([
   './subProblemController',
   './createSubProblemController',
-  './editSubProblemTitleController',
-  './deleteSubproblemController',
   './subProblemService',
   './scaleRangeService',
-  'angular'
+  '../../ts/Subproblem/Subproblem',
+  'angular',
+  'react2angular'
 ], function (
   SubProblemController,
   CreateSubProblemController,
-  EditSubProblemTitleController,
-  DeleteSubproblemController,
   SubProblemService,
   ScaleRangeService,
-  angular
+  Subproblem,
+  angular,
+  react2angular
 ) {
   return angular
     .module('elicit.subProblem', [])
     .controller('SubProblemController', SubProblemController)
     .controller('CreateSubProblemController', CreateSubProblemController)
-    .controller('EditSubProblemTitleController', EditSubProblemTitleController)
-    .controller('DeleteSubproblemController', DeleteSubproblemController)
     .factory('SubProblemService', SubProblemService)
-    .factory('ScaleRangeService', ScaleRangeService);
+    .factory('ScaleRangeService', ScaleRangeService)
+    .component(
+      'subproblem',
+      react2angular.react2angular(Subproblem.default, [
+        'workspace',
+        'settings',
+        'scales',
+        'toggledColumns',
+        'subproblems',
+        'currentSubproblem',
+        'subproblemChanged',
+        'createDialogCallback',
+        'workspaceId'
+      ])
+    );
 });

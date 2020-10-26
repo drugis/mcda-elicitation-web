@@ -1,17 +1,15 @@
-import TableCell from '@material-ui/core/TableCell';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {AnalysisType} from '@shared/interface/ISettings';
 import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext/EffectsTableContext';
+import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
 import EffectValueCell from './EffectValueCell/EffectValueCell';
-import EmptyCell from './EmptyCell/EmptyCell';
 import NMACell from './NMACell/NMACell';
-import {ErrorContext} from 'app/ts/Error/ErrorContext';
 
 export default function ValueCell({
   alternativeId,

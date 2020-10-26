@@ -370,32 +370,6 @@ define(['lodash', 'angular'], function (_) {
       });
     }
 
-    function findRowWithoutValues(effectsTableInfo, scales) {
-      return !_.some(effectsTableInfo, function (row, dataSourceId) {
-        return !row.isAbsolute || hasCellWithValue(row, scales, dataSourceId);
-      });
-    }
-
-    function hasCellWithValue(row, scales, dataSourceId) {
-      return _.some(row.studyDataLabelsAndUncertainty, function (
-        cell,
-        alternativeId
-      ) {
-        return (
-          cell.effectValue !== '' ||
-          (scales &&
-            scales.observed &&
-            scales.observed[dataSourceId][alternativeId]['50%'])
-        );
-      });
-    }
-
-    function areTooManyDataSourcesIncluded(criteria) {
-      return _.some(criteria, function (criterion) {
-        return criterion.dataSources.length > 1;
-      });
-    }
-
     return {
       createSubProblemCommand: createSubProblemCommand,
       determineBaseline: determineBaseline,
@@ -406,8 +380,6 @@ define(['lodash', 'angular'], function (_) {
       getCriteriaByDataSource: getCriteriaByDataSource,
       createSubProblemState: createSubProblemState,
       excludeDeselectedAlternatives: excludeDeselectedAlternatives,
-      findRowWithoutValues: findRowWithoutValues,
-      areTooManyDataSourcesIncluded: areTooManyDataSourcesIncluded,
       getScaleBlockingWarnings: getScaleBlockingWarnings
     };
   };

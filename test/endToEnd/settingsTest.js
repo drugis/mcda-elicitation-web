@@ -184,12 +184,12 @@ function switchSettingsInProblemDefinition(browser) {
     '//*[@id="value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1"]';
   var unitsCellPath =
     '//*[@id="unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e"]';
-  var scaleRangeCellPath = '//*[@id="scalestable"]/tbody/tr[1]/td[3]/span[1]';
+  var scaleRangeCellPath = '//*[@id="observed-range-OS"]';
   util
     .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
     .useXpath()
     .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectTableCellPath, '60%')
+    .assert.containsText(effectTableCellPath, '60')
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
@@ -199,7 +199,7 @@ function switchSettingsInProblemDefinition(browser) {
 
   showPercentagesAndValues(browser)
     .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectTableCellPath, '60%')
+    .assert.containsText(effectTableCellPath, '60')
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)
@@ -214,7 +214,7 @@ function switchSettingsInProblemDefinition(browser) {
 
   showPercentagesAndSmaaValues(browser)
     .assert.containsText(unitsCellPath, '%')
-    .assert.containsText(effectTableCellPath, '60%')
+    .assert.containsText(effectTableCellPath, '60')
     .assert.containsText(scaleRangeCellPath, '50');
 
   showDecimals(browser)

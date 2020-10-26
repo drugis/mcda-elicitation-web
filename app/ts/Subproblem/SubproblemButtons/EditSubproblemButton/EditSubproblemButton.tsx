@@ -6,32 +6,25 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
+import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
-export default function ScenarioActionButton({
-  action,
-  icon,
-  callback,
-  idOfScenarioBeingEdited
-}: {
-  action: string;
-  icon: JSX.Element;
-  callback: (newTitle: string) => void;
-  idOfScenarioBeingEdited?: string;
-}) {
-  const {currentScenario, scenarios} = useContext(PreferencesContext);
+export default function EditSubproblemButton({}: {}) {
+  const {currentSubproblem, subproblems, editTitle} = useContext(
+    WorkspaceContext
+  );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [title, setTitle] = useState<string>('');
   const [error, setError] = useState<string>(
-    checkTitleErrors(title, scenarios, idOfScenarioBeingEdited)
+    checkTitleErrors(title, subproblems, currentSubproblem.id)
   );
 
   useEffect(() => {
-    setError(checkTitleErrors(title, scenarios, idOfScenarioBeingEdited));
+    setError(checkTitleErrors(title, subproblems, currentSubproblem.id));
   }, [title]);
 
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
@@ -41,7 +34,7 @@ export default function ScenarioActionButton({
   }
 
   function openDialog(): void {
-    setTitle(idOfScenarioBeingEdited ? currentScenario.title : '');
+    setTitle(currentSubproblem.title);
     setIsDialogOpen(true);
   }
 
@@ -50,7 +43,7 @@ export default function ScenarioActionButton({
   }
 
   function handleButtonClick(): void {
-    callback(title);
+    editTitle(title);
     closeDialog();
   }
 
@@ -60,12 +53,13 @@ export default function ScenarioActionButton({
 
   return (
     <>
-      <Tooltip title={action + ' scenario'}>
+      <Tooltip title={'Edit problem'}>
         <IconButton
-          id={action.toLowerCase() + '-scenario-button'}
+          id={'edit-subproblem-button'}
+          color="primary"
           onClick={openDialog}
         >
-          {icon}
+          <Edit />
         </IconButton>
       </Tooltip>
       <Dialog
@@ -75,14 +69,14 @@ export default function ScenarioActionButton({
         maxWidth={'sm'}
       >
         <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-          {action} scenario
+          Edit problem title
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
-            <Grid item xs={9}>
+            <Grid item xs={12}>
               <TextField
                 label="new title"
-                id="new-scenario-title"
+                id="subproblem-title-input"
                 value={title}
                 onChange={titleChanged}
                 onKeyDown={handleKey}
@@ -104,13 +98,13 @@ export default function ScenarioActionButton({
         </DialogContent>
         <DialogActions>
           <Button
-            id={action.toLowerCase() + '-scenario-confirm-button'}
+            id={'edit-subproblem-confirm-button'}
             variant="contained"
             color="primary"
             onClick={handleButtonClick}
             disabled={isDisabled()}
           >
-            {action}
+            Edit
           </Button>
         </DialogActions>
       </Dialog>

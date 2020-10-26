@@ -202,36 +202,12 @@ define(['lodash', 'angular'], function (_, angular) {
       );
     }
 
-    function getScaleTable(table, scales, performanceTable) {
-      var scaleTable = _.reject(table, 'isHeaderRow');
-      return _.map(scaleTable, function (row) {
-        var newRow = angular.copy(row);
-        if (scales && scales.observed) {
-          var effects = PerformanceTableService.getEffectValues(
-            performanceTable,
-            row.dataSource
-          );
-          var rangeDistributions = PerformanceTableService.getRangeDistributionValues(
-            performanceTable,
-            row.dataSource
-          );
-          newRow.intervalHull = intervalHull(
-            scales.observed[row.dataSource.id],
-            effects,
-            rangeDistributions
-          );
-        }
-        return newRow;
-      });
-    }
-
     return {
       nice: nice,
       niceTo: niceTo,
       niceFrom: niceFrom,
       calculateScales: calculateScales,
-      getScalesStateAndChoices: getScalesStateAndChoices,
-      getScaleTable: getScaleTable
+      getScalesStateAndChoices: getScalesStateAndChoices
     };
   };
 

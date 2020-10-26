@@ -50,7 +50,7 @@ function renderEnteredValues(
   }
 }
 
-function getStringForValue(
+export function getStringForValue(
   value: number,
   usePercentage: boolean,
   unitOfMeasurementType: UnitOfMeasurementType
@@ -59,7 +59,7 @@ function getStringForValue(
     return 'No value entered';
   } else if (usePercentage) {
     const modifier = unitOfMeasurementType === 'decimal' ? 100 : 1;
-    return significantDigits(value * modifier) + '%';
+    return significantDigits(value * modifier).toString();
   } else {
     const modifier = unitOfMeasurementType === 'percentage' ? 0.01 : 1;
     return significantDigits(value * modifier).toString();
