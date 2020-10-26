@@ -23,8 +23,8 @@ export default function CriterionChoice({
     showPercentages && canBePercentage(criterion.unitOfMeasurement.type);
 
   return (
-    <label key={criterion.id}>
-      <Radio key={criterion.id} value={criterion.id} />
+    <label id={`ranking-choice-${criterion.id}`}>
+      <Radio value={criterion.id} />
       {`${pvf.direction} `}
       <Tooltip
         disableHoverListener={!criterion.description}

@@ -67,10 +67,15 @@
           <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
             {{row.criterion.description}}
           </td>
-          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
+          <td
+            id="sensitivity-unit-{{row.criterion.id}}"
+            ng-if="!row.isHeaderRow"
+            ng-show="toggledColumns['units']"
+          >
             {{row.dataSource.unitOfMeasurement.label}}
           </td>
           <td
+            id="sensitivity-value-{{alternative.id}}-{{row.criterion.id}}"
             ng-if="!row.isHeaderRow"
             class="text-center"
             ng-repeat="alternative in alternatives"

@@ -14,15 +14,20 @@ export default function CriterionSituation({
   const {showPercentages} = useContext(SettingsContext);
 
   return (
-    <ul key={criterion.id}>
-      <li>
+    <ul>
+      <li id={`situation-${criterion.id}`}>
         <Tooltip
           disableHoverListener={!criterion.description}
           title={criterion.description ? criterion.description : ''}
         >
-          <span className="criterion-title">{criterion.title}</span>
+          <span
+            id={`situation-title-${criterion.id}`}
+            className="criterion-title"
+          >
+            {criterion.title}
+          </span>
         </Tooltip>
-        : {displayValue}{' '}
+        : <span id={`situation-value-${criterion.id}`}>{displayValue}</span>{' '}
         {getUnitLabel(criterion.unitOfMeasurement, showPercentages)}
       </li>
     </ul>

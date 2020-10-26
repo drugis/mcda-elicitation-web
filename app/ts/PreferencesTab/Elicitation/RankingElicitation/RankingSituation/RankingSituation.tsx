@@ -7,7 +7,6 @@ import {
   getBest,
   getWorst
 } from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
-
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
@@ -34,7 +33,7 @@ export default function RankingSituation() {
         <Typography variant="h6">Given the following situation:</Typography>
       </Grid>
       <Grid item xs={12}>
-        {_.map(criteria, (criterion) => {
+        {_.map(criteria, (criterion: IPreferencesCriterion) => {
           return (
             <CriterionSituation
               key={criterion.id}
