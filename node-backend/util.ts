@@ -1,5 +1,6 @@
 import {OurError} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
 import {Request} from 'express';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
@@ -28,19 +29,16 @@ export function handleError(error: OurError, next: any): void {
   });
 }
 
-export function getRanges(problem: IProblem): Record<string, [number, number]> {
-  return _.reduce(
-    problem.criteria,
-    (
-      accum: Record<string, any>,
-      criterion,
-      key
-    ): Record<string, [number, number]> => {
-      accum[key] = _.pick(criterion, ['pvf.range']);
-      return accum;
-    },
-    {}
-  );
+export function getRanges(
+  problem: IProblem
+): Record<string, [number, number] | undefined> {
+  return _(problem.criteria)
+    .flatMap('dataSources')
+    .keyBy('id')
+    .mapValues((dataSource: IProblemDataSource) => {
+      return dataSource.pvf ? dataSource.pvf.range : undefined;
+    })
+    .value();
 }
 
 export function reduceProblem(problem: IProblem): IScenarioProblem {

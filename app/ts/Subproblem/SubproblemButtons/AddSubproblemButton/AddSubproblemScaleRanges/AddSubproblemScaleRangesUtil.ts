@@ -59,10 +59,28 @@ function getMargin(from: number, to: number): number {
   return 0.5 * (to - from);
 }
 
+export function increaseRangeFrom(
+  [configuredLower, configuredUpper]: [number, number],
+  theoreticalLower: number
+): [number, number] {
+  const margin = getMargin(configuredLower, configuredUpper);
+  const newFrom = niceFrom(configuredLower - margin);
+  return [Math.max(newFrom, theoreticalLower), configuredUpper];
+}
+
+export function increaseRangeTo(
+  [configuredLower, configuredUpper]: [number, number],
+  theoreticalUpper: number
+): [number, number] {
+  const margin = getMargin(configuredLower, configuredUpper);
+  const newTo = niceTo(configuredUpper + margin);
+  return [configuredLower, Math.min(newTo, theoreticalUpper)];
+}
+
 export function getSliderLimits(
   [theoreticalLower, theoreticalUpper]: [number, number],
-  [configuredLower, configuredUpper]: [number, number],
-  [observedLower, observedUpper]: [number, number]
+  [observedLower, observedUpper]: [number, number],
+  [configuredLower, configuredUpper]: [number, number]
 ): ISliderLimits {
   if (observedLower === observedUpper) {
     // dumb corner case
@@ -81,36 +99,40 @@ export function getSliderLimits(
   var floor = getFloor(configuredLower, observedLower);
   var ceil = getCeil(configuredUpper, observedUpper);
 
-  var margin = getMargin(configuredLower, configuredUpper);
-
-  function determineStepSize() {
-    const interval = observedUpper - observedLower;
-    const magnitude = Math.floor(Math.log10(interval));
-    return Math.pow(10, magnitude - 1);
-  }
-
   return {
     min: floor,
     max: ceil,
     minRestricted: observedLower,
     maxRestricted: observedUpper,
-    step: determineStepSize()
+    step: determineStepSize(floor, ceil) //Math.abs(niceTo(observedUpper) - niceFrom(observedLower)) / 100
   };
+}
+
+function determineStepSize(from: number, to: number) {
+  const interval = to - from;
+  const magnitude = Math.floor(Math.log10(interval));
+  return Math.pow(10, magnitude - 2);
 }
 
 export function createMarks(
-  {min, max, minRestricted, maxRestricted}: ISliderLimits,
+  sliderRange: [number, number],
+  observedRange: [number, number],
   doPercentification: boolean
 ): Mark[] {
-  return _.map(
-    [min, minRestricted, maxRestricted, max],
-    _.partial(buildMark, doPercentification)
-  );
-}
-
-function buildMark(doPercentification: boolean, value: number): Mark {
-  return {
-    value: value,
-    label: getPercentifiedValue(value, doPercentification)
-  };
+  return [
+    {
+      value: sliderRange[0],
+      label: getPercentifiedValue(sliderRange[0], doPercentification)
+    },
+    {
+      value: observedRange[0]
+    },
+    {
+      value: observedRange[1]
+    },
+    {
+      value: sliderRange[1],
+      label: getPercentifiedValue(sliderRange[1], doPercentification)
+    }
+  ];
 }
