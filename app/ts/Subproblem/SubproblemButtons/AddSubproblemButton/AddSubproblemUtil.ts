@@ -1,3 +1,4 @@
+import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
@@ -52,11 +53,11 @@ function hasMissingValues(
 ) {
   return _.some(includedDataSourceIds, (dataSourceId) => {
     return _.some(includedAlternativeIds, (alternativeId) => {
-      const [
-        effect,
-        distribution,
-        relativePerformance
-      ] = findEffectAndDistribution(workspace, dataSourceId, alternativeId);
+      const [effect, distribution, relativePerformance] = findPerformances(
+        workspace,
+        dataSourceId,
+        alternativeId
+      );
 
       if (isEffect) {
         return (
@@ -74,7 +75,7 @@ function hasMissingValues(
   });
 }
 
-function findEffectAndDistribution(
+function findPerformances(
   workspace: IWorkspace,
   dataSourceId: string,
   alternativeId: string
@@ -163,50 +164,24 @@ function areValuesMissingInEffectsTable(
   dataSourceInclusions: Record<string, boolean>,
   alternativeInclusions: Record<string, boolean>
 ): boolean {
-  const includedDataSources: IDataSource[] = _.flatMap(
-    workspace.criteria,
-    (criterion) => {
-      return _.filter(criterion.dataSources, (dataSource) => {
-        return dataSourceInclusions[dataSource.id];
-      });
-    }
-  );
-  return _.some(includedDataSources, (dataSource) => {
-    return _.some(workspace.alternatives, (alternative) => {
-      const effectForCoordinates = _.find(workspace.effects, (effect) => {
-        return (
-          effect.dataSourceId === dataSource.id &&
-          effect.alternativeId === alternative.id
-        );
-      });
-      const distributionForCoordinates = _.find(
-        workspace.distributions,
-        (distribution) => {
-          return (
-            distribution.dataSourceId === dataSource.id &&
-            distribution.alternativeId === alternative.id
-          );
-        }
+  const includedDataSourceIds = _.keys(_.pickBy(dataSourceInclusions));
+  const includedAlternativeIds = _.keys(_.pickBy(alternativeInclusions));
+
+  return _.some(includedDataSourceIds, (dataSourceId) => {
+    return _.some(includedAlternativeIds, (alternativeId) => {
+      const [effect, distribution, relativePerformance] = findPerformances(
+        workspace,
+        dataSourceId,
+        alternativeId
       );
+
       return (
-        alternativeInclusions[alternative.id] &&
-        hasEmptyEffect(effectForCoordinates) &&
-        hasEmptyDistribution(distributionForCoordinates)
+        !hasPerformance(effect) &&
+        !hasPerformance(distribution) &&
+        !relativePerformance
       );
     });
   });
-}
-
-function hasEmptyEffect(effect: Effect): boolean {
-  return !effect || effect.type === 'empty' || effect.type === 'text';
-}
-
-function hasEmptyDistribution(distribution: Distribution): boolean {
-  return (
-    !distribution ||
-    distribution.type === 'empty' ||
-    distribution.type === 'text'
-  );
 }
 
 function areTooManyDataSourcesSelected(
@@ -214,14 +189,61 @@ function areTooManyDataSourcesSelected(
   criterionInclusions: Record<string, boolean>,
   dataSourceInclusions: Record<string, boolean>
 ): boolean {
-  return _.some(criterionInclusions, (criterionInclusion, criterionId) => {
+  const includedCriterionIds = _.keys(_.pickBy(criterionInclusions));
+  return _.some(includedCriterionIds, (criterionId) => {
     const criterion = criteria[criterionId];
-    const numberOfSelectedDataSources = _.countBy(
+    const numberOfSelectedDataSources = getNumberOfSelectedDataSources(
       criterion.dataSources,
-      (dataSource) => {
-        return dataSourceInclusions[dataSource.id];
-      }
-    ).true;
-    return criterionInclusion && numberOfSelectedDataSources > 1;
+      dataSourceInclusions
+    );
+    return numberOfSelectedDataSources > 1;
   });
+}
+
+function getNumberOfSelectedDataSources(
+  dataSources: IDataSource[],
+  dataSourceInclusions: Record<string, boolean>
+) {
+  return _.countBy(dataSources, (dataSource) => {
+    return dataSourceInclusions[dataSource.id];
+  }).true;
+}
+
+export function isAlternativeDisabled(
+  id: string,
+  alternativeInclusions: Record<string, boolean>,
+  baselineMap: Record<string, boolean>
+) {
+  return (
+    _.filter(alternativeInclusions).length < 3 || isBaseline(id, baselineMap)
+  );
+}
+
+function isBaseline(id: string, baselineMap: Record<string, boolean>): boolean {
+  return baselineMap[id];
+}
+
+export function getBaselineMap(
+  alternatives: Record<string, IAlternative>,
+  relativePerformances: IRelativePerformance[]
+): Record<string, boolean> {
+  return _.mapValues(alternatives, (alternative) => {
+    return _.some(relativePerformances, (relativePerformance) => {
+      return alternative.id === relativePerformance.baseline.id;
+    });
+  });
+}
+
+export function isDataSourceDeselectionDisabled(
+  criterion: ICriterion,
+  dataSourceInclusions: Record<string, boolean>,
+  criterionInclusions: Record<string, boolean>
+): boolean {
+  const numberOfSelectedDataSources = _.countBy(
+    criterion.dataSources,
+    (dataSource) => {
+      return dataSourceInclusions[dataSource.id];
+    }
+  ).true;
+  return numberOfSelectedDataSources < 2 || !criterionInclusions[criterion.id];
 }

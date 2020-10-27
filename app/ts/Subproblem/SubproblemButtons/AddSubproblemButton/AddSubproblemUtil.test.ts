@@ -1,8 +1,14 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {
+  getBaselineMap,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
-  initInclusions
+  initInclusions,
+  isAlternativeDisabled,
+  isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
 
 describe('addSubproblemUtil', () => {
@@ -125,7 +131,7 @@ describe('addSubproblemUtil', () => {
       expect(warnings).toEqual(expectedWarnings);
     });
 
-    it('should warn about missing deterministic and SMAA values', () => {
+    it('should warn about missing deterministic and SMAA values, when the problem has a cell with neither', () => {
       const dataSourceInclusions = {ds1Id: true, ds2Id: true};
       const alternativeInclusions = {alt1Id: true};
 
@@ -271,7 +277,7 @@ describe('addSubproblemUtil', () => {
     const multipleDataSourcesWarning =
       'Effects table contains multiple data sources per criterion';
 
-    it('should return no warnings', () => {
+    it('should return no warnings, if all selected criteria have precisely one data source, and a value and a distribution for each cell', () => {
       const criterionInclusions = {crit1Id: true};
       const dataSourceInclusions = {ds1Id: true};
       const alternativeInclusions = {alt1Id: true};
@@ -308,7 +314,37 @@ describe('addSubproblemUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return a warning if effects and distributions are missing', () => {
+    it('should return no warnings, if all selected criteria have precisely one data source, and a value and a relative performance for each cell', () => {
+      const criterionInclusions = {crit1Id: true};
+      const dataSourceInclusions = {ds1Id: true};
+      const alternativeInclusions = {alt1Id: true};
+
+      const workspace = {
+        criteria: [{id: 'crit1Id', dataSources: [{id: 'ds1Id'}]}],
+        alternatives: [{id: 'alt1Id'}],
+        effects: [
+          {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'value'
+          }
+        ],
+        distributions: [],
+        relativePerformances: [{criterionId: 'crit1Id', dataSourceId: 'ds1Id'}]
+      } as IWorkspace;
+
+      const result = getScaleBlockingWarnings(
+        criterionInclusions,
+        dataSourceInclusions,
+        alternativeInclusions,
+        workspace
+      );
+      const expectedResult: string[] = [];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return a warning if there is a cell with no effect, distribution, or performance', () => {
       const criterionInclusions = {crit1Id: true};
       const dataSourceInclusions = {ds1Id: true};
       const alternativeInclusions = {alt1Id: true};
@@ -382,7 +418,7 @@ describe('addSubproblemUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return both warnings', () => {
+    it('should return both warnings, if both apply', () => {
       const criterionInclusions = {crit1Id: true};
       const dataSourceInclusions = {ds1Id: true, ds2Id: true};
       const alternativeInclusions = {alt1Id: true};
@@ -434,6 +470,110 @@ describe('addSubproblemUtil', () => {
         multipleDataSourcesWarning
       ];
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('isAlternativeDisabledFoo', () => {
+    const id = 'alt1Id';
+    it('should return false if the are at more than 2 alternatives included, and the alterntive is not a baseline', () => {
+      const alternativeInclusions = {alt1Id: true, alt2Id: true, alt3Id: true};
+      const baselineMap = {alt1Id: false, alt2Id: true, alt3Id: false};
+
+      const result = isAlternativeDisabled(
+        id,
+        alternativeInclusions,
+        baselineMap
+      );
+      expect(result).toBeFalsy();
+    });
+
+    it('should return true if there are 2 alternatives included', () => {
+      const alternativeInclusions = {alt1Id: true, alt2Id: true};
+      const baselineMap = {alt1Id: false, alt2Id: true};
+
+      const result = isAlternativeDisabled(
+        id,
+        alternativeInclusions,
+        baselineMap
+      );
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if the alternative is a baseline for some criterion', () => {
+      const alternativeInclusions = {alt1Id: true, alt2Id: true, alt3Id: true};
+      const baselineMap = {alt1Id: true, alt2Id: true, alt3Id: false};
+
+      const result = isAlternativeDisabled(
+        id,
+        alternativeInclusions,
+        baselineMap
+      );
+      expect(result).toBeTruthy();
+    });
+  });
+
+  describe('getBaselineMap', () => {
+    it('should return a map which for each alternative id tells if the alternative is a baseline of a relative criterion', () => {
+      const alternatives: Record<string, IAlternative> = {
+        alt1Id: {id: 'alt1Id'} as IAlternative,
+        alt2Id: {id: 'alt2Id'} as IAlternative
+      };
+      const relativePerformances: IRelativePerformance[] = [
+        {baseline: {id: 'alt1Id'}} as IRelativePerformance
+      ];
+      const result = getBaselineMap(alternatives, relativePerformances);
+      const expectedResult: Record<string, boolean> = {
+        alt1Id: true,
+        alt2Id: false
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('isDataSourceDeselectionDisabled', () => {
+    it('should return false if there is more than one data source selected and the criterion is included', () => {
+      const criterion: ICriterion = {
+        id: 'crit1Id',
+        dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
+      } as ICriterion;
+      const dataSourceInclusions = {ds1Id: true, ds2Id: true};
+      const criterionInclusions = {crit1Id: true};
+      const result = isDataSourceDeselectionDisabled(
+        criterion,
+        dataSourceInclusions,
+        criterionInclusions
+      );
+      expect(result).toBeFalsy();
+    });
+
+    it('should return true if there is only one data source selected for the criterion', () => {
+      const criterion: ICriterion = {
+        id: 'crit1Id',
+        dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
+      } as ICriterion;
+      const dataSourceInclusions = {ds1Id: true, ds2Id: false};
+      const criterionInclusions = {crit1Id: true};
+      const result = isDataSourceDeselectionDisabled(
+        criterion,
+        dataSourceInclusions,
+        criterionInclusions
+      );
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if the criterion is not included', () => {
+      const criterion: ICriterion = {
+        id: 'crit1Id',
+        dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
+      } as ICriterion;
+      const dataSourceInclusions = {ds1Id: true, ds2Id: true};
+      const criterionInclusions = {crit1Id: false};
+      const result = isDataSourceDeselectionDisabled(
+        criterion,
+        dataSourceInclusions,
+        criterionInclusions
+      );
+      expect(result).toBeTruthy();
     });
   });
 });

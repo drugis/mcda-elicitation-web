@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
+import {getTitleError} from 'app/ts/util/getTitleError';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
@@ -20,11 +20,11 @@ export default function EditSubproblemButton({}: {}) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [title, setTitle] = useState<string>('');
   const [error, setError] = useState<string>(
-    checkTitleErrors(title, subproblems, currentSubproblem.id)
+    getTitleError(title, subproblems, currentSubproblem.id)
   );
 
   useEffect(() => {
-    setError(checkTitleErrors(title, subproblems, currentSubproblem.id));
+    setError(getTitleError(title, subproblems, currentSubproblem.id));
   }, [title]);
 
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
