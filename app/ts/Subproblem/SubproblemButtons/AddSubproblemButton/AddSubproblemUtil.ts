@@ -2,61 +2,124 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
-import IScale from '@shared/interface/IScale';
+import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
 import _ from 'lodash';
 
 export function getMissingValueWarnings(
   dataSourceInclusions: Record<string, boolean>,
   alternativeInclusions: Record<string, boolean>,
-  scales: Record<string, Record<string, IScale>>,
   workspace: IWorkspace
 ): string[] {
-  var warnings: string[] = [];
-  var includedDataSourcesIds = _.keys(_.pickBy(dataSourceInclusions));
-  var includedAlternativeIds = _.keys(_.pickBy(alternativeInclusions));
-  // if (
-  //   areDeterministicValuesMissing(
-  //     includedDataSourcesIds,
-  //     includedAlternativeIds,
-  //     scales,
-  //     workspace.effects
-  //   )
-  // ) {
-  //   warnings.push(
-  //     'Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).'
-  //   );
-  // }
-  // if (
-  //   areSmaaValuesMissing(
-  //     includedDataSourcesIds,
-  //     includedAlternativeIds,
-  //     scales,
-  //     performanceTable
-  //   )
-  // ) {
-  //   warnings.push(
-  //     'Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).'
-  //   );
-  // }
+  const warnings: string[] = [];
+  const includedDataSourceIds = _.keys(_.pickBy(dataSourceInclusions));
+  const includedAlternativeIds = _.keys(_.pickBy(alternativeInclusions));
+  const noSmaaWarning =
+    'Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).';
+  const noDeterministicWarning =
+    'Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).';
+
+  if (
+    hasMissingValues(
+      workspace,
+      includedDataSourceIds,
+      includedAlternativeIds,
+      true
+    )
+  ) {
+    warnings.push(noDeterministicWarning);
+  }
+
+  if (
+    hasMissingValues(
+      workspace,
+      includedDataSourceIds,
+      includedAlternativeIds,
+      false
+    )
+  ) {
+    warnings.push(noSmaaWarning);
+  }
+
   return warnings;
 }
 
-// function areDeterministicValuesMissing(
-//   includedDataSourcesIds: string[],
-//   includedAlternativeIds: string[],
-//   scales: Record<string, Record<string, IScale>>,
-//   effects: Effect[]
-// ) {
-//   return _.some(includedDataSourcesIds, function (dataSourceId) {
-//     return _.some(includedAlternativeIds, function (alternativeId) {
-//       return (
-//         !isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
-//         missesEffectValue(performanceTable, dataSourceId, alternativeId)
-//       );
-//     });
-//   });
-// }
+function hasMissingValues(
+  workspace: IWorkspace,
+  includedDataSourceIds: string[],
+  includedAlternativeIds: string[],
+  isEffect: boolean
+) {
+  return _.some(includedDataSourceIds, (dataSourceId) => {
+    return _.some(includedAlternativeIds, (alternativeId) => {
+      const [
+        effect,
+        distribution,
+        relativePerformance
+      ] = findEffectAndDistribution(workspace, dataSourceId, alternativeId);
+
+      if (isEffect) {
+        return (
+          !hasPerformance(effect) &&
+          (hasPerformance(distribution) || relativePerformance)
+        );
+      } else {
+        return (
+          !hasPerformance(distribution) &&
+          !relativePerformance &&
+          hasPerformance(effect)
+        );
+      }
+    });
+  });
+}
+
+function findEffectAndDistribution(
+  workspace: IWorkspace,
+  dataSourceId: string,
+  alternativeId: string
+): [Effect, Distribution, IRelativePerformance] {
+  const effect = findPerformance(
+    workspace.effects,
+    dataSourceId,
+    alternativeId
+  );
+  const distribution = findPerformance(
+    workspace.distributions,
+    dataSourceId,
+    alternativeId
+  );
+  const relativePerformance = findRelativePerformance(
+    workspace.relativePerformances,
+    dataSourceId
+  );
+  return [effect, distribution, relativePerformance];
+}
+
+function findPerformance<
+  T extends {dataSourceId: string; alternativeId: string}
+>(items: T[], dataSourceId: string, alternativeId: string): T {
+  return _.find(items, (item: T) => {
+    return (
+      item.dataSourceId === dataSourceId && item.alternativeId === alternativeId
+    );
+  });
+}
+
+function findRelativePerformance(
+  items: IRelativePerformance[],
+  dataSourceId: string
+): IRelativePerformance {
+  return _.find(items, (item: IRelativePerformance) => {
+    return item.dataSourceId === dataSourceId;
+  });
+}
+
+function hasPerformance(performance: Effect | Distribution) {
+  return (
+    performance && performance.type !== 'empty' && performance.type !== 'text'
+  );
+}
 
 export function initInclusions<T extends {id: string}>(
   items: Record<string, T>,
@@ -77,7 +140,6 @@ export function getScaleBlockingWarnings(
   if (
     areValuesMissingInEffectsTable(
       workspace,
-      criterionInclusions,
       dataSourceInclusions,
       alternativeInclusions
     )
@@ -98,15 +160,11 @@ export function getScaleBlockingWarnings(
 
 function areValuesMissingInEffectsTable(
   workspace: IWorkspace,
-  criterionInclusions: Record<string, boolean>,
   dataSourceInclusions: Record<string, boolean>,
   alternativeInclusions: Record<string, boolean>
 ): boolean {
-  const includedCriteria = _.filter(workspace.criteria, (criterion) => {
-    return criterionInclusions[criterion.id];
-  });
   const includedDataSources: IDataSource[] = _.flatMap(
-    includedCriteria,
+    workspace.criteria,
     (criterion) => {
       return _.filter(criterion.dataSources, (dataSource) => {
         return dataSourceInclusions[dataSource.id];

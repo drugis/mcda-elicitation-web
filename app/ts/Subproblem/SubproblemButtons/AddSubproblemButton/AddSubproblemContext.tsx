@@ -71,7 +71,6 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     getMissingValueWarnings(
       dataSourceInclusions,
       alternativeInclusions,
-      scales,
       workspace
     )
   );
@@ -98,7 +97,22 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         workspace
       )
     );
-  }, [dataSourceInclusions, criterionInclusions, alternativeInclusions]);
+  }, [
+    dataSourceInclusions,
+    criterionInclusions,
+    alternativeInclusions,
+    workspace
+  ]);
+
+  useEffect(() => {
+    setMissingValueWarnings(
+      getMissingValueWarnings(
+        dataSourceInclusions,
+        alternativeInclusions,
+        workspace
+      )
+    );
+  }, [dataSourceInclusions, alternativeInclusions, workspace]);
 
   function updateAlternativeInclusion(id: string, newValue: boolean) {
     let newInclusions = {...alternativeInclusions};
@@ -111,9 +125,12 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   }
 
   function updateCriterionInclusion(id: string, newValue: boolean) {
-    let newInclusions = {...criterionInclusions};
-    newInclusions[id] = newValue;
-    setCriterionInclusions(newInclusions);
+    let newCriterionInclusions = {...criterionInclusions};
+    newCriterionInclusions[id] = newValue;
+    setCriterionInclusions(newCriterionInclusions);
+    _.forEach(criteria[id].dataSources, (dataSource: IDataSource) => {
+      updateDataSourceInclusion(dataSource.id, newValue);
+    });
   }
 
   function isBaseline(id: string): boolean {

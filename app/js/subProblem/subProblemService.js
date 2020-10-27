@@ -321,7 +321,7 @@ define(['lodash', 'angular'], function (_) {
         dataSourceInclusions: createDataSourceInclusions(problem, subProblem),
         ranges: _.merge(
           {},
-          _.keyBy(criteria, 'id'),
+          _.keyBy(criteria, 'id'), //FIXME: key by datasource
           subProblem.definition.ranges
         )
       };

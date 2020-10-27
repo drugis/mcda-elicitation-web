@@ -27,7 +27,7 @@ export default function InclusionCell({
     <TableCell rowSpan={rowSpan} style={cellStyle}>
       <Checkbox
         id={`inclusion-${itemId}-checkbox`}
-        checked={isChecked}
+        checked={isChecked && !isExcluded}
         onChange={handleChanged}
         color="primary"
         disabled={isDeselectionDisabled && isChecked}

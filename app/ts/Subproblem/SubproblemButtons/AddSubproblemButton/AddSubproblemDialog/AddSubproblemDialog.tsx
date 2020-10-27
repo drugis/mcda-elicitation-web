@@ -27,7 +27,13 @@ export default function AddSubproblemDialog({
   function showErrors(): JSX.Element[] {
     return _.map(errors, (error, index) => {
       return (
-        <Grid item xs={12} key={`error-${index}`} className="alert">
+        <Grid
+          item
+          xs={12}
+          key={`error-${index}`}
+          className="alert"
+          style={{textAlign: 'end'}}
+        >
           {error}
         </Grid>
       );
@@ -64,19 +70,23 @@ export default function AddSubproblemDialog({
             <Typography variant={'h5'}>Scale ranges</Typography>
             <AddSubproblemScaleRanges />
           </Grid>
-          {showErrors()}
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button
-          id={'add-subproblem-confirm-button'}
-          variant="contained"
-          color="primary"
-          onClick={handleButtonClick}
-          disabled={isDisabled()}
-        >
-          Add
-        </Button>
+        <Grid container spacing={1}>
+          {showErrors()}
+          <Grid item xs={12} style={{textAlign: 'end'}}>
+            <Button
+              id={'add-subproblem-confirm-button'}
+              variant="contained"
+              color="primary"
+              onClick={handleButtonClick}
+              disabled={isDisabled()}
+            >
+              Add
+            </Button>
+          </Grid>
+        </Grid>
       </DialogActions>
     </Dialog>
   );
