@@ -167,9 +167,9 @@ describe('ScalesTableUtil', () => {
       const configuredRanges: Record<string, [number, number]> = {
         ds1Id: [0, 1]
       };
-      const doPercentification = false;
+      const usePercentage = false;
       const result = getConfiguredRange(
-        doPercentification,
+        usePercentage,
         observedRanges['ds1Id'],
         configuredRanges['ds1Id']
       );
@@ -178,11 +178,8 @@ describe('ScalesTableUtil', () => {
     });
 
     it('should return the observed ranges if there are no configured ranges', () => {
-      const doPercentification = false;
-      const result = getConfiguredRange(
-        doPercentification,
-        observedRanges['ds1Id']
-      );
+      const usePercentage = false;
+      const result = getConfiguredRange(usePercentage, observedRanges['ds1Id']);
       const expectedResult = '37, 42';
       expect(result).toEqual(expectedResult);
     });

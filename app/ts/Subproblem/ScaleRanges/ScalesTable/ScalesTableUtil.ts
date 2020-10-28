@@ -101,7 +101,7 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
 }
 
 export function getConfiguredRange(
-  doPercentification: boolean,
+  usePercentage: boolean,
   [lowerObservedRange, upperObservedRange]: [number, number],
   configuredRange?: [number, number]
 ): string {
@@ -109,22 +109,16 @@ export function getConfiguredRange(
     const [lowerConfiguredRange, upperConfiguredRange] = configuredRange;
     const lowerValue = getPercentifiedValue(
       lowerConfiguredRange,
-      doPercentification
+      usePercentage
     );
     const upperValue = getPercentifiedValue(
       upperConfiguredRange,
-      doPercentification
+      usePercentage
     );
     return `${lowerValue}, ${upperValue}`;
   } else {
-    const lowerValue = getPercentifiedValue(
-      lowerObservedRange,
-      doPercentification
-    );
-    const upperValue = getPercentifiedValue(
-      upperObservedRange,
-      doPercentification
-    );
+    const lowerValue = getPercentifiedValue(lowerObservedRange, usePercentage);
+    const upperValue = getPercentifiedValue(upperObservedRange, usePercentage);
     return `${lowerValue}, ${upperValue}`;
   }
 }

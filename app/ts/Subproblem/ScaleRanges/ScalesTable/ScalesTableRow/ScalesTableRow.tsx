@@ -19,7 +19,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
   const dataSourceId = criterion.dataSources[0].id;
 
   const unit = criterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentages = showPercentages && canBePercentage(unit);
+  const usePercentage = showPercentages && canBePercentage(unit);
   const theoreticalValues = [
     getStringForValue(
       criterion.dataSources[0].unitOfMeasurement.lowerBound,
@@ -33,8 +33,8 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
     )
   ];
   const observedValues = [
-    getPercentifiedValue(observedRanges[dataSourceId][0], usePercentages),
-    getPercentifiedValue(observedRanges[dataSourceId][1], usePercentages)
+    getPercentifiedValue(observedRanges[dataSourceId][0], usePercentage),
+    getPercentifiedValue(observedRanges[dataSourceId][1], usePercentage)
   ];
   const rangeDefinition = currentSubproblem.definition.ranges[dataSourceId];
 
@@ -51,7 +51,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
         {getConfiguredRange(
-          usePercentages,
+          usePercentage,
           observedRanges[dataSourceId],
           rangeDefinition ? rangeDefinition : undefined
         )}

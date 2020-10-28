@@ -134,12 +134,12 @@ export function determineStepSize(from: number, to: number) {
 export function createMarks(
   sliderRange: [number, number],
   observedRange: [number, number],
-  doPercentification: boolean
+  usePercentage: boolean
 ): Mark[] {
   return [
     {
       value: sliderRange[0],
-      label: getPercentifiedValue(sliderRange[0], doPercentification)
+      label: getPercentifiedValue(sliderRange[0], usePercentage)
     },
     {
       value: observedRange[0]
@@ -149,7 +149,7 @@ export function createMarks(
     },
     {
       value: sliderRange[1],
-      label: getPercentifiedValue(sliderRange[1], doPercentification)
+      label: getPercentifiedValue(sliderRange[1], usePercentage)
     }
   ];
 }

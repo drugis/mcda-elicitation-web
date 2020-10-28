@@ -93,7 +93,7 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     logger.debug('creating subproblem');
     const definition = {
-      ranges: getRanges(request.body.problem)
+      ranges: getRanges(request.body.problem) //FIXME
     };
     subproblemRepository.create(
       client,
