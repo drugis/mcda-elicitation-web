@@ -437,8 +437,7 @@ define([
         const funkyProblem = {
           schemaVersion: 'can.never.happen'
         };
-        const error =
-          'Configured current schema version (1.4.5) is not the same as the updated schema version (can.never.happen)';
+        const error = `Configured current schema version (${currentSchemaVersion}) is not the same as the updated schema version (${funkyProblem.schemaVersion})`;
 
         expect(function () {
           schemaService.updateProblemToCurrentSchema(funkyProblem);

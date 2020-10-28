@@ -157,9 +157,9 @@ describe('ScalesTableUtil', () => {
     });
   });
 
-  describe('getConfiguredRange', () => {
+  describe('getConfiguredRangeLabel', () => {
     const observedRanges: Record<string, [number, number]> = {
-      crit1Id: [37, 42]
+      ds1Id: [37, 42]
     };
     const showPercentages = false;
 
@@ -170,7 +170,7 @@ describe('ScalesTableUtil', () => {
       const doPercentification = false;
       const result = getConfiguredRange(
         doPercentification,
-        observedRanges['crit1Id'],
+        observedRanges['ds1Id'],
         configuredRanges['ds1Id']
       );
       const expectedResult = '0, 1';
@@ -181,7 +181,7 @@ describe('ScalesTableUtil', () => {
       const doPercentification = false;
       const result = getConfiguredRange(
         doPercentification,
-        observedRanges['crit1Id']
+        observedRanges['ds1Id']
       );
       const expectedResult = '37, 42';
       expect(result).toEqual(expectedResult);

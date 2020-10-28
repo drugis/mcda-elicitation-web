@@ -2,8 +2,10 @@ import {Grid, IconButton, makeStyles, Slider, Tooltip} from '@material-ui/core';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import ICriterion from '@shared/interface/ICriterion';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {
+  canBePercentage,
+  getPercentifiedValue
+} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
@@ -51,10 +53,8 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   }, [configuredRange]);
 
   // units
-  const {decimal, percentage} = UnitOfMeasurementType;
   const unit = includedDataSource.unitOfMeasurement.type;
-  const usePercentage =
-    showPercentages && (unit === decimal || unit === percentage);
+  const usePercentage = showPercentages && canBePercentage(unit);
 
   function handleChange(event: any, newValue: [number, number]) {
     if (

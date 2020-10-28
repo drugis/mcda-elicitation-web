@@ -1,7 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/AddSubproblemEffectsTable';
 import React, {useContext} from 'react';
@@ -37,12 +37,18 @@ export default function DistributionValueCell({
 
   function renderValuesForAnalysis(scale: IScale): JSX.Element | string {
     if (scale['50%'] !== null) {
-      const lowerBound = getPercentifiedValue(scale['2.5%'], usePercentage);
-      const upperBound = getPercentifiedValue(scale['97.5%'], usePercentage);
+      const lowerBound = getPercentifiedValueLabel(
+        scale['2.5%'],
+        usePercentage
+      );
+      const upperBound = getPercentifiedValueLabel(
+        scale['97.5%'],
+        usePercentage
+      );
       const modeOrMedian =
         scalesCalculationMethod === 'mode'
-          ? getPercentifiedValue(scale.mode, usePercentage)
-          : getPercentifiedValue(scale['50%'], usePercentage);
+          ? getPercentifiedValueLabel(scale.mode, usePercentage)
+          : getPercentifiedValueLabel(scale['50%'], usePercentage);
       return (
         <UncertainValue
           value={modeOrMedian}

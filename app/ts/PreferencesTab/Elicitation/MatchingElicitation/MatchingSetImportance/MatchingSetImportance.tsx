@@ -5,11 +5,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {
   getBest,
   getWorst
 } from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
 import {
@@ -19,10 +21,12 @@ import {
 import MatchingSlider from './MatchingSlider/MatchingSlider';
 
 export default function MatchingSetImportance() {
+  const {showPercentages} = useContext(SettingsContext);
   const {mostImportantCriterionId, currentStep} = useContext(
     ElicitationContext
   );
   const {criteria, pvfs} = useContext(PreferencesContext);
+
   const mostImportantCriterion = criteria[mostImportantCriterionId];
 
   const currentCriterion = getCurrentCriterion(
@@ -34,6 +38,13 @@ export default function MatchingSetImportance() {
     mostImportantCriterion,
     currentCriterion
   );
+
+  const usePercentagesForMostImportantCriterion =
+    showPercentages &&
+    canBePercentage(mostImportantCriterion.unitOfMeasurement.type);
+
+  const usePercentagesForCurrentCriterion =
+    showPercentages && canBePercentage(currentCriterion.unitOfMeasurement.type);
 
   return (
     <Grid container item spacing={2}>
@@ -59,7 +70,10 @@ export default function MatchingSetImportance() {
             <TableRow>
               <TableCell>{mostImportantCriterion.title}</TableCell>
               <TableCell align="center">
-                {getWorst(pvfs[mostImportantCriterionId])}
+                {getWorst(
+                  pvfs[mostImportantCriterionId],
+                  usePercentagesForMostImportantCriterion
+                )}
               </TableCell>
               <TableCell align="center">
                 <MatchingSlider currentCriterionId={currentCriterion.id} />
@@ -68,10 +82,16 @@ export default function MatchingSetImportance() {
             <TableRow>
               <TableCell>{currentCriterion.title}</TableCell>
               <TableCell align="center">
-                {getBest(pvfs[currentCriterion.id])}
+                {getBest(
+                  pvfs[currentCriterion.id],
+                  usePercentagesForCurrentCriterion
+                )}
               </TableCell>
               <TableCell align="center">
-                {getWorst(pvfs[currentCriterion.id])}
+                {getWorst(
+                  pvfs[currentCriterion.id],
+                  usePercentagesForCurrentCriterion
+                )}
               </TableCell>
             </TableRow>
           </TableBody>

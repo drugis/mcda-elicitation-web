@@ -1,6 +1,8 @@
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import _ from 'lodash';
 import {
   getBest,
@@ -10,12 +12,16 @@ import {DEFAULT_PRECISE_TEMPLATE} from '../elicitationConstants';
 
 export function getSwingStatement(
   criterion: IPreferencesCriterion,
-  pvf: IPvf
+  pvf: IPvf,
+  showPercentages: boolean
 ): string {
+  const label = getUnitLabel(criterion.unitOfMeasurement, showPercentages);
+  const usePercentage =
+    showPercentages && canBePercentage(criterion.unitOfMeasurement.type);
   return DEFAULT_PRECISE_TEMPLATE.replace(/%criterion1%/gi, criterion.title)
-    .replace(/%unit1%/gi, criterion.unitOfMeasurement.label)
-    .replace(/%worst1%/gi, String(getWorst(pvf)))
-    .replace(/%best1%/gi, String(getBest(pvf)));
+    .replace(/%unit1%/gi, label)
+    .replace(/%worst1%/gi, String(getWorst(pvf, usePercentage)))
+    .replace(/%best1%/gi, String(getBest(pvf, usePercentage)));
 }
 
 export function buildInitialPrecisePreferences(

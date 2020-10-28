@@ -18,9 +18,10 @@ module.exports = {
   'Unselecting reference column in deterministic results tab': unselectReferenceInDeterministic,
   'Switching between median and mode in deterministic tab': switchMedianInDeterministic,
   'Switching settings in the overview tab': switchSettingsInOverview,
-  // 'Switching settings in the preferences tab': switchSettingsInPreferences, //FIXME:  does not use view settings at all atm
-  'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF
-  // 'Switching settings while setting the weights': switchSettingsWhileSettingWeights //FIXME: does not use view settings at all atm
+  'Switching settings in the preferences tab': switchSettingsInPreferences,
+  'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF,
+  'Switching settings mid-elicitation': switchSettingsMidRanking,
+  'Switching settings on the deterministic tab': switchSettingsOnDeterministicTab
 };
 
 const loginService = require('./util/loginService');
@@ -322,8 +323,8 @@ function switchSettingsInOverview(browser) {
 }
 
 function switchSettingsInPreferences(browser) {
-  var effectCellPath = '//*[@id="perferences-weights-table"]/tbody/tr[1]/td[4]';
-  var unitsCellPath = '//*[@id="perferences-weights-table"]/tbody/tr[1]/td[3]';
+  var effectCellPath = '//*[@id="worst-OS"]';
+  var unitsCellPath = '//*[@id="unit-OS"]';
 
   util
     .delayedClick(
@@ -387,8 +388,9 @@ function switchSettingsWhileSettingPVF(browser) {
   showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
 }
 
-function switchSettingsWhileSettingWeights(browser) {
-  var firstCriterion = '//*[@id="criterion-0"]';
+function switchSettingsMidRanking(browser) {
+  var firstRankingSituation = '//*[@id="situation-OS"]';
+  var firstRankingChoice = '//*[@id="ranking-choice-OS"]';
 
   util
     .delayedClick(
@@ -398,30 +400,42 @@ function switchSettingsWhileSettingWeights(browser) {
     )
     .click('#ranking-button')
     .useXpath()
-    .assert.containsText(firstCriterion, '2-year survival: 45 %');
+    .assert.containsText(firstRankingSituation, '2-year survival: 45 %')
+    .assert.containsText(
+      firstRankingChoice,
+      'increasing 2-year survival from 45 to 65'
+    );
 
-  showDecimals(browser).assert.containsText(
-    firstCriterion,
-    '2-year survival: 0.45'
-  );
-  showPercentagesAndValues(browser).assert.containsText(
-    firstCriterion,
-    '2-year survival: 45 %'
-  );
-  showDecimals(browser).assert.containsText(
-    firstCriterion,
-    '2-year survival: 0.45'
-  );
-  showDecimals(browser).assert.containsText(
-    firstCriterion,
-    '2-year survival: 0.45'
-  );
+  showDecimals(browser)
+    .assert.containsText(firstRankingSituation, '2-year survival: 0.45')
+    .assert.containsText(
+      firstRankingChoice,
+      'increasing 2-year survival from 0.45 to 0.65'
+    );
   showPercentagesAndSmaaValues(browser).assert.containsText(
-    firstCriterion,
+    firstRankingSituation,
     '2-year survival: 45 %'
   );
   showDecimals(browser).assert.containsText(
-    firstCriterion,
+    firstRankingSituation,
     '2-year survival: 0.45'
   );
+}
+
+function switchSettingsOnDeterministicTab(browser) {
+  var OSUnitCell = '//*[@id="sensitivity-unit-OS"]';
+  var firstOSSensitivityCell = '//*[@id="sensitivity-value-alt1-OS"]';
+
+  util
+    .delayedClick(
+      browser,
+      '#deterministic-tab',
+      '#sensitivity-measurements-header'
+    )
+    .useXpath()
+    .assert.containsText(OSUnitCell, '%')
+    .assert.containsText(firstOSSensitivityCell, '60');
+  showDecimals(browser)
+    .assert.containsText(OSUnitCell, '')
+    .assert.containsText(firstOSSensitivityCell, '0.6');
 }

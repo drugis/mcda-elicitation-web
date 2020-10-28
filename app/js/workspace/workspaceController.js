@@ -39,6 +39,7 @@ define(['angular'], function (angular) {
     } else {
       $scope.workspace = currentWorkspace;
     }
+    $scope.workspaceForReact = angular.copy($scope.workspace);
     getWorkspaceSettings();
     $scope.$on('elicit.settingsChanged', getWorkspaceSettings);
     $scope.isEditTitleVisible = false;

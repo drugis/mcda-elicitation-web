@@ -1,6 +1,8 @@
 import Tooltip from '@material-ui/core/Tooltip';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
-import React from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import React, {useContext} from 'react';
 
 export default function CriterionSituation({
   criterion,
@@ -9,16 +11,24 @@ export default function CriterionSituation({
   criterion: IPreferencesCriterion;
   displayValue: number;
 }) {
+  const {showPercentages} = useContext(SettingsContext);
+
   return (
-    <ul key={criterion.id}>
-      <li>
+    <ul>
+      <li id={`situation-${criterion.id}`}>
         <Tooltip
           disableHoverListener={!criterion.description}
           title={criterion.description ? criterion.description : ''}
         >
-          <span className="criterion-title">{criterion.title}</span>
+          <span
+            id={`situation-title-${criterion.id}`}
+            className="criterion-title"
+          >
+            {criterion.title}
+          </span>
         </Tooltip>
-        : {displayValue} {criterion.unitOfMeasurement.label}
+        : <span id={`situation-value-${criterion.id}`}>{displayValue}</span>{' '}
+        {getUnitLabel(criterion.unitOfMeasurement, showPercentages)}
       </li>
     </ul>
   );

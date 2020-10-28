@@ -1,4 +1,6 @@
 import Grid from '@material-ui/core/Grid';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {ChartConfiguration, generate} from 'c3';
 import {selectAll} from 'd3';
 import React, {useContext, useEffect} from 'react';
@@ -13,6 +15,7 @@ export default function PartialValueFunctionPlot({
 }: {
   criterionId: string;
 }) {
+  const {showPercentages} = useContext(SettingsContext);
   const {getCriterion, getPvf} = useContext(PreferencesContext);
   const criterion = getCriterion(criterionId);
   const pvf = getPvf(criterionId);
@@ -20,14 +23,16 @@ export default function PartialValueFunctionPlot({
   const height = '216px';
 
   useEffect(() => {
-    const values = getPvfCoordinates(pvf, criterion.title);
+    const usePercentage =
+      showPercentages && canBePercentage(criterion.unitOfMeasurement.type);
+    const values = getPvfCoordinates(pvf, criterion.title, usePercentage);
     const settings: ChartConfiguration = generatePlotSettings(
       criterionId,
       values
     );
     generate(settings);
     selectAll('.c3-line').style('stroke-width', '2px');
-  }, [pvf]);
+  }, [pvf, showPercentages]);
 
   return (
     <Grid item>

@@ -50,7 +50,9 @@ define(['clipboard', 'lodash'], function (Clipboard, _) {
     };
     new Clipboard('.clipboard-button');
 
-    $scope.$on('elicit.settingsChanged', $state.reload);
+    $scope.$on('elicit.settingsChanged', () => {
+      $state.reload(); // discard broadcast argument, keep in anonymous function
+    });
     $scope.$watch('scales.observed', resetSensitivityAnalysis);
     $scope.$on('elicit.legendChanged', loadState);
 

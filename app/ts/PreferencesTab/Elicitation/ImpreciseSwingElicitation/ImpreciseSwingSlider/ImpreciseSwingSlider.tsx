@@ -18,7 +18,10 @@ export default function ImpreciseSwingSlider({
     setBoundPreference(criterion.id, sliderValue);
   }, [mostImportantCriterionId]);
 
-  function handleSliderChanged(event: any, newValue: any) {
+  function handleSliderChanged(
+    event: React.ChangeEvent<any>,
+    newValue: [number, number]
+  ) {
     setSliderValue(newValue);
     setBoundPreference(criterion.id, newValue);
   }

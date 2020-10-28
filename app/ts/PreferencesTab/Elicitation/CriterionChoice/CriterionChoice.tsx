@@ -1,6 +1,8 @@
 import Radio from '@material-ui/core/Radio';
 import Tooltip from '@material-ui/core/Tooltip';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 import {
   getBest,
@@ -13,11 +15,16 @@ export default function CriterionChoice({
 }: {
   criterion: IPreferencesCriterion;
 }) {
+  const {showPercentages} = useContext(SettingsContext);
   const {pvfs} = useContext(PreferencesContext);
+
   const pvf = pvfs[criterion.id];
+  const usePercentage =
+    showPercentages && canBePercentage(criterion.unitOfMeasurement.type);
+
   return (
-    <label key={criterion.id}>
-      <Radio key={criterion.id} value={criterion.id} />
+    <label id={`ranking-choice-${criterion.id}`}>
+      <Radio value={criterion.id} />
       {`${pvf.direction} `}
       <Tooltip
         disableHoverListener={!criterion.description}
@@ -30,7 +37,10 @@ export default function CriterionChoice({
           {criterion.title}
         </span>
       </Tooltip>
-      {` from ${getWorst(pvf)} to ${getBest(pvf)}`}
+      {` from ${getWorst(pvf, usePercentage)} to ${getBest(
+        pvf,
+        usePercentage
+      )}`}
     </label>
   );
 }

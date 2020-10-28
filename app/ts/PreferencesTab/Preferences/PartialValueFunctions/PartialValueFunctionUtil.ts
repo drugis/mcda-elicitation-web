@@ -6,17 +6,40 @@ import _ from 'lodash';
 
 export function getPvfCoordinates(
   pvf: IPvf,
-  criterionTitle: string
+  criterionTitle: string,
+  usePercentage: boolean
 ): [['x', ...number[]], [string, 1, ...number[]]] {
-  return [getXValues(pvf), getYValues(pvf, criterionTitle)];
+  return [getXValues(pvf, usePercentage), getYValues(pvf, criterionTitle)];
 }
 
-function getXValues(pvf: IPvf): ['x', ...number[]] {
-  return ['x', getBest(pvf), ...intermediateX(pvf), getWorst(pvf)];
+function getXValues(pvf: IPvf, usePercentage: boolean): ['x', ...number[]] {
+  return [
+    'x',
+    getBest(pvf, usePercentage),
+    ...intermediateX(pvf, usePercentage),
+    getWorst(pvf, usePercentage)
+  ];
 }
 
-function intermediateX(pvf: IPvf): number[] {
-  return pvf.cutoffs ? pvf.cutoffs : [];
+export function getPercentifiedNumber(
+  value: number,
+  usePercentage: boolean
+): number {
+  if (usePercentage) {
+    return significantDigits(value * 100);
+  } else {
+    return significantDigits(value);
+  }
+}
+
+function intermediateX(pvf: IPvf, usePercentage: boolean): number[] {
+  if (pvf.cutoffs) {
+    return _.map(pvf.cutoffs, (value: number) => {
+      return getPercentifiedNumber(value, usePercentage);
+    });
+  } else {
+    return [];
+  }
 }
 
 function getYValues(
@@ -30,13 +53,20 @@ function intermediateY(pvf: IPvf): number[] {
   return pvf.values ? pvf.values : [];
 }
 
-export function getBest(pvf: IPvf): number {
-  return significantDigits(isIncreasing(pvf) ? pvf.range[1] : pvf.range[0]);
+export function getBest(pvf: IPvf, usePercentage: boolean): number {
+  const value = significantDigits(
+    isIncreasing(pvf) ? pvf.range[1] : pvf.range[0]
+  );
+  return getPercentifiedNumber(value, usePercentage);
 }
 
-export function getWorst(pvf: IPvf): number {
-  return significantDigits(isIncreasing(pvf) ? pvf.range[0] : pvf.range[1]);
+export function getWorst(pvf: IPvf, usePercentage: boolean): number {
+  const value = significantDigits(
+    isIncreasing(pvf) ? pvf.range[0] : pvf.range[1]
+  );
+  return getPercentifiedNumber(value, usePercentage);
 }
+
 function isIncreasing(pvf: IPvf): boolean {
   return pvf.direction === 'increasing';
 }

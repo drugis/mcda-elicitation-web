@@ -1,7 +1,7 @@
 import {Distribution} from '@shared/interface/IDistribution';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
 
 export function renderDistribution(
   distribution: Distribution,
@@ -24,7 +24,7 @@ export function renderDistribution(
       case 'text':
         return distribution.text;
       case 'value':
-        return getPercentifiedValue(distribution.value, usePercentage);
+        return getPercentifiedValueLabel(distribution.value, usePercentage);
     }
   }
 }
@@ -33,18 +33,18 @@ function renderRangeDistribution(
   distribution: IRangeEffect,
   usePercentage: boolean
 ): string {
-  return `[${getPercentifiedValue(
+  return `[${getPercentifiedValueLabel(
     distribution.lowerBound,
     usePercentage
-  )}, ${getPercentifiedValue(distribution.upperBound, usePercentage)}]`;
+  )}, ${getPercentifiedValueLabel(distribution.upperBound, usePercentage)}]`;
 }
 
 function renderNormalDistribution(
   distribution: INormalDistribution,
   usePercentage: boolean
 ): string {
-  return `Normal(${getPercentifiedValue(
+  return `Normal(${getPercentifiedValueLabel(
     distribution.mean,
     usePercentage
-  )}, ${getPercentifiedValue(distribution.standardError, usePercentage)})`;
+  )}, ${getPercentifiedValueLabel(distribution.standardError, usePercentage)})`;
 }
