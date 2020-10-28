@@ -13,6 +13,7 @@
     "build-backend": "rm -rf tscomp/*  && tsc -p ts-backend-config.json",
     "build-dev": "webpack --config webpack.dev.js",
     "build-local-login": "webpack --config webpack.local.js",
+    "build-local-login-dev": "webpack --config webpack.local.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js --watch",
     "dev-local": "webpack --config webpack.local.js --watch",
