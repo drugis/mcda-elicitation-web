@@ -264,12 +264,34 @@ export function initConfiguredRanges(
   });
 }
 
-export function createProblemDefinition(): ISubproblemDefinition {
+export function createSubproblemDefinition(
+  criterionInclusions: Record<string, boolean>,
+  dataSourceInclusions: Record<string, boolean>,
+  alternativeInclusions: Record<string, boolean>,
+  configuredRanges: Record<string, [number, number]>
+): ISubproblemDefinition {
   return {
-    ranges: getConfiguredRanges()
+    excludedCriteria: getExclusions(criterionInclusions),
+    excludedDataSources: getExclusions(dataSourceInclusions),
+    excludedAlternatives: getExclusions(alternativeInclusions),
+    ranges: getConfiguredRanges(configuredRanges, dataSourceInclusions)
   };
 }
 
-function getConfiguredRanges(): Record<string, [number, number]> {
-  return {} as Record<string, [number, number]>;
+function getExclusions(items: Record<string, boolean>): string[] {
+  return _(items)
+    .omitBy((value) => {
+      return value;
+    })
+    .keys()
+    .value();
+}
+
+function getConfiguredRanges(
+  configuredRanges: Record<string, [number, number]>,
+  dataSourceInclusions: Record<string, boolean>
+): Record<string, [number, number]> {
+  return _.pickBy(configuredRanges, (range, dataSourceId) => {
+    return dataSourceInclusions[dataSourceId];
+  });
 }

@@ -24,5 +24,5 @@ export default interface IAddSubproblemContext {
     lowestConfiguredValue: number,
     highestConfiguredValue: number
   ) => void;
-  addSubproblemWrapper: () => void;
+  addSubproblem: () => void;
 }

@@ -24,7 +24,7 @@ export default function AddSubproblemDialog({
 }) {
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
-  const {errors, addSubproblemWrapper} = useContext(AddSubproblemContext);
+  const {errors, addSubproblem} = useContext(AddSubproblemContext);
   function showErrors(): JSX.Element[] {
     return _.map(errors, (error, index) => {
       return (
@@ -46,7 +46,7 @@ export default function AddSubproblemDialog({
   }
 
   function handleButtonClick(): void {
-    addSubproblemWrapper();
+    addSubproblem();
     closeDialog();
   }
 

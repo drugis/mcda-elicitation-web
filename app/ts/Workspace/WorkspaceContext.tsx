@@ -1,6 +1,7 @@
 import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
+import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {buildWorkspace} from '@shared/workspaceService';
 import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
@@ -68,7 +69,7 @@ export function WorkspaceContextProviderComponent({
   function deleteSubproblem(subproblemId: string): void {
     Axios.delete(`/workspaces/${workspaceId}/problems/${currentSubproblem.id}`)
       .then(() => {
-        const newCurrentSubproblem = _.reject(subproblems, [
+        const newCurrentSubproblem: IOldSubproblem = _.reject(subproblems, [
           'id',
           subproblemId
         ])[0];
@@ -77,10 +78,10 @@ export function WorkspaceContextProviderComponent({
       .catch(errorCallback);
   }
 
-  function addSubproblem(command: any): void {
+  function addSubproblem(command: ISubproblemCommand): void {
     Axios.post(`/workspaces/${workspaceId}/problems/`, command)
-      .then((result: AxiosResponse) => {
-        // window.location.assign(getScenarioLocation(result.data.id));
+      .then((result: AxiosResponse<IOldSubproblem>) => {
+        subproblemChanged(result.data);
       })
       .catch(errorCallback);
   }

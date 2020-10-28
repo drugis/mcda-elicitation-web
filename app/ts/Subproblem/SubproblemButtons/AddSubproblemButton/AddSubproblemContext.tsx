@@ -1,13 +1,12 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
-import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
-  createProblemDefinition,
+  createSubproblemDefinition,
   getBaselineMap,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
@@ -23,7 +22,6 @@ export const AddSubproblemContext = createContext<IAddSubproblemContext>(
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
-  const {setError} = useContext(ErrorContext);
   const {
     subproblems,
     alternatives,
@@ -191,7 +189,12 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   function addSubproblemWrapper(): void {
     const subproblemCommand: ISubproblemCommand = {
       title: title,
-      definition: createProblemDefinition()
+      definition: createSubproblemDefinition(
+        criterionInclusions,
+        dataSourceInclusions,
+        alternativeInclusions,
+        configuredRanges
+      )
     };
     addSubproblem(subproblemCommand);
   }
@@ -228,7 +231,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper,
         resetToDefault,
         setConfiguredRange,
-        addSubproblemWrapper
+        addSubproblem: addSubproblemWrapper
       }}
     >
       {props.children}

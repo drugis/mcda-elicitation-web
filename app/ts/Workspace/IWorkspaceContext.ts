@@ -1,6 +1,7 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IScale from '@shared/interface/IScale';
+import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
 
@@ -14,5 +15,5 @@ export default interface IWorkspaceContext {
   workspace: IWorkspace;
   deleteSubproblem: (subproblemId: string) => void;
   editTitle: (title: string) => void;
-  addSubproblem: (command: any) => void;
+  addSubproblem: (command: ISubproblemCommand) => void;
 }

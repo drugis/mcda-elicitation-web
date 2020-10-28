@@ -2,13 +2,15 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
+import ISubproblemDefinition from 'app/ts/interface/ISubproblemDefinition';
 import {
   getBaselineMap,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
   initInclusions,
   isAlternativeDisabled,
-  isDataSourceDeselectionDisabled
+  isDataSourceDeselectionDisabled,
+  createSubproblemDefinition
 } from './AddSubproblemUtil';
 
 describe('addSubproblemUtil', () => {
@@ -574,6 +576,44 @@ describe('addSubproblemUtil', () => {
         criterionInclusions
       );
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe('createSubproblemDefinition', () => {
+    it('should return a subproblem definition ready for the backend', () => {
+      const criterionInclusions: Record<string, boolean> = {
+        crit1Id: true,
+        crit2Id: false,
+        crit3Id: true
+      };
+      const dataSourceInclusions: Record<string, boolean> = {
+        ds1Id: true,
+        ds2Id: true,
+        ds3Id: false
+      };
+      const alternativeInclusions: Record<string, boolean> = {
+        alt1Id: false,
+        alt2Id: true,
+        alt3Id: true
+      };
+      const configuredRanges: Record<string, [number, number]> = {
+        ds1Id: [0, 1],
+        ds2Id: [50, 100],
+        ds3Id: [37, 42]
+      };
+      const result = createSubproblemDefinition(
+        criterionInclusions,
+        dataSourceInclusions,
+        alternativeInclusions,
+        configuredRanges
+      );
+      const expectedResult: ISubproblemDefinition = {
+        excludedAlternatives: ['alt1Id'],
+        excludedCriteria: ['crit2Id'],
+        excludedDataSources: ['ds3Id'],
+        ranges: {ds1Id: [0, 1], ds2Id: [50, 100]}
+      };
+      expect(result).toEqual(expectedResult);
     });
   });
 });
