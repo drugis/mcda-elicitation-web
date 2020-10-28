@@ -1,3 +1,4 @@
+import {TableCell} from '@material-ui/core';
 import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
@@ -12,6 +13,7 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {AddSubproblemContext} from '../../../AddSubproblemContext';
+import {deselectedCellStyle} from '../../AddSubproblemEffectsTable';
 import InclusionCell from '../../InclusionCell/InclusionCell';
 
 export default function AddSubproblemEffectsTableDataSourceRow({
@@ -38,15 +40,21 @@ export default function AddSubproblemEffectsTableDataSourceRow({
   const areDataSourceCellsExcluded = isDataSourceExcluded(dataSource.id);
 
   function renderDataSourceCells(): JSX.Element {
+    const cellStyle = isDataSourceExcluded(dataSource.id)
+      ? deselectedCellStyle
+      : {};
     return (
       <>
-        <InclusionCell
-          itemId={dataSource.id}
-          updateInclusion={updateDataSourceInclusion}
-          isDeselectionDisabled={isDataSourceDeselectionDisabled(criterion.id)}
-          rowSpan={1}
-          isExcluded={areCriterionCellsExcluded || areDataSourceCellsExcluded}
-        />
+        <TableCell rowSpan={1} style={cellStyle}>
+          <InclusionCell
+            itemId={dataSource.id}
+            updateInclusion={updateDataSourceInclusion}
+            isDeselectionDisabled={isDataSourceDeselectionDisabled(
+              criterion.id
+            )}
+            isExcluded={isDataSourceExcluded(dataSource.id)}
+          />
+        </TableCell>
         <EffectsTableUnitOfMeasurementCell
           dataSource={dataSource}
           isExcluded={areCriterionCellsExcluded || areDataSourceCellsExcluded}
@@ -84,15 +92,19 @@ export default function AddSubproblemEffectsTableDataSourceRow({
 
   function renderCriterionCells(): JSX.Element {
     if (rowIndex === 0) {
+      const cellStyle = isCriterionExcluded(criterion.id)
+        ? deselectedCellStyle
+        : {};
       return (
         <>
-          <InclusionCell
-            itemId={criterion.id}
-            updateInclusion={updateCriterionInclusion}
-            isDeselectionDisabled={isCriterionDeselectionDisabled}
-            rowSpan={criterion.dataSources.length}
-            isExcluded={areCriterionCellsExcluded}
-          />
+          <TableCell rowSpan={criterion.dataSources.length} style={cellStyle}>
+            <InclusionCell
+              itemId={criterion.id}
+              updateInclusion={updateCriterionInclusion}
+              isDeselectionDisabled={isCriterionDeselectionDisabled}
+              isExcluded={isCriterionExcluded(criterion.id)}
+            />
+          </TableCell>
           <EffectsTableCriterionTitleCell
             rowIndex={rowIndex}
             criterion={criterion}

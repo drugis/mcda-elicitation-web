@@ -45,7 +45,6 @@ export default function Subproblem({
           workspaceId={workspaceId}
           subproblemChanged={subproblemChanged}
           scales={scales}
-          createSubproblemDialogCallback={createDialogCallback}
         >
           <SettingsContextProviderComponent
             settings={settings}

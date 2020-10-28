@@ -4,7 +4,7 @@ import IScale from '@shared/interface/IScale';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {buildWorkspace} from '@shared/workspaceService';
 import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
-import Axios from 'axios';
+import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
@@ -22,8 +22,7 @@ export function WorkspaceContextProviderComponent({
   currentAngularSubproblem,
   workspaceId,
   subproblemChanged,
-  scales,
-  createSubproblemDialogCallback
+  scales
 }: {
   children: any;
   oldWorkspace: IOldWorkspace;
@@ -32,7 +31,6 @@ export function WorkspaceContextProviderComponent({
   workspaceId: string;
   subproblemChanged: (subproblem: IOldSubproblem) => void;
   scales: Record<string, Record<string, IScale>>;
-  createSubproblemDialogCallback: () => void;
 }) {
   const {setError} = useContext(ErrorContext);
   const [subproblems, setSubproblems] = useState<
@@ -79,6 +77,14 @@ export function WorkspaceContextProviderComponent({
       .catch(errorCallback);
   }
 
+  function addSubproblem(command: any): void {
+    Axios.post(`/workspaces/${workspaceId}/problems/`, command)
+      .then((result: AxiosResponse) => {
+        // window.location.assign(getScenarioLocation(result.data.id));
+      })
+      .catch(errorCallback);
+  }
+
   function errorCallback(error: OurError) {
     setError(error);
   }
@@ -93,9 +99,9 @@ export function WorkspaceContextProviderComponent({
         scales,
         subproblems,
         workspace,
-        createSubproblemDialogCallback,
         deleteSubproblem,
-        editTitle
+        editTitle,
+        addSubproblem
       }}
     >
       {children}

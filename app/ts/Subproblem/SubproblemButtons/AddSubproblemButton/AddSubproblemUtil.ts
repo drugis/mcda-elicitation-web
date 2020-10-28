@@ -5,7 +5,9 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
+import ISubproblemDefinition from 'app/ts/interface/ISubproblemDefinition';
 import _ from 'lodash';
+import {getSliderLimits} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
 
 export function getMissingValueWarnings(
   dataSourceInclusions: Record<string, boolean>,
@@ -246,4 +248,28 @@ export function isDataSourceDeselectionDisabled(
     }
   ).true;
   return numberOfSelectedDataSources < 2 || !criterionInclusions[criterion.id];
+}
+
+export function initConfiguredRanges(
+  dataSourcesById: Record<string, IDataSource>,
+  observedRanges: Record<string, [number, number]>,
+  definitionRanges?: Record<string, [number, number]>
+): Record<string, [number, number]> {
+  return _.mapValues(dataSourcesById, (dataSource: IDataSource) => {
+    const configuredRange: [number, number] =
+      definitionRanges && definitionRanges[dataSource.id]
+        ? definitionRanges[dataSource.id]
+        : observedRanges[dataSource.id];
+    return getSliderLimits(observedRanges[dataSource.id], configuredRange);
+  });
+}
+
+export function createProblemDefinition(): ISubproblemDefinition {
+  return {
+    ranges: getConfiguredRanges()
+  };
+}
+
+function getConfiguredRanges(): Record<string, [number, number]> {
+  return {} as Record<string, [number, number]>;
 }

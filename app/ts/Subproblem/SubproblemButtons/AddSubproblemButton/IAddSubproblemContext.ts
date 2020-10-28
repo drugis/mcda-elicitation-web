@@ -7,6 +7,7 @@ export default interface IAddSubproblemContext {
   isCriterionDeselectionDisabled: boolean;
   scaleRangesWarnings: string[];
   missingValueWarnings: string[];
+  configuredRanges: Record<string, [number, number]>;
   getIncludedDataSourceForCriterion: (criterion: ICriterion) => IDataSource;
   isCriterionExcluded: (criterionId: string) => boolean;
   isDataSourceDeselectionDisabled: (criterionId: string) => boolean;
@@ -17,4 +18,11 @@ export default interface IAddSubproblemContext {
   updateAlternativeInclusion: (id: string, newValue: boolean) => void;
   updateCriterionInclusion: (id: string, newValue: boolean) => void;
   updateDataSourceInclusion: (id: string, newValue: boolean) => void;
+  resetToDefault: () => void;
+  setConfiguredRange: (
+    dataSourceId: string,
+    lowestConfiguredValue: number,
+    highestConfiguredValue: number
+  ) => void;
+  addSubproblemWrapper: () => void;
 }

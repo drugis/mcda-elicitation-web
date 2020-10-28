@@ -53,9 +53,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
         {getConfiguredRange(
           doPercentification,
           observedRanges[dataSourceId],
-          rangeDefinition && rangeDefinition.pvf
-            ? rangeDefinition.pvf.range
-            : undefined
+          rangeDefinition ? rangeDefinition : undefined
         )}
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>

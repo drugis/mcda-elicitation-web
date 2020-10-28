@@ -12,7 +12,7 @@ export default interface IWorkspaceContext {
   scales: Record<string, Record<string, IScale>>;
   subproblems: Record<string, IOldSubproblem>;
   workspace: IWorkspace;
-  createSubproblemDialogCallback: () => void;
   deleteSubproblem: (subproblemId: string) => void;
   editTitle: (title: string) => void;
+  addSubproblem: (command: any) => void;
 }

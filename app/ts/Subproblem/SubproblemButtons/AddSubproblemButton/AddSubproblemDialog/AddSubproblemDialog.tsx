@@ -13,6 +13,7 @@ import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTable from '../AddSubproblemEffectsTable/AddSubproblemEffectsTable';
 import AddSubproblemScaleRanges from '../AddSubproblemScaleRanges/AddSubproblemScaleRanges';
 import SubproblemTitle from '../SubproblemTitle/SubproblemTitle';
+import ResetButton from './ResetButton/ResetButton';
 
 export default function AddSubproblemDialog({
   isDialogOpen,
@@ -23,7 +24,7 @@ export default function AddSubproblemDialog({
 }) {
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
-  const {errors} = useContext(AddSubproblemContext);
+  const {errors, addSubproblemWrapper} = useContext(AddSubproblemContext);
   function showErrors(): JSX.Element[] {
     return _.map(errors, (error, index) => {
       return (
@@ -45,6 +46,7 @@ export default function AddSubproblemDialog({
   }
 
   function handleButtonClick(): void {
+    addSubproblemWrapper();
     closeDialog();
   }
 
@@ -59,9 +61,7 @@ export default function AddSubproblemDialog({
             <SubproblemTitle handleKeyCallback={handleKey} />
           </Grid>
           <Grid item xs={12}>
-            <Button variant="contained" color="primary">
-              Reset to default
-            </Button>
+            <ResetButton />
           </Grid>
           <Grid item xs={12}>
             <AddSubproblemEffectsTable />

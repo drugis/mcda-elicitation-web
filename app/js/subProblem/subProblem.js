@@ -32,7 +32,6 @@ define([
         'subproblems',
         'currentSubproblem',
         'subproblemChanged',
-        'createDialogCallback',
         'workspaceId'
       ])
     );

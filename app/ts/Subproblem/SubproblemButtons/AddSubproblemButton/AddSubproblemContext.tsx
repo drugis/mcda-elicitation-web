@@ -1,13 +1,17 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
+import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
+import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
+  createProblemDefinition,
   getBaselineMap,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
+  initConfiguredRanges,
   initInclusions,
   isAlternativeDisabled,
   isDataSourceDeselectionDisabled
@@ -19,14 +23,17 @@ export const AddSubproblemContext = createContext<IAddSubproblemContext>(
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
+  const {setError} = useContext(ErrorContext);
   const {
     subproblems,
     alternatives,
     workspace,
     criteria,
-    currentSubproblem
+    currentSubproblem,
+    observedRanges,
+    addSubproblem
   } = useContext(WorkspaceContext);
-  const [title, setTitle] = useState<string>('');
+  const [title, setTitle] = useState<string>('new problem');
   const [errors, setErrors] = useState<string[]>(getErrors());
   const dataSourcesById: Record<string, IDataSource> = _(criteria)
     .flatMap('dataSources')
@@ -67,6 +74,16 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       dataSourceInclusions,
       alternativeInclusions,
       workspace
+    )
+  );
+
+  const [configuredRanges, setConfiguredRanges] = useState<
+    Record<string, [number, number]>
+  >(
+    initConfiguredRanges(
+      dataSourcesById,
+      observedRanges,
+      currentSubproblem.definition.ranges
     )
   );
 
@@ -164,6 +181,31 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     );
   }
 
+  function resetToDefault(): void {
+    setCriterionInclusions(initInclusions(criteria));
+    setDataSourceInclusions(initInclusions(dataSourcesById));
+    setAlternativeInclusions(initInclusions(alternatives));
+    setConfiguredRanges(initConfiguredRanges(dataSourcesById, observedRanges));
+  }
+
+  function addSubproblemWrapper(): void {
+    const subproblemCommand: ISubproblemCommand = {
+      title: title,
+      definition: createProblemDefinition()
+    };
+    addSubproblem(subproblemCommand);
+  }
+
+  function setConfiguredRange(
+    dataSourceId: string,
+    lowestConfiguredValue: number,
+    highestConfiguredValue: number
+  ): void {
+    let newRanges = _.cloneDeep(configuredRanges);
+    newRanges[dataSourceId] = [lowestConfiguredValue, highestConfiguredValue];
+    setConfiguredRanges(newRanges);
+  }
+
   return (
     <AddSubproblemContext.Provider
       value={{
@@ -173,6 +215,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
           _.filter(criterionInclusions).length < 3,
         scaleRangesWarnings,
         missingValueWarnings,
+        configuredRanges,
         getIncludedDataSourceForCriterion,
         isCriterionExcluded,
         isDataSourceExcluded,
@@ -182,7 +225,10 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         updateCriterionInclusion,
         updateDataSourceInclusion,
         isAlternativeDisabled: isAlternativeDisabledWrapper,
-        isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper
+        isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper,
+        resetToDefault,
+        setConfiguredRange,
+        addSubproblemWrapper
       }}
     >
       {props.children}

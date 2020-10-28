@@ -1,7 +1,5 @@
-import ISubproblemRange from '../../../shared/interface/ISubproblemRange';
-
 export default interface ISubproblemDefinition {
-  ranges: Record<string, ISubproblemRange>;
+  ranges: Record<string, [number, number]>;
   excludedCriteria?: string[];
   excludedAlternatives?: string[];
   excludedDataSources?: string[];

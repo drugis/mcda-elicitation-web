@@ -1,6 +1,5 @@
 import {Mark} from '@material-ui/core';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
-import ISliderLimits from 'app/ts/interface/ISliderLimits';
 import _ from 'lodash';
 
 function log10(x: number) {
@@ -11,12 +10,12 @@ function nice(x: number, dirFun: (x: number) => number) {
   if (x === 0) {
     return 0;
   }
-  var absX = Math.abs(x);
-  var log10X = log10(absX);
-  var factor;
-  var normalised;
-  var ceiled;
-  var deNormalised;
+  const absX = Math.abs(x);
+  const log10X = log10(absX);
+  let factor;
+  let normalised;
+  let ceiled;
+  let deNormalised;
   if (absX >= 1) {
     factor = Math.floor(log10X);
     normalised = x / Math.pow(10, factor);
@@ -63,52 +62,70 @@ export function increaseRangeFrom(
   [configuredLower, configuredUpper]: [number, number],
   theoreticalLower: number
 ): [number, number] {
+  const limit = _.isNull(theoreticalLower) ? -Infinity : theoreticalLower;
   const margin = getMargin(configuredLower, configuredUpper);
   const newFrom = niceFrom(configuredLower - margin);
-  return [Math.max(newFrom, theoreticalLower), configuredUpper];
+  return [Math.max(newFrom, limit), configuredUpper];
 }
 
 export function increaseRangeTo(
   [configuredLower, configuredUpper]: [number, number],
   theoreticalUpper: number
 ): [number, number] {
+  const limit = _.isNull(theoreticalUpper) ? Infinity : theoreticalUpper;
   const margin = getMargin(configuredLower, configuredUpper);
   const newTo = niceTo(configuredUpper + margin);
-  return [configuredLower, Math.min(newTo, theoreticalUpper)];
+  return [configuredLower, Math.min(newTo, limit)];
 }
 
 export function getSliderLimits(
-  [theoreticalLower, theoreticalUpper]: [number, number],
-  [observedLower, observedUpper]: [number, number],
-  [configuredLower, configuredUpper]: [number, number]
-): ISliderLimits {
-  if (observedLower === observedUpper) {
-    // dumb corner case
-    observedLower -= Math.abs(observedLower) * 0.001;
-    observedUpper += Math.abs(observedUpper) * 0.001;
-  }
+  observedRange: [number, number],
+  configuredRange: [number, number]
+): [number, number] {
+  const [
+    localObservedLower,
+    localObservedUpper
+  ] = preventOverlappingObservedRanges(observedRange);
 
-  if (configuredLower === configuredUpper) {
-    configuredLower *= 0.95;
-    configuredUpper *= 1.05;
-  }
+  const [
+    localConfiguredLower,
+    localConfiguredUpper
+  ] = preventOverlappingConfiguredRanges(configuredRange);
 
-  theoreticalLower = _.isNull(theoreticalLower) ? -Infinity : theoreticalLower;
-  theoreticalUpper = _.isNull(theoreticalUpper) ? Infinity : theoreticalUpper;
+  const floor = getFloor(localConfiguredLower, localObservedLower);
+  const ceil = getCeil(localConfiguredUpper, localObservedUpper);
 
-  var floor = getFloor(configuredLower, observedLower);
-  var ceil = getCeil(configuredUpper, observedUpper);
-
-  return {
-    min: floor,
-    max: ceil,
-    minRestricted: observedLower,
-    maxRestricted: observedUpper,
-    step: determineStepSize(floor, ceil) //Math.abs(niceTo(observedUpper) - niceFrom(observedLower)) / 100
-  };
+  return [floor, ceil];
 }
 
-function determineStepSize(from: number, to: number) {
+function preventOverlappingObservedRanges([observedLower, observedUpper]: [
+  number,
+  number
+]): [number, number] {
+  if (observedLower === observedUpper) {
+    // dumb corner case
+    return [
+      observedLower - Math.abs(observedLower) * 0.001,
+      observedUpper + Math.abs(observedUpper) * 0.001
+    ];
+  } else {
+    return [observedLower, observedUpper];
+  }
+}
+
+function preventOverlappingConfiguredRanges([
+  configuredLower,
+  configuredUpper
+]: [number, number]): [number, number] {
+  if (configuredLower === configuredUpper) {
+    // dumb corner case
+    return [configuredLower * 0.95, configuredUpper * 1.05];
+  } else {
+    return [configuredLower, configuredUpper];
+  }
+}
+
+export function determineStepSize(from: number, to: number) {
   const interval = to - from;
   const magnitude = Math.floor(Math.log10(interval));
   return Math.pow(10, magnitude - 2);

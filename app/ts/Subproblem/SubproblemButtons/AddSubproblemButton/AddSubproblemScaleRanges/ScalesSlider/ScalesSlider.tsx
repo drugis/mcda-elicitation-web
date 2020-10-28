@@ -7,11 +7,11 @@ import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
   createMarks,
-  getSliderLimits,
+  determineStepSize,
   increaseRangeFrom,
   increaseRangeTo
 } from '../AddSubproblemScaleRangesUtil';
@@ -19,10 +19,16 @@ import {
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
   const {observedRanges} = useContext(WorkspaceContext);
-  const {getIncludedDataSourceForCriterion} = useContext(AddSubproblemContext);
+  const {
+    getIncludedDataSourceForCriterion,
+    configuredRanges,
+    setConfiguredRange
+  } = useContext(AddSubproblemContext);
   const includedDataSource = getIncludedDataSourceForCriterion(criterion);
 
   // ranges
+  const configuredRange = configuredRanges[includedDataSource.id];
+  const [lowestConfiguredValue, highestConfiguredValue] = configuredRange;
   const observedRange = observedRanges[includedDataSource.id];
   const [lowestObservedValue, highestObservedValue] = observedRange;
   const theoreticalRange: [number, number] = [
@@ -30,36 +36,34 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     includedDataSource.unitOfMeasurement.upperBound
   ];
 
-  const sliderLimits = getSliderLimits(
-    theoreticalRange,
-    observedRange,
-    observedRange //FIXME to configredRange
-  );
-
   const [configuredValues, setConfiguredValues] = useState<[number, number]>([
-    sliderLimits.min,
-    sliderLimits.max
+    lowestConfiguredValue,
+    highestConfiguredValue
   ]);
 
   const [sliderRange, setSliderRange] = useState<[number, number]>([
-    sliderLimits.min,
-    sliderLimits.max
+    lowestConfiguredValue,
+    highestConfiguredValue
   ]);
+
+  useEffect(() => {
+    setConfiguredValues(configuredRange);
+  }, [configuredRange]);
 
   // units
   const {decimal, percentage} = UnitOfMeasurementType;
   const unit = includedDataSource.unitOfMeasurement.type;
-  const doPercentification =
+  const usePercentage =
     showPercentages && (unit === decimal || unit === percentage);
 
-  const handleChange = (event: any, newValue: [number, number]) => {
+  function handleChange(event: any, newValue: [number, number]) {
     if (
       newValue[0] <= lowestObservedValue &&
       newValue[1] >= highestObservedValue
     ) {
-      setConfiguredValues(newValue);
+      setConfiguredRange(includedDataSource.id, newValue[0], newValue[1]);
     }
-  };
+  }
 
   function renderUnitLabel(): string {
     const unitLabel = getUnitLabel(
@@ -119,12 +123,15 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           onChange={handleChange}
           valueLabelDisplay="on"
           valueLabelFormat={(x: number) => {
-            return getPercentifiedValue(x, doPercentification);
+            return getPercentifiedValue(x, usePercentage);
           }}
           min={sliderRange[0]}
           max={sliderRange[1]}
-          step={sliderLimits.step}
-          marks={createMarks(sliderRange, observedRange, doPercentification)}
+          step={determineStepSize(
+            lowestConfiguredValue,
+            highestConfiguredValue
+          )}
+          marks={createMarks(sliderRange, observedRange, usePercentage)}
           className={classes.root}
         />
       </Grid>
