@@ -92,11 +92,11 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
     .value();
 }
 
-export function getConfiguredRange(
-  criterion: IProblemCriterion,
+function buildConfiguredRange(
   observedRanges: Record<string, [number, number]>,
-  showPercentages: boolean
-) {
+  showPercentages: boolean,
+  criterion: IProblemCriterion
+): [number, number] {
   const pvf = criterion.dataSources[0].pvf;
   const unit = criterion.dataSources[0].unitOfMeasurement.type;
   const doPercentification =
@@ -104,7 +104,7 @@ export function getConfiguredRange(
   if (pvf) {
     const lowerValue = getPercentifiedValue(pvf.range[0], doPercentification);
     const upperValue = getPercentifiedValue(pvf.range[1], doPercentification);
-    return `${lowerValue}, ${upperValue}`;
+    return [lowerValue, upperValue];
   } else {
     const lowerValue = getPercentifiedValue(
       observedRanges[criterion.id][0],
@@ -114,6 +114,19 @@ export function getConfiguredRange(
       observedRanges[criterion.id][1],
       doPercentification
     );
-    return `${lowerValue}, ${upperValue}`;
+    return [lowerValue, upperValue];
   }
+}
+
+export function getConfiguredRangeLabel(
+  criterion: IProblemCriterion,
+  observedRanges: Record<string, [number, number]>,
+  showPercentages: boolean
+): string {
+  const [lowerValue, upperValue] = buildConfiguredRange(
+    observedRanges,
+    showPercentages,
+    criterion
+  );
+  return `${lowerValue}, ${upperValue}`;
 }

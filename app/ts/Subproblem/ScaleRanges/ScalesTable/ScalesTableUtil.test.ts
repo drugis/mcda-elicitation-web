@@ -2,7 +2,10 @@ import IScale from '@shared/interface/IScale';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
-import {calculateObservedRanges, getConfiguredRange} from './ScalesTableUtil';
+import {
+  calculateObservedRanges,
+  getConfiguredRangeLabel
+} from './ScalesTableUtil';
 
 describe('ScalesTableUtil', () => {
   describe('calculateObservedRanges', () => {
@@ -157,7 +160,7 @@ describe('ScalesTableUtil', () => {
     });
   });
 
-  describe('getConfiguredRange', () => {
+  describe('getConfiguredRangeLabel', () => {
     const observedRanges: Record<string, [number, number]> = {
       crit1Id: [37, 42]
     };
@@ -175,7 +178,7 @@ describe('ScalesTableUtil', () => {
         description: 'desc',
         id: 'crit1Id'
       };
-      const result = getConfiguredRange(
+      const result = getConfiguredRangeLabel(
         criterion,
         observedRanges,
         showPercentages
@@ -193,7 +196,7 @@ describe('ScalesTableUtil', () => {
         description: 'desc',
         id: 'crit1Id'
       };
-      const result = getConfiguredRange(
+      const result = getConfiguredRangeLabel(
         criterion,
         observedRanges,
         showPercentages

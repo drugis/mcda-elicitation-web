@@ -4,10 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
