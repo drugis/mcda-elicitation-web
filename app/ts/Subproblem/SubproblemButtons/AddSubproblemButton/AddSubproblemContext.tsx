@@ -77,13 +77,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   const [configuredRanges, setConfiguredRanges] = useState<
     Record<string, [number, number]>
-  >(
-    initConfiguredRanges(
-      dataSourcesById,
-      observedRanges,
-      currentSubproblem.definition.ranges
-    )
-  );
+  >({});
 
   const baselineMap: Record<string, boolean> = getBaselineMap(
     alternatives,
@@ -116,6 +110,18 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     alternativeInclusions,
     workspace
   ]);
+
+  useEffect(() => {
+    if (!_.isEmpty(observedRanges)) {
+      setConfiguredRanges(
+        initConfiguredRanges(
+          dataSourcesById,
+          observedRanges,
+          currentSubproblem.definition.ranges
+        )
+      );
+    }
+  }, [observedRanges, currentSubproblem]);
 
   function getErrors(): string[] {
     const titleError: string = getTitleError(title, subproblems);

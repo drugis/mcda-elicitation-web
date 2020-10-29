@@ -95,7 +95,7 @@ export default function SubproblemRepository(db: IDB) {
         if (error) {
           callback(error);
         } else {
-          callback(null, result.rows);
+          callback(null, _.map(result.rows, formatSubproblem));
         }
       }
     );

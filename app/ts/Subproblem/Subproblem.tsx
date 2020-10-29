@@ -22,7 +22,6 @@ export default function Subproblem({
   subproblems,
   currentSubproblem,
   subproblemChanged,
-  createDialogCallback,
   workspaceId
 }: {
   workspace: IOldWorkspace;
@@ -32,7 +31,6 @@ export default function Subproblem({
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
   subproblemChanged: (subproblem: IOldSubproblem) => void;
-  createDialogCallback: () => void;
   workspaceId: string;
 }) {
   return (

@@ -7,7 +7,7 @@ import {buildWorkspace} from '@shared/workspaceService';
 import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import {calculateObservedRanges} from '../Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import IWorkspaceContext from './IWorkspaceContext';
@@ -42,14 +42,21 @@ export function WorkspaceContextProviderComponent({
   );
 
   const workspace: IWorkspace = buildWorkspace(oldWorkspace);
-  const observedRanges: Record<
-    string,
-    [number, number]
-  > = calculateObservedRanges(
-    scales,
-    oldWorkspace.problem.criteria,
-    oldWorkspace.problem.performanceTable
-  );
+  const [observedRanges, setObservedRanges] = useState<
+    Record<string, [number, number]>
+  >({});
+
+  useEffect(() => {
+    if (scales && oldWorkspace) {
+      setObservedRanges(
+        calculateObservedRanges(
+          scales,
+          oldWorkspace.problem.criteria,
+          oldWorkspace.problem.performanceTable
+        )
+      );
+    }
+  }, [scales, oldWorkspace]);
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};
