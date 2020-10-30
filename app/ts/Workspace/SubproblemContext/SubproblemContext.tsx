@@ -14,7 +14,9 @@ export function SubproblemContextProviderComponent({
   children: any;
 }) {
   const {workspace, currentSubproblem, scales} = useContext(WorkspaceContext);
-  const filteredWorkspace = applySubproblem(workspace, currentSubproblem);
+  const [filteredWorkspace] = useState(
+    applySubproblem(workspace, currentSubproblem)
+  );
   const {alternatives, criteria, performanceTable} = filteredWorkspace.problem;
   const [observedRanges, setObservedRanges] = useState<
     Record<string, [number, number]>

@@ -1,3 +1,4 @@
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,7 +12,7 @@ import React, {useContext} from 'react';
 import ScalesTableRow from './ScalesTableRow/ScalesTableRow';
 
 export default function ScalesTable({}: {}) {
-  const {filteredCriteria} = useContext(SubproblemContext);
+  const {filteredCriteria, observedRanges} = useContext(SubproblemContext);
 
   function createScaleTableRows() {
     return _.map(filteredCriteria, (criterion: IProblemCriterion) => {
@@ -19,7 +20,7 @@ export default function ScalesTable({}: {}) {
     });
   }
 
-  return (
+  return !_.isEmpty(observedRanges) ? (
     <Table size="small" id="scales-table">
       <TableHead>
         <TableRow>
@@ -42,5 +43,7 @@ export default function ScalesTable({}: {}) {
       </TableHead>
       <TableBody>{createScaleTableRows()}</TableBody>
     </Table>
+  ) : (
+    <CircularProgress />
   );
 }
