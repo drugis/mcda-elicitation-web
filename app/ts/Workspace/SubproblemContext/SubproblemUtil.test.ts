@@ -3,7 +3,6 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import _ from 'lodash';
 import {applySubproblem} from './SubproblemUtil';
 
 describe('The Subproblem util', () => {
@@ -23,7 +22,9 @@ describe('The Subproblem util', () => {
               {
                 id: 'ds1Id'
               },
-              {id: 'ds2Id'}
+              {
+                id: 'ds2Id'
+              }
             ]
           } as IProblemCriterion,
           crit2Id: {
@@ -45,11 +46,38 @@ describe('The Subproblem util', () => {
             title: 'alternative 2'
           }
         },
-        performanceTable: buildPerformanceTable(
-          ['crit1Id', 'crit2Id'],
-          ['alt1Id', 'alt2Id'],
-          ['ds1Id', 'ds2Id', 'ds3Id']
-        )
+        performanceTable: [
+          {
+            criterion: 'crit1Id',
+            dataSource: 'ds1Id',
+            alternative: 'alt1Id'
+          } as IPerformanceTableEntry,
+          {
+            criterion: 'crit1Id',
+            dataSource: 'ds12d',
+            alternative: 'alt1Id'
+          } as IPerformanceTableEntry,
+          {
+            criterion: 'crit2Id',
+            dataSource: 'ds13d',
+            alternative: 'alt1Id'
+          } as IPerformanceTableEntry,
+          {
+            criterion: 'crit1Id',
+            dataSource: 'ds1Id',
+            alternative: 'alt2Id'
+          } as IPerformanceTableEntry,
+          {
+            criterion: 'crit1Id',
+            dataSource: 'ds12d',
+            alternative: 'alt2Id'
+          } as IPerformanceTableEntry,
+          {
+            criterion: 'crit2Id',
+            dataSource: 'ds13d',
+            alternative: 'alt2Id'
+          } as IPerformanceTableEntry
+        ]
       } as IProblem
     };
 
@@ -58,6 +86,7 @@ describe('The Subproblem util', () => {
       const result = applySubproblem(baseWorkspace, noExclusions);
       expect(result).toEqual(baseWorkspace);
     });
+
     it('should exclude criteria', () => {
       const excludeCrit1 = {
         definition: {excludedCriteria: ['crit1Id']}
@@ -71,16 +100,29 @@ describe('The Subproblem util', () => {
               id: 'crit2Id',
               dataSources: [
                 {
-                  id: 'ds2Id'
+                  id: 'ds3Id'
                 }
               ]
             } as IProblemCriterion
-          }
+          },
+          performanceTable: [
+            {
+              criterion: 'crit2Id',
+              dataSource: 'ds13d',
+              alternative: 'alt1Id'
+            } as IPerformanceTableEntry,
+            {
+              criterion: 'crit2Id',
+              dataSource: 'ds13d',
+              alternative: 'alt2Id'
+            } as IPerformanceTableEntry
+          ]
         } as IProblem
       };
       const result = applySubproblem(baseWorkspace, excludeCrit1);
       expect(result).toEqual(expectedResult);
     });
+
     it('should exclude alternatives', () => {
       const excludeAlt2 = {
         definition: {
@@ -96,7 +138,24 @@ describe('The Subproblem util', () => {
               id: 'alt1Id',
               title: 'alternative 1'
             }
-          }
+          },
+          performanceTable: [
+            {
+              criterion: 'crit1Id',
+              dataSource: 'ds1Id',
+              alternative: 'alt1Id'
+            } as IPerformanceTableEntry,
+            {
+              criterion: 'crit1Id',
+              dataSource: 'ds12d',
+              alternative: 'alt1Id'
+            } as IPerformanceTableEntry,
+            {
+              criterion: 'crit2Id',
+              dataSource: 'ds13d',
+              alternative: 'alt1Id'
+            } as IPerformanceTableEntry
+          ]
         }
       };
       const result = applySubproblem(baseWorkspace, excludeAlt2);
@@ -104,26 +163,3 @@ describe('The Subproblem util', () => {
     });
   });
 });
-
-function buildPerformanceTable(
-  criteria: Record<string, IProblemCriterion>,
-  altIds: string[]
-): IPerformanceTableEntry[] {
-  const combinations: {
-    critId: string;
-    altId: string;
-    dsId: string;
-  }[] = _.reduce(criteria, (accum, criterion) => {
-    return accum.concat(entriesForCriterion());
-  });
-  return _.map(
-    combinations,
-    ({critId, altId, dsId}): IPerformanceTableEntry => {
-      return {
-        criterion: critId,
-        alternative: altId,
-        dataSource: dsId
-      } as IPerformanceTableEntry;
-    }
-  );
-}
