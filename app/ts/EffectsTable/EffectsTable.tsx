@@ -10,6 +10,7 @@ import _ from 'lodash';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
+import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
@@ -19,7 +20,8 @@ export default function EffectsTable({
 }: {
   toggledColumns: IToggledColumns;
 }) {
-  const {workspace, scales} = useContext(WorkspaceContext);
+  const {scales} = useContext(WorkspaceContext);
+  const {filteredWorkspace: workspace} = useContext(SubproblemContext);
 
   function renderAlternativeHeaders(): JSX.Element[] {
     return _(workspace.problem.alternatives)
