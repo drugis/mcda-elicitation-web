@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext} from 'react';
 import {
   getScaleRangeWarnings,
@@ -12,10 +12,10 @@ import {
 import ScalesTable from './ScalesTable/ScalesTable';
 
 export default function ScaleRanges({}: {}) {
-  const {workspace, scales} = useContext(WorkspaceContext);
-  const warnings: string[] = getScaleRangeWarnings(workspace.problem);
+  const {filteredWorkspace} = useContext(SubproblemContext);
+  const warnings: string[] = getScaleRangeWarnings(filteredWorkspace.problem);
 
-  return scales && workspace ? (
+  return filteredWorkspace ? (
     <Grid container>
       <Grid item xs={9} id="effects-table-header">
         <Typography variant={'h5'}>

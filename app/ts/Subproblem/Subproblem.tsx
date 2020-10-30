@@ -9,6 +9,7 @@ import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
+import {SubproblemContextProviderComponent} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContextProviderComponent} from '../Workspace/WorkspaceContext';
 import ScaleRanges from './ScaleRanges/ScaleRanges';
 import SubproblemButtons from './SubproblemButtons/SubproblemButtons';
@@ -47,17 +48,19 @@ export default function Subproblem({
           scales={scales}
           createSubProblemDialogCallback={createDialogCallback}
         >
-          <SettingsContextProviderComponent
-            settings={settings}
-            toggledColumns={toggledColumns}
-          >
-            <ErrorHandler>
-              <SubproblemSelection subproblemChanged={subproblemChanged} />
-              <SubproblemButtons />
-              <EffectsTable toggledColumns={toggledColumns} />
-              <ScaleRanges />
-            </ErrorHandler>
-          </SettingsContextProviderComponent>
+          <SubproblemContextProviderComponent>
+            <SettingsContextProviderComponent
+              settings={settings}
+              toggledColumns={toggledColumns}
+            >
+              <ErrorHandler>
+                <SubproblemSelection subproblemChanged={subproblemChanged} />
+                <SubproblemButtons />
+                <EffectsTable toggledColumns={toggledColumns} />
+                <ScaleRanges />
+              </ErrorHandler>
+            </SettingsContextProviderComponent>
+          </SubproblemContextProviderComponent>
         </WorkspaceContextProviderComponent>
       </HelpContextProviderComponent>
     </ErrorContextProviderComponent>

@@ -1,3 +1,4 @@
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -5,21 +6,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ScalesTableRow from './ScalesTableRow/ScalesTableRow';
 
 export default function ScalesTable({}: {}) {
-  const {workspace} = useContext(WorkspaceContext);
+  const {filteredCriteria, observedRanges} = useContext(SubproblemContext);
 
   function createScaleTableRows() {
-    return _.map(workspace.problem.criteria, (criterion: IProblemCriterion) => {
+    return _.map(filteredCriteria, (criterion: IProblemCriterion) => {
       return <ScalesTableRow key={criterion.id} criterion={criterion} />;
     });
   }
 
-  return (
+  return !_.isEmpty(observedRanges) ? (
     <Table size="small" id="scales-table">
       <TableHead>
         <TableRow>
@@ -42,5 +43,7 @@ export default function ScalesTable({}: {}) {
       </TableHead>
       <TableBody>{createScaleTableRows()}</TableBody>
     </Table>
+  ) : (
+    <CircularProgress />
   );
 }

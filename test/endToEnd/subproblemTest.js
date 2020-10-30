@@ -71,9 +71,9 @@ function afterEach(browser) {
 function create(browser) {
   setupSubProblem(browser)
     .click('#create-new-subproblem-button')
-    .assert.not.visible('#column-alternative-2')
-    .assert.not.visible('#unit-cell-deselectionDataSourceId')
-    .assert.not.visible('#criterion-row-deselectionCriterionId')
+    .assert.not.elementPresent('#column-alternative-2')
+    .assert.not.elementPresent('#unit-cell-deselectionDataSourceId')
+    .assert.not.elementPresent('#criterion-row-deselectionCriterionId')
     .waitForElementVisible('#scales-table');
 }
 
