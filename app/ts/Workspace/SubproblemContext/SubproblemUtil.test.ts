@@ -1,9 +1,9 @@
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import { IPerformanceTableEntry } from '@shared/interface/Problem/IPerformanceTableEntry';
+import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import { applySubproblem } from './SubproblemUtil';
+import {applySubproblem} from './SubproblemUtil';
 
 describe('The Subproblem util', () => {
   describe('applySubproblem', () => {
@@ -195,7 +195,7 @@ describe('The Subproblem util', () => {
               criterion: 'crit1Id',
               dataSource: 'ds1Id',
               alternative: 'alt1Id'
-            } as IPerformanceTableEntry
+            } as IPerformanceTableEntry,
             {
               criterion: 'crit2Id',
               dataSource: 'ds3Id',
@@ -215,6 +215,47 @@ describe('The Subproblem util', () => {
         }
       };
       const result = applySubproblem(baseWorkspace, excludeDataSource2);
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should exclude all the things', () => {
+      const exclusions = {
+        definition: {
+          excludedCriteria: ['crit2Id'],
+          excludedDataSources: ['ds2Id'],
+          excludedAlternatives: ['alt2Id']
+        }
+      } as IOldSubproblem;
+      const expectedResult = {
+        ...baseWorkspace,
+        problem: {
+          ...baseWorkspace.problem,
+          criteria: {
+            crit1Id: {
+              id: 'crit1Id',
+              dataSources: [
+                {
+                  id: 'ds1Id'
+                }
+              ]
+            } as IProblemCriterion
+          },
+          alternatives: {
+            alt1Id: {
+              id: 'alt1Id',
+              title: 'alternative 1'
+            }
+          },
+          performanceTable: [
+            {
+              criterion: 'crit1Id',
+              dataSource: 'ds1Id',
+              alternative: 'alt1Id'
+            } as IPerformanceTableEntry
+          ]
+        }
+      };
+      const result = applySubproblem(baseWorkspace, exclusions);
       expect(result).toEqual(expectedResult);
     });
   });

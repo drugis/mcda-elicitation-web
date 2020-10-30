@@ -6,7 +6,7 @@ import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
 import {getStringForValue} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext} from 'react';
 import {getConfiguredRangeLabel} from '../ScalesTableUtil';
 
@@ -16,8 +16,7 @@ export default function ScalesTableRow({
   criterion: IProblemCriterion;
 }) {
   const {showPercentages} = useContext(SettingsContext);
-  const {observedRanges} = useContext(WorkspaceContext);
-
+  const {observedRanges} = useContext(SubproblemContext);
   const {decimal, percentage} = UnitOfMeasurementType;
 
   const unit = criterion.dataSources[0].unitOfMeasurement.type;

@@ -8,4 +8,5 @@ export default interface ISubproblemContext {
   filteredCriteria: Record<string, IProblemCriterion>;
   filteredPerformanceTable: IPerformanceTableEntry[];
   filteredWorkspace: IOldWorkspace;
+  observedRanges: Record<string, [number, number]>;
 }

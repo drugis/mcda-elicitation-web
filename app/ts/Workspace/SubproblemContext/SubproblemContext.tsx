@@ -1,4 +1,5 @@
-import React, {createContext, useContext} from 'react';
+import {calculateObservedRanges} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {WorkspaceContext} from '../WorkspaceContext';
 import ISubproblemContext from './ISubproblemContext';
 import {applySubproblem} from './SubproblemUtil';
@@ -12,9 +13,24 @@ export function SubproblemContextProviderComponent({
 }: {
   children: any;
 }) {
-  const {workspace, currentSubproblem} = useContext(WorkspaceContext);
+  const {workspace, currentSubproblem, scales} = useContext(WorkspaceContext);
   const filteredWorkspace = applySubproblem(workspace, currentSubproblem);
   const {alternatives, criteria, performanceTable} = filteredWorkspace.problem;
+  const [observedRanges, setObservedRanges] = useState<
+    Record<string, [number, number]>
+  >({});
+
+  useEffect(() => {
+    if (scales && filteredWorkspace) {
+      setObservedRanges(
+        calculateObservedRanges(
+          scales,
+          filteredWorkspace.problem.criteria,
+          filteredWorkspace.problem.performanceTable
+        )
+      );
+    }
+  }, [scales, filteredWorkspace]);
 
   return (
     <SubproblemContext.Provider
@@ -22,7 +38,8 @@ export function SubproblemContextProviderComponent({
         filteredAlternatives: alternatives,
         filteredCriteria: criteria,
         filteredPerformanceTable: performanceTable,
-        filteredWorkspace: filteredWorkspace
+        filteredWorkspace: filteredWorkspace,
+        observedRanges
       }}
     >
       {children}
