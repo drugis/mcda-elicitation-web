@@ -4,10 +4,16 @@ import IEffect, {Effect} from '@shared/interface/IEffect';
 import {IEffectWithValue} from '@shared/interface/IEffectWithValue';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
-import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import IUnitOfMeasurement, {
+  UnitOfMeasurementType
+} from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {
+  canBePercentage,
+  getPercentifiedValue
+} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {use} from 'chai';
 import _ from 'lodash';
 
 export function calculateObservedRanges(
@@ -27,10 +33,10 @@ function calculateObservedRange(
   dataSource: IDataSource
 ): [number, number] {
   const dataSourceId = dataSource.id;
-  const effectValues = getValuesAndBounds(workspace.effects, dataSourceId);
+  const effectValues = getValuesAndBounds(workspace.effects, dataSource);
   const rangeDistributionValues = getValuesAndBounds(
     workspace.distributions,
-    dataSourceId
+    dataSource
   );
   const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
 
@@ -48,15 +54,26 @@ function calculateObservedRange(
 
 function getValuesAndBounds(
   effects: (Effect | Distribution)[],
-  dataSourceId: string
+  dataSource: IDataSource
 ): number[] {
   return _(effects)
-    .filter(['dataSourceId', dataSourceId])
+    .filter(['dataSourceId', dataSource.id])
     .map((entry: Effect | Distribution) => {
       if (hasValue(entry)) {
-        return [entry.value];
+        if (dataSource.unitOfMeasurement.type === 'percentage') {
+          return [significantDigits(entry.value * 0.01)];
+        } else {
+          return [entry.value];
+        }
       } else if (hasRange(entry)) {
-        return [entry.lowerBound, entry.upperBound];
+        if (dataSource.unitOfMeasurement.type === 'percentage') {
+          return [
+            significantDigits(entry.lowerBound * 0.01),
+            significantDigits(entry.upperBound * 0.01)
+          ];
+        } else {
+          return [entry.lowerBound, entry.upperBound];
+        }
       }
     })
     .flatten()
@@ -88,7 +105,7 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
 
 export function getConfiguredRangeLabel(
   usePercentage: boolean,
-  [lowerObservedRange, upperObservedRange]: [number, number],
+  observedRange: [number, number],
   configuredRange?: [number, number]
 ): string {
   if (configuredRange) {
@@ -103,10 +120,17 @@ export function getConfiguredRangeLabel(
     );
     return `${lowerValue}, ${upperValue}`;
   } else {
-    const lowerValue = getPercentifiedValue(lowerObservedRange, usePercentage);
-    const upperValue = getPercentifiedValue(upperObservedRange, usePercentage);
-    return `${lowerValue}, ${upperValue}`;
+    return getObservedRangeLabel(usePercentage, observedRange);
   }
+}
+
+export function getObservedRangeLabel(
+  usePercentage: boolean,
+  [lowerObservedRange, upperObservedRange]: [number, number]
+): string {
+  const lowerValue = getPercentifiedValue(lowerObservedRange, usePercentage);
+  const upperValue = getPercentifiedValue(upperObservedRange, usePercentage);
+  return `${lowerValue}, ${upperValue}`;
 }
 
 export function getTheoreticalRangeLabel(
@@ -114,9 +138,21 @@ export function getTheoreticalRangeLabel(
   unit: IUnitOfMeasurement
 ): string {
   const lowerLabel = unit.lowerBound === null ? '-∞' : unit.lowerBound;
-  const upperLabel =
-    unit.upperBound === null
-      ? '∞'
-      : getPercentifiedValue(unit.upperBound, usePercentage);
+  const upperLabel = getUpperBound(usePercentage, unit);
   return `${lowerLabel}, ${upperLabel}`;
+}
+
+function getUpperBound(
+  usePercentage: boolean,
+  unit: IUnitOfMeasurement
+): string {
+  if (unit.upperBound === null) {
+    return '∞';
+  } else if (usePercentage && unit.type === 'decimal') {
+    return '100';
+  } else if (!usePercentage && unit.type === 'percentage') {
+    return '1';
+  } else {
+    return unit.upperBound.toString();
+  }
 }

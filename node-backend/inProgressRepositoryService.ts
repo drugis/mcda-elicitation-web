@@ -641,7 +641,10 @@ export function buildEmptyInProgress(): IWorkspace {
   };
 }
 
-function buildInprogressCriterion(criterionId: string, index: number) {
+function buildInprogressCriterion(
+  criterionId: string,
+  index: number
+): ICriterion {
   return {
     id: criterionId,
     isFavourable: true,
@@ -657,7 +660,9 @@ function buildInprogressCriterion(criterionId: string, index: number) {
         strengthOfEvidence: '',
         unitOfMeasurement: {
           label: '',
-          type: UnitOfMeasurementType.custom
+          type: 'custom',
+          lowerBound: null,
+          upperBound: null
         }
       }
     ]

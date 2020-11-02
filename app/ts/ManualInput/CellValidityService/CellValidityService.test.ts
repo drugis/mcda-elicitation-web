@@ -2,9 +2,7 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
-import IUnitOfMeasurement, {
-  UnitOfMeasurementType
-} from '@shared/interface/IUnitOfMeasurement';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {
   getBetaAlphaError,
   getBetaBetaError,
@@ -24,14 +22,14 @@ const unit: IUnitOfMeasurement = {
   label: '',
   lowerBound: -Infinity,
   upperBound: Infinity,
-  type: UnitOfMeasurementType.custom
+  type: 'custom'
 };
 
 const percentageUnit: IUnitOfMeasurement = {
   label: '%',
   lowerBound: 0,
   upperBound: 100,
-  type: UnitOfMeasurementType.percentage
+  type: 'percentage'
 };
 
 describe('CellValidityService', () => {
@@ -236,7 +234,7 @@ describe('CellValidityService', () => {
             referenceLink: '',
             strengthOfEvidence: '',
             unitOfMeasurement: {
-              type: UnitOfMeasurementType.percentage,
+              type: 'percentage',
               lowerBound: 0,
               upperBound: 100,
               label: '%'

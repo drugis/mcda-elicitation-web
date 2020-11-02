@@ -2,7 +2,7 @@
 define(['angular'], function (angular) {
   var dependencies = ['ngResource'];
 
-  var SubProblemResource = function ($resource) {
+  var SubproblemResource = function ($resource) {
     var resource = $resource(
       window.config.workspacesRepositoryUrl +
         ':workspaceId/problems/:problemId',
@@ -25,5 +25,5 @@ define(['angular'], function (angular) {
 
   return angular
     .module('elicit.subProblemResource', dependencies)
-    .factory('SubProblemResource', ['$resource', SubProblemResource]);
+    .factory('SubProblemResource', ['$resource', SubproblemResource]);
 });

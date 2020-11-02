@@ -58,13 +58,28 @@ describe('ScalesTableUtil', () => {
       };
       const criteria: ICriterion[] = [
         {
-          dataSources: [{id: 'dataSourceNoDistributionId'} as IDataSource]
+          dataSources: [
+            {
+              id: 'dataSourceNoDistributionId',
+              unitOfMeasurement: {type: 'custom'}
+            } as IDataSource
+          ]
         } as ICriterion,
         {
-          dataSources: [{id: 'dataSourceRangeAndExactId'} as IDataSource]
+          dataSources: [
+            {
+              id: 'dataSourceRangeAndExactId',
+              unitOfMeasurement: {type: 'custom'}
+            } as IDataSource
+          ]
         } as ICriterion,
         {
-          dataSources: [{id: 'dataSourceOverlappingRanges'} as IDataSource]
+          dataSources: [
+            {
+              id: 'dataSourceOverlappingRanges',
+              unitOfMeasurement: {type: 'custom'}
+            } as IDataSource
+          ]
         } as ICriterion
       ];
 

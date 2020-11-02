@@ -142,11 +142,7 @@ function effectIsViable(effect: Effect): boolean {
 
 function getValueFromScales(scale: IScale, usePercentage: boolean): string {
   if (scale['50%'] !== null && scale['50%'] !== undefined) {
-    return valueToString(
-      scale['50%'],
-      usePercentage,
-      UnitOfMeasurementType.decimal
-    );
+    return valueToString(scale['50%'], usePercentage, 'decimal');
   } else {
     return 'No data entered';
   }

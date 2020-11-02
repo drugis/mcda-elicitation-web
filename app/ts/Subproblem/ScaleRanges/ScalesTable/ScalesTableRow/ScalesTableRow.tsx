@@ -12,6 +12,7 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';
 import {
   getConfiguredRangeLabel,
+  getObservedRangeLabel,
   getTheoreticalRangeLabel
 } from '../ScalesTableUtil';
 
@@ -21,17 +22,22 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
   const {currentSubproblem} = useContext(WorkspaceContext);
   const {observedRanges} = useContext(SubproblemContext);
 
-  const unit = criterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unit);
+  const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unitType);
+
   const theoreticalRangeLabel = getTheoreticalRangeLabel(
     usePercentage,
     criterion.dataSources[0].unitOfMeasurement
   );
-  const [lowerObserved, upperObserved] = [
-    getPercentifiedValue(observedRanges[dataSourceId][0], usePercentage),
-    getPercentifiedValue(observedRanges[dataSourceId][1], usePercentage)
-  ];
-  const configuredRange = currentSubproblem.definition.ranges[dataSourceId];
+  const observedRangeLabel = getObservedRangeLabel(
+    usePercentage,
+    observedRanges[dataSourceId]
+  );
+  const configuredRangeLabel = getConfiguredRangeLabel(
+    usePercentage,
+    observedRanges[dataSourceId],
+    currentSubproblem.definition.ranges[dataSourceId]
+  );
 
   return (
     <TableRow key={criterion.id}>
@@ -39,17 +45,13 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
         {criterion.title}
       </TableCell>
       <TableCell id={`theoretical-range-${criterion.id}`}>
-        {`${theoreticalRangeLabel}`}
+        <div className="text-centered">{theoreticalRangeLabel}</div>
       </TableCell>
       <TableCell id={`observed-range-${criterion.id}`}>
-        {`${lowerObserved}, ${upperObserved}`}
+        <div className="text-centered">{observedRangeLabel}</div>
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
-        {getConfiguredRangeLabel(
-          usePercentage,
-          observedRanges[dataSourceId],
-          configuredRange
-        )}
+        <div className="text-centered">{configuredRangeLabel}</div>
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>
         {getUnitLabel(

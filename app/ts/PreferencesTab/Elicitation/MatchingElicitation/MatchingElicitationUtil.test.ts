@@ -1,4 +1,3 @@
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import {
   calculateImportance,
@@ -12,21 +11,30 @@ const criteria: Record<string, IPreferencesCriterion> = {
     id: 'critId1',
     title: 'title1',
     dataSourceId: 'ds1',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
+    unitOfMeasurement: {
+      type: 'custom',
+      label: ''
+    },
     description: 'description'
   },
   critId2: {
     id: 'critId2',
     title: 'title2',
     dataSourceId: 'ds2',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
+    unitOfMeasurement: {
+      type: 'custom',
+      label: ''
+    },
     description: 'description'
   },
   critId3: {
     id: 'critId3',
     title: 'title3',
     dataSourceId: 'ds3',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''},
+    unitOfMeasurement: {
+      type: 'custom',
+      label: ''
+    },
     description: 'description'
   }
 };

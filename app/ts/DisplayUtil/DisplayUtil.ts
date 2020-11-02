@@ -3,9 +3,9 @@ import significantDigits from '../ManualInput/Util/significantDigits';
 
 export function getPercentifiedValue(
   value: number,
-  showPercentages: boolean
+  usePercentage: boolean
 ): number {
-  if (showPercentages) {
+  if (usePercentage) {
     return significantDigits(value * 100);
   } else {
     return significantDigits(value);
@@ -14,9 +14,9 @@ export function getPercentifiedValue(
 
 export function getPercentifiedValueLabel(
   value: number,
-  showPercentages: boolean
+  usePercentage: boolean
 ): string {
-  return getPercentifiedValue(value, showPercentages).toString();
+  return getPercentifiedValue(value, usePercentage).toString();
 }
 
 export function canBePercentage(unitType: UnitOfMeasurementType) {

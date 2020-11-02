@@ -25,7 +25,6 @@ export default function UnitOfMeasurementDialog({
 }) {
   const lowerBoundOptions = [-Infinity, 0];
   const upperBoundOptions = [1, 100, Infinity];
-  const {custom, decimal, percentage} = UnitOfMeasurementType;
   const [label, setLabel] = useState(unitOfMeasurement.label);
   const [unitType, setUnitType] = useState(unitOfMeasurement.type);
   const [lowerBound, setLowerBound] = useState<number>(
@@ -47,15 +46,15 @@ export default function UnitOfMeasurementDialog({
   ) {
     const newType = event.target.value as UnitOfMeasurementType;
     setUnitType(newType);
-    if (newType === custom) {
+    if (newType === 'custom') {
       setLowerBound(-Infinity);
       setUpperBound(Infinity);
       setLabel('');
-    } else if (newType === percentage) {
+    } else if (newType === 'percentage') {
       setLowerBound(0);
       setUpperBound(100);
       setLabel('%');
-    } else if (newType === decimal) {
+    } else if (newType === 'decimal') {
       setLowerBound(0);
       setUpperBound(1);
       setLabel('');
@@ -118,9 +117,9 @@ export default function UnitOfMeasurementDialog({
               onChange={handleTypeChange}
               style={{minWidth: '198px'}}
             >
-              <option value={custom}>custom</option>
-              <option value={decimal}>Proportion (decimal)</option>
-              <option value={percentage}>Proportion (percentage)</option>
+              <option value={'custom'}>custom</option>
+              <option value={'decimal'}>Proportion (decimal)</option>
+              <option value={'percentage'}>Proportion (percentage)</option>
             </Select>
           </Grid>
           <Grid item xs={6}>
@@ -131,7 +130,7 @@ export default function UnitOfMeasurementDialog({
               value={label}
               onChange={handleLabelChange}
               onKeyDown={handleKey}
-              disabled={unitType !== custom}
+              disabled={unitType !== 'custom'}
             />
           </Grid>
           <Grid item xs={6}>
@@ -144,7 +143,7 @@ export default function UnitOfMeasurementDialog({
               value={lowerBound}
               onChange={handleLowerBoundChange}
               style={{minWidth: '198px'}}
-              disabled={unitType !== custom}
+              disabled={unitType !== 'custom'}
             >
               {_.map(lowerBoundOptions, (option) => {
                 return (
@@ -165,7 +164,7 @@ export default function UnitOfMeasurementDialog({
               value={upperBound}
               onChange={handleUpperBoundChange}
               style={{minWidth: '198px'}}
-              disabled={unitType !== custom}
+              disabled={unitType !== 'custom'}
             >
               {_.map(upperBoundOptions, (option) => {
                 return (
