@@ -22,3 +22,19 @@ export function getPercentifiedValueLabel(
 export function canBePercentage(unitType: UnitOfMeasurementType) {
   return unitType === 'percentage' || unitType === 'decimal';
 }
+
+export function valueToString(
+  value: number,
+  showPercentage: boolean,
+  unitOfMeasurementType: UnitOfMeasurementType
+): string {
+  if (value === undefined) {
+    return 'No value entered';
+  } else if (showPercentage) {
+    const modifier = unitOfMeasurementType === 'decimal' ? 100 : 1;
+    return significantDigits(value * modifier).toString();
+  } else {
+    const modifier = unitOfMeasurementType === 'percentage' ? 0.01 : 1;
+    return significantDigits(value * modifier).toString();
+  }
+}

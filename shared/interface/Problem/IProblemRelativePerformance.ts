@@ -1,3 +1,5 @@
+import IRelativeCovarianceMatrix from './IRelativeCovarianceMatrix';
+
 export interface IProblemRelativePerformance {
   distribution: TRelativePerformance;
 }
@@ -14,6 +16,6 @@ interface IRelativeLogitNormal {
 
 export interface IRelative {
   type: 'dmnorm';
-  mu: Record<string, number>; //id, value
-  cov: {colnames: string[]; rownames: string[]; data: number[][]};
+  mu: Record<string, number>; //alternativeid, value
+  cov: IRelativeCovarianceMatrix;
 }

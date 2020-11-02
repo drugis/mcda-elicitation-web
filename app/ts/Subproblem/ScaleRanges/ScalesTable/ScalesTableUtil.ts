@@ -1,35 +1,38 @@
+import IDataSource from '@shared/interface/IDataSource';
+import {Distribution} from '@shared/interface/IDistribution';
+import IEffect, {Effect} from '@shared/interface/IEffect';
+import {IEffectWithValue} from '@shared/interface/IEffectWithValue';
+import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import IWorkspace from '@shared/interface/IWorkspace';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
 
 export function calculateObservedRanges(
   scales: Record<string, Record<string, IScale>>,
-  criteria: Record<string, IProblemCriterion>,
-  performanceTable: IPerformanceTableEntry[]
+  workspace: IWorkspace
 ): Record<string, [number, number]> {
-  return _(criteria)
+  return _(workspace.criteria)
     .flatMap('dataSources')
     .keyBy('id')
-    .mapValues(_.partial(calculateObservedRange, scales, performanceTable))
+    .mapValues(_.partial(calculateObservedRange, scales, workspace))
     .value();
 }
 
 function calculateObservedRange(
   scales: Record<string, Record<string, IScale>>,
-  performanceTable: IPerformanceTableEntry[],
-  dataSource: IProblemDataSource
+  workspace: IWorkspace,
+  dataSource: IDataSource
 ): [number, number] {
   const dataSourceId = dataSource.id;
-  const effectValues = getEffectValues(performanceTable, dataSourceId);
-  const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
-  const rangeDistributionValues = getRangeDistributionValues(
-    performanceTable,
+  const effectValues = getValuesAndBounds(workspace.effects, dataSourceId);
+  const rangeDistributionValues = getValuesAndBounds(
+    workspace.distributions,
     dataSourceId
   );
+  const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
 
   const allValues = [
     ...effectValues,
@@ -43,51 +46,34 @@ function calculateObservedRange(
   ];
 }
 
-function getEffectValues(
-  performanceTable: IPerformanceTableEntry[],
+function getValuesAndBounds(
+  effects: (Effect | Distribution)[],
   dataSourceId: string
 ): number[] {
-  return _(performanceTable)
-    .map((entry: any) => {
-      if (
-        entry.dataSource === dataSourceId &&
-        entry.performance.effect &&
-        entry.performance.effect.type === 'exact'
-      ) {
-        return entry.performance.effect.value;
+  return _(effects)
+    .filter(['dataSourceId', dataSourceId])
+    .map((entry: Effect | Distribution) => {
+      if (hasValue(entry)) {
+        return [entry.value];
+      } else if (hasRange(entry)) {
+        return [entry.lowerBound, entry.upperBound];
       }
     })
+    .flatten()
     .filter(filterUndefined)
     .value();
 }
 
-function getRangeDistributionValues(
-  performanceTable: any[],
-  dataSourceId: string
-): number[] {
-  return _(performanceTable)
-    .flatMap((entry): [number, number] => {
-      if (hasRangeDistribution(entry, dataSourceId)) {
-        return [
-          entry.performance.distribution.parameters.lowerBound,
-          entry.performance.distribution.parameters.upperBound
-        ];
-      }
-    })
-    .filter(filterUndefined)
-    .value();
+function hasValue(effect: IEffect): effect is IEffectWithValue {
+  return (effect as IEffectWithValue).value !== undefined;
+}
+
+function hasRange(effect: IEffect): effect is IRangeEffect {
+  return (effect as IRangeEffect).type === 'range';
 }
 
 function filterUndefined(value: number) {
   return value !== undefined && value !== null && !isNaN(value);
-}
-
-function hasRangeDistribution(entry: any, dataSourceId: string): boolean {
-  return (
-    entry.dataSource === dataSourceId &&
-    entry.performance.distribution &&
-    entry.performance.distribution.type === 'range'
-  );
 }
 
 function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
@@ -100,7 +86,7 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
     .value();
 }
 
-export function getConfiguredRange(
+export function getConfiguredRangeLabel(
   usePercentage: boolean,
   [lowerObservedRange, upperObservedRange]: [number, number],
   configuredRange?: [number, number]
@@ -121,4 +107,16 @@ export function getConfiguredRange(
     const upperValue = getPercentifiedValue(upperObservedRange, usePercentage);
     return `${lowerValue}, ${upperValue}`;
   }
+}
+
+export function getTheoreticalRangeLabel(
+  usePercentage: boolean,
+  unit: IUnitOfMeasurement
+): string {
+  const lowerLabel = unit.lowerBound === null ? '-∞' : unit.lowerBound;
+  const upperLabel =
+    unit.upperBound === null
+      ? '∞'
+      : getPercentifiedValue(unit.upperBound, usePercentage);
+  return `${lowerLabel}, ${upperLabel}`;
 }

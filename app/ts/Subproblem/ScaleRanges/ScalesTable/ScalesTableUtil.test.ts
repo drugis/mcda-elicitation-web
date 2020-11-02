@@ -1,14 +1,19 @@
+import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
-import {calculateObservedRanges, getConfiguredRange} from './ScalesTableUtil';
+import IWorkspace from '@shared/interface/IWorkspace';
+import {
+  calculateObservedRanges,
+  getConfiguredRangeLabel
+} from './ScalesTableUtil';
 
 describe('ScalesTableUtil', () => {
   describe('calculateObservedRanges', () => {
     it('should return observed ranges keyed by data source ids', () => {
       const scales: Record<string, Record<string, IScale>> = {
-        ds1Id: {
+        dataSourceNoDistributionId: {
           alt1Id: {
             '2.5%': 0.1,
             '50%': 0.1,
@@ -22,7 +27,7 @@ describe('ScalesTableUtil', () => {
             mode: 0.9
           }
         },
-        ds2Id: {
+        dataSourceRangeAndExactId: {
           alt1Id: {
             '2.5%': 0.1,
             '50%': 0.25,
@@ -36,7 +41,7 @@ describe('ScalesTableUtil', () => {
             mode: 0.75
           }
         },
-        ds3Id: {
+        dataSourceOverlappingRanges: {
           alt1Id: {
             '2.5%': 0.41,
             '50%': 0.45,
@@ -51,107 +56,75 @@ describe('ScalesTableUtil', () => {
           }
         }
       };
-      const criteria: Record<string, IProblemCriterion> = {
-        crit1Id: {
-          dataSources: [{id: 'ds1Id'} as IProblemDataSource]
-        } as IProblemCriterion,
-        crit2Id: {
-          dataSources: [{id: 'ds2Id'} as IProblemDataSource]
-        } as IProblemCriterion,
-        crit3Id: {
-          dataSources: [{id: 'ds3Id'} as IProblemDataSource]
-        } as IProblemCriterion
-      };
-
-      const effectOnly: IPerformanceTableEntry = {
-        alternative: 'alt1Id',
-        criterion: 'crit1Id',
-        dataSource: 'ds1Id',
-        performance: {effect: {type: 'exact', value: 0.1}}
-      };
-      const effectAndExactDistribution: IPerformanceTableEntry = {
-        alternative: 'alt2Id',
-        criterion: 'crit1Id',
-        dataSource: 'ds1Id',
-        performance: {
-          effect: {type: 'exact', value: 0.9},
-          distribution: {type: 'exact', value: 1}
-        }
-      };
-      const rangeDistributionAndEmptyEffect: IPerformanceTableEntry = {
-        alternative: 'alt1Id',
-        criterion: 'crit2Id',
-        dataSource: 'ds2Id',
-        performance: {
-          effect: {
-            type: 'empty'
-          },
-          distribution: {
-            type: 'range',
-            parameters: {lowerBound: 0, upperBound: 0.5}
-          }
-        }
-      };
-      const rangeDistributionOnly: IPerformanceTableEntry = {
-        alternative: 'alt2Id',
-        criterion: 'crit2Id',
-        dataSource: 'ds2Id',
-        performance: {
-          distribution: {
-            type: 'range',
-            parameters: {lowerBound: 0.5, upperBound: 1}
-          }
-        }
-      };
-      const exactEffectAndRangeDistribution1: IPerformanceTableEntry = {
-        alternative: 'alt1Id',
-        criterion: 'crit3Id',
-        dataSource: 'ds3Id',
-        performance: {
-          effect: {
-            type: 'exact',
-            value: 0.1
-          },
-          distribution: {
-            type: 'range',
-            parameters: {lowerBound: 0.4, upperBound: 0.5}
-          }
-        }
-      };
-      const exactEffectAndRangeDistribution2: IPerformanceTableEntry = {
-        alternative: 'alt2Id',
-        criterion: 'crit3Id',
-        dataSource: 'ds3Id',
-        performance: {
-          effect: {
-            type: 'exact',
-            value: 0.6
-          },
-          distribution: {
-            type: 'range',
-            parameters: {lowerBound: 0.9, upperBound: 1}
-          }
-        }
-      };
-
-      const performanceTable: IPerformanceTableEntry[] = [
-        effectOnly,
-        effectAndExactDistribution,
-        rangeDistributionAndEmptyEffect,
-        rangeDistributionOnly,
-        exactEffectAndRangeDistribution1,
-        exactEffectAndRangeDistribution2
+      const criteria: ICriterion[] = [
+        {
+          dataSources: [{id: 'dataSourceNoDistributionId'} as IDataSource]
+        } as ICriterion,
+        {
+          dataSources: [{id: 'dataSourceRangeAndExactId'} as IDataSource]
+        } as ICriterion,
+        {
+          dataSources: [{id: 'dataSourceOverlappingRanges'} as IDataSource]
+        } as ICriterion
       ];
+
+      const effects: Effect[] = [
+        {
+          type: 'empty',
+          dataSourceId: 'dataSourceNoDistributionId'
+        } as Effect,
+        {
+          type: 'value',
+          dataSourceId: 'dataSourceNoDistributionId',
+          value: 0.1
+        } as Effect,
+        {
+          type: 'range',
+          dataSourceId: 'dataSourceRangeAndExactId',
+          lowerBound: 0,
+          upperBound: 0.5
+        } as Effect,
+        {
+          type: 'range',
+          dataSourceId: 'dataSourceOverlappingRanges',
+          lowerBound: 0.4,
+          upperBound: 0.5
+        } as Effect
+      ];
+
+      const distributions: Distribution[] = [
+        {
+          type: 'value',
+          value: 0.25,
+          dataSourceId: 'dataSourceRangeAndExactId'
+        } as Distribution,
+        {
+          type: 'value',
+          value: 0.25,
+          dataSourceId: 'dataSourceRangeAndExactId'
+        } as Distribution,
+        {
+          type: 'range',
+          dataSourceId: 'dataSourceOverlappingRanges',
+          lowerBound: 0.9,
+          upperBound: 1
+        } as Distribution
+      ];
+
+      const workspace: IWorkspace = {
+        criteria: criteria,
+        effects: effects,
+        distributions: distributions
+      } as IWorkspace;
 
       const result: Record<string, [number, number]> = calculateObservedRanges(
         scales,
-        criteria,
-        performanceTable
+        workspace
       );
       const expectedResult: Record<string, [number, number]> = {
-        ds1Id: [0.1, 0.9],
-        ds2Id: [0, 1],
-        ds3Id: [0.1, 1]
+        dataSourceNoDistributionId: [0.1, 0.9],
+        dataSourceRangeAndExactId: [0, 0.9],
+        dataSourceOverlappingRanges: [0.4, 1]
       };
       expect(result).toEqual(expectedResult);
     });
@@ -159,19 +132,18 @@ describe('ScalesTableUtil', () => {
 
   describe('getConfiguredRangeLabel', () => {
     const observedRanges: Record<string, [number, number]> = {
-      ds1Id: [37, 42]
+      dataSourceNoDistributionId: [37, 42]
     };
-    const showPercentages = false;
 
     it('should return the configured ranges if available', () => {
       const configuredRanges: Record<string, [number, number]> = {
-        ds1Id: [0, 1]
+        dataSourceNoDistributionId: [0, 1]
       };
       const usePercentage = false;
-      const result = getConfiguredRange(
+      const result = getConfiguredRangeLabel(
         usePercentage,
-        observedRanges['ds1Id'],
-        configuredRanges['ds1Id']
+        observedRanges['dataSourceNoDistributionId'],
+        configuredRanges['dataSourceNoDistributionId']
       );
       const expectedResult = '0, 1';
       expect(result).toEqual(expectedResult);
@@ -179,7 +151,10 @@ describe('ScalesTableUtil', () => {
 
     it('should return the observed ranges if there are no configured ranges', () => {
       const usePercentage = false;
-      const result = getConfiguredRange(usePercentage, observedRanges['ds1Id']);
+      const result = getConfiguredRangeLabel(
+        usePercentage,
+        observedRanges['dataSourceNoDistributionId']
+      );
       const expectedResult = '37, 42';
       expect(result).toEqual(expectedResult);
     });

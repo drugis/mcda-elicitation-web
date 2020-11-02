@@ -1,16 +1,16 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
+import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
-import ISubproblemDefinition from 'app/ts/interface/ISubproblemDefinition';
 import {
+  createSubproblemDefinition,
   getBaselineMap,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
   initInclusions,
   isAlternativeDisabled,
-  isDataSourceDeselectionDisabled,
-  createSubproblemDefinition
+  isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
 
 describe('addSubproblemUtil', () => {

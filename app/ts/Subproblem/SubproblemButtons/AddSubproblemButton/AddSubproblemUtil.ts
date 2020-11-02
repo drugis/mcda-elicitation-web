@@ -4,8 +4,8 @@ import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
+import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
-import ISubproblemDefinition from 'app/ts/interface/ISubproblemDefinition';
 import _ from 'lodash';
 import {getSliderLimits} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
 

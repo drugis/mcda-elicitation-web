@@ -420,10 +420,10 @@ define(['lodash', 'angular'], function (_, angular) {
       });
     }
 
-    function reduceCov(oldCov, names) {
+    function reduceCov(oldCov, excludedAlternatives) {
       var newCov = _.cloneDeep(oldCov);
-      _.forEach(names, function (name) {
-        var idx = newCov.colnames.indexOf(name);
+      _.forEach(excludedAlternatives, function (excludedAlternativeId) {
+        var idx = newCov.colnames.indexOf(excludedAlternativeId);
         newCov.colnames.splice(idx, 1);
         newCov.rownames.splice(idx, 1);
         newCov.data = reduceMatrix(newCov.data, idx);
@@ -431,8 +431,8 @@ define(['lodash', 'angular'], function (_, angular) {
       return newCov;
     }
 
-    function reduceMatrix(cov, idx) {
-      var newCov = _.cloneDeep(cov);
+    function reduceMatrix(matrix, idx) {
+      var newCov = _.cloneDeep(matrix);
       newCov.splice(idx, 1);
       _.forEach(newCov, function (row) {
         row = row.splice(idx, 1);

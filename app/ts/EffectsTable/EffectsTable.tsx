@@ -9,6 +9,7 @@ import _ from 'lodash';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
+import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 import CriteriaHeader from './EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
@@ -18,10 +19,14 @@ import SoEUncHeader from './EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from './EffectsTableHeaders/UnitsHeader/UnitsHeader';
 
 export default function EffectsTable() {
-  const {alternatives, scales} = useContext(WorkspaceContext);
+  const {scales} = useContext(WorkspaceContext);
+  const {filteredAlternatives} = useContext(SubproblemContext);
 
   function renderAlternativeHeaders(): JSX.Element[] {
-    return _(alternatives).toPairs().map(createAlternativeHeader).value();
+    return _(filteredAlternatives)
+      .toPairs()
+      .map(createAlternativeHeader)
+      .value();
   }
 
   function createAlternativeHeader(

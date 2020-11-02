@@ -4,7 +4,7 @@ import IScale from '@shared/interface/IScale';
 import {DisplayMode} from '@shared/interface/ISettings';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
 
 export function renderEffect(
   effect: Effect,
@@ -37,7 +37,7 @@ function renderEnteredValues(
       case 'text':
         return effect.text;
       case 'value':
-        return getStringForValue(
+        return valueToString(
           effect.value,
           usePercentage,
           effect.unitOfMeasurementType
@@ -50,29 +50,13 @@ function renderEnteredValues(
   }
 }
 
-export function getStringForValue(
-  value: number,
-  usePercentage: boolean,
-  unitOfMeasurementType: UnitOfMeasurementType
-): string {
-  if (value === undefined) {
-    return 'No value entered';
-  } else if (usePercentage) {
-    const modifier = unitOfMeasurementType === 'decimal' ? 100 : 1;
-    return significantDigits(value * modifier).toString();
-  } else {
-    const modifier = unitOfMeasurementType === 'percentage' ? 0.01 : 1;
-    return significantDigits(value * modifier).toString();
-  }
-}
-
 function renderRange(effect: IRangeEffect, usePercentage: boolean): string {
-  const lowerBound = getStringForValue(
+  const lowerBound = valueToString(
     effect.lowerBound,
     usePercentage,
     effect.unitOfMeasurementType
   );
-  const upperBound = getStringForValue(
+  const upperBound = valueToString(
     effect.upperBound,
     usePercentage,
     effect.unitOfMeasurementType
@@ -81,7 +65,7 @@ function renderRange(effect: IRangeEffect, usePercentage: boolean): string {
 }
 
 function renderValueCI(effect: IValueCIEffect, usePercentage: boolean): string {
-  const value = getStringForValue(
+  const value = valueToString(
     effect.value,
     usePercentage,
     effect.unitOfMeasurementType
@@ -110,7 +94,7 @@ function getBound(
   if (isNotEstimable) {
     return 'NE';
   } else {
-    return getStringForValue(value, usePercentage, unitType);
+    return valueToString(value, usePercentage, unitType);
   }
 }
 
@@ -124,13 +108,13 @@ function renderValuesForAnalysis(
       case 'range':
         return renderRangeValueForAnalysis(effect, usePercentage);
       case 'value':
-        return getStringForValue(
+        return valueToString(
           effect.value,
           usePercentage,
           effect.unitOfMeasurementType
         );
       case 'valueCI':
-        return getStringForValue(
+        return valueToString(
           effect.value,
           usePercentage,
           effect.unitOfMeasurementType
@@ -145,7 +129,7 @@ function renderRangeValueForAnalysis(
   effect: IRangeEffect,
   usePercentage: boolean
 ): string {
-  return getStringForValue(
+  return valueToString(
     (effect.lowerBound + effect.upperBound) / 2,
     usePercentage,
     effect.unitOfMeasurementType
@@ -158,7 +142,7 @@ function effectIsViable(effect: Effect): boolean {
 
 function getValueFromScales(scale: IScale, usePercentage: boolean): string {
   if (scale['50%'] !== null && scale['50%'] !== undefined) {
-    return getStringForValue(
+    return valueToString(
       scale['50%'],
       usePercentage,
       UnitOfMeasurementType.decimal

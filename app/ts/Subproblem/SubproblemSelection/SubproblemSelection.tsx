@@ -1,8 +1,8 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
+import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';

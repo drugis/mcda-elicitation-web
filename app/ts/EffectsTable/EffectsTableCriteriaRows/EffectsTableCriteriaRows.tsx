@@ -5,17 +5,17 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableDataSourceRow';
 
 export default function EffectsTableCriteriaRows() {
-  const {workspace} = useContext(WorkspaceContext);
+  const {filteredWorkspace} = useContext(SubproblemContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
-  const useFavourability = workspace.properties.useFavourability;
+  const useFavourability = filteredWorkspace.properties.useFavourability;
   const numberOfColumns =
-    numberOfToggledColumns + _.size(workspace.alternatives);
+    numberOfToggledColumns + _.size(filteredWorkspace.alternatives);
 
   function createCriteriaRows(criteria: ICriterion[]): JSX.Element[][] {
     return _.map(criteria, buildDataSourceRows);
@@ -35,11 +35,11 @@ export default function EffectsTableCriteriaRows() {
   }
 
   if (useFavourability) {
-    const favourableCriteria = _.filter(workspace.criteria, [
+    const favourableCriteria = _.filter(filteredWorkspace.criteria, [
       'isFavourable',
       true
     ]);
-    const unfavourableCriteria = _.filter(workspace.criteria, [
+    const unfavourableCriteria = _.filter(filteredWorkspace.criteria, [
       'isFavourable',
       false
     ]);
@@ -70,6 +70,8 @@ export default function EffectsTableCriteriaRows() {
       </TableBody>
     );
   } else {
-    return <TableBody>{createCriteriaRows(workspace.criteria)}</TableBody>;
+    return (
+      <TableBody>{createCriteriaRows(filteredWorkspace.criteria)}</TableBody>
+    );
   }
 }

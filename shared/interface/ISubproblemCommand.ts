@@ -1,4 +1,4 @@
-import ISubproblemDefinition from 'app/ts/interface/ISubproblemDefinition';
+import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 
 export default interface ISubproblemCommand {
   title: string;

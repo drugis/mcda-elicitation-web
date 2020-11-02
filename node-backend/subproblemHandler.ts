@@ -1,8 +1,8 @@
 import {OurError} from '@shared/interface/IError';
+import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
-import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';

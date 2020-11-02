@@ -1,6 +1,6 @@
 import {OurError} from '@shared/interface/IError';
+import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import ISubproblemRange from '@shared/interface/ISubproblemRange';
-import IOldSubproblem from 'app/ts/interface/IOldSubproblem';
 import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
 import IDB from './interface/IDB';
@@ -51,7 +51,7 @@ export default function SubproblemRepository(db: IDB) {
     );
   }
 
-  function formatSubproblem(subproblem: IOldSubproblem) {
+  function formatSubproblem(subproblem: IOldSubproblem): IOldSubproblem {
     const excludedCriteria = subproblem.definition.excludedCriteria
       ? subproblem.definition.excludedCriteria
       : [];
@@ -66,7 +66,7 @@ export default function SubproblemRepository(db: IDB) {
       ...subproblem,
       definition: {
         excludedCriteria: excludedCriteria,
-        excludedDatasources: excludedDataSources,
+        excludedDataSources: excludedDataSources,
         excludedAlternatives: excludedAlternatives,
         ranges: ranges
       }

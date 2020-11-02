@@ -5,38 +5,33 @@ import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import {getStringForValue} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';
-import {getConfiguredRange} from '../ScalesTableUtil';
+import {
+  getConfiguredRangeLabel,
+  getTheoreticalRangeLabel
+} from '../ScalesTableUtil';
 
 export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
-  const {observedRanges, currentSubproblem} = useContext(WorkspaceContext);
-
   const dataSourceId = criterion.dataSources[0].id;
+  const {currentSubproblem} = useContext(WorkspaceContext);
+  const {observedRanges} = useContext(SubproblemContext);
 
   const unit = criterion.dataSources[0].unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
-  const theoreticalValues = [
-    getStringForValue(
-      criterion.dataSources[0].unitOfMeasurement.lowerBound,
-      showPercentages,
-      unit
-    ),
-    getStringForValue(
-      criterion.dataSources[0].unitOfMeasurement.upperBound,
-      showPercentages,
-      unit
-    )
-  ];
-  const observedValues = [
+  const theoreticalRangeLabel = getTheoreticalRangeLabel(
+    usePercentage,
+    criterion.dataSources[0].unitOfMeasurement
+  );
+  const [lowerObserved, upperObserved] = [
     getPercentifiedValue(observedRanges[dataSourceId][0], usePercentage),
     getPercentifiedValue(observedRanges[dataSourceId][1], usePercentage)
   ];
-  const rangeDefinition = currentSubproblem.definition.ranges[dataSourceId];
+  const configuredRange = currentSubproblem.definition.ranges[dataSourceId];
 
   return (
     <TableRow key={criterion.id}>
@@ -44,16 +39,16 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
         {criterion.title}
       </TableCell>
       <TableCell id={`theoretical-range-${criterion.id}`}>
-        {`${theoreticalValues[0]}, ${theoreticalValues[1]}`}
+        {`${theoreticalRangeLabel}`}
       </TableCell>
       <TableCell id={`observed-range-${criterion.id}`}>
-        {`${observedValues[0]}, ${observedValues[1]}`}
+        {`${lowerObserved}, ${upperObserved}`}
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
-        {getConfiguredRange(
+        {getConfiguredRangeLabel(
           usePercentage,
           observedRanges[dataSourceId],
-          rangeDefinition ? rangeDefinition : undefined
+          configuredRange
         )}
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>

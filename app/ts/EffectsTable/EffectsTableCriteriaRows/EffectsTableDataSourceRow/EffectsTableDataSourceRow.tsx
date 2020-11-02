@@ -2,7 +2,7 @@ import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import EffectsTableCriterionDescriptionCell from './EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
@@ -21,7 +21,7 @@ export default function EffectsTableDataSourceRow({
   dataSource: IDataSource;
   rowIndex: number;
 }) {
-  const {alternatives} = useContext(WorkspaceContext);
+  const {filteredAlternatives} = useContext(SubproblemContext);
 
   function renderDataSourceCells(): JSX.Element {
     return (
@@ -35,7 +35,7 @@ export default function EffectsTableDataSourceRow({
   }
 
   function renderCells(): JSX.Element[] {
-    return _.map(alternatives, (alternative: IAlternative) => {
+    return _.map(filteredAlternatives, (alternative: IAlternative) => {
       return (
         <ValueCell
           key={alternative.id}

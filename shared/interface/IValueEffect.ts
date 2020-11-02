@@ -1,6 +1,5 @@
-import IEffect from './IEffect';
+import {IEffectWithValue} from './IEffectWithValue';
 
-export default interface IValueEffect extends IEffect {
+export default interface IValueEffect extends IEffectWithValue {
   type: 'value';
-  value: number;
 }

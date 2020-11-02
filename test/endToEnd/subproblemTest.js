@@ -42,7 +42,9 @@ function setupSubProblem(browser) {
     .waitForElementVisible('#create-new-subproblem-button:enabled')
     .click('#alternative-2')
     .click('#datasource-1')
-    .click('#criterion-3');
+    .assert.not.elementPresent('#scale-blocking-warning-1')
+    .click('#criterion-3')
+    .assert.not.elementPresent('#scale-blocking-warning-0');
   return browser;
 }
 
@@ -67,7 +69,12 @@ function afterEach(browser) {
 }
 
 function create(browser) {
-  setupSubProblem(browser).click('#create-new-subproblem-button');
+  setupSubProblem(browser)
+    .click('#create-new-subproblem-button')
+    .assert.not.elementPresent('#column-alternative-2')
+    .assert.not.elementPresent('#unit-cell-deselectionDataSourceId')
+    .assert.not.elementPresent('#criterion-row-deselectionCriterionId')
+    .waitForElementVisible('#scales-table');
 }
 
 function switchSubproblem(browser) {
