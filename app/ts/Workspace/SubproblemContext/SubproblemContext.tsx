@@ -42,7 +42,7 @@ export function SubproblemContextProviderComponent({
         filteredEffects: effects,
         filteredDistributions: distributions,
         filteredRelativePerformances: relativePerformances,
-        filteredWorkspace: filteredWorkspace,
+        filteredWorkspace,
         observedRanges
       }}
     >

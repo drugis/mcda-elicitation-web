@@ -12,7 +12,7 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';
 import {
   getConfiguredRangeLabel,
-  getObservedRangeLabel,
+  getRangeLabel,
   getTheoreticalRangeLabel
 } from '../ScalesTableUtil';
 
@@ -29,7 +29,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
     usePercentage,
     criterion.dataSources[0].unitOfMeasurement
   );
-  const observedRangeLabel = getObservedRangeLabel(
+  const observedRangeLabel = getRangeLabel(
     usePercentage,
     observedRanges[dataSourceId]
   );

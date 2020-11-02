@@ -108,28 +108,18 @@ export function getConfiguredRangeLabel(
   observedRange: [number, number],
   configuredRange?: [number, number]
 ): string {
-  if (configuredRange) {
-    const [lowerConfiguredRange, upperConfiguredRange] = configuredRange;
-    const lowerValue = getPercentifiedValue(
-      lowerConfiguredRange,
-      usePercentage
-    );
-    const upperValue = getPercentifiedValue(
-      upperConfiguredRange,
-      usePercentage
-    );
-    return `${lowerValue}, ${upperValue}`;
-  } else {
-    return getObservedRangeLabel(usePercentage, observedRange);
-  }
+  return getRangeLabel(
+    usePercentage,
+    configuredRange ? configuredRange : observedRange
+  );
 }
 
-export function getObservedRangeLabel(
+export function getRangeLabel(
   usePercentage: boolean,
-  [lowerObservedRange, upperObservedRange]: [number, number]
+  [lowerRange, upperRange]: [number, number]
 ): string {
-  const lowerValue = getPercentifiedValue(lowerObservedRange, usePercentage);
-  const upperValue = getPercentifiedValue(upperObservedRange, usePercentage);
+  const lowerValue = getPercentifiedValue(lowerRange, usePercentage);
+  const upperValue = getPercentifiedValue(upperRange, usePercentage);
   return `${lowerValue}, ${upperValue}`;
 }
 
