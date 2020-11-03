@@ -31,12 +31,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     observedRanges,
     addSubproblem
   } = useContext(WorkspaceContext);
-  const [title, setTitle] = useState<string>('new problem');
-  const [errors, setErrors] = useState<string[]>(getErrors());
+
   const dataSourcesById: Record<string, IDataSource> = _(criteria)
     .flatMap('dataSources')
     .keyBy('id')
     .value();
+  const baselineMap: Record<string, boolean> = getBaselineMap(
+    alternatives,
+    workspace.relativePerformances
+  );
+
+  // *** states
+  const [title, setTitle] = useState<string>('new problem');
+  const [errors, setErrors] = useState<string[]>(getErrors());
 
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
@@ -57,7 +64,6 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       currentSubproblem.definition.excludedDataSources
     )
   );
-
   const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>(
     getScaleBlockingWarnings(
       criterionInclusions,
@@ -66,7 +72,6 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       workspace
     )
   );
-
   const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
     getMissingValueWarnings(
       dataSourceInclusions,
@@ -74,20 +79,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       workspace
     )
   );
-
-  const [configuredRanges, setConfiguredRanges] = useState<
+  const [configuredRangesByDS, setConfiguredRanges] = useState<
+    Record<string, [number, number]>
+  >({});
+  const [sliderRangesByDS, setSliderRangesByDS] = useState<
     Record<string, [number, number]>
   >({});
 
-  const baselineMap: Record<string, boolean> = getBaselineMap(
-    alternatives,
-    workspace.relativePerformances
-  );
+  // *** end states
 
+  // *** useEffects
   useEffect(() => {
     setErrors(getErrors());
   }, [title]);
-
   useEffect(() => {
     setScaleRangesWarnings(
       getScaleBlockingWarnings(
@@ -110,18 +114,18 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     alternativeInclusions,
     workspace
   ]);
-
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
-      setConfiguredRanges(
-        initConfiguredRanges(
-          dataSourcesById,
-          observedRanges,
-          currentSubproblem.definition.ranges
-        )
+      const initialConfiguredRanges = initConfiguredRanges(
+        dataSourcesById,
+        observedRanges,
+        currentSubproblem.definition.ranges
       );
+      setConfiguredRanges(initialConfiguredRanges);
+      setSliderRangesByDS(initialConfiguredRanges);
     }
   }, [observedRanges, currentSubproblem]);
+  // *** end useEffects
 
   function getErrors(): string[] {
     const titleError: string = getTitleError(title, subproblems);
@@ -186,10 +190,15 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   }
 
   function resetToDefault(): void {
-    setCriterionInclusions(initInclusions(criteria));
-    setDataSourceInclusions(initInclusions(dataSourcesById));
-    setAlternativeInclusions(initInclusions(alternatives));
-    setConfiguredRanges(initConfiguredRanges(dataSourcesById, observedRanges));
+    const initialConfiguredRanges = initConfiguredRanges(
+      dataSourcesById,
+      observedRanges
+    );
+    setCriterionInclusions(_.mapValues(criteria, () => true));
+    setDataSourceInclusions(_.mapValues(dataSourcesById, () => true));
+    setAlternativeInclusions(_.mapValues(alternatives, () => true));
+    setConfiguredRanges(initialConfiguredRanges);
+    setSliderRangesByDS(initialConfiguredRanges);
   }
 
   function addSubproblemWrapper(): void {
@@ -199,7 +208,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        configuredRanges
+        configuredRangesByDS
       )
     };
     addSubproblem(subproblemCommand);
@@ -210,9 +219,23 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     lowestConfiguredValue: number,
     highestConfiguredValue: number
   ): void {
-    let newRanges = _.cloneDeep(configuredRanges);
+    let newRanges = _.cloneDeep(configuredRangesByDS);
     newRanges[dataSourceId] = [lowestConfiguredValue, highestConfiguredValue];
     setConfiguredRanges(newRanges);
+  }
+
+  function updateSliderRangeforDS(
+    dataSourceId: string,
+    newRange: [number, number]
+  ): void {
+    let newEntry: Record<string, [number, number]> = {};
+    newEntry[dataSourceId] = newRange;
+    const newSliderRanges = {...sliderRangesByDS, ...newEntry};
+    setSliderRangesByDS(newSliderRanges);
+  }
+
+  function getSliderRangeForDS(criterionId: string) {
+    return sliderRangesByDS[criterionId];
   }
 
   return (
@@ -223,9 +246,11 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         isCriterionDeselectionDisabled:
           _.filter(criterionInclusions).length < 3,
         scaleRangesWarnings,
+
         missingValueWarnings,
-        configuredRanges,
+        configuredRanges: configuredRangesByDS,
         getIncludedDataSourceForCriterion,
+        getSliderRangeForDS,
         isCriterionExcluded,
         isDataSourceExcluded,
         isAlternativeExcluded,
@@ -237,6 +262,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper,
         resetToDefault,
         setConfiguredRange,
+        updateSliderRangeforDS,
         addSubproblem: addSubproblemWrapper
       }}
     >

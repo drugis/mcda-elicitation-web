@@ -26,9 +26,9 @@ const subproblem1 = {
 function setupSubProblem(browser) {
   browser
     .waitForElementVisible('#effects-table-header')
-    .click('#create-subproblem-button')
-    .waitForElementVisible('#create-subproblem-header')
-    .waitForElementVisible('#create-new-subproblem-button:disabled')
+    .click('#add-subproblem-button')
+    .waitForElementVisible('#add-subproblem-header')
+    .waitForElementVisible('#add-subproblem-confirm-button:disabled')
     .assert.containsText('#no-title-warning', 'No title entered')
     .assert.containsText(
       '#scale-blocking-warning-0',
@@ -39,7 +39,7 @@ function setupSubProblem(browser) {
       'Effects table contains multiple data sources per criterion, therefore no scales can be set and this problem cannot be analyzed.'
     )
     .setValue('#subproblem-title', subproblem1.title)
-    .waitForElementVisible('#create-new-subproblem-button:enabled')
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
     .click('#alternative-2')
     .click('#datasource-1')
     .assert.not.elementPresent('#scale-blocking-warning-1')
@@ -70,7 +70,7 @@ function afterEach(browser) {
 
 function create(browser) {
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
     .assert.not.elementPresent('#column-alternative-2')
     .assert.not.elementPresent('#unit-cell-deselectionDataSourceId')
     .assert.not.elementPresent('#criterion-row-deselectionCriterionId')
@@ -79,8 +79,8 @@ function create(browser) {
 
 function switchSubproblem(browser) {
   setupSubProblem(browser)
-    .waitForElementVisible('#create-new-subproblem-button:enabled')
-    .click('#create-new-subproblem-button')
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
+    .click('#add-subproblem-confirm-button')
     .assert.containsText('#subproblem-selector', subproblem1.title)
     .click('#subproblem-selector')
     .click('#subproblem-selector > option:nth-child(1)')
@@ -103,7 +103,7 @@ function edit(browser) {
 function reset(browser) {
   setupSubProblem(browser)
     .click('#reset-subproblem-button')
-    .waitForElementVisible('#create-new-subproblem-button:disabled')
+    .waitForElementVisible('#add-subproblem-confirm-button:disabled')
     .assert.containsText('#subproblem-title', '')
     .waitForElementVisible('#alternative-2:checked')
     .waitForElementVisible('#datasource-1:checked')
@@ -146,7 +146,7 @@ function changeScale(browser) {
 function deleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
     .waitForElementVisible('#delete-subproblem-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
@@ -159,7 +159,7 @@ function deleteSubproblem(browser) {
 function deleteDefaultSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
     .assert.containsText('#subproblem-selector', subproblem1.title)
     .click('#subproblem-selector')
     .click('#subproblem-selector > option:nth-child(1)')
@@ -176,7 +176,7 @@ function deleteDefaultSubproblem(browser) {
 function cancelDeleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
     .click('#close-modal-button')
@@ -187,6 +187,6 @@ function cancelDeleteSubproblem(browser) {
 function createNonAnalyzableProblem(browser) {
   setupSubProblem(browser)
     .click('#datasource-1')
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
     .waitForElementVisible('#no-scales-warning-0');
 }

@@ -122,21 +122,28 @@ export function getTheoreticalRangeLabel(
   unit: IUnitOfMeasurement
 ): string {
   const lowerLabel = unit.lowerBound === null ? '-∞' : unit.lowerBound;
-  const upperLabel = getUpperBound(usePercentage, unit);
+  const upperLabel = getUpperBoundLabel(usePercentage, unit);
   return `${lowerLabel}, ${upperLabel}`;
 }
 
-function getUpperBound(
+export function getUpperBound(
+  usePercentage: boolean,
+  unit: IUnitOfMeasurement
+): number {
+  if (usePercentage && unit.type === 'decimal') {
+    return 100;
+  } else if (!usePercentage && unit.type === 'percentage') {
+    return 1;
+  } else {
+    return unit.upperBound;
+  }
+}
+
+export function getUpperBoundLabel(
   usePercentage: boolean,
   unit: IUnitOfMeasurement
 ): string {
   if (unit.upperBound === null) {
     return '∞';
-  } else if (usePercentage && unit.type === 'decimal') {
-    return '100';
-  } else if (!usePercentage && unit.type === 'percentage') {
-    return '1';
-  } else {
-    return unit.upperBound.toString();
-  }
+  } else return getUpperBound(usePercentage, unit).toString();
 }

@@ -9,6 +9,7 @@ export default interface IAddSubproblemContext {
   missingValueWarnings: string[];
   configuredRanges: Record<string, [number, number]>;
   getIncludedDataSourceForCriterion: (criterion: ICriterion) => IDataSource;
+  getSliderRangeForDS: (dataSourceId: string) => [number, number];
   isCriterionExcluded: (criterionId: string) => boolean;
   isDataSourceDeselectionDisabled: (criterionId: string) => boolean;
   isDataSourceExcluded: (dataSourceId: string) => boolean;
@@ -18,6 +19,10 @@ export default interface IAddSubproblemContext {
   updateAlternativeInclusion: (id: string, newValue: boolean) => void;
   updateCriterionInclusion: (id: string, newValue: boolean) => void;
   updateDataSourceInclusion: (id: string, newValue: boolean) => void;
+  updateSliderRangeforDS: (
+    dataSourceId: string,
+    newValue: [number, number]
+  ) => void;
   resetToDefault: () => void;
   setConfiguredRange: (
     dataSourceId: string,

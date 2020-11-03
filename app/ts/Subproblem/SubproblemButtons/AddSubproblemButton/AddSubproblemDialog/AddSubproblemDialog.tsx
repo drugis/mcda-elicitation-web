@@ -52,7 +52,7 @@ export default function AddSubproblemDialog({
 
   return (
     <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth={'lg'}>
-      <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
+      <DialogTitleWithCross id="add-subproblem-header" onClose={closeDialog}>
         Add new problem <InlineHelp helpId="add-subproblem" />
       </DialogTitleWithCross>
       <DialogContent>
