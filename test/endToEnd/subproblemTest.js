@@ -6,7 +6,7 @@ module.exports = {
   'Create subproblem': create,
   'Switching between subproblems': switchSubproblem,
   'Edit the title': edit,
-  'Reset during subproblem creation': reset,
+  'Reset during subproblem creation': resetAndDuplicateTitle,
   'Interact with scale sliders': changeScale,
   Deleting: deleteSubproblem,
   'Deleting the default subproblem': deleteDefaultSubproblem,
@@ -18,7 +18,8 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
-
+const alternative2checkbox =
+  '#inclusion-785c281d-c66a-48a7-8cfa-4aeb8899a2b7-checkbox';
 const subproblem1 = {
   title: 'subproblem1'
 };
@@ -28,23 +29,23 @@ function setupSubProblem(browser) {
     .waitForElementVisible('#effects-table-header')
     .click('#add-subproblem-button')
     .waitForElementVisible('#add-subproblem-header')
-    .waitForElementVisible('#add-subproblem-confirm-button:disabled')
-    .assert.containsText('#no-title-warning', 'No title entered')
-    .assert.containsText(
-      '#scale-blocking-warning-0',
-      'Effects table contains missing values, therefore no scales can be set and this problem cannot be analyzed.'
-    )
-    .assert.containsText(
-      '#scale-blocking-warning-1',
-      'Effects table contains multiple data sources per criterion, therefore no scales can be set and this problem cannot be analyzed.'
-    )
-    .setValue('#subproblem-title', subproblem1.title)
     .waitForElementVisible('#add-subproblem-confirm-button:enabled')
-    .click('#alternative-2')
-    .click('#datasource-1')
-    .assert.not.elementPresent('#scale-blocking-warning-1')
-    .click('#criterion-3')
-    .assert.not.elementPresent('#scale-blocking-warning-0');
+    .assert.containsText(
+      '#scale-ranges-warning-0',
+      'Effects table contains missing values'
+    )
+    .assert.containsText(
+      '#scale-ranges-warning-1',
+      'Effects table contains multiple data sources per criterion'
+    )
+    .clearValue('#subproblem-title-input')
+    .setValue('#subproblem-title-input', subproblem1.title)
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
+    .click(alternative2checkbox)
+    .click('#inclusion-deselectionDataSourceId-checkbox')
+    .assert.not.elementPresent('#scale-ranges-warning-1')
+    .click('#inclusion-deselectionCriterionId-checkbox')
+    .assert.not.elementPresent('#scale-ranges-warning-0');
   return browser;
 }
 
@@ -100,15 +101,20 @@ function edit(browser) {
     .assert.containsText('#subproblem-selector', newTitle);
 }
 
-function reset(browser) {
+function resetAndDuplicateTitle(browser) {
   setupSubProblem(browser)
+    .clearValue('#subproblem-title-input')
+    .setValue('#subproblem-title-input', 'Default')
+    .waitForElementVisible('#error-0')
     .click('#reset-subproblem-button')
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
     .waitForElementVisible('#add-subproblem-confirm-button:disabled')
-    .assert.containsText('#subproblem-title', '')
-    .waitForElementVisible('#alternative-2:checked')
-    .waitForElementVisible('#datasource-1:checked')
-    .waitForElementVisible('#criterion-3:checked')
-    .click('#close-modal-button');
+    .expect.element(alternative2checkbox)
+    .to.be.selected.expect.element(
+      '#inclusion-deselectionDataSourceId-checkbox'
+    )
+    .to.be.selected.expect.element('#inclusion-deselectionCriterionId-checkbox')
+    .to.be.selected.click('#close-modal-button');
 }
 
 function changeScale(browser) {

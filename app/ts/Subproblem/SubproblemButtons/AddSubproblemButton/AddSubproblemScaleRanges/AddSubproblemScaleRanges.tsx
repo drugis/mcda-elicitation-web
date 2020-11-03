@@ -23,7 +23,7 @@ export default function AddSubproblemScaleRanges() {
   return (
     <>
       {scaleRangesWarnings.length > 0 ? (
-        <>{displayWarnings(scaleRangesWarnings)}</>
+        <>{displayWarnings(scaleRangesWarnings, 'scale-ranges')}</>
       ) : (
         <Grid container item xs={12} spacing={4}>
           {renderSliders()}

@@ -68,7 +68,7 @@ export default function AddSubproblemEffectsTable() {
         </Table>
       </Grid>
 
-      {displayWarnings(missingValueWarnings)}
+      {displayWarnings(missingValueWarnings, 'effects-table')}
     </Grid>
   );
 }

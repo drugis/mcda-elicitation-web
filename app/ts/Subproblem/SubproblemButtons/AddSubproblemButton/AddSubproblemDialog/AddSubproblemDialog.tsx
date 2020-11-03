@@ -31,6 +31,7 @@ export default function AddSubproblemDialog({
         <Grid
           item
           xs={12}
+          id={`error-${index}`}
           key={`error-${index}`}
           className="alert"
           style={{textAlign: 'end'}}

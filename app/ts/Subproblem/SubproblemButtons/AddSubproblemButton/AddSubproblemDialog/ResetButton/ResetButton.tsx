@@ -6,7 +6,12 @@ export default function ResetButton() {
   const {resetToDefault} = useContext(AddSubproblemContext);
 
   return (
-    <Button variant="contained" color="primary" onClick={resetToDefault}>
+    <Button
+      id="reset-subproblem-button"
+      variant="contained"
+      color="primary"
+      onClick={resetToDefault}
+    >
       Reset to default
     </Button>
   );
