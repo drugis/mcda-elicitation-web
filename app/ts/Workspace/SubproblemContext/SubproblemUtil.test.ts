@@ -1,9 +1,12 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
+import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import {relative} from 'path';
 import {applySubproblem} from './SubproblemUtil';
 
 describe('The Subproblem util', () => {
@@ -79,6 +82,24 @@ describe('The Subproblem util', () => {
       relativePerformances: []
     } as IWorkspace;
 
+    const reducedCriteria: ICriterion[] = [
+      {
+        id: 'crit2Id',
+        dataSources: [
+          {
+            id: 'ds3Id'
+          }
+        ]
+      } as ICriterion
+    ];
+
+    const reducedAlternatives = [
+      {
+        id: 'alt1Id',
+        title: 'alternative 1'
+      }
+    ];
+
     it('should work for no exclusions', () => {
       const noExclusions = {definition: {}} as IOldSubproblem;
       const result = applySubproblem(baseWorkspace, noExclusions);
@@ -103,16 +124,7 @@ describe('The Subproblem util', () => {
       ];
       const expectedResult = {
         ...baseWorkspace,
-        criteria: [
-          {
-            id: 'crit2Id',
-            dataSources: [
-              {
-                id: 'ds3Id'
-              }
-            ]
-          } as IProblemCriterion
-        ],
+        criteria: reducedCriteria,
         effects: reducedEffects,
         distributions: reducedEffects
       };
@@ -145,16 +157,81 @@ describe('The Subproblem util', () => {
       ];
       const expectedResult = {
         ...baseWorkspace,
-        alternatives: [
-          {
-            id: 'alt1Id',
-            title: 'alternative 1'
-          }
-        ],
+        alternatives: reducedAlternatives,
         effects: reducedEffects,
         distributions: reducedEffects
       };
       const result = applySubproblem(baseWorkspace, excludeAlt2);
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should exclude alternatives in relative problems', () => {
+      const excludeAlt2 = {
+        definition: {
+          excludedAlternatives: ['alt2Id'],
+          excludedCriteria: ['crit1Id']
+        }
+      } as IOldSubproblem;
+
+      const inputRelativePerformances: IRelativePerformance[] = [
+        {
+          dataSourceId: 'ds3Id',
+          criterionId: 'crit2Id',
+          type: 'relative-cloglog-normal',
+          baseline: {
+            type: 'dnorm',
+            id: 'alt1Id'
+          },
+          relative: {
+            cov: {
+              rownames: ['alt1Id', 'alt2Id'],
+              colnames: ['alt1Id', 'alt2Id'],
+              data: [
+                [0, 0],
+                [0, 1]
+              ]
+            },
+            mu: {alt1Id: 0, alt2Id: 0.5},
+            type: 'dmnorm'
+          }
+        }
+      ];
+
+      const result = applySubproblem(
+        {
+          ...baseWorkspace,
+          effects: [],
+          distributions: [],
+          relativePerformances: inputRelativePerformances
+        },
+        excludeAlt2
+      );
+
+      const reducedRelativePerformances: IRelativePerformance[] = [
+        {
+          dataSourceId: 'ds3Id',
+          criterionId: 'crit2Id',
+          type: 'relative-cloglog-normal',
+          baseline: {
+            type: 'dnorm',
+            id: 'alt1Id'
+          },
+          relative: {
+            cov: {rownames: ['alt1Id'], colnames: ['alt1Id'], data: [[0]]},
+            mu: {alt1Id: 0},
+            type: 'dmnorm'
+          }
+        }
+      ];
+
+      const expectedResult = {
+        ...baseWorkspace,
+        criteria: reducedCriteria,
+        alternatives: reducedAlternatives,
+        effects: [] as Effect[],
+        distributions: [] as Distribution[],
+        relativePerformances: reducedRelativePerformances
+      };
       expect(result).toEqual(expectedResult);
     });
 
@@ -240,12 +317,7 @@ describe('The Subproblem util', () => {
             ]
           } as IProblemCriterion
         ],
-        alternatives: [
-          {
-            id: 'alt1Id',
-            title: 'alternative 1'
-          }
-        ],
+        alternatives: reducedAlternatives,
         effects: reducedEffects,
         distributions: reducedEffects
       };

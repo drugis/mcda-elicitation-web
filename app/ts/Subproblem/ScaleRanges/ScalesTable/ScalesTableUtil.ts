@@ -4,16 +4,10 @@ import IEffect, {Effect} from '@shared/interface/IEffect';
 import {IEffectWithValue} from '@shared/interface/IEffectWithValue';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
-import IUnitOfMeasurement, {
-  UnitOfMeasurementType
-} from '@shared/interface/IUnitOfMeasurement';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import {use} from 'chai';
 import _ from 'lodash';
 
 export function calculateObservedRanges(

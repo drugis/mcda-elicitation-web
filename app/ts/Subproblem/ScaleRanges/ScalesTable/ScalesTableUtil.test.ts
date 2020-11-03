@@ -3,10 +3,14 @@ import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
+import {useParams} from 'react-router-dom';
 import {
   calculateObservedRanges,
-  getConfiguredRangeLabel
+  getConfiguredRangeLabel,
+  getRangeLabel,
+  getTheoreticalRangeLabel
 } from './ScalesTableUtil';
 
 describe('ScalesTableUtil', () => {
@@ -171,6 +175,83 @@ describe('ScalesTableUtil', () => {
         observedRanges['dataSourceNoDistributionId']
       );
       const expectedResult = '37, 42';
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getRangeLabel', () => {
+    it('should return the label for an lower and upper bound', () => {
+      const usePercentage = false;
+      const observedRange: [number, number] = [37, 42];
+      const result = getRangeLabel(usePercentage, observedRange);
+      const expectedResult = '37, 42';
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getTheoreticalRangeLabel', () => {
+    it('should return the label given a theoretical scale in percentages with percentage input', () => {
+      const usePercentage = true;
+      const unit: IUnitOfMeasurement = {
+        lowerBound: 0,
+        upperBound: 100,
+        type: 'percentage',
+        label: '%'
+      };
+      const result = getTheoreticalRangeLabel(usePercentage, unit);
+      const expectedResult = '0, 100';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the label given a theoretical scale in decimals with percentage input', () => {
+      const usePercentage = false;
+      const unit: IUnitOfMeasurement = {
+        lowerBound: 0,
+        upperBound: 100,
+        type: 'percentage',
+        label: '%'
+      };
+      const result = getTheoreticalRangeLabel(usePercentage, unit);
+      const expectedResult = '0, 1';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the label given a theoretical scale in percentages with decimal input', () => {
+      const usePercentage = true;
+      const unit: IUnitOfMeasurement = {
+        lowerBound: 0,
+        upperBound: 1,
+        type: 'decimal',
+        label: '%'
+      };
+      const result = getTheoreticalRangeLabel(usePercentage, unit);
+      const expectedResult = '0, 100';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the label given a theoretical scale in decimals with decimal input', () => {
+      const usePercentage = false;
+      const unit: IUnitOfMeasurement = {
+        lowerBound: 0,
+        upperBound: 1,
+        type: 'decimal',
+        label: '%'
+      };
+      const result = getTheoreticalRangeLabel(usePercentage, unit);
+      const expectedResult = '0, 1';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the label given a theoretical scale for a custom unit', () => {
+      const usePercentage = false;
+      const unit: IUnitOfMeasurement = {
+        lowerBound: null,
+        upperBound: null,
+        type: 'custom',
+        label: 'something'
+      };
+      const result = getTheoreticalRangeLabel(usePercentage, unit);
+      const expectedResult = '-∞, ∞';
       expect(result).toEqual(expectedResult);
     });
   });
