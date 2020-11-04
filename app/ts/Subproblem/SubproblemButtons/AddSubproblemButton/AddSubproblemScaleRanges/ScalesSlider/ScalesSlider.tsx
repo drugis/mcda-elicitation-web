@@ -117,13 +117,14 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       </Grid>
       <Grid item xs={1}>
         <Tooltip title="Extend the range">
-          <IconButton onClick={increaseFrom}>
+          <IconButton id={`extend-from-${criterion.id}`} onClick={increaseFrom}>
             <ChevronLeft color="primary" />
           </IconButton>
         </Tooltip>
       </Grid>
       <Grid item xs={10}>
         <Slider
+          id={`slider-${criterion.id}`}
           value={configuredValues}
           onChange={handleChange}
           valueLabelDisplay="on"
@@ -146,7 +147,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       </Grid>
       <Grid item xs={1}>
         <Tooltip title="Extend the range">
-          <IconButton onClick={increaseTo}>
+          <IconButton id={`extend-to-${criterion.id}`} onClick={increaseTo}>
             <ChevronRight color="primary" />
           </IconButton>
         </Tooltip>

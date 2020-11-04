@@ -40,9 +40,10 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     alternatives,
     workspace.relativePerformances
   );
+  const defaultTitle = 'new problem';
 
   // *** states
-  const [title, setTitle] = useState<string>('new problem');
+  const [title, setTitle] = useState<string>(defaultTitle);
   const [errors, setErrors] = useState<string[]>(getErrors());
 
   const [alternativeInclusions, setAlternativeInclusions] = useState<
@@ -199,6 +200,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     setAlternativeInclusions(_.mapValues(alternatives, () => true));
     setConfiguredRanges(initialConfiguredRanges);
     setSliderRangesByDS(initialConfiguredRanges);
+    setTitle(defaultTitle);
   }
 
   function addSubproblemWrapper(): void {

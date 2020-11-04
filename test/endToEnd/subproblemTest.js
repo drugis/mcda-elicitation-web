@@ -106,26 +106,35 @@ function resetAndDuplicateTitle(browser) {
     .clearValue('#subproblem-title-input')
     .setValue('#subproblem-title-input', 'Default')
     .waitForElementVisible('#error-0')
+    .waitForElementVisible('#add-subproblem-confirm-button:disabled')
     .click('#reset-subproblem-button')
     .waitForElementVisible('#add-subproblem-confirm-button:enabled')
-    .waitForElementVisible('#add-subproblem-confirm-button:disabled')
-    .expect.element(alternative2checkbox)
-    .to.be.selected.expect.element(
-      '#inclusion-deselectionDataSourceId-checkbox'
-    )
-    .to.be.selected.expect.element('#inclusion-deselectionCriterionId-checkbox')
-    .to.be.selected.click('#close-modal-button');
+    .expect.element(alternative2checkbox).to.be.selected;
+  browser.expect.element('#inclusion-deselectionDataSourceId-checkbox').to.be
+    .selected;
+  browser.expect.element('#inclusion-deselectionCriterionId-checkbox').to.be
+    .selected;
+  browser
+    .waitForElementVisible('#close-modal-button')
+    .click('#close-modal-button');
 }
 
 function changeScale(browser) {
-  const lowerValueLabel = '//*[@id="slider-0"]/div/span[10]';
-  const upperValueLabel = '//*[@id="slider-0"]/div/span[11]';
-  const moveFloor = '//*[@id="slider-0-floor"]';
-  const moveCeil = '//*[@id="slider-0-ceil"]';
-  const floorLabel = '//*[@id="slider-0"]/div/span[8]';
-  const ceilLabel = '//*[@id="slider-0"]/div/span[9]';
-  const moveLowerValue = '//*[@id="slider-0"]/div/span[6]';
-  const moveUpperValue = '//*[@id="slider-0"]/div/span[7]';
+  const lowerValueLabel =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[9]/span/span/span';
+  const upperValueLabel =
+    ' /html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[10]/span/span';
+  const floorLabel =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[4]';
+  const ceilLabel =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[8]';
+  const moveFloor =
+    '//*[@id="extend-from-c4a470d2-b457-4f65-9b8d-5e22741c24a6"]';
+  const moveCeil = '//*[@id="extend-to-c4a470d2-b457-4f65-9b8d-5e22741c24a6"]';
+  const moveLowerValue =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[9]';
+  const moveUpperValue =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[10]/span/span/span';
 
   setupSubProblem(browser)
     .useXpath()
@@ -133,18 +142,18 @@ function changeScale(browser) {
     .assert.containsText(upperValueLabel, '200')
     .click(moveFloor)
     .click(moveCeil)
-    .assert.containsText(floorLabel, '-300')
-    .assert.containsText(ceilLabel, '300')
+    .assert.containsText(floorLabel, '-400')
+    .assert.containsText(ceilLabel, '500')
     .moveToElement(moveLowerValue, 0, 0)
     .mouseButtonDown(0)
     .moveToElement(moveFloor, 0, 0)
     .mouseButtonUp(0)
-    .assert.containsText(lowerValueLabel, '-300')
+    .assert.containsText(lowerValueLabel, '-400')
     .moveToElement(moveUpperValue, 0, 0)
     .mouseButtonDown(0)
     .moveToElement(moveCeil, 0, 0)
     .mouseButtonUp(0)
-    .assert.containsText(upperValueLabel, '300')
+    .assert.containsText(upperValueLabel, '500')
     .useCss()
     .click('#close-modal-button');
 }
@@ -153,6 +162,7 @@ function deleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
     .click('#add-subproblem-confirm-button')
+    .pause(1000) //wait for page reload to be done
     .waitForElementVisible('#delete-subproblem-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
@@ -183,6 +193,7 @@ function cancelDeleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
     .click('#add-subproblem-confirm-button')
+    .pause(1000)
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
     .click('#close-modal-button')
@@ -192,7 +203,8 @@ function cancelDeleteSubproblem(browser) {
 
 function createNonAnalyzableProblem(browser) {
   setupSubProblem(browser)
-    .click('#datasource-1')
+    .click('#inclusion-deselectionDataSourceId-checkbox')
     .click('#add-subproblem-confirm-button')
+    .pause(1000) //wait for page reload
     .waitForElementVisible('#no-scales-warning-0');
 }
