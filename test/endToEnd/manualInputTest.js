@@ -41,10 +41,13 @@ const manualInputService = require('./util/manualInputService');
 const workspaceService = require('./util/workspaceService');
 const {TEST_URL} = require('./util/constants');
 
+const seleniumDelay = 500;
+
 const FIRST_WARNING_PATH = '//*[@id="warnings"]/div[1]';
 const CRITERION_ROW_PATH = '//tbody/tr[2]';
 const DATA_SOURCE_PATH = '//tbody/tr[2]/td[12]';
 const ALTERNATIVE_PATH = '//thead/tr/th[6]';
+const FIRST_CELL = '//tbody/tr[2]/td[8]/span';
 
 const NEW_TITLE = 'new title';
 const NEW_THERAPEUTIC_CONTEXT = 'therapeutic context';
@@ -571,7 +574,6 @@ function duplicateAlternativeTitleWarning(browser) {
 }
 
 function finishCreatingWorkspace(browser) {
-  const firstCell = '//tbody/tr[2]/td[8]/span';
   const secondCell = '//tbody/tr[2]/td[9]/span';
   const thirdCell = '//tbody/tr[4]/td[8]/span';
   const fourthCell = '//tbody/tr[4]/td[9]/span';
@@ -579,46 +581,46 @@ function finishCreatingWorkspace(browser) {
   browser
     .useXpath()
     .assert.containsText(FIRST_WARNING_PATH, UNFILLED_VALUES_WARNING)
-    .click(firstCell)
-    .pause(100) //selenium tends to click too fast
+    .click(FIRST_CELL)
+    .pause(seleniumDelay) //selenium tends to click too fast
     .click(editEffectCell)
-    .pause(100)
+    .pause(seleniumDelay)
     .click(secondCell)
-    .pause(100)
+    .pause(seleniumDelay)
     .click(editEffectCell)
-    .pause(100)
+    .pause(seleniumDelay)
     .click(thirdCell)
-    .pause(100)
+    .pause(seleniumDelay)
     .click(editEffectCell)
-    .pause(100)
+    .pause(seleniumDelay)
     .click(fourthCell)
-    .pause(100)
+    .pause(seleniumDelay)
     .click(editEffectCell)
-    .pause(100)
+    .pause(seleniumDelay)
     .click('//*[@id="finish-creating-workspace"]')
-    .pause(500)
-    .getTitle(function (result) {
+    .pause(seleniumDelay)
+    .getTitle((result) => {
       browser.assert.equal(result, "new workspace's overview");
     });
 }
 
 function generateDistributions(browser) {
-  const firstCell = '//tbody/tr[2]/td[8]/span';
   const editEffectCell = '//*[@id="edit-effect-cell"]';
   browser
     .useXpath()
     .assert.containsText('//*[@id="table-input-mode-selector"]', 'Effect')
     .assert.containsText(FIRST_WARNING_PATH, UNFILLED_VALUES_WARNING)
-    .click(firstCell)
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(editEffectCell)
+    .pause(seleniumDelay)
     .click('//*[@id="generate-distributions"]')
     .click('//*[@id="confirm-generating-distributions"]')
     .assert.containsText('//*[@id="table-input-mode-selector"]', 'Distribution')
-    .assert.containsText(firstCell, '0');
+    .assert.containsText(FIRST_CELL, '0');
 }
 
 function enterEffects(browser) {
-  const firstCell = '//tbody/tr[2]/td[8]/span';
   const editEffectCell = '//*[@id="edit-effect-cell"]';
   const typeSelector = '//*[@id="input-parameters-selector"]';
   const valueCI = '//*[@id="input-parameters-selector"]/option[2]';
@@ -631,11 +633,15 @@ function enterEffects(browser) {
   const textInput = '//*[@id="text-input"]';
   browser
     .useXpath()
-    .click(firstCell)
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
+    .pause(seleniumDelay)
     .setValue(valueInput, 1)
     .click(editEffectCell)
-    .assert.containsText(firstCell, 1)
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 1)
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(valueCI)
     .pause(100)
@@ -644,8 +650,10 @@ function enterEffects(browser) {
     .setValue(lowerBoundInput, 1)
     .setValue(upperBoundInput, 3)
     .click(editEffectCell)
-    .assert.containsText(firstCell, '2\n(1, 3)')
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, '2\n(1, 3)')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(range)
     .pause(100)
@@ -654,24 +662,28 @@ function enterEffects(browser) {
     .clearValue(upperBoundInput)
     .setValue(upperBoundInput, 1)
     .click(editEffectCell)
-    .assert.containsText(firstCell, '[0, 1]')
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, '[0, 1]')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(empty)
     .pause(100)
     .click(editEffectCell)
-    .assert.containsText(firstCell, 'Empty')
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 'Empty')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(text)
     .pause(100)
     .setValue(textInput, 'text')
     .click(editEffectCell)
-    .assert.containsText(firstCell, 'text');
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 'text');
 }
 
 function enterDistributions(browser) {
-  const firstCell = '//tbody/tr[2]/td[8]/span';
   const editDistributionCell = '//*[@id="edit-distribution-cell"]';
   const typeSelector = '//*[@id="input-parameters-selector"]';
   const beta = '//*[@id="input-parameters-selector"]/option[2]';
@@ -693,14 +705,17 @@ function enterDistributions(browser) {
     .click('//*[@id="table-input-mode-selector"]')
     .click('//*[@id="table-input-mode-selector"]/option[2]')
     .pause(100)
-    .click(firstCell)
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .setValue(meanInput, 1)
     .clearValue(standardErrorInput)
     .setValue(standardErrorInput, 2)
     .click(editDistributionCell)
+    .pause(seleniumDelay)
     .pause(100)
-    .assert.containsText(firstCell, 'Normal(1, 2)')
-    .click(firstCell)
+    .assert.containsText(FIRST_CELL, 'Normal(1, 2)')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(beta)
     .clearValue(alphaInput)
@@ -709,8 +724,10 @@ function enterDistributions(browser) {
     .setValue(betaInput, 3)
     .pause(100)
     .click(editDistributionCell)
-    .assert.containsText(firstCell, 'Beta(2, 3)')
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 'Beta(2, 3)')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(gamma)
     .clearValue(alphaInput)
@@ -719,15 +736,19 @@ function enterDistributions(browser) {
     .setValue(betaInput, 4)
     .pause(100)
     .click(editDistributionCell)
-    .assert.containsText(firstCell, 'Gamma(3, 4)')
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 'Gamma(3, 4)')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(value)
     .setValue(valueInput, 1)
     .pause(100)
     .click(editDistributionCell)
-    .assert.containsText(firstCell, 1)
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 1)
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(range)
     .pause(100)
@@ -736,18 +757,23 @@ function enterDistributions(browser) {
     .clearValue(upperBoundInput)
     .setValue(upperBoundInput, 1)
     .click(editDistributionCell)
-    .assert.containsText(firstCell, '[0, 1]')
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, '[0, 1]')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(empty)
     .pause(100)
     .click(editDistributionCell)
-    .assert.containsText(firstCell, 'Empty')
-    .click(firstCell)
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 'Empty')
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
     .click(typeSelector)
     .click(text)
     .pause(100)
     .setValue(textInput, 'text')
     .click(editDistributionCell)
-    .assert.containsText(firstCell, 'text');
+    .pause(seleniumDelay)
+    .assert.containsText(FIRST_CELL, 'text');
 }
