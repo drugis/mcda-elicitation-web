@@ -6,43 +6,41 @@ define([
   'mcda/smaaResults/smaaResults',
   'angular-patavi-client',
   'angularjs-slider'
-], function(angular) {
-  describe('The SmaaResultsService', function() {
+], function (angular) {
+  describe('The SmaaResultsService', function () {
     var smaaResultsService;
-    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['postAndHandleResults']);
+    var pataviResultsServiceMock = jasmine.createSpyObj(
+      'PataviResultsServiceMock',
+      ['postAndHandleResults']
+    );
 
     const root = 'root';
 
-    beforeEach(function() {
-      angular.mock.module('patavi', function() { });
-      angular.mock.module('elicit.smaaResults', function($provide) {
+    beforeEach(function () {
+      angular.mock.module('patavi', function () {});
+      angular.mock.module('elicit.smaaResults', function ($provide) {
         $provide.value('PataviResultsService', pataviResultsServiceMock);
       });
     });
 
-    beforeEach(inject(function(SmaaResultsService) {
+    beforeEach(inject(function (SmaaResultsService) {
       smaaResultsService = SmaaResultsService;
     }));
 
-    describe('addSmaaResults', function() {
-      it('should return a state with alternatives per rank, ranks per alternatives, and the central weights', function() {
+    describe('addSmaaResults', function () {
+      it('should return a state with alternatives per rank, ranks per alternatives, and the central weights', function () {
         var state = {
           results: {
             ranks: {
-              data: {
-                altKey1: [0.2, 0.8],
-                altKey2: [0.8, 0.2]
-              }
+              altKey1: [0.2, 0.8],
+              altKey2: [0.8, 0.2]
             },
             cw: {
-              data: {
-                altKey1: {
-                  cf: 0.123,
-                  w: {
-                    critKey1: 0.5,
-                    critKey2: 0.5
-                  }
-
+              altKey1: {
+                cf: 0.123,
+                w: {
+                  critKey1: 0.5,
+                  critKey2: 0.5
                 }
               }
             }
@@ -70,20 +68,15 @@ define([
         var expectedResult = {
           results: {
             ranks: {
-              data: {
-                altKey1: [0.2, 0.8],
-                altKey2: [0.8, 0.2]
-              }
+              altKey1: [0.2, 0.8],
+              altKey2: [0.8, 0.2]
             },
             cw: {
-              data: {
-                altKey1: {
-                  cf: 0.123,
-                  w: {
-                    critKey1: 0.5,
-                    critKey2: 0.5
-                  }
-
+              altKey1: {
+                cf: 0.123,
+                w: {
+                  critKey1: 0.5,
+                  critKey2: 0.5
                 }
               }
             }
@@ -107,78 +100,105 @@ define([
             }
           },
           alternativesByRank: [
-            [{
-              key: 'Alternatives for rank 1',
-              values: [{
-                label: 'alternative1',
-                value: 0.2
-              }, {
-                label: 'alternative2',
-                value: 0.8
-              }]
-            }],
-            [{
-              key: 'Alternatives for rank 2',
-              values: [{
-                label: 'alternative1',
-                value: 0.8
-              }, {
-                label: 'alternative2',
-                value: 0.2
-              }]
-            }]
+            [
+              {
+                key: 'Alternatives for rank 1',
+                values: [
+                  {
+                    label: 'alternative1',
+                    value: 0.2
+                  },
+                  {
+                    label: 'alternative2',
+                    value: 0.8
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                key: 'Alternatives for rank 2',
+                values: [
+                  {
+                    label: 'alternative1',
+                    value: 0.8
+                  },
+                  {
+                    label: 'alternative2',
+                    value: 0.2
+                  }
+                ]
+              }
+            ]
           ],
-          centralWeights: [{
-            key: 'alternative1',
-            labels: ['criterion1', 'criterion2'],
-            values: [{
-              x: 0,
-              label: 'critKey1',
-              y: 0.5
-            }, {
-              x: 1,
-              label: 'critKey2',
-              y: 0.5
-            }]
-          }],
-          ranksByAlternatives: {
-            altKey1: [{
+          centralWeights: [
+            {
               key: 'alternative1',
-              values: [{
-                label: 'Rank 1',
-                value: [0.2]
-              }, {
-                label: 'Rank 2',
-                value: [0.8]
-              },]
-            }],
-            altKey2: [{
-              key: 'alternative2',
-              values: [{
-                label: 'Rank 1',
-                value: [0.8]
-              }, {
-                label: 'Rank 2',
-                value: [0.2]
-              },]
-            }]
+              labels: ['criterion1', 'criterion2'],
+              values: [
+                {
+                  x: 0,
+                  label: 'critKey1',
+                  y: 0.5
+                },
+                {
+                  x: 1,
+                  label: 'critKey2',
+                  y: 0.5
+                }
+              ]
+            }
+          ],
+          ranksByAlternatives: {
+            altKey1: [
+              {
+                key: 'alternative1',
+                values: [
+                  {
+                    label: 'Rank 1',
+                    value: [0.2]
+                  },
+                  {
+                    label: 'Rank 2',
+                    value: [0.8]
+                  }
+                ]
+              }
+            ],
+            altKey2: [
+              {
+                key: 'alternative2',
+                values: [
+                  {
+                    label: 'Rank 1',
+                    value: [0.8]
+                  },
+                  {
+                    label: 'Rank 2',
+                    value: [0.2]
+                  }
+                ]
+              }
+            ]
           }
         };
         expect(result).toEqual(expectedResult);
       });
     });
 
-    describe('getCentralWeightsPlotSettings', function() {
-      it('should return the settings for the central weights plot', function() {
-        const results = [{
-          labels: ['label 1', 'label 2'],
-          key: 'key 1',
-          values: [
-            { y: 1 },
-            { y: 2 }
-          ]
-        }];
-        var result = smaaResultsService.getCentralWeightsPlotSettings(results, root);
+    describe('getCentralWeightsPlotSettings', function () {
+      it('should return the settings for the central weights plot', function () {
+        const results = [
+          {
+            labels: ['label 1', 'label 2'],
+            key: 'key 1',
+            values: [{y: 1}, {y: 2}]
+          }
+        ];
+        var result = smaaResultsService.getCentralWeightsPlotSettings(
+          results,
+          root
+        );
         delete result.axis.y.tick.format;
 
         const values = [
@@ -201,8 +221,8 @@ define([
             },
             y: {
               tick: {
-                count: 5,
-              },
+                count: 5
+              }
             }
           },
           grid: {
@@ -221,22 +241,30 @@ define([
       });
     });
 
-    describe('getRankPlotSettings', function() {
+    describe('getRankPlotSettings', function () {
       const results = {
         alt1: [1, 2],
         alt2: [3, 4]
       };
-      const alternatives = [{
-        id: 'alt1',
-        title: 'alt1'
-      }, {
-        id: 'alt2',
-        title: 'alt2'
-      }];
+      const alternatives = [
+        {
+          id: 'alt1',
+          title: 'alt1'
+        },
+        {
+          id: 'alt2',
+          title: 'alt2'
+        }
+      ];
 
-      it('should return the settings for the rank plot', function() {
+      it('should return the settings for the rank plot', function () {
         var legend;
-        var result = smaaResultsService.getRankPlotSettings(results, alternatives, legend, root);
+        var result = smaaResultsService.getRankPlotSettings(
+          results,
+          alternatives,
+          legend,
+          root
+        );
         delete result.axis.y.tick.format;
 
         const values = [
@@ -261,7 +289,7 @@ define([
             },
             y: {
               tick: {
-                count: 5,
+                count: 5
               },
               min: 0,
               max: 1,
@@ -286,7 +314,7 @@ define([
         expect(result).toEqual(expectedResult);
       });
 
-      it('should return the settings for the rank plot using alternative legend', function() {
+      it('should return the settings for the rank plot using alternative legend', function () {
         var legend = {
           alt1: {
             newTitle: 'newalt1'
@@ -295,7 +323,12 @@ define([
             newTitle: 'newalt2'
           }
         };
-        var result = smaaResultsService.getRankPlotSettings(results, alternatives, legend, root);
+        var result = smaaResultsService.getRankPlotSettings(
+          results,
+          alternatives,
+          legend,
+          root
+        );
         delete result.axis.y.tick.format;
 
         const values = [
@@ -320,7 +353,7 @@ define([
             },
             y: {
               tick: {
-                count: 5,
+                count: 5
               },
               min: 0,
               max: 1,
@@ -346,104 +379,131 @@ define([
       });
     });
 
-    describe('hasNoStochasticMeasurements', function() {
-      it('should return false if there is a performance that has a distribution that is not exact', function() {
+    describe('hasNoStochasticMeasurements', function () {
+      it('should return false if there is a performance that has a distribution that is not exact', function () {
         const aggregateState = {
           problem: {
-            performanceTable: [{
-              performance: {
-                distribution: {
-                  type: 'not exact'
+            performanceTable: [
+              {
+                performance: {
+                  distribution: {
+                    type: 'not exact'
+                  }
+                }
+              },
+              {
+                performance: {
+                  distribution: {
+                    type: 'exact'
+                  }
                 }
               }
-            }, {
-              performance: {
-                distribution: {
-                  type: 'exact'
-                }
-              }
-            }]
+            ]
           }
         };
-        const result = smaaResultsService.hasNoStochasticMeasurements(aggregateState);
+        const result = smaaResultsService.hasNoStochasticMeasurements(
+          aggregateState
+        );
         expect(result).toBeFalsy();
       });
 
-      it('should return true if there is no performance that has a distribution that is not exact', function() {
+      it('should return true if there is no performance that has a distribution that is not exact', function () {
         const aggregateState = {
           problem: {
-            performanceTable: [{
-              performance: {
-                distribution: {
-                  type: 'exact'
+            performanceTable: [
+              {
+                performance: {
+                  distribution: {
+                    type: 'exact'
+                  }
                 }
               }
-            }]
+            ]
           }
         };
-        const result = smaaResultsService.hasNoStochasticMeasurements(aggregateState);
+        const result = smaaResultsService.hasNoStochasticMeasurements(
+          aggregateState
+        );
         expect(result).toBeTruthy();
       });
 
-      it('should return true if there is no performance that has a distribution', function() {
+      it('should return true if there is no performance that has a distribution', function () {
         const aggregateState = {
           problem: {
-            performanceTable: [{
-              performance: {}
-            }]
+            performanceTable: [
+              {
+                performance: {}
+              }
+            ]
           }
         };
-        const result = smaaResultsService.hasNoStochasticMeasurements(aggregateState);
+        const result = smaaResultsService.hasNoStochasticMeasurements(
+          aggregateState
+        );
         expect(result).toBeTruthy();
       });
     });
 
-    describe('hasNoStochasticWeights', function() {
-      it('should return true if there are no weights that are stochastic', function() {
+    describe('hasNoStochasticWeights', function () {
+      it('should return true if there are no weights that are stochastic', function () {
         const aggregateState = {
-          prefs: [{
-            type: 'exact swing'
-          }]
+          prefs: [
+            {
+              type: 'exact swing'
+            }
+          ]
         };
-        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(
+          aggregateState
+        );
         expect(result).toBeTruthy();
       });
 
-      it('should return false if there are any weights that are stochastic', function() {
+      it('should return false if there are any weights that are stochastic', function () {
         const aggregateState = {
-          prefs: [{
-            type: 'ordinal'
-          }]
+          prefs: [
+            {
+              type: 'ordinal'
+            }
+          ]
         };
-        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(
+          aggregateState
+        );
         expect(result).toBeFalsy();
       });
 
-      it('should return false if there are no weights', function() {
+      it('should return false if there are no weights', function () {
         const aggregateState = {
           prefs: []
         };
-        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(
+          aggregateState
+        );
         expect(result).toBeFalsy();
       });
 
-      it('should return false for legacy empty initialisations of aggregateState', function() {
+      it('should return false for legacy empty initialisations of aggregateState', function () {
         const aggregateState = {
           prefs: {}
         };
-        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(
+          aggregateState
+        );
         expect(result).toBeFalsy();
       });
 
-      it('should return false if there are no preferences', function() {
+      it('should return false if there are no preferences', function () {
         const aggregateState = {};
-        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(
+          aggregateState
+        );
         expect(result).toBeFalsy();
       });
     });
 
-    describe('getResults', function() {
-      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+    describe('getResults', function () {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function () {
         const uncertaintyOptions = {
           un: 'certain'
         };
@@ -451,23 +511,28 @@ define([
           problem: {
             criteria: {
               criterion1: {
-                dataSources: [{
-                  some: 'thing'
-                }]
+                dataSources: [
+                  {
+                    some: 'thing'
+                  }
+                ]
               }
             },
             alternatives: {
-              'alternative1': {}
+              alternative1: {}
             },
-            performanceTable: [{
-              performance: {
-                effect: 'effect'
+            performanceTable: [
+              {
+                performance: {
+                  effect: 'effect'
+                }
+              },
+              {
+                performance: {
+                  distribution: 'distribution'
+                }
               }
-            }, {
-              performance: {
-                distribution: 'distribution'
-              }
-            }]
+            ]
           },
           prefs: {}
         };
@@ -475,18 +540,21 @@ define([
           preferences: state.prefs,
           method: 'smaa',
           uncertaintyOptions: uncertaintyOptions,
-          performanceTable: [{
-            performance: 'effect'
-          }, {
-            performance: 'distribution'
-          }],
+          performanceTable: [
+            {
+              performance: 'effect'
+            },
+            {
+              performance: 'distribution'
+            }
+          ],
           criteria: {
             criterion1: {
               some: 'thing'
             }
           },
           alternatives: {
-            'alternative1': {}
+            alternative1: {}
           }
         };
         const result = smaaResultsService.getResults(uncertaintyOptions, state);
