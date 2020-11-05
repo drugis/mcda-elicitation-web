@@ -1,4 +1,4 @@
-import {TableCell} from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import React from 'react';
 

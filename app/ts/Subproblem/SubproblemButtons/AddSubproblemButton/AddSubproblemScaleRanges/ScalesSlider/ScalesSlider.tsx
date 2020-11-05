@@ -1,4 +1,8 @@
-import {Grid, IconButton, makeStyles, Slider, Tooltip} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Slider from '@material-ui/core/Slider';
+import Tooltip from '@material-ui/core/Tooltip';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import ICriterion from '@shared/interface/ICriterion';

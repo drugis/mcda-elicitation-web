@@ -1,4 +1,4 @@
-import {Mark} from '@material-ui/core';
+import {Mark} from '@material-ui/core/Slider';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import _ from 'lodash';
 
