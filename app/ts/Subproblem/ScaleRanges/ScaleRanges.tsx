@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import {displayWarnings} from 'app/ts/util/displayWarnings';
+import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext} from 'react';
 import {getScaleRangeWarnings} from './ScaleRangesUtil';
@@ -24,7 +24,7 @@ export default function ScaleRanges({}: {}) {
         <ClipboardButton targetId="#scales-table" />
       </Grid>
       {warnings.length ? (
-        displayWarnings(warnings, 'no-scales')
+        <DisplayWarnings warnings={warnings} identifier="no-scales" />
       ) : (
         <ScalesTable />
       )}

@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid';
-import {displayWarnings} from 'app/ts/util/displayWarnings';
+import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -23,7 +23,10 @@ export default function AddSubproblemScaleRanges() {
   return (
     <>
       {scaleRangesWarnings.length > 0 ? (
-        <>{displayWarnings(scaleRangesWarnings, 'scale-ranges')}</>
+        <DisplayWarnings
+          warnings={scaleRangesWarnings}
+          identifier="scale-ranges"
+        />
       ) : (
         <Grid container item xs={12} spacing={4}>
           {renderSliders()}

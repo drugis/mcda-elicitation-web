@@ -105,7 +105,7 @@ function resetAndDuplicateTitle(browser) {
   setupSubProblem(browser)
     .clearValue('#subproblem-title-input')
     .setValue('#subproblem-title-input', 'Default')
-    .waitForElementVisible('#error-0')
+    .waitForElementVisible('#add-subproblem-error-0')
     .waitForElementVisible('#add-subproblem-confirm-button:disabled')
     .click('#reset-subproblem-button')
     .waitForElementVisible('#add-subproblem-confirm-button:enabled')

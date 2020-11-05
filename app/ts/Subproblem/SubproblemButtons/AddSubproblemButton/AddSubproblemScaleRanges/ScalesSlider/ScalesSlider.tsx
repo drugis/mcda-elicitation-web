@@ -1,7 +1,7 @@
-import {makeStyles} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Slider from '@material-ui/core/Slider';
+import {makeStyles} from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
@@ -18,10 +18,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
   createMarks,
+  decreaseSliderLowerBound,
   determineStepSize,
-  increaseRangeFrom,
-  increaseRangeTo
+  increaseSliderUpperBound
 } from '../AddSubproblemScaleRangesUtil';
+import {calculateRestrictedAreaRatio} from './ScalesSliderUtil';
 
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
@@ -76,27 +77,24 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     return unitLabel ? `(${unitLabel})` : '';
   }
 
-  function increaseFrom(): void {
+  function decreaseLowerBound(): void {
     updateSliderRangeforDS(
       includedDataSource.id,
-      increaseRangeFrom(sliderRange, lowerTheoretical)
+      decreaseSliderLowerBound(sliderRange, lowerTheoretical)
     );
   }
 
-  function increaseTo(): void {
+  function increaseUpperBound(): void {
     updateSliderRangeforDS(
       includedDataSource.id,
-      increaseRangeTo(sliderRange, upperTheoretical)
+      increaseSliderUpperBound(sliderRange, upperTheoretical)
     );
   }
 
-  const restrictedAreaRatio: string = calculateRestrictedAreaRatio();
-
-  function calculateRestrictedAreaRatio(): string {
-    const totalMargin = sliderRange[1] - sliderRange[0];
-    const restrictedMargin = highestObservedValue - lowestObservedValue;
-    return (restrictedMargin / totalMargin) * 100 + '%';
-  }
+  const restrictedAreaRatio: string = calculateRestrictedAreaRatio(
+    sliderRange,
+    configuredRange
+  );
 
   const useStyles = makeStyles({
     root: {
@@ -121,7 +119,10 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       </Grid>
       <Grid item xs={1}>
         <Tooltip title="Extend the range">
-          <IconButton id={`extend-from-${criterion.id}`} onClick={increaseFrom}>
+          <IconButton
+            id={`extend-from-${criterion.id}`}
+            onClick={decreaseLowerBound}
+          >
             <ChevronLeft color="primary" />
           </IconButton>
         </Tooltip>
@@ -151,7 +152,10 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       </Grid>
       <Grid item xs={1}>
         <Tooltip title="Extend the range">
-          <IconButton id={`extend-to-${criterion.id}`} onClick={increaseTo}>
+          <IconButton
+            id={`extend-to-${criterion.id}`}
+            onClick={increaseUpperBound}
+          >
             <ChevronRight color="primary" />
           </IconButton>
         </Tooltip>

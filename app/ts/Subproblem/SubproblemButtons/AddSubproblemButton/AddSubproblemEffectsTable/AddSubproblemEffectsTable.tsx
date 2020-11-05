@@ -10,7 +10,7 @@ import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/References
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import {displayWarnings} from 'app/ts/util/displayWarnings';
+import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -58,15 +58,16 @@ export default function AddSubproblemEffectsTable() {
           Effects Table <InlineHelp helpId="effects-table" />
         </Typography>
       </Grid>
-
       <Grid item xs={12}>
         <Table size="small" id="effects-table">
           {renderTableHeaders()}
           <AddSubproblemEffectsTableCriteriaRows />
         </Table>
       </Grid>
-
-      {displayWarnings(missingValueWarnings, 'effects-table')}
+      <DisplayWarnings
+        warnings={missingValueWarnings}
+        identifier="effects-table"
+      />
     </Grid>
   );
 }

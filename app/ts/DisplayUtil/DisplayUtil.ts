@@ -19,7 +19,7 @@ export function getPercentifiedValueLabel(
   return getPercentifiedValue(value, usePercentage).toString();
 }
 
-export function canBePercentage(unitType: UnitOfMeasurementType) {
+export function canBePercentage(unitType: UnitOfMeasurementType): boolean {
   return unitType === 'percentage' || unitType === 'decimal';
 }
 

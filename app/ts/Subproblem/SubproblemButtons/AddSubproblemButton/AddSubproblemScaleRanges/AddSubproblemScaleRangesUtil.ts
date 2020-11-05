@@ -2,11 +2,11 @@ import {Mark} from '@material-ui/core/Slider';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import _ from 'lodash';
 
-function log10(x: number) {
+function log10(x: number): number {
   return Math.log(x) / Math.log(10);
 }
 
-function nice(x: number, dirFun: (x: number) => number) {
+function makeValueNice(x: number, dirFun: (x: number) => number): number {
   if (x === 0) {
     return 0;
   }
@@ -30,35 +30,37 @@ function nice(x: number, dirFun: (x: number) => number) {
   return deNormalised;
 }
 
-function niceTo(x: number) {
-  return nice(x, Math.ceil);
+function niceTo(x: number): number {
+  return makeValueNice(x, Math.ceil);
 }
 
-function niceFrom(x: number) {
-  return nice(x, Math.floor);
+function niceFrom(x: number): number {
+  return makeValueNice(x, Math.floor);
 }
 
 function getFloor(from: number, restrictedRangeFrom: number): number {
-  var floor = niceFrom(from);
+  const floor = niceFrom(from);
   if (floor >= restrictedRangeFrom) {
-    floor = niceFrom(floor - Math.abs(floor * 0.1));
+    return niceFrom(floor - Math.abs(floor * 0.1));
+  } else {
+    return floor;
   }
-  return floor;
 }
 
 function getCeil(to: number, restrictedRangeTo: number): number {
-  var ceil = niceTo(to);
+  const ceil = niceTo(to);
   if (ceil <= restrictedRangeTo) {
-    ceil = niceTo(ceil + Math.abs(ceil * 0.1));
+    return niceTo(ceil + Math.abs(ceil * 0.1));
+  } else {
+    return ceil;
   }
-  return ceil;
 }
 
 function getMargin(from: number, to: number): number {
   return 0.5 * (to - from);
 }
 
-export function increaseRangeFrom(
+export function decreaseSliderLowerBound(
   [configuredLower, configuredUpper]: [number, number],
   theoreticalLower: number
 ): [number, number] {
@@ -68,7 +70,7 @@ export function increaseRangeFrom(
   return [Math.max(newFrom, limit), configuredUpper];
 }
 
-export function increaseRangeTo(
+export function increaseSliderUpperBound(
   [configuredLower, configuredUpper]: [number, number],
   theoreticalUpper: number
 ): [number, number] {
@@ -103,7 +105,7 @@ function preventOverlappingObservedRanges([observedLower, observedUpper]: [
   number
 ]): [number, number] {
   if (observedLower === observedUpper) {
-    // dumb corner case
+    // in case of effects only
     return [
       observedLower - Math.abs(observedLower) * 0.001,
       observedUpper + Math.abs(observedUpper) * 0.001
@@ -118,14 +120,14 @@ function preventOverlappingConfiguredRanges([
   configuredUpper
 ]: [number, number]): [number, number] {
   if (configuredLower === configuredUpper) {
-    // dumb corner case
+    // in case all cells in a row have the same value
     return [configuredLower * 0.95, configuredUpper * 1.05];
   } else {
     return [configuredLower, configuredUpper];
   }
 }
 
-export function determineStepSize(from: number, to: number) {
+export function determineStepSize(from: number, to: number): number {
   const interval = to - from;
   const magnitude = Math.floor(Math.log10(interval));
   return Math.pow(10, magnitude - 2);

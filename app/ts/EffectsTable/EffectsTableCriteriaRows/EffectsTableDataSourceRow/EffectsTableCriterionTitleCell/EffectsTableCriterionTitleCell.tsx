@@ -4,11 +4,9 @@ import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubpro
 import React from 'react';
 
 export default function EffectsTableCriterionTitleCell({
-  rowIndex,
   criterion,
   isExcluded
 }: {
-  rowIndex: number;
   criterion: ICriterion;
   isExcluded?: boolean;
 }) {
@@ -16,7 +14,7 @@ export default function EffectsTableCriterionTitleCell({
 
   return (
     <TableCell
-      id={`criterion-title-${rowIndex}`}
+      id={`criterion-title-${criterion.id}`}
       rowSpan={criterion.dataSources.length}
       style={cellStyle}
     >

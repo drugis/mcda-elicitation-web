@@ -2,7 +2,6 @@ import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IProblem from '@shared/interface/Problem/IProblem';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
@@ -44,7 +43,7 @@ export function PreferencesContextProviderComponent({
   >(_.keyBy(scenarios, 'id'));
 
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
-    _.find(contextScenarios, ['id', currentScenarioId]) // FIXMEWW: take the one who's id is in the url instead
+    _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
   const criteria: Record<
     string,

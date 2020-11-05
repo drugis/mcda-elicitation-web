@@ -56,27 +56,37 @@ function hasMissingValues(
   isEffect: boolean
 ) {
   return _.some(includedDataSourceIds, (dataSourceId) => {
-    return _.some(includedAlternativeIds, (alternativeId) => {
-      const [effect, distribution, relativePerformance] = findPerformances(
-        workspace,
-        dataSourceId,
-        alternativeId
-      );
-
-      if (isEffect) {
-        return (
-          !hasPerformance(effect) &&
-          (hasPerformance(distribution) || relativePerformance)
-        );
-      } else {
-        return (
-          !hasPerformance(distribution) &&
-          !relativePerformance &&
-          hasPerformance(effect)
-        );
-      }
-    });
+    return _.some(
+      includedAlternativeIds,
+      _.partial(hasMissingValue, workspace, isEffect, dataSourceId)
+    );
   });
+}
+
+function hasMissingValue(
+  workspace: IWorkspace,
+  isEffect: boolean,
+  dataSourceId: string,
+  alternativeId: string
+): boolean {
+  const [effect, distribution, relativePerformance] = findPerformances(
+    workspace,
+    dataSourceId,
+    alternativeId
+  );
+
+  if (isEffect) {
+    return (
+      !hasPerformance(effect) &&
+      (hasPerformance(distribution) || !!relativePerformance)
+    );
+  } else {
+    return (
+      !hasPerformance(distribution) &&
+      !relativePerformance &&
+      hasPerformance(effect)
+    );
+  }
 }
 
 function findPerformances(

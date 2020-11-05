@@ -50,10 +50,7 @@ export default function EffectsTableDataSourceRow({
     if (rowIndex === 0) {
       return (
         <>
-          <EffectsTableCriterionTitleCell
-            rowIndex={rowIndex}
-            criterion={criterion}
-          />
+          <EffectsTableCriterionTitleCell criterion={criterion} />
           <EffectsTableCriterionDescriptionCell criterion={criterion} />
         </>
       );
