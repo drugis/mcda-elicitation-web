@@ -5,7 +5,6 @@ import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {useParams} from 'react-router-dom';
 import {
   calculateObservedRanges,
   getConfiguredRangeLabel,

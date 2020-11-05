@@ -5,7 +5,6 @@ import IWorkspace from '@shared/interface/IWorkspace';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import _ from 'lodash';
-import React from 'react';
 
 export function getScaleRangeWarnings(workspace: IWorkspace): string[] {
   let warnings: string[] = [];
@@ -56,15 +55,5 @@ export function findRowWithoutValues(workspace: IWorkspace): boolean {
 function hasNonEmptyPerformance(effects: Effect[] | Distribution[]): boolean {
   return _.some(effects, (effect: Effect | Distribution) => {
     return effect.type !== 'text' && effect.type !== 'empty';
-  });
-}
-
-export function renderScaleRangeWarnings(warnings: string[]) {
-  return _.map(warnings, (warning, index) => {
-    return (
-      <div key={index} id={`no-scales-warning-${index}`}>
-        {warning}
-      </div>
-    );
   });
 }

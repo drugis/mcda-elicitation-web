@@ -3,9 +3,11 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
+import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
+import {getTitleError} from 'app/ts/util/getTitleError';
 import _ from 'lodash';
 import {getSliderLimits} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
 
@@ -294,4 +296,16 @@ function getConfiguredRanges(
   return _.pickBy(configuredRanges, (range, dataSourceId) => {
     return dataSourceInclusions[dataSourceId];
   });
+}
+
+export function getSubproblemTitleError(
+  title: string,
+  subproblems: Record<string, IOldSubproblem>
+): string[] {
+  const titleError: string = getTitleError(title, subproblems);
+  if (titleError) {
+    return [titleError];
+  } else {
+    return [];
+  }
 }

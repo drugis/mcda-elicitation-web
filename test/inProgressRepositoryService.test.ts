@@ -28,7 +28,6 @@ import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTabl
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {CURRENT_SCHEMA_VERSION} from 'app/ts/ManualInput/constants';
-import {lowerCase} from 'lodash';
 import {
   buildEmptyInProgress,
   buildProblem,

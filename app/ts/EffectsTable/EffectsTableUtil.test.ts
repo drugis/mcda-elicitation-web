@@ -1,10 +1,10 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
-import {canBePercentage} from './EffectsTableUtil';
+import {canDSBePercentage} from './EffectsTableUtil';
 
 describe('EffectsTableUtil', () => {
-  describe('canBePercentage', () => {
+  describe('canDSBePercentage', () => {
     const criteria: ICriterion[] = [
       {
         dataSources: [
@@ -26,19 +26,19 @@ describe('EffectsTableUtil', () => {
 
     it('should return true if data source unit is decimal', () => {
       const dataSourceId = 'ds1Id';
-      const result = canBePercentage(criteria, dataSourceId);
+      const result = canDSBePercentage(criteria, dataSourceId);
       expect(result).toBeTruthy();
     });
 
     it('should return true if data source unit is percentage', () => {
       const dataSourceId = 'ds2Id';
-      const result = canBePercentage(criteria, dataSourceId);
+      const result = canDSBePercentage(criteria, dataSourceId);
       expect(result).toBeTruthy();
     });
 
     it('should return true if data source unit is custom', () => {
       const dataSourceId = 'ds3Id';
-      const result = canBePercentage(criteria, dataSourceId);
+      const result = canDSBePercentage(criteria, dataSourceId);
       expect(result).toBeFalsy();
     });
   });

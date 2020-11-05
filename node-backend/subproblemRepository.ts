@@ -1,10 +1,9 @@
 import {OurError} from '@shared/interface/IError';
-import IOldSubproblem from '@shared/interface/IOldSubproblem';
-import ISubproblemRange from '@shared/interface/ISubproblemRange';
 import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
 import IDB from './interface/IDB';
 import logger from './logger';
+import {formatSubproblem} from './subproblemRepositoryService';
 
 export default function SubproblemRepository(db: IDB) {
   function create(
@@ -49,36 +48,6 @@ export default function SubproblemRepository(db: IDB) {
         }
       }
     );
-  }
-
-  function formatSubproblem(subproblem: IOldSubproblem): IOldSubproblem {
-    const excludedCriteria = subproblem.definition.excludedCriteria
-      ? subproblem.definition.excludedCriteria
-      : [];
-    const excludedDataSources = subproblem.definition.excludedDataSources
-      ? subproblem.definition.excludedDataSources
-      : [];
-    const excludedAlternatives = subproblem.definition.excludedAlternatives
-      ? subproblem.definition.excludedAlternatives
-      : [];
-    const ranges = formatRanges(subproblem.definition.ranges);
-    return {
-      ...subproblem,
-      definition: {
-        excludedCriteria: excludedCriteria,
-        excludedDataSources: excludedDataSources,
-        excludedAlternatives: excludedAlternatives,
-        ranges: ranges
-      }
-    };
-  }
-
-  function formatRanges(
-    ranges: Record<string, ISubproblemRange> | Record<string, [number, number]>
-  ): Record<string, [number, number]> {
-    return _.mapValues(ranges, (range: any) => {
-      return range.pvf ? range.pvf.range : range;
-    });
   }
 
   function query(

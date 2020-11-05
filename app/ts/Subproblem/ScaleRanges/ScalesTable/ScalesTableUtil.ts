@@ -52,27 +52,36 @@ function getValuesAndBounds(
 ): number[] {
   return _(effects)
     .filter(['dataSourceId', dataSource.id])
-    .map((entry: Effect | Distribution) => {
+    .map((entry: Effect | Distribution): number[] => {
       if (hasValue(entry)) {
-        if (dataSource.unitOfMeasurement.type === 'percentage') {
-          return [significantDigits(entry.value * 0.01)];
-        } else {
-          return [entry.value];
-        }
+        return getValue(entry, dataSource);
       } else if (hasRange(entry)) {
-        if (dataSource.unitOfMeasurement.type === 'percentage') {
-          return [
-            significantDigits(entry.lowerBound * 0.01),
-            significantDigits(entry.upperBound * 0.01)
-          ];
-        } else {
-          return [entry.lowerBound, entry.upperBound];
-        }
+        return getRange(entry, dataSource);
+      } else {
+        return [];
       }
     })
     .flatten()
-    .filter(filterUndefined)
     .value();
+}
+
+function getValue(entry: IEffectWithValue, dataSource: IDataSource) {
+  if (dataSource.unitOfMeasurement.type === 'percentage') {
+    return [significantDigits(entry.value * 0.01)];
+  } else {
+    return [entry.value];
+  }
+}
+
+function getRange(entry: IRangeEffect, dataSource: IDataSource) {
+  if (dataSource.unitOfMeasurement.type === 'percentage') {
+    return [
+      significantDigits(entry.lowerBound * 0.01),
+      significantDigits(entry.upperBound * 0.01)
+    ];
+  } else {
+    return [entry.lowerBound, entry.upperBound];
+  }
 }
 
 function hasValue(effect: IEffect): effect is IEffectWithValue {
@@ -83,10 +92,6 @@ function hasRange(effect: IEffect): effect is IRangeEffect {
   return (effect as IRangeEffect).type === 'range';
 }
 
-function filterUndefined(value: number) {
-  return value !== undefined && value !== null && !isNaN(value);
-}
-
 function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
   return _(scaleRanges)
     .values()
@@ -95,6 +100,10 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
     })
     .filter(filterUndefined)
     .value();
+}
+
+function filterUndefined(value: number) {
+  return value !== undefined && value !== null && !isNaN(value);
 }
 
 export function getConfiguredRangeLabel(

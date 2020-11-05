@@ -600,7 +600,7 @@ function finishCreatingWorkspace(browser) {
     .click('//*[@id="finish-creating-workspace"]')
     .pause(seleniumDelay)
     .getTitle((result) => {
-      browser.assert.equal(result, "new workspace's overview");
+      browser.assert.equal(result, `new workspace's overview`);
     });
 }
 

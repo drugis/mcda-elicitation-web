@@ -1,7 +1,6 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
-import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -10,6 +9,7 @@ import {
   getBaselineMap,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
+  getSubproblemTitleError,
   initConfiguredRanges,
   initInclusions,
   isAlternativeDisabled,
@@ -44,7 +44,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   // *** states
   const [title, setTitle] = useState<string>(defaultTitle);
-  const [errors, setErrors] = useState<string[]>(getErrors());
+  const [errors, setErrors] = useState<string[]>(
+    getSubproblemTitleError(title, subproblems)
+  );
 
   const [alternativeInclusions, setAlternativeInclusions] = useState<
     Record<string, boolean>
@@ -91,8 +93,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   // *** useEffects
   useEffect(() => {
-    setErrors(getErrors());
+    setErrors(getSubproblemTitleError(title, subproblems));
   }, [title]);
+
   useEffect(() => {
     setScaleRangesWarnings(
       getScaleBlockingWarnings(
@@ -115,6 +118,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     alternativeInclusions,
     workspace
   ]);
+
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
       const initialConfiguredRanges = initConfiguredRanges(
@@ -127,15 +131,6 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     }
   }, [observedRanges, currentSubproblem]);
   // *** end useEffects
-
-  function getErrors(): string[] {
-    const titleError: string = getTitleError(title, subproblems);
-    if (titleError) {
-      return [titleError];
-    } else {
-      return [];
-    }
-  }
 
   function updateAlternativeInclusion(id: string, newValue: boolean) {
     let newInclusions = {...alternativeInclusions};
@@ -243,29 +238,28 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   return (
     <AddSubproblemContext.Provider
       value={{
-        title,
         errors,
+        configuredRanges: configuredRangesByDS,
         isCriterionDeselectionDisabled:
           _.filter(criterionInclusions).length < 3,
-        scaleRangesWarnings,
-
         missingValueWarnings,
-        configuredRanges: configuredRangesByDS,
+        scaleRangesWarnings,
+        title,
+        addSubproblem: addSubproblemWrapper,
         getIncludedDataSourceForCriterion,
         getSliderRangeForDS,
-        isCriterionExcluded,
-        isDataSourceExcluded,
+        isAlternativeDisabled: isAlternativeDisabledWrapper,
         isAlternativeExcluded,
+        isCriterionExcluded,
+        isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper,
+        isDataSourceExcluded,
+        resetToDefault,
+        setConfiguredRange,
         setTitle,
         updateAlternativeInclusion,
         updateCriterionInclusion,
         updateDataSourceInclusion,
-        isAlternativeDisabled: isAlternativeDisabledWrapper,
-        isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper,
-        resetToDefault,
-        setConfiguredRange,
-        updateSliderRangeforDS,
-        addSubproblem: addSubproblemWrapper
+        updateSliderRangeforDS
       }}
     >
       {props.children}

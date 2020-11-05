@@ -3,12 +3,10 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {displayWarnings} from 'app/ts/util/displayWarnings';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext} from 'react';
-import {
-  getScaleRangeWarnings,
-  renderScaleRangeWarnings
-} from './ScaleRangesUtil';
+import {getScaleRangeWarnings} from './ScaleRangesUtil';
 import ScalesTable from './ScalesTable/ScalesTable';
 
 export default function ScaleRanges({}: {}) {
@@ -25,9 +23,11 @@ export default function ScaleRanges({}: {}) {
       <Grid item container xs={3} justify="flex-end">
         <ClipboardButton targetId="#scales-table" />
       </Grid>
-      <Grid item xs={12}>
-        {warnings.length ? renderScaleRangeWarnings(warnings) : <ScalesTable />}
-      </Grid>
+      {warnings.length ? (
+        displayWarnings(warnings, 'no-scales')
+      ) : (
+        <ScalesTable />
+      )}
     </Grid>
   ) : (
     <CircularProgress />

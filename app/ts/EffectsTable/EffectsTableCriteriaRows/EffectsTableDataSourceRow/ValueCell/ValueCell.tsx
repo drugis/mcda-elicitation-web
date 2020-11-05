@@ -2,7 +2,7 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {AnalysisType} from '@shared/interface/ISettings';
-import {canBePercentage} from 'app/ts/EffectsTable/EffectsTableUtil';
+import {canDSBePercentage} from 'app/ts/EffectsTable/EffectsTableUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
@@ -26,7 +26,7 @@ export default function ValueCell({
   const {setErrorMessage} = useContext(ErrorContext);
 
   const usePercentage =
-    canBePercentage(workspace.criteria, dataSourceId) && showPercentages;
+    canDSBePercentage(workspace.criteria, dataSourceId) && showPercentages;
   const effect = findValue(workspace.effects, dataSourceId, alternativeId);
   const distribution = findValue(
     workspace.distributions,

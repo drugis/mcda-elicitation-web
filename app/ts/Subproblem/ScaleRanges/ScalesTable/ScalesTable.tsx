@@ -1,3 +1,4 @@
+import {Grid} from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -20,30 +21,34 @@ export default function ScalesTable({}: {}) {
     });
   }
 
-  return !_.isEmpty(observedRanges) ? (
-    <Table size="small" id="scales-table">
-      <TableHead>
-        <TableRow>
-          <TableCell id="scales-table-criterion" align="center">
-            Criterion <InlineHelp helpId="criterion" />
-          </TableCell>
-          <TableCell id="theoretical-range" align="center">
-            Theoretical Range <InlineHelp helpId="theoretical-range" />
-          </TableCell>
-          <TableCell id="observed-range" align="center">
-            Observed Range <InlineHelp helpId="observed-range" />
-          </TableCell>
-          <TableCell id="configured-range" align="center">
-            Configured Range <InlineHelp helpId="configured-range" />
-          </TableCell>
-          <TableCell id="scales-table-unit-of-measurement" align="center">
-            Units <InlineHelp helpId="unit-of-measurement" />
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>{createScaleTableRows()}</TableBody>
-    </Table>
-  ) : (
-    <CircularProgress />
+  return (
+    <Grid item xs={12}>
+      {!_.isEmpty(observedRanges) ? (
+        <Table size="small" id="scales-table">
+          <TableHead>
+            <TableRow>
+              <TableCell id="scales-table-criterion" align="center">
+                Criterion <InlineHelp helpId="criterion" />
+              </TableCell>
+              <TableCell id="theoretical-range" align="center">
+                Theoretical Range <InlineHelp helpId="theoretical-range" />
+              </TableCell>
+              <TableCell id="observed-range" align="center">
+                Observed Range <InlineHelp helpId="observed-range" />
+              </TableCell>
+              <TableCell id="configured-range" align="center">
+                Configured Range <InlineHelp helpId="configured-range" />
+              </TableCell>
+              <TableCell id="scales-table-unit-of-measurement" align="center">
+                Units <InlineHelp helpId="unit-of-measurement" />
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{createScaleTableRows()}</TableBody>
+        </Table>
+      ) : (
+        <CircularProgress />
+      )}
+    </Grid>
   );
 }

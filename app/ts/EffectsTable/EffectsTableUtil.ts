@@ -1,7 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
 import _ from 'lodash';
 
-export function canBePercentage(
+export function canDSBePercentage(
   criteria: ICriterion[],
   dataSourceId: string
 ): boolean {
