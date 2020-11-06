@@ -138,20 +138,26 @@ export function createMarks(
   observedRange: [number, number],
   usePercentage: boolean
 ): Mark[] {
-  return [
+  let marks: Mark[] = [
     {
       value: sliderRange[0],
       label: getPercentifiedValue(sliderRange[0], usePercentage)
-    },
-    {
-      value: observedRange[0]
-    },
-    {
-      value: observedRange[1]
-    },
-    {
-      value: sliderRange[1],
-      label: getPercentifiedValue(sliderRange[1], usePercentage)
     }
   ];
+  if (observedRange[0] !== sliderRange[0]) {
+    marks.push({
+      value: observedRange[0]
+    });
+  }
+  if (observedRange[1] !== sliderRange[1]) {
+    marks.push({
+      value: observedRange[1]
+    });
+  }
+  marks.push({
+    value: sliderRange[1],
+    label: getPercentifiedValue(sliderRange[1], usePercentage)
+  });
+
+  return marks;
 }
