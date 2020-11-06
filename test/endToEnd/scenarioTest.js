@@ -90,7 +90,7 @@ function switchinPreferences(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#add-scenario-confirm-button:enabled')
     .click('#add-scenario-confirm-button')
-    .pause(500) //pause needed to not get 'stale element' error
+    .pause(1000) //pause needed to not get 'stale element' error
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
     .click('#scenario-selector > option:nth-child(1)')

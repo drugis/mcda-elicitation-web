@@ -17,20 +17,20 @@ export function SubproblemContextProviderComponent({
   const [filteredWorkspace] = useState(
     applySubproblem(workspace, currentSubproblem)
   );
-  const {alternatives, criteria, performanceTable} = filteredWorkspace.problem;
+  const {
+    alternatives,
+    criteria,
+    effects,
+    distributions,
+    relativePerformances
+  } = filteredWorkspace;
   const [observedRanges, setObservedRanges] = useState<
     Record<string, [number, number]>
   >({});
 
   useEffect(() => {
     if (scales && filteredWorkspace) {
-      setObservedRanges(
-        calculateObservedRanges(
-          scales,
-          filteredWorkspace.problem.criteria,
-          filteredWorkspace.problem.performanceTable
-        )
-      );
+      setObservedRanges(calculateObservedRanges(scales, filteredWorkspace));
     }
   }, [scales, filteredWorkspace]);
 
@@ -39,8 +39,10 @@ export function SubproblemContextProviderComponent({
       value={{
         filteredAlternatives: alternatives,
         filteredCriteria: criteria,
-        filteredPerformanceTable: performanceTable,
-        filteredWorkspace: filteredWorkspace,
+        filteredEffects: effects,
+        filteredDistributions: distributions,
+        filteredRelativePerformances: relativePerformances,
+        filteredWorkspace,
         observedRanges
       }}
     >

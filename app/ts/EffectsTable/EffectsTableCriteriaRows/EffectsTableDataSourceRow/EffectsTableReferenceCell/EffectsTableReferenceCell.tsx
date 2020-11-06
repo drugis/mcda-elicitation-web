@@ -1,14 +1,18 @@
 import TableCell from '@material-ui/core/TableCell';
 import IDataSource from '@shared/interface/IDataSource';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React, {useContext} from 'react';
 
 export default function EffectsTableReferenceCell({
-  dataSource
+  dataSource,
+  isExcluded
 }: {
   dataSource: IDataSource;
+  isExcluded?: boolean;
 }) {
-  const {showRefereces} = useContext(SettingsContext);
+  const {showReferences} = useContext(SettingsContext);
+  const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function renderReference(): JSX.Element | string {
     if (dataSource.referenceLink) {
@@ -22,5 +26,9 @@ export default function EffectsTableReferenceCell({
     }
   }
 
-  return showRefereces ? <TableCell>{renderReference()}</TableCell> : <></>;
+  return showReferences ? (
+    <TableCell style={cellStyle}>{renderReference()}</TableCell>
+  ) : (
+    <></>
+  );
 }

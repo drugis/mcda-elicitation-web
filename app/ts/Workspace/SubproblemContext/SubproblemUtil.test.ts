@@ -1,87 +1,106 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import IProblem from '@shared/interface/Problem/IProblem';
+import IRelativePerformance from '@shared/interface/IRelativePerformance';
+import IWorkspace from '@shared/interface/IWorkspace';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import {relative} from 'path';
 import {applySubproblem} from './SubproblemUtil';
 
 describe('The Subproblem util', () => {
   describe('applySubproblem', () => {
-    const baseWorkspace: IOldWorkspace = {
-      defaultScenarioId: 'foo',
-      defaultSubproblemId: 'bar',
-      owner: 3,
-      problem: {
-        description: 'foo',
-        schemaVersion: '1',
-        title: 'x',
-        criteria: {
-          crit1Id: {
-            id: 'crit1Id',
-            dataSources: [
-              {
-                id: 'ds1Id'
-              },
-              {
-                id: 'ds2Id'
-              }
-            ]
-          } as IProblemCriterion,
-          crit2Id: {
-            id: 'crit2Id',
-            dataSources: [
-              {
-                id: 'ds3Id'
-              }
-            ]
-          } as IProblemCriterion
-        },
-        alternatives: {
-          alt1Id: {
-            id: 'alt1Id',
-            title: 'alternative 1'
+    const criteria: ICriterion[] = [
+      {
+        id: 'crit1Id',
+        dataSources: [
+          {
+            id: 'ds1Id'
           },
-          alt2Id: {
-            id: 'alt2Id',
-            title: 'alternative 2'
+          {
+            id: 'ds2Id'
           }
-        },
-        performanceTable: [
-          {
-            criterion: 'crit1Id',
-            dataSource: 'ds1Id',
-            alternative: 'alt1Id'
-          } as IPerformanceTableEntry,
-          {
-            criterion: 'crit1Id',
-            dataSource: 'ds2Id',
-            alternative: 'alt1Id'
-          } as IPerformanceTableEntry,
-          {
-            criterion: 'crit2Id',
-            dataSource: 'ds3Id',
-            alternative: 'alt1Id'
-          } as IPerformanceTableEntry,
-          {
-            criterion: 'crit1Id',
-            dataSource: 'ds1Id',
-            alternative: 'alt2Id'
-          } as IPerformanceTableEntry,
-          {
-            criterion: 'crit1Id',
-            dataSource: 'ds2Id',
-            alternative: 'alt2Id'
-          } as IPerformanceTableEntry,
-          {
-            criterion: 'crit2Id',
-            dataSource: 'ds3Id',
-            alternative: 'alt2Id'
-          } as IPerformanceTableEntry
         ]
-      } as IProblem
-    };
+      } as ICriterion,
+      {
+        id: 'crit2Id',
+        dataSources: [
+          {
+            id: 'ds3Id'
+          }
+        ]
+      } as ICriterion
+    ];
+    const alternatives: IAlternative[] = [
+      {
+        id: 'alt1Id',
+        title: 'alternative 1'
+      },
+      {
+        id: 'alt2Id',
+        title: 'alternative 2'
+      }
+    ];
+    const fullEffects = [
+      {
+        criterionId: 'crit1Id',
+        dataSourceId: 'ds1Id',
+        alternativeId: 'alt1Id'
+      } as Effect,
+      {
+        criterionId: 'crit1Id',
+        dataSourceId: 'ds2Id',
+        alternativeId: 'alt1Id'
+      } as Effect,
+      {
+        criterionId: 'crit2Id',
+        dataSourceId: 'ds3Id',
+        alternativeId: 'alt1Id'
+      } as Effect,
+      {
+        criterionId: 'crit1Id',
+        dataSourceId: 'ds1Id',
+        alternativeId: 'alt2Id'
+      } as Effect,
+      {
+        criterionId: 'crit1Id',
+        dataSourceId: 'ds2Id',
+        alternativeId: 'alt2Id'
+      } as Effect,
+      {
+        criterionId: 'crit2Id',
+        dataSourceId: 'ds3Id',
+        alternativeId: 'alt2Id'
+      } as Effect
+    ];
+    const baseWorkspace: IWorkspace = {
+      criteria: criteria,
+      alternatives: alternatives,
+      effects: fullEffects,
+      distributions: fullEffects,
+      relativePerformances: []
+    } as IWorkspace;
 
-    it('should work for undefined exclusions', () => {
+    const reducedCriteria: ICriterion[] = [
+      {
+        id: 'crit2Id',
+        dataSources: [
+          {
+            id: 'ds3Id'
+          }
+        ]
+      } as ICriterion
+    ];
+
+    const reducedAlternatives = [
+      {
+        id: 'alt1Id',
+        title: 'alternative 1'
+      }
+    ];
+
+    it('should work for no exclusions', () => {
       const noExclusions = {definition: {}} as IOldSubproblem;
       const result = applySubproblem(baseWorkspace, noExclusions);
       expect(result).toEqual(baseWorkspace);
@@ -91,33 +110,23 @@ describe('The Subproblem util', () => {
       const excludeCrit1 = {
         definition: {excludedCriteria: ['crit1Id']}
       } as IOldSubproblem;
+      const reducedEffects = [
+        {
+          criterionId: 'crit2Id',
+          dataSourceId: 'ds3Id',
+          alternativeId: 'alt1Id'
+        } as Effect,
+        {
+          criterionId: 'crit2Id',
+          dataSourceId: 'ds3Id',
+          alternativeId: 'alt2Id'
+        } as Effect
+      ];
       const expectedResult = {
         ...baseWorkspace,
-        problem: {
-          ...baseWorkspace.problem,
-          criteria: {
-            crit2Id: {
-              id: 'crit2Id',
-              dataSources: [
-                {
-                  id: 'ds3Id'
-                }
-              ]
-            } as IProblemCriterion
-          },
-          performanceTable: [
-            {
-              criterion: 'crit2Id',
-              dataSource: 'ds3Id',
-              alternative: 'alt1Id'
-            } as IPerformanceTableEntry,
-            {
-              criterion: 'crit2Id',
-              dataSource: 'ds3Id',
-              alternative: 'alt2Id'
-            } as IPerformanceTableEntry
-          ]
-        } as IProblem
+        criteria: reducedCriteria,
+        effects: reducedEffects,
+        distributions: reducedEffects
       };
       const result = applySubproblem(baseWorkspace, excludeCrit1);
       expect(result).toEqual(expectedResult);
@@ -129,36 +138,100 @@ describe('The Subproblem util', () => {
           excludedAlternatives: ['alt2Id']
         }
       } as IOldSubproblem;
+      const reducedEffects = [
+        {
+          criterionId: 'crit1Id',
+          dataSourceId: 'ds1Id',
+          alternativeId: 'alt1Id'
+        } as Effect,
+        {
+          criterionId: 'crit1Id',
+          dataSourceId: 'ds2Id',
+          alternativeId: 'alt1Id'
+        } as Effect,
+        {
+          criterionId: 'crit2Id',
+          dataSourceId: 'ds3Id',
+          alternativeId: 'alt1Id'
+        } as Effect
+      ];
       const expectedResult = {
         ...baseWorkspace,
-        problem: {
-          ...baseWorkspace.problem,
-          alternatives: {
-            alt1Id: {
-              id: 'alt1Id',
-              title: 'alternative 1'
-            }
-          },
-          performanceTable: [
-            {
-              criterion: 'crit1Id',
-              dataSource: 'ds1Id',
-              alternative: 'alt1Id'
-            } as IPerformanceTableEntry,
-            {
-              criterion: 'crit1Id',
-              dataSource: 'ds2Id',
-              alternative: 'alt1Id'
-            } as IPerformanceTableEntry,
-            {
-              criterion: 'crit2Id',
-              dataSource: 'ds3Id',
-              alternative: 'alt1Id'
-            } as IPerformanceTableEntry
-          ]
-        }
+        alternatives: reducedAlternatives,
+        effects: reducedEffects,
+        distributions: reducedEffects
       };
       const result = applySubproblem(baseWorkspace, excludeAlt2);
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should exclude alternatives in relative problems', () => {
+      const excludeAlt2 = {
+        definition: {
+          excludedAlternatives: ['alt2Id'],
+          excludedCriteria: ['crit1Id']
+        }
+      } as IOldSubproblem;
+
+      const inputRelativePerformances: IRelativePerformance[] = [
+        {
+          dataSourceId: 'ds3Id',
+          criterionId: 'crit2Id',
+          type: 'relative-cloglog-normal',
+          baseline: {
+            type: 'dnorm',
+            id: 'alt1Id'
+          },
+          relative: {
+            cov: {
+              rownames: ['alt1Id', 'alt2Id'],
+              colnames: ['alt1Id', 'alt2Id'],
+              data: [
+                [0, 0],
+                [0, 1]
+              ]
+            },
+            mu: {alt1Id: 0, alt2Id: 0.5},
+            type: 'dmnorm'
+          }
+        }
+      ];
+
+      const result = applySubproblem(
+        {
+          ...baseWorkspace,
+          effects: [],
+          distributions: [],
+          relativePerformances: inputRelativePerformances
+        },
+        excludeAlt2
+      );
+
+      const reducedRelativePerformances: IRelativePerformance[] = [
+        {
+          dataSourceId: 'ds3Id',
+          criterionId: 'crit2Id',
+          type: 'relative-cloglog-normal',
+          baseline: {
+            type: 'dnorm',
+            id: 'alt1Id'
+          },
+          relative: {
+            cov: {rownames: ['alt1Id'], colnames: ['alt1Id'], data: [[0]]},
+            mu: {alt1Id: 0},
+            type: 'dmnorm'
+          }
+        }
+      ];
+
+      const expectedResult = {
+        ...baseWorkspace,
+        criteria: reducedCriteria,
+        alternatives: reducedAlternatives,
+        effects: [] as Effect[],
+        distributions: [] as Distribution[],
+        relativePerformances: reducedRelativePerformances
+      };
       expect(result).toEqual(expectedResult);
     });
 
@@ -168,51 +241,50 @@ describe('The Subproblem util', () => {
           excludedDataSources: ['ds2Id']
         }
       } as IOldSubproblem;
+      const reducedEffects = [
+        {
+          criterionId: 'crit1Id',
+          dataSourceId: 'ds1Id',
+          alternativeId: 'alt1Id'
+        } as Effect,
+        {
+          criterionId: 'crit2Id',
+          dataSourceId: 'ds3Id',
+          alternativeId: 'alt1Id'
+        } as Effect,
+        {
+          criterionId: 'crit1Id',
+          dataSourceId: 'ds1Id',
+          alternativeId: 'alt2Id'
+        } as Effect,
+        {
+          criterionId: 'crit2Id',
+          dataSourceId: 'ds3Id',
+          alternativeId: 'alt2Id'
+        } as Effect
+      ];
       const expectedResult = {
         ...baseWorkspace,
-        problem: {
-          ...baseWorkspace.problem,
-          criteria: {
-            crit1Id: {
-              id: 'crit1Id',
-              dataSources: [
-                {
-                  id: 'ds1Id'
-                }
-              ]
-            } as IProblemCriterion,
-            crit2Id: {
-              id: 'crit2Id',
-              dataSources: [
-                {
-                  id: 'ds3Id'
-                }
-              ]
-            } as IProblemCriterion
-          },
-          performanceTable: [
-            {
-              criterion: 'crit1Id',
-              dataSource: 'ds1Id',
-              alternative: 'alt1Id'
-            } as IPerformanceTableEntry,
-            {
-              criterion: 'crit2Id',
-              dataSource: 'ds3Id',
-              alternative: 'alt1Id'
-            } as IPerformanceTableEntry,
-            {
-              criterion: 'crit1Id',
-              dataSource: 'ds1Id',
-              alternative: 'alt2Id'
-            } as IPerformanceTableEntry,
-            {
-              criterion: 'crit2Id',
-              dataSource: 'ds3Id',
-              alternative: 'alt2Id'
-            } as IPerformanceTableEntry
-          ]
-        }
+        criteria: [
+          {
+            id: 'crit1Id',
+            dataSources: [
+              {
+                id: 'ds1Id'
+              }
+            ]
+          } as ICriterion,
+          {
+            id: 'crit2Id',
+            dataSources: [
+              {
+                id: 'ds3Id'
+              }
+            ]
+          } as ICriterion
+        ],
+        effects: reducedEffects,
+        distributions: reducedEffects
       };
       const result = applySubproblem(baseWorkspace, excludeDataSource2);
       expect(result).toEqual(expectedResult);
@@ -226,34 +298,28 @@ describe('The Subproblem util', () => {
           excludedAlternatives: ['alt2Id']
         }
       } as IOldSubproblem;
+      const reducedEffects = [
+        {
+          criterionId: 'crit1Id',
+          dataSourceId: 'ds1Id',
+          alternativeId: 'alt1Id'
+        } as Effect
+      ];
       const expectedResult = {
         ...baseWorkspace,
-        problem: {
-          ...baseWorkspace.problem,
-          criteria: {
-            crit1Id: {
-              id: 'crit1Id',
-              dataSources: [
-                {
-                  id: 'ds1Id'
-                }
-              ]
-            } as IProblemCriterion
-          },
-          alternatives: {
-            alt1Id: {
-              id: 'alt1Id',
-              title: 'alternative 1'
-            }
-          },
-          performanceTable: [
-            {
-              criterion: 'crit1Id',
-              dataSource: 'ds1Id',
-              alternative: 'alt1Id'
-            } as IPerformanceTableEntry
-          ]
-        }
+        criteria: [
+          {
+            id: 'crit1Id',
+            dataSources: [
+              {
+                id: 'ds1Id'
+              }
+            ]
+          } as IProblemCriterion
+        ],
+        alternatives: reducedAlternatives,
+        effects: reducedEffects,
+        distributions: reducedEffects
       };
       const result = applySubproblem(baseWorkspace, exclusions);
       expect(result).toEqual(expectedResult);

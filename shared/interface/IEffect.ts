@@ -4,6 +4,7 @@ import ITextEffect from './ITextEffect';
 import {UnitOfMeasurementType} from './IUnitOfMeasurement';
 import IValueCIEffect from './IValueCIEffect';
 import IValueEffect from './IValueEffect';
+
 export type Effect =
   | IValueEffect
   | IValueCIEffect

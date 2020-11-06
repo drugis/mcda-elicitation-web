@@ -5,7 +5,7 @@ interface GenericItem {
   title: string;
 }
 
-export function checkTitleErrors<T extends GenericItem>(
+export function getTitleError<T extends GenericItem>(
   newTitle: string,
   items: Record<string, T>,
   currentItemId?: string

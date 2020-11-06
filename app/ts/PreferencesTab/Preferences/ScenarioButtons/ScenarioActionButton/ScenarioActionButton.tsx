@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
-import {checkTitleErrors} from 'app/ts/util/checkTitleErrors';
+import {getTitleError} from 'app/ts/util/getTitleError';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
@@ -27,11 +27,11 @@ export default function ScenarioActionButton({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [title, setTitle] = useState<string>('');
   const [error, setError] = useState<string>(
-    checkTitleErrors(title, scenarios, idOfScenarioBeingEdited)
+    getTitleError(title, scenarios, idOfScenarioBeingEdited)
   );
 
   useEffect(() => {
-    setError(checkTitleErrors(title, scenarios, idOfScenarioBeingEdited));
+    setError(getTitleError(title, scenarios, idOfScenarioBeingEdited));
   }, [title]);
 
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);

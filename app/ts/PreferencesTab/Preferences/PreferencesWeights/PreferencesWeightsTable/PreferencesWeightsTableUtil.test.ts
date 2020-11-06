@@ -1,4 +1,3 @@
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
@@ -12,14 +11,20 @@ describe('buildImportance', () => {
       title: 'crit1',
       description: '',
       dataSourceId: 'dsId1',
-      unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''}
+      unitOfMeasurement: {
+        type: 'custom',
+        label: ''
+      }
     },
     critId2: {
       id: 'critId2',
       title: 'crit2',
       description: '',
       dataSourceId: 'dsId2',
-      unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''}
+      unitOfMeasurement: {
+        type: 'custom',
+        label: ''
+      }
     }
   };
 

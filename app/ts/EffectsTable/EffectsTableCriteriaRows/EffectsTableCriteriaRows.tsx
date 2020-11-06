@@ -1,30 +1,18 @@
-import Box from '@material-ui/core/Box';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {EffectsTableContext} from '../EffectsTableContext/EffectsTableContext';
 import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableDataSourceRow';
+import TableWithFavourability from './TableWithFavourability/TableWithFavourability';
 
 export default function EffectsTableCriteriaRows() {
-  const {workspace} = useContext(EffectsTableContext);
+  const {filteredWorkspace} = useContext(SubproblemContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
-  const useFavourability = workspace.properties.useFavourability;
+  const useFavourability = filteredWorkspace.properties.useFavourability;
   const numberOfColumns =
-    numberOfToggledColumns + workspace.alternatives.length;
-
-  const favourableCriteria = _.filter(workspace.criteria, [
-    'isFavourable',
-    true
-  ]);
-  const unfavourableCriteria = _.filter(workspace.criteria, [
-    'isFavourable',
-    false
-  ]);
+    numberOfToggledColumns + _.size(filteredWorkspace.alternatives);
 
   function createCriteriaRows(criteria: ICriterion[]): JSX.Element[][] {
     return _.map(criteria, buildDataSourceRows);
@@ -45,31 +33,15 @@ export default function EffectsTableCriteriaRows() {
 
   if (useFavourability) {
     return (
-      <TableBody>
-        <TableRow>
-          <TableCell colSpan={numberOfColumns}>
-            <Box p={1}>
-              <Typography id="favourable-criteria-label" variant="h6">
-                Favourable criteria
-              </Typography>
-            </Box>
-          </TableCell>
-        </TableRow>
-        {createCriteriaRows(favourableCriteria)}
-
-        <TableRow>
-          <TableCell colSpan={numberOfColumns}>
-            <Box p={1}>
-              <Typography id="unfavourable-criteria-label" variant="h6">
-                Unfavourable criteria
-              </Typography>
-            </Box>
-          </TableCell>
-        </TableRow>
-        {createCriteriaRows(unfavourableCriteria)}
-      </TableBody>
+      <TableWithFavourability
+        criteria={filteredWorkspace.criteria}
+        numberOfColumns={numberOfColumns}
+        createCriteriaRows={createCriteriaRows}
+      />
     );
   } else {
-    return <TableBody>{createCriteriaRows(workspace.criteria)}</TableBody>;
+    return (
+      <TableBody>{createCriteriaRows(filteredWorkspace.criteria)}</TableBody>
+    );
   }
 }

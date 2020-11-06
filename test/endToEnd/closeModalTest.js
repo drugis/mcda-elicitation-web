@@ -135,7 +135,7 @@ function cancelEditingSubroblemTitle(browser) {
 function cancelCreatingSubproblem(browser) {
   var paths = {
     tab: '#problem-definition-tab',
-    actionButton: '#create-subproblem-button',
+    actionButton: '#add-subproblem-button',
     cancelButton: closeModalButtonPath,
     content: '#subproblem-selector'
   };

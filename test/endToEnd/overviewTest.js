@@ -100,7 +100,10 @@ function editCriterionSwitchTabs(browser) {
     .assert.containsText('#criterion-title-0', newTitle)
     .click('#problem-definition-tab')
     .waitForElementVisible('#effects-table-header')
-    .assert.containsText('#criterion-title-0', newTitle);
+    .assert.containsText(
+      '#criterion-title-cae083fa-c1e7-427f-8039-c46479392344',
+      newTitle
+    );
 }
 
 function editDataSource(browser) {

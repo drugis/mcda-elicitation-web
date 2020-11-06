@@ -24,7 +24,7 @@ const criterion1: IProblemCriterion = {
       sourceLink: '',
       strengthOfEvidence: '',
       uncertainties: '',
-      unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''}
+      unitOfMeasurement: {type: 'custom', label: ''}
     }
   ]
 };
@@ -41,7 +41,7 @@ const criterion2: IProblemCriterion = {
       sourceLink: '',
       strengthOfEvidence: '',
       uncertainties: '',
-      unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: ''}
+      unitOfMeasurement: {type: 'custom', label: ''}
     }
   ]
 };

@@ -23,7 +23,6 @@ export default function Subproblem({
   subproblems,
   currentSubproblem,
   subproblemChanged,
-  createDialogCallback,
   workspaceId
 }: {
   workspace: IOldWorkspace;
@@ -33,20 +32,18 @@ export default function Subproblem({
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
   subproblemChanged: (subproblem: IOldSubproblem) => void;
-  createDialogCallback: () => void;
   workspaceId: string;
 }) {
   return (
     <ErrorContextProviderComponent>
       <HelpContextProviderComponent>
         <WorkspaceContextProviderComponent
-          workspace={workspace}
+          oldWorkspace={workspace}
           oldSubproblems={subproblems}
           currentAngularSubproblem={currentSubproblem}
           workspaceId={workspaceId}
           subproblemChanged={subproblemChanged}
           scales={scales}
-          createSubProblemDialogCallback={createDialogCallback}
         >
           <SubproblemContextProviderComponent>
             <SettingsContextProviderComponent
@@ -56,7 +53,7 @@ export default function Subproblem({
               <ErrorHandler>
                 <SubproblemSelection subproblemChanged={subproblemChanged} />
                 <SubproblemButtons />
-                <EffectsTable toggledColumns={toggledColumns} />
+                <EffectsTable />
                 <ScaleRanges />
               </ErrorHandler>
             </SettingsContextProviderComponent>

@@ -2,9 +2,10 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {AnalysisType} from '@shared/interface/ISettings';
-import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext/EffectsTableContext';
+import {canDSBePercentage} from 'app/ts/EffectsTable/EffectsTableUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
@@ -13,16 +14,19 @@ import NMACell from './NMACell/NMACell';
 
 export default function ValueCell({
   alternativeId,
-  dataSourceId
+  dataSourceId,
+  isExcluded
 }: {
   alternativeId: string;
   dataSourceId: string;
+  isExcluded?: boolean;
 }) {
-  const {workspace, scales, canBePercentage} = useContext(EffectsTableContext);
+  const {workspace, scales} = useContext(WorkspaceContext);
   const {analysisType, showPercentages} = useContext(SettingsContext);
   const {setErrorMessage} = useContext(ErrorContext);
 
-  const usePercentage = canBePercentage(dataSourceId) && showPercentages;
+  const usePercentage =
+    canDSBePercentage(workspace.criteria, dataSourceId) && showPercentages;
   const effect = findValue(workspace.effects, dataSourceId, alternativeId);
   const distribution = findValue(
     workspace.distributions,
@@ -72,6 +76,7 @@ export default function ValueCell({
           effect={effect}
           scale={scale}
           usePercentage={usePercentage}
+          isExcluded={isExcluded}
         />
       );
     } else if (hasScaleValues) {
@@ -81,6 +86,7 @@ export default function ValueCell({
           alternativeId={alternativeId}
           scale={scale}
           usePercentage={usePercentage}
+          isExcluded={isExcluded}
         />
       );
     } else {
@@ -97,6 +103,7 @@ export default function ValueCell({
           usePercentage={usePercentage}
           dataSourceId={dataSourceId}
           alternativeId={alternativeId}
+          isExcluded={isExcluded}
         />
       );
     } else if (hasScaleValues) {
@@ -106,6 +113,7 @@ export default function ValueCell({
           alternativeId={alternativeId}
           scale={scale}
           usePercentage={usePercentage}
+          isExcluded={isExcluded}
         />
       );
     } else {

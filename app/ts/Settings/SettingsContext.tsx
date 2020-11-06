@@ -36,9 +36,9 @@ export function SettingsContextProviderComponent({
         randomSeed: settings.randomSeed,
         showDescriptions: toggledColumns.description,
         showUnitsOfMeasurement: toggledColumns.units,
-        showRefereces: toggledColumns.references,
+        showReferences: toggledColumns.references,
         showStrengthsAndUncertainties: toggledColumns.strength,
-        numberOfToggledColumns: numberOfToggledColumns
+        numberOfToggledColumns
       }}
     >
       {children}

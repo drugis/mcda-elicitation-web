@@ -6,7 +6,7 @@ import {Effect} from '@shared/interface/IEffect';
 import {OurError} from '@shared/interface/IError';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IManualInputContext from '@shared/interface/IManualInputContext';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import Axios from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -20,9 +20,9 @@ import {
   swapItems
 } from './ManualInputService/ManualInputService';
 
-const defaultUnitOfMeasurement = {
+const defaultUnitOfMeasurement: IUnitOfMeasurement = {
   label: '',
-  type: UnitOfMeasurementType.custom,
+  type: 'custom',
   lowerBound: -Infinity,
   upperBound: Infinity
 };

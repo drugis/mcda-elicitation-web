@@ -2,7 +2,7 @@
 define(['lodash'], function (_) {
   var dependencies = [];
 
-  var ScaleRangeService = function () {
+  var PerformanceTableService = function () {
     function getEffectValues(performanceTable, dataSource) {
       return _.reduce(
         performanceTable,
@@ -56,5 +56,5 @@ define(['lodash'], function (_) {
     };
   };
 
-  return dependencies.concat(ScaleRangeService);
+  return dependencies.concat(PerformanceTableService);
 });

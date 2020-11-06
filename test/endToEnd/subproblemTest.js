@@ -6,7 +6,7 @@ module.exports = {
   'Create subproblem': create,
   'Switching between subproblems': switchSubproblem,
   'Edit the title': edit,
-  'Reset during subproblem creation': reset,
+  'Reset during subproblem creation': resetAndDuplicateTitle,
   'Interact with scale sliders': changeScale,
   Deleting: deleteSubproblem,
   'Deleting the default subproblem': deleteDefaultSubproblem,
@@ -18,7 +18,8 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
-
+const alternative2checkbox =
+  '#inclusion-785c281d-c66a-48a7-8cfa-4aeb8899a2b7-checkbox';
 const subproblem1 = {
   title: 'subproblem1'
 };
@@ -26,25 +27,25 @@ const subproblem1 = {
 function setupSubProblem(browser) {
   browser
     .waitForElementVisible('#effects-table-header')
-    .click('#create-subproblem-button')
-    .waitForElementVisible('#create-subproblem-header')
-    .waitForElementVisible('#create-new-subproblem-button:disabled')
-    .assert.containsText('#no-title-warning', 'No title entered')
+    .click('#add-subproblem-button')
+    .waitForElementVisible('#add-subproblem-header')
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
     .assert.containsText(
-      '#scale-blocking-warning-0',
-      'Effects table contains missing values, therefore no scales can be set and this problem cannot be analyzed.'
+      '#scale-ranges-warning-0',
+      'Effects table contains missing values'
     )
     .assert.containsText(
-      '#scale-blocking-warning-1',
-      'Effects table contains multiple data sources per criterion, therefore no scales can be set and this problem cannot be analyzed.'
+      '#scale-ranges-warning-1',
+      'Effects table contains multiple data sources per criterion'
     )
-    .setValue('#subproblem-title', subproblem1.title)
-    .waitForElementVisible('#create-new-subproblem-button:enabled')
-    .click('#alternative-2')
-    .click('#datasource-1')
-    .assert.not.elementPresent('#scale-blocking-warning-1')
-    .click('#criterion-3')
-    .assert.not.elementPresent('#scale-blocking-warning-0');
+    .clearValue('#subproblem-title-input')
+    .setValue('#subproblem-title-input', subproblem1.title)
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
+    .click(alternative2checkbox)
+    .click('#inclusion-deselectionDataSourceId-checkbox')
+    .assert.not.elementPresent('#scale-ranges-warning-1')
+    .click('#inclusion-deselectionCriterionId-checkbox')
+    .assert.not.elementPresent('#scale-ranges-warning-0');
   return browser;
 }
 
@@ -70,7 +71,7 @@ function afterEach(browser) {
 
 function create(browser) {
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
     .assert.not.elementPresent('#column-alternative-2')
     .assert.not.elementPresent('#unit-cell-deselectionDataSourceId')
     .assert.not.elementPresent('#criterion-row-deselectionCriterionId')
@@ -79,8 +80,8 @@ function create(browser) {
 
 function switchSubproblem(browser) {
   setupSubProblem(browser)
-    .waitForElementVisible('#create-new-subproblem-button:enabled')
-    .click('#create-new-subproblem-button')
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
+    .click('#add-subproblem-confirm-button')
     .assert.containsText('#subproblem-selector', subproblem1.title)
     .click('#subproblem-selector')
     .click('#subproblem-selector > option:nth-child(1)')
@@ -100,26 +101,40 @@ function edit(browser) {
     .assert.containsText('#subproblem-selector', newTitle);
 }
 
-function reset(browser) {
+function resetAndDuplicateTitle(browser) {
   setupSubProblem(browser)
+    .clearValue('#subproblem-title-input')
+    .setValue('#subproblem-title-input', 'Default')
+    .waitForElementVisible('#add-subproblem-error-0')
+    .waitForElementVisible('#add-subproblem-confirm-button:disabled')
     .click('#reset-subproblem-button')
-    .waitForElementVisible('#create-new-subproblem-button:disabled')
-    .assert.containsText('#subproblem-title', '')
-    .waitForElementVisible('#alternative-2:checked')
-    .waitForElementVisible('#datasource-1:checked')
-    .waitForElementVisible('#criterion-3:checked')
+    .waitForElementVisible('#add-subproblem-confirm-button:enabled')
+    .expect.element(alternative2checkbox).to.be.selected;
+  browser.expect.element('#inclusion-deselectionDataSourceId-checkbox').to.be
+    .selected;
+  browser.expect.element('#inclusion-deselectionCriterionId-checkbox').to.be
+    .selected;
+  browser
+    .waitForElementVisible('#close-modal-button')
     .click('#close-modal-button');
 }
 
 function changeScale(browser) {
-  const lowerValueLabel = '//*[@id="slider-0"]/div/span[10]';
-  const upperValueLabel = '//*[@id="slider-0"]/div/span[11]';
-  const moveFloor = '//*[@id="slider-0-floor"]';
-  const moveCeil = '//*[@id="slider-0-ceil"]';
-  const floorLabel = '//*[@id="slider-0"]/div/span[8]';
-  const ceilLabel = '//*[@id="slider-0"]/div/span[9]';
-  const moveLowerValue = '//*[@id="slider-0"]/div/span[6]';
-  const moveUpperValue = '//*[@id="slider-0"]/div/span[7]';
+  const lowerValueLabel =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[9]/span/span/span';
+  const upperValueLabel =
+    ' /html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[10]/span/span';
+  const floorLabel =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[4]';
+  const ceilLabel =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[8]';
+  const moveFloor =
+    '//*[@id="extend-from-c4a470d2-b457-4f65-9b8d-5e22741c24a6"]';
+  const moveCeil = '//*[@id="extend-to-c4a470d2-b457-4f65-9b8d-5e22741c24a6"]';
+  const moveLowerValue =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[9]';
+  const moveUpperValue =
+    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[10]/span/span/span';
 
   setupSubProblem(browser)
     .useXpath()
@@ -127,18 +142,18 @@ function changeScale(browser) {
     .assert.containsText(upperValueLabel, '200')
     .click(moveFloor)
     .click(moveCeil)
-    .assert.containsText(floorLabel, '-300')
-    .assert.containsText(ceilLabel, '300')
+    .assert.containsText(floorLabel, '-400')
+    .assert.containsText(ceilLabel, '500')
     .moveToElement(moveLowerValue, 0, 0)
     .mouseButtonDown(0)
     .moveToElement(moveFloor, 0, 0)
     .mouseButtonUp(0)
-    .assert.containsText(lowerValueLabel, '-300')
+    .assert.containsText(lowerValueLabel, '-400')
     .moveToElement(moveUpperValue, 0, 0)
     .mouseButtonDown(0)
     .moveToElement(moveCeil, 0, 0)
     .mouseButtonUp(0)
-    .assert.containsText(upperValueLabel, '300')
+    .assert.containsText(upperValueLabel, '500')
     .useCss()
     .click('#close-modal-button');
 }
@@ -146,7 +161,8 @@ function changeScale(browser) {
 function deleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
+    .pause(1000) //wait for page reload to be done
     .waitForElementVisible('#delete-subproblem-button')
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
@@ -159,7 +175,7 @@ function deleteSubproblem(browser) {
 function deleteDefaultSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
     .assert.containsText('#subproblem-selector', subproblem1.title)
     .click('#subproblem-selector')
     .click('#subproblem-selector > option:nth-child(1)')
@@ -176,7 +192,8 @@ function deleteDefaultSubproblem(browser) {
 function cancelDeleteSubproblem(browser) {
   browser.waitForElementVisible('#delete-subproblem-button:disabled');
   setupSubProblem(browser)
-    .click('#create-new-subproblem-button')
+    .click('#add-subproblem-confirm-button')
+    .pause(1000)
     .click('#delete-subproblem-button')
     .waitForElementVisible('#delete-subproblem-header')
     .click('#close-modal-button')
@@ -186,7 +203,8 @@ function cancelDeleteSubproblem(browser) {
 
 function createNonAnalyzableProblem(browser) {
   setupSubProblem(browser)
-    .click('#datasource-1')
-    .click('#create-new-subproblem-button')
+    .click('#inclusion-deselectionDataSourceId-checkbox')
+    .click('#add-subproblem-confirm-button')
+    .pause(1000) //wait for page reload
     .waitForElementVisible('#no-scales-warning-0');
 }

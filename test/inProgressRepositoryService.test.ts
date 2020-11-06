@@ -21,7 +21,6 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOrdering from '@shared/interface/IOrdering';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
@@ -161,7 +160,7 @@ describe('inProgressRepositoryService', () => {
           unitlabel: '%',
           unitlowerbound: null,
           unitupperbound: null,
-          unittype: UnitOfMeasurementType.percentage
+          unittype: 'percentage'
         },
         {
           id: 'dsId2',
@@ -175,7 +174,7 @@ describe('inProgressRepositoryService', () => {
           unitlabel: '',
           unitlowerbound: 0,
           unitupperbound: 1,
-          unittype: UnitOfMeasurementType.custom
+          unittype: 'custom'
         }
       ];
       const result = mapDataSources(dataSources);
@@ -469,7 +468,7 @@ describe('inProgressRepositoryService', () => {
             label: '%',
             lowerBound: 0,
             upperBound: 100,
-            type: UnitOfMeasurementType.percentage
+            type: 'percentage'
           }
         }
       ];
@@ -556,7 +555,7 @@ describe('inProgressRepositoryService', () => {
               label: '%',
               lowerBound: 0,
               upperBound: 100,
-              type: UnitOfMeasurementType.percentage
+              type: 'percentage'
             }
           }
         ],
@@ -924,7 +923,7 @@ describe('inProgressRepositoryService', () => {
               source: 'reference',
               sourceLink: 'www.link.com',
               unitOfMeasurement: {
-                type: UnitOfMeasurementType.percentage,
+                type: 'percentage',
                 label: '%'
               },
               strengthOfEvidence: 'strengths',
@@ -944,7 +943,7 @@ describe('inProgressRepositoryService', () => {
               source: 'reference',
               sourceLink: 'www.link.com',
               unitOfMeasurement: {
-                type: UnitOfMeasurementType.percentage,
+                type: 'percentage',
                 label: '%'
               },
               strengthOfEvidence: 'strengths',
@@ -998,7 +997,9 @@ describe('inProgressRepositoryService', () => {
                 strengthOfEvidence: '',
                 unitOfMeasurement: {
                   label: '',
-                  type: UnitOfMeasurementType.custom
+                  type: 'custom',
+                  lowerBound: null,
+                  upperBound: null
                 }
               }
             ]
@@ -1018,7 +1019,9 @@ describe('inProgressRepositoryService', () => {
                 strengthOfEvidence: '',
                 unitOfMeasurement: {
                   label: '',
-                  type: UnitOfMeasurementType.custom
+                  type: 'custom',
+                  lowerBound: null,
+                  upperBound: null
                 }
               }
             ]
@@ -1029,7 +1032,8 @@ describe('inProgressRepositoryService', () => {
           {id: 'unique_uuid', title: 'alternative 2'}
         ],
         effects: [],
-        distributions: []
+        distributions: [],
+        relativePerformances: []
       };
       expect(result).toEqual(expectedResult);
     });
@@ -1101,7 +1105,7 @@ describe('inProgressRepositoryService', () => {
           uncertainty: 'unc',
           unitOfMeasurement: {
             label: 'some unit',
-            type: UnitOfMeasurementType.custom,
+            type: 'custom',
             lowerBound: 0,
             upperBound: Infinity
           },
@@ -1118,7 +1122,7 @@ describe('inProgressRepositoryService', () => {
           uncertainty: 'unc',
 
           unitlabel: 'some unit',
-          unittype: UnitOfMeasurementType.custom,
+          unittype: 'custom',
           unitlowerbound: 0,
           unitupperbound: Infinity,
           inprogressworkspaceid: 37,

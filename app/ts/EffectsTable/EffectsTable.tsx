@@ -5,26 +5,25 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import IToggledColumns from '@shared/interface/IToggledColumns';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
-import {EffectsTableContextProviderComponent} from './EffectsTableContext/EffectsTableContext';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
+import CriteriaHeader from './EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
+import DescriptionHeader from './EffectsTableHeaders/DescriptionHeader/DescriptionHeader';
+import ReferencesHeader from './EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
+import SoEUncHeader from './EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
+import UnitsHeader from './EffectsTableHeaders/UnitsHeader/UnitsHeader';
 
-export default function EffectsTable({
-  toggledColumns
-}: {
-  toggledColumns: IToggledColumns;
-}) {
+export default function EffectsTable() {
   const {scales} = useContext(WorkspaceContext);
-  const {filteredWorkspace: workspace} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(SubproblemContext);
 
   function renderAlternativeHeaders(): JSX.Element[] {
-    return _(workspace.problem.alternatives)
+    return _(filteredAlternatives)
       .toPairs()
       .map(createAlternativeHeader)
       .value();
@@ -49,96 +48,34 @@ export default function EffectsTable({
     return (
       <TableHead>
         <TableRow>
-          {renderCriteriaHeader()}
-          {renderDescriptionHeader()}
-          {renderUnitOfMeasurementHeader()}
+          <CriteriaHeader colSpan={1} />
+          <DescriptionHeader />
+          <UnitsHeader />
           {renderAlternativeHeaders()}
-          {renderStrengthAndUncertaintyHeader()}
-          {renderReferenceHeader()}
+          <SoEUncHeader />
+          <ReferencesHeader />
         </TableRow>
       </TableHead>
     );
   }
 
-  function renderCriteriaHeader(): JSX.Element {
-    return (
-      <TableCell id="column-criterion" align="center">
-        Criterion <InlineHelp helpId="criterion" />
-      </TableCell>
-    );
-  }
-
-  function renderDescriptionHeader(): JSX.Element {
-    if (toggledColumns.description) {
-      return (
-        <TableCell id="column-description" align="center">
-          Description
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
-  function renderUnitOfMeasurementHeader(): JSX.Element {
-    if (toggledColumns.units) {
-      return (
-        <TableCell id="column-unit-of-measurement" align="center">
-          Unit of measurement <InlineHelp helpId="unit-of-measurement" />
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
-  function renderStrengthAndUncertaintyHeader(): JSX.Element {
-    if (toggledColumns.strength) {
-      return (
-        <TableCell align="center">
-          Strength of evidence <InlineHelp helpId="strength-of-evidence" /> and
-          Uncertainties <InlineHelp helpId="uncertainties" />
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
-  function renderReferenceHeader(): JSX.Element {
-    if (toggledColumns.references) {
-      return (
-        <TableCell align="center">
-          Reference <InlineHelp helpId="reference" />
-        </TableCell>
-      );
-    } else {
-      return <></>;
-    }
-  }
-
   return scales ? (
-    <EffectsTableContextProviderComponent
-      oldWorkspace={workspace}
-      scales={scales}
-    >
-      <Grid container>
-        <Grid item xs={9} id="effects-table-header">
-          <Typography variant={'h5'}>
-            Effects Table <InlineHelp helpId="effects-table" />
-          </Typography>
-        </Grid>
-        <Grid item container xs={3} justify="flex-end">
-          <ClipboardButton targetId="#effects-table" />
-        </Grid>
-        <Grid item xs={12}>
-          <Table size="small" id="effects-table">
-            {renderTableHeaders()}
-            <EffectsTableCriteriaRows />
-          </Table>
-        </Grid>
+    <Grid container>
+      <Grid item xs={9} id="effects-table-header">
+        <Typography variant={'h5'}>
+          Effects Table <InlineHelp helpId="effects-table" />
+        </Typography>
       </Grid>
-    </EffectsTableContextProviderComponent>
+      <Grid item container xs={3} justify="flex-end">
+        <ClipboardButton targetId="#effects-table" />
+      </Grid>
+      <Grid item xs={12}>
+        <Table size="small" id="effects-table">
+          {renderTableHeaders()}
+          <EffectsTableCriteriaRows />
+        </Table>
+      </Grid>
+    </Grid>
   ) : (
     <CircularProgress />
   );

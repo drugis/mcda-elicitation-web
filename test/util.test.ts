@@ -1,4 +1,7 @@
 'use strict';
+import IProblem from '@shared/interface/Problem/IProblem';
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import {
   getRanges,
   getUser,
@@ -71,34 +74,31 @@ describe('The utility', () => {
 
   describe('getRanges', () => {
     it('should return the scales ranges from a problem', () => {
-      const problem: any = {
-        prefs: 'some prefs',
+      const problem: IProblem = {
+        schemaVersion: 'schemaVersion,',
+        alternatives: {},
+        description: 'desc',
+        performanceTable: [],
+        title: 'title',
         criteria: {
           critId1: {
-            id: 'critId1',
-            pvf: {range: [3, 5]},
-            scale: [1, 2],
-            title: 'crit 1 title'
-          },
+            dataSources: [
+              {id: 'ds1Id', pvf: {range: [3, 5]}} as IProblemDataSource
+            ]
+          } as IProblemCriterion,
           critId2: {
-            pvf: {range: [1, 3]}
-          }
+            dataSources: [
+              {id: 'ds2Id', pvf: {range: [1, 3]}} as IProblemDataSource
+            ]
+          } as IProblemCriterion
         }
       };
 
       const result = getRanges(problem);
 
       const expectedResult = {
-        critId1: {
-          pvf: {
-            range: [3, 5]
-          }
-        },
-        critId2: {
-          pvf: {
-            range: [1, 3]
-          }
-        }
+        ds1Id: [3, 5],
+        ds2Id: [1, 3]
       };
       expect(expectedResult).toEqual(result);
     });

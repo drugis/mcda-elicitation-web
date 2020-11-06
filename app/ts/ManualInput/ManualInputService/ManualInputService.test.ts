@@ -99,7 +99,7 @@ describe('manualInputService', () => {
       uncertainty: 'uncertainty',
       unitOfMeasurement: {
         label: '',
-        type: UnitOfMeasurementType.custom,
+        type: 'custom' as UnitOfMeasurementType,
         lowerBound: -Infinity,
         upperBound: Infinity
       }
@@ -505,7 +505,7 @@ describe('manualInputService', () => {
           uncertainty: 'unc',
           unitOfMeasurement: {
             label: '',
-            type: UnitOfMeasurementType.custom,
+            type: 'custom',
             lowerBound: undefined,
             upperBound: undefined
           }
@@ -518,7 +518,7 @@ describe('manualInputService', () => {
           uncertainty: 'unc',
           unitOfMeasurement: {
             label: '',
-            type: UnitOfMeasurementType.decimal,
+            type: 'decimal',
             lowerBound: 0,
             upperBound: 1
           }
@@ -536,13 +536,13 @@ describe('manualInputService', () => {
       const result = replaceUndefinedBounds(criteria);
       const expectedUnitOfMeasurementWithInfinities = {
         label: '',
-        type: UnitOfMeasurementType.custom,
+        type: 'custom',
         lowerBound: -Infinity,
         upperBound: Infinity
       };
       const expectedUnitOfMeasurementWithoutInfinities = {
         label: '',
-        type: UnitOfMeasurementType.decimal,
+        type: 'decimal',
         lowerBound: 0,
         upperBound: 1
       };

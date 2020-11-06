@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
 import IDB from './interface/IDB';
 import logger from './logger';
+import {formatSubproblem} from './subproblemRepositoryService';
 
 export default function SubproblemRepository(db: IDB) {
   function create(
@@ -43,7 +44,7 @@ export default function SubproblemRepository(db: IDB) {
         if (error) {
           callback(error);
         } else {
-          callback(null, result.rows[0]);
+          callback(null, formatSubproblem(result.rows[0]));
         }
       }
     );
@@ -63,7 +64,7 @@ export default function SubproblemRepository(db: IDB) {
         if (error) {
           callback(error);
         } else {
-          callback(null, result.rows);
+          callback(null, _.map(result.rows, formatSubproblem));
         }
       }
     );

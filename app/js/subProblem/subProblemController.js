@@ -3,26 +3,21 @@ define(['lodash', 'angular'], function (_) {
   var dependencies = [
     '$scope',
     '$stateParams',
-    '$modal',
     '$state',
     'ScenarioResource',
     'subProblems',
-    'SubProblemService',
     'PageTitleService'
   ];
 
   var SubProblemController = function (
     $scope,
     $stateParams,
-    $modal,
     $state,
     ScenarioResource,
     subProblems,
-    SubProblemService,
     PageTitleService
   ) {
     // functions
-    $scope.openCreateDialog = openCreateDialog;
     $scope.subproblemChanged = subproblemChanged;
 
     // init
@@ -61,45 +56,6 @@ define(['lodash', 'angular'], function (_) {
           problemId: newSubProblem.id,
           id: scenarios[0].id
         });
-      });
-    }
-
-    function openCreateDialog() {
-      $modal.open({
-        templateUrl: './createSubProblem.html',
-        controller: 'CreateSubProblemController',
-        size: 'large',
-        resolve: {
-          subProblems: function () {
-            return $scope.subProblems;
-          },
-          subProblem: function () {
-            return $scope.subProblem;
-          },
-          problem: function () {
-            return $scope.baseState.dePercentified.problem;
-          },
-          scales: function () {
-            return $scope.scales;
-          },
-          editMode: function () {
-            return $scope.editMode;
-          },
-          effectsTableInfo: function () {
-            return $scope.effectsTableInfo;
-          },
-          callback: function () {
-            return function (newProblemId, newScenarioId) {
-              $state.go(
-                'problem',
-                _.extend({}, $stateParams, {
-                  problemId: newProblemId,
-                  id: newScenarioId
-                })
-              );
-            };
-          }
-        }
       });
     }
   };

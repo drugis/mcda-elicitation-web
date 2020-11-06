@@ -1,5 +1,8 @@
 import {OurError} from '@shared/interface/IError';
+import IOldSubproblem from '@shared/interface/IOldSubproblem';
+import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
+import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {CREATED, OK} from 'http-status-codes';
@@ -76,7 +79,7 @@ export default function SubproblemHandler(db: IDB) {
 
   function retrieveSubProblemCallback(
     error: OurError,
-    subproblem: any,
+    subproblem: IOldSubproblem,
     response: Response,
     next: any
   ): void {
@@ -97,7 +100,7 @@ export default function SubproblemHandler(db: IDB) {
     waterfall(
       [
         _.partial(createSubProblem, client, request),
-        _.partial(createScenario, client, request)
+        _.partial(createScenario, client)
       ],
       (error: OurError, newSubproblemId?: string) => {
         transactionCallback(error, newSubproblemId);
@@ -107,7 +110,7 @@ export default function SubproblemHandler(db: IDB) {
 
   function createSubProblem(
     client: PoolClient,
-    request: Request,
+    request: Request<{workspaceId: string}, {}, ISubproblemCommand>,
     callback: (
       error: OurError,
       workspaceId?: string,
@@ -135,7 +138,6 @@ export default function SubproblemHandler(db: IDB) {
 
   function createScenario(
     client: PoolClient,
-    request: Request,
     workspaceId: string,
     subproblemId: string,
     callback: (error: OurError, subproblemId?: string) => void
@@ -146,7 +148,10 @@ export default function SubproblemHandler(db: IDB) {
         ', subproblemId: ' +
         subproblemId
     );
-    const state = request.body.scenarioState;
+    const state: IScenarioState = {
+      problem: {criteria: {}},
+      prefs: []
+    };
     const scenario: IScenarioCommand = {
       title: 'Default',
       state: state,

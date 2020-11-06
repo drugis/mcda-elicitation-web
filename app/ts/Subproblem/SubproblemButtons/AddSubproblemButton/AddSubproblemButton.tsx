@@ -1,21 +1,35 @@
-import {IconButton} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Add from '@material-ui/icons/Add';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {useContext} from 'react';
+import React, {useState} from 'react';
+import AddSubproblemDialog from './AddSubproblemDialog/AddSubproblemDialog';
 
 export default function AddSubproblemButton() {
-  const {createSubProblemDialogCallback} = useContext(WorkspaceContext);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  function closeDialog(): void {
+    setIsDialogOpen(false);
+  }
+
+  function openDialog(): void {
+    setIsDialogOpen(true);
+  }
 
   return (
-    <Tooltip title={'Create new problem'}>
-      <IconButton
-        id={'create-subproblem-button'}
-        color={'primary'}
-        onClick={createSubProblemDialogCallback}
-      >
-        <Add />
-      </IconButton>
-    </Tooltip>
+    <>
+      <Tooltip title={'Add a new problem'}>
+        <IconButton
+          id={'add-subproblem-button'}
+          color={'primary'}
+          onClick={openDialog}
+        >
+          <Add />
+        </IconButton>
+      </Tooltip>
+      <AddSubproblemDialog
+        isDialogOpen={isDialogOpen}
+        closeDialog={closeDialog}
+      />
+    </>
   );
 }

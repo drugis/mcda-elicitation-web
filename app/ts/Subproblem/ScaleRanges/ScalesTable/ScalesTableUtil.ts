@@ -1,85 +1,94 @@
+import IDataSource from '@shared/interface/IDataSource';
+import {Distribution} from '@shared/interface/IDistribution';
+import IEffect, {Effect} from '@shared/interface/IEffect';
+import {IEffectWithValue} from '@shared/interface/IEffectWithValue';
+import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import IWorkspace from '@shared/interface/IWorkspace';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
 
-const {decimal, percentage} = UnitOfMeasurementType;
-
 export function calculateObservedRanges(
   scales: Record<string, Record<string, IScale>>,
-  criteria: Record<string, IProblemCriterion>,
-  performanceTable: IPerformanceTableEntry[]
+  workspace: IWorkspace
 ): Record<string, [number, number]> {
-  return _.mapValues(criteria, (criterion): [number, number] => {
-    const dataSourceId = criterion.dataSources[0].id;
-    const effectValues = getEffectValues(performanceTable, dataSourceId);
-    const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
-    const rangeDistributionValues = getRangeDistributionValues(
-      performanceTable,
-      dataSourceId
-    );
-
-    const allValues = [
-      ...effectValues,
-      ...scaleRangesValues,
-      ...rangeDistributionValues
-    ];
-
-    return [
-      significantDigits(_.min(allValues)),
-      significantDigits(_.max(allValues))
-    ];
-  });
-}
-
-function getEffectValues(
-  performanceTable: IPerformanceTableEntry[],
-  dataSourceId: string
-): number[] {
-  return _(performanceTable)
-    .map((entry: any) => {
-      if (
-        entry.dataSource === dataSourceId &&
-        entry.performance.effect &&
-        entry.performance.effect.type === 'exact'
-      ) {
-        return entry.performance.effect.value;
-      }
-    })
-    .filter(filterUndefined)
+  return _(workspace.criteria)
+    .flatMap('dataSources')
+    .keyBy('id')
+    .mapValues(_.partial(calculateObservedRange, scales, workspace))
     .value();
 }
 
-function getRangeDistributionValues(
-  performanceTable: any[],
-  dataSourceId: string
-): number[] {
-  return _(performanceTable)
-    .flatMap((entry): [number, number] => {
-      if (hasRangeDistribution(entry, dataSourceId)) {
-        return [
-          entry.performance.distribution.parameters.lowerBound,
-          entry.performance.distribution.parameters.upperBound
-        ];
-      }
-    })
-    .filter(filterUndefined)
-    .value();
-}
-
-function filterUndefined(value: number) {
-  return value !== undefined && value !== null && !isNaN(value);
-}
-
-function hasRangeDistribution(entry: any, dataSourceId: string): boolean {
-  return (
-    entry.dataSource === dataSourceId &&
-    entry.performance.distribution &&
-    entry.performance.distribution.type === 'range'
+function calculateObservedRange(
+  scales: Record<string, Record<string, IScale>>,
+  workspace: IWorkspace,
+  dataSource: IDataSource
+): [number, number] {
+  const dataSourceId = dataSource.id;
+  const effectValues = getValuesAndBounds(workspace.effects, dataSource);
+  const rangeDistributionValues = getValuesAndBounds(
+    workspace.distributions,
+    dataSource
   );
+  const scaleRangesValues = getScaleRangeValues(scales[dataSourceId]);
+
+  const allValues = [
+    ...effectValues,
+    ...scaleRangesValues,
+    ...rangeDistributionValues
+  ];
+
+  return [
+    significantDigits(_.min(allValues)),
+    significantDigits(_.max(allValues))
+  ];
+}
+
+function getValuesAndBounds(
+  effects: (Effect | Distribution)[],
+  dataSource: IDataSource
+): number[] {
+  return _(effects)
+    .filter(['dataSourceId', dataSource.id])
+    .flatMap((entry: Effect | Distribution): number[] => {
+      if (hasValue(entry)) {
+        return getValue(entry, dataSource);
+      } else if (hasRange(entry)) {
+        return getRange(entry, dataSource);
+      } else {
+        return [];
+      }
+    })
+    .value();
+}
+
+function getValue(entry: IEffectWithValue, dataSource: IDataSource) {
+  if (dataSource.unitOfMeasurement.type === 'percentage') {
+    return [significantDigits(entry.value * 0.01)];
+  } else {
+    return [entry.value];
+  }
+}
+
+function getRange(entry: IRangeEffect, dataSource: IDataSource) {
+  if (dataSource.unitOfMeasurement.type === 'percentage') {
+    return [
+      significantDigits(entry.lowerBound * 0.01),
+      significantDigits(entry.upperBound * 0.01)
+    ];
+  } else {
+    return [entry.lowerBound, entry.upperBound];
+  }
+}
+
+function hasValue(effect: IEffect): effect is IEffectWithValue {
+  return (effect as IEffectWithValue).value !== undefined;
+}
+
+function hasRange(effect: IEffect): effect is IRangeEffect {
+  return (effect as IRangeEffect).type === 'range';
 }
 
 function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
@@ -92,41 +101,57 @@ function getScaleRangeValues(scaleRanges: Record<string, IScale>): number[] {
     .value();
 }
 
-function buildConfiguredRange(
-  observedRanges: Record<string, [number, number]>,
-  showPercentages: boolean,
-  criterion: IProblemCriterion
-): [number, number] {
-  const pvf = criterion.dataSources[0].pvf;
-  const unit = criterion.dataSources[0].unitOfMeasurement.type;
-  const doPercentification =
-    showPercentages && (unit === decimal || unit === percentage);
-  if (pvf) {
-    const lowerValue = getPercentifiedValue(pvf.range[0], doPercentification);
-    const upperValue = getPercentifiedValue(pvf.range[1], doPercentification);
-    return [lowerValue, upperValue];
-  } else {
-    const lowerValue = getPercentifiedValue(
-      observedRanges[criterion.id][0],
-      doPercentification
-    );
-    const upperValue = getPercentifiedValue(
-      observedRanges[criterion.id][1],
-      doPercentification
-    );
-    return [lowerValue, upperValue];
-  }
+function filterUndefined(value: number) {
+  return value !== undefined && value !== null && !isNaN(value);
 }
 
 export function getConfiguredRangeLabel(
-  criterion: IProblemCriterion,
-  observedRanges: Record<string, [number, number]>,
-  showPercentages: boolean
+  usePercentage: boolean,
+  observedRange: [number, number],
+  configuredRange?: [number, number]
 ): string {
-  const [lowerValue, upperValue] = buildConfiguredRange(
-    observedRanges,
-    showPercentages,
-    criterion
+  return getRangeLabel(
+    usePercentage,
+    configuredRange ? configuredRange : observedRange
   );
+}
+
+export function getRangeLabel(
+  usePercentage: boolean,
+  [lowerRange, upperRange]: [number, number]
+): string {
+  const lowerValue = getPercentifiedValue(lowerRange, usePercentage);
+  const upperValue = getPercentifiedValue(upperRange, usePercentage);
   return `${lowerValue}, ${upperValue}`;
+}
+
+export function getTheoreticalRangeLabel(
+  usePercentage: boolean,
+  unit: IUnitOfMeasurement
+): string {
+  const lowerLabel = unit.lowerBound === null ? '-∞' : unit.lowerBound;
+  const upperLabel = getUpperBoundLabel(usePercentage, unit);
+  return `${lowerLabel}, ${upperLabel}`;
+}
+
+export function getUpperBound(
+  usePercentage: boolean,
+  unit: IUnitOfMeasurement
+): number {
+  if (usePercentage && unit.type === 'decimal') {
+    return 100;
+  } else if (!usePercentage && unit.type === 'percentage') {
+    return 1;
+  } else {
+    return unit.upperBound;
+  }
+}
+
+export function getUpperBoundLabel(
+  usePercentage: boolean,
+  unit: IUnitOfMeasurement
+): string {
+  if (unit.upperBound === null) {
+    return '∞';
+  } else return getUpperBound(usePercentage, unit).toString();
 }

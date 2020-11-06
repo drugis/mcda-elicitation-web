@@ -1,4 +1,3 @@
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
@@ -11,21 +10,30 @@ const criteria: Record<string, IPreferencesCriterion> = {
   critId1: {
     id: 'critId1',
     title: 'title1',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: 'kg'},
+    unitOfMeasurement: {
+      type: 'custom',
+      label: 'kg'
+    },
     dataSourceId: 'ds1',
     description: 'description'
   },
   critId2: {
     id: 'critId2',
     title: 'title2',
-    unitOfMeasurement: {type: UnitOfMeasurementType.custom, label: 'kg'},
+    unitOfMeasurement: {
+      type: 'custom',
+      label: 'kg'
+    },
     dataSourceId: 'ds2',
     description: 'description'
   },
   critId3: {
     id: 'critId3',
     title: 'title3',
-    unitOfMeasurement: {type: UnitOfMeasurementType.percentage, label: '%'},
+    unitOfMeasurement: {
+      type: 'percentage',
+      label: '%'
+    },
     dataSourceId: 'ds3',
     description: 'description'
   }

@@ -1,48 +1,54 @@
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
-import {getStringForValue} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
+import ICriterion from '@shared/interface/ICriterion';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';
-import {getConfiguredRangeLabel} from '../ScalesTableUtil';
+import {
+  getConfiguredRangeLabel,
+  getRangeLabel,
+  getTheoreticalRangeLabel
+} from '../ScalesTableUtil';
 
-export default function ScalesTableRow({
-  criterion
-}: {
-  criterion: IProblemCriterion;
-}) {
+export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
+  const dataSourceId = criterion.dataSources[0].id;
+  const {currentSubproblem} = useContext(WorkspaceContext);
   const {observedRanges} = useContext(SubproblemContext);
-  const {decimal, percentage} = UnitOfMeasurementType;
 
-  const unit = criterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentages =
-    showPercentages && (unit === decimal || unit === percentage);
-  const theoreticalValues = [
-    getStringForValue(criterion.dataSources[0].scale[0], showPercentages, unit),
-    getStringForValue(criterion.dataSources[0].scale[1], showPercentages, unit)
-  ];
-  const observedValues = [
-    getPercentifiedValueLabel(observedRanges[criterion.id][0], usePercentages),
-    getPercentifiedValueLabel(observedRanges[criterion.id][1], usePercentages)
-  ];
+  const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unitType);
+
+  const theoreticalRangeLabel = getTheoreticalRangeLabel(
+    usePercentage,
+    criterion.dataSources[0].unitOfMeasurement
+  );
+  const observedRangeLabel = getRangeLabel(
+    usePercentage,
+    observedRanges[dataSourceId]
+  );
+  const configuredRangeLabel = getConfiguredRangeLabel(
+    usePercentage,
+    observedRanges[dataSourceId],
+    currentSubproblem.definition.ranges[dataSourceId]
+  );
+
   return (
     <TableRow key={criterion.id}>
       <TableCell id={`scales-table-criterion-${criterion.id}`}>
         {criterion.title}
       </TableCell>
       <TableCell id={`theoretical-range-${criterion.id}`}>
-        {`${theoreticalValues[0]}, ${theoreticalValues[1]}`}
+        <div className="text-centered">{theoreticalRangeLabel}</div>
       </TableCell>
       <TableCell id={`observed-range-${criterion.id}`}>
-        {`${observedValues[0]}, ${observedValues[1]}`}
+        <div className="text-centered">{observedRangeLabel}</div>
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
-        {getConfiguredRangeLabel(criterion, observedRanges, showPercentages)}
+        <div className="text-centered">{configuredRangeLabel}</div>
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>
         {getUnitLabel(

@@ -2,6 +2,7 @@
 import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
+import IProblem from '@shared/interface/Problem/IProblem';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
@@ -83,7 +84,7 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createSubProblem(
     client: PoolClient,
-    request: Request,
+    request: Request<{}, {}, {problem: IProblem}>,
     workspaceId: string,
     callback: (
       error: OurError,
@@ -93,7 +94,7 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     logger.debug('creating subproblem');
     const definition = {
-      ranges: getRanges(request.body.problem)
+      ranges: getRanges(request.body.problem) //FIXME don't allow ranges on uploads
     };
     subproblemRepository.create(
       client,

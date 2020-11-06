@@ -3,18 +3,19 @@
 const _ = require('lodash');
 
 const xpathSelectorType = 'xpath';
-const TIMEOUT = 100;
+const TIMEOUT = 500;
 
 function delayedClick(
   browser,
   clickPath,
   expectPath,
   selectorType = 'css selector',
-  attempts = 50
+  attempts = 10
 ) {
   if (attempts === 0) {
     throw new Error('! Could not locate "' + expectPath + '".');
   } else {
+    browser.pause(1000);
     browser.waitForElementVisible(clickPath);
     browser.click(clickPath);
     browser.elements(selectorType, expectPath, function (result) {

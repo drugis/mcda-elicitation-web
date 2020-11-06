@@ -1,13 +1,19 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
+import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
+import IWorkspace from '@shared/interface/IWorkspace';
 
 export default interface IWorkspaceContext {
-  subproblems: Record<string, IOldSubproblem>;
+  alternatives: Record<string, IAlternative>;
+  criteria: Record<string, ICriterion>;
   currentSubproblem: IOldSubproblem;
-  editTitle: (title: string) => void;
-  deleteSubproblem: (subproblemId: string) => void;
-  workspace: IOldWorkspace;
+  observedRanges: Record<string, [number, number]>;
   scales: Record<string, Record<string, IScale>>;
-  createSubProblemDialogCallback: () => void;
+  subproblems: Record<string, IOldSubproblem>;
+  workspace: IWorkspace;
+  deleteSubproblem: (subproblemId: string) => void;
+  editTitle: (title: string) => void;
+  addSubproblem: (command: ISubproblemCommand) => void;
 }

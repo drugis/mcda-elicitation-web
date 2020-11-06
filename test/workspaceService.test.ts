@@ -53,7 +53,7 @@ import {
   createEmptyOrTextEffect,
   createExactEffect,
   finishDistributionCreation,
-  isNotNMAEntry
+  hasAlternativeId
 } from '@shared/workspaceService';
 import _ from 'lodash';
 
@@ -66,18 +66,18 @@ const emptyEffect: IEmptyEffect = {
   alternativeId: alternative1Id,
   criterionId: criterion1Id,
   dataSourceId: dataSource1Id,
-  unitOfMeasurementType: UnitOfMeasurementType.percentage
+  unitOfMeasurementType: 'percentage'
 };
 
 const effectBase = {
   alternativeId: alternative1Id,
   criterionId: criterion1Id,
   dataSourceId: dataSource1Id,
-  unitOfMeasurementType: UnitOfMeasurementType.percentage
+  unitOfMeasurementType: 'percentage'
 };
 
 const unitTypeMap: Record<string, UnitOfMeasurementType> = {
-  ds1Id: UnitOfMeasurementType.percentage
+  ds1Id: 'percentage'
 };
 const idMapper: (id: string) => string = _.identity;
 
@@ -110,6 +110,7 @@ describe('buildWorkspace', () => {
       criteria: [],
       distributions: [],
       effects: [],
+      relativePerformances: [],
       properties: expectedWorkspace
     };
     expect(result).toEqual(expectedResult);
@@ -185,7 +186,7 @@ describe('buildWorkspace', () => {
             uncertainties: 'unc',
             unitOfMeasurement: {
               label: '%',
-              type: UnitOfMeasurementType.percentage
+              type: 'percentage'
             }
           }
         ]
@@ -204,7 +205,7 @@ describe('buildWorkspace', () => {
           uncertainty: 'unc',
           unitOfMeasurement: {
             label: '%',
-            type: UnitOfMeasurementType.percentage,
+            type: 'percentage',
             lowerBound: 0,
             upperBound: 100
           },
@@ -218,8 +219,8 @@ describe('buildWorkspace', () => {
 
   describe('buildWorkspaceAlternatives', () => {
     it('should return the transformed alternatives', () => {
-      const alternatives: Record<string, {title: string}> = {
-        alt1Id: {title: 'alternative 1'}
+      const alternatives: Record<string, IAlternative> = {
+        alt1Id: {title: 'alternative 1', id: 'alt1Id'}
       };
       const result = buildWorkspaceAlternatives(alternatives, idMapper);
       const expectedAlternatives: IAlternative[] = [
@@ -252,13 +253,13 @@ describe('buildWorkspace', () => {
   describe('isNotNMAEntry', () => {
     it('should return true if the entry has an alternative property', () => {
       const entry = {alternative: alternative1Id} as IPerformanceTableEntry;
-      const result = isNotNMAEntry(entry);
+      const result = hasAlternativeId(entry);
       expect(result).toBe(true);
     });
 
     it('should return false if the entry has no alternative property', () => {
       const entry = {} as IPerformanceTableEntry;
-      const result = isNotNMAEntry(entry);
+      const result = hasAlternativeId(entry);
       expect(result).toBe(false);
     });
   });
@@ -294,7 +295,7 @@ describe('buildWorkspace', () => {
         alternativeId: alternative1Id,
         criterionId: criterion1Id,
         dataSourceId: dataSource1Id,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -336,7 +337,7 @@ describe('buildWorkspace', () => {
         criterionId: criterion1Id,
         dataSourceId: dataSource1Id,
         text: 'some text',
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -354,7 +355,7 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'value',
         value: 37,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -379,7 +380,7 @@ describe('buildWorkspace', () => {
         isNotEstimableUpperBound: false,
         lowerBound: 20,
         upperBound: 40,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -396,7 +397,7 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'value',
         value: 37,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -418,7 +419,7 @@ describe('buildWorkspace', () => {
         isNotEstimableUpperBound: false,
         lowerBound: 20,
         upperBound: 40,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -438,7 +439,7 @@ describe('buildWorkspace', () => {
         isNotEstimableUpperBound: true,
         lowerBound: undefined,
         upperBound: undefined,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -479,6 +480,7 @@ describe('buildWorkspace', () => {
 
   describe('finishDistributionCreation', () => {
     const modifier = 1;
+
     it('should create a value effect', () => {
       const performance: IValuePerformance = {type: 'exact', value: 37};
       const result = finishDistributionCreation(
@@ -490,7 +492,7 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'value',
         value: 37,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -509,10 +511,12 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'beta',
         beta: 42,
-        alpha: 37
+        alpha: 37,
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
+
     it('should create a gamma distribution', () => {
       const performance: IGammaPerformance = {
         type: 'dgamma',
@@ -527,10 +531,12 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'gamma',
         beta: 42,
-        alpha: 37
+        alpha: 37,
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
+
     it('should create a normal distribution', () => {
       const performance: INormalPerformance = {
         type: 'dnorm',
@@ -545,7 +551,8 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'normal',
         mean: 37,
-        standardError: 42
+        standardError: 42,
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -565,7 +572,7 @@ describe('buildWorkspace', () => {
         type: 'range',
         upperBound: 42,
         lowerBound: 37,
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -580,7 +587,7 @@ describe('buildWorkspace', () => {
       const expectedResult: IEmptyEffect = {
         ...effectBase,
         type: 'empty',
-        unitOfMeasurementType: UnitOfMeasurementType.percentage
+        unitOfMeasurementType: 'percentage'
       };
       expect(result).toEqual(expectedResult);
     });
@@ -622,7 +629,7 @@ describe('buildWorkspace', () => {
               uncertainties: 'unc',
               unitOfMeasurement: {
                 label: '%',
-                type: UnitOfMeasurementType.percentage
+                type: 'percentage'
               }
             }
           ]
@@ -653,7 +660,7 @@ describe('buildWorkspace', () => {
               scale: [0, 100],
               unitOfMeasurement: {
                 label: '%',
-                type: UnitOfMeasurementType.percentage
+                type: 'percentage'
               },
               source: '',
               sourceLink: '',
@@ -673,7 +680,7 @@ describe('buildWorkspace', () => {
               scale: [0, 1],
               unitOfMeasurement: {
                 label: '',
-                type: UnitOfMeasurementType.decimal
+                type: 'decimal'
               },
               source: '',
               sourceLink: '',
@@ -685,8 +692,8 @@ describe('buildWorkspace', () => {
       };
       const result = buildUnitTypeMap(criteria);
       const expectedResult: Record<string, UnitOfMeasurementType> = {
-        ds1Id: UnitOfMeasurementType.percentage,
-        ds2Id: UnitOfMeasurementType.decimal
+        ds1Id: 'percentage',
+        ds2Id: 'decimal'
       };
       expect(result).toEqual(expectedResult);
     });

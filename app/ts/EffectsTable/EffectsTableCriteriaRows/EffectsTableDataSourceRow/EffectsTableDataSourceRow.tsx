@@ -2,10 +2,9 @@ import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {EffectsTableContext} from '../../EffectsTableContext/EffectsTableContext';
 import EffectsTableCriterionDescriptionCell from './EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
 import EffectsTableCriterionTitleCell from './EffectsTableCriterionTitleCell/EffectsTableCriterionTitleCell';
 import EffectsTableReferenceCell from './EffectsTableReferenceCell/EffectsTableReferenceCell';
@@ -22,10 +21,7 @@ export default function EffectsTableDataSourceRow({
   dataSource: IDataSource;
   rowIndex: number;
 }) {
-  const {alternatives} = useContext(EffectsTableContext);
-  const {showStrengthsAndUncertainties, showRefereces} = useContext(
-    SettingsContext
-  );
+  const {filteredAlternatives} = useContext(SubproblemContext);
 
   function renderDataSourceCells(): JSX.Element {
     return (
@@ -39,7 +35,7 @@ export default function EffectsTableDataSourceRow({
   }
 
   function renderCells(): JSX.Element[] {
-    return _.map(alternatives, (alternative: IAlternative) => {
+    return _.map(filteredAlternatives, (alternative: IAlternative) => {
       return (
         <ValueCell
           key={alternative.id}
@@ -54,10 +50,7 @@ export default function EffectsTableDataSourceRow({
     if (rowIndex === 0) {
       return (
         <>
-          <EffectsTableCriterionTitleCell
-            rowIndex={rowIndex}
-            criterion={criterion}
-          />
+          <EffectsTableCriterionTitleCell criterion={criterion} />
           <EffectsTableCriterionDescriptionCell criterion={criterion} />
         </>
       );
