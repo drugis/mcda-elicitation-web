@@ -11,7 +11,7 @@ export default function EffectsTableReferenceCell({
   dataSource: IDataSource;
   isExcluded?: boolean;
 }) {
-  const {showRefereces} = useContext(SettingsContext);
+  const {showReferences} = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function renderReference(): JSX.Element | string {
@@ -26,7 +26,7 @@ export default function EffectsTableReferenceCell({
     }
   }
 
-  return showRefereces ? (
+  return showReferences ? (
     <TableCell style={cellStyle}>{renderReference()}</TableCell>
   ) : (
     <></>

@@ -4,8 +4,8 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 
 export default function ReferencesHeader() {
-  const {showRefereces} = useContext(SettingsContext);
-  if (showRefereces) {
+  const {showReferences} = useContext(SettingsContext);
+  if (showReferences) {
     return (
       <TableCell id="references-header" align="center">
         Reference <InlineHelp helpId="reference" />
