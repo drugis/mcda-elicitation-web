@@ -52,7 +52,7 @@ function getValuesAndBounds(
 ): number[] {
   return _(effects)
     .filter(['dataSourceId', dataSource.id])
-    .map((entry: Effect | Distribution): number[] => {
+    .flatMap((entry: Effect | Distribution): number[] => {
       if (hasValue(entry)) {
         return getValue(entry, dataSource);
       } else if (hasRange(entry)) {
@@ -61,7 +61,6 @@ function getValuesAndBounds(
         return [];
       }
     })
-    .flatten()
     .value();
 }
 

@@ -9,7 +9,7 @@ import {
   getMissingValueWarnings,
   getScaleBlockingWarnings,
   initInclusions,
-  isAlternativeDisabled,
+  isAlternativeDeselectionDisabled,
   isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
 
@@ -475,13 +475,13 @@ describe('addSubproblemUtil', () => {
     });
   });
 
-  describe('isAlternativeDisabledFoo', () => {
+  describe('isAlternativeDeselectionDisabled', () => {
     const id = 'alt1Id';
     it('should return false if the are at more than 2 alternatives included, and the alterntive is not a baseline', () => {
       const alternativeInclusions = {alt1Id: true, alt2Id: true, alt3Id: true};
       const baselineMap = {alt1Id: false, alt2Id: true, alt3Id: false};
 
-      const result = isAlternativeDisabled(
+      const result = isAlternativeDeselectionDisabled(
         id,
         alternativeInclusions,
         baselineMap
@@ -493,7 +493,7 @@ describe('addSubproblemUtil', () => {
       const alternativeInclusions = {alt1Id: true, alt2Id: true};
       const baselineMap = {alt1Id: false, alt2Id: true};
 
-      const result = isAlternativeDisabled(
+      const result = isAlternativeDeselectionDisabled(
         id,
         alternativeInclusions,
         baselineMap
@@ -505,7 +505,7 @@ describe('addSubproblemUtil', () => {
       const alternativeInclusions = {alt1Id: true, alt2Id: true, alt3Id: true};
       const baselineMap = {alt1Id: true, alt2Id: true, alt3Id: false};
 
-      const result = isAlternativeDisabled(
+      const result = isAlternativeDeselectionDisabled(
         id,
         alternativeInclusions,
         baselineMap

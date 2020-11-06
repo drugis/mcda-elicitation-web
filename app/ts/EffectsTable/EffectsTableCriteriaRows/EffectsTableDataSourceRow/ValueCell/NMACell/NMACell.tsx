@@ -1,7 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import IScale from '@shared/interface/IScale';
 import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
-import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/AddSubproblemEffectsTable';
+import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React from 'react';
 import UncertainValue from '../UncertainValue/UncertainValue';
 

@@ -20,18 +20,11 @@ export default function AddSubproblemScaleRanges() {
     });
   }
 
-  return (
-    <>
-      {scaleRangesWarnings.length > 0 ? (
-        <DisplayWarnings
-          warnings={scaleRangesWarnings}
-          identifier="scale-ranges"
-        />
-      ) : (
-        <Grid container item xs={12} spacing={4}>
-          {renderSliders()}
-        </Grid>
-      )}
-    </>
+  return scaleRangesWarnings.length > 0 ? (
+    <DisplayWarnings warnings={scaleRangesWarnings} identifier="scale-ranges" />
+  ) : (
+    <Grid container item xs={12} spacing={4}>
+      {renderSliders()}-{' '}
+    </Grid>
   );
 }

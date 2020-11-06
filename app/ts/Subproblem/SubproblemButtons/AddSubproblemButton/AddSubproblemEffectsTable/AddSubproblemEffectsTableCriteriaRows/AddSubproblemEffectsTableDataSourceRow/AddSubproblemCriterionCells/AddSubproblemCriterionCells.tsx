@@ -4,7 +4,7 @@ import EffectsTableCriterionDescriptionCell from 'app/ts/EffectsTable/EffectsTab
 import EffectsTableCriterionTitleCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableCriterionTitleCell/EffectsTableCriterionTitleCell';
 import React, {useContext} from 'react';
 import {AddSubproblemContext} from '../../../../AddSubproblemContext';
-import {deselectedCellStyle} from '../../../AddSubproblemEffectsTable';
+import {deselectedCellStyle} from '../../../deselectedCellStyle';
 import InclusionCell from '../../../InclusionCell/InclusionCell';
 
 export default function AddSubproblemCriterionCells({

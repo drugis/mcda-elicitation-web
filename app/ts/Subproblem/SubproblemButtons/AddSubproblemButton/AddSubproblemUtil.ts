@@ -74,16 +74,16 @@ function hasMissingValue(
     dataSourceId,
     alternativeId
   );
-
+  const hasRelativePerformance = !!relativePerformance;
   if (isEffect) {
     return (
       !hasPerformance(effect) &&
-      (hasPerformance(distribution) || !!relativePerformance)
+      (hasPerformance(distribution) || hasRelativePerformance)
     );
   } else {
     return (
       !hasPerformance(distribution) &&
-      !relativePerformance &&
+      !hasRelativePerformance &&
       hasPerformance(effect)
     );
   }
@@ -223,7 +223,7 @@ function getNumberOfSelectedDataSources(
   }).true;
 }
 
-export function isAlternativeDisabled(
+export function isAlternativeDeselectionDisabled(
   id: string,
   alternativeInclusions: Record<string, boolean>,
   baselineMap: Record<string, boolean>

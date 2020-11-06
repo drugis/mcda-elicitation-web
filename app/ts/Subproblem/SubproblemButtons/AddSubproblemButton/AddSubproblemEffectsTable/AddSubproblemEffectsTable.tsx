@@ -18,8 +18,6 @@ import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTableAlternativeHeader from './AddSubproblemEffectsTableAlternativeHeader/AddSubproblemEffectsTableAlternativeHeader';
 import AddSubproblemEffectsTableCriteriaRows from './AddSubproblemEffectsTableCriteriaRows/AddSubproblemEffectsTableCriteriaRows';
 
-export const deselectedCellStyle = {backgroundColor: '#e9e9e9'};
-
 export default function AddSubproblemEffectsTable() {
   const {alternatives} = useContext(WorkspaceContext);
   const {missingValueWarnings} = useContext(AddSubproblemContext);

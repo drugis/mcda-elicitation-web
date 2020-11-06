@@ -36,7 +36,7 @@ describe('EffectsTableUtil', () => {
       expect(result).toBeTruthy();
     });
 
-    it('should return true if data source unit is custom', () => {
+    it('should return false if data source unit is custom', () => {
       const dataSourceId = 'ds3Id';
       const result = canDSBePercentage(criteria, dataSourceId);
       expect(result).toBeFalsy();

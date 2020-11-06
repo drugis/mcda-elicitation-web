@@ -14,7 +14,7 @@ export default interface IAddSubproblemContext {
   isDataSourceDeselectionDisabled: (criterionId: string) => boolean;
   isDataSourceExcluded: (dataSourceId: string) => boolean;
   isAlternativeExcluded: (alternativeId: string) => boolean;
-  isAlternativeDisabled: (id: string) => boolean;
+  isAlternativeDeselectionDisabled: (id: string) => boolean;
   setTitle: (title: string) => void;
   updateAlternativeInclusion: (id: string, newValue: boolean) => void;
   updateCriterionInclusion: (id: string, newValue: boolean) => void;

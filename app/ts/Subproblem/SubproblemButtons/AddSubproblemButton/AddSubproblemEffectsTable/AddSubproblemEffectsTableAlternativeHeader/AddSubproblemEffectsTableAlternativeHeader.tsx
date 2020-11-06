@@ -12,7 +12,7 @@ export default function AddSubproblemEffectsTableAlternativeHeader({
 }) {
   const {
     updateAlternativeInclusion,
-    isAlternativeDisabled,
+    isAlternativeDeselectionDisabled,
     isAlternativeExcluded
   } = useContext(AddSubproblemContext);
 
@@ -31,7 +31,9 @@ export default function AddSubproblemEffectsTableAlternativeHeader({
           <InclusionCell
             itemId={alternative.id}
             updateInclusion={updateAlternativeInclusion}
-            isDeselectionDisabled={isAlternativeDisabled(alternative.id)}
+            isDeselectionDisabled={isAlternativeDeselectionDisabled(
+              alternative.id
+            )}
             isExcluded={isAlternativeExcluded(alternative.id)}
           />
         </Grid>
