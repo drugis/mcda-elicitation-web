@@ -101,7 +101,7 @@ function editCriterionSwitchTabs(browser) {
     .click('#problem-definition-tab')
     .waitForElementVisible('#effects-table-header')
     .assert.containsText(
-      '#effects-table > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(1)',
+      '#criterion-title-cae083fa-c1e7-427f-8039-c46479392344',
       newTitle
     );
 }
