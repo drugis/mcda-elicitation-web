@@ -2,7 +2,7 @@ import TableCell from '@material-ui/core/TableCell';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/AddSubproblemEffectsTable';
+import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React, {useContext} from 'react';
 import EmptyCell from '../EmptyCell/EmptyCell';
 import {renderEffect} from './EffectValueCellService';

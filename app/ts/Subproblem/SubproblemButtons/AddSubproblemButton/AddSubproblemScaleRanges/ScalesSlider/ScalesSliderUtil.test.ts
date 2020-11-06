@@ -1,11 +1,14 @@
-import {calculateRestrictedAreaRatio} from './ScalesSliderUtil';
+import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
 
 describe('scalesSliderUtil', () => {
-  describe('calculateRestrictedAreaRatio', () => {
-    it('should return a string of ratio of restricted and total slider area', () => {
+  describe('calculateRestrictedAreaWidthPercentage', () => {
+    it('should return a string the percentage of restricted area compared to the total slider', () => {
       const sliderRange: [number, number] = [0, 1];
       const configuredRange: [number, number] = [0.25, 0.75];
-      const result = calculateRestrictedAreaRatio(sliderRange, configuredRange);
+      const result = calculateRestrictedAreaWidthPercentage(
+        sliderRange,
+        configuredRange
+      );
       const expectedResult = '50%';
       expect(result).toEqual(expectedResult);
     });

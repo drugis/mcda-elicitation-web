@@ -22,7 +22,7 @@ import {
   determineStepSize,
   increaseSliderUpperBound
 } from '../AddSubproblemScaleRangesUtil';
-import {calculateRestrictedAreaRatio} from './ScalesSliderUtil';
+import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
 
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
@@ -91,7 +91,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     );
   }
 
-  const restrictedAreaRatio: string = calculateRestrictedAreaRatio(
+  const restrictedAreaRatio: string = calculateRestrictedAreaWidthPercentage(
     sliderRange,
     [lowestObservedValue, highestObservedValue]
   );

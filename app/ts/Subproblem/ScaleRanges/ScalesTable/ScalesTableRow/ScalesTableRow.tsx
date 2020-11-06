@@ -1,10 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';

@@ -3,7 +3,7 @@ import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
 import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/AddSubproblemEffectsTable';
+import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React, {useContext} from 'react';
 import EmptyCell from '../EmptyCell/EmptyCell';
 import UncertainValue from '../UncertainValue/UncertainValue';

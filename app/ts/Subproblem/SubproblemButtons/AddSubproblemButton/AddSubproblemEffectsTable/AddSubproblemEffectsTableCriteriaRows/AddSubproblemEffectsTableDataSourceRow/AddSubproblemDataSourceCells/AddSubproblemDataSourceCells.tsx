@@ -10,7 +10,7 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {AddSubproblemContext} from '../../../../AddSubproblemContext';
-import {deselectedCellStyle} from '../../../AddSubproblemEffectsTable';
+import {deselectedCellStyle} from '../../../deselectedCellStyle';
 import InclusionCell from '../../../InclusionCell/InclusionCell';
 
 export default function AddSubproblemDataSourceCells({

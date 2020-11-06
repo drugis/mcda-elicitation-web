@@ -12,7 +12,7 @@ import {
   getSubproblemTitleError,
   initConfiguredRanges,
   initInclusions,
-  isAlternativeDisabled,
+  isAlternativeDeselectionDisabled,
   isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
 import IAddSubproblemContext from './IAddSubproblemContext';
@@ -173,8 +173,12 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     });
   }
 
-  function isAlternativeDisabledWrapper(id: string) {
-    return isAlternativeDisabled(id, alternativeInclusions, baselineMap);
+  function isAlternativeDeselectionDisabledWrapper(id: string) {
+    return isAlternativeDeselectionDisabled(
+      id,
+      alternativeInclusions,
+      baselineMap
+    );
   }
 
   function isDataSourceDeselectionDisabledWrapper(criterionId: string) {
@@ -248,7 +252,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         addSubproblem: addSubproblemWrapper,
         getIncludedDataSourceForCriterion,
         getSliderRangeForDS,
-        isAlternativeDisabled: isAlternativeDisabledWrapper,
+        isAlternativeDeselectionDisabled: isAlternativeDeselectionDisabledWrapper,
         isAlternativeExcluded,
         isCriterionExcluded,
         isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper,

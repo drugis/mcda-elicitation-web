@@ -16,7 +16,7 @@ export default interface ISettingsContext {
   randomSeed: number;
   showDescriptions: boolean;
   showUnitsOfMeasurement: boolean;
-  showRefereces: boolean;
+  showReferences: boolean;
   showStrengthsAndUncertainties: boolean;
   numberOfToggledColumns: number;
 }

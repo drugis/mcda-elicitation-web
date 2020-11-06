@@ -1,4 +1,4 @@
-export function calculateRestrictedAreaRatio(
+export function calculateRestrictedAreaWidthPercentage(
   sliderRange: [number, number],
   configuredRange: [number, number]
 ): string {

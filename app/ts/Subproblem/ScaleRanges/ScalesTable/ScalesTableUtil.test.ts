@@ -124,7 +124,7 @@ describe('ScalesTableUtil', () => {
         {
           type: 'range',
           dataSourceId: 'dataSourceOverlappingRanges',
-          lowerBound: 0.9,
+          lowerBound: 0.45,
           upperBound: 1
         } as Distribution
       ];
