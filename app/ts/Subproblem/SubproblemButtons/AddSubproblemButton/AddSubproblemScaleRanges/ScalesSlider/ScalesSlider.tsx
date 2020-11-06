@@ -93,7 +93,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
 
   const restrictedAreaRatio: string = calculateRestrictedAreaRatio(
     sliderRange,
-    configuredRange
+    [lowestObservedValue, highestObservedValue]
   );
 
   const useStyles = makeStyles({
