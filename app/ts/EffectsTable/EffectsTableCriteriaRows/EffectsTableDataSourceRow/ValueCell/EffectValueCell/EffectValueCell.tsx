@@ -11,12 +11,16 @@ export default function EffectValueCell({
   effect,
   scale,
   usePercentage,
-  isExcluded
+  isExcluded,
+  dataSourceId,
+  alternativeId
 }: {
   effect: Effect;
   scale: IScale;
   usePercentage: boolean;
   isExcluded?: boolean;
+  dataSourceId: string;
+  alternativeId: string;
 }) {
   const {displayMode} = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
@@ -29,7 +33,7 @@ export default function EffectValueCell({
   );
   return renderedEffect ? (
     <TableCell
-      id={`value-cell-${effect.dataSourceId}-${effect.alternativeId}`}
+      id={`value-cell-${dataSourceId}-${alternativeId}`}
       style={cellStyle}
     >
       <div
@@ -41,8 +45,8 @@ export default function EffectValueCell({
     </TableCell>
   ) : (
     <EmptyCell
-      dataSourceId={effect.dataSourceId}
-      alternativeId={effect.alternativeId}
+      dataSourceId={dataSourceId}
+      alternativeId={alternativeId}
       isExcluded={isExcluded}
     />
   );
