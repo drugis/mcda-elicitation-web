@@ -49,7 +49,7 @@ export function WorkspaceContextProviderComponent({
       setObservedRanges(calculateObservedRanges(scales, workspace));
     }
   }, [scales, oldWorkspace]);
-  const workspace: IWorkspace = buildWorkspace(oldWorkspace);
+  const workspace: IWorkspace = buildWorkspace(oldWorkspace, workspaceId);
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};

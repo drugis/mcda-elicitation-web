@@ -31,10 +31,13 @@ import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
 import {generateUuid} from './util';
 
-export function buildWorkspace(workspace: IOldWorkspace): IWorkspace {
+export function buildWorkspace(
+  workspace: IOldWorkspace,
+  workspaceId?: string
+): IWorkspace {
   const idMapper = _.identity;
   const title = workspace.problem.title;
-  return buildNewStyleCopy(workspace, idMapper, title);
+  return buildNewStyleCopy(workspace, idMapper, title, workspaceId);
 }
 
 export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
@@ -63,12 +66,13 @@ export function buildInProgressIdMapper(
 export function buildNewStyleCopy<T>(
   workspace: IOldWorkspace,
   idMapper: (id: string) => string,
-  title: string
+  title: string,
+  workspaceId?: string
 ): IWorkspace {
   const unitTypeMap = buildUnitTypeMap(workspace.problem.criteria);
 
   return {
-    properties: buildWorkspaceProperties(workspace, title),
+    properties: buildWorkspaceProperties(workspace, title, workspaceId),
     criteria: buildWorkspaceCriteria(workspace.problem.criteria, idMapper),
     alternatives: buildWorkspaceAlternatives(
       workspace.problem.alternatives,
@@ -153,10 +157,12 @@ function buildDataSourcesIdMap(
 
 export function buildWorkspaceProperties(
   workspace: IOldWorkspace,
-  title: string
+  title: string,
+  workspaceId?: string
 ): IWorkspaceProperties {
   return {
     title: title,
+    id: workspaceId ? Number.parseInt(workspaceId) : undefined,
     therapeuticContext: workspace.problem.description
       ? workspace.problem.description
       : '',
