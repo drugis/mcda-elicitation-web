@@ -77,6 +77,8 @@ export default function ValueCell({
           scale={scale}
           usePercentage={usePercentage}
           isExcluded={isExcluded}
+          dataSourceId={dataSourceId}
+          alternativeId={alternativeId}
         />
       );
     } else if (hasScaleValues) {
