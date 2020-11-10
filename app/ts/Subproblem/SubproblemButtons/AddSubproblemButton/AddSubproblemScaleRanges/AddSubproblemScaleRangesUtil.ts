@@ -127,10 +127,17 @@ function preventOverlappingConfiguredRanges([
   }
 }
 
-export function determineStepSize(from: number, to: number): number {
-  const interval = to - from;
+export function determineStepSizes(
+  lowestObservedValue: number,
+  highestObservedValue: number
+) {
+  const interval = highestObservedValue - lowestObservedValue;
   const magnitude = Math.floor(Math.log10(interval));
-  return Math.pow(10, magnitude - 2);
+  return [
+    Math.pow(10, magnitude),
+    Math.pow(10, magnitude - 1),
+    Math.pow(10, magnitude - 2)
+  ];
 }
 
 export function createMarks(

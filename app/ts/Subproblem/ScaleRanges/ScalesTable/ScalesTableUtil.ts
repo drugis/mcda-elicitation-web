@@ -41,9 +41,37 @@ function calculateObservedRange(
   ];
 
   return [
-    significantDigits(_.min(allValues)),
-    significantDigits(_.max(allValues))
+    makeValueNice(_.min(allValues), Math.floor),
+    makeValueNice(_.max(allValues), Math.ceil)
   ];
+}
+
+function makeValueNice(x: number, dirFun: (x: number) => number): number {
+  if (x === 0) {
+    return 0;
+  }
+  const absX = Math.abs(x);
+  const log10X = log10(absX);
+  let factor;
+  let normalised;
+  let ceiled;
+  let deNormalised;
+  if (absX >= 1) {
+    factor = Math.floor(log10X);
+    normalised = x / Math.pow(10, factor);
+    ceiled = dirFun(normalised);
+    deNormalised = ceiled * Math.pow(10, factor);
+  } else {
+    factor = Math.ceil(Math.abs(log10X));
+    normalised = x * Math.pow(10, factor);
+    ceiled = dirFun(normalised);
+    deNormalised = ceiled * Math.pow(10, -factor);
+  }
+  return deNormalised;
+}
+
+function log10(x: number): number {
+  return Math.log(x) / Math.log(10);
 }
 
 function getValuesAndBounds(

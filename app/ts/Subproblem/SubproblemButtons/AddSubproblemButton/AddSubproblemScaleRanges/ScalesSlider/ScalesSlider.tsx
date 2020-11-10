@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Select from '@material-ui/core/Select';
 import Slider from '@material-ui/core/Slider';
 import {makeStyles} from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -10,16 +11,18 @@ import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
   createMarks,
   decreaseSliderLowerBound,
-  determineStepSize,
+  determineStepSizes,
   increaseSliderUpperBound
 } from '../AddSubproblemScaleRangesUtil';
 import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
@@ -56,6 +59,12 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     highestConfiguredValue
   ]);
 
+  const stepSizeOptions = determineStepSizes(
+    lowestObservedValue,
+    highestObservedValue
+  );
+  const [stepSize, setStepSize] = useState<number>(stepSizeOptions[1]); //FIXME: double-check the story
+
   useEffect(() => {
     setConfiguredValues(configuredRange);
   }, [configuredRange]);
@@ -67,6 +76,10 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     ) {
       setConfiguredRange(includedDataSource.id, newValue[0], newValue[1]);
     }
+  }
+
+  function handleStepSizeChange(event: any) {
+    setStepSize(Number.parseFloat(event.target.value));
   }
 
   function renderUnitLabel(): string {
@@ -127,7 +140,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           </IconButton>
         </Tooltip>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={8}>
         <Slider
           id={`slider-${criterion.id}`}
           value={configuredValues}
@@ -138,10 +151,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           }}
           min={sliderRange[0]}
           max={sliderRange[1]}
-          step={determineStepSize(
-            lowestConfiguredValue,
-            highestConfiguredValue
-          )}
+          step={stepSize}
           marks={createMarks(
             sliderRange,
             observedRanges[includedDataSource.id],
@@ -159,6 +169,28 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
             <ChevronRight color="primary" />
           </IconButton>
         </Tooltip>
+      </Grid>
+      <Grid item xs={2}>
+        Step size:{' '}
+        <Select
+          native
+          id={`step-size-selector-${criterion.id}`}
+          value={stepSize}
+          onChange={handleStepSizeChange}
+        >
+          {_.map(stepSizeOptions, (option) => {
+            return (
+              <option
+                key={`step-size-${criterion.id}-${option}`}
+                value={option}
+              >
+                {usePercentage
+                  ? significantDigits(option, 1) * 100
+                  : significantDigits(option, 1)}
+              </option>
+            );
+          })}
+        </Select>
       </Grid>
     </Grid>
   );
