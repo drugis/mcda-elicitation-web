@@ -280,13 +280,15 @@ export function createSubproblemDefinition(
   criterionInclusions: Record<string, boolean>,
   dataSourceInclusions: Record<string, boolean>,
   alternativeInclusions: Record<string, boolean>,
-  configuredRanges: Record<string, [number, number]>
+  configuredRanges: Record<string, [number, number]>,
+  stepSizes: Record<string, number>
 ): ISubproblemDefinition {
   return {
     excludedCriteria: getExclusions(criterionInclusions),
     excludedDataSources: getExclusions(dataSourceInclusions),
     excludedAlternatives: getExclusions(alternativeInclusions),
-    ranges: getConfiguredRanges(configuredRanges, dataSourceInclusions)
+    ranges: getConfiguredRanges(configuredRanges, dataSourceInclusions),
+    stepSizes: getStepSizes(stepSizes, dataSourceInclusions)
   };
 }
 
@@ -304,6 +306,15 @@ function getConfiguredRanges(
   dataSourceInclusions: Record<string, boolean>
 ): Record<string, [number, number]> {
   return _.pickBy(configuredRanges, (range, dataSourceId) => {
+    return dataSourceInclusions[dataSourceId];
+  });
+}
+
+function getStepSizes(
+  stepSizes: Record<string, number>,
+  dataSourceInclusions: Record<string, boolean>
+): Record<string, number> {
+  return _.pickBy(stepSizes, (stepSize, dataSourceId) => {
     return dataSourceInclusions[dataSourceId];
   });
 }

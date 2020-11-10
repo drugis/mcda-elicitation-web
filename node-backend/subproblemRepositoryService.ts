@@ -13,13 +13,17 @@ export function formatSubproblem(subproblem: any): IOldSubproblem {
     ? subproblem.definition.excludedAlternatives
     : [];
   const ranges = formatRanges(subproblem.definition.ranges);
+  const stepSizes = subproblem.definition.stepSizes
+    ? subproblem.definition.stepSizes
+    : {};
   return {
     ...subproblem,
     definition: {
       excludedCriteria: excludedCriteria,
       excludedDataSources: excludedDataSources,
       excludedAlternatives: excludedAlternatives,
-      ranges: ranges
+      ranges: ranges,
+      stepSizes: stepSizes
     }
   };
 }

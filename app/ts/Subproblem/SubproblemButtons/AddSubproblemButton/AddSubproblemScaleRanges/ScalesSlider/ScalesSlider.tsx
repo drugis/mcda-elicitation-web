@@ -20,6 +20,7 @@ import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
+  adjustConfiguredRangeForStepSize,
   createMarks,
   decreaseSliderLowerBound,
   determineStepSizes,
@@ -35,7 +36,9 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     getIncludedDataSourceForCriterion,
     getSliderRangeForDS,
     setConfiguredRange,
-    updateSliderRangeforDS
+    updateSliderRangeforDS,
+    getStepSizeForDS,
+    updateStepSizeForDS
   } = useContext(AddSubproblemContext);
   const includedDataSource = getIncludedDataSourceForCriterion(criterion);
   const sliderRange = getSliderRangeForDS(includedDataSource.id);
@@ -45,7 +48,6 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
 
   // ranges
   const configuredRange = configuredRanges[includedDataSource.id];
-  const [lowestConfiguredValue, highestConfiguredValue] = configuredRange;
   const [lowestObservedValue, highestObservedValue] = observedRanges[
     includedDataSource.id
   ];
@@ -54,20 +56,29 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     getUpperBound(usePercentage, includedDataSource.unitOfMeasurement)
   ];
 
-  const [configuredValues, setConfiguredValues] = useState<[number, number]>([
-    lowestConfiguredValue,
-    highestConfiguredValue
-  ]);
-
   const stepSizeOptions = determineStepSizes(
     lowestObservedValue,
     highestObservedValue
   );
-  const [stepSize, setStepSize] = useState<number>(stepSizeOptions[1]); //FIXME: double-check the story
+  const [stepSize, setStepSize] = useState<number>(getInitialStepSize()); //FIXME: double-check the story
+
+  function getInitialStepSize(): number {
+    const stepSizeForDS = getStepSizeForDS(includedDataSource.id);
+    return stepSizeForDS ? stepSizeForDS : stepSizeOptions[1];
+  } // FIXME: move to context
 
   useEffect(() => {
-    setConfiguredValues(configuredRange);
-  }, [configuredRange]);
+    const newConfiguredRange = adjustConfiguredRangeForStepSize(
+      stepSize,
+      configuredRange
+    );
+    setConfiguredRange(
+      includedDataSource.id,
+      newConfiguredRange[0],
+      newConfiguredRange[1]
+    );
+    updateStepSizeForDS(includedDataSource.id, stepSize);
+  }, [stepSize]);
 
   function handleChange(event: any, newValue: [number, number]) {
     if (
@@ -79,7 +90,10 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   }
 
   function handleStepSizeChange(event: any) {
-    setStepSize(Number.parseFloat(event.target.value));
+    updateStepSizeForDS(
+      includedDataSource.id,
+      Number.parseFloat(event.target.value)
+    );
   }
 
   function renderUnitLabel(): string {
@@ -143,7 +157,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       <Grid item xs={8}>
         <Slider
           id={`slider-${criterion.id}`}
-          value={configuredValues}
+          value={configuredRange}
           onChange={handleChange}
           valueLabelDisplay="on"
           valueLabelFormat={(x: number) => {

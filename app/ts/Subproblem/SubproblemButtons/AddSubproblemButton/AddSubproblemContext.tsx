@@ -88,6 +88,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [sliderRangesByDS, setSliderRangesByDS] = useState<
     Record<string, [number, number]>
   >({});
+  const [stepSizesByDS, setStepSizesByDS] = useState<Record<string, number>>(
+    {}
+  );
 
   // *** end states
 
@@ -128,6 +131,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       );
       setConfiguredRanges(initialConfiguredRanges);
       setSliderRangesByDS(initialConfiguredRanges);
+      setStepSizesByDS(currentSubproblem.definition.stepSizes);
     }
   }, [observedRanges, currentSubproblem]);
   // *** end useEffects
@@ -209,7 +213,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        configuredRangesByDS
+        configuredRangesByDS,
+        stepSizesByDS
       )
     };
     addSubproblem(subproblemCommand);
@@ -235,8 +240,22 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     setSliderRangesByDS(newSliderRanges);
   }
 
-  function getSliderRangeForDS(criterionId: string) {
-    return sliderRangesByDS[criterionId];
+  function getSliderRangeForDS(dataSourceId: string) {
+    return sliderRangesByDS[dataSourceId];
+  }
+
+  function updateStepSizeForDS(
+    dataSourceId: string,
+    newStepSize: number
+  ): void {
+    let newEntry: Record<string, number> = {};
+    newEntry[dataSourceId] = newStepSize;
+    const newStepSizes = {...stepSizesByDS, ...newEntry};
+    setStepSizesByDS(newStepSizes);
+  }
+
+  function getStepSizeForDS(dataSourceId: string) {
+    return stepSizesByDS[dataSourceId];
   }
 
   return (
@@ -263,7 +282,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         updateAlternativeInclusion,
         updateCriterionInclusion,
         updateDataSourceInclusion,
-        updateSliderRangeforDS
+        updateSliderRangeforDS,
+        updateStepSizeForDS,
+        getStepSizeForDS
       }}
     >
       {props.children}
