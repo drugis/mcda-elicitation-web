@@ -280,13 +280,15 @@ export function createSubproblemDefinition(
   criterionInclusions: Record<string, boolean>,
   dataSourceInclusions: Record<string, boolean>,
   alternativeInclusions: Record<string, boolean>,
-  configuredRanges: Record<string, [number, number]>
+  configuredRanges: Record<string, [number, number]>,
+  stepSizes: Record<string, number>
 ): ISubproblemDefinition {
   return {
     excludedCriteria: getExclusions(criterionInclusions),
     excludedDataSources: getExclusions(dataSourceInclusions),
     excludedAlternatives: getExclusions(alternativeInclusions),
-    ranges: getConfiguredRanges(configuredRanges, dataSourceInclusions)
+    ranges: getConfiguredRanges(configuredRanges, dataSourceInclusions),
+    stepSizes: getStepSizes(stepSizes, dataSourceInclusions)
   };
 }
 
@@ -308,6 +310,15 @@ function getConfiguredRanges(
   });
 }
 
+function getStepSizes(
+  stepSizes: Record<string, number>,
+  dataSourceInclusions: Record<string, boolean>
+): Record<string, number> {
+  return _.pickBy(stepSizes, (stepSize, dataSourceId) => {
+    return dataSourceInclusions[dataSourceId];
+  });
+}
+
 export function getSubproblemTitleError(
   title: string,
   subproblems: Record<string, IOldSubproblem>
@@ -318,4 +329,40 @@ export function getSubproblemTitleError(
   } else {
     return [];
   }
+}
+
+export function initializeStepSizeOptions(
+  dataSourcesById: Record<string, IDataSource>,
+  observedRanges: Record<string, [number, number]>
+): Record<string, [number, number, number]> {
+  return _.mapValues(dataSourcesById, (dataSource) => {
+    return determineStepSizes(observedRanges[dataSource.id]);
+  });
+}
+
+function determineStepSizes([lowestObservedValue, highestObservedValue]: [
+  number,
+  number
+]): [number, number, number] {
+  const interval = highestObservedValue - lowestObservedValue;
+  const magnitude = Math.floor(Math.log10(interval));
+  return [
+    Math.pow(10, magnitude),
+    Math.pow(10, magnitude - 1),
+    Math.pow(10, magnitude - 2)
+  ];
+}
+
+export function intializeStepSizes(
+  stepSizeOptions: Record<string, [number, number, number]>,
+  stepSizesByDS: Record<string, number>
+): Record<string, number> {
+  return _.mapValues(
+    stepSizeOptions,
+    (options: [number, number, number], dataSourceId: string) => {
+      return stepSizesByDS[dataSourceId]
+        ? stepSizesByDS[dataSourceId]
+        : options[1];
+    }
+  );
 }

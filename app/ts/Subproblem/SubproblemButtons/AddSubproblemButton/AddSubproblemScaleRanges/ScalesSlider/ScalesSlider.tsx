@@ -14,15 +14,16 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
+  adjustConfiguredRangeForStepSize,
   createMarks,
   decreaseSliderLowerBound,
-  determineStepSize,
   increaseSliderUpperBound
 } from '../AddSubproblemScaleRangesUtil';
 import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
+import StepSizeSelector from './StepSizeSelector/StepSizeSelector';
 
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
@@ -32,17 +33,20 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     getIncludedDataSourceForCriterion,
     getSliderRangeForDS,
     setConfiguredRange,
-    updateSliderRangeforDS
+    updateSliderRangeforDS,
+    getStepSizeForDS,
+    updateStepSizeForDS
   } = useContext(AddSubproblemContext);
   const includedDataSource = getIncludedDataSourceForCriterion(criterion);
   const sliderRange = getSliderRangeForDS(includedDataSource.id);
+  const stepSize = getStepSizeForDS(includedDataSource.id);
+
   // units
   const unit = includedDataSource.unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
 
   // ranges
   const configuredRange = configuredRanges[includedDataSource.id];
-  const [lowestConfiguredValue, highestConfiguredValue] = configuredRange;
   const [lowestObservedValue, highestObservedValue] = observedRanges[
     includedDataSource.id
   ];
@@ -51,14 +55,18 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     getUpperBound(usePercentage, includedDataSource.unitOfMeasurement)
   ];
 
-  const [configuredValues, setConfiguredValues] = useState<[number, number]>([
-    lowestConfiguredValue,
-    highestConfiguredValue
-  ]);
-
   useEffect(() => {
-    setConfiguredValues(configuredRange);
-  }, [configuredRange]);
+    const newConfiguredRange = adjustConfiguredRangeForStepSize(
+      stepSize,
+      configuredRange
+    );
+    setConfiguredRange(
+      includedDataSource.id,
+      newConfiguredRange[0],
+      newConfiguredRange[1]
+    );
+    updateStepSizeForDS(includedDataSource.id, stepSize);
+  }, [stepSize]);
 
   function handleChange(event: any, newValue: [number, number]) {
     if (
@@ -127,10 +135,10 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           </IconButton>
         </Tooltip>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={8}>
         <Slider
           id={`slider-${criterion.id}`}
-          value={configuredValues}
+          value={configuredRange}
           onChange={handleChange}
           valueLabelDisplay="on"
           valueLabelFormat={(x: number) => {
@@ -138,10 +146,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           }}
           min={sliderRange[0]}
           max={sliderRange[1]}
-          step={determineStepSize(
-            lowestConfiguredValue,
-            highestConfiguredValue
-          )}
+          step={stepSize}
           marks={createMarks(
             sliderRange,
             observedRanges[includedDataSource.id],
@@ -159,6 +164,9 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
             <ChevronRight color="primary" />
           </IconButton>
         </Tooltip>
+      </Grid>
+      <Grid item xs={2}>
+        Step size: <StepSizeSelector criterion={criterion} />
       </Grid>
     </Grid>
   );

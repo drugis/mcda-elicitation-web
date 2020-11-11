@@ -3,4 +3,5 @@ export default interface ISubproblemDefinition {
   excludedCriteria: string[];
   excludedAlternatives: string[];
   excludedDataSources: string[];
+  stepSizes: Record<string, number>;
 }

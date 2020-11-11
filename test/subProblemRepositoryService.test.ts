@@ -19,7 +19,8 @@ describe('subproblemRepositoryService', () => {
           excludedAlternatives: [],
           excludedCriteria: [],
           excludedDataSources: [],
-          ranges: {}
+          ranges: {},
+          stepSizes: {}
         }
       };
       expect(result).toEqual(expectedResult);
@@ -40,7 +41,8 @@ describe('subproblemRepositoryService', () => {
                 range: [0, 42]
               }
             }
-          }
+          },
+          stepSizes: {ds1Id: 0.1}
         }
       };
       const result = formatSubproblem(legacySubproblem);
@@ -52,7 +54,8 @@ describe('subproblemRepositoryService', () => {
           excludedAlternatives: [],
           excludedCriteria: [],
           excludedDataSources: [],
-          ranges: {ds1Id: [0, 42]}
+          ranges: {ds1Id: [0, 42]},
+          stepSizes: {ds1Id: 0.1}
         }
       };
       expect(result).toEqual(expectedResult);
