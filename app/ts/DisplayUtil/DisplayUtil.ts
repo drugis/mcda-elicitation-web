@@ -6,7 +6,7 @@ export function getPercentifiedValue(
   usePercentage: boolean
 ): number {
   if (usePercentage) {
-    return significantDigits(value * 100);
+    return significantDigits(significantDigits(value) * 100); //2 sigdits to ensure the precision stays the same
   } else {
     return significantDigits(value);
   }

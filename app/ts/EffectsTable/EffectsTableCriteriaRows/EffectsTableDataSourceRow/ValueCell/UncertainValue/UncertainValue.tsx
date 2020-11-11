@@ -1,3 +1,4 @@
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import React from 'react';
 
 export default function UncertainValue({
@@ -5,9 +6,9 @@ export default function UncertainValue({
   lowerBound,
   upperBound
 }: {
-  value: string;
-  lowerBound: string;
-  upperBound: string;
+  value: number;
+  lowerBound: number;
+  upperBound: number;
 }) {
   return (
     <>
