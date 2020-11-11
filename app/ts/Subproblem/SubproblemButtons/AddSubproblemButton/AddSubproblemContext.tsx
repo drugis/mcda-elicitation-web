@@ -11,7 +11,9 @@ import {
   getScaleBlockingWarnings,
   getSubproblemTitleError,
   initConfiguredRanges,
+  initializeStepSizeOptions,
   initInclusions,
+  intializeStepSizes,
   isAlternativeDeselectionDisabled,
   isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
@@ -88,6 +90,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [sliderRangesByDS, setSliderRangesByDS] = useState<
     Record<string, [number, number]>
   >({});
+  const [stepSizeOptionsByDS, setStepSizeOptionsByDS] = useState<
+    Record<string, [number, number, number]>
+  >({});
   const [stepSizesByDS, setStepSizesByDS] = useState<Record<string, number>>(
     {}
   );
@@ -129,9 +134,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         observedRanges,
         currentSubproblem.definition.ranges
       );
+      const stepSizeOptions = initializeStepSizeOptions(
+        dataSourcesById,
+        observedRanges
+      );
+      const stepSizes = intializeStepSizes(
+        stepSizeOptions,
+        currentSubproblem.definition.stepSizes
+      );
       setConfiguredRanges(initialConfiguredRanges);
       setSliderRangesByDS(initialConfiguredRanges);
       setStepSizesByDS(currentSubproblem.definition.stepSizes);
+      setStepSizeOptionsByDS(stepSizeOptions);
+      setStepSizesByDS(stepSizes);
     }
   }, [observedRanges, currentSubproblem]);
   // *** end useEffects
@@ -254,8 +269,14 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     setStepSizesByDS(newStepSizes);
   }
 
-  function getStepSizeForDS(dataSourceId: string) {
+  function getStepSizeForDS(dataSourceId: string): number {
     return stepSizesByDS[dataSourceId];
+  }
+
+  function getStepSizeOptionsForDS(
+    dataSourceId: string
+  ): [number, number, number] {
+    return stepSizeOptionsByDS[dataSourceId];
   }
 
   return (
@@ -284,7 +305,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         updateDataSourceInclusion,
         updateSliderRangeforDS,
         updateStepSizeForDS,
-        getStepSizeForDS
+        getStepSizeForDS,
+        getStepSizeOptionsForDS
       }}
     >
       {props.children}

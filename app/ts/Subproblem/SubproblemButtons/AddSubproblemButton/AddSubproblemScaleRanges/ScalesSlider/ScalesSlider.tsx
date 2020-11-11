@@ -11,19 +11,17 @@ import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
   adjustConfiguredRangeForStepSize,
   createMarks,
   decreaseSliderLowerBound,
-  determineStepSizes,
   increaseSliderUpperBound
 } from '../AddSubproblemScaleRangesUtil';
 import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
@@ -38,10 +36,13 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     setConfiguredRange,
     updateSliderRangeforDS,
     getStepSizeForDS,
-    updateStepSizeForDS
+    updateStepSizeForDS,
+    getStepSizeOptionsForDS
   } = useContext(AddSubproblemContext);
   const includedDataSource = getIncludedDataSourceForCriterion(criterion);
   const sliderRange = getSliderRangeForDS(includedDataSource.id);
+  const stepSize = getStepSizeForDS(includedDataSource.id);
+  const stepSizeOptions = getStepSizeOptionsForDS(includedDataSource.id);
   // units
   const unit = includedDataSource.unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
@@ -55,17 +56,6 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     includedDataSource.unitOfMeasurement.lowerBound,
     getUpperBound(usePercentage, includedDataSource.unitOfMeasurement)
   ];
-
-  const stepSizeOptions = determineStepSizes(
-    lowestObservedValue,
-    highestObservedValue
-  );
-  const [stepSize, setStepSize] = useState<number>(getInitialStepSize()); //FIXME: double-check the story
-
-  function getInitialStepSize(): number {
-    const stepSizeForDS = getStepSizeForDS(includedDataSource.id);
-    return stepSizeForDS ? stepSizeForDS : stepSizeOptions[1];
-  } // FIXME: move to context
 
   useEffect(() => {
     const newConfiguredRange = adjustConfiguredRangeForStepSize(
@@ -139,6 +129,16 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   });
   const classes = useStyles();
 
+  function renderStepSizeOptions(): JSX.Element[] {
+    return _.map(stepSizeOptions, (option) => {
+      return (
+        <option key={`step-size-${criterion.id}-${option}`} value={option}>
+          {usePercentage ? option * 100 : option}
+        </option>
+      );
+    });
+  }
+
   return (
     <Grid container item xs={12} spacing={4} justify="center">
       <Grid item xs={12}>
@@ -192,18 +192,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           value={stepSize}
           onChange={handleStepSizeChange}
         >
-          {_.map(stepSizeOptions, (option) => {
-            return (
-              <option
-                key={`step-size-${criterion.id}-${option}`}
-                value={option}
-              >
-                {usePercentage
-                  ? significantDigits(option, 1) * 100
-                  : significantDigits(option, 1)}
-              </option>
-            );
-          })}
+          {renderStepSizeOptions()}
         </Select>
       </Grid>
     </Grid>

@@ -32,4 +32,5 @@ export default interface IAddSubproblemContext {
   addSubproblem: () => void;
   updateStepSizeForDS: (dataSourceId: string, newStepSize: number) => void;
   getStepSizeForDS: (dataSourceId: string) => number;
+  getStepSizeOptionsForDS: (dataSourceId: string) => [number, number, number];
 }

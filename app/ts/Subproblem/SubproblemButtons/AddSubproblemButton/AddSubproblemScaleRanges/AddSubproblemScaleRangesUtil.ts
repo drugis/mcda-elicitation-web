@@ -128,19 +128,6 @@ function preventOverlappingConfiguredRanges([
   }
 }
 
-export function determineStepSizes(
-  lowestObservedValue: number,
-  highestObservedValue: number
-) {
-  const interval = highestObservedValue - lowestObservedValue;
-  const magnitude = Math.floor(Math.log10(interval));
-  return [
-    Math.pow(10, magnitude),
-    Math.pow(10, magnitude - 1),
-    Math.pow(10, magnitude - 2)
-  ];
-}
-
 export function createMarks(
   sliderRange: [number, number],
   observedRange: [number, number],

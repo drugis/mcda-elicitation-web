@@ -330,3 +330,39 @@ export function getSubproblemTitleError(
     return [];
   }
 }
+
+export function initializeStepSizeOptions(
+  dataSourcesById: Record<string, IDataSource>,
+  observedRanges: Record<string, [number, number]>
+): Record<string, [number, number, number]> {
+  return _.mapValues(dataSourcesById, (dataSource) => {
+    return determineStepSizes(observedRanges[dataSource.id]);
+  });
+}
+
+function determineStepSizes([lowestObservedValue, highestObservedValue]: [
+  number,
+  number
+]): [number, number, number] {
+  const interval = highestObservedValue - lowestObservedValue;
+  const magnitude = Math.floor(Math.log10(interval));
+  return [
+    Math.pow(10, magnitude),
+    Math.pow(10, magnitude - 1),
+    Math.pow(10, magnitude - 2)
+  ];
+}
+
+export function intializeStepSizes(
+  stepSizeOptions: Record<string, [number, number, number]>,
+  stepSizesByDS: Record<string, number>
+): Record<string, number> {
+  return _.mapValues(
+    stepSizeOptions,
+    (options: [number, number, number], dataSourceId: string) => {
+      return stepSizesByDS[dataSourceId]
+        ? stepSizesByDS[dataSourceId]
+        : options[1];
+    }
+  );
+}

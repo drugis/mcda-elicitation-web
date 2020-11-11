@@ -1,7 +1,4 @@
-import {
-  adjustConfiguredRangeForStepSize,
-  determineStepSizes
-} from './AddSubproblemScaleRangesUtil';
+import {adjustConfiguredRangeForStepSize} from './AddSubproblemScaleRangesUtil';
 
 describe('addSubproblemScaleRangesUtil', () => {
   describe('adjustConfiguredRangeForStepSize', () => {
@@ -24,19 +21,6 @@ describe('addSubproblemScaleRangesUtil', () => {
         configuredRange
       );
       expect(result).toEqual(result);
-    });
-  });
-
-  describe('determineStepSizes', () => {
-    it('should return the correct step sizes', () => {
-      const lowestObservedValue = 0;
-      const highestObservedValue = 0.9;
-      const result = determineStepSizes(
-        lowestObservedValue,
-        highestObservedValue
-      );
-      const expectedResult = [0.1, 0.01, 0.001];
-      expect(result).toEqual(expectedResult);
     });
   });
 });
