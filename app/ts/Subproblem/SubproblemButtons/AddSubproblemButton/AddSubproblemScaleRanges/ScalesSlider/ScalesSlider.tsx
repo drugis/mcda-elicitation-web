@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Select from '@material-ui/core/Select';
 import Slider from '@material-ui/core/Slider';
 import {makeStyles} from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -15,7 +14,6 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import _ from 'lodash';
 import React, {useContext, useEffect} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
@@ -25,6 +23,7 @@ import {
   increaseSliderUpperBound
 } from '../AddSubproblemScaleRangesUtil';
 import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
+import StepSizeSelector from './StepSizeSelector/StepSizeSelector';
 
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
@@ -36,13 +35,12 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     setConfiguredRange,
     updateSliderRangeforDS,
     getStepSizeForDS,
-    updateStepSizeForDS,
-    getStepSizeOptionsForDS
+    updateStepSizeForDS
   } = useContext(AddSubproblemContext);
   const includedDataSource = getIncludedDataSourceForCriterion(criterion);
   const sliderRange = getSliderRangeForDS(includedDataSource.id);
   const stepSize = getStepSizeForDS(includedDataSource.id);
-  const stepSizeOptions = getStepSizeOptionsForDS(includedDataSource.id);
+
   // units
   const unit = includedDataSource.unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
@@ -77,13 +75,6 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     ) {
       setConfiguredRange(includedDataSource.id, newValue[0], newValue[1]);
     }
-  }
-
-  function handleStepSizeChange(event: any) {
-    updateStepSizeForDS(
-      includedDataSource.id,
-      Number.parseFloat(event.target.value)
-    );
   }
 
   function renderUnitLabel(): string {
@@ -128,16 +119,6 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     }
   });
   const classes = useStyles();
-
-  function renderStepSizeOptions(): JSX.Element[] {
-    return _.map(stepSizeOptions, (option) => {
-      return (
-        <option key={`step-size-${criterion.id}-${option}`} value={option}>
-          {usePercentage ? option * 100 : option}
-        </option>
-      );
-    });
-  }
 
   return (
     <Grid container item xs={12} spacing={4} justify="center">
@@ -185,15 +166,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
         </Tooltip>
       </Grid>
       <Grid item xs={2}>
-        Step size:{' '}
-        <Select
-          native
-          id={`step-size-selector-${criterion.id}`}
-          value={stepSize}
-          onChange={handleStepSizeChange}
-        >
-          {renderStepSizeOptions()}
-        </Select>
+        Step size: <StepSizeSelector criterion={criterion} />
       </Grid>
     </Grid>
   );
