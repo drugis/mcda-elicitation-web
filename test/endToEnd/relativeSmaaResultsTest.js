@@ -1,14 +1,15 @@
 'use strict';
+
 module.exports = {
-  'SMAA results': smaaResults
+  'SMAA results for relative problem': checkRelativeSmaaResults
 };
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 
-function smaaResults(browser) {
+function checkRelativeSmaaResults(browser) {
   const title =
-    'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
+    'Antidepressants - relative effectiveness analysis (Van Valkenhoef et al, J Clin Epi, 2012)';
 
   loginService.login(browser);
   workspaceService.cleanList(browser);
@@ -26,13 +27,19 @@ function smaaResults(browser) {
 
   const measurementElementId = '#criterion-0-alternative-0-measurement';
   const centralWightElementId = '#alternative-0-criterion-0-central-weight';
-  browser.assert.containsText(measurementElementId, '36.8');
-  browser.assert.containsText(centralWightElementId, '0.187');
-
-  browser.assert.containsText('#alternative-0-rank-1', '0.743');
-  browser.assert.containsText('#alternative-1-rank-1', '0.175');
-  browser.assert.containsText('#alternative-2-rank-1', '0.082');
+  browser.assert.containsText(measurementElementId, '45.7');
+  browser.assert.containsText(centralWightElementId, '0.09');
+  checkRankTable(browser);
 
   browser.click('#logo');
   workspaceService.deleteFromList(browser, 0).end();
+}
+
+function checkRankTable(browser) {
+  browser.assert
+    .containsText('#alternative-0-rank-1', '0.604')
+    .assert.containsText('#alternative-1-rank-1', '0.021')
+    .assert.containsText('#alternative-2-rank-1', '0.151')
+    .assert.containsText('#alternative-3-rank-1', '0.083')
+    .assert.containsText('#alternative-4-rank-1', '0.141');
 }

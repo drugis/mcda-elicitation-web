@@ -394,6 +394,7 @@ define(['lodash', 'angular'], function (_, angular) {
 
     function updateRelative(relative, excludedAlternatives) {
       return {
+        ...relative,
         cov: reduceCov(relative.cov, excludedAlternatives),
         mu: reduceMu(relative.mu, excludedAlternatives)
       };
