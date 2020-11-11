@@ -1,4 +1,3 @@
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import React from 'react';
 
 export default function UncertainValue({
