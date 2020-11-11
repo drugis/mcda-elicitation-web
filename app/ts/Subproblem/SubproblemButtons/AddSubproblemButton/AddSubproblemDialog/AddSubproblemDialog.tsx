@@ -8,7 +8,7 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTable from '../AddSubproblemEffectsTable/AddSubproblemEffectsTable';
 import AddSubproblemScaleRanges from '../AddSubproblemScaleRanges/AddSubproblemScaleRanges';
@@ -25,14 +25,18 @@ export default function AddSubproblemDialog({
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
   const {errors, addSubproblem} = useContext(AddSubproblemContext);
+  const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
 
   function isDisabled(): boolean {
-    return errors.length > 0;
+    return errors.length > 0 || isButtonPressed;
   }
 
   function handleButtonClick(): void {
-    addSubproblem();
-    closeDialog();
+    if (!isButtonPressed) {
+      setIsButtonPressed(true);
+      closeDialog();
+      addSubproblem();
+    }
   }
 
   return (

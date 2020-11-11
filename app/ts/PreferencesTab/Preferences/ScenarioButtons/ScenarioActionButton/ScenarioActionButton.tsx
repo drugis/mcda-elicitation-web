@@ -8,8 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
-import {getTitleError} from 'app/ts/util/getTitleError';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import {getTitleError} from 'app/ts/util/getTitleError';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
 export default function ScenarioActionButton({
@@ -29,6 +29,7 @@ export default function ScenarioActionButton({
   const [error, setError] = useState<string>(
     getTitleError(title, scenarios, idOfScenarioBeingEdited)
   );
+  const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
 
   useEffect(() => {
     setError(getTitleError(title, scenarios, idOfScenarioBeingEdited));
@@ -50,12 +51,15 @@ export default function ScenarioActionButton({
   }
 
   function handleButtonClick(): void {
-    callback(title);
-    closeDialog();
+    if (!isButtonPressed) {
+      setIsButtonPressed(true);
+      closeDialog();
+      callback(title);
+    }
   }
 
   function isDisabled(): boolean {
-    return !!error;
+    return !!error || isButtonPressed;
   }
 
   return (

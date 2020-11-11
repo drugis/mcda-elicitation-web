@@ -8,8 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {getTitleError} from 'app/ts/util/getTitleError';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
@@ -22,6 +22,7 @@ export default function EditSubproblemButton({}: {}) {
   const [error, setError] = useState<string>(
     getTitleError(title, subproblems, currentSubproblem.id)
   );
+  const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
 
   useEffect(() => {
     setError(getTitleError(title, subproblems, currentSubproblem.id));
@@ -43,12 +44,15 @@ export default function EditSubproblemButton({}: {}) {
   }
 
   function handleButtonClick(): void {
-    editTitle(title);
-    closeDialog();
+    if (!isButtonPressed) {
+      setIsButtonPressed(true);
+      closeDialog();
+      editTitle(title);
+    }
   }
 
   function isDisabled(): boolean {
-    return !!error;
+    return !!error || isButtonPressed;
   }
 
   return (
