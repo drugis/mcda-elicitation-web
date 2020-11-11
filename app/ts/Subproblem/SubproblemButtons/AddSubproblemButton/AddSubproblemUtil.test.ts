@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
@@ -8,7 +9,9 @@ import {
   getBaselineMap,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
+  initializeStepSizeOptions,
   initInclusions,
+  intializeStepSizes,
   isAlternativeDeselectionDisabled,
   isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
@@ -601,18 +604,66 @@ describe('addSubproblemUtil', () => {
         ds2Id: [50, 100],
         ds3Id: [37, 42]
       };
+      const stepSizes: Record<string, number> = {
+        ds1Id: 0.1,
+        ds2Id: 0.01,
+        ds3Id: 0.001
+      };
       const result = createSubproblemDefinition(
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        configuredRanges
+        configuredRanges,
+        stepSizes
       );
       const expectedResult: ISubproblemDefinition = {
         excludedAlternatives: ['alt1Id'],
         excludedCriteria: ['crit2Id'],
         excludedDataSources: ['ds3Id'],
-        ranges: {ds1Id: [0, 1], ds2Id: [50, 100]}
+        ranges: {ds1Id: [0, 1], ds2Id: [50, 100]},
+        stepSizes: {
+          ds1Id: 0.1,
+          ds2Id: 0.01
+        }
       };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('initializeStepSizeOptions', () => {
+    it('should return step size options for each data source', () => {
+      const dataSourcesById: Record<string, IDataSource> = {
+        ds1Id: {id: 'ds1Id'} as IDataSource
+      };
+      const observedRanges: Record<string, [number, number]> = {
+        ds1Id: [0, 0.9]
+      };
+      const result = initializeStepSizeOptions(dataSourcesById, observedRanges);
+      const expectedResult: Record<string, [number, number, number]> = {
+        ds1Id: [0.1, 0.01, 0.001]
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('intializeStepSizes', () => {
+    it('should return existing step sizes', () => {
+      const stepSizeOptions: Record<string, [number, number, number]> = {
+        ds1Id: [0.1, 0.01, 0.001]
+      };
+      const stepSizesByDS: Record<string, number> = {ds1Id: 0.0001};
+      const result = intializeStepSizes(stepSizeOptions, stepSizesByDS);
+      const expectedResult: Record<string, number> = {ds1Id: 0.0001};
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the correct step size option', () => {
+      const stepSizeOptions: Record<string, [number, number, number]> = {
+        ds1Id: [0.1, 0.01, 0.001]
+      };
+      const stepSizesByDS: Record<string, number> = {};
+      const result = intializeStepSizes(stepSizeOptions, stepSizesByDS);
+      const expectedResult: Record<string, number> = {ds1Id: 0.01};
       expect(result).toEqual(expectedResult);
     });
   });

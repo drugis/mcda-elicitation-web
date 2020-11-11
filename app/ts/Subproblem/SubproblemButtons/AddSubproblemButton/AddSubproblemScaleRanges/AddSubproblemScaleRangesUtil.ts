@@ -1,5 +1,6 @@
 import {Mark} from '@material-ui/core/Slider';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
 
 function log10(x: number): number {
@@ -127,12 +128,6 @@ function preventOverlappingConfiguredRanges([
   }
 }
 
-export function determineStepSize(from: number, to: number): number {
-  const interval = to - from;
-  const magnitude = Math.floor(Math.log10(interval));
-  return Math.pow(10, magnitude - 2);
-}
-
 export function createMarks(
   sliderRange: [number, number],
   observedRange: [number, number],
@@ -160,4 +155,31 @@ export function createMarks(
   });
 
   return marks;
+}
+
+export function adjustConfiguredRangeForStepSize(
+  stepSize: number,
+  configuredRange: [number, number]
+): [number, number] {
+  const lowerValue = getAdjustedLowerBound(configuredRange[0], stepSize);
+  const upperValue = getAdjustedUpperBound(configuredRange[1], stepSize);
+  return [lowerValue, upperValue];
+}
+
+function getAdjustedLowerBound(value: number, stepSize: number): number {
+  const remainder = value % stepSize;
+  if (remainder === 0) {
+    return value;
+  } else {
+    return significantDigits(value - remainder);
+  }
+}
+
+function getAdjustedUpperBound(value: number, stepSize: number): number {
+  const remainder = value % stepSize;
+  if (remainder === 0) {
+    return value;
+  } else {
+    return significantDigits(value - remainder + stepSize);
+  }
 }

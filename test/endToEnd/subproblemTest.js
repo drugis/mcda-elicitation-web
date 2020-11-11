@@ -18,8 +18,7 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
-const alternative2checkbox =
-  '#inclusion-785c281d-c66a-48a7-8cfa-4aeb8899a2b7-checkbox';
+const alternative2checkbox = '#inclusion-alt2Id-checkbox';
 const subproblem1 = {
   title: 'subproblem1'
 };
@@ -120,21 +119,13 @@ function resetAndDuplicateTitle(browser) {
 }
 
 function changeScale(browser) {
-  const lowerValueLabel =
-    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[9]/span/span/span';
-  const upperValueLabel =
-    ' /html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[10]/span/span';
-  const floorLabel =
-    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[4]';
-  const ceilLabel =
-    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[8]';
-  const moveFloor =
-    '//*[@id="extend-from-c4a470d2-b457-4f65-9b8d-5e22741c24a6"]';
-  const moveCeil = '//*[@id="extend-to-c4a470d2-b457-4f65-9b8d-5e22741c24a6"]';
-  const moveLowerValue =
-    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[9]';
-  const moveUpperValue =
-    '/html/body/div[3]/div[3]/div/div[2]/div/div[4]/div/div[1]/div[3]/span/span[10]/span/span/span';
+  const lowerValueLabel = '//*[@id="slider-crit1Id"]/span[9]/span/span/span';
+  const upperValueLabel = '//*[@id="slider-crit1Id"]/span[10]/span/span/span';
+  const floorLabel = '//*[@id="slider-crit1Id"]/span[4]';
+  const ceilLabel = '//*[@id="slider-crit1Id"]/span[8]';
+  const moveFloor = '//*[@id="extend-from-crit1Id"]';
+  const moveCeil = '//*[@id="extend-to-crit1Id"]';
+  const stepSizeSelector = '//*[@id="step-size-selector-crit1Id"]';
 
   setupSubProblem(browser)
     .useXpath()
@@ -144,16 +135,23 @@ function changeScale(browser) {
     .click(moveCeil)
     .assert.containsText(floorLabel, '-400')
     .assert.containsText(ceilLabel, '500')
-    .moveToElement(moveLowerValue, 0, 0)
+    .moveToElement(lowerValueLabel, 0, 0)
     .mouseButtonDown(0)
     .moveToElement(moveFloor, 0, 0)
     .mouseButtonUp(0)
     .assert.containsText(lowerValueLabel, '-400')
-    .moveToElement(moveUpperValue, 0, 0)
+    .moveToElement(upperValueLabel, 0, 0)
     .mouseButtonDown(0)
     .moveToElement(moveCeil, 0, 0)
     .mouseButtonUp(0)
     .assert.containsText(upperValueLabel, '500')
+    .assert.containsText(stepSizeSelector, '10')
+    .click(stepSizeSelector)
+    .assert.containsText(stepSizeSelector + '/option[1]', '100')
+    .assert.containsText(stepSizeSelector + '/option[2]', '10')
+    .assert.containsText(stepSizeSelector + '/option[3]', '1')
+    .click(stepSizeSelector + '/option[3]')
+    .assert.containsText(stepSizeSelector, '1')
     .useCss()
     .click('#close-modal-button');
 }

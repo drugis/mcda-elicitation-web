@@ -11,7 +11,9 @@ import {
   getScaleBlockingWarnings,
   getSubproblemTitleError,
   initConfiguredRanges,
+  initializeStepSizeOptions,
   initInclusions,
+  intializeStepSizes,
   isAlternativeDeselectionDisabled,
   isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
@@ -88,6 +90,12 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [sliderRangesByDS, setSliderRangesByDS] = useState<
     Record<string, [number, number]>
   >({});
+  const [stepSizeOptionsByDS, setStepSizeOptionsByDS] = useState<
+    Record<string, [number, number, number]>
+  >({});
+  const [stepSizesByDS, setStepSizesByDS] = useState<Record<string, number>>(
+    {}
+  );
 
   // *** end states
 
@@ -126,8 +134,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         observedRanges,
         currentSubproblem.definition.ranges
       );
+      const stepSizeOptions = initializeStepSizeOptions(
+        dataSourcesById,
+        observedRanges
+      );
+      const stepSizes = intializeStepSizes(
+        stepSizeOptions,
+        currentSubproblem.definition.stepSizes
+      );
       setConfiguredRanges(initialConfiguredRanges);
       setSliderRangesByDS(initialConfiguredRanges);
+      setStepSizesByDS(currentSubproblem.definition.stepSizes);
+      setStepSizeOptionsByDS(stepSizeOptions);
+      setStepSizesByDS(stepSizes);
     }
   }, [observedRanges, currentSubproblem]);
   // *** end useEffects
@@ -209,7 +228,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        configuredRangesByDS
+        configuredRangesByDS,
+        stepSizesByDS
       )
     };
     addSubproblem(subproblemCommand);
@@ -235,8 +255,28 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     setSliderRangesByDS(newSliderRanges);
   }
 
-  function getSliderRangeForDS(criterionId: string) {
-    return sliderRangesByDS[criterionId];
+  function getSliderRangeForDS(dataSourceId: string) {
+    return sliderRangesByDS[dataSourceId];
+  }
+
+  function updateStepSizeForDS(
+    dataSourceId: string,
+    newStepSize: number
+  ): void {
+    let newEntry: Record<string, number> = {};
+    newEntry[dataSourceId] = newStepSize;
+    const newStepSizes = {...stepSizesByDS, ...newEntry};
+    setStepSizesByDS(newStepSizes);
+  }
+
+  function getStepSizeForDS(dataSourceId: string): number {
+    return stepSizesByDS[dataSourceId];
+  }
+
+  function getStepSizeOptionsForDS(
+    dataSourceId: string
+  ): [number, number, number] {
+    return stepSizeOptionsByDS[dataSourceId];
   }
 
   return (
@@ -263,7 +303,10 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         updateAlternativeInclusion,
         updateCriterionInclusion,
         updateDataSourceInclusion,
-        updateSliderRangeforDS
+        updateSliderRangeforDS,
+        updateStepSizeForDS,
+        getStepSizeForDS,
+        getStepSizeOptionsForDS
       }}
     >
       {props.children}
