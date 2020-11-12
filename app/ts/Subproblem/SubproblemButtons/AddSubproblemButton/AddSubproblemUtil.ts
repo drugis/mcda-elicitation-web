@@ -7,6 +7,7 @@ import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import _ from 'lodash';
 import {getSliderLimits} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
@@ -347,9 +348,9 @@ function determineStepSizes([lowestObservedValue, highestObservedValue]: [
   const interval = highestObservedValue - lowestObservedValue;
   const magnitude = Math.floor(Math.log10(interval));
   return [
-    Math.pow(10, magnitude),
-    Math.pow(10, magnitude - 1),
-    Math.pow(10, magnitude - 2)
+    significantDigits(Math.pow(10, magnitude)),
+    significantDigits(Math.pow(10, magnitude - 1)),
+    significantDigits(Math.pow(10, magnitude - 2))
   ];
 }
 
@@ -361,7 +362,7 @@ export function intializeStepSizes(
     stepSizeOptions,
     (options: [number, number, number], dataSourceId: string) => {
       return stepSizesByDS[dataSourceId]
-        ? stepSizesByDS[dataSourceId]
+        ? significantDigits(stepSizesByDS[dataSourceId])
         : options[1];
     }
   );

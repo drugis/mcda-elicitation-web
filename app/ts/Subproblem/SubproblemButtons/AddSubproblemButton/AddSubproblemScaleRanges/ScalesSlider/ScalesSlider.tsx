@@ -58,7 +58,8 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   useEffect(() => {
     const newConfiguredRange = adjustConfiguredRangeForStepSize(
       stepSize,
-      configuredRange
+      configuredRange,
+      sliderRange
     );
     setConfiguredRange(
       includedDataSource.id,
@@ -66,7 +67,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       newConfiguredRange[1]
     );
     updateStepSizeForDS(includedDataSource.id, stepSize);
-  }, [stepSize]);
+  }, [stepSize, sliderRange]);
 
   function handleChange(event: any, newValue: [number, number]) {
     if (

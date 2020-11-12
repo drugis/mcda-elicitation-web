@@ -165,10 +165,17 @@ export function createMarks(
 
 export function adjustConfiguredRangeForStepSize(
   stepSize: number,
-  configuredRange: [number, number]
+  configuredRange: [number, number],
+  sliderRange: [number, number]
 ): [number, number] {
-  const lowerValue = getAdjustedLowerBound(configuredRange[0], stepSize);
-  const upperValue = getAdjustedUpperBound(configuredRange[1], stepSize);
+  const lowerValue = Math.max(
+    getAdjustedLowerBound(configuredRange[0], stepSize),
+    sliderRange[0]
+  );
+  const upperValue = Math.min(
+    getAdjustedUpperBound(configuredRange[1], stepSize),
+    sliderRange[1]
+  );
   return [lowerValue, upperValue];
 }
 

@@ -14,9 +14,11 @@ describe('addSubproblemScaleRangesUtil', () => {
     it('should return rounded configured ranges', () => {
       const stepSize = 0.1;
       const configuredRange: [number, number] = [1.04, 1.41];
+      const sliderRange: [number, number] = [0, 2];
       const result = adjustConfiguredRangeForStepSize(
         stepSize,
-        configuredRange
+        configuredRange,
+        sliderRange
       );
       const expectedResult: [number, number] = [1, 1.5];
       expect(result).toEqual(expectedResult);
@@ -25,11 +27,25 @@ describe('addSubproblemScaleRangesUtil', () => {
     it('should return original configured ranges', () => {
       const stepSize = 0.1;
       const configuredRange: [number, number] = [1, 1.4];
+      const sliderRange: [number, number] = [0, 2];
       const result = adjustConfiguredRangeForStepSize(
         stepSize,
-        configuredRange
+        configuredRange,
+        sliderRange
       );
       expect(result).toEqual(result);
+    });
+
+    it('should return slider range', () => {
+      const stepSize = 0.1;
+      const configuredRange: [number, number] = [1.04, 1.4];
+      const sliderRange: [number, number] = [1.1, 1.4];
+      const result = adjustConfiguredRangeForStepSize(
+        stepSize,
+        configuredRange,
+        sliderRange
+      );
+      expect(result).toEqual(sliderRange);
     });
   });
 
