@@ -213,16 +213,8 @@ define([
         };
         var subProblemDefinition = {
           ranges: {
-            ds2: {
-              pvf: {
-                range: [2, 3]
-              }
-            },
-            ds4: {
-              pvf: {
-                range: [6, 7]
-              }
-            }
+            ds2: [2, 3],
+            ds4: [6, 7]
           },
           excludedCriteria: ['critId1'],
           excludedAlternatives: ['alt1'],
@@ -344,16 +336,8 @@ define([
         var subProblem = {
           definition: {
             ranges: {
-              ds2: {
-                pvf: {
-                  range: [2, 3]
-                }
-              },
-              ds4: {
-                pvf: {
-                  range: [6, 7]
-                }
-              }
+              ds2: [2, 3],
+              ds4: [6, 7]
             },
             excludedCriteria: ['critId1'],
             excludedDataSources: ['ds1', 'ds3']

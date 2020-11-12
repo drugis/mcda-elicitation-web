@@ -351,7 +351,7 @@ define(['lodash', 'angular'], function (_, angular) {
 
     function getRanges(dataSourceId, ranges) {
       if (ranges) {
-        return ranges[dataSourceId];
+        return {pvf: {range: ranges[dataSourceId]}};
       } else {
         return {};
       }
