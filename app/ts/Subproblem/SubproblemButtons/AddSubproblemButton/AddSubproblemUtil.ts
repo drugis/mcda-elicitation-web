@@ -252,7 +252,8 @@ export function getBaselineMap(
 export function isDataSourceDeselectionDisabled(
   criterion: ICriterion,
   dataSourceInclusions: Record<string, boolean>,
-  criterionInclusions: Record<string, boolean>
+  criterionInclusions: Record<string, boolean>,
+  dataSourceId: string
 ): boolean {
   const numberOfSelectedDataSources = _.countBy(
     criterion.dataSources,
@@ -260,7 +261,10 @@ export function isDataSourceDeselectionDisabled(
       return dataSourceInclusions[dataSource.id];
     }
   ).true;
-  return numberOfSelectedDataSources < 2 || !criterionInclusions[criterion.id];
+  return (
+    !criterionInclusions[criterion.id] ||
+    (numberOfSelectedDataSources < 2 && dataSourceInclusions[dataSourceId])
+  );
 }
 
 export function initConfiguredRanges(

@@ -161,9 +161,11 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     let newCriterionInclusions = {...criterionInclusions};
     newCriterionInclusions[id] = newValue;
     setCriterionInclusions(newCriterionInclusions);
+    let newDataSourceInclusions = {...dataSourceInclusions};
     _.forEach(criteria[id].dataSources, (dataSource: IDataSource) => {
-      updateDataSourceInclusion(dataSource.id, newValue);
+      newDataSourceInclusions[dataSource.id] = newValue;
     });
+    setDataSourceInclusions(newDataSourceInclusions);
   }
 
   function updateDataSourceInclusion(id: string, newValue: boolean): void {
@@ -200,11 +202,15 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     );
   }
 
-  function isDataSourceDeselectionDisabledWrapper(criterionId: string) {
+  function isDataSourceDeselectionDisabledWrapper(
+    criterionId: string,
+    dataSourceId: string
+  ) {
     return isDataSourceDeselectionDisabled(
       criteria[criterionId],
       dataSourceInclusions,
-      criterionInclusions
+      criterionInclusions,
+      dataSourceId
     );
   }
 

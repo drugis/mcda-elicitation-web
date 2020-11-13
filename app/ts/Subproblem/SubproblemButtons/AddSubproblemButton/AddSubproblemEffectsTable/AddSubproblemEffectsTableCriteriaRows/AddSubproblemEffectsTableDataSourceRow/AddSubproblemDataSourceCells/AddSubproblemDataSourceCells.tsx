@@ -1,3 +1,4 @@
+import Checkbox from '@material-ui/core/Checkbox';
 import TableCell from '@material-ui/core/TableCell';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
@@ -8,10 +9,9 @@ import EffectsTableUnitOfMeasurementCell from 'app/ts/EffectsTable/EffectsTableC
 import ValueCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/ValueCell';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AddSubproblemContext} from '../../../../AddSubproblemContext';
 import {deselectedCellStyle} from '../../../deselectedCellStyle';
-import InclusionCell from '../../../InclusionCell/InclusionCell';
 
 export default function AddSubproblemDataSourceCells({
   criterion,
@@ -36,6 +36,12 @@ export default function AddSubproblemDataSourceCells({
     ? deselectedCellStyle
     : {};
 
+  const [isChecked, setIsChecked] = useState(!areDataSourceCellsExcluded);
+
+  useEffect(() => {
+    setIsChecked(!areDataSourceCellsExcluded);
+  }, [areDataSourceCellsExcluded]);
+
   function renderValueCells(): JSX.Element[] {
     return _.map(alternatives, (alternative: IAlternative) => {
       return (
@@ -53,14 +59,22 @@ export default function AddSubproblemDataSourceCells({
     });
   }
 
+  function handleSelectionChange() {
+    updateDataSourceInclusion(dataSource.id, !isChecked);
+  }
+
   return (
     <>
       <TableCell rowSpan={1} style={cellStyle}>
-        <InclusionCell
-          itemId={dataSource.id}
-          updateInclusion={updateDataSourceInclusion}
-          isDeselectionDisabled={isDataSourceDeselectionDisabled(criterion.id)}
-          isExcluded={isDataSourceExcluded(dataSource.id)}
+        <Checkbox
+          id={`inclusion-${dataSource.id}-checkbox`}
+          checked={isChecked}
+          onChange={handleSelectionChange}
+          color="primary"
+          disabled={isDataSourceDeselectionDisabled(
+            criterion.id,
+            dataSource.id
+          )}
         />
       </TableCell>
       <EffectsTableUnitOfMeasurementCell

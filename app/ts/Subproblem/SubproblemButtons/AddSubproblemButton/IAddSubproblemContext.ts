@@ -11,7 +11,7 @@ export default interface IAddSubproblemContext {
   getIncludedDataSourceForCriterion: (criterion: ICriterion) => IDataSource;
   getSliderRangeForDS: (dataSourceId: string) => [number, number];
   isCriterionExcluded: (criterionId: string) => boolean;
-  isDataSourceDeselectionDisabled: (criterionId: string) => boolean;
+  isDataSourceDeselectionDisabled: (criterionId: string, dataSourceId: string) => boolean;
   isDataSourceExcluded: (dataSourceId: string) => boolean;
   isAlternativeExcluded: (alternativeId: string) => boolean;
   isAlternativeDeselectionDisabled: (id: string) => boolean;

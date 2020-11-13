@@ -543,25 +543,63 @@ describe('addSubproblemUtil', () => {
       } as ICriterion;
       const dataSourceInclusions = {ds1Id: true, ds2Id: true};
       const criterionInclusions = {crit1Id: true};
+      const dataSourceId = 'ds1Id';
       const result = isDataSourceDeselectionDisabled(
         criterion,
         dataSourceInclusions,
-        criterionInclusions
+        criterionInclusions,
+        dataSourceId
       );
       expect(result).toBeFalsy();
     });
 
-    it('should return true if there is only one data source selected for the criterion', () => {
+    it('should return true if there this is the only data source selected for the criterion', () => {
       const criterion: ICriterion = {
         id: 'crit1Id',
         dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
       } as ICriterion;
       const dataSourceInclusions = {ds1Id: true, ds2Id: false};
       const criterionInclusions = {crit1Id: true};
+      const dataSourceId = 'ds1Id';
       const result = isDataSourceDeselectionDisabled(
         criterion,
         dataSourceInclusions,
-        criterionInclusions
+        criterionInclusions,
+        dataSourceId
+      );
+      expect(result).toBeTruthy();
+    });
+
+    it('should return false if there this is only one data source selected for the criterion but this datasource is deselected', () => {
+      const criterion: ICriterion = {
+        id: 'crit1Id',
+        dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
+      } as ICriterion;
+      const dataSourceInclusions = {ds1Id: true, ds2Id: false};
+      const criterionInclusions = {crit1Id: true};
+      const dataSourceId = 'ds2Id';
+      const result = isDataSourceDeselectionDisabled(
+        criterion,
+        dataSourceInclusions,
+        criterionInclusions,
+        dataSourceId
+      );
+      expect(result).toBeFalsy();
+    });
+
+    it('should return true if there this is the only data source selected for the criterion', () => {
+      const criterion: ICriterion = {
+        id: 'crit1Id',
+        dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
+      } as ICriterion;
+      const dataSourceInclusions = {ds1Id: true, ds2Id: false};
+      const criterionInclusions = {crit1Id: true};
+      const dataSourceId = 'ds1Id';
+      const result = isDataSourceDeselectionDisabled(
+        criterion,
+        dataSourceInclusions,
+        criterionInclusions,
+        dataSourceId
       );
       expect(result).toBeTruthy();
     });
@@ -571,12 +609,14 @@ describe('addSubproblemUtil', () => {
         id: 'crit1Id',
         dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
       } as ICriterion;
-      const dataSourceInclusions = {ds1Id: true, ds2Id: true};
+      const dataSourceInclusions = {ds1Id: false, ds2Id: false};
       const criterionInclusions = {crit1Id: false};
+      const dataSourceId = 'ds1Id';
       const result = isDataSourceDeselectionDisabled(
         criterion,
         dataSourceInclusions,
-        criterionInclusions
+        criterionInclusions,
+        dataSourceId
       );
       expect(result).toBeTruthy();
     });
