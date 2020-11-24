@@ -19,11 +19,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.deployPrivateKey }}
 
-      - name: create ssl files
-        run: |
-          echo "${{ secrets.pataviClientCrt }}" > crt.pem 
-          echo "${{ secrets.pataviClientKey }}" > key.pem
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
