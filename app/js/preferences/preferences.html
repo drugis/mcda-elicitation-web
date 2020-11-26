@@ -1,14 +1,18 @@
-<div ng-if="aggregateState">
-  <preferences
-    scenarios="reactScenarios"
-    current-scenario-id="scenario.id"
-    workspace-id="workspace.id"
-    problem="aggregateState.problem"
-    settings="workspaceSettings"
-    update-angular-scenario="updateAngularScenario"
-    toggled-columns="toggledColumns"
-  ></preferences>
-</div>
+<preferences
+  ng-if="aggregateState && workspaceForReact"
+  scenarios="reactScenarios"
+  current-scenario-id="scenario.id"
+  workspace-id="workspace.id"
+  problem="aggregateState.problem"
+  settings="workspaceSettings"
+  update-angular-scenario="updateAngularScenario"
+  toggled-columns="toggledColumns"
+  workspace="workspaceForReact"
+  subproblems="subProblems"
+  scales="workspace.scales.base"
+  current-subproblem="subProblem"
+  subproblems="subProblems"
+></preferences>
 
 <div ng-if="!aggregateState" class="grid-x">
   <div class="cell text-centered">
