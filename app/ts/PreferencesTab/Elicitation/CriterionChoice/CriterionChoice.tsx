@@ -1,6 +1,6 @@
 import Radio from '@material-ui/core/Radio';
 import Tooltip from '@material-ui/core/Tooltip';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
@@ -10,17 +10,14 @@ import {
 } from '../../Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {PreferencesContext} from '../../PreferencesContext';
 
-export default function CriterionChoice({
-  criterion
-}: {
-  criterion: IPreferencesCriterion;
-}) {
+export default function CriterionChoice({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
   const {pvfs} = useContext(PreferencesContext);
 
   const pvf = pvfs[criterion.id];
   const usePercentage =
-    showPercentages && canBePercentage(criterion.unitOfMeasurement.type);
+    showPercentages &&
+    canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
 
   return (
     <label id={`ranking-choice-${criterion.id}`}>

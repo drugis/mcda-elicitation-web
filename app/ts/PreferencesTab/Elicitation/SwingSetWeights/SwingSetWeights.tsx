@@ -11,11 +11,11 @@ export default function SwingSetWeights() {
   const {mostImportantCriterionId, elicitationMethod} = useContext(
     ElicitationContext
   );
-  const {criteria, pvfs} = useContext(PreferencesContext);
+  const {getCriterion, pvfs} = useContext(PreferencesContext);
 
   const [statement, setStatement] = useState<string>(
     getSwingStatement(
-      criteria[mostImportantCriterionId],
+      getCriterion(mostImportantCriterionId),
       pvfs[mostImportantCriterionId],
       showPercentages
     )
@@ -24,7 +24,7 @@ export default function SwingSetWeights() {
   useEffect(() => {
     setStatement(
       getSwingStatement(
-        criteria[mostImportantCriterionId],
+        getCriterion(mostImportantCriterionId),
         pvfs[mostImportantCriterionId],
         showPercentages
       )

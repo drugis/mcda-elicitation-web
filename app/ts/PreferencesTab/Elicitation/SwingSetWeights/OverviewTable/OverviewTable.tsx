@@ -23,9 +23,9 @@ export default function OverviewTable() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {_.map(criteria, (criterion) => {
-          return <CriterionOverview key={criterion.id} criterion={criterion} />;
-        })}
+        {_.map(criteria, (criterion) => (
+          <CriterionOverview key={criterion.id} criterion={criterion} />
+        ))}
       </TableBody>
     </Table>
   );

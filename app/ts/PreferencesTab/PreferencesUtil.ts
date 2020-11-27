@@ -1,5 +1,4 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
@@ -7,13 +6,18 @@ import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
 
 export function initPvfs(
-  criteria: Record<string, IProblemCriterion>,
-  currentScenario: IMcdaScenario
+  criteria: ICriterion[],
+  currentScenario: IMcdaScenario,
+  subproblemPvfs: Record<string, IPvf>
 ): Record<string, IPvf> {
-  return _.mapValues(criteria, (criterion, id) => {
-    const scenarioPvf = getScenarioPvf(id, currentScenario);
-    return _.merge({}, criterion.dataSources[0].pvf, scenarioPvf);
-  });
+  return _(criteria)
+    .keyBy('id')
+    .mapValues((criterion) => {
+      const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
+      const subproblemPvf = subproblemPvfs[criterion.dataSources[0].id];
+      return _.merge({}, subproblemPvf, scenarioPvf);
+    })
+    .value();
 }
 
 function getScenarioPvf(
@@ -30,21 +34,6 @@ function getScenarioPvf(
   } else {
     return undefined;
   }
-}
-
-export function createPreferencesCriteria(
-  criteria: Record<string, IProblemCriterion>
-): Record<string, IPreferencesCriterion> {
-  return _.mapValues(criteria, (criterion, id) => {
-    const dataSource = criterion.dataSources[0];
-    let preferencesCriterion = {
-      ..._.pick(criterion, ['title', 'description', 'isFavorable']),
-      id: id,
-      dataSourceId: dataSource.id,
-      ..._.pick(dataSource, ['unitOfMeasurement'])
-    };
-    return preferencesCriterion;
-  });
 }
 
 export function buildScenarioWithPreferences(

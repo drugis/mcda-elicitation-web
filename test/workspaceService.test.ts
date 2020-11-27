@@ -32,6 +32,8 @@ import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
+import IPvf from '@shared/interface/Problem/IPvf';
 import IRangeDistributionPerformance from '@shared/interface/Problem/IRangeDistributionPerformance';
 import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
 import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
@@ -42,6 +44,7 @@ import {
   buildIdMap,
   buildInProgressCopy,
   buildInProgressIdMapper,
+  buildSubproblemPvfs,
   buildUnitTypeMap,
   buildWorkspaceAlternatives,
   buildWorkspaceCriteria,
@@ -694,6 +697,25 @@ describe('buildWorkspace', () => {
       const expectedResult: Record<string, UnitOfMeasurementType> = {
         ds1Id: 'percentage',
         ds2Id: 'decimal'
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('buildSubproblemPvfs', () => {
+    it('should return a record of pvfs keyed by datasource ids', () => {
+      const criteria: Record<string, IProblemCriterion> = {
+        critId1: {
+          dataSources: [
+            {id: 'ds1Id', pvf: {range: [0, 1]}} as IProblemDataSource,
+            {id: 'ds2Id', pvf: {range: [0, 2]}} as IProblemDataSource
+          ]
+        } as IProblemCriterion
+      };
+      const result = buildSubproblemPvfs(criteria);
+      const expectedResult: Record<string, IPvf> = {
+        ds1Id: {range: [0, 1]},
+        ds2Id: {range: [0, 2]}
       };
       expect(result).toEqual(expectedResult);
     });

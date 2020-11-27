@@ -4,7 +4,8 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {buildWorkspace} from '@shared/workspaceService';
+import IPvf from '@shared/interface/Problem/IPvf';
+import {buildSubproblemPvfs, buildWorkspace} from '@shared/workspaceService';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -50,6 +51,9 @@ export function WorkspaceContextProviderComponent({
     }
   }, [scales, oldWorkspace]);
   const workspace: IWorkspace = buildWorkspace(oldWorkspace, workspaceId);
+  const subproblemPvfs: Record<string, IPvf> = buildSubproblemPvfs(
+    oldWorkspace.problem.criteria
+  );
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};
@@ -99,6 +103,7 @@ export function WorkspaceContextProviderComponent({
         observedRanges,
         scales,
         subproblems,
+        subproblemPvfs,
         workspace,
         deleteSubproblem,
         editTitle,

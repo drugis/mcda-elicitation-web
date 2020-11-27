@@ -66,13 +66,16 @@ export default function PreferencesWeightsTable() {
         {_.map(criteria, (criterion) => {
           const usePercentage =
             showPercentages &&
-            canBePercentage(criterion.unitOfMeasurement.type);
+            canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
           return (
             <TableRow key={criterion.id}>
               <TableCell>{criterion.title}</TableCell>
               <TableCell>{criterion.description}</TableCell>
               <TableCell id={`unit-${criterion.id}`}>
-                {getUnitLabel(criterion.unitOfMeasurement, showPercentages)}
+                {getUnitLabel(
+                  criterion.dataSources[0].unitOfMeasurement,
+                  showPercentages
+                )}
               </TableCell>
               <TableCell id={`worst-${criterion.id}`}>
                 {getWorst(pvfs[criterion.id], usePercentage)}

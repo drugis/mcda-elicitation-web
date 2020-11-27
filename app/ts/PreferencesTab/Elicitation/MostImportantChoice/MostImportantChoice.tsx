@@ -1,7 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
@@ -32,10 +31,10 @@ export default function MostImportantChoice() {
         <Typography variant="h6">Given the following situation:</Typography>
       </Grid>
       <Grid item xs={12}>
-        {_.map(criteria, (criterion: IPreferencesCriterion) => {
+        {_.map(criteria, (criterion) => {
           const usePercentage =
             showPercentages &&
-            canBePercentage(criterion.unitOfMeasurement.type);
+            canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
           return (
             <CriterionSituation
               key={criterion.id}
@@ -56,9 +55,9 @@ export default function MostImportantChoice() {
           value={mostImportantCriterionId ? mostImportantCriterionId : ''}
           onChange={handleSelection}
         >
-          {_.map(criteria, (criterion) => {
-            return <CriterionChoice key={criterion.id} criterion={criterion} />;
-          })}
+          {_.map(criteria, (criterion) => (
+            <CriterionChoice key={criterion.id} criterion={criterion} />
+          ))}
         </RadioGroup>
       </Grid>
     </Grid>

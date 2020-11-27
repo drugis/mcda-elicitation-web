@@ -25,6 +25,7 @@ import {IPerformanceTableEntry} from './interface/Problem/IPerformanceTableEntry
 import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
 import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
+import IPvf from './interface/Problem/IPvf';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
@@ -454,4 +455,14 @@ function buildRelative(
     },
     relative: parameters.relative
   };
+}
+
+export function buildSubproblemPvfs(
+  criteria: Record<string, IProblemCriterion>
+): Record<string, IPvf> {
+  const dataSources: Record<string, IProblemDataSource> = _(criteria)
+    .flatMap((criterion): IProblemDataSource[] => criterion.dataSources)
+    .keyBy('id')
+    .value();
+  return _.mapValues(dataSources, (dataSource): IPvf => dataSource.pvf);
 }

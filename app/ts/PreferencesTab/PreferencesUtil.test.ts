@@ -1,47 +1,49 @@
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {TPreferences} from '@shared/types/Preferences';
-import {
-  buildScenarioWithPreferences,
-  createPreferencesCriteria,
-  initPvfs
-} from './PreferencesUtil';
+import {buildScenarioWithPreferences, initPvfs} from './PreferencesUtil';
 
-const criterion1: IProblemCriterion = {
+const criterion1: ICriterion = {
   id: 'crit1Id',
   description: '',
   title: 'criterion1',
+  isFavourable: true,
   dataSources: [
     {
-      pvf: {range: [0, 1]},
       id: 'dsId1',
-      scale: [11, 12],
-      source: '',
-      sourceLink: '',
       strengthOfEvidence: '',
-      uncertainties: '',
-      unitOfMeasurement: {type: 'custom', label: ''}
+      unitOfMeasurement: {
+        type: 'custom',
+        label: '',
+        lowerBound: 0,
+        upperBound: 1
+      },
+      reference: '',
+      referenceLink: '',
+      uncertainty: ''
     }
   ]
 };
-const criterion2: IProblemCriterion = {
+const criterion2: ICriterion = {
   id: 'crit2Id',
   description: '',
   title: 'criterion2',
+  isFavourable: true,
   dataSources: [
     {
-      pvf: {range: [2, 3]},
       id: 'dsId2',
-      scale: [13, 14],
-      source: '',
-      sourceLink: '',
+      reference: '',
+      referenceLink: '',
       strengthOfEvidence: '',
-      uncertainties: '',
-      unitOfMeasurement: {type: 'custom', label: ''}
+      uncertainty: '',
+      unitOfMeasurement: {
+        type: 'custom',
+        label: '',
+        lowerBound: 0,
+        upperBound: 1
+      }
     }
   ]
 };
@@ -49,10 +51,7 @@ const criterion2: IProblemCriterion = {
 describe('PreferencesUtil', () => {
   describe('initPvfs', () => {
     it('should return a map of string id to the corresponding pvf', () => {
-      const criteria: Record<string, IProblemCriterion> = {
-        critId1: criterion1,
-        critId2: criterion2
-      };
+      const criteria: ICriterion[] = [criterion1, criterion2];
 
       const currentScenario: IMcdaScenario = {
         id: 'scenarioId1',
@@ -61,7 +60,7 @@ describe('PreferencesUtil', () => {
           prefs: [],
           problem: {
             criteria: {
-              critId2: {
+              crit2Id: {
                 dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
               }
             }
@@ -70,27 +69,18 @@ describe('PreferencesUtil', () => {
         subproblemId: '37',
         workspaceId: '42'
       };
-      const result = initPvfs(criteria, currentScenario);
-      const expectedResult: Record<string, IPvf> = {
-        critId1: {range: [0, 1]},
-        critId2: {type: 'linear', direction: 'decreasing', range: [2, 3]}
-      };
-      expect(result).toEqual(expectedResult);
-    });
-  });
-
-  describe('createPreferencesCriteria', () => {
-    it('should transform problem criteria into preferences criteria', () => {
-      const criteria: Record<string, IProblemCriterion> = {critId1: criterion1};
-      const result = createPreferencesCriteria(criteria);
-      const expectedResult: Record<string, IPreferencesCriterion> = {
-        critId1: {
-          title: criterion1.title,
-          description: criterion1.description,
-          unitOfMeasurement: criterion1.dataSources[0].unitOfMeasurement,
-          id: 'critId1',
-          dataSourceId: criterion1.dataSources[0].id
+      const subproblemPvfs: Record<string, IPvf> = {
+        dsId1: {
+          range: [0, 1]
+        },
+        dsId2: {
+          range: [2, 3]
         }
+      };
+      const result = initPvfs(criteria, currentScenario, subproblemPvfs);
+      const expectedResult: Record<string, IPvf> = {
+        crit1Id: {range: [0, 1]},
+        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
       };
       expect(result).toEqual(expectedResult);
     });
