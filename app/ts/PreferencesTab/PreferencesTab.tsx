@@ -7,6 +7,7 @@ import IProblem from '@shared/interface/Problem/IProblem';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
+import ErrorHandler from '../Error/ErrorHandler';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {SubproblemContextProviderComponent} from '../Workspace/SubproblemContext/SubproblemContext';
@@ -62,7 +63,9 @@ export default function PreferencesTab({
                 problem={problem}
                 updateAngularScenario={updateAngularScenario}
               >
-                <Preferences />
+                <ErrorHandler>
+                  <Preferences />
+                </ErrorHandler>
               </PreferencesContextProviderComponent>
             </SettingsContextProviderComponent>
           </SubproblemContextProviderComponent>

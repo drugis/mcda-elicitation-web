@@ -15,13 +15,9 @@ export function getSwingStatement(
   pvf: IPvf,
   showPercentages: boolean
 ): string {
-  const label = getUnitLabel(
-    criterion.dataSources[0].unitOfMeasurement,
-    showPercentages
-  );
-  const usePercentage =
-    showPercentages &&
-    canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
+  const unit = criterion.dataSources[0].unitOfMeasurement;
+  const label = getUnitLabel(unit, showPercentages);
+  const usePercentage = showPercentages && canBePercentage(unit.type);
   return DEFAULT_PRECISE_TEMPLATE.replace(/%criterion1%/gi, criterion.title)
     .replace(/%unit1%/gi, label)
     .replace(/%worst1%/gi, String(getWorst(pvf, usePercentage)))

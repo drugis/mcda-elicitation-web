@@ -11,7 +11,7 @@ export function findCriterionIdForRank(
 ): string {
   return _.find(
     criteria,
-    (criterion) =>
+    (criterion: ICriterion): boolean =>
       rankings[criterion.id] && rankings[criterion.id].rank === rank
   ).id;
 }
@@ -50,7 +50,7 @@ function findCriterionIdWithoutRanking(
 ): string {
   return _.find(
     criteria,
-    (criterion) =>
+    (criterion: ICriterion): boolean =>
       rankings[criterion.id] === undefined ||
       rankings[criterion.id].rank === UNRANKED
   ).id;

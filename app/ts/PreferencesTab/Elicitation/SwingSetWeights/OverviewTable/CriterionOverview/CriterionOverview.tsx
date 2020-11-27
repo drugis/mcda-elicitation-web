@@ -23,10 +23,8 @@ export default function CriterionOverview({
   const {showPercentages} = useContext(SettingsContext);
   const {elicitationMethod} = useContext(ElicitationContext);
   const {pvfs} = useContext(PreferencesContext);
-
-  const usePercentage =
-    showPercentages &&
-    canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
+  const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unitType);
 
   function renderSwingSlider(): JSX.Element {
     if (elicitationMethod === 'precise') {

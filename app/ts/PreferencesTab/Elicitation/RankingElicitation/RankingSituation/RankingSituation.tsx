@@ -20,12 +20,24 @@ export default function RankingSituation() {
   const {rankings} = useContext(RankingElicitationContext);
 
   function getValueToDisplay(criterion: ICriterion) {
-    const usePercentage =
-      showPercentages &&
-      canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
+    const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+    const usePercentage = showPercentages && canBePercentage(unitType);
     return !rankings[criterion.id] || rankings[criterion.id].rank === UNRANKED
       ? getWorst(pvfs[criterion.id], usePercentage)
       : getBest(pvfs[criterion.id], usePercentage);
+  }
+
+  function renderCriterionSituations(): JSX.Element[] {
+    return _.map(
+      criteria,
+      (criterion: ICriterion): JSX.Element => (
+        <CriterionSituation
+          key={criterion.id}
+          criterion={criterion}
+          displayValue={getValueToDisplay(criterion)}
+        />
+      )
+    );
   }
 
   return (
@@ -34,15 +46,7 @@ export default function RankingSituation() {
         <Typography variant="h6">Given the following situation:</Typography>
       </Grid>
       <Grid item xs={12}>
-        {_.map(criteria, (criterion) => {
-          return (
-            <CriterionSituation
-              key={criterion.id}
-              criterion={criterion}
-              displayValue={getValueToDisplay(criterion)}
-            />
-          );
-        })}
+        {renderCriterionSituations()}
       </Grid>
     </Grid>
   );

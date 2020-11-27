@@ -40,7 +40,7 @@ export function PreferencesContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
-  const {subproblemPvfs} = useContext(WorkspaceContext);
+  const {currentSubproblem} = useContext(WorkspaceContext);
   const {filteredCriteria} = useContext(SubproblemContext);
 
   const [contextScenarios, setScenarios] = useState<
@@ -51,7 +51,11 @@ export function PreferencesContextProviderComponent({
     _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
   const [pvfs, setPvfs] = useState<Record<string, IPvf>>(
-    initPvfs(filteredCriteria, currentScenario, subproblemPvfs)
+    initPvfs(
+      filteredCriteria,
+      currentScenario,
+      currentSubproblem.definition.ranges
+    )
   );
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);

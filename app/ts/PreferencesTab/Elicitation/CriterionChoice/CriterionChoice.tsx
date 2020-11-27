@@ -15,9 +15,8 @@ export default function CriterionChoice({criterion}: {criterion: ICriterion}) {
   const {pvfs} = useContext(PreferencesContext);
 
   const pvf = pvfs[criterion.id];
-  const usePercentage =
-    showPercentages &&
-    canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
+  const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unitType);
 
   return (
     <label id={`ranking-choice-${criterion.id}`}>

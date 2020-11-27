@@ -30,11 +30,8 @@ export default function MatchingSlider({
 
   const mostImportantCriterion = getCriterion(mostImportantCriterionId);
   const range = pvfs[mostImportantCriterionId].range;
-  const usePercentage =
-    showPercentages &&
-    canBePercentage(
-      mostImportantCriterion.dataSources[0].unitOfMeasurement.type
-    );
+  const unitType = mostImportantCriterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unitType);
 
   const [sliderValue, setSliderValue] = useState<number>(
     getBest(pvfs[mostImportantCriterionId], usePercentage)

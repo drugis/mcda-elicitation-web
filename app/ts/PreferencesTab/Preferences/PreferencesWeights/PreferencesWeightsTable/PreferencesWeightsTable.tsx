@@ -4,6 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
+import ICriterion from '@shared/interface/ICriterion';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
@@ -41,6 +42,37 @@ export default function PreferencesWeightsTable() {
     }
   }
 
+  function renderCriterionPreferences(): JSX.Element[] {
+    return _.map(
+      criteria,
+      (criterion: ICriterion): JSX.Element => {
+        const unit = criterion.dataSources[0].unitOfMeasurement;
+        const usePercentage = showPercentages && canBePercentage(unit.type);
+        return (
+          <TableRow key={criterion.id}>
+            <TableCell>{criterion.title}</TableCell>
+            <TableCell>{criterion.description}</TableCell>
+            <TableCell id={`unit-${criterion.id}`}>
+              {getUnitLabel(unit, showPercentages)}
+            </TableCell>
+            <TableCell id={`worst-${criterion.id}`}>
+              {getWorst(pvfs[criterion.id], usePercentage)}
+            </TableCell>
+            <TableCell id={`best-${criterion.id}`}>
+              {getBest(pvfs[criterion.id], usePercentage)}
+            </TableCell>
+            <TableCell id={`importance-criterion-${criterion.id}`}>
+              {importances[criterion.id]}
+            </TableCell>
+            <TableCell id={`weight-criterion-${criterion.id}`}>
+              {getWeight(criterion.id)}
+            </TableCell>
+          </TableRow>
+        );
+      }
+    );
+  }
+
   return (
     <Table id="perferences-weights-table">
       <TableHead>
@@ -62,37 +94,7 @@ export default function PreferencesWeightsTable() {
           </TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>
-        {_.map(criteria, (criterion) => {
-          const usePercentage =
-            showPercentages &&
-            canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
-          return (
-            <TableRow key={criterion.id}>
-              <TableCell>{criterion.title}</TableCell>
-              <TableCell>{criterion.description}</TableCell>
-              <TableCell id={`unit-${criterion.id}`}>
-                {getUnitLabel(
-                  criterion.dataSources[0].unitOfMeasurement,
-                  showPercentages
-                )}
-              </TableCell>
-              <TableCell id={`worst-${criterion.id}`}>
-                {getWorst(pvfs[criterion.id], usePercentage)}
-              </TableCell>
-              <TableCell id={`best-${criterion.id}`}>
-                {getBest(pvfs[criterion.id], usePercentage)}
-              </TableCell>
-              <TableCell id={`importance-criterion-${criterion.id}`}>
-                {importances[criterion.id]}
-              </TableCell>
-              <TableCell id={`weight-criterion-${criterion.id}`}>
-                {getWeight(criterion.id)}
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
+      <TableBody>{renderCriterionPreferences()}</TableBody>
     </Table>
   );
 }

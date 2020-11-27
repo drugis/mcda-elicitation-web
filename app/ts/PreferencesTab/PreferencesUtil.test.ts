@@ -69,15 +69,11 @@ describe('PreferencesUtil', () => {
         subproblemId: '37',
         workspaceId: '42'
       };
-      const subproblemPvfs: Record<string, IPvf> = {
-        dsId1: {
-          range: [0, 1]
-        },
-        dsId2: {
-          range: [2, 3]
-        }
+      const ranges: Record<string, [number, number]> = {
+        dsId1: [0, 1],
+        dsId2: [2, 3]
       };
-      const result = initPvfs(criteria, currentScenario, subproblemPvfs);
+      const result = initPvfs(criteria, currentScenario, ranges);
       const expectedResult: Record<string, IPvf> = {
         crit1Id: {range: [0, 1]},
         crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}

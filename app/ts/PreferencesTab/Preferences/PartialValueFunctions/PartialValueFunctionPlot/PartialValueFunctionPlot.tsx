@@ -23,9 +23,8 @@ export default function PartialValueFunctionPlot({
   const height = '216px';
 
   useEffect(() => {
-    const usePercentage =
-      showPercentages &&
-      canBePercentage(criterion.dataSources[0].unitOfMeasurement.type);
+    const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+    const usePercentage = showPercentages && canBePercentage(unitType);
     const values = getPvfCoordinates(pvf, criterion.title, usePercentage);
     const settings: ChartConfiguration = generatePlotSettings(
       criterionId,

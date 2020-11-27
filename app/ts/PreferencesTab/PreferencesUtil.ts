@@ -8,14 +8,17 @@ import _ from 'lodash';
 export function initPvfs(
   criteria: ICriterion[],
   currentScenario: IMcdaScenario,
-  subproblemPvfs: Record<string, IPvf>
+  ranges: Record<string, [number, number]>
 ): Record<string, IPvf> {
   return _(criteria)
     .keyBy('id')
     .mapValues((criterion) => {
       const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
-      const subproblemPvf = subproblemPvfs[criterion.dataSources[0].id];
-      return _.merge({}, subproblemPvf, scenarioPvf);
+      return _.merge(
+        {},
+        {range: ranges[criterion.dataSources[0].id]},
+        scenarioPvf
+      );
     })
     .value();
 }
