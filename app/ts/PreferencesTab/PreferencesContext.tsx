@@ -54,7 +54,8 @@ export function PreferencesContextProviderComponent({
     initPvfs(
       filteredCriteria,
       currentScenario,
-      currentSubproblem.definition.ranges
+      currentSubproblem.definition.ranges,
+      problem.criteria
     )
   );
   const subproblemId = currentScenario.subproblemId;

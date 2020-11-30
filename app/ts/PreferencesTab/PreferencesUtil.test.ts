@@ -1,4 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IWeights from '@shared/interface/Scenario/IWeights';
@@ -47,11 +48,32 @@ const criterion2: ICriterion = {
     }
   ]
 };
+const criterion3: ICriterion = {
+  id: 'crit3Id',
+  description: '',
+  title: 'criterion3',
+  isFavourable: true,
+  dataSources: [
+    {
+      id: 'dsId3',
+      reference: '',
+      referenceLink: '',
+      strengthOfEvidence: '',
+      uncertainty: '',
+      unitOfMeasurement: {
+        type: 'custom',
+        label: '',
+        lowerBound: 0,
+        upperBound: 100
+      }
+    }
+  ]
+};
 
 describe('PreferencesUtil', () => {
   describe('initPvfs', () => {
     it('should return a map of string id to the corresponding pvf', () => {
-      const criteria: ICriterion[] = [criterion1, criterion2];
+      const criteria: ICriterion[] = [criterion1, criterion2, criterion3];
 
       const currentScenario: IMcdaScenario = {
         id: 'scenarioId1',
@@ -73,10 +95,28 @@ describe('PreferencesUtil', () => {
         dsId1: [0, 1],
         dsId2: [2, 3]
       };
-      const result = initPvfs(criteria, currentScenario, ranges);
+      const problemCriteria: Record<string, IProblemCriterion> = {
+        crit2Id: {
+          dataSources: [
+            {pvf: {type: 'linear', direction: 'increasing', range: [0, 100]}}
+          ]
+        } as IProblemCriterion,
+        crit3Id: {
+          dataSources: [
+            {pvf: {type: 'linear', direction: 'increasing', range: [0, 100]}}
+          ]
+        } as IProblemCriterion
+      };
+      const result = initPvfs(
+        criteria,
+        currentScenario,
+        ranges,
+        problemCriteria
+      );
       const expectedResult: Record<string, IPvf> = {
         crit1Id: {range: [0, 1]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
+        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]},
+        crit3Id: {type: 'linear', direction: 'increasing', range: [0, 100]}
       };
       expect(result).toEqual(expectedResult);
     });
