@@ -1,20 +1,20 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import _ from 'lodash';
 import {DEFAULT_MATCHING_TEMPLATE} from '../elicitationConstants';
 
 export function getCurrentCriterion(
-  criteria: Record<string, IPreferencesCriterion>,
+  criteria: ICriterion[],
   mostImportantCriterionId: string,
   currentStep: number
-) {
-  return _.reject(criteria, (criterion: IPreferencesCriterion) => {
+): ICriterion {
+  return _.reject(criteria, (criterion: ICriterion) => {
     return criterion.id === mostImportantCriterionId;
   })[currentStep - 2];
 }
 
 export function getMatchingStatement(
-  mostImportantCriterion: IPreferencesCriterion,
-  currentCriterion: IPreferencesCriterion
+  mostImportantCriterion: ICriterion,
+  currentCriterion: ICriterion
 ): string {
   return DEFAULT_MATCHING_TEMPLATE.replace(
     /%criterion1%/gi,

@@ -1,6 +1,6 @@
+import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
@@ -13,8 +13,10 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import {SettingsContext} from '../Settings/SettingsContext';
+import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
+import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import IPreferencesContext from './IPreferencesContext';
-import {createPreferencesCriteria, initPvfs} from './PreferencesUtil';
+import {initPvfs} from './PreferencesUtil';
 import {TPreferencesView} from './TPreferencesView';
 
 export const PreferencesContext = createContext<IPreferencesContext>(
@@ -38,6 +40,9 @@ export function PreferencesContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
+  const {currentSubproblem} = useContext(WorkspaceContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
+
   const [contextScenarios, setScenarios] = useState<
     Record<string, IMcdaScenario>
   >(_.keyBy(scenarios, 'id'));
@@ -45,12 +50,13 @@ export function PreferencesContextProviderComponent({
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
     _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
-  const criteria: Record<
-    string,
-    IPreferencesCriterion
-  > = createPreferencesCriteria(problem.criteria);
   const [pvfs, setPvfs] = useState<Record<string, IPvf>>(
-    initPvfs(problem.criteria, currentScenario)
+    initPvfs(
+      filteredCriteria,
+      currentScenario,
+      currentSubproblem.definition.ranges,
+      problem.criteria
+    )
   );
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);
@@ -72,8 +78,7 @@ export function PreferencesContextProviderComponent({
       type: 'linear',
       range: pvfs[criterionId].range
     };
-    let newPvfs = _.cloneDeep(pvfs);
-    newPvfs[criterionId] = pvf;
+    const newPvfs = {..._.cloneDeep(pvfs), [criterionId]: pvf};
     setPvfs(newPvfs);
     const newScenario = createScenarioWithPvf(criterionId, direction);
     updateScenario(newScenario).then(() => {
@@ -149,9 +154,7 @@ export function PreferencesContextProviderComponent({
   }
 
   function updateScenarioCallback(scenario: IMcdaScenario) {
-    let scenarioToAdd: Record<string, IMcdaScenario> = {};
-    scenarioToAdd[scenario.id] = scenario;
-    setScenarios({...contextScenarios, ...scenarioToAdd});
+    setScenarios({..._.cloneDeep(contextScenarios), [scenario.id]: scenario});
     setCurrentScenario(scenario);
     if (areAllPvfsSet(pvfs)) {
       updateAngularScenario(scenario);
@@ -207,8 +210,8 @@ export function PreferencesContextProviderComponent({
     setError(error);
   }
 
-  function getCriterion(id: string): IPreferencesCriterion {
-    return criteria[id];
+  function getCriterion(id: string): ICriterion {
+    return _.find(filteredCriteria, ['id', id]);
   }
 
   function determineElicitationMethod(): string {
@@ -235,7 +238,7 @@ export function PreferencesContextProviderComponent({
         currentScenario,
         problem,
         pvfs,
-        criteria,
+        criteria: filteredCriteria,
         disableWeightsButtons,
         activeView,
         setCurrentScenario,

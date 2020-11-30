@@ -1,32 +1,18 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {buildImportance} from './PreferencesWeightsTableUtil';
 
 describe('buildImportance', () => {
-  const criteria: Record<string, IPreferencesCriterion> = {
-    critId1: {
-      id: 'critId1',
-      title: 'crit1',
-      description: '',
-      dataSourceId: 'dsId1',
-      unitOfMeasurement: {
-        type: 'custom',
-        label: ''
-      }
-    },
-    critId2: {
-      id: 'critId2',
-      title: 'crit2',
-      description: '',
-      dataSourceId: 'dsId2',
-      unitOfMeasurement: {
-        type: 'custom',
-        label: ''
-      }
-    }
-  };
+  const criteria: ICriterion[] = [
+    {
+      id: 'critId1'
+    } as ICriterion,
+    {
+      id: 'critId2'
+    } as ICriterion
+  ];
 
   it('should return "?" if there are no preferences', () => {
     const result = buildImportance(criteria, []);

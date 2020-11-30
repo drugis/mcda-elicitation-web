@@ -1,4 +1,4 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import _ from 'lodash';
 import IRankingAnswer from '../Interface/IRankingAnswer';
@@ -9,38 +9,17 @@ import {
   findCriterionIdForRank
 } from './RankingUtil';
 
-const criteria: Record<string, IPreferencesCriterion> = {
-  critId1: {
-    id: 'critId1',
-    title: 'title',
-    dataSourceId: 'ds1',
-    unitOfMeasurement: {
-      type: 'custom',
-      label: ''
-    },
-    description: 'description'
-  },
-  critId2: {
-    id: 'critId2',
-    title: 'title',
-    dataSourceId: 'ds2',
-    unitOfMeasurement: {
-      type: 'custom',
-      label: ''
-    },
-    description: 'description'
-  },
-  critId3: {
-    id: 'critId3',
-    title: 'title',
-    dataSourceId: 'ds3',
-    unitOfMeasurement: {
-      type: 'custom',
-      label: ''
-    },
-    description: 'description'
-  }
-};
+const criteria: ICriterion[] = [
+  {
+    id: 'critId1'
+  } as ICriterion,
+  {
+    id: 'critId2'
+  } as ICriterion,
+  {
+    id: 'critId3'
+  } as ICriterion
+];
 
 describe('findCriterionIdForRank', () => {
   it('should return the id of the criterion with the requested rank', () => {

@@ -1,5 +1,5 @@
 import Tooltip from '@material-ui/core/Tooltip';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import React, {useContext} from 'react';
@@ -8,7 +8,7 @@ export default function CriterionSituation({
   criterion,
   displayValue
 }: {
-  criterion: IPreferencesCriterion;
+  criterion: ICriterion;
   displayValue: number;
 }) {
   const {showPercentages} = useContext(SettingsContext);
@@ -28,7 +28,10 @@ export default function CriterionSituation({
           </span>
         </Tooltip>
         : <span id={`situation-value-${criterion.id}`}>{displayValue}</span>{' '}
-        {getUnitLabel(criterion.unitOfMeasurement, showPercentages)}
+        {getUnitLabel(
+          criterion.dataSources[0].unitOfMeasurement,
+          showPercentages
+        )}
       </li>
     </ul>
   );

@@ -25,26 +25,29 @@ export default function MatchingSetImportance() {
   const {mostImportantCriterionId, currentStep} = useContext(
     ElicitationContext
   );
-  const {criteria, pvfs} = useContext(PreferencesContext);
+  const {getCriterion, pvfs, criteria} = useContext(PreferencesContext);
 
-  const mostImportantCriterion = criteria[mostImportantCriterionId];
+  const mostImportantCriterion = getCriterion(mostImportantCriterionId);
+  const mostImportantUnitType =
+    mostImportantCriterion.dataSources[0].unitOfMeasurement.type;
 
   const currentCriterion = getCurrentCriterion(
     criteria,
     mostImportantCriterionId,
     currentStep
   );
+  const currentUnitType =
+    currentCriterion.dataSources[0].unitOfMeasurement.type;
   const statement = getMatchingStatement(
     mostImportantCriterion,
     currentCriterion
   );
 
   const usePercentagesForMostImportantCriterion =
-    showPercentages &&
-    canBePercentage(mostImportantCriterion.unitOfMeasurement.type);
+    showPercentages && canBePercentage(mostImportantUnitType);
 
   const usePercentagesForCurrentCriterion =
-    showPercentages && canBePercentage(currentCriterion.unitOfMeasurement.type);
+    showPercentages && canBePercentage(currentUnitType);
 
   return (
     <Grid container item spacing={2}>

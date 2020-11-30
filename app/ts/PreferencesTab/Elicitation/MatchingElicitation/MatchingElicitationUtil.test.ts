@@ -1,4 +1,4 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import {
   calculateImportance,
   determineStepSize,
@@ -6,38 +6,20 @@ import {
   getMatchingStatement
 } from './MatchingElicitationUtil';
 
-const criteria: Record<string, IPreferencesCriterion> = {
-  critId1: {
+const criteria: ICriterion[] = [
+  {
     id: 'critId1',
-    title: 'title1',
-    dataSourceId: 'ds1',
-    unitOfMeasurement: {
-      type: 'custom',
-      label: ''
-    },
-    description: 'description'
-  },
-  critId2: {
+    title: 'title1'
+  } as ICriterion,
+  {
     id: 'critId2',
-    title: 'title2',
-    dataSourceId: 'ds2',
-    unitOfMeasurement: {
-      type: 'custom',
-      label: ''
-    },
-    description: 'description'
-  },
-  critId3: {
+    title: 'title2'
+  } as ICriterion,
+  {
     id: 'critId3',
-    title: 'title3',
-    dataSourceId: 'ds3',
-    unitOfMeasurement: {
-      type: 'custom',
-      label: ''
-    },
-    description: 'description'
-  }
-};
+    title: 'title3'
+  } as ICriterion
+];
 
 describe('determineStepSize', () => {
   it('should return the step size based on the criterion scale', () => {
@@ -60,19 +42,15 @@ describe('calculateImportance', () => {
 
 describe('getCurrentCriterion', () => {
   it('should return the correct criterion for matching', () => {
-    const result: IPreferencesCriterion = getCurrentCriterion(
-      criteria,
-      'critId1',
-      2
-    );
+    const result: ICriterion = getCurrentCriterion(criteria, 'critId1', 2);
     expect(result.id).toEqual('critId2');
   });
 });
 
 describe('getMatchingStatement', () => {
   it('should return a complete matching statement', () => {
-    const mostImportantCriterion = criteria['critId1'];
-    const currentCriterion = criteria['critId2'];
+    const mostImportantCriterion = criteria[0];
+    const currentCriterion = criteria[1];
     const result: string = getMatchingStatement(
       mostImportantCriterion,
       currentCriterion

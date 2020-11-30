@@ -1,4 +1,4 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
@@ -6,21 +6,24 @@ import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
 
 export function buildImportance(
-  criteria: Record<string, IPreferencesCriterion>,
+  criteria: ICriterion[],
   preferences: TPreferences
 ): Record<string, string> {
-  return _.mapValues(criteria, (criterion) => {
-    if (_.isEmpty(preferences)) {
-      return '?';
-    } else if (preferences[0].type === 'ordinal') {
-      return determineRank(preferences as IRanking[], criterion.id);
-    } else {
-      return buildCriterionImportance(
-        preferences as IExactSwingRatio[] | IRatioBoundConstraint[],
-        criterion.id
-      );
-    }
-  });
+  return _(criteria)
+    .keyBy('id')
+    .mapValues((criterion): string => {
+      if (_.isEmpty(preferences)) {
+        return '?';
+      } else if (preferences[0].type === 'ordinal') {
+        return determineRank(preferences as IRanking[], criterion.id);
+      } else {
+        return buildCriterionImportance(
+          preferences as IExactSwingRatio[] | IRatioBoundConstraint[],
+          criterion.id
+        );
+      }
+    })
+    .value();
 }
 
 function determineRank(preferences: IRanking[], criterionId: string) {

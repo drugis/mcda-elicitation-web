@@ -1,9 +1,9 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import _ from 'lodash';
 
 export function buildInitialImprecisePreferences(
-  criteria: Record<string, IPreferencesCriterion>,
+  criteria: ICriterion[],
   mostImportantCriterionId: string
 ): Record<string, IRatioBoundConstraint> {
   return _(criteria)

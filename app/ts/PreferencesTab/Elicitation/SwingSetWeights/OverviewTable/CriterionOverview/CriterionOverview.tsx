@@ -1,7 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {ElicitationContext} from 'app/ts/PreferencesTab/Elicitation/ElicitationContext';
 import ImpreciseSwingSlider from 'app/ts/PreferencesTab/Elicitation/ImpreciseSwingElicitation/ImpreciseSwingSlider/ImpreciseSwingSlider';
@@ -18,14 +18,13 @@ import PreciseSwingSlider from '../../../PreciseSwingElicitation/PreciseSwingSli
 export default function CriterionOverview({
   criterion
 }: {
-  criterion: IPreferencesCriterion;
+  criterion: ICriterion;
 }) {
   const {showPercentages} = useContext(SettingsContext);
   const {elicitationMethod} = useContext(ElicitationContext);
   const {pvfs} = useContext(PreferencesContext);
-
-  const usePercentage =
-    showPercentages && canBePercentage(criterion.unitOfMeasurement.type);
+  const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unitType);
 
   function renderSwingSlider(): JSX.Element {
     if (elicitationMethod === 'precise') {
@@ -46,7 +45,10 @@ export default function CriterionOverview({
         </Tooltip>
       </TableCell>
       <TableCell>
-        {getUnitLabel(criterion.unitOfMeasurement, showPercentages)}
+        {getUnitLabel(
+          criterion.dataSources[0].unitOfMeasurement,
+          showPercentages
+        )}
       </TableCell>
       <TableCell align="center">
         {getWorst(pvfs[criterion.id], usePercentage)}

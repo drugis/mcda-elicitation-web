@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
@@ -26,24 +26,39 @@ export default function MostImportantChoice() {
     setIsNextDisabled(false);
   }
 
+  function renderCriterionSituations(): JSX.Element[] {
+    return _.map(
+      criteria,
+      (criterion: ICriterion): JSX.Element => {
+        const unitType = criterion.dataSources[0].unitOfMeasurement.type;
+        const usePercentage = showPercentages && canBePercentage(unitType);
+        return (
+          <CriterionSituation
+            key={criterion.id}
+            criterion={criterion}
+            displayValue={getWorst(pvfs[criterion.id], usePercentage)}
+          />
+        );
+      }
+    );
+  }
+
+  function renderCriterionChoices(): JSX.Element[] {
+    return _.map(
+      criteria,
+      (criterion: ICriterion): JSX.Element => (
+        <CriterionChoice key={criterion.id} criterion={criterion} />
+      )
+    );
+  }
+
   return (
     <Grid container item>
       <Grid item xs={12}>
         <Typography variant="h6">Given the following situation:</Typography>
       </Grid>
       <Grid item xs={12}>
-        {_.map(criteria, (criterion: IPreferencesCriterion) => {
-          const usePercentage =
-            showPercentages &&
-            canBePercentage(criterion.unitOfMeasurement.type);
-          return (
-            <CriterionSituation
-              key={criterion.id}
-              criterion={criterion}
-              displayValue={getWorst(pvfs[criterion.id], usePercentage)}
-            />
-          );
-        })}
+        {renderCriterionSituations()}
       </Grid>
       <Grid item xs={12}>
         <Typography variant="h6">
@@ -56,9 +71,7 @@ export default function MostImportantChoice() {
           value={mostImportantCriterionId ? mostImportantCriterionId : ''}
           onChange={handleSelection}
         >
-          {_.map(criteria, (criterion) => {
-            return <CriterionChoice key={criterion.id} criterion={criterion} />;
-          })}
+          {renderCriterionChoices()}
         </RadioGroup>
       </Grid>
     </Grid>

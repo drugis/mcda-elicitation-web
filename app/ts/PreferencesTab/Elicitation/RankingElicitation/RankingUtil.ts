@@ -1,24 +1,26 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import _ from 'lodash';
 import {UNRANKED} from '../elicitationConstants';
 import IRankingAnswer from '../Interface/IRankingAnswer';
 
 export function findCriterionIdForRank(
-  criteria: Record<string, IPreferencesCriterion>,
+  criteria: ICriterion[],
   rankings: Record<string, IRankingAnswer>,
   rank: number
 ): string {
-  return _.find(criteria, (criterion) => {
-    return rankings[criterion.id] && rankings[criterion.id].rank === rank;
-  }).id;
+  return _.find(
+    criteria,
+    (criterion: ICriterion): boolean =>
+      rankings[criterion.id] && rankings[criterion.id].rank === rank
+  ).id;
 }
 
 export function assignMissingRankings(
   rankings: Record<string, IRankingAnswer>,
   selectedCriterionId: string,
   rank: number,
-  criteria: Record<string, IPreferencesCriterion>
+  criteria: ICriterion[]
 ): Record<string, IRankingAnswer> {
   const intermediateRankings = addRanking(rankings, selectedCriterionId, rank);
   const lastCriterionId = findCriterionIdWithoutRanking(
@@ -43,15 +45,15 @@ export function addRanking(
 }
 
 function findCriterionIdWithoutRanking(
-  criteria: Record<string, IPreferencesCriterion>,
+  criteria: ICriterion[],
   rankings: Record<string, IRankingAnswer>
 ): string {
-  return _.find(criteria, (criterion) => {
-    return (
+  return _.find(
+    criteria,
+    (criterion: ICriterion): boolean =>
       rankings[criterion.id] === undefined ||
       rankings[criterion.id].rank === UNRANKED
-    );
-  }).id;
+  ).id;
 }
 
 export function buildRankingPreferences(answers: IRankingAnswer[]): IRanking[] {

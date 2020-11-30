@@ -1,6 +1,5 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IProblem from '@shared/interface/Problem/IProblem';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPvfDirection} from '@shared/types/PvfTypes';
@@ -11,7 +10,7 @@ export default interface IPreferencesContext {
   currentScenario: IMcdaScenario;
   problem: IProblem;
   pvfs: Record<string, IPvf>;
-  criteria: Record<string, IPreferencesCriterion>;
+  criteria: ICriterion[];
   disableWeightsButtons: boolean;
   activeView: TPreferencesView;
   setCurrentScenario: (currentScenario: IMcdaScenario) => void;
@@ -19,7 +18,7 @@ export default interface IPreferencesContext {
   deleteScenario: (id: string) => void;
   copyScenario: (newTitle: string) => void;
   addScenario: (newTitle: string) => void;
-  getCriterion: (id: string) => IPreferencesCriterion;
+  getCriterion: (id: string) => ICriterion;
   getPvf: (criterionId: string) => IPvf;
   setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
   resetPreferences: (scenario: IMcdaScenario) => void;

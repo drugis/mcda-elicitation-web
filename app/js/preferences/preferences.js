@@ -35,7 +35,11 @@ define([
         'problem',
         'settings',
         'updateAngularScenario',
-        'toggledColumns'
+        'toggledColumns',
+        'workspace',
+        'scales',
+        'subproblems',
+        'currentSubproblem'
       ])
     )
     .controller(

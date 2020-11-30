@@ -3,7 +3,6 @@ import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {
   getBest,
-  getPercentifiedNumber,
   getWorst
 } from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
@@ -27,13 +26,12 @@ export default function MatchingSlider({
     mostImportantCriterionId,
     setPreference
   } = useContext(ElicitationContext);
-  const {criteria, pvfs} = useContext(PreferencesContext);
+  const {getCriterion, pvfs} = useContext(PreferencesContext);
 
-  const mostImportantCriterion = criteria[mostImportantCriterionId];
+  const mostImportantCriterion = getCriterion(mostImportantCriterionId);
   const range = pvfs[mostImportantCriterionId].range;
-  const usePercentage =
-    showPercentages &&
-    canBePercentage(mostImportantCriterion.unitOfMeasurement.type);
+  const unitType = mostImportantCriterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unitType);
 
   const [sliderValue, setSliderValue] = useState<number>(
     getBest(pvfs[mostImportantCriterionId], usePercentage)

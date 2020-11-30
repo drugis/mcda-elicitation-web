@@ -1,4 +1,4 @@
-import IPreferencesCriterion from '@shared/interface/Preferences/IPreferencesCriterion';
+import ICriterion from '@shared/interface/ICriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
@@ -11,13 +11,13 @@ import {
 import {DEFAULT_PRECISE_TEMPLATE} from '../elicitationConstants';
 
 export function getSwingStatement(
-  criterion: IPreferencesCriterion,
+  criterion: ICriterion,
   pvf: IPvf,
   showPercentages: boolean
 ): string {
-  const label = getUnitLabel(criterion.unitOfMeasurement, showPercentages);
-  const usePercentage =
-    showPercentages && canBePercentage(criterion.unitOfMeasurement.type);
+  const unit = criterion.dataSources[0].unitOfMeasurement;
+  const label = getUnitLabel(unit, showPercentages);
+  const usePercentage = showPercentages && canBePercentage(unit.type);
   return DEFAULT_PRECISE_TEMPLATE.replace(/%criterion1%/gi, criterion.title)
     .replace(/%unit1%/gi, label)
     .replace(/%worst1%/gi, String(getWorst(pvf, usePercentage)))
@@ -25,7 +25,7 @@ export function getSwingStatement(
 }
 
 export function buildInitialPrecisePreferences(
-  criteria: Record<string, IPreferencesCriterion>,
+  criteria: ICriterion[],
   mostImportantCriterionId: string
 ): Record<string, IExactSwingRatio> {
   return _(criteria)
