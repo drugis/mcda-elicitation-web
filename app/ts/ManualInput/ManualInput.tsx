@@ -8,7 +8,7 @@ import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
 import Favourability from './Favourability/Favourability';
 import GenerateDistributionsButton from './GenerateDistributionsButton/GenerateDistributionsButton';
 import ManualInputTable from './ManualInputTable/ManualInputTable';
-import TherapeuticContext from './TherapeuticContext/TherapeuticContext';
+import ManualInputTherapeuticContext from './ManualInputTherapeuticContext/ManualInputTherapeuticContext';
 import Title from './Title/Title';
 import Warnings from './Warnings/Warnings';
 
@@ -31,7 +31,7 @@ export default function ManualInput() {
           <Title />
         </Grid>
         <Grid item xs={11}>
-          <TherapeuticContext />
+          <ManualInputTherapeuticContext />
         </Grid>
         <Grid item xs={1}>
           <InlineHelp helpId="therapeutic-context" />

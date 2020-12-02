@@ -9,57 +9,52 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import React, {ChangeEvent, useContext, useState} from 'react';
 
-export default function EditSubproblemButton() {
-  const {currentSubproblem, subproblems, editTitle} = useContext(
+export default function EditTherapeuticContext() {
+  const {therapeuticContext, editTherapeuticContext} = useContext(
     WorkspaceContext
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [title, setTitle] = useState<string>('');
-  const [error, setError] = useState<string>(
-    getTitleError(title, subproblems, currentSubproblem.id)
-  );
+  const [
+    localTherapeuticContext,
+    setLocalTherapeuticContext
+  ] = useState<string>('');
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
 
-  useEffect(() => {
-    setError(getTitleError(title, subproblems, currentSubproblem.id));
-  }, [title]);
-
-  const handleKey = createEnterHandler(handleButtonClick, isDisabled);
+  const handleKey = createEnterHandler(handleButtonClick, () => {
+    return false;
+  });
 
   function closeDialog(): void {
     setIsDialogOpen(false);
   }
 
   function openDialog(): void {
-    setTitle(currentSubproblem.title);
+    setLocalTherapeuticContext(therapeuticContext);
     setIsDialogOpen(true);
   }
 
-  function titleChanged(event: ChangeEvent<HTMLTextAreaElement>): void {
-    setTitle(event.target.value);
+  function therapeuticContextChanged(
+    event: ChangeEvent<HTMLTextAreaElement>
+  ): void {
+    setLocalTherapeuticContext(event.target.value);
   }
 
   function handleButtonClick(): void {
     if (!isButtonPressed) {
       setIsButtonPressed(true);
       closeDialog();
-      editTitle(title);
+      editTherapeuticContext(localTherapeuticContext);
     }
-  }
-
-  function isDisabled(): boolean {
-    return !!error || isButtonPressed;
   }
 
   return (
     <>
-      <Tooltip title={'Edit problem'}>
+      <Tooltip title={'Edit therapeutic context'}>
         <IconButton
-          id={'edit-subproblem-button'}
+          id={'edit-therapeutic-context-button'}
           color="primary"
           onClick={openDialog}
         >
@@ -73,40 +68,32 @@ export default function EditSubproblemButton() {
         maxWidth={'sm'}
       >
         <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-          Edit problem title
+          Edit therapeutic context
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
             <Grid item xs={12}>
               <TextField
-                label="new title"
-                id="subproblem-title-input"
-                value={title}
-                onChange={titleChanged}
+                label="new therapeutic context"
+                id="therapeutic-context-input"
+                value={localTherapeuticContext}
+                onChange={therapeuticContextChanged}
+                variant="outlined"
                 onKeyDown={handleKey}
                 autoFocus
+                multiline
+                rows={5}
                 fullWidth
               />
-            </Grid>
-            <Grid
-              id={`title-error`}
-              item
-              container
-              xs={12}
-              justify="flex-end"
-              className="alert"
-            >
-              {error}
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button
-            id={'edit-subproblem-confirm-button'}
+            id={'edit-therapeutic-context-confirm-button'}
             variant="contained"
             color="primary"
             onClick={handleButtonClick}
-            disabled={isDisabled()}
           >
             Edit
           </Button>

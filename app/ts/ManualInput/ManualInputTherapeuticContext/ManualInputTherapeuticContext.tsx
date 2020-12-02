@@ -3,7 +3,7 @@ import _ from 'lodash';
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
-export default function TherapeuticContext() {
+export default function ManualInputTherapeuticContext() {
   const {therapeuticContext, updateTherapeuticContext} = useContext(
     ManualInputContext
   );
@@ -25,9 +25,9 @@ export default function TherapeuticContext() {
     []
   );
 
-  const debouncedFunctionRef: React.MutableRefObject<(
-    newTherapeuticContext: string
-  ) => void> = useRef((newTherapeuticContext: string) =>
+  const debouncedFunctionRef: React.MutableRefObject<
+    (newTherapeuticContext: string) => void
+  > = useRef((newTherapeuticContext: string) =>
     updateTherapeuticContext(newTherapeuticContext)
   );
 

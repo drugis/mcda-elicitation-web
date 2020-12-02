@@ -4,6 +4,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
+import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import {buildWorkspace} from '@shared/workspaceService';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
@@ -44,12 +45,15 @@ export function WorkspaceContextProviderComponent({
     Record<string, [number, number]>
   >({});
 
+  const [workspace, setWorkspace] = useState<IWorkspace>(
+    buildWorkspace(oldWorkspace, workspaceId)
+  );
+
   useEffect(() => {
     if (scales && oldWorkspace) {
       setObservedRanges(calculateObservedRanges(scales, workspace));
     }
   }, [scales, oldWorkspace]);
-  const workspace: IWorkspace = buildWorkspace(oldWorkspace, workspaceId);
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};
@@ -90,6 +94,20 @@ export function WorkspaceContextProviderComponent({
     setError(error);
   }
 
+  function editTherapeuticContext(therapeuticContext: string): void {
+    const newWorkspace = _.merge({}, workspace, {
+      properties: {therapeuticContext: therapeuticContext}
+    });
+    setWorkspace(newWorkspace);
+    const oldWorkspaceToSend = {
+      ...oldWorkspace,
+      problem: {...oldWorkspace.problem, description: therapeuticContext}
+    };
+    Axios.post(`/workspaces/${workspaceId}`, oldWorkspaceToSend)
+      .then(() => {})
+      .catch(errorCallback);
+  }
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -97,10 +115,13 @@ export function WorkspaceContextProviderComponent({
         criteria: _.keyBy(workspace.criteria, 'id'),
         currentSubproblem,
         observedRanges,
+        oldProblem: oldWorkspace.problem,
         scales,
         subproblems,
+        therapeuticContext: workspace.properties.therapeuticContext,
         workspace,
         deleteSubproblem,
+        editTherapeuticContext,
         editTitle,
         addSubproblem
       }}

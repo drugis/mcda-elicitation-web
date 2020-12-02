@@ -1,26 +1,15 @@
+<overview
+  ng-if="workspaceForReact && workspaceSettings"
+  workspace="workspaceForReact"
+  subproblems="subProblems"
+  settings="workspaceSettings"
+  scales="workspace.scales.base"
+  toggled-columns="toggledColumns"
+  current-subproblem="subProblem"
+  workspace-id="workspace.id"
+/>
+<!-- 
 <div class="grid-x">
-  <div class="cell large-6">
-    <a class="button small" ng-click="downloadWorkspace()">
-      Download workspace
-    </a>
-  </div>
-  <div class="cell">
-    <h4>
-      Therapeutic context
-      <inline-help help-key="therapeutic-context"></inline-help>
-      <a
-        id="edit-therapeutic-context-button"
-        ng-if="editMode.canEdit && isStandAlone"
-        ng-click="editTherapeuticContext()"
-      >
-        <i class="fa fa-edit"></i>
-      </a>
-    </h4>
-  </div>
-  <div id="therapeutic-context" class="cell underlined-div">
-    <span ng-if="problem.description">{{problem.description}}</span>
-    <span ng-if="!problem.description">No description given.</span>
-  </div>
   <div class="cell">
     <h4>
       Criteria
@@ -102,4 +91,4 @@
       </tbody>
     </table>
   </div>
-</div>
+</div> -->
