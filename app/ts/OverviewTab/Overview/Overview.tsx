@@ -1,6 +1,7 @@
 import {Grid} from '@material-ui/core';
 import React from 'react';
 import DownloadWorkspace from './DownloadWorkspace/DownloadWorkspace';
+import OverviewAlternatives from './OverviewAlternatives/OverviewAlternatives';
 import TherapeuticContext from './TherapeuticContext/TherapeuticContext';
 
 export default function Overview() {
@@ -9,7 +10,7 @@ export default function Overview() {
       <DownloadWorkspace />
       <TherapeuticContext />
       {/* <OverviewCriteria/> */}
-      {/* <OverviewAlternatives/> */}
+      <OverviewAlternatives />
     </Grid>
   );
 }
