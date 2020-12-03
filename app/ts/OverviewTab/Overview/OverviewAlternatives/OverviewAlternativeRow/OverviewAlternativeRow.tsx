@@ -1,6 +1,7 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import React from 'react';
+import EditOverviewAlternativeButton from './EditOverviewAlternativeButton/EditOverviewAlternativeButton';
 
 export default function OverviewAlternativeRow({
   alternative
@@ -11,7 +12,9 @@ export default function OverviewAlternativeRow({
     <TableRow>
       <TableCell></TableCell>
       <TableCell>{alternative.title}</TableCell>
-      <TableCell></TableCell>
+      <TableCell>
+        <EditOverviewAlternativeButton alternative={alternative} />
+      </TableCell>
     </TableRow>
   );
 }

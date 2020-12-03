@@ -7,54 +7,65 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
+import IAlternative from '@shared/interface/IAlternative';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {ChangeEvent, useContext, useState} from 'react';
+import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
-export default function EditTherapeuticContext() {
-  const {therapeuticContext, editTherapeuticContext} = useContext(
-    WorkspaceContext
-  );
+export default function EditOverviewAlternativeButton({
+  alternative
+}: {
+  alternative: IAlternative;
+}) {
+  const {editAlternative, alternatives} = useContext(WorkspaceContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [
-    localTherapeuticContext,
-    setLocalTherapeuticContext
-  ] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
+  const [error, setError] = useState<string>(
+    getTitleError(title, alternatives, alternative.id)
+  );
 
-  const handleKey = createEnterHandler(handleButtonClick, () => {
-    return false;
-  });
+  useEffect(() => {
+    setError(getTitleError(title, alternatives, alternative.id));
+  }, [title]);
+
+  const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
   function closeDialog(): void {
     setIsDialogOpen(false);
   }
 
   function openDialog(): void {
-    setLocalTherapeuticContext(therapeuticContext);
+    setIsButtonPressed(false);
+    setTitle(alternative.title);
     setIsDialogOpen(true);
   }
 
-  function therapeuticContextChanged(
+  function OverviewAlternativeChanged(
     event: ChangeEvent<HTMLTextAreaElement>
   ): void {
-    setLocalTherapeuticContext(event.target.value);
+    setTitle(event.target.value);
   }
 
   function handleButtonClick(): void {
     if (!isButtonPressed) {
       setIsButtonPressed(true);
       closeDialog();
-      editTherapeuticContext(localTherapeuticContext);
+      editAlternative(alternative, title);
     }
+  }
+
+  function isDisabled(): boolean {
+    return !!error || isButtonPressed;
   }
 
   return (
     <>
-      <Tooltip title={'Edit therapeutic context'}>
+      <Tooltip title={'Edit alternative'}>
         <IconButton
-          id={'edit-therapeutic-context-button'}
+          id={'edit-alternative-button'}
           color="primary"
           onClick={openDialog}
         >
@@ -68,32 +79,41 @@ export default function EditTherapeuticContext() {
         maxWidth={'sm'}
       >
         <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-          Edit therapeutic context
+          Edit alternative
         </DialogTitleWithCross>
         <DialogContent>
           <Grid container>
             <Grid item xs={12}>
               <TextField
-                label="new therapeutic context"
-                id="therapeutic-context-input"
-                value={localTherapeuticContext}
-                onChange={therapeuticContextChanged}
+                label="new title"
+                id="alternative-title-input"
+                value={title}
+                onChange={OverviewAlternativeChanged}
                 variant="outlined"
                 onKeyDown={handleKey}
                 autoFocus
-                multiline
-                rows={5}
                 fullWidth
               />
+            </Grid>
+            <Grid
+              id={`title-error`}
+              item
+              container
+              xs={12}
+              justify="flex-end"
+              className="alert"
+            >
+              {error}
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button
-            id={'edit-therapeutic-context-confirm-button'}
+            id={'edit-alternative-confirm-button'}
             variant="contained"
             color="primary"
             onClick={handleButtonClick}
+            disabled={isDisabled()}
           >
             Edit
           </Button>

@@ -17,6 +17,7 @@ export default interface IWorkspaceContext {
   therapeuticContext: string;
   workspace: IWorkspace;
   deleteSubproblem: (subproblemId: string) => void;
+  editAlternative: (alternative: IAlternative, newTitle: string) => void;
   editTitle: (title: string) => void;
   editTherapeuticContext: (therapeuticContext: string) => void;
   addSubproblem: (command: ISubproblemCommand) => void;

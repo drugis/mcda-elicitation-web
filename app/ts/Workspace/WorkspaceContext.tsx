@@ -1,3 +1,4 @@
+import IAlternative from '@shared/interface/IAlternative';
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
@@ -90,22 +91,37 @@ export function WorkspaceContextProviderComponent({
       .catch(errorCallback);
   }
 
-  function errorCallback(error: OurError) {
-    setError(error);
+  function editTherapeuticContext(therapeuticContext: string): void {
+    const oldWorkspaceToSend: IOldWorkspace = _.merge(
+      {},
+      _.cloneDeep(oldWorkspace),
+      {
+        problem: {description: therapeuticContext}
+      }
+    );
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId));
+    sendOldWorkspace(oldWorkspaceToSend);
   }
 
-  function editTherapeuticContext(therapeuticContext: string): void {
-    const newWorkspace = _.merge({}, workspace, {
-      properties: {therapeuticContext: therapeuticContext}
-    });
-    setWorkspace(newWorkspace);
-    const oldWorkspaceToSend = {
-      ...oldWorkspace,
-      problem: {...oldWorkspace.problem, description: therapeuticContext}
-    };
-    Axios.post(`/workspaces/${workspaceId}`, oldWorkspaceToSend)
-      .then(() => {})
-      .catch(errorCallback);
+  function editAlternative(alternative: IAlternative, newTitle: string): void {
+    const newAlternative: IAlternative = {id: alternative.id, title: newTitle};
+    const oldWorkspaceToSend: IOldWorkspace = _.merge(
+      {},
+      _.cloneDeep(oldWorkspace),
+      {problem: {alternatives: {[alternative.id]: newAlternative}}}
+    );
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId));
+    sendOldWorkspace(oldWorkspaceToSend);
+  }
+
+  function sendOldWorkspace(oldWorkspaceToSend: IOldWorkspace) {
+    Axios.post(`/workspaces/${workspaceId}`, oldWorkspaceToSend).catch(
+      errorCallback
+    );
+  }
+
+  function errorCallback(error: OurError) {
+    setError(error);
   }
 
   return (
@@ -121,6 +137,7 @@ export function WorkspaceContextProviderComponent({
         therapeuticContext: workspace.properties.therapeuticContext,
         workspace,
         deleteSubproblem,
+        editAlternative,
         editTherapeuticContext,
         editTitle,
         addSubproblem
