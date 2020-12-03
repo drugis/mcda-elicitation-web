@@ -4,20 +4,19 @@ import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DUMMY_ID} from '../../../../constants';
 import {ManualInputContext} from '../../../../ManualInputContext';
 import AddDataSourceButton from '../AddDataSourceButton/AddDataSourceButton';
 import {DataSourceRowContext} from '../DataSourceRowContext/DataSourceRowContext';
-import MoveCriterionButtons from '../MoveCriterionButtons/MoveCriterionButtons';
 import ChangeFavourabilityButton from './ChangeFavourabilityButton/ChangeFavourabilityButton';
 import CriterionDescriptionCell from './CriterionDescriptionCell/CriterionDescriptionCell';
 import CriterionTitleCell from './CriterionTitleCell/CriterionTitleCell';
 import DeleteCriterionButton from './DeleteCriterionButton/DeleteCriterionButton';
 import DeleteDataSourceButton from './DeleteDataSourceButton/DeleteDataSourceButton';
 import InputCell from './InputCell/InputCell';
-import MoveDataSourceButtons from './MoveDataSourceButtons/MoveDataSourceButtons';
 import ReferenceCell from './ReferenceCell/ReferenceCell';
 import SoEUncertaintyCell from './SoEUncertaintyCell/SoEUncertaintyCell';
 import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
@@ -29,8 +28,19 @@ export default function DataSourceRow({
   dataSource: IDataSource;
   isFirstRowForCriterion: boolean;
 }) {
-  const {criterion} = useContext(DataSourceRowContext);
-  const {alternatives, useFavourability} = useContext(ManualInputContext);
+  const {
+    criterion,
+    previousCriterionId,
+    nextCriterionId,
+    nextDataSourceId,
+    previousDataSourceId
+  } = useContext(DataSourceRowContext);
+  const {
+    alternatives,
+    useFavourability,
+    swapCriteria,
+    swapDataSources
+  } = useContext(ManualInputContext);
   const numberOfColumns = alternatives.length + 6;
   const numberOfDataSourceRows = criterion.dataSources.length;
 
@@ -53,7 +63,12 @@ export default function DataSourceRow({
           />
         </TableCell>
         <TableCell align={'center'}>
-          <MoveDataSourceButtons />
+          <MoveUpDownButtons
+            swap={_.partial(swapDataSources, criterion.id)}
+            id={dataSource.id}
+            previousId={previousDataSourceId}
+            nextId={nextDataSourceId}
+          />
         </TableCell>
         <UnitOfMeasurementCell criterion={criterion} dataSource={dataSource} />
         {createInputCells()}
@@ -89,7 +104,12 @@ export default function DataSourceRow({
             </Grid>
           </TableCell>
           <TableCell rowSpan={numberOfDataSourceRows} align="center">
-            <MoveCriterionButtons />
+            <MoveUpDownButtons
+              swap={swapCriteria}
+              id={criterion.id}
+              nextId={nextCriterionId}
+              previousId={previousCriterionId}
+            />
           </TableCell>
           <CriterionTitleCell criterion={criterion} />
           <CriterionDescriptionCell criterion={criterion} />
