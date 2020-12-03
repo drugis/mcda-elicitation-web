@@ -16,9 +16,10 @@ export default interface IWorkspaceContext {
   subproblems: Record<string, IOldSubproblem>;
   therapeuticContext: string;
   workspace: IWorkspace;
+  addSubproblem: (command: ISubproblemCommand) => void;
   deleteSubproblem: (subproblemId: string) => void;
   editAlternative: (alternative: IAlternative, newTitle: string) => void;
   editTitle: (title: string) => void;
   editTherapeuticContext: (therapeuticContext: string) => void;
-  addSubproblem: (command: ISubproblemCommand) => void;
+  swapAlternatives: (alternative1Id: string, alternative2Id: string) => void;
 }

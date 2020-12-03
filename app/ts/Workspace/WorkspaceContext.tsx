@@ -1,16 +1,18 @@
 import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import IOrdering from '@shared/interface/IOrdering';
 import IScale from '@shared/interface/IScale';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
-import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import {buildWorkspace} from '@shared/workspaceService';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
+import {swapItems} from '../ManualInput/ManualInputService/ManualInputService';
 import {calculateObservedRanges} from '../Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import IWorkspaceContext from './IWorkspaceContext';
 
@@ -124,6 +126,28 @@ export function WorkspaceContextProviderComponent({
     setError(error);
   }
 
+  function swapAlternatives(alternative1Id: string, alternative2Id: string) {
+    const newAlternatives = swapItems(
+      alternative1Id,
+      alternative2Id,
+      workspace.alternatives
+    );
+    setWorkspace(
+      _.merge({}, _.cloneDeep(workspace), {alternatives: newAlternatives})
+    );
+    const newOrdering: IOrdering = {
+      alternatives: _.map(newAlternatives, 'id'),
+      criteria: _.map(workspace.criteria, 'id'),
+      dataSources: _.flatMap(
+        workspace.criteria,
+        (criterion: ICriterion): string[] => _.map(criterion.dataSources, 'id')
+      )
+    };
+    Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
+      errorCallback
+    );
+  }
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -136,11 +160,12 @@ export function WorkspaceContextProviderComponent({
         subproblems,
         therapeuticContext: workspace.properties.therapeuticContext,
         workspace,
+        addSubproblem,
         deleteSubproblem,
         editAlternative,
         editTherapeuticContext,
         editTitle,
-        addSubproblem
+        swapAlternatives
       }}
     >
       {children}
