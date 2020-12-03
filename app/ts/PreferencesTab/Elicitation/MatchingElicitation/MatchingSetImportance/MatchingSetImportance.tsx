@@ -78,7 +78,7 @@ export default function MatchingSetImportance() {
                   usePercentagesForMostImportantCriterion
                 )}
               </TableCell>
-              <TableCell align="center">
+              <TableCell align="center" id="matching-cell">
                 <MatchingSlider currentCriterionId={currentCriterion.id} />
               </TableCell>
             </TableRow>
