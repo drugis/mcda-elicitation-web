@@ -40,7 +40,7 @@ export default function MatchingSlider({
   const [stepSize, setStepSize] = useState<number>();
 
   useEffect(() => {
-    const sliderValue = getBest(pvfs[mostImportantCriterionId], false);
+    const sliderValue = getBest(pvf, false);
     setSliderValue(sliderValue);
     setPreference(currentCriterionId, calculateImportance(sliderValue, pvf));
   }, [currentStep]);
