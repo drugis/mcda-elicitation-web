@@ -236,14 +236,7 @@ export function buildWorkspaceDataSources(
       };
     }
   );
-  if (ordering) {
-    const dataSourceOrderingForCriterion = _.filter(ordering, (dataSourceId) =>
-      _.some(criterion.dataSources, ['id', dataSourceId])
-    );
-    return order(dataSourceOrderingForCriterion, newDataSources);
-  } else {
-    return newDataSources;
-  }
+  return order(ordering, newDataSources);
 }
 
 export function buildWorkspaceAlternatives(
