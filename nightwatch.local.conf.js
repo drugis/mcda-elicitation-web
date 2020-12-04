@@ -26,9 +26,6 @@ module.exports = {
         'moz:firefoxOptions': {
           args: ['-headless']
         },
-        firefoxOptions: {
-          w3c: false
-        },
         javascriptEnabled: true,
         acceptSslCerts: true,
         acceptInsecureCerts: true
