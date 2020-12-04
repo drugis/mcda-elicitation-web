@@ -14,7 +14,7 @@ export function SubproblemContextProviderComponent({
   children: any;
 }) {
   const {workspace, currentSubproblem, scales} = useContext(WorkspaceContext);
-  const [filteredWorkspace] = useState(
+  const [filteredWorkspace, setFilteredWorkspace] = useState(
     applySubproblem(workspace, currentSubproblem)
   );
   const {
@@ -33,6 +33,10 @@ export function SubproblemContextProviderComponent({
       setObservedRanges(calculateObservedRanges(scales, filteredWorkspace));
     }
   }, [scales, filteredWorkspace]);
+
+  useEffect(() => {
+    setFilteredWorkspace(applySubproblem(workspace, currentSubproblem));
+  }, [workspace, currentSubproblem]);
 
   return (
     <SubproblemContext.Provider

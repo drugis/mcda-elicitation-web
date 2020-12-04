@@ -45,12 +45,12 @@ define(['lodash'], function (_) {
 
     function getNewOrdering(problem) {
       var ordering = {
-        alternatives: _.map(problem.alternatives, function (
-          alternative,
-          alternativeId
-        ) {
-          return _.extend({}, alternative, {id: alternativeId});
-        }),
+        alternatives: _.map(
+          problem.alternatives,
+          function (alternative, alternativeId) {
+            return _.extend({}, alternative, {id: alternativeId});
+          }
+        ),
         criteria: getOrderedCriteria(problem)
       };
       return ordering;
@@ -58,12 +58,12 @@ define(['lodash'], function (_) {
 
     // private
     function getOrderedCriteria(problem) {
-      var criteriaWithId = _.map(problem.criteria, function (
-        criterion,
-        criterionId
-      ) {
-        return _.extend({}, criterion, {id: criterionId});
-      });
+      var criteriaWithId = _.map(
+        problem.criteria,
+        function (criterion, criterionId) {
+          return _.extend({}, criterion, {id: criterionId});
+        }
+      );
       var partition = _.partition(criteriaWithId, ['isFavorable', true]);
       return partition[0].concat(partition[1]);
     }

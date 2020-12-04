@@ -51,12 +51,29 @@ export function WorkspaceContextProviderComponent({
   const [workspace, setWorkspace] = useState<IWorkspace>(
     buildWorkspace(oldWorkspace, workspaceId)
   );
+  const [ordering, setOrdering] = useState<IOrdering>();
+
+  useEffect(() => {
+    Axios.get(`/workspaces/${workspaceId}/ordering`)
+      .then((response: AxiosResponse<{ordering: IOrdering | {}}>) => {
+        const newOrdering: IOrdering | {} = response.data.ordering;
+        if (isOrdering(newOrdering)) {
+          setOrdering(newOrdering);
+          setWorkspace(buildWorkspace(oldWorkspace, workspaceId, newOrdering));
+        }
+      })
+      .catch(errorCallback);
+  }, []);
 
   useEffect(() => {
     if (scales && oldWorkspace) {
       setObservedRanges(calculateObservedRanges(scales, workspace));
     }
   }, [scales, oldWorkspace]);
+
+  function isOrdering(ordering: {} | IOrdering): ordering is IOrdering {
+    return !_.isEqual(ordering, {});
+  }
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};
@@ -101,7 +118,7 @@ export function WorkspaceContextProviderComponent({
         problem: {description: therapeuticContext}
       }
     );
-    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId));
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId, ordering));
     sendOldWorkspace(oldWorkspaceToSend);
   }
 
@@ -112,7 +129,7 @@ export function WorkspaceContextProviderComponent({
       _.cloneDeep(oldWorkspace),
       {problem: {alternatives: {[alternative.id]: newAlternative}}}
     );
-    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId));
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId, ordering));
     sendOldWorkspace(oldWorkspaceToSend);
   }
 
