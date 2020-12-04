@@ -29,14 +29,20 @@ describe('determineStepSize', () => {
 });
 
 describe('calculateImportance', () => {
-  it('should calculate the importance based on slider value and criterion scale', () => {
-    const result = calculateImportance(0.5, [0, 1]);
-    expect(result).toEqual(50);
+  it('should calculate the importance correctly for increasing pvf', () => {
+    const result = calculateImportance(0.3, {
+      range: [0, 1],
+      direction: 'increasing'
+    });
+    expect(result).toEqual(30);
   });
 
-  it('should return 100 for the initial slider value for unfavorable criteria', () => {
-    const result = calculateImportance(0, [0, 1]);
-    expect(result).toEqual(100);
+  it('should calculate the importance correctly for decreasing pvf', () => {
+    const result = calculateImportance(0.3, {
+      range: [0, 1],
+      direction: 'decreasing'
+    });
+    expect(result).toEqual(70);
   });
 });
 

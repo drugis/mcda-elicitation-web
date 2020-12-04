@@ -29,7 +29,8 @@ export default function MatchingSlider({
   const {getCriterion, pvfs} = useContext(PreferencesContext);
 
   const mostImportantCriterion = getCriterion(mostImportantCriterionId);
-  const range = pvfs[mostImportantCriterionId].range;
+  const pvf = pvfs[mostImportantCriterionId];
+
   const unitType = mostImportantCriterion.dataSources[0].unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unitType);
 
@@ -39,13 +40,13 @@ export default function MatchingSlider({
   const [stepSize, setStepSize] = useState<number>();
 
   useEffect(() => {
-    const sliderValue = getBest(pvfs[mostImportantCriterionId], false);
+    const sliderValue = getBest(pvf, false);
     setSliderValue(sliderValue);
-    setPreference(currentCriterionId, calculateImportance(sliderValue, range));
+    setPreference(currentCriterionId, calculateImportance(sliderValue, pvf));
   }, [currentStep]);
 
   useEffect(() => {
-    setStepSize(determineStepSize(range));
+    setStepSize(determineStepSize(pvf.range));
   }, []);
 
   function handleSliderChanged(
@@ -54,9 +55,10 @@ export default function MatchingSlider({
   ) {
     setSliderValue(newValue);
     setIsNextDisabled(
-      newValue === getWorst(pvfs[mostImportantCriterion.id], false)
+      significantDigits(newValue) ===
+        getWorst(pvfs[mostImportantCriterion.id], false)
     );
-    setPreference(currentCriterionId, calculateImportance(newValue, range));
+    setPreference(currentCriterionId, calculateImportance(newValue, pvf));
   }
 
   function displayValue() {
@@ -69,9 +71,10 @@ export default function MatchingSlider({
     <>
       {displayValue()}
       <Slider
+        id="matching-slider"
         value={sliderValue}
-        min={range[0]}
-        max={range[1]}
+        min={pvf.range[0]}
+        max={pvf.range[1]}
         onChange={handleSliderChanged}
         step={stepSize}
       />

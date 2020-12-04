@@ -91,15 +91,26 @@ function rankingGoBack(browser) {
 }
 
 function matching(browser) {
+  const sliderValue = '//*[@id="matching-slider"]/span[3]';
+
   browser
     .click('#matching-button')
     .waitForElementVisible('#matching-title-header')
-    .click('#criterion-option-OS')
+    .click('#criterion-option-severe')
     .click('#next-button')
+    .useXpath()
+    .click(sliderValue)
+    .sendKeys(sliderValue, [
+      browser.Keys.ARROW_RIGHT,
+      browser.Keys.ARROW_RIGHT,
+      browser.Keys.ARROW_RIGHT
+    ])
+    .useCss()
+    .assert.containsText('#matching-cell', '3')
     .click('#next-button')
     .click('#save-button');
 
-  matchImportanceColumnContents(browser, 'Matching', '100%', '100%', '100%');
+  matchImportanceColumnContents(browser, 'Matching', '96%', '100%', '100%');
   resetWeights(browser);
 }
 
