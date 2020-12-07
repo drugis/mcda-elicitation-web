@@ -5,12 +5,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import IAlternative from '@shared/interface/IAlternative';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
+import EffectsTableAlternativeHeaders from './EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
 import CriteriaHeader from './EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
 import DescriptionHeader from './EffectsTableHeaders/DescriptionHeader/DescriptionHeader';
@@ -22,28 +24,6 @@ export default function EffectsTable() {
   const {scales} = useContext(WorkspaceContext);
   const {filteredAlternatives} = useContext(SubproblemContext);
 
-  function renderAlternativeHeaders(): JSX.Element[] {
-    return _(filteredAlternatives)
-      .toPairs()
-      .map(createAlternativeHeader)
-      .value();
-  }
-
-  function createAlternativeHeader(
-    [alternativeId, alternative]: [string, {title: string}],
-    index: number
-  ) {
-    return (
-      <TableCell
-        id={`column-alternative-${index}`}
-        key={alternativeId}
-        align="center"
-      >
-        {alternative.title}
-      </TableCell>
-    );
-  }
-
   function renderTableHeaders(): JSX.Element {
     return (
       <TableHead>
@@ -51,7 +31,7 @@ export default function EffectsTable() {
           <CriteriaHeader colSpan={1} />
           <DescriptionHeader />
           <UnitsHeader />
-          {renderAlternativeHeaders()}
+          <EffectsTableAlternativeHeaders alternatives={filteredAlternatives} />
           <SoEUncHeader />
           <ReferencesHeader />
         </TableRow>
