@@ -1,6 +1,5 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
-import {swapItems} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';

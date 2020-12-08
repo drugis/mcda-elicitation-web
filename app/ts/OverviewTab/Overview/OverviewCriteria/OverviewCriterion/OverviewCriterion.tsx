@@ -15,6 +15,7 @@ import {
 import Edit from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import EffectsTableAlternativeHeaders from 'app/ts/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
@@ -37,10 +38,10 @@ export default function OverviewCriterion({
 }) {
   const {alternatives, swapCriteria} = useContext(WorkspaceContext);
 
-  function renderDataSourceRows(): JSX.Element[] {
-    return _.map(criterion.dataSources, (dataSource, index) => {
-      const previousDSId = getPreviousId(index, criterion.dataSources);
-      const nextDSId = getNextId(index, criterion.dataSources);
+  function renderDataSourceRows(dataSources: IDataSource[]): JSX.Element[] {
+    return _.map(dataSources, (dataSource, index) => {
+      const previousDSId = getPreviousId(index, dataSources);
+      const nextDSId = getNextId(index, dataSources);
       return (
         <OverviewDataSourceRow
           key={dataSource.id}
@@ -56,12 +57,12 @@ export default function OverviewCriterion({
     <Accordion defaultExpanded={true}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Grid container>
-          <Typography variant={'h6'}>{criterion.title}</Typography>
+          <Typography variant="h6">{criterion.title}</Typography>
         </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
-          <Grid item xs={1}>
+          <Grid item container alignItems="center" justify="center" xs={1}>
             <MoveUpDownButtons
               id={criterion.id}
               swap={swapCriteria}
@@ -75,8 +76,8 @@ export default function OverviewCriterion({
               {criterion.description}
             </Grid>
             <Grid item xs={1} container justify="flex-end">
-              <Tooltip title={'Edit criterion'}>
-                <IconButton color={'primary'}>
+              <Tooltip title="Edit criterion">
+                <IconButton color="primary">
                   <Edit />
                 </IconButton>
               </Tooltip>
@@ -98,7 +99,9 @@ export default function OverviewCriterion({
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>{renderDataSourceRows()}</TableBody>
+                <TableBody>
+                  {renderDataSourceRows(criterion.dataSources)}
+                </TableBody>
               </Table>
             </Grid>
           </Grid>
