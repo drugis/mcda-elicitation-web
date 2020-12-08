@@ -33,7 +33,7 @@ export default function InlineHelp({helpId}: {helpId: string}) {
   return (
     <>
       <IconButton onClick={openPopover}>
-        <Help></Help>
+        <Help fontSize={'small'} />
       </IconButton>
       <Popover
         open={!!anchorEl}

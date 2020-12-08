@@ -13,6 +13,7 @@ import _ from 'lodash';
 import OverviewAlternativeRow from './OverviewAlternativeRow/OverviewAlternativeRow';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import IAlternative from '@shared/interface/IAlternative';
+import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 
 export default function OverviewAlternatives(): JSX.Element {
   const {alternatives} = useContext(WorkspaceContext);
@@ -38,20 +39,6 @@ export default function OverviewAlternatives(): JSX.Element {
     );
   }
 
-  function getNextId<T extends {id: string}>(
-    index: number,
-    items: T[]
-  ): string | undefined {
-    return index < items.length - 1 ? items[index + 1].id : undefined;
-  }
-
-  function getPreviousId<T extends {id: string}>(
-    index: number,
-    items: T[]
-  ): string | undefined {
-    return index ? items[index - 1].id : undefined;
-  }
-
   return (
     <Grid item container xs={12}>
       <Grid item xs={12}>
@@ -60,7 +47,7 @@ export default function OverviewAlternatives(): JSX.Element {
         </Typography>
       </Grid>
       <Grid item xs={6}>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell></TableCell>

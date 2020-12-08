@@ -31,15 +31,21 @@ export default function MoveUpDownButtons({
       variant="text"
       size="small"
     >
-      <Button id={`move-up-${id}`} disabled={!previousId} onClick={moveUp}>
-        <ArrowDropUp />
+      <Button
+        id={`move-up-${id}`}
+        disabled={!previousId}
+        onClick={moveUp}
+        size="small"
+      >
+        <ArrowDropUp fontSize={'small'} />
       </Button>
       <Button
         id={`move-down-${id}`}
         disabled={!nextId || nextId.startsWith(DUMMY_ID)}
         onClick={moveDown}
+        size="small"
       >
-        <ArrowDropDown />
+        <ArrowDropDown fontSize={'small'} />
       </Button>
     </ButtonGroup>
   );

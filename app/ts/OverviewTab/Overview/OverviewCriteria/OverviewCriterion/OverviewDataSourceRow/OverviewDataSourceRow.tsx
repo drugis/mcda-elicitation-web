@@ -16,15 +16,15 @@ export default function OverviewDataSourceRow({
   nextId: string;
   previousId: string;
 }) {
-  const {alternatives} = useContext(WorkspaceContext);
+  const {alternatives, swapDataSources} = useContext(WorkspaceContext);
 
   return (
     <TableRow>
       <TableCell align={'center'}>
         <MoveUpDownButtons
           nextId={nextId}
-          swap={() => {}}
-          id={''}
+          swap={_.partial(swapDataSources, dataSource.criterionId)}
+          id={dataSource.id}
           previousId={previousId}
         />
       </TableCell>

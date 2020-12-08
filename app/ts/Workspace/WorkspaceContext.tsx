@@ -143,7 +143,10 @@ export function WorkspaceContextProviderComponent({
     setError(error);
   }
 
-  function swapAlternatives(alternative1Id: string, alternative2Id: string) {
+  function swapAlternatives(
+    alternative1Id: string,
+    alternative2Id: string
+  ): void {
     const newAlternatives = swapItems(
       alternative1Id,
       alternative2Id,
@@ -158,6 +161,56 @@ export function WorkspaceContextProviderComponent({
       dataSources: _.flatMap(
         workspace.criteria,
         (criterion: ICriterion): string[] => _.map(criterion.dataSources, 'id')
+      )
+    };
+    Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
+      errorCallback
+    );
+  }
+
+  function swapCriteria(criterion1Id: string, criterion2Id: string): void {
+    const newCriteria = swapItems(
+      criterion1Id,
+      criterion2Id,
+      workspace.criteria
+    );
+    setWorkspace(_.merge({}, _.cloneDeep(workspace), {criteria: newCriteria}));
+    const newOrdering: IOrdering = {
+      alternatives: _.map(workspace.alternatives, 'id'),
+      criteria: _.map(newCriteria, 'id'),
+      dataSources: _.flatMap(
+        workspace.criteria,
+        (criterion: ICriterion): string[] => _.map(criterion.dataSources, 'id')
+      )
+    };
+    Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
+      errorCallback
+    );
+  }
+
+  function swapDataSources(
+    criterionId: string,
+    dataSource1Id: string,
+    dataSource2Id: string
+  ): void {
+    const criterionIndex = _.findIndex(workspace.criteria, ['id', criterionId]);
+    const criterion = workspace.criteria[criterionIndex];
+    const newCriterion = {
+      ...criterion,
+      dataSources: swapItems(
+        dataSource1Id,
+        dataSource2Id,
+        criterion.dataSources
+      )
+    };
+    let newCriteria = _.cloneDeep(workspace.criteria);
+    newCriteria[criterionIndex] = newCriterion;
+    setWorkspace(_.merge({}, _.cloneDeep(workspace), {criteria: newCriteria}));
+    const newOrdering: IOrdering = {
+      alternatives: _.map(workspace.alternatives, 'id'),
+      criteria: _.map(workspace.criteria, 'id'),
+      dataSources: _.flatMap(newCriteria, (criterion: ICriterion): string[] =>
+        _.map(criterion.dataSources, 'id')
       )
     };
     Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
@@ -182,7 +235,9 @@ export function WorkspaceContextProviderComponent({
         editAlternative,
         editTherapeuticContext,
         editTitle,
-        swapAlternatives
+        swapAlternatives,
+        swapCriteria,
+        swapDataSources
       }}
     >
       {children}

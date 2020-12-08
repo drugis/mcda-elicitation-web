@@ -22,4 +22,10 @@ export default interface IWorkspaceContext {
   editTitle: (title: string) => void;
   editTherapeuticContext: (therapeuticContext: string) => void;
   swapAlternatives: (alternative1Id: string, alternative2Id: string) => void;
+  swapCriteria: (criterion1Id: string, criterion2Id: string) => void;
+  swapDataSources: (
+    criterionId: string,
+    dataSource1Id: string,
+    dataSource2Id: string
+  ) => void;
 }
