@@ -1,31 +1,25 @@
-import {IconButton, TableCell, TableRow, Tooltip} from '@material-ui/core';
+import {TableCell, TableRow} from '@material-ui/core';
 import EffectTableDataSourceCells from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectTableDataSourceCells/EffectTableDataSourceCells';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
-import React, {useContext} from 'react';
-import Edit from '@material-ui/icons/Edit';
-import _ from 'lodash';
-import IDataSource from '@shared/interface/IDataSource';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
+import React, {useContext} from 'react';
+import {OverviewDataSourceContext} from '../OverviewDataSourceTable/OverviewDataSourceContext/OverviewDataSourceContext';
+import EditOverviewDataSourceButton from './EditOverviewDataSourceButton/EditOverviewDataSourceButton';
 
-export default function OverviewDataSourceRow({
-  dataSource,
-  nextId,
-  previousId
-}: {
-  dataSource: IDataSource;
-  nextId: string;
-  previousId: string;
-}) {
+export default function OverviewDataSourceRow() {
   const {alternatives, swapDataSources} = useContext(WorkspaceContext);
-
+  const {dataSource, previousDataSourceId, nextDataSourceId} = useContext(
+    OverviewDataSourceContext
+  );
   return (
     <TableRow>
       <TableCell align={'center'}>
         <MoveUpDownButtons
-          nextId={nextId}
+          nextId={nextDataSourceId}
           swap={_.partial(swapDataSources, dataSource.criterionId)}
           id={dataSource.id}
-          previousId={previousId}
+          previousId={previousDataSourceId}
         />
       </TableCell>
       <EffectTableDataSourceCells
@@ -33,11 +27,7 @@ export default function OverviewDataSourceRow({
         alternatives={_.values(alternatives)}
       />
       <TableCell align={'center'}>
-        <Tooltip title="Edit data source">
-          <IconButton color="primary">
-            <Edit />
-          </IconButton>
-        </Tooltip>
+        <EditOverviewDataSourceButton />
       </TableCell>
     </TableRow>
   );

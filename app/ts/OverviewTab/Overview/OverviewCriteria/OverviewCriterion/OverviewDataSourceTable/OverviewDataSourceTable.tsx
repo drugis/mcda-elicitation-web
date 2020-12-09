@@ -16,13 +16,12 @@ import OverviewDataSourceRow from '../OverviewDataSourceRow/OverviewDataSourceRo
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
+import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
+import {OverviewDataSourceContextProviderComponent} from './OverviewDataSourceContext/OverviewDataSourceContext';
 
-export default function OverviewDataSourceTable({
-  dataSources
-}: {
-  dataSources: IDataSource[];
-}) {
+export default function OverviewDataSourceTable() {
   const {alternatives} = useContext(WorkspaceContext);
+  const {dataSources} = useContext(OverviewCriterionContext);
 
   function renderDataSourceRows(dataSources: IDataSource[]): JSX.Element[] {
     return _.map(dataSources, renderDataSourceRow);
@@ -35,37 +34,32 @@ export default function OverviewDataSourceTable({
     const previousDSId = getPreviousId(index, dataSources);
     const nextDSId = getNextId(index, dataSources);
     return (
-      <OverviewDataSourceRow
-        key={dataSource.id}
+      <OverviewDataSourceContextProviderComponent
         dataSource={dataSource}
-        previousId={previousDSId}
-        nextId={nextDSId}
-      />
+        previousDataSourceId={previousDSId}
+        nextDataSourceId={nextDSId}
+        index={index}
+      >
+        <OverviewDataSourceRow key={dataSource.id} />
+      </OverviewDataSourceContextProviderComponent>
     );
   }
 
   return (
-    <>
-      <Grid item xs={12}>
-        <b>Data sources:</b>
-      </Grid>
-      <Grid item xs={12}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <UnitsHeader />
-              <EffectsTableAlternativeHeaders
-                alternatives={_.values(alternatives)}
-              />
-              <SoEUncHeader />
-              <ReferencesHeader />
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderDataSourceRows(dataSources)}</TableBody>
-        </Table>
-      </Grid>
-    </>
+    <Table size="small">
+      <TableHead>
+        <TableRow>
+          <TableCell></TableCell>
+          <UnitsHeader />
+          <EffectsTableAlternativeHeaders
+            alternatives={_.values(alternatives)}
+          />
+          <SoEUncHeader />
+          <ReferencesHeader />
+          <TableCell></TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>{renderDataSourceRows(dataSources)}</TableBody>
+    </Table>
   );
 }

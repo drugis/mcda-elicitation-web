@@ -6,23 +6,18 @@ import {
   Typography
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ICriterion from '@shared/interface/ICriterion';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
+import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';
 import EditOverviewCriterionButton from './EditOverviewCriterionButton/EditOverviewCriterionButton';
 import OverviewDataSourceTable from './OverviewDataSourceTable/OverviewDataSourceTable';
 
-export default function OverviewCriterion({
-  criterion,
-  nextCriterionId,
-  previousCriterionId
-}: {
-  criterion: ICriterion;
-  nextCriterionId: string;
-  previousCriterionId: string;
-}) {
+export default function OverviewCriterion() {
   const {swapCriteria} = useContext(WorkspaceContext);
+  const {criterion, previousCriterionId, nextCriterionId} = useContext(
+    OverviewCriterionContext
+  );
 
   return (
     <Accordion defaultExpanded={true}>
@@ -47,9 +42,14 @@ export default function OverviewCriterion({
               {criterion.description}
             </Grid>
             <Grid item xs={1} container justify="flex-end">
-              <EditOverviewCriterionButton criterion={criterion} />
+              <EditOverviewCriterionButton />
             </Grid>
-            <OverviewDataSourceTable dataSources={criterion.dataSources} />
+            <Grid item xs={12}>
+              <b>Data sources:</b>
+            </Grid>
+            <Grid item xs={12}>
+              <OverviewDataSourceTable />
+            </Grid>
           </Grid>
         </Grid>
       </AccordionDetails>

@@ -1,6 +1,5 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import IDataSource from '@shared/interface/IDataSource';
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
@@ -8,8 +7,6 @@ import IOrdering from '@shared/interface/IOrdering';
 import IScale from '@shared/interface/IScale';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import {buildWorkspace} from '@shared/workspaceService';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';

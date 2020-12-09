@@ -2,6 +2,7 @@ import {Grid, Typography} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
+import {OverviewCriterionContextProviderComponent} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -23,12 +24,13 @@ export default function OverviewCriteria() {
       const previousCriterionId = getPreviousId(index, criteria);
       const nextCriterionId = getNextId(index, criteria);
       return (
-        <OverviewCriterion
-          key={criterion.id}
+        <OverviewCriterionContextProviderComponent
           criterion={criterion}
           nextCriterionId={nextCriterionId}
           previousCriterionId={previousCriterionId}
-        />
+        >
+          <OverviewCriterion key={criterion.id} />
+        </OverviewCriterionContextProviderComponent>
       );
     });
   }
