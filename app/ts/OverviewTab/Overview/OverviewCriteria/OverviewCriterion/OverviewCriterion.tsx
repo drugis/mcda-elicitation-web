@@ -3,29 +3,15 @@ import {
   AccordionDetails,
   AccordionSummary,
   Grid,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Tooltip,
   Typography
 } from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ICriterion from '@shared/interface/ICriterion';
-import IDataSource from '@shared/interface/IDataSource';
-import EffectsTableAlternativeHeaders from 'app/ts/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
-import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
-import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
-import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
-import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import _ from 'lodash';
 import React, {useContext} from 'react';
-import OverviewDataSourceRow from './OverviewDataSourceRow/OverviewDataSourceRow';
+import EditOverviewCriterionButton from './EditOverviewCriterionButton/EditOverviewCriterionButton';
+import OverviewDataSourceTable from './OverviewDataSourceTable/OverviewDataSourceTable';
 
 export default function OverviewCriterion({
   criterion,
@@ -36,22 +22,7 @@ export default function OverviewCriterion({
   nextCriterionId: string;
   previousCriterionId: string;
 }) {
-  const {alternatives, swapCriteria} = useContext(WorkspaceContext);
-
-  function renderDataSourceRows(dataSources: IDataSource[]): JSX.Element[] {
-    return _.map(dataSources, (dataSource, index) => {
-      const previousDSId = getPreviousId(index, dataSources);
-      const nextDSId = getNextId(index, dataSources);
-      return (
-        <OverviewDataSourceRow
-          key={dataSource.id}
-          dataSource={dataSource}
-          previousId={previousDSId}
-          nextId={nextDSId}
-        />
-      );
-    });
-  }
+  const {swapCriteria} = useContext(WorkspaceContext);
 
   return (
     <Accordion defaultExpanded={true}>
@@ -76,34 +47,9 @@ export default function OverviewCriterion({
               {criterion.description}
             </Grid>
             <Grid item xs={1} container justify="flex-end">
-              <Tooltip title="Edit criterion">
-                <IconButton color="primary">
-                  <Edit />
-                </IconButton>
-              </Tooltip>
+              <EditOverviewCriterionButton criterion={criterion} />
             </Grid>
-            <Grid item xs={12}>
-              <b>Data sources:</b>
-            </Grid>
-            <Grid item xs={12}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell></TableCell>
-                    <UnitsHeader />
-                    <EffectsTableAlternativeHeaders
-                      alternatives={_.values(alternatives)}
-                    />
-                    <SoEUncHeader />
-                    <ReferencesHeader />
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {renderDataSourceRows(criterion.dataSources)}
-                </TableBody>
-              </Table>
-            </Grid>
+            <OverviewDataSourceTable dataSources={criterion.dataSources} />
           </Grid>
         </Grid>
       </AccordionDetails>

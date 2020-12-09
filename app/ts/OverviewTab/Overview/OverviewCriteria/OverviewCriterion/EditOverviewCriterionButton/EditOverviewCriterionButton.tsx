@@ -1,35 +1,42 @@
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import Tooltip from '@material-ui/core/Tooltip';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Grid,
+  IconButton,
+  TextField,
+  Tooltip
+} from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import FavourabilitySwitch from './FavourabilitySwitch/FavourabilitySwitch';
 
-export default function EditOverviewAlternativeButton({
-  alternative
+export default function EditOverviewCriterionButton({
+  criterion
 }: {
-  alternative: IAlternative;
+  criterion: ICriterion;
 }) {
-  const {editAlternative, alternatives} = useContext(WorkspaceContext);
+  const {editCriterion, criteria} = useContext(WorkspaceContext);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [title, setTitle] = useState<string>('');
+  const [localCriterion, setLocalCriterion] = useState<ICriterion>(
+    _.cloneDeep(criterion)
+  );
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [error, setError] = useState<string>(
-    getTitleError(title, alternatives, alternative.id)
+    getTitleError(localCriterion.title, criteria, criterion.id)
   );
 
   useEffect(() => {
-    setError(getTitleError(title, alternatives, alternative.id));
-  }, [title]);
+    setError(getTitleError(localCriterion.title, criteria, criterion.id));
+  }, [localCriterion]);
 
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
@@ -39,21 +46,27 @@ export default function EditOverviewAlternativeButton({
 
   function openDialog(): void {
     setIsButtonPressed(false);
-    setTitle(alternative.title);
+    setLocalCriterion(_.cloneDeep(criterion));
     setIsDialogOpen(true);
   }
 
-  function OverviewAlternativeChanged(
+  function OverviewCriterionTitleChanged(
     event: ChangeEvent<HTMLTextAreaElement>
   ): void {
-    setTitle(event.target.value);
+    setLocalCriterion({...localCriterion, title: event.target.value});
+  }
+
+  function OverviewCriterionDescriptionChanged(
+    event: ChangeEvent<HTMLTextAreaElement>
+  ): void {
+    setLocalCriterion({...localCriterion, description: event.target.value});
   }
 
   function handleButtonClick(): void {
     if (!isButtonPressed) {
       setIsButtonPressed(true);
       closeDialog();
-      editAlternative(alternative, title);
+      editCriterion(localCriterion);
     }
   }
 
@@ -63,9 +76,9 @@ export default function EditOverviewAlternativeButton({
 
   return (
     <>
-      <Tooltip title={'Edit alternative'}>
+      <Tooltip title="Edit criterion">
         <IconButton
-          id={`edit-alternative-button-${alternative.id}`}
+          id={`edit-criterion-button-${criterion.id}`}
           color="primary"
           onClick={openDialog}
         >
@@ -79,20 +92,39 @@ export default function EditOverviewAlternativeButton({
         maxWidth={'sm'}
       >
         <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-          Edit alternative
+          Edit criterion
         </DialogTitleWithCross>
-        <DialogContent>
-          <Grid container>
+        <DialogContent style={{overflow: 'hidden'}}>
+          <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
                 label="new title"
-                id="alternative-title-input"
-                value={title}
-                onChange={OverviewAlternativeChanged}
+                id="criterion-title-input"
+                value={localCriterion.title}
+                onChange={OverviewCriterionTitleChanged}
                 variant="outlined"
                 onKeyDown={handleKey}
                 autoFocus
                 fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="description"
+                id="criterion-description-input"
+                value={localCriterion.description}
+                onChange={OverviewCriterionDescriptionChanged}
+                variant="outlined"
+                onKeyDown={handleKey}
+                multiline
+                rows={5}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FavourabilitySwitch
+                criterion={localCriterion}
+                setCriterion={setLocalCriterion}
               />
             </Grid>
             <Grid
@@ -109,7 +141,7 @@ export default function EditOverviewAlternativeButton({
         </DialogContent>
         <DialogActions>
           <Button
-            id={'edit-alternative-confirm-button'}
+            id={'edit-criterion-confirm-button'}
             variant="contained"
             color="primary"
             onClick={handleButtonClick}

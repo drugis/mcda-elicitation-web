@@ -16,10 +16,10 @@ import IAlternative from '@shared/interface/IAlternative';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 
 export default function OverviewAlternatives(): JSX.Element {
-  const {alternatives} = useContext(WorkspaceContext);
+  const {workspace} = useContext(WorkspaceContext);
 
   function renderAlternativeRows(): JSX.Element[] {
-    return _(alternatives).values().map(renderAlternativeRow).value();
+    return _.map(workspace.alternatives, renderAlternativeRow);
   }
 
   function renderAlternativeRow(

@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
@@ -7,6 +8,8 @@ import IOrdering from '@shared/interface/IOrdering';
 import IScale from '@shared/interface/IScale';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import {buildWorkspace} from '@shared/workspaceService';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
@@ -15,6 +18,7 @@ import {ErrorContext} from '../Error/ErrorContext';
 import {swapItems} from '../ManualInput/ManualInputService/ManualInputService';
 import {calculateObservedRanges} from '../Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import IWorkspaceContext from './IWorkspaceContext';
+import {transformCriterionToOldCriterion} from './transformUtil';
 
 export const WorkspaceContext = createContext<IWorkspaceContext>(
   {} as IWorkspaceContext
@@ -133,6 +137,22 @@ export function WorkspaceContextProviderComponent({
     sendOldWorkspace(oldWorkspaceToSend);
   }
 
+  function editCriterion(newCriterion: ICriterion): void {
+    const oldWorkspaceToSend: IOldWorkspace = _.merge(
+      {},
+      _.cloneDeep(oldWorkspace),
+      {
+        problem: {
+          criteria: {
+            [newCriterion.id]: transformCriterionToOldCriterion(newCriterion)
+          }
+        }
+      }
+    );
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId, ordering));
+    sendOldWorkspace(oldWorkspaceToSend);
+  }
+
   function sendOldWorkspace(oldWorkspaceToSend: IOldWorkspace) {
     Axios.post(`/workspaces/${workspaceId}`, oldWorkspaceToSend).catch(
       errorCallback
@@ -233,6 +253,7 @@ export function WorkspaceContextProviderComponent({
         addSubproblem,
         deleteSubproblem,
         editAlternative,
+        editCriterion,
         editTherapeuticContext,
         editTitle,
         swapAlternatives,
