@@ -35,6 +35,7 @@ export default function OverviewDataSourceTable() {
     const nextDSId = getNextId(index, dataSources);
     return (
       <OverviewDataSourceContextProviderComponent
+        key={dataSource.id}
         dataSource={dataSource}
         previousDataSourceId={previousDSId}
         nextDataSourceId={nextDSId}
