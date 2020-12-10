@@ -21,6 +21,7 @@ export default function DoneButton() {
           window.location.assign(url);
         })
         .catch((error: OurError) => {
+          setIsButtonPressed(false);
           setError(error);
         });
     }

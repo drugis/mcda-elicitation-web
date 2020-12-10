@@ -28,6 +28,12 @@ export default function EditSubproblemButton({}: {}) {
     setError(getTitleError(title, subproblems, currentSubproblem.id));
   }, [title]);
 
+  useEffect(() => {
+    if (isDialogOpen) {
+      setIsButtonPressed(false);
+    }
+  }, [isDialogOpen]);
+
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
   function closeDialog(): void {

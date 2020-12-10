@@ -68,7 +68,9 @@ function edit(browser) {
     .click('#edit-scenario-confirm-button')
     .pause(100)
     .waitForElementVisible('#scenario-selector')
-    .assert.containsText('#scenario-selector', scenarioTitle);
+    .assert.containsText('#scenario-selector', scenarioTitle)
+    .click('#edit-scenario-button')
+    .click('#edit-scenario-confirm-button');
 }
 
 function copy(browser) {

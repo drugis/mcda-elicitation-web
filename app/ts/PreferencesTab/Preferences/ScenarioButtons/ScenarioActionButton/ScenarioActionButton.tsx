@@ -35,6 +35,12 @@ export default function ScenarioActionButton({
     setError(getTitleError(title, scenarios, idOfScenarioBeingEdited));
   }, [title]);
 
+  useEffect(() => {
+    if (isDialogOpen) {
+      setIsButtonPressed(false);
+    }
+  }, [isDialogOpen]);
+
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
   function closeDialog(): void {

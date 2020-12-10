@@ -97,7 +97,9 @@ function edit(browser) {
     .setValue('#subproblem-title-input', newTitle)
     .click('#edit-subproblem-confirm-button')
     .waitForElementVisible('#effects-table-header')
-    .assert.containsText('#subproblem-selector', newTitle);
+    .assert.containsText('#subproblem-selector', newTitle)
+    .click('#edit-subproblem-button')
+    .click('#edit-subproblem-confirm-button');
 }
 
 function resetAndDuplicateTitle(browser) {
