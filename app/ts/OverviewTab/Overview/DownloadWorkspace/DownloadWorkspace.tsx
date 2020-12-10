@@ -23,8 +23,8 @@ export default function DownloadWorkspace() {
     link.href = 'data:' + data;
 
     // let js simulate mouse click
-    link.click = function () {
-      var evt = this.ownerDocument.createEvent('MouseEvents');
+    link.click = () => {
+      const evt = this.ownerDocument.createEvent('MouseEvents');
       evt.initMouseEvent(
         'click',
         true,

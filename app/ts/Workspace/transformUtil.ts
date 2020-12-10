@@ -14,7 +14,7 @@ export function transformCriterionToOldCriterion(
   };
 }
 
-function transformDataSourcesToOldDataSources(
+export function transformDataSourcesToOldDataSources(
   dataSources: IDataSource[]
 ): IProblemDataSource[] {
   return _.map(
