@@ -27,7 +27,9 @@ export default function EffectsTableReferenceCell({
   }
 
   return showReferences ? (
-    <TableCell style={cellStyle}>{renderReference()}</TableCell>
+    <TableCell id={`reference-${dataSource.id}`} style={cellStyle}>
+      {renderReference()}
+    </TableCell>
   ) : (
     <></>
   );

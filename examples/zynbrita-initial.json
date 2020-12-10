@@ -3,13 +3,13 @@
   "title": "Zinbryta - initial regulatory review",
   "description": "There remains an unmet medical need for new, alternative high-efficacy treatment options that have demonstrated superior efficacy to current standards of MS care, that offer advantages in terms of frequency of administration, and that have manageable risks. the novel IL-2 signalling modulation of daclizumab represents a targeted and reversible therapeutic approach to MS treatment that can selectively impact both grey and white matter MS pathology without causing nonspecific immunodepletion. Daclizumab's mechanism of action is distinct and differentiated from other therapies available to treat RMS. Daclizumab was systematically evaluated in clinical studies to define its risks and benefits in relapsing MS.",
   "criteria": {
-    "f09b3e30-be30-4cad-93ac-9567c2a3a3da": {
+    "arrId": {
       "title": "ARR",
       "description": "Annualised relapse rate",
       "isFavorable": true,
       "dataSources": [
         {
-          "id": "d7dff15e-44a3-4246-b80a-6fc3955464f6",
+          "id": "arrDsId",
           "source": "Study 205MS301",
           "unitOfMeasurement": "Annual rate",
           "strengthOfEvidence": "A similar effect was found for the number of new/newly enlarging MRI T2 lesions (2.16 for DAC HYP vs 3.84 for IFN beta)",
@@ -138,8 +138,8 @@
   "performanceTable": [
     {
       "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
-      "criterion": "f09b3e30-be30-4cad-93ac-9567c2a3a3da",
-      "dataSource": "d7dff15e-44a3-4246-b80a-6fc3955464f6",
+      "criterion": "arrId",
+      "dataSource": "arrDsId",
       "performance": {
         "effect": {
           "type": "exact",
@@ -161,8 +161,8 @@
     },
     {
       "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
-      "criterion": "f09b3e30-be30-4cad-93ac-9567c2a3a3da",
-      "dataSource": "d7dff15e-44a3-4246-b80a-6fc3955464f6",
+      "criterion": "arrId",
+      "dataSource": "arrDsId",
       "performance": {
         "effect": {
           "type": "exact",

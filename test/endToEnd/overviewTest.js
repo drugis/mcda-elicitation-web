@@ -21,9 +21,9 @@ const errorService = require('./util/errorService');
 const util = require('./util/util');
 
 const title = 'Thrombolytics - single study B/R analysis';
-const proximalDVTCriterionTitle = '#criterion-title-0';
-const proximalDVTCriterionDescription = '#criterion-description-0';
-const heparinAlternative = '#alternative-title-0';
+const proximalDVTCriterionTitle = '#criterion-title-proximalId';
+const proximalDVTCriterionDescription = '#criterion-description-proximalId';
+const heparinAlternative = '#alternative-title-heparinId';
 
 function loadTestWorkspace(browser, title) {
   workspaceService
@@ -45,8 +45,7 @@ function afterEach(browser) {
 }
 
 function assertContents(browser) {
-  const firstDistalDVTValue =
-    '//*[@id="c-1-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
+  const firstDistalDVTValue = '#value-cell-distalDsId-heparinId';
 
   loadTestWorkspace(browser, title)
     .assert.containsText('#therapeutic-context', 'No description given.')
@@ -56,9 +55,7 @@ function assertContents(browser) {
       proximalDVTCriterionDescription,
       'Proximal deep vein thrombolytic events, often associated with serious complications.'
     )
-    .useXpath()
-    .assert.containsText(firstDistalDVTValue, '40 / 136')
-    .useCss();
+    .assert.containsText(firstDistalDVTValue, '29.4');
 }
 
 function editTherapeuticContext(browser) {
@@ -67,7 +64,7 @@ function editTherapeuticContext(browser) {
     .click('#edit-therapeutic-context-button')
     .waitForElementVisible('#therapeutic-context-header')
     .setValue('#therapeutic-context-input', 'new context')
-    .click('#save-button')
+    .click('#edit-therapeutic-context-confirm-button')
     .assert.containsText('#therapeutic-context', 'new context');
 }
 
@@ -76,13 +73,13 @@ function editCriterion(browser) {
   const newDescription = 'new description';
 
   loadTestWorkspace(browser, title)
-    .click('#edit-criterion-0')
+    .click('#edit-criterion-button-proximalId')
     .waitForElementVisible('#criterion-title-input')
     .clearValue('#criterion-title-input')
     .setValue('#criterion-title-input', newTitle)
     .clearValue('#criterion-description-input')
     .setValue('#criterion-description-input', newDescription)
-    .click('#add-criterion-confirm-button')
+    .click('#edit-criterion-confirm-button')
     .assert.containsText(proximalDVTCriterionTitle, newTitle)
     .assert.containsText(proximalDVTCriterionDescription, newDescription);
 }
@@ -91,19 +88,16 @@ function editCriterionSwitchTabs(browser) {
   const newTitle = 'new title';
 
   loadTestWorkspace(browser, title)
-    .click('#edit-criterion-0')
+    .click('#edit-criterion-button-proximalId')
     .waitForElementVisible('#criterion-title-input')
     .clearValue('#criterion-title-input')
     .setValue('#criterion-title-input', newTitle)
-    .click('#add-criterion-confirm-button')
+    .click('#edit-criterion-confirm-button')
     .waitForElementVisible('#workspace-title')
-    .assert.containsText('#criterion-title-0', newTitle)
+    .assert.containsText('#criterion-title-proximalId', newTitle)
     .click('#problem-definition-tab')
     .waitForElementVisible('#effects-table-header')
-    .assert.containsText(
-      '#criterion-title-cae083fa-c1e7-427f-8039-c46479392344',
-      newTitle
-    );
+    .assert.containsText('#criterion-title-proximalId', newTitle);
 }
 
 function editDataSource(browser) {
@@ -116,9 +110,9 @@ function editDataSource(browser) {
   const originalReference = 'Study 205MS301';
 
   loadTestWorkspace(browser, zinbryta)
-    .assert.containsText('#data-source-reference-0-0', originalReference)
-    .assert.containsText('#unit-of-measurement-0-0', 'Annual rate')
-    .click('#edit-data-source-0-0')
+    .assert.containsText('#reference-arrDsId', originalReference)
+    .assert.containsText('#unit-cell-arrDsId', 'Annual rate')
+    .click('#edit-data-source-button-arrDsId')
     .waitForElementVisible('#unit-of-measurement-input')
     .clearValue('#unit-of-measurement-input')
     .setValue('#unit-of-measurement-input', newUnit)
@@ -131,24 +125,24 @@ function editDataSource(browser) {
     .setValue('#strength-of-evidence-input', newStrength)
     .setValue('#uncertainties-input', newUncertainties)
 
-    .click('#edit-data-source-button')
-    .assert.containsText('#linked-data-source-reference-0-0', newReference)
+    .click('#edit-data-source-confirm-button')
+    .assert.containsText('#reference-arrDsId', newReference)
     .assert.containsText(
-      '#soe-unc-0-0',
+      '#soe-unc-arrDsId',
       'SoE: ' + newStrength + '\nUnc: ' + newUncertainties
     )
-    .assert.containsText('#unit-of-measurement-0-0', newUnit);
+    .assert.containsText('#unit-cell-arrDsId', newUnit);
 }
 
 function editAlternative(browser) {
   const newTitle = 'new alternative';
 
   loadTestWorkspace(browser, title)
-    .click('#edit-alternative-0')
-    .waitForElementVisible('#alternative-title')
-    .clearValue('#alternative-title')
-    .setValue('#alternative-title', newTitle)
-    .click('#save-alternative-button')
+    .click('#edit-alternative-button-heparinId')
+    .waitForElementVisible('#alternative-title-input')
+    .clearValue('#alternative-title-input')
+    .setValue('#alternative-title-input', newTitle)
+    .click('#edit-alternative-confirm-button')
     .assert.containsText(heparinAlternative, newTitle);
 }
 
@@ -163,8 +157,8 @@ function editTitle(browser) {
 }
 
 function reorderCriteria(browser) {
-  const firstCriterionTitle = '#criterion-title-0';
-  const firstCriterionDown = '#move-down-criterion-0';
+  const firstCriterionTitle = '#criterion-title-proximalId';
+  const firstCriterionDown = '#move-down-proximalId';
 
   loadTestWorkspace(browser, title)
     .click(firstCriterionDown)
@@ -174,9 +168,9 @@ function reorderCriteria(browser) {
 }
 
 function reorderAlternatives(browser) {
-  const firstAlternativeTitle = '#alternative-title-0';
-  const heparinDown = '#move-down-alternative-0';
-  const heparinUp = '#move-up-alternative-1';
+  const firstAlternativeTitle = '#alternative-title-heparinId';
+  const heparinDown = '#move-down-heparinId';
+  const heparinUp = '#move-up-heparinId';
 
   loadTestWorkspace(browser, title)
     .getLocationInView(heparinDown)
@@ -193,9 +187,9 @@ function reorderDataSources(browser) {
     '/createSubproblemTestProblem.json'
   );
 
-  const firstReference = '#data-source-reference-0-0';
-  const ref1Down = '#move-down-data-source-0-0';
-  const ref1Up = '#move-up-data-source-0-1';
+  const firstReference = '#reference-ds1Id';
+  const ref1Down = '#move-down-ds1Id';
+  const ref1Up = '#move-up-data-ds1Id';
 
   browser.assert
     .containsText(firstReference, 'ref1')

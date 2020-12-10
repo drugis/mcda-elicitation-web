@@ -117,7 +117,11 @@ export default function EditOverviewDataSourceButton() {
   return (
     <>
       <Tooltip title="Edit data source">
-        <IconButton color="primary" onClick={openDialog}>
+        <IconButton
+          id={`edit-data-source-button-${dataSource.id}`}
+          color="primary"
+          onClick={openDialog}
+        >
           <Edit />
         </IconButton>
       </Tooltip>

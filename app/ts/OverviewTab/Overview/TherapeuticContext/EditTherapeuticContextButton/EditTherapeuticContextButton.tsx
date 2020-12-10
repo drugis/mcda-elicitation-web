@@ -68,7 +68,10 @@ export default function EditTherapeuticContextButton() {
         fullWidth
         maxWidth={'sm'}
       >
-        <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
+        <DialogTitleWithCross
+          id="therapeutic-context-header"
+          onClose={closeDialog}
+        >
           Edit therapeutic context
         </DialogTitleWithCross>
         <DialogContent>

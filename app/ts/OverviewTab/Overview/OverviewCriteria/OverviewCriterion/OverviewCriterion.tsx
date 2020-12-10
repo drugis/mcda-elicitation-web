@@ -20,9 +20,9 @@ export default function OverviewCriterion() {
   return (
     <Accordion defaultExpanded={true}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Grid container>
-          <Typography variant="h6">{criterion.title}</Typography>
-        </Grid>
+        <Typography id={`criterion-title-${criterion.id}`} variant="h6">
+          {criterion.title}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
@@ -35,7 +35,7 @@ export default function OverviewCriterion() {
             />
           </Grid>
           <Grid item xs={11} container>
-            <Grid item xs={11}>
+            <Grid id={`criterion-description-${criterion.id}`} item xs={11}>
               <b>Description: </b>
               {criterion.description}
             </Grid>

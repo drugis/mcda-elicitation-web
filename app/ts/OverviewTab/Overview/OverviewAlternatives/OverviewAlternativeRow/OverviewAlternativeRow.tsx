@@ -26,7 +26,9 @@ export default function OverviewAlternativeRow({
           previousId={previousAlternativeId}
         />
       </TableCell>
-      <TableCell>{alternative.title}</TableCell>
+      <TableCell id={`alternative-title-${alternative.id}`}>
+        {alternative.title}
+      </TableCell>
       <TableCell align={'center'}>
         <EditOverviewAlternativeButton alternative={alternative} />
       </TableCell>

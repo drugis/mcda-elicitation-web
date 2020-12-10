@@ -14,7 +14,7 @@ export default function TherapeuticContext() {
           <EditTherapeuticContextButton />
         </Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid id={'therapeutic-context'} item xs={12}>
         {therapeuticContext ? therapeuticContext : 'No description given.'}
       </Grid>
     </Grid>
