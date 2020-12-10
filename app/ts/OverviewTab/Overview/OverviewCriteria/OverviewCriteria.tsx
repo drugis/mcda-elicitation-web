@@ -1,4 +1,6 @@
-import {Grid, Typography} from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
@@ -8,43 +10,86 @@ import _ from 'lodash';
 import React, {useContext} from 'react';
 import OverviewCriterion from './OverviewCriterion/OverviewCriterion';
 
+const style = {backgroundColor: '#eaeaea', margin: '0px'};
+
 export default function OverviewCriteria() {
   const {workspace} = useContext(WorkspaceContext);
 
-  function renderCriteria(): JSX.Element[] {
+  function CriteriaContainer(): JSX.Element {
     if (workspace.properties.useFavourability) {
-      return foo(workspace.criteria);
+      const [favourableCriteria, unfavourableCriteria] = _.partition(
+        workspace.criteria,
+        (criterion: ICriterion): boolean => {
+          return criterion.isFavourable;
+        }
+      );
+      return (
+        <Grid item container>
+          <CriteriaBackground>
+            <FavorabilityHeader>Favourable criteria</FavorabilityHeader>
+            <Criteria criteria={favourableCriteria} />
+          </CriteriaBackground>
+          <CriteriaBackground>
+            <FavorabilityHeader>Unfavourable criteria</FavorabilityHeader>
+            <Criteria criteria={unfavourableCriteria} />
+          </CriteriaBackground>
+        </Grid>
+      );
     } else {
-      return foo(workspace.criteria);
+      return (
+        <CriteriaBackground>
+          <Criteria criteria={workspace.criteria} />
+        </CriteriaBackground>
+      );
     }
   }
 
-  function foo(criteria: ICriterion[]): JSX.Element[] {
-    return _.map(criteria, (criterion: ICriterion, index: number) => {
-      const previousCriterionId = getPreviousId(index, criteria);
-      const nextCriterionId = getNextId(index, criteria);
-      return (
-        <OverviewCriterionContextProviderComponent
-          criterion={criterion}
-          nextCriterionId={nextCriterionId}
-          previousCriterionId={previousCriterionId}
-        >
-          <OverviewCriterion key={criterion.id} />
-        </OverviewCriterionContextProviderComponent>
-      );
-    });
+  function CriteriaBackground({children}: {children: any}): JSX.Element {
+    return (
+      <Grid container spacing={4} item xs={12} component={Paper} style={style}>
+        {children}
+      </Grid>
+    );
+  }
+
+  function FavorabilityHeader({children}: {children: any}): JSX.Element {
+    return (
+      <Grid item xs={12}>
+        <Typography variant="h6">{children}</Typography>
+      </Grid>
+    );
+  }
+
+  function Criteria({criteria}: {criteria: ICriterion[]}): JSX.Element {
+    return (
+      <Grid item xs={12}>
+        {_.map(criteria, (criterion: ICriterion, index: number) => {
+          const previousCriterionId = getPreviousId(index, criteria);
+          const nextCriterionId = getNextId(index, criteria);
+          return (
+            <Grid item xs={12}>
+              <OverviewCriterionContextProviderComponent
+                criterion={criterion}
+                nextCriterionId={nextCriterionId}
+                previousCriterionId={previousCriterionId}
+              >
+                <OverviewCriterion key={criterion.id} />
+              </OverviewCriterionContextProviderComponent>
+            </Grid>
+          );
+        })}
+      </Grid>
+    );
   }
 
   return (
     <Grid container item xs={12}>
       <Grid item xs={12}>
-        <Typography variant={'h5'}>
+        <Typography variant="h5">
           Criteria <InlineHelp helpId="criterion" />
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        {renderCriteria()}
-      </Grid>
+      <CriteriaContainer />
     </Grid>
   );
 }
