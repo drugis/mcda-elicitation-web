@@ -29,20 +29,6 @@ define(['lodash'], function (_) {
       });
     }
 
-    function saveOrdering(stateParams, criteria, alternatives) {
-      return OrderingResource.put(stateParams, {
-        criteria: _.map(criteria, 'id'),
-        alternatives: _.map(alternatives, 'id'),
-        dataSources: _.reduce(
-          criteria,
-          function (accum, criterion) {
-            return accum.concat(_.map(criterion.dataSources, 'id'));
-          },
-          []
-        )
-      }).$promise;
-    }
-
     function getNewOrdering(problem) {
       var ordering = {
         alternatives: _.map(
@@ -97,7 +83,6 @@ define(['lodash'], function (_) {
     }
     return {
       getOrderedCriteriaAndAlternatives: getOrderedCriteriaAndAlternatives,
-      saveOrdering: saveOrdering,
       getNewOrdering: getNewOrdering
     };
   };
