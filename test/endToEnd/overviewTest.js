@@ -20,7 +20,7 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
 
-const title = 'Thrombolytics - single study B/R analysis';
+const thrombolyticsTitle = 'Thrombolytics - single study B/R analysis';
 const proximalDVTCriterionTitle = '#criterion-title-proximalId';
 const proximalDVTCriterionDescription = '#criterion-description-proximalId';
 const heparinAlternative = '#alternative-title-heparinId';
@@ -47,7 +47,7 @@ function afterEach(browser) {
 function assertContents(browser) {
   const firstDistalDVTValue = '#value-cell-distalDsId-heparinId';
 
-  loadTestWorkspace(browser, title)
+  loadTestWorkspace(browser, thrombolyticsTitle)
     .assert.containsText('#therapeutic-context', 'No description given.')
     .assert.containsText(proximalDVTCriterionTitle, 'Proximal DVT')
     .assert.containsText(heparinAlternative, 'Heparin')
@@ -59,7 +59,7 @@ function assertContents(browser) {
 }
 
 function editTherapeuticContext(browser) {
-  loadTestWorkspace(browser, title)
+  loadTestWorkspace(browser, thrombolyticsTitle)
     .assert.containsText('#therapeutic-context', 'No description given.')
     .click('#edit-therapeutic-context-button')
     .waitForElementVisible('#therapeutic-context-header')
@@ -72,7 +72,7 @@ function editCriterion(browser) {
   const newTitle = 'new title';
   const newDescription = 'new description';
 
-  loadTestWorkspace(browser, title)
+  loadTestWorkspace(browser, thrombolyticsTitle)
     .click('#edit-criterion-button-proximalId')
     .waitForElementVisible('#criterion-title-input')
     .clearValue('#criterion-title-input')
@@ -87,7 +87,7 @@ function editCriterion(browser) {
 function editCriterionSwitchTabs(browser) {
   const newTitle = 'new title';
 
-  loadTestWorkspace(browser, title)
+  loadTestWorkspace(browser, thrombolyticsTitle)
     .click('#edit-criterion-button-proximalId')
     .waitForElementVisible('#criterion-title-input')
     .clearValue('#criterion-title-input')
@@ -137,7 +137,7 @@ function editDataSource(browser) {
 function editAlternative(browser) {
   const newTitle = 'new alternative';
 
-  loadTestWorkspace(browser, title)
+  loadTestWorkspace(browser, thrombolyticsTitle)
     .click('#edit-alternative-button-heparinId')
     .waitForElementVisible('#alternative-title-input')
     .clearValue('#alternative-title-input')
@@ -149,7 +149,7 @@ function editAlternative(browser) {
 function editTitle(browser) {
   const newTitle = 'new workspace title';
 
-  loadTestWorkspace(browser, title)
+  loadTestWorkspace(browser, thrombolyticsTitle)
     .click('#edit-workspace-title-button')
     .clearValue('#workspace-title-input')
     .setValue('#workspace-title-input', newTitle)
@@ -157,28 +157,33 @@ function editTitle(browser) {
 }
 
 function reorderCriteria(browser) {
-  const firstCriterionTitle = '#criterion-title-proximalId';
-  const firstCriterionDown = '#move-down-proximalId';
-
-  loadTestWorkspace(browser, title)
-    .click(firstCriterionDown)
-    .assert.containsText(firstCriterionTitle, 'Distal DVT')
-    .click(firstCriterionDown)
-    .assert.containsText(firstCriterionTitle, 'Proximal DVT');
+  const firstCriterionTitlePath =
+    '/html/body/div[1]/div/div[3]/div[2]/div/overview/span/div/div[3]/div[2]/div/div[1]/div/div[1]/div[1]';
+  const proximalDown = '//*[@id="move-down-proximalId"]';
+  const proximalUp = '//*[@id="move-up-proximalId"]';
+  loadTestWorkspace(browser, thrombolyticsTitle)
+    .useXpath()
+    .click(proximalDown)
+    .assert.containsText(firstCriterionTitlePath, 'Distal DVT')
+    .click(proximalUp)
+    .assert.containsText(firstCriterionTitlePath, 'Proximal DVT')
+    .useCss();
 }
 
 function reorderAlternatives(browser) {
-  const firstAlternativeTitle = '#alternative-title-heparinId';
-  const heparinDown = '#move-down-heparinId';
-  const heparinUp = '#move-up-heparinId';
-
-  loadTestWorkspace(browser, title)
-    .getLocationInView(heparinDown)
-    .waitForElementVisible(heparinDown)
-    .click(heparinDown)
-    .assert.containsText(firstAlternativeTitle, 'Enoxaparin')
-    .click(heparinUp)
-    .assert.containsText(firstAlternativeTitle, 'Heparin');
+  const firstAlternativeTitlePath =
+    '//overview/span/div/div[4]/div[2]/table/tbody/tr[1]/td[2]';
+  const moveHeparinDown = '//*[@id="move-down-heparinId"]';
+  const moveHeparinUp = '//*[@id="move-up-heparinId"]';
+  loadTestWorkspace(browser, thrombolyticsTitle)
+    .useXpath()
+    .getLocationInView(moveHeparinDown)
+    .waitForElementVisible(moveHeparinDown)
+    .click(moveHeparinDown)
+    .assert.containsText(firstAlternativeTitlePath, 'Enoxaparin')
+    .click(moveHeparinUp)
+    .assert.containsText(firstAlternativeTitlePath, 'Heparin')
+    .useCss();
 }
 
 function reorderDataSources(browser) {
@@ -187,14 +192,17 @@ function reorderDataSources(browser) {
     '/createSubproblemTestProblem.json'
   );
 
-  const firstReference = '#reference-ds1Id';
-  const ref1Down = '#move-down-ds1Id';
-  const ref1Up = '#move-up-data-ds1Id';
+  const firstDataSourceReferencePath =
+    '//overview/span/div/div[3]/div[2]/div/div[1]/div/div[2]/div/div/div/div/div/div[2]/div[4]/table/tbody/tr[1]/td[7]';
+  const ref1Down = '//*[@id="move-down-ds1Id"]';
+  const ref1Up = '//*[@id="move-up-ds1Id"]';
 
-  browser.assert
-    .containsText(firstReference, 'ref1')
+  browser
+    .useXpath()
+    .assert.containsText(firstDataSourceReferencePath, 'ref1')
     .click(ref1Down)
-    .assert.containsText(firstReference, 'ref2')
+    .assert.containsText(firstDataSourceReferencePath, 'ref2')
     .click(ref1Up)
-    .assert.containsText(firstReference, 'ref1');
+    .assert.containsText(firstDataSourceReferencePath, 'ref1')
+    .useCss();
 }

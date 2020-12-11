@@ -151,9 +151,11 @@ export function WorkspaceContextProviderComponent({
   }
 
   function sendOldWorkspace(oldWorkspaceToSend: IOldWorkspace) {
-    Axios.post(`/workspaces/${workspaceId}`, oldWorkspaceToSend).catch(
-      errorCallback
-    );
+    Axios.post(`/workspaces/${workspaceId}`, oldWorkspaceToSend)
+      .catch(errorCallback)
+      .then(() => {
+        window.location.reload();
+      }); // FIXME: needed to update the angular scope
   }
 
   function errorCallback(error: OurError) {
