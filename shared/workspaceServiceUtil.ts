@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export function order<T extends {id: string}>(
+export function applyOrdering<T extends {id: string}>(
   ordering: string[] | undefined,
   objectsToOrder: T[]
 ): T[] {

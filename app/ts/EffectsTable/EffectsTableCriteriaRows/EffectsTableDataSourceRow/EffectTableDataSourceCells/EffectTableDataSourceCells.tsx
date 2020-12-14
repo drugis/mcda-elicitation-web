@@ -14,7 +14,7 @@ export default function EffectTableDataSourceCells({
   dataSource: IDataSource;
   alternatives: IAlternative[];
 }) {
-  function renderCells(): JSX.Element[] {
+  function renderValueCells(): JSX.Element[] {
     return _.map(alternatives, (alternative: IAlternative) => {
       return (
         <ValueCell
@@ -29,7 +29,7 @@ export default function EffectTableDataSourceCells({
   return (
     <>
       <EffectsTableUnitOfMeasurementCell dataSource={dataSource} />
-      {renderCells()}
+      {renderValueCells()}
       <EffectsTableStrengthsAndUncertainties dataSource={dataSource} />
       <EffectsTableReferenceCell dataSource={dataSource} />
     </>

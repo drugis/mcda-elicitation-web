@@ -31,7 +31,7 @@ import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
 import {generateUuid} from './util';
-import {order} from './workspaceServiceUtil';
+import {applyOrdering} from './workspaceServiceUtil';
 
 export function buildWorkspace(
   workspace: IOldWorkspace,
@@ -189,8 +189,8 @@ export function buildWorkspaceCriteria(
   idMapper: (id: string) => string,
   ordering?: IOrdering
 ): ICriterion[] {
-  const criteriaOrder = ordering ? ordering.criteria : undefined;
-  const dataSourceOrder = ordering ? ordering.dataSources : undefined;
+  const criteriaOrdering = ordering ? ordering.criteria : undefined;
+  const dataSourceOrdering = ordering ? ordering.dataSources : undefined;
   const newCriteria = _.map(
     criteria,
     (criterion: IProblemCriterion, oldId: string): ICriterion => {
@@ -203,12 +203,12 @@ export function buildWorkspaceCriteria(
           criterion,
           idMapper(oldId),
           idMapper,
-          dataSourceOrder
+          dataSourceOrdering
         )
       };
     }
   );
-  return order(criteriaOrder, newCriteria);
+  return applyOrdering(criteriaOrdering, newCriteria);
 }
 
 export function buildWorkspaceDataSources(
@@ -236,7 +236,7 @@ export function buildWorkspaceDataSources(
       };
     }
   );
-  return order(ordering, newDataSources);
+  return applyOrdering(ordering, newDataSources);
 }
 
 export function buildWorkspaceAlternatives(
@@ -253,7 +253,7 @@ export function buildWorkspaceAlternatives(
       };
     }
   );
-  return order(ordering, newAlternatives);
+  return applyOrdering(ordering, newAlternatives);
 }
 
 export function buildWorkspaceEffects(

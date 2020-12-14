@@ -24,7 +24,7 @@ describe('swapUtil', () => {
       expect(result).toEqual('1');
     });
 
-    it('should return undefined if the index is the last item in the provided array', () => {
+    it('should return undefined if the index is the first item in the provided array', () => {
       const index = 0;
       const result = getPreviousId(index, items);
       expect(result).toBeUndefined();
