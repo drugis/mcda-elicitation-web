@@ -24,15 +24,19 @@ export default function OverviewCriteria() {
         }
       );
       return (
-        <Grid item container>
-          <CriteriaBackground>
-            <FavorabilityHeader>Favourable criteria</FavorabilityHeader>
-            <Criteria criteria={favourableCriteria} />
-          </CriteriaBackground>
-          <CriteriaBackground>
-            <FavorabilityHeader>Unfavourable criteria</FavorabilityHeader>
-            <Criteria criteria={unfavourableCriteria} />
-          </CriteriaBackground>
+        <Grid container item xs={12} spacing={2}>
+          <Grid item xs={12}>
+            <CriteriaBackground>
+              <FavorabilityHeader>Favourable criteria</FavorabilityHeader>
+              <Criteria criteria={favourableCriteria} />
+            </CriteriaBackground>
+          </Grid>
+          <Grid item xs={12}>
+            <CriteriaBackground>
+              <FavorabilityHeader>Unfavourable criteria</FavorabilityHeader>
+              <Criteria criteria={unfavourableCriteria} />
+            </CriteriaBackground>
+          </Grid>
         </Grid>
       );
     } else {
@@ -46,7 +50,7 @@ export default function OverviewCriteria() {
 
   function CriteriaBackground({children}: {children: any}): JSX.Element {
     return (
-      <Grid container spacing={4} item xs={12} component={Paper} style={style}>
+      <Grid container item xs={12} component={Paper} style={style} spacing={1}>
         {children}
       </Grid>
     );
@@ -54,7 +58,7 @@ export default function OverviewCriteria() {
 
   function FavorabilityHeader({children}: {children: any}): JSX.Element {
     return (
-      <Grid item xs={12}>
+      <Grid container item xs={12} justify="center">
         <Typography variant="h6">{children}</Typography>
       </Grid>
     );
@@ -62,16 +66,17 @@ export default function OverviewCriteria() {
 
   function Criteria({criteria}: {criteria: ICriterion[]}): JSX.Element {
     return (
-      <Grid item xs={12} container>
+      <Grid container item xs={12} spacing={2}>
         {_.map(criteria, (criterion: ICriterion, index: number) => {
           const previousCriterionId = getPreviousId(index, criteria);
           const nextCriterionId = getNextId(index, criteria);
           return (
-            <Grid item xs={12} key={criterion.id}>
+            <Grid item xs={12}>
               <OverviewCriterionContextProviderComponent
                 criterion={criterion}
                 nextCriterionId={nextCriterionId}
                 previousCriterionId={previousCriterionId}
+                key={criterion.id}
               >
                 <OverviewCriterion />
               </OverviewCriterionContextProviderComponent>

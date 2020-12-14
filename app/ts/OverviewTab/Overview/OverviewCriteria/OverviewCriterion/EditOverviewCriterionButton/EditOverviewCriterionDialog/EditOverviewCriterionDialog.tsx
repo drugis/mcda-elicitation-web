@@ -6,14 +6,14 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
+import ICriterion from '@shared/interface/ICriterion';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
-import _ from 'lodash';
-import ICriterion from '@shared/interface/ICriterion';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import {getTitleError} from 'app/ts/util/getTitleError';
+import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
+import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import FavourabilitySwitch from '../FavourabilitySwitch/FavourabilitySwitch';
 
 export default function EditOverviewCriterionDialog({
