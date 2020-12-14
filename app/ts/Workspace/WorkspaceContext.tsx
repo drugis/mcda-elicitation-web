@@ -73,7 +73,12 @@ export function WorkspaceContextProviderComponent({
   }, [scales, oldWorkspace]);
 
   function isOrdering(ordering: {} | IOrdering): ordering is IOrdering {
-    return !_.isEqual(ordering, {});
+    return (
+      _.difference(
+        ['criteria', 'alternatives', 'dataSources'],
+        _.keys(ordering)
+      ).length === 0
+    );
   }
 
   function editTitle(newTitle: string): void {
