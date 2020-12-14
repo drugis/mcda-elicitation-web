@@ -43,7 +43,7 @@ export default function EditOverviewAlternativeButton({
     setIsDialogOpen(true);
   }
 
-  function OverviewAlternativeChanged(
+  function overviewAlternativeChanged(
     event: ChangeEvent<HTMLTextAreaElement>
   ): void {
     setTitle(event.target.value);
@@ -88,7 +88,7 @@ export default function EditOverviewAlternativeButton({
                 label="new title"
                 id="alternative-title-input"
                 value={title}
-                onChange={OverviewAlternativeChanged}
+                onChange={overviewAlternativeChanged}
                 variant="outlined"
                 onKeyDown={handleKey}
                 autoFocus

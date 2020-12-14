@@ -1,12 +1,9 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import IAlternative from '@shared/interface/IAlternative';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import InlineHelp from '../InlineHelp/InlineHelp';
