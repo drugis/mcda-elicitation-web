@@ -50,7 +50,15 @@ export default function OverviewCriteria() {
 
   function CriteriaBackground({children}: {children: any}): JSX.Element {
     return (
-      <Grid container item xs={12} component={Paper} style={style} spacing={1}>
+      <Grid
+        container
+        item
+        xs={12}
+        component={Paper}
+        style={style}
+        spacing={1}
+        justify="center"
+      >
         {children}
       </Grid>
     );

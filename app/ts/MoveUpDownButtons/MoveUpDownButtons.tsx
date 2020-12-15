@@ -28,7 +28,7 @@ export default function MoveUpDownButtons({
     <ButtonGroup
       orientation="vertical"
       color="primary"
-      variant="text"
+      variant="outlined"
       size="small"
     >
       <Button
@@ -36,6 +36,7 @@ export default function MoveUpDownButtons({
         disabled={!previousId}
         onClick={moveUp}
         size="small"
+        title="Move up"
       >
         <ArrowDropUp fontSize={'small'} />
       </Button>
@@ -44,6 +45,7 @@ export default function MoveUpDownButtons({
         disabled={!nextId || nextId.startsWith(DUMMY_ID)}
         onClick={moveDown}
         size="small"
+        title="Move down"
       >
         <ArrowDropDown fontSize={'small'} />
       </Button>

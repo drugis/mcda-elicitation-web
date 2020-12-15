@@ -7,7 +7,7 @@ import TherapeuticContext from './TherapeuticContext/TherapeuticContext';
 
 export default function Overview() {
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       <DownloadWorkspace />
       <TherapeuticContext />
       <OverviewCriteria />
