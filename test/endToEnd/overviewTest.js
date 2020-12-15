@@ -15,6 +15,8 @@ module.exports = {
   'Reordering data sources': reorderDataSources
 };
 
+const RELOAD_PAUSE = 4000;
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
@@ -61,10 +63,12 @@ function assertContents(browser) {
 function editTherapeuticContext(browser) {
   loadTestWorkspace(browser, thrombolyticsTitle)
     .assert.containsText('#therapeutic-context', 'No description given.')
+    .pause(RELOAD_PAUSE)
     .click('#edit-therapeutic-context-button')
     .waitForElementVisible('#therapeutic-context-header')
     .setValue('#therapeutic-context-input', 'new context')
     .click('#edit-therapeutic-context-confirm-button')
+    .pause(RELOAD_PAUSE)
     .assert.containsText('#therapeutic-context', 'new context');
 }
 
@@ -80,6 +84,7 @@ function editCriterion(browser) {
     .clearValue('#criterion-description-input')
     .setValue('#criterion-description-input', newDescription)
     .click('#edit-criterion-confirm-button')
+    .pause(RELOAD_PAUSE)
     .assert.containsText(proximalDVTCriterionTitle, newTitle)
     .assert.containsText(proximalDVTCriterionDescription, newDescription);
 }
@@ -93,6 +98,7 @@ function editCriterionSwitchTabs(browser) {
     .clearValue('#criterion-title-input')
     .setValue('#criterion-title-input', newTitle)
     .click('#edit-criterion-confirm-button')
+    .pause(RELOAD_PAUSE)
     .waitForElementVisible('#workspace-title')
     .assert.containsText('#criterion-title-proximalId', newTitle)
     .click('#problem-definition-tab')
@@ -126,6 +132,7 @@ function editDataSource(browser) {
     .setValue('#uncertainties-input', newUncertainties)
 
     .click('#edit-data-source-confirm-button')
+    .pause(RELOAD_PAUSE)
     .assert.containsText('#reference-arrDsId', newReference)
     .assert.containsText(
       '#soe-unc-arrDsId',
@@ -143,6 +150,7 @@ function editAlternative(browser) {
     .clearValue('#alternative-title-input')
     .setValue('#alternative-title-input', newTitle)
     .click('#edit-alternative-confirm-button')
+    .pause(RELOAD_PAUSE)
     .assert.containsText(heparinAlternative, newTitle);
 }
 
@@ -172,7 +180,7 @@ function reorderCriteria(browser) {
 
 function reorderAlternatives(browser) {
   const firstAlternativeTitlePath =
-    '//overview/span/div/div[4]/div[2]/table/tbody/tr[1]/td[2]';
+    '//overview/span/div/div[4]/div[2]/table/tbody/tr[1]/td[1]';
   const moveHeparinDown = '//*[@id="move-down-heparinId"]';
   const moveHeparinUp = '//*[@id="move-up-heparinId"]';
   loadTestWorkspace(browser, thrombolyticsTitle)
@@ -193,7 +201,7 @@ function reorderDataSources(browser) {
   );
 
   const firstDataSourceReferencePath =
-    '//overview/span/div/div[3]/div[2]/div/div[1]/div/div[2]/div/div/div/div/div/div[2]/div[4]/table/tbody/tr[1]/td[7]';
+    '//overview/span/div/div[3]/div[2]/div/div[1]/div/div/div[5]/table/tbody/tr[1]/td[6]';
   const ref1Down = '//*[@id="move-down-ds1Id"]';
   const ref1Up = '//*[@id="move-up-ds1Id"]';
 

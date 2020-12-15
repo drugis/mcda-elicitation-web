@@ -50,8 +50,8 @@ export default function OverviewAlternatives(): JSX.Element {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
               <TableCell width="100%">Alternative title</TableCell>
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>

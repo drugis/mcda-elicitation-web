@@ -14,6 +14,13 @@ export default function OverviewDataSourceRow() {
   );
   return (
     <TableRow>
+      <EffectTableDataSourceCells
+        dataSource={dataSource}
+        alternatives={_.values(alternatives)}
+      />
+      <TableCell align={'center'}>
+        <EditOverviewDataSourceButton />
+      </TableCell>
       <TableCell align={'center'}>
         <MoveUpDownButtons
           nextId={nextDataSourceId}
@@ -21,13 +28,6 @@ export default function OverviewDataSourceRow() {
           id={dataSource.id}
           previousId={previousDataSourceId}
         />
-      </TableCell>
-      <EffectTableDataSourceCells
-        dataSource={dataSource}
-        alternatives={_.values(alternatives)}
-      />
-      <TableCell align={'center'}>
-        <EditOverviewDataSourceButton />
       </TableCell>
     </TableRow>
   );

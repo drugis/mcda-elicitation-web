@@ -28,7 +28,7 @@ export default function MoveUpDownButtons({
     <ButtonGroup
       orientation="vertical"
       color="primary"
-      variant="outlined"
+      variant="text"
       size="small"
     >
       <Button

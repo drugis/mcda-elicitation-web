@@ -50,13 +50,13 @@ export default function OverviewDataSourceTable() {
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell></TableCell>
           <UnitsHeader />
           <EffectsTableAlternativeHeaders
             alternatives={_.values(alternatives)}
           />
           <SoEUncHeader />
           <ReferencesHeader />
+          <TableCell></TableCell>
           <TableCell></TableCell>
         </TableRow>
       </TableHead>

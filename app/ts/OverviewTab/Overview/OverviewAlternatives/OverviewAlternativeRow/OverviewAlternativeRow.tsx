@@ -18,6 +18,12 @@ export default function OverviewAlternativeRow({
 
   return (
     <TableRow>
+      <TableCell id={`alternative-title-${alternative.id}`}>
+        {alternative.title}
+      </TableCell>
+      <TableCell align={'center'}>
+        <EditOverviewAlternativeButton alternative={alternative} />
+      </TableCell>
       <TableCell align={'center'}>
         <MoveUpDownButtons
           swap={swapAlternatives}
@@ -25,12 +31,6 @@ export default function OverviewAlternativeRow({
           nextId={nextAlternativeId}
           previousId={previousAlternativeId}
         />
-      </TableCell>
-      <TableCell id={`alternative-title-${alternative.id}`}>
-        {alternative.title}
-      </TableCell>
-      <TableCell align={'center'}>
-        <EditOverviewAlternativeButton alternative={alternative} />
       </TableCell>
     </TableRow>
   );
