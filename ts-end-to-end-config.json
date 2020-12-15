@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./test/endToEnd",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "sourceMap": true,
+    "allowJs": false
+  },
+  "include": ["test/endToEnd/*.ts"],
+  "exclude": ["node_modules"]
+}
