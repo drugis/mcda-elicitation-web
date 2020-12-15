@@ -83,6 +83,14 @@ describe('ScalesTableUtil', () => {
               unitOfMeasurement: {type: 'custom'}
             } as IDataSource
           ]
+        } as ICriterion,
+        {
+          dataSources: [
+            {
+              id: 'percentAndExactDistribution',
+              unitOfMeasurement: {type: 'percentage'}
+            } as IDataSource
+          ]
         } as ICriterion
       ];
 
@@ -107,6 +115,13 @@ describe('ScalesTableUtil', () => {
           dataSourceId: 'dataSourceOverlappingRanges',
           lowerBound: 0.4,
           upperBound: 0.5
+        } as Effect,
+        {
+          type: 'valueCI',
+          dataSourceId: 'percentAndExactDistribution',
+          value: 6,
+          lowerBound: 3,
+          upperBound: 9
         } as Effect
       ];
 
@@ -126,6 +141,11 @@ describe('ScalesTableUtil', () => {
           dataSourceId: 'dataSourceOverlappingRanges',
           lowerBound: 0.45,
           upperBound: 1
+        } as Distribution,
+        {
+          type: 'value',
+          dataSourceId: 'percentAndExactDistribution',
+          value: 5
         } as Distribution
       ];
 
@@ -142,7 +162,8 @@ describe('ScalesTableUtil', () => {
       const expectedResult: Record<string, [number, number]> = {
         dataSourceNoDistributionId: [0.1, 0.9],
         dataSourceRangeAndExactId: [0, 0.9],
-        dataSourceOverlappingRanges: [0.4, 1]
+        dataSourceOverlappingRanges: [0.4, 1],
+        percentAndExactDistribution: [0.05, 0.06]
       };
       expect(result).toEqual(expectedResult);
     });

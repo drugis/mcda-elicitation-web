@@ -379,7 +379,11 @@ export function finishDistributionCreation(
 ): Distribution {
   switch (performance.type) {
     case 'exact':
-      return {...distributionBase, type: 'value', value: performance.value};
+      return {
+        ...distributionBase,
+        type: 'value',
+        value: significantDigits(performance.value * modifier)
+      };
     case 'dbeta':
       return {
         ...distributionBase,

@@ -1,7 +1,7 @@
 import {Distribution} from '@shared/interface/IDistribution';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
-import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
+import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
 
 export function renderDistribution(
   distribution: Distribution,
@@ -24,7 +24,11 @@ export function renderDistribution(
       case 'text':
         return distribution.text;
       case 'value':
-        return getPercentifiedValueLabel(distribution.value, usePercentage);
+        return valueToString(
+          distribution.value,
+          usePercentage,
+          distribution.unitOfMeasurementType
+        );
     }
   }
 }
@@ -33,18 +37,28 @@ function renderRangeDistribution(
   distribution: IRangeEffect,
   usePercentage: boolean
 ): string {
-  return `[${getPercentifiedValueLabel(
+  return `[${valueToString(
     distribution.lowerBound,
-    usePercentage
-  )}, ${getPercentifiedValueLabel(distribution.upperBound, usePercentage)}]`;
+    usePercentage,
+    distribution.unitOfMeasurementType
+  )}, ${valueToString(
+    distribution.upperBound,
+    usePercentage,
+    distribution.unitOfMeasurementType
+  )}]`;
 }
 
 function renderNormalDistribution(
   distribution: INormalDistribution,
   usePercentage: boolean
 ): string {
-  return `Normal(${getPercentifiedValueLabel(
+  return `Normal(${valueToString(
     distribution.mean,
-    usePercentage
-  )}, ${getPercentifiedValueLabel(distribution.standardError, usePercentage)})`;
+    usePercentage,
+    distribution.unitOfMeasurementType
+  )}, ${valueToString(
+    distribution.standardError,
+    usePercentage,
+    distribution.unitOfMeasurementType
+  )})`;
 }

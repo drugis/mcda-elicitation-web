@@ -1,7 +1,7 @@
 module.exports = {
   // The root of your source code, typically /src
   // `<rootDir>` is a token Jest substitutes
-  roots: ['<rootDir>/test', '<rootDir>/app/ts'],
+  roots: ['<rootDir>/test', '<rootDir>/app/ts', '<rootDir>/shared'],
 
   // Jest transformations -- this adds support for TypeScript
   // using ts-jest
