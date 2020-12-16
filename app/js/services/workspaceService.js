@@ -35,9 +35,11 @@ define(['lodash', 'angular'], function (_, angular) {
     function createPerformanceTable(performanceTable) {
       return _.map(performanceTable, function (entry) {
         entry.criterion = entry.dataSource;
-        entry.performance = entry.performance.distribution
-          ? entry.performance.distribution
-          : entry.performance.effect;
+        entry.performance =
+          entry.performance.distribution &&
+          entry.performance.distribution.type !== 'empty'
+            ? entry.performance.distribution
+            : entry.performance.effect;
         return entry;
       });
     }
@@ -588,16 +590,17 @@ define(['lodash', 'angular'], function (_, angular) {
     function performanceTableWithMissingData(workspace) {
       var alternatives = _.keys(workspace.alternatives);
       var criteria = _.keys(workspace.criteria);
-      var criteriaWithAbsolutePerformance = _.filter(criteria, function (
-        criterion
-      ) {
-        return _.find(workspace.performanceTable, function (tableEntry) {
-          return (
-            tableEntry.criterion === criterion &&
-            isAbsolutePerformance(tableEntry)
-          );
-        });
-      });
+      var criteriaWithAbsolutePerformance = _.filter(
+        criteria,
+        function (criterion) {
+          return _.find(workspace.performanceTable, function (tableEntry) {
+            return (
+              tableEntry.criterion === criterion &&
+              isAbsolutePerformance(tableEntry)
+            );
+          });
+        }
+      );
       var critAltCombinations = _.reduce(
         criteriaWithAbsolutePerformance,
         function (acc, criterion) {
@@ -827,14 +830,15 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     function relativePerformanceLackingBaseline(workspace) {
-      var entryLackingBaseline = _.find(workspace.performanceTable, function (
-        tableEntry
-      ) {
-        return (
-          !isAbsolutePerformance(tableEntry) &&
-          !tableEntry.performance.distribution.parameters.baseline
-        );
-      });
+      var entryLackingBaseline = _.find(
+        workspace.performanceTable,
+        function (tableEntry) {
+          return (
+            !isAbsolutePerformance(tableEntry) &&
+            !tableEntry.performance.distribution.parameters.baseline
+          );
+        }
+      );
       if (entryLackingBaseline) {
         return (
           'Missing baseline for criterion: "' +
@@ -846,20 +850,23 @@ define(['lodash', 'angular'], function (_, angular) {
 
     function relativePerformanceWithBadMu(workspace) {
       var missingAlternativeId;
-      var entryWithBadMu = _.find(workspace.performanceTable, function (
-        tableEntry
-      ) {
-        return (
-          !isAbsolutePerformance(tableEntry) &&
-          _.find(
-            _.keys(tableEntry.performance.distribution.parameters.relative.mu),
-            function (alternativeId) {
-              missingAlternativeId = alternativeId;
-              return !workspace.alternatives[alternativeId];
-            }
-          )
-        );
-      });
+      var entryWithBadMu = _.find(
+        workspace.performanceTable,
+        function (tableEntry) {
+          return (
+            !isAbsolutePerformance(tableEntry) &&
+            _.find(
+              _.keys(
+                tableEntry.performance.distribution.parameters.relative.mu
+              ),
+              function (alternativeId) {
+                missingAlternativeId = alternativeId;
+                return !workspace.alternatives[alternativeId];
+              }
+            )
+          );
+        }
+      );
       if (entryWithBadMu) {
         return (
           'The mu of the performance of criterion: "' +
@@ -873,29 +880,30 @@ define(['lodash', 'angular'], function (_, angular) {
 
     function relativePerformanceWithBadCov(workspace) {
       var alternativeKey;
-      var entryWithBadCov = _.find(workspace.performanceTable, function (
-        tableEntry
-      ) {
-        return (
-          !isAbsolutePerformance(tableEntry) &&
-          (_.find(
-            tableEntry.performance.distribution.parameters.relative.cov
-              .rownames,
-            function (rowVal) {
-              alternativeKey = rowVal;
-              return !workspace.alternatives[rowVal];
-            }
-          ) ||
-            _.find(
+      var entryWithBadCov = _.find(
+        workspace.performanceTable,
+        function (tableEntry) {
+          return (
+            !isAbsolutePerformance(tableEntry) &&
+            (_.find(
               tableEntry.performance.distribution.parameters.relative.cov
-                .colnames,
-              function (colVal) {
-                alternativeKey = colVal;
-                return !workspace.alternatives[colVal];
+                .rownames,
+              function (rowVal) {
+                alternativeKey = rowVal;
+                return !workspace.alternatives[rowVal];
               }
-            ))
-        );
-      });
+            ) ||
+              _.find(
+                tableEntry.performance.distribution.parameters.relative.cov
+                  .colnames,
+                function (colVal) {
+                  alternativeKey = colVal;
+                  return !workspace.alternatives[colVal];
+                }
+              ))
+          );
+        }
+      );
       if (entryWithBadCov) {
         return (
           'The covariance matrix of criterion: "' +

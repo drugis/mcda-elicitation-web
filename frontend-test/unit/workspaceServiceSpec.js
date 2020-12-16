@@ -75,11 +75,14 @@ define([
         ).toHaveBeenCalledWith(expectedProblem);
       });
 
-      it('should call the pataviResultService with effect data if distribution data is missing', function () {
+      it('should call the pataviResultService with effect data if distribution data is missing or empty', function () {
         var problem = {
           criteria: {
             crit1: {
               dataSources: [{id: 'ds1'}]
+            },
+            crit2: {
+              dataSources: [{id: 'ds2'}]
             }
           },
           performanceTable: [
@@ -87,7 +90,21 @@ define([
               criterion: 'crit1',
               dataSource: 'ds1',
               performance: {
-                effect: {}
+                effect: {
+                  prop: 'effect-ds1'
+                }
+              }
+            },
+            {
+              criterion: 'crit2',
+              dataSource: 'ds2',
+              performance: {
+                effect: {
+                  prop: 'effect-ds2'
+                },
+                distribution: {
+                  type: 'empty'
+                }
               }
             }
           ]
@@ -97,13 +114,25 @@ define([
           criteria: {
             ds1: {
               id: 'ds1'
+            },
+            ds2: {
+              id: 'ds2'
             }
           },
           performanceTable: [
             {
               criterion: 'ds1',
               dataSource: 'ds1',
-              performance: {}
+              performance: {
+                prop: 'effect-ds1'
+              }
+            },
+            {
+              criterion: 'ds2',
+              dataSource: 'ds2',
+              performance: {
+                prop: 'effect-ds2'
+              }
             }
           ],
           method: 'scales'
