@@ -79,12 +79,11 @@ export default function OverviewCriteria() {
           const previousCriterionId = getPreviousId(index, criteria);
           const nextCriterionId = getNextId(index, criteria);
           return (
-            <Grid item xs={12}>
+            <Grid item xs={12} key={criterion.id}>
               <OverviewCriterionContextProviderComponent
                 criterion={criterion}
                 nextCriterionId={nextCriterionId}
                 previousCriterionId={previousCriterionId}
-                key={criterion.id}
               >
                 <OverviewCriterion />
               </OverviewCriterionContextProviderComponent>
