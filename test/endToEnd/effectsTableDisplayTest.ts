@@ -12,8 +12,6 @@ import {
   decimalCriterionWithEffectsDepercentifiedEntered,
   decimalCriterionWithEffectsPercentifiedAnalysis,
   decimalCriterionWithEffectsPercentifiedEntered,
-  ICriterionRow,
-  ICriterionRowWithUncertainty,
   percentageCriterionWithDistributionsDepercentifiedAnalysis,
   percentageCriterionWithDistributionsDepercentifiedEntered,
   percentageCriterionWithDistributionsPercentifiedAnalysis,
@@ -23,6 +21,8 @@ import {
   percentageCriterionWithEffectsPercentifiedAnalysis,
   percentageCriterionWithEffectsPercentifiedEntered
 } from './util/effectsTableDisplayTestUtil';
+import ICriterionRow from './util/ICriterionRow';
+import ICriterionRowWithUncertainty from './util/ICriterionRowWithUncertainty';
 import loginService from './util/loginService';
 import util from './util/util';
 import workspaceService from './util/workspaceService';
