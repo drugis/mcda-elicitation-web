@@ -22,7 +22,7 @@ import {
   percentageCriterionWithEffectsDepercentifiedEntered,
   percentageCriterionWithEffectsPercentifiedAnalysis,
   percentageCriterionWithEffectsPercentifiedEntered
-} from './util/displayTestUtil';
+} from './util/effectsTableDisplayTestUtil';
 import loginService from './util/loginService';
 import util from './util/util';
 import workspaceService from './util/workspaceService';
@@ -30,6 +30,7 @@ import workspaceService from './util/workspaceService';
 export = {
   'Check displayed values for effects and distributions': checkDisplayedValues
 };
+// Values used for analysis differ for 1st and 2nd criterion for distributions because they are randomly sampled
 
 function checkDisplayedValues(browser: NightwatchBrowser) {
   loginService.login(browser);
