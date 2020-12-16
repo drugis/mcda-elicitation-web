@@ -1,24 +1,5 @@
-export interface ICriterionRow {
-  criterionId: string;
-  dataSourceId: string;
-  title: string;
-  unit: string;
-  alt1Value: string;
-  alt2Value: string;
-  alt3Value: string;
-  alt4Value: string;
-  alt5Value: string;
-  alt6Value: string;
-  alt7Value: string;
-}
-
-export interface ICriterionRowWithUncertainty extends ICriterionRow {
-  alt1Uncertainty: string;
-  alt2Uncertainty: string;
-  alt3Uncertainty: string;
-  alt4Uncertainty: string;
-  alt5Uncertainty: string;
-}
+import ICriterionRow from './ICriterionRow';
+import ICriterionRowWithUncertainty from './ICriterionRowWithUncertainty';
 
 export const percentageCriterionWithEffectsPercentifiedEntered: ICriterionRow = {
   criterionId: 'percentageCriterion',

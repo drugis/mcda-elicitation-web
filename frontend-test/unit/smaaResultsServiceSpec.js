@@ -442,6 +442,26 @@ define([
         );
         expect(result).toBeTruthy();
       });
+      it('should return true if there are only empty distributions', function () {
+        const aggregateState = {
+          problem: {
+            performanceTable: [
+              {
+                performance: {
+                  distribution: {
+                    type: 'empty'
+                  },
+                  effect: 'any effect'
+                }
+              }
+            ]
+          }
+        };
+        const result = smaaResultsService.hasNoStochasticMeasurements(
+          aggregateState
+        );
+        expect(result).toBeTruthy();
+      });
     });
 
     describe('hasNoStochasticWeights', function () {
@@ -524,12 +544,20 @@ define([
             performanceTable: [
               {
                 performance: {
-                  effect: 'effect'
+                  effect: 'effect 1'
                 }
               },
               {
                 performance: {
                   distribution: 'distribution'
+                }
+              },
+              {
+                performance: {
+                  effect: 'effect 2',
+                  distribution: {
+                    type: 'empty'
+                  }
                 }
               }
             ]
@@ -542,10 +570,13 @@ define([
           uncertaintyOptions: uncertaintyOptions,
           performanceTable: [
             {
-              performance: 'effect'
+              performance: 'effect 1'
             },
             {
               performance: 'distribution'
+            },
+            {
+              performance: 'effect 2'
             }
           ],
           criteria: {
