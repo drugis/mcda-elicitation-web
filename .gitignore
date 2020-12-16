@@ -50,3 +50,5 @@ R/*.json
 # TSC artifacts
 app/js/interface/*.js
 app/js/type/*.js
+test/endToEnd/effectsTableDisplayTest.js*
+test/endToEnd/util/effectsTableDisplayTestUtil.js*
