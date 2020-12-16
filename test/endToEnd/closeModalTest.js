@@ -83,9 +83,9 @@ function cancelEditingTherapeuticContext(browser) {
 function cancelEditingCriterion(browser) {
   var paths = {
     valueToClear: '#criterion-title-input',
-    actionButton: '#edit-criterion-0',
+    actionButton: '#edit-criterion-button-treatmentRespondersId',
     cancelButton: closeModalButtonPath,
-    content: '#criterion-title-0'
+    content: '#criterion-title-treatmentRespondersId'
   };
   clearValueCancelAction(browser, paths, 'Treatment responders');
 }
@@ -93,32 +93,34 @@ function cancelEditingCriterion(browser) {
 function cancelEditingDataSource(browser) {
   var paths = {
     valueToClear: '#reference-input',
-    actionButton: '#edit-data-source-0-0',
+    actionButton:
+      '#edit-data-source-button-029909c4-cb8c-43cb-9816-e8550ef561be',
     cancelButton: closeModalButtonPath,
-    content: '#data-source-reference-0-0'
+    content: '#reference-029909c4-cb8c-43cb-9816-e8550ef561be'
   };
   clearValueCancelAction(browser, paths, 'Nemeroff and Thase (2007)');
 }
 
 function cancelEditingAlternative(browser) {
   var paths = {
-    valueToClear: '#alternative-title',
-    actionButton: '#edit-alternative-0',
+    valueToClear: '#alternative-title-input',
+    actionButton: '#edit-alternative-button-placeboId',
     cancelButton: closeModalButtonPath,
-    content: '#alternative-title-0'
+    content: '#alternative-title-placeboId'
   };
   clearValueCancelAction(browser, paths, 'Placebo');
 }
 
 function cancelSettings(browser) {
   var actionButtonPath = '#settings-button';
-  var contentPath = '#c-0-ds-0-a-0-table-cell';
+  var contentPath =
+    '#value-cell-029909c4-cb8c-43cb-9816-e8550ef561be-placeboId';
   browser
     .click(actionButtonPath)
     .click('#show-decimals-radio')
     .click('#smaa-radio')
     .click(closeModalButtonPath)
-    .assert.containsText(contentPath, '37 / 101');
+    .assert.containsText(contentPath, '36.634');
 }
 
 function cancelEditingSubroblemTitle(browser) {

@@ -79,9 +79,9 @@ export const lexicon: Record<string, IHelpInfo> = {
       'The effects table shows the size of the effects on each criterion for each alternative. In the case of a known distribution of an effect the values shown are the median value and the 95% credible interval. If the effect is an exact distribution value only that value is shown.',
     link: '/manual.html#mcda-running-example'
   },
-  favorability: {
-    title: 'Favorability',
-    text: 'Whether or not an increase in the criterion is seen as favorable.',
+  favourability: {
+    title: 'Favourability',
+    text: 'Whether or not an increase in the criterion is seen as favourable.',
     link: '/manual.html#mcda-manual-entry'
   },
   importance: {

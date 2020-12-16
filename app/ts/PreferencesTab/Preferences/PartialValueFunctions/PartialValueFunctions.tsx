@@ -40,7 +40,7 @@ export default function PartialValueFunctions() {
     <>
       <Grid item container id="partial-value-functions-block">
         <Grid item xs={12}>
-          <Typography id="partial-value-functions-header" variant="h4">
+          <Typography id="partial-value-functions-header" variant="h5">
             Partial Value Functions
             <InlineHelp helpId="partial-value-function" />
           </Typography>

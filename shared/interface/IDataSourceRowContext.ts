@@ -4,8 +4,8 @@ import IDataSource from './IDataSource';
 export default interface IDataSourceRowContext {
   criterion: ICriterion;
   dataSource: IDataSource;
-  previousCriterion: ICriterion | undefined;
-  nextCriterion: ICriterion | undefined;
-  previousDataSource: IDataSource | undefined;
-  nextDataSource: IDataSource | undefined;
+  previousCriterionId: string | undefined;
+  nextCriterionId: string | undefined;
+  previousDataSourceId: string | undefined;
+  nextDataSourceId: string | undefined;
 }

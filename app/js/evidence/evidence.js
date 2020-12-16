@@ -1,28 +1,24 @@
 'use strict';
 define([
+  '../../ts/OverviewTab/OverviewTab',
   './evidenceController',
-  './editAlternativeController',
-  './editCriterionController',
-  './editTherapeuticContextController',
-  './editDataSourceController',
   'angular',
+  'react2angular',
   'angular-resource'
-], function (
-  EvidenceController,
-  EditAlternativeController,
-  EditCriterionController,
-  EditTherapeuticContextController,
-  EditDataSourceController,
-  angular
-) {
+], function (OverviewTab, EvidenceController, angular, react2angular) {
   return angular
     .module('elicit.evidence', [])
     .controller('EvidenceController', EvidenceController)
-    .controller('EditAlternativeController', EditAlternativeController)
-    .controller('EditCriterionController', EditCriterionController)
-    .controller(
-      'EditTherapeuticContextController',
-      EditTherapeuticContextController
-    )
-    .controller('EditDataSourceController', EditDataSourceController);
+    .component(
+      'overview',
+      react2angular.react2angular(OverviewTab.default, [
+        'workspace',
+        'subproblems',
+        'settings',
+        'scales',
+        'toggledColumns',
+        'subproblem',
+        'workspaceId'
+      ])
+    );
 });

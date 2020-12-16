@@ -36,13 +36,10 @@ function checkValue(browser, expectedValue, result) {
 }
 
 function showDecimals(browser) {
-  browser
-    .useCss()
+  return browser
     .click('#settings-button')
     .click('#show-decimals-radio')
-    .click('#save-settings-button')
-    .useXpath();
-  return browser;
+    .click('#save-settings-button');
 }
 
 function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
@@ -70,24 +67,20 @@ function changeProblemDefinitionTabSetting(browser, settingsPath, columnPath) {
 
 function showPercentagesAndValues(browser) {
   browser
-    .useCss()
     .click('#settings-button')
     .click('#show-percentages-radio')
     .click('#values-radio')
-    .click('#save-settings-button')
-    .useXpath();
+    .click('#save-settings-button');
   return browser;
 }
 
 function showPercentagesAndSmaaValues(browser) {
   browser
-    .useCss()
     .click('#settings-button')
     .click('#show-percentages-radio')
     .click('#values-radio')
     .click('#smaa-radio')
-    .click('#save-settings-button')
-    .useXpath();
+    .click('#save-settings-button');
   return browser;
 }
 
@@ -170,25 +163,21 @@ function deselectAll(browser) {
 
 function checkEnteredSmaaDisabled(browser) {
   browser
-    .useCss()
     .click('#settings-button')
     .click('#show-percentages-radio')
     .click('#entered-radio')
     .click('#smaa-radio')
     .waitForElementVisible('#save-settings-button:disabled')
-    .click('#close-modal-button')
-    .useXpath();
+    .click('#close-modal-button');
 }
 
 function switchSettingsInProblemDefinition(browser) {
   var effectTableCellPath =
-    '//*[@id="value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1"]';
-  var unitsCellPath =
-    '//*[@id="unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e"]';
-  var scaleRangeCellPath = '//*[@id="observed-range-OS"]';
+    '#value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1';
+  var unitsCellPath = '#unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e';
+  var scaleRangeCellPath = '#observed-range-OS';
   util
     .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
-    .useXpath()
     .assert.containsText(unitsCellPath, '%')
     .assert.containsText(effectTableCellPath, '60')
     .assert.containsText(scaleRangeCellPath, '50');
@@ -287,19 +276,18 @@ function switchMedianInDeterministic(browser) {
 }
 
 function switchSettingsInOverview(browser) {
-  var effectCellPath =
-    '//*[@id="c-0-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
-  var unitsCellPath =
-    '//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]';
+  var effectCellPath = '#value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1';
+  var unitsCellPath = '#unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e';
 
   browser
-    .useXpath()
     .getValue(unitsCellPath, _.partial(checkValue, browser, null))
-    .assert.containsText(effectCellPath, '60%');
+    .assert.containsText(unitsCellPath, '%')
+    .assert.containsText(effectCellPath, '60');
 
   showDecimals(browser)
     .getValue(unitsCellPath, _.partial(checkValue, browser, null))
-    .assert.containsText(effectCellPath, '60%');
+    .assert.containsText(unitsCellPath, '')
+    .assert.containsText(effectCellPath, '0.6');
 
   showPercentagesAndValues(browser)
     .assert.containsText(unitsCellPath, '%')
@@ -323,8 +311,8 @@ function switchSettingsInOverview(browser) {
 }
 
 function switchSettingsInPreferences(browser) {
-  var effectCellPath = '//*[@id="worst-OS"]';
-  var unitsCellPath = '//*[@id="unit-OS"]';
+  var effectCellPath = '#worst-OS';
+  var unitsCellPath = '#unit-OS';
 
   util
     .delayedClick(
@@ -332,7 +320,6 @@ function switchSettingsInPreferences(browser) {
       '#preferences-tab',
       '#partial-value-functions-header'
     )
-    .useXpath()
     .assert.containsText(unitsCellPath, '%')
     .assert.containsText(effectCellPath, '45');
 
@@ -362,7 +349,7 @@ function switchSettingsInPreferences(browser) {
 }
 
 function switchSettingsWhileSettingPVF(browser) {
-  var lowestOption = '//*[@id="decreasing-pvf-option"]';
+  var lowestOption = '#decreasing-pvf-option';
 
   util
     .delayedClick(
@@ -371,7 +358,6 @@ function switchSettingsWhileSettingPVF(browser) {
       '#partial-value-functions-header'
     )
     .click('#advanced-pvf-button-OS')
-    .useXpath()
     .assert.containsText(lowestOption, '45 % is best');
 
   showDecimals(browser).assert.containsText(lowestOption, '0.45 is best');
@@ -389,8 +375,8 @@ function switchSettingsWhileSettingPVF(browser) {
 }
 
 function switchSettingsMidRanking(browser) {
-  var firstRankingSituation = '//*[@id="situation-OS"]';
-  var firstRankingChoice = '//*[@id="ranking-choice-OS"]';
+  var firstRankingSituation = '#situation-OS';
+  var firstRankingChoice = '#ranking-choice-OS';
 
   util
     .delayedClick(
@@ -399,7 +385,6 @@ function switchSettingsMidRanking(browser) {
       '#partial-value-functions-header'
     )
     .click('#ranking-button')
-    .useXpath()
     .assert.containsText(firstRankingSituation, '2-year survival: 45 %')
     .assert.containsText(
       firstRankingChoice,
@@ -423,8 +408,8 @@ function switchSettingsMidRanking(browser) {
 }
 
 function switchSettingsOnDeterministicTab(browser) {
-  var OSUnitCell = '//*[@id="sensitivity-unit-OS"]';
-  var firstOSSensitivityCell = '//*[@id="sensitivity-value-alt1-OS"]';
+  var OSUnitCell = '#sensitivity-unit-OS';
+  var firstOSSensitivityCell = '#sensitivity-value-alt1-OS';
 
   util
     .delayedClick(
@@ -432,7 +417,6 @@ function switchSettingsOnDeterministicTab(browser) {
       '#deterministic-tab',
       '#sensitivity-measurements-header'
     )
-    .useXpath()
     .assert.containsText(OSUnitCell, '%')
     .assert.containsText(firstOSSensitivityCell, '60');
   showDecimals(browser)

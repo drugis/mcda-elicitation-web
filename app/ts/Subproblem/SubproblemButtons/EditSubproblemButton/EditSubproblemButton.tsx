@@ -13,7 +13,7 @@ import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
-export default function EditSubproblemButton({}: {}) {
+export default function EditSubproblemButton() {
   const {currentSubproblem, subproblems, editTitle} = useContext(
     WorkspaceContext
   );

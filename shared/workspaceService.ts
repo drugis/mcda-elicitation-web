@@ -7,6 +7,7 @@ import {Distribution} from './interface/IDistribution';
 import {Effect} from './interface/IEffect';
 import IEmptyEffect from './interface/IEmptyEffect';
 import IOldWorkspace from './interface/IOldWorkspace';
+import IOrdering from './interface/IOrdering';
 import IRangeEffect from './interface/IRangeEffect';
 import IRelativePerformance from './interface/IRelativePerformance';
 import ITextEffect from './interface/ITextEffect';
@@ -30,14 +31,16 @@ import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
 import {generateUuid} from './util';
+import {applyOrdering} from './workspaceServiceUtil';
 
 export function buildWorkspace(
   workspace: IOldWorkspace,
-  workspaceId?: string
+  workspaceId: string,
+  ordering?: IOrdering
 ): IWorkspace {
   const idMapper = _.identity;
   const title = workspace.problem.title;
-  return buildNewStyleCopy(workspace, idMapper, title, workspaceId);
+  return buildNewStyleCopy(workspace, idMapper, title, workspaceId, ordering);
 }
 
 export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
@@ -63,20 +66,26 @@ export function buildInProgressIdMapper(
   };
 }
 
-export function buildNewStyleCopy<T>(
+export function buildNewStyleCopy(
   workspace: IOldWorkspace,
   idMapper: (id: string) => string,
   title: string,
-  workspaceId?: string
+  workspaceId?: string,
+  ordering?: IOrdering
 ): IWorkspace {
   const unitTypeMap = buildUnitTypeMap(workspace.problem.criteria);
 
   return {
     properties: buildWorkspaceProperties(workspace, title, workspaceId),
-    criteria: buildWorkspaceCriteria(workspace.problem.criteria, idMapper),
+    criteria: buildWorkspaceCriteria(
+      workspace.problem.criteria,
+      idMapper,
+      ordering
+    ),
     alternatives: buildWorkspaceAlternatives(
       workspace.problem.alternatives,
-      idMapper
+      idMapper,
+      ordering ? ordering.alternatives : undefined
     ),
     effects: buildWorkspaceEffects(
       workspace.problem.performanceTable,
@@ -177,9 +186,12 @@ export function buildWorkspaceProperties(
 
 export function buildWorkspaceCriteria(
   criteria: Record<string, IProblemCriterion>,
-  idMapper: (id: string) => string
+  idMapper: (id: string) => string,
+  ordering?: IOrdering
 ): ICriterion[] {
-  return _.map(
+  const criteriaOrdering = ordering ? ordering.criteria : undefined;
+  const dataSourceOrdering = ordering ? ordering.dataSources : undefined;
+  const newCriteria = _.map(
     criteria,
     (criterion: IProblemCriterion, oldId: string): ICriterion => {
       return {
@@ -190,19 +202,22 @@ export function buildWorkspaceCriteria(
         dataSources: buildWorkspaceDataSources(
           criterion,
           idMapper(oldId),
-          idMapper
+          idMapper,
+          dataSourceOrdering
         )
       };
     }
   );
+  return applyOrdering(criteriaOrdering, newCriteria);
 }
 
 export function buildWorkspaceDataSources(
   criterion: IProblemCriterion,
   criterionId: string,
-  idMapper: (id: string) => string
+  idMapper: (id: string) => string,
+  ordering?: string[]
 ): IDataSource[] {
-  return _.map(
+  const newDataSources = _.map(
     criterion.dataSources,
     (dataSource: IProblemDataSource): IDataSource => {
       return {
@@ -221,13 +236,15 @@ export function buildWorkspaceDataSources(
       };
     }
   );
+  return applyOrdering(ordering, newDataSources);
 }
 
 export function buildWorkspaceAlternatives(
   alternatives: Record<string, IAlternative>,
-  idMapper: (id: string) => string
+  idMapper: (id: string) => string,
+  ordering?: string[]
 ): IAlternative[] {
-  return _.map(
+  const newAlternatives = _.map(
     alternatives,
     (alternative: IAlternative): IAlternative => {
       return {
@@ -236,6 +253,7 @@ export function buildWorkspaceAlternatives(
       };
     }
   );
+  return applyOrdering(ordering, newAlternatives);
 }
 
 export function buildWorkspaceEffects(
