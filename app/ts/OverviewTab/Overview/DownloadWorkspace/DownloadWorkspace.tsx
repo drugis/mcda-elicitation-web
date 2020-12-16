@@ -22,29 +22,9 @@ export default function DownloadWorkspace() {
       encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
     link.href = 'data:' + data;
 
-    // let js simulate mouse click
-    link.click = () => {
-      const evt = this.ownerDocument.createEvent('MouseEvents');
-      evt.initMouseEvent(
-        'click',
-        true,
-        true,
-        this.ownerDocument.defaultView,
-        1,
-        0,
-        0,
-        0,
-        0,
-        false,
-        false,
-        false,
-        false,
-        0,
-        null
-      );
-      this.dispatchEvent(evt);
-    };
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   }
 
   return (
