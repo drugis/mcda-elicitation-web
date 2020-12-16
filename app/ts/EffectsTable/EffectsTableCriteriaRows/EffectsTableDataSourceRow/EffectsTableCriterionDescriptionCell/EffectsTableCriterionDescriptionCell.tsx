@@ -15,7 +15,11 @@ export default function EffectsTableCriterionDescriptionCell({
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   return showDescriptions ? (
-    <TableCell rowSpan={criterion.dataSources.length} style={cellStyle}>
+    <TableCell
+      id={`criterion-description-${criterion.id}`}
+      rowSpan={criterion.dataSources.length}
+      style={cellStyle}
+    >
       {criterion.description}
     </TableCell>
   ) : (
