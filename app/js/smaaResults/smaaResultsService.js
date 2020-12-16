@@ -29,7 +29,10 @@ define(['lodash', 'angular', 'd3'], function (_, angular, d3) {
 
     function createEntry(entry) {
       var newEntry = angular.copy(entry);
-      if (entry.performance.distribution) {
+      if (
+        entry.performance.distribution &&
+        entry.performance.distribution.type !== 'empty'
+      ) {
         newEntry.performance = entry.performance.distribution;
       } else {
         newEntry.performance = entry.performance.effect;
@@ -81,16 +84,16 @@ define(['lodash', 'angular', 'd3'], function (_, angular, d3) {
       var data = state.results.cw;
       var result = [];
       _.each(_.toPairs(data), function (alternative) {
-        var values = _.map(_.toPairs(alternative[1].w), function (
-          criterion,
-          index
-        ) {
-          return {
-            x: index,
-            label: criterion[0],
-            y: criterion[1]
-          };
-        });
+        var values = _.map(
+          _.toPairs(alternative[1].w),
+          function (criterion, index) {
+            return {
+              x: index,
+              label: criterion[0],
+              y: criterion[1]
+            };
+          }
+        );
         var labels = _.map(_.map(values, 'label'), function (id) {
           return problem.criteria[id].title;
         });
@@ -275,14 +278,16 @@ define(['lodash', 'angular', 'd3'], function (_, angular, d3) {
     }
 
     function hasNoStochasticMeasurements(aggregateState) {
-      return !_.some(aggregateState.problem.performanceTable, function (
-        tableEntry
-      ) {
-        return (
-          tableEntry.performance.distribution &&
-          tableEntry.performance.distribution.type !== 'exact'
-        );
-      });
+      return !_.some(
+        aggregateState.problem.performanceTable,
+        function (tableEntry) {
+          return (
+            tableEntry.performance.distribution &&
+            tableEntry.performance.distribution.type !== 'exact' &&
+            tableEntry.performance.distribution.type !== 'empty'
+          );
+        }
+      );
     }
 
     function hasNoStochasticWeights(aggregateState) {
