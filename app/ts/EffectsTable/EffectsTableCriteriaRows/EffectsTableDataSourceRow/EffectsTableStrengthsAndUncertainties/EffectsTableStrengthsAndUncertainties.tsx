@@ -19,7 +19,7 @@ export default function EffectsTableStrengthsAndUncertainties({
   return showStrengthsAndUncertainties ? (
     <TableCell style={cellStyle}>
       <Box p={1}>
-        <Grid container>
+        <Grid id={`soe-unc-${dataSource.id}`} container>
           <Grid item xs={12}>
             <b>SoE: </b>
             {dataSource.strengthOfEvidence}

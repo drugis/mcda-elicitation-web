@@ -29,7 +29,7 @@ export default function Favourability() {
         label="Use favourability"
         labelPlacement="start"
       />
-      <InlineHelp helpId="favorability" />
+      <InlineHelp helpId="favourability" />
     </>
   );
 }

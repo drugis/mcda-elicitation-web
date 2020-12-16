@@ -29,10 +29,14 @@ export function DataSourceRowContextProviderComponent({
       value={{
         criterion: criterion,
         dataSource: dataSource,
-        previousCriterion: previousCriterion,
-        nextCriterion: nextCriterion,
-        previousDataSource: previousDataSource,
-        nextDataSource: nextDataSource
+        previousCriterionId: previousCriterion
+          ? previousCriterion.id
+          : undefined,
+        nextCriterionId: nextCriterion ? nextCriterion.id : undefined,
+        previousDataSourceId: previousDataSource
+          ? previousDataSource.id
+          : undefined,
+        nextDataSourceId: nextDataSource ? nextDataSource.id : undefined
       }}
     >
       {children}

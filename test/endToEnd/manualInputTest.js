@@ -188,9 +188,8 @@ function moveCriterion(browser) {
   browser.perform(() => {
     browser.useXpath().getAttribute(CRITERION_ROW_PATH, 'id', (result) => {
       const criterionId = result.value.split('-').slice(2).join('-');
-      const moveDownButton =
-        '//*[@id="move-criterion-down-' + criterionId + '"]';
-      const moveUpButton = '//*[@id="move-criterion-up-' + criterionId + '"]';
+      const moveDownButton = '//*[@id="move-down-' + criterionId + '"]';
+      const moveUpButton = '//*[@id="move-up-' + criterionId + '"]';
       browser.assert
         .containsText(criterionTitle, 'criterion 1')
         .click(moveDownButton)
@@ -324,9 +323,9 @@ function moveDataSource(browser) {
       browser.getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
         const dataSourceId = result.value.split('-').slice(2).join('-');
         const moveDataSourceDownButton =
-          '//*[@id="move-ds-down-' + dataSourceId + '"]';
+          '//*[@id="move-down-' + dataSourceId + '"]';
         const moveDataSourceUpButton =
-          '//*[@id="move-ds-up-' + dataSourceId + '"]';
+          '//*[@id="move-up-' + dataSourceId + '"]';
         browser
           .click(moveDataSourceDownButton)
           .assert.containsText(firstDataSourceReference, NEW_REFERENCE)

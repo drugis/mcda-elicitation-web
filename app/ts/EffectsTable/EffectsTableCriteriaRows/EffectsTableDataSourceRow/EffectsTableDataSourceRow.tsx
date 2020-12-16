@@ -10,6 +10,7 @@ import EffectsTableCriterionTitleCell from './EffectsTableCriterionTitleCell/Eff
 import EffectsTableReferenceCell from './EffectsTableReferenceCell/EffectsTableReferenceCell';
 import EffectsTableStrengthsAndUncertainties from './EffectsTableStrengthsAndUncertainties/EffectsTableStrengthsAndUncertainties';
 import EffectsTableUnitOfMeasurementCell from './EffectsTableUnitOfMeasurementCell/EffectsTableUnitOfMeasurementCell';
+import EffectTableDataSourceCells from './EffectTableDataSourceCells/EffectTableDataSourceCells';
 import ValueCell from './ValueCell/ValueCell';
 
 export default function EffectsTableDataSourceRow({
@@ -22,29 +23,6 @@ export default function EffectsTableDataSourceRow({
   rowIndex: number;
 }) {
   const {filteredAlternatives} = useContext(SubproblemContext);
-
-  function renderDataSourceCells(): JSX.Element {
-    return (
-      <>
-        <EffectsTableUnitOfMeasurementCell dataSource={dataSource} />
-        {renderCells()}
-        <EffectsTableStrengthsAndUncertainties dataSource={dataSource} />
-        <EffectsTableReferenceCell dataSource={dataSource} />
-      </>
-    );
-  }
-
-  function renderCells(): JSX.Element[] {
-    return _.map(filteredAlternatives, (alternative: IAlternative) => {
-      return (
-        <ValueCell
-          key={alternative.id}
-          alternativeId={alternative.id}
-          dataSourceId={dataSource.id}
-        />
-      );
-    });
-  }
 
   function renderCriterionCells(): JSX.Element {
     if (rowIndex === 0) {
@@ -62,7 +40,10 @@ export default function EffectsTableDataSourceRow({
   return (
     <TableRow id={`criterion-row-${criterion.id}`}>
       {renderCriterionCells()}
-      {renderDataSourceCells()}
+      <EffectTableDataSourceCells
+        dataSource={dataSource}
+        alternatives={filteredAlternatives}
+      />
     </TableRow>
   );
 }

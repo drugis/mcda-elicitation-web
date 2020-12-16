@@ -29,28 +29,14 @@ define(['lodash'], function (_) {
       });
     }
 
-    function saveOrdering(stateParams, criteria, alternatives) {
-      return OrderingResource.put(stateParams, {
-        criteria: _.map(criteria, 'id'),
-        alternatives: _.map(alternatives, 'id'),
-        dataSources: _.reduce(
-          criteria,
-          function (accum, criterion) {
-            return accum.concat(_.map(criterion.dataSources, 'id'));
-          },
-          []
-        )
-      }).$promise;
-    }
-
     function getNewOrdering(problem) {
       var ordering = {
-        alternatives: _.map(problem.alternatives, function (
-          alternative,
-          alternativeId
-        ) {
-          return _.extend({}, alternative, {id: alternativeId});
-        }),
+        alternatives: _.map(
+          problem.alternatives,
+          function (alternative, alternativeId) {
+            return _.extend({}, alternative, {id: alternativeId});
+          }
+        ),
         criteria: getOrderedCriteria(problem)
       };
       return ordering;
@@ -58,12 +44,12 @@ define(['lodash'], function (_) {
 
     // private
     function getOrderedCriteria(problem) {
-      var criteriaWithId = _.map(problem.criteria, function (
-        criterion,
-        criterionId
-      ) {
-        return _.extend({}, criterion, {id: criterionId});
-      });
+      var criteriaWithId = _.map(
+        problem.criteria,
+        function (criterion, criterionId) {
+          return _.extend({}, criterion, {id: criterionId});
+        }
+      );
       var partition = _.partition(criteriaWithId, ['isFavorable', true]);
       return partition[0].concat(partition[1]);
     }
@@ -97,7 +83,6 @@ define(['lodash'], function (_) {
     }
     return {
       getOrderedCriteriaAndAlternatives: getOrderedCriteriaAndAlternatives,
-      saveOrdering: saveOrdering,
       getNewOrdering: getNewOrdering
     };
   };
