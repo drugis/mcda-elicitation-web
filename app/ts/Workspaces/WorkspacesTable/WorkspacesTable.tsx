@@ -8,11 +8,11 @@ import {
 } from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import Axios, {AxiosResponse, AxiosStatic} from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import DeleteWorkspaceButton from './DeleteWorkspaceButton/DeleteWorkspaceButton';
+import React, {useContext, useEffect, useState} from 'react';
 import CopyWorkspaceButton from './CopyWorkspaceButton/CopyWorkspaceButton';
+import DeleteWorkspaceButton from './DeleteWorkspaceButton/DeleteWorkspaceButton';
 
 export default function WorkspacesTable(): JSX.Element {
   const {setError} = useContext(ErrorContext);
@@ -39,10 +39,10 @@ export default function WorkspacesTable(): JSX.Element {
                     {workspace.title}
                   </a>
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <CopyWorkspaceButton workspace={workspace} />
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <DeleteWorkspaceButton
                     workspace={workspace}
                     deleteLocalWorkspace={deleteLocalWorkspace}
@@ -62,12 +62,13 @@ export default function WorkspacesTable(): JSX.Element {
 
   function getLink(workspace: IOldWorkspace): string {
     return (
-      '/workspaces/' +
+      '/#!/workspaces/' +
       workspace.id +
       '/problems/' +
-      workspace.defaultSubproblemId +
+      workspace.defaultSubProblemId +
       '/scenarios/' +
-      workspace.defaultScenarioId
+      workspace.defaultScenarioId +
+      '/evidence'
     );
   }
 

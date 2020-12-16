@@ -1,9 +1,9 @@
 import {IconButton, Tooltip} from '@material-ui/core';
-import React, {useContext} from 'react';
 import FileCopy from '@material-ui/icons/FileCopy';
-import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import Axios, {AxiosResponse} from 'axios';
+import React, {useContext} from 'react';
 
 export default function CopyWorkspaceButton({
   workspace
@@ -17,7 +17,7 @@ export default function CopyWorkspaceButton({
       sourceWorkspaceId: workspace.id
     })
       .then((response: AxiosResponse<{id: string}>) => {
-        window.location.assign(`/manual-input/${response.data.id}`);
+        window.location.assign(`/#!/manual-input/${response.data.id}`);
       })
       .catch(setError);
   }
