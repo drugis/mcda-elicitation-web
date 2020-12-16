@@ -18,8 +18,11 @@ define([
 
   './fileReaderDirective',
   './workspaceSettingsDirective',
-  './workspacesDirective',
   './inProgressWorkspacesDirective',
+
+  '../../ts/Workspaces/Workspaces',
+  'react2angular',
+
   'angular',
   '../util',
   '../results/results'
@@ -41,8 +44,11 @@ define([
 
   fileReaderDirective,
   WorkspaceSettings,
-  Workspaces,
   InProgressWorkspaces,
+
+  Workspaces,
+  react2angular,
+
   angular
 ) {
   return angular
@@ -64,6 +70,10 @@ define([
 
     .directive('fileReader', fileReaderDirective)
     .directive('workspaceSettings', WorkspaceSettings)
-    .directive('workspaces', Workspaces)
-    .directive('inProgressWorkspaces', InProgressWorkspaces);
+    .directive('inProgressWorkspaces', InProgressWorkspaces)
+
+    .component(
+      'workspaces',
+      react2angular.react2angular(Workspaces.default, [])
+    );
 });
