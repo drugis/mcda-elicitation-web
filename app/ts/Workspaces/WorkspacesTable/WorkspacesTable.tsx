@@ -11,6 +11,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import Axios, {AxiosResponse} from 'axios';
+import dateFormat from 'dateformat';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import CopyWorkspaceButton from './CopyWorkspaceButton/CopyWorkspaceButton';
@@ -52,6 +53,9 @@ export default function WorkspacesTable(): JSX.Element {
     workspace: IOldWorkspace;
     index: number;
   }): JSX.Element {
+    const date = new Date(workspace.creationDate);
+    const datestring = dateFormat(date, 'yyyy-mm-dd');
+
     return (
       <TableRow>
         <TableCell width="100%">
@@ -59,6 +63,7 @@ export default function WorkspacesTable(): JSX.Element {
             {workspace.title}
           </a>
         </TableCell>
+        <TableCell width="100%">{datestring}</TableCell>
         <TableCell id={`copy-workspace-${index}`} align="center">
           <CopyWorkspaceButton workspace={workspace} />
         </TableCell>
@@ -97,6 +102,7 @@ export default function WorkspacesTable(): JSX.Element {
           </TableCell>
           <TableCell align="center"></TableCell>
           <TableCell align="center"></TableCell>
+          <TableCell align="center"></TableCell>
         </TableRow>
       </TableBody>
     );
@@ -117,6 +123,7 @@ export default function WorkspacesTable(): JSX.Element {
             <TableHead>
               <TableRow>
                 <TableCell>Title</TableCell>
+                <TableCell>Created</TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>

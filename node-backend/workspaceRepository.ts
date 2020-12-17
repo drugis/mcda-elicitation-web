@@ -104,16 +104,20 @@ export default function WorkspaceRepository(db: IDB) {
   ) {
     logger.debug('getting default scenario id for: ' + workspaceId);
     const query = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
-    db.query(query, [workspaceId], function (
-      error: OurError,
-      result: QueryResult<{defaultscenarioid: number}>
-    ) {
-      if (error) {
-        callback(error);
-      } else {
-        callback(error, result.rows[0].defaultscenarioid.toString());
+    db.query(
+      query,
+      [workspaceId],
+      function (
+        error: OurError,
+        result: QueryResult<{defaultscenarioid: number}>
+      ) {
+        if (error) {
+          callback(error);
+        } else {
+          callback(error, result.rows[0].defaultscenarioid.toString());
+        }
       }
-    });
+    );
   }
 
   function getWorkspaceInfo(
@@ -164,17 +168,18 @@ export default function WorkspaceRepository(db: IDB) {
     callback: (error: OurError, workspaces?: IOldWorkspace[]) => void
   ) {
     const query =
-      'SELECT id, owner, title, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
-    db.query(query, [ownerId], function (
-      error: OurError,
-      result: QueryResult<IOldWorkspace>
-    ) {
-      if (error) {
-        callback(error);
-      } else {
-        callback(null, result.rows);
+      'SELECT id, owner, title, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId", creationdate AS "creationDate" FROM Workspace WHERE owner = $1';
+    db.query(
+      query,
+      [ownerId],
+      function (error: OurError, result: QueryResult<IOldWorkspace>) {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, result.rows);
+        }
       }
-    });
+    );
   }
 
   return {
