@@ -33,28 +33,42 @@ export default function WorkspacesTable(): JSX.Element {
       <TableBody>
         {_.map(
           workspaces,
-          (workspace: IOldWorkspace, index: number): JSX.Element => {
-            return (
-              <TableRow key={workspace.id}>
-                <TableCell width="100%">
-                  <a id={`workspace-${index}`} href={getLink(workspace)}>
-                    {workspace.title}
-                  </a>
-                </TableCell>
-                <TableCell id={`copy-workspace-${index}`} align="center">
-                  <CopyWorkspaceButton workspace={workspace} />
-                </TableCell>
-                <TableCell id={`delete-workspace-${index}`} align="center">
-                  <DeleteWorkspaceButton
-                    workspace={workspace}
-                    deleteLocalWorkspace={deleteLocalWorkspace}
-                  />
-                </TableCell>
-              </TableRow>
-            );
-          }
+          (workspace: IOldWorkspace, index: number): JSX.Element => (
+            <WorkspacesTableRow
+              key={workspace.id}
+              workspace={workspace}
+              index={index}
+            />
+          )
         )}
       </TableBody>
+    );
+  }
+
+  function WorkspacesTableRow({
+    workspace,
+    index
+  }: {
+    workspace: IOldWorkspace;
+    index: number;
+  }): JSX.Element {
+    return (
+      <TableRow>
+        <TableCell width="100%">
+          <a id={`workspace-${index}`} href={getLink(workspace)}>
+            {workspace.title}
+          </a>
+        </TableCell>
+        <TableCell id={`copy-workspace-${index}`} align="center">
+          <CopyWorkspaceButton workspace={workspace} />
+        </TableCell>
+        <TableCell id={`delete-workspace-${index}`} align="center">
+          <DeleteWorkspaceButton
+            workspace={workspace}
+            deleteLocalWorkspace={deleteLocalWorkspace}
+          />
+        </TableCell>
+      </TableRow>
     );
   }
 
