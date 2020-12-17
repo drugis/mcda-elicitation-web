@@ -25,11 +25,7 @@ export default function CopyWorkspaceButton({
   return (
     <Tooltip title={'Copy workspace'}>
       <span>
-        <IconButton
-          id="copy-workspace-button"
-          size="small"
-          onClick={copyWorkspace}
-        >
+        <IconButton size="small" onClick={copyWorkspace}>
           <FileCopy color="primary" />
         </IconButton>
       </span>

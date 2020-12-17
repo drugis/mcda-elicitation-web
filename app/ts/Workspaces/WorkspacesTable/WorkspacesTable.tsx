@@ -4,10 +4,12 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
+  Typography
 } from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
@@ -39,10 +41,10 @@ export default function WorkspacesTable(): JSX.Element {
                     {workspace.title}
                   </a>
                 </TableCell>
-                <TableCell align="center">
+                <TableCell id={`copy-workspace-${index}`} align="center">
                   <CopyWorkspaceButton workspace={workspace} />
                 </TableCell>
-                <TableCell align="center">
+                <TableCell id={`delete-workspace-${index}`} align="center">
                   <DeleteWorkspaceButton
                     workspace={workspace}
                     deleteLocalWorkspace={deleteLocalWorkspace}
@@ -72,18 +74,47 @@ export default function WorkspacesTable(): JSX.Element {
     );
   }
 
+  function EmptyWorkspaceMessage(): JSX.Element {
+    return (
+      <TableBody>
+        <TableRow>
+          <TableCell>
+            <em id="empty-workspace-message">No workspaces defined</em>
+          </TableCell>
+          <TableCell align="center"></TableCell>
+          <TableCell align="center"></TableCell>
+        </TableRow>
+      </TableBody>
+    );
+  }
+
   return (
-    <Grid item xs={6}>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Title</TableCell>
-            <TableCell></TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <WorkspacesTableBody />
-      </Table>
-    </Grid>
+    <>
+      <Grid item xs={12}>
+        <Grid item xs={6}>
+          <Typography id="workspaces-header" variant="h4">
+            Workspaces <InlineHelp helpId="workspace" />
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid item xs={12}>
+        <Grid item xs={6}>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            {workspaces.length ? (
+              <WorkspacesTableBody />
+            ) : (
+              <EmptyWorkspaceMessage />
+            )}
+          </Table>
+        </Grid>
+      </Grid>
+    </>
   );
 }

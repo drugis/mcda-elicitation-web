@@ -38,13 +38,17 @@ function addTutorial(browser, title) {
 
 function copy(browser, index) {
   return browser
-    .click('#copy-workspace-' + index)
+    .useXpath()
+    .click('//*[@id="copy-workspace-' + index + '"]/span/button')
+    .useCss()
     .waitForElementVisible('#workspace-title');
 }
 
 function deleteFromList(browser, index) {
   browser
-    .click('#delete-workspace-' + index)
+    .useXpath()
+    .click('//*[@id="delete-workspace-' + index + '"]/span/button')
+    .useCss()
     .click('#delete-workspace-confirm-button');
   return browser;
 }
@@ -73,10 +77,11 @@ function deleteUnfinishedFromList(browser, index) {
 function cleanList(browser) {
   var expectPath = '#delete-workspace-0';
   browser.waitForElementVisible('#workspaces-header');
+  browser.pause(500);
   browser.elements('css selector', expectPath, (result) => {
     if (result.value.length !== 0) {
       console.log('! Workspace list is not empty. Deleting a workspace.');
-      browser.click(expectPath);
+      browser.click(expectPath + ' > span > button');
       browser.waitForElementVisible('#delete-workspace-confirm-button');
       browser.click('#delete-workspace-confirm-button');
       cleanList(browser);

@@ -7,12 +7,12 @@ import {
   IconButton,
   Tooltip
 } from '@material-ui/core';
-import React, {useContext, useState} from 'react';
 import Delete from '@material-ui/icons/Delete';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import Axios from 'axios';
+import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import Axios from 'axios';
+import React, {useContext, useState} from 'react';
 
 export default function DeleteWorkspaceButton({
   workspace,
@@ -42,11 +42,7 @@ export default function DeleteWorkspaceButton({
     <>
       <Tooltip title={'Delete workspace'}>
         <span>
-          <IconButton
-            id="delete-workspace-button"
-            size="small"
-            onClick={openDialog}
-          >
+          <IconButton size="small" onClick={openDialog}>
             <Delete color="secondary" />
           </IconButton>
         </span>
