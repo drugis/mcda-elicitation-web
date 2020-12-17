@@ -22,8 +22,10 @@ export default function WorkspacesTable(): JSX.Element {
   const {setError} = useContext(ErrorContext);
   const [workspaces, setWorkspaces] = useState<IOldWorkspace[]>([]);
 
-  const [orderBy, setOrderBy] = useState('title');
+  const [orderBy, setOrderBy] = useState<TSortProperty>('title');
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
+
+  type TSortProperty = 'title' | 'creationDate';
 
   useEffect(() => {
     Axios.get('/workspaces/')
@@ -112,9 +114,16 @@ export default function WorkspacesTable(): JSX.Element {
     );
   }
 
-  function createSortHandler(propertyToOrder: string, event: any): void {
-    setOrderBy(propertyToOrder);
+  function createSortHandler(propertyToOrder: TSortProperty, event: any): void {
     const newWorkspaces = _.sortBy(workspaces, [propertyToOrder]);
+    if (orderBy === propertyToOrder) {
+      orderBySameProperty(newWorkspaces);
+    } else {
+      orderByNewProperty(propertyToOrder, newWorkspaces);
+    }
+  }
+
+  function orderBySameProperty(newWorkspaces: IOldWorkspace[]): void {
     if (orderDirection === 'desc') {
       setOrderDirection('asc');
       setWorkspaces(newWorkspaces);
@@ -122,6 +131,15 @@ export default function WorkspacesTable(): JSX.Element {
       setOrderDirection('desc');
       setWorkspaces(newWorkspaces.reverse());
     }
+  }
+
+  function orderByNewProperty(
+    propertyToOrder: TSortProperty,
+    newWorkspaces: IOldWorkspace[]
+  ): void {
+    setOrderBy(propertyToOrder);
+    setWorkspaces(newWorkspaces);
+    setOrderDirection('asc');
   }
 
   return (
@@ -133,13 +151,14 @@ export default function WorkspacesTable(): JSX.Element {
           </Typography>
         </Grid>
       </Grid>
-      <Grid item xs={12}>
+      <Grid container item xs={12}>
         <Grid item xs={8}>
           <Table size="small">
             <TableHead>
               <TableRow>
                 <TableCell>
                   <TableSortLabel
+                    id="sort-workspaces-by-title"
                     active={orderBy === 'title'}
                     direction={orderBy === 'title' ? orderDirection : 'asc'}
                     onClick={_.partial(createSortHandler, 'title')}
@@ -149,6 +168,7 @@ export default function WorkspacesTable(): JSX.Element {
                 </TableCell>
                 <TableCell>
                   <TableSortLabel
+                    id="sort-workspaces-by-creation-date"
                     active={orderBy === 'creationDate'}
                     direction={
                       orderBy === 'creationDate' ? orderDirection : 'asc'
