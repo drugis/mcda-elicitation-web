@@ -3,7 +3,6 @@
 define([
   './chooseProblemController',
   './createWorkspaceController',
-  './deleteWorkspaceController',
   './deleteInProgressController',
   './workspaceController',
   './workspaceSettingsController',
@@ -18,15 +17,17 @@ define([
 
   './fileReaderDirective',
   './workspaceSettingsDirective',
-  './workspacesDirective',
   './inProgressWorkspacesDirective',
+
+  '../../ts/Workspaces/Workspaces',
+  'react2angular',
+
   'angular',
   '../util',
   '../results/results'
 ], function (
   ChooseProblemController,
   CreateWorkspaceController,
-  DeleteWorkspaceController,
   DeleteInProgressController,
   WorkspaceController,
   WorkspaceSettingsController,
@@ -41,15 +42,17 @@ define([
 
   fileReaderDirective,
   WorkspaceSettings,
-  Workspaces,
   InProgressWorkspaces,
+
+  Workspaces,
+  react2angular,
+
   angular
 ) {
   return angular
     .module('elicit.workspace', ['elicit.util', 'elicit.results'])
     .controller('ChooseProblemController', ChooseProblemController)
     .controller('CreateWorkspaceController', CreateWorkspaceController)
-    .controller('DeleteWorkspaceController', DeleteWorkspaceController)
     .controller('DeleteInProgressController', DeleteInProgressController)
     .controller('WorkspaceController', WorkspaceController)
     .controller('WorkspaceSettingsController', WorkspaceSettingsController)
@@ -64,6 +67,10 @@ define([
 
     .directive('fileReader', fileReaderDirective)
     .directive('workspaceSettings', WorkspaceSettings)
-    .directive('workspaces', Workspaces)
-    .directive('inProgressWorkspaces', InProgressWorkspaces);
+    .directive('inProgressWorkspaces', InProgressWorkspaces)
+
+    .component(
+      'workspaces',
+      react2angular.react2angular(Workspaces.default, [])
+    );
 });

@@ -13,7 +13,7 @@ const errorService = require('./util/errorService');
 const util = require('./util/util');
 
 const closeModalButton = '#close-modal-button';
-const deleteWorkspaceButton = '#delete-workspace-0';
+const deleteWorkspaceButton = '#delete-workspace-0 > span > button';
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);

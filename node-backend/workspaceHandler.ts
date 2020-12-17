@@ -230,11 +230,11 @@ export default function WorkspaceHandler(db: IDB) {
   }
 
   return {
-    query: query,
-    create: create,
-    createWorkspaceTransaction: createWorkspaceTransaction,
-    get: get,
-    update: update,
+    query,
+    create,
+    createWorkspaceTransaction,
+    get,
+    update,
     delete: del
   };
 }
