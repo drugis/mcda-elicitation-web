@@ -3,7 +3,6 @@
 define([
   './chooseProblemController',
   './createWorkspaceController',
-  './deleteWorkspaceController',
   './deleteInProgressController',
   './workspaceController',
   './workspaceSettingsController',
@@ -29,7 +28,6 @@ define([
 ], function (
   ChooseProblemController,
   CreateWorkspaceController,
-  DeleteWorkspaceController,
   DeleteInProgressController,
   WorkspaceController,
   WorkspaceSettingsController,
@@ -55,7 +53,6 @@ define([
     .module('elicit.workspace', ['elicit.util', 'elicit.results'])
     .controller('ChooseProblemController', ChooseProblemController)
     .controller('CreateWorkspaceController', CreateWorkspaceController)
-    .controller('DeleteWorkspaceController', DeleteWorkspaceController)
     .controller('DeleteInProgressController', DeleteInProgressController)
     .controller('WorkspaceController', WorkspaceController)
     .controller('WorkspaceSettingsController', WorkspaceSettingsController)
