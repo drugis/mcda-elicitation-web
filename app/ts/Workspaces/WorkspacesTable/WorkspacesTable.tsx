@@ -5,6 +5,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
   Typography
 } from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
@@ -21,10 +22,13 @@ export default function WorkspacesTable(): JSX.Element {
   const {setError} = useContext(ErrorContext);
   const [workspaces, setWorkspaces] = useState<IOldWorkspace[]>([]);
 
+  const [orderBy, setOrderBy] = useState('title');
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
+
   useEffect(() => {
     Axios.get('/workspaces/')
       .then((result: AxiosResponse<IOldWorkspace[]>) => {
-        setWorkspaces(result.data);
+        setWorkspaces(_.sortBy(result.data, [orderBy]));
       })
       .catch(setError);
   }, []);
@@ -65,7 +69,7 @@ export default function WorkspacesTable(): JSX.Element {
         </TableCell>
         <TableCell width="100%">{datestring}</TableCell>
         <TableCell id={`copy-workspace-${index}`} align="center">
-          <CopyWorkspaceButton workspace={workspace} />
+          <CopyWorkspaceButton workspaceId={workspace.id} />
         </TableCell>
         <TableCell id={`delete-workspace-${index}`} align="center">
           <DeleteWorkspaceButton
@@ -108,22 +112,52 @@ export default function WorkspacesTable(): JSX.Element {
     );
   }
 
+  function createSortHandler(propertyToOrder: string, event: any): void {
+    setOrderBy(propertyToOrder);
+    const newWorkspaces = _.sortBy(workspaces, [propertyToOrder]);
+    if (orderDirection === 'desc') {
+      setOrderDirection('asc');
+      setWorkspaces(newWorkspaces);
+    } else {
+      setOrderDirection('desc');
+      setWorkspaces(newWorkspaces.reverse());
+    }
+  }
+
   return (
     <>
       <Grid item xs={12}>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Typography id="workspaces-header" variant="h4">
             Workspaces <InlineHelp helpId="workspace" />
           </Typography>
         </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Created</TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === 'title'}
+                    direction={orderBy === 'title' ? orderDirection : 'asc'}
+                    onClick={_.partial(createSortHandler, 'title')}
+                  >
+                    Title
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={orderBy === 'creationDate'}
+                    direction={
+                      orderBy === 'creationDate' ? orderDirection : 'asc'
+                    }
+                    onClick={_.partial(createSortHandler, 'creationDate')}
+                  >
+                    Created
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>
