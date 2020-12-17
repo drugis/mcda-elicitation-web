@@ -4,7 +4,6 @@ define(['lodash'], function (_) {
     '$scope',
     '$state',
     '$modal',
-    'WorkspaceResource',
     'InProgressResource',
     'PageTitleService'
   ];
@@ -13,7 +12,6 @@ define(['lodash'], function (_) {
     $scope,
     $state,
     $modal,
-    WorkspaceResource,
     InProgressResource,
     PageTitleService
   ) {
@@ -23,7 +21,6 @@ define(['lodash'], function (_) {
     // init
     $scope.model = {};
     $scope.local = {};
-    $scope.workspacesList = WorkspaceResource.query();
     $scope.inProgressWorkspaces = InProgressResource.query();
 
     $scope.$watch('local.contents', function (newVal) {
