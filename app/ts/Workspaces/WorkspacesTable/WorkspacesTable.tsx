@@ -36,7 +36,7 @@ export default function WorkspacesTable(): JSX.Element {
           (workspace: IOldWorkspace, index: number): JSX.Element => {
             return (
               <TableRow key={workspace.id}>
-                <TableCell>
+                <TableCell width="100%">
                   <a id={`workspace-${index}`} href={getLink(workspace)}>
                     {workspace.title}
                   </a>
