@@ -5,12 +5,14 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableSortLabel,
   Typography
 } from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import Axios, {AxiosResponse} from 'axios';
+import dateFormat from 'dateformat';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import CopyWorkspaceButton from './CopyWorkspaceButton/CopyWorkspaceButton';
@@ -20,10 +22,15 @@ export default function WorkspacesTable(): JSX.Element {
   const {setError} = useContext(ErrorContext);
   const [workspaces, setWorkspaces] = useState<IOldWorkspace[]>([]);
 
+  const [orderBy, setOrderBy] = useState<TSortProperty>('title');
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
+
+  type TSortProperty = 'title' | 'creationDate';
+
   useEffect(() => {
     Axios.get('/workspaces/')
       .then((result: AxiosResponse<IOldWorkspace[]>) => {
-        setWorkspaces(result.data);
+        setWorkspaces(_.sortBy(result.data, [orderBy]));
       })
       .catch(setError);
   }, []);
@@ -52,6 +59,9 @@ export default function WorkspacesTable(): JSX.Element {
     workspace: IOldWorkspace;
     index: number;
   }): JSX.Element {
+    const date = new Date(workspace.creationDate);
+    const datestring = dateFormat(date, 'yyyy-mm-dd');
+
     return (
       <TableRow>
         <TableCell width="100%">
@@ -59,8 +69,9 @@ export default function WorkspacesTable(): JSX.Element {
             {workspace.title}
           </a>
         </TableCell>
+        <TableCell width="100%">{datestring}</TableCell>
         <TableCell id={`copy-workspace-${index}`} align="center">
-          <CopyWorkspaceButton workspace={workspace} />
+          <CopyWorkspaceButton workspaceId={workspace.id} />
         </TableCell>
         <TableCell id={`delete-workspace-${index}`} align="center">
           <DeleteWorkspaceButton
@@ -97,26 +108,76 @@ export default function WorkspacesTable(): JSX.Element {
           </TableCell>
           <TableCell align="center"></TableCell>
           <TableCell align="center"></TableCell>
+          <TableCell align="center"></TableCell>
         </TableRow>
       </TableBody>
     );
   }
 
+  function orderByProperty(propertyToOrder: TSortProperty, event: any): void {
+    const newWorkspaces = _.sortBy(workspaces, [propertyToOrder]);
+    if (orderBy === propertyToOrder) {
+      orderBySameProperty(newWorkspaces);
+    } else {
+      orderByOtherProperty(propertyToOrder, newWorkspaces);
+    }
+  }
+
+  function orderBySameProperty(newWorkspaces: IOldWorkspace[]): void {
+    if (orderDirection === 'desc') {
+      setOrderDirection('asc');
+      setWorkspaces(newWorkspaces);
+    } else {
+      setOrderDirection('desc');
+      setWorkspaces(newWorkspaces.reverse());
+    }
+  }
+
+  function orderByOtherProperty(
+    propertyToOrder: TSortProperty,
+    newWorkspaces: IOldWorkspace[]
+  ): void {
+    setOrderBy(propertyToOrder);
+    setWorkspaces(newWorkspaces);
+    setOrderDirection('asc');
+  }
+
   return (
     <>
       <Grid item xs={12}>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Typography id="workspaces-header" variant="h4">
             Workspaces <InlineHelp helpId="workspace" />
           </Typography>
         </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Grid item xs={6}>
+      <Grid container item xs={12}>
+        <Grid item xs={8}>
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    id="sort-workspaces-by-title"
+                    active={orderBy === 'title'}
+                    direction={orderBy === 'title' ? orderDirection : 'asc'}
+                    onClick={_.partial(orderByProperty, 'title')}
+                  >
+                    Title
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    id="sort-workspaces-by-creation-date"
+                    active={orderBy === 'creationDate'}
+                    direction={
+                      orderBy === 'creationDate' ? orderDirection : 'asc'
+                    }
+                    onClick={_.partial(orderByProperty, 'creationDate')}
+                  >
+                    Created
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
               </TableRow>

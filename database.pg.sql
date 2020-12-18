@@ -486,3 +486,8 @@ SET
 WHERE
   json (state) ->> 'prefs' IS NULL;
 
+--changeset zalitek:28
+
+ALTER TABLE workspace ADD COLUMN creationDate TIMESTAMP DEFAULT NOW() NOT NULL;
+
+--rollback ALTER TABLE workspace DROP COLUMN creationDate

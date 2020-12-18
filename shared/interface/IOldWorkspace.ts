@@ -7,4 +7,5 @@ export default interface IOldWorkspace {
   problem: IProblem;
   defaultSubProblemId: string;
   defaultScenarioId: string;
+  creationDate: string;
 }
