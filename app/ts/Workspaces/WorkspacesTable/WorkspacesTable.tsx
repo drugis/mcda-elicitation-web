@@ -114,12 +114,12 @@ export default function WorkspacesTable(): JSX.Element {
     );
   }
 
-  function createSortHandler(propertyToOrder: TSortProperty, event: any): void {
+  function orderByProperty(propertyToOrder: TSortProperty, event: any): void {
     const newWorkspaces = _.sortBy(workspaces, [propertyToOrder]);
     if (orderBy === propertyToOrder) {
       orderBySameProperty(newWorkspaces);
     } else {
-      orderByNewProperty(propertyToOrder, newWorkspaces);
+      orderByOtherProperty(propertyToOrder, newWorkspaces);
     }
   }
 
@@ -133,7 +133,7 @@ export default function WorkspacesTable(): JSX.Element {
     }
   }
 
-  function orderByNewProperty(
+  function orderByOtherProperty(
     propertyToOrder: TSortProperty,
     newWorkspaces: IOldWorkspace[]
   ): void {
@@ -161,7 +161,7 @@ export default function WorkspacesTable(): JSX.Element {
                     id="sort-workspaces-by-title"
                     active={orderBy === 'title'}
                     direction={orderBy === 'title' ? orderDirection : 'asc'}
-                    onClick={_.partial(createSortHandler, 'title')}
+                    onClick={_.partial(orderByProperty, 'title')}
                   >
                     Title
                   </TableSortLabel>
@@ -173,7 +173,7 @@ export default function WorkspacesTable(): JSX.Element {
                     direction={
                       orderBy === 'creationDate' ? orderDirection : 'asc'
                     }
-                    onClick={_.partial(createSortHandler, 'creationDate')}
+                    onClick={_.partial(orderByProperty, 'creationDate')}
                   >
                     Created
                   </TableSortLabel>
