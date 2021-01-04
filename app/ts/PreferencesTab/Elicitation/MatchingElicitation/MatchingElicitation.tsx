@@ -2,9 +2,9 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {PreferencesContext} from '../../PreferencesContext';
 import {ElicitationContext} from '../ElicitationContext';
 import MostImportantChoice from '../MostImportantChoice/MostImportantChoice';
 import MatchingButtons from './MatchingButtons/MatchingButtons';
@@ -12,8 +12,8 @@ import MatchingSetImportance from './MatchingSetImportance/MatchingSetImportance
 
 export default function MatchingElicitation() {
   const {currentStep} = useContext(ElicitationContext);
-  const {criteria} = useContext(PreferencesContext);
-  const totalSteps = _.size(criteria);
+  const {filteredCriteria} = useContext(SubproblemContext);
+  const totalSteps = _.size(filteredCriteria);
 
   return (
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>

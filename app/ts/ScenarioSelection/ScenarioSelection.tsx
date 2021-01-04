@@ -19,13 +19,16 @@ export default function ScenarioSelection({
   }
 
   function getScenarioOptions(): JSX.Element[] {
-    return _.map(scenarios, (scenario: IMcdaScenario) => {
-      return (
-        <option value={scenario.id} key={scenario.id}>
-          {scenario.title}
-        </option>
-      );
-    });
+    return _.map(
+      scenarios,
+      (scenario: IMcdaScenario): JSX.Element => {
+        return (
+          <option value={scenario.id} key={scenario.id}>
+            {scenario.title}
+          </option>
+        );
+      }
+    );
   }
 
   return (

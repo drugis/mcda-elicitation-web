@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -8,10 +9,11 @@ import PartialValueFunctionButtons from './PartialValueFunctionButtons/PartialVa
 import PartialValueFunctionPlot from './PartialValueFunctionPlot/PartialValueFunctionPlot';
 
 export default function PartialValueFunctions() {
-  const {pvfs, criteria} = useContext(PreferencesContext);
+  const {pvfs} = useContext(PreferencesContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
 
   function getPartialValueFunctions(): JSX.Element[] {
-    return _.map(criteria, (criterion) => {
+    return _.map(filteredCriteria, (criterion) => {
       return (
         <Grid key={criterion.id} container item lg={3} md={4} xs={6}>
           <Grid item xs={12} style={{textAlign: 'center'}}>
