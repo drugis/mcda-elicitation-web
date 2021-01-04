@@ -1,4 +1,3 @@
-bower_components
 frontend-test/node_modules
 *.swp
 /tags
@@ -7,15 +6,14 @@ frontend-test/node_modules
 .\#*
 *_archive
 .sass-cache
-database.h2.db
-database.trace.db
-database.lock.db
 frontend-test/test-results.xml
 node_modules
 dist
 coverage
 ssl
 /tscomp
+liquibase/liquibase-changelog.sql
+tests_output/
 
 # Numerous always-ignore extensions
 *.diff
@@ -52,3 +50,6 @@ app/js/interface/*.js
 app/js/type/*.js
 test/endToEnd/effectsTableDisplayTest.js*
 test/endToEnd/util/effectsTableDisplayTestUtil.js*
+test/endToEnd/util/ICriterionRow.js*
+test/endToEnd/util/ICriterionRowWithUncertainty.js*
+test/endToEnd/workspaceSortingTest.js*

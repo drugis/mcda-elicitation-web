@@ -57,6 +57,9 @@ jobs:
       - name: stop MCDA docker container
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
 
+      - name: liquify database
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
+
       - name: delete docker container
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
 
