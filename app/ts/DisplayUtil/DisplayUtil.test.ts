@@ -50,12 +50,21 @@ describe('displayUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return a modified value if unit type is decimal and percentages are shown', () => {
-      const value: number = 1;
+    it('should return a percentage value if unit type is decimal and percentages are shown', () => {
+      const value: number = 0.37;
       const showPercentage = true;
       const unitType: UnitOfMeasurementType = 'decimal';
       const result = valueToString(value, showPercentage, unitType);
-      const expectedResult = '100';
+      const expectedResult = '37';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return a percentage value if unit type is percentage and percentages are shown', () => {
+      const value: number = 0.45;
+      const showPercentage = true;
+      const unitType: UnitOfMeasurementType = 'percentage';
+      const result = valueToString(value, showPercentage, unitType);
+      const expectedResult = '45';
       expect(result).toEqual(expectedResult);
     });
 
@@ -68,8 +77,8 @@ describe('displayUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return a modified value if unit type is percentage and percentages are not shown', () => {
-      const value: number = 1;
+    it('should return a decimal value if unit type is percentage and percentages are not shown', () => {
+      const value: number = 0.01;
       const showPercentage = false;
       const unitType: UnitOfMeasurementType = 'percentage';
       const result = valueToString(value, showPercentage, unitType);
@@ -77,12 +86,12 @@ describe('displayUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return a string value if unit type is not percentage and percentages are not shown', () => {
-      const value: number = 1;
+    it('should return a decimal value if unit type is not percentage and percentages are not shown', () => {
+      const value: number = 0.5;
       const showPercentage = false;
       const unitType: UnitOfMeasurementType = 'decimal';
       const result = valueToString(value, showPercentage, unitType);
-      const expectedResult = '1';
+      const expectedResult = '0.5';
       expect(result).toEqual(expectedResult);
     });
   });

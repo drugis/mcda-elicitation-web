@@ -20,7 +20,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
   useEffect(() => {
     setLabel(
       renderInputEffect(
-        effect,
+        {...effect, unitOfMeasurementType: dataSource.unitOfMeasurement.type},
         dataSource.unitOfMeasurement.type === 'percentage'
       )
     );

@@ -30,11 +30,13 @@ export function valueToString(
 ): string {
   if (value === undefined) {
     return 'No value entered';
-  } else if (showPercentage) {
-    const modifier = unitOfMeasurementType === 'decimal' ? 100 : 1;
-    return significantDigits(value * modifier).toString();
+  } else if (
+    showPercentage &&
+    (unitOfMeasurementType === 'decimal' ||
+      unitOfMeasurementType === 'percentage')
+  ) {
+    return significantDigits(value * 100).toString();
   } else {
-    const modifier = unitOfMeasurementType === 'percentage' ? 0.01 : 1;
-    return significantDigits(value * modifier).toString();
+    return significantDigits(value).toString();
   }
 }

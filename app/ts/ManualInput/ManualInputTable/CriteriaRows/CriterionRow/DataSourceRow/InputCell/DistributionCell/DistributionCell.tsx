@@ -63,7 +63,7 @@ export default function DistributionCell({
     } else if (valueIsOutofBounds(distribution.value)) {
       return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `${distribution.value}%`;
+      return `${distribution.value * 100}%`;
     } else {
       return `${distribution.value}`;
     }
