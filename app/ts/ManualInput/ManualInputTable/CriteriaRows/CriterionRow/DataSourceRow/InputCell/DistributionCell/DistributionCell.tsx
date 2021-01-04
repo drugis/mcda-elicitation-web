@@ -78,7 +78,9 @@ export default function DistributionCell({
     ) {
       return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `Normal(${distribution.mean}%, ${distribution.standardError}%)`;
+      return `Normal(${distribution.mean * 100}%, ${
+        distribution.standardError * 100
+      }%)`;
     } else {
       return `Normal(${distribution.mean}, ${distribution.standardError})`;
     }
@@ -91,7 +93,9 @@ export default function DistributionCell({
     ) {
       return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `[${distribution.lowerBound}%, ${distribution.upperBound}%]`;
+      return `[${distribution.lowerBound * 100}%, ${
+        distribution.upperBound * 100
+      }%]`;
     } else {
       return `[${distribution.lowerBound}, ${distribution.upperBound}]`;
     }

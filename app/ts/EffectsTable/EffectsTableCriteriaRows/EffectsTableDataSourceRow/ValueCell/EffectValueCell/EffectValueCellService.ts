@@ -147,3 +147,14 @@ function getValueFromScales(scale: IScale, usePercentage: boolean): string {
     return 'No data entered';
   }
 }
+
+export function normalizeInputValue(
+  value: string,
+  unitType: UnitOfMeasurementType
+): number {
+  if (!value || unitType != 'percentage') {
+    return Number.parseFloat(value);
+  } else {
+    return Number.parseFloat(value) / 100;
+  }
+}
