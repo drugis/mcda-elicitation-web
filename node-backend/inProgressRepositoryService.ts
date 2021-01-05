@@ -494,29 +494,27 @@ function buildEffectPerformance(
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: significantDigits(cell.value / percentageModifier)
+        value: cell.value
       };
       return valuePerformance;
     case 'valueCI':
       const valueCIPerformance: IValueCIPerformance = {
         type: 'exact',
-        value: significantDigits(cell.value / percentageModifier),
+        value: cell.value,
         input: {
-          value: cell.value,
-          lowerBound: cell.lowerBound,
-          upperBound: cell.upperBound
+          value: significantDigits(cell.value * percentageModifier),
+          lowerBound: significantDigits(cell.lowerBound * percentageModifier),
+          upperBound: significantDigits(cell.upperBound * percentageModifier)
         }
       };
       return valueCIPerformance;
     case 'range':
       const rangePerformance: IRangeEffectPerformance = {
         type: 'exact',
-        value: significantDigits(
-          (cell.lowerBound + cell.upperBound) / (2 * percentageModifier)
-        ),
+        value: significantDigits((cell.lowerBound + cell.upperBound) / 2),
         input: {
-          lowerBound: cell.lowerBound,
-          upperBound: cell.upperBound
+          lowerBound: significantDigits(cell.lowerBound * percentageModifier),
+          upperBound: significantDigits(cell.upperBound * percentageModifier)
         }
       };
       return rangePerformance;
@@ -543,15 +541,15 @@ function buildDistributionPerformance(
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: significantDigits(cell.value / percentageModifier)
+        value: cell.value
       };
       return valuePerformance;
     case 'range':
       const rangePerformance: IRangeDistributionPerformance = {
         type: 'range',
         parameters: {
-          lowerBound: significantDigits(cell.lowerBound / percentageModifier),
-          upperBound: significantDigits(cell.upperBound / percentageModifier)
+          lowerBound: significantDigits(cell.lowerBound * percentageModifier),
+          upperBound: significantDigits(cell.upperBound * percentageModifier)
         }
       };
       return rangePerformance;
@@ -559,8 +557,8 @@ function buildDistributionPerformance(
       const normalPerformace: INormalPerformance = {
         type: 'dnorm',
         parameters: {
-          mu: significantDigits(cell.mean / percentageModifier),
-          sigma: significantDigits(cell.standardError / percentageModifier)
+          mu: cell.mean,
+          sigma: cell.standardError
         }
       };
       return normalPerformace;

@@ -1,4 +1,4 @@
-import {applyOrdering} from './workspaceServiceUtil';
+import {applyOrdering} from '../shared/workspaceServiceUtil';
 
 describe('workspaceServiceUtil', () => {
   describe('applyOrdering', () => {
