@@ -32,10 +32,10 @@ export default function TradeOffReferenceCriterion(): JSX.Element {
 
   return (
     <>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         Reference criterion:
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={10}>
         <Select
           native
           id="scenario-selector"

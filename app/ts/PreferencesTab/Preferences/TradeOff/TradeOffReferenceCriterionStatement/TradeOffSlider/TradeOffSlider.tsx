@@ -45,27 +45,29 @@ export default function TradeOffSlider({
     setDialogOpen(true);
     setAnchorElement(event.currentTarget);
   }
+
   function closeDialog(): void {
     setDialogOpen(false);
     setAnchorElement(null);
   }
 
+  const marginTop = {marginTop: '50px'};
+
   return (
     <>
       <Button onClick={openSlider} variant="text">
-        {significantDigits(value, 2)}
+        {getPercentifiedValue(value, usePercentage)}
       </Button>
       <Popover
         open={isDialogOpen}
         onClose={closeDialog}
         anchorEl={anchorElement}
       >
-        <Grid
-          container
-          spacing={2}
-          style={{minWidth: '400px', minHeight: '50px'}}
-        >
-          <Grid item xs={12} style={{marginTop: '50px'}}>
+        <Grid container style={{minWidth: '400px', minHeight: '50px'}}>
+          <Grid item xs={2} style={{...marginTop, textAlign: 'center'}}>
+            {getPercentifiedValue(min, usePercentage)}
+          </Grid>
+          <Grid item xs={8} style={marginTop}>
             <Slider
               marks
               valueLabelDisplay="on"
@@ -78,6 +80,9 @@ export default function TradeOffSlider({
               onChange={handleChange}
               step={stepSize}
             />
+          </Grid>
+          <Grid item xs={2} style={{...marginTop, textAlign: 'center'}}>
+            {getPercentifiedValue(max, usePercentage)}
           </Grid>
         </Grid>
       </Popover>
