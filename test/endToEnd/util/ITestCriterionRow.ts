@@ -1,5 +1,5 @@
-export default interface ICriterionRow {
-  criterionId: string;
+export default interface ITestCriterionRow {
+  rowNumber: number;
   dataSourceId: string;
   title: string;
   unit: string;
