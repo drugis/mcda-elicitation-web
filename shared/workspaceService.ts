@@ -369,19 +369,19 @@ function normalisePercentageValue(
 export function buildWorkspaceDistributions(
   performanceTable: IPerformanceTableEntry[],
   idMapper: (id: string) => string,
-  unitTypeMap: Record<string, UnitOfMeasurementType>
+  unitTypesByDataSource: Record<string, UnitOfMeasurementType>
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
       return hasAlternativeId(entry) && 'distribution' in entry.performance;
     })
-    .map(_.partial(buildDistribution, idMapper, unitTypeMap))
+    .map(_.partial(buildDistribution, idMapper, unitTypesByDataSource))
     .value();
 }
 
 export function buildDistribution(
   idMapper: (id: string) => string,
-  unitTypeMap: Record<string, UnitOfMeasurementType>,
+  unitTypesByDataSource: Record<string, UnitOfMeasurementType>,
   entry: IPerformanceTableEntry
 ): Distribution {
   const performance = entry.performance as IDistributionPerformance;
@@ -389,7 +389,7 @@ export function buildDistribution(
     alternativeId: idMapper(entry.alternative),
     dataSourceId: idMapper(entry.dataSource),
     criterionId: idMapper(entry.criterion),
-    unitOfMeasurementType: unitTypeMap[idMapper(entry.dataSource)]
+    unitOfMeasurementType: unitTypesByDataSource[entry.dataSource]
   };
   return finishDistributionCreation(performance.distribution, distributionBase);
 }

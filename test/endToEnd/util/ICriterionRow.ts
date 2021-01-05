@@ -1,5 +1,5 @@
 export default interface ICriterionRow {
-  criterionId: string;
+  rowNumber: number;
   dataSourceId: string;
   title: string;
   unit: string;

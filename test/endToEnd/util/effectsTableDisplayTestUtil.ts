@@ -2,7 +2,7 @@ import ICriterionRow from './ICriterionRow';
 import ICriterionRowWithUncertainty from './ICriterionRowWithUncertainty';
 
 export const percentageCriterionWithEffectsPercentifiedEntered: ICriterionRow = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '%',
@@ -16,7 +16,7 @@ export const percentageCriterionWithEffectsPercentifiedEntered: ICriterionRow = 
 };
 
 export const decimalCriterionWithEffectsPercentifiedEntered: ICriterionRow = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '%',
@@ -30,7 +30,7 @@ export const decimalCriterionWithEffectsPercentifiedEntered: ICriterionRow = {
 };
 
 export const percentageCriterionWithEffectsDepercentifiedEntered: ICriterionRow = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '',
@@ -44,7 +44,7 @@ export const percentageCriterionWithEffectsDepercentifiedEntered: ICriterionRow 
 };
 
 export const decimalCriterionWithEffectsDepercentifiedEntered: ICriterionRow = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '',
@@ -58,7 +58,7 @@ export const decimalCriterionWithEffectsDepercentifiedEntered: ICriterionRow = {
 };
 
 export const customCriterionWithEffectsEntered: ICriterionRow = {
-  criterionId: 'customCriterion',
+  rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',
   unit: '',
@@ -72,7 +72,7 @@ export const customCriterionWithEffectsEntered: ICriterionRow = {
 };
 
 export const percentageCriterionWithDistributionsPercentifiedEntered: ICriterionRow = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '%',
@@ -86,7 +86,7 @@ export const percentageCriterionWithDistributionsPercentifiedEntered: ICriterion
 };
 
 export const decimalCriterionWithDistributionsPercentifiedEntered: ICriterionRow = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '%',
@@ -100,7 +100,7 @@ export const decimalCriterionWithDistributionsPercentifiedEntered: ICriterionRow
 };
 
 export const percentageCriterionWithDistributionsDepercentifiedEntered: ICriterionRow = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '',
@@ -114,7 +114,7 @@ export const percentageCriterionWithDistributionsDepercentifiedEntered: ICriteri
 };
 
 export const decimalCriterionWithDistributionsDepercentifiedEntered: ICriterionRow = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '',
@@ -128,7 +128,7 @@ export const decimalCriterionWithDistributionsDepercentifiedEntered: ICriterionR
 };
 
 export const customCriterionWithDistributionsEntered: ICriterionRow = {
-  criterionId: 'customCriterion',
+  rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',
   unit: '',
@@ -142,7 +142,7 @@ export const customCriterionWithDistributionsEntered: ICriterionRow = {
 };
 
 export const percentageCriterionWithEffectsPercentifiedAnalysis: ICriterionRow = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '%',
@@ -156,7 +156,7 @@ export const percentageCriterionWithEffectsPercentifiedAnalysis: ICriterionRow =
 };
 
 export const decimalCriterionWithEffectsPercentifiedAnalysis: ICriterionRow = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '%',
@@ -170,7 +170,7 @@ export const decimalCriterionWithEffectsPercentifiedAnalysis: ICriterionRow = {
 };
 
 export const percentageCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '',
@@ -184,7 +184,7 @@ export const percentageCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow
 };
 
 export const decimalCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '',
@@ -198,7 +198,7 @@ export const decimalCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow = 
 };
 
 export const customCriterionWithEffectsAnalysis: ICriterionRow = {
-  criterionId: 'customCriterion',
+  rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',
   unit: '',
@@ -212,7 +212,7 @@ export const customCriterionWithEffectsAnalysis: ICriterionRow = {
 };
 
 export const percentageCriterionWithDistributionsPercentifiedAnalysis: ICriterionRowWithUncertainty = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '%',
@@ -231,7 +231,7 @@ export const percentageCriterionWithDistributionsPercentifiedAnalysis: ICriterio
 };
 
 export const decimalCriterionWithDistributionsPercentifiedAnalysis: ICriterionRowWithUncertainty = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '%',
@@ -250,7 +250,7 @@ export const decimalCriterionWithDistributionsPercentifiedAnalysis: ICriterionRo
 };
 
 export const percentageCriterionWithDistributionsDepercentifiedAnalysis: ICriterionRowWithUncertainty = {
-  criterionId: 'percentageCriterion',
+  rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
   unit: '',
@@ -269,7 +269,7 @@ export const percentageCriterionWithDistributionsDepercentifiedAnalysis: ICriter
 };
 
 export const decimalCriterionWithDistributionsDepercentifiedAnalysis: ICriterionRowWithUncertainty = {
-  criterionId: 'decimalCriterion',
+  rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
   unit: '',
@@ -288,7 +288,7 @@ export const decimalCriterionWithDistributionsDepercentifiedAnalysis: ICriterion
 };
 
 export const customCriterionWithDistributionsAnalysis: ICriterionRowWithUncertainty = {
-  criterionId: 'customCriterion',
+  rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',
   unit: '',
