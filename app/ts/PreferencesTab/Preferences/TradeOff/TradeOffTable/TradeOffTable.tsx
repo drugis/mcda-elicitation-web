@@ -37,7 +37,7 @@ export default function TradeOffTable(): JSX.Element {
         const improvedValue = getImprovedValue(criterion, usePercentage);
         return (
           <TableRow key={criterion.id}>
-            <TableCell>
+            <TableCell id={`trade-off-statement-${criterion.id}`}>
               Changing {criterion.title} from{' '}
               {getWorst(pvfs[criterion.id], usePercentage)} to {improvedValue}
             </TableCell>
