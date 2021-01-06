@@ -370,9 +370,9 @@ describe('buildWorkspace', () => {
         type: 'exact',
         value: 37,
         input: {
-          lowerBound: 20,
-          upperBound: 40,
-          value: 37
+          lowerBound: 0.2,
+          upperBound: 0.4,
+          value: 0.37
         }
       };
       const result = createExactEffect(performance, effectBase);
@@ -409,9 +409,9 @@ describe('buildWorkspace', () => {
   describe('createBoundEffect', () => {
     it('should build a value CI effect', () => {
       const input = {
-        lowerBound: 20,
-        upperBound: 40,
-        value: 37
+        lowerBound: 0.2,
+        upperBound: 0.4,
+        value: 0.37
       };
       const result = createBoundEffect(input, effectBase);
       const expectedResult: IValueCIEffect = {
@@ -429,7 +429,7 @@ describe('buildWorkspace', () => {
 
     it('should build a value CI effect with NE bounds', () => {
       const input = {
-        value: 37,
+        value: 0.37,
         lowerBound: 'NE' as 'NE' | number,
         upperBound: 'NE' as 'NE' | number
       };

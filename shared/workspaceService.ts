@@ -339,9 +339,9 @@ export function createBoundEffect(
     return {
       ...effectBase,
       type: 'valueCI',
-      value: normalisePercentageValue(input.value, unitType),
-      lowerBound: normalisePercentageValue(lowerBound, unitType),
-      upperBound: normalisePercentageValue(upperBound, unitType),
+      value: input.value,
+      lowerBound: lowerBound,
+      upperBound: upperBound,
       isNotEstimableUpperBound: input.lowerBound === 'NE',
       isNotEstimableLowerBound: input.upperBound === 'NE'
     };
@@ -349,20 +349,9 @@ export function createBoundEffect(
     return {
       ...effectBase,
       type: 'range',
-      lowerBound: normalisePercentageValue(lowerBound, unitType),
-      upperBound: normalisePercentageValue(upperBound, unitType)
+      lowerBound: lowerBound,
+      upperBound: upperBound
     };
-  }
-}
-
-function normalisePercentageValue(
-  value: number,
-  unitType: UnitOfMeasurementType
-): number {
-  if (!value || unitType !== 'percentage') {
-    return value;
-  } else {
-    return value / 100;
   }
 }
 

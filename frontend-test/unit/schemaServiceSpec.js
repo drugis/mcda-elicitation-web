@@ -9,7 +9,7 @@ define([
   var generateUuidMock = function () {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.4.5';
+  var currentSchemaVersion = '1.4.6';
   var schemaService;
 
   describe('The SchemaService', function () {
@@ -428,6 +428,20 @@ define([
         var expectedResult = {
           problem: exampleProblem()
         };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should update a problem of schema version 1.4.5 to the current version', function () {
+        const workspace = {
+          problem: exampleProblem145()
+        };
+        const result = schemaService.updateWorkspaceToCurrentSchema(workspace);
+        let expectedResult = angular.copy(workspace);
+        expectedResult.problem.performanceTable[1].performance.effect.input.value = 0.01;
+        expectedResult.problem.performanceTable[1].performance.effect.input.upperBound = 0.02;
+        expectedResult.problem.performanceTable[2].performance.effect.input.lowerBound = 0.01;
+        expectedResult.problem.performanceTable[2].performance.effect.input.upperBound = 0.9;
+        expectedResult.problem.schemaVersion = currentSchemaVersion;
         expect(result).toEqual(expectedResult);
       });
     });
