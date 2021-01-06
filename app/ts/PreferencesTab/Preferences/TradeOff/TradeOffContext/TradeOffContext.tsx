@@ -4,6 +4,11 @@ import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemCo
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
+import {
+  getPartOfInterval,
+  getInitialReferenceValueFrom,
+  getInitialReferenceValueTo
+} from '../tradeOffUtil';
 import ITradeOffContext from './ITradeOffContext';
 
 export const TradeOffContext = createContext<ITradeOffContext>(
@@ -22,8 +27,8 @@ export function TradeOffContextProviderComponent({
   const [referenceCriterion, setReferenceCriterion] = useState<ICriterion>(
     filteredCriteria[0]
   );
-  const [criteria, setCriteria] = useState<ICriterion[]>(
-    filteredCriteria.slice(1, filteredCriteria.length)
+  const [otherCriteria, setCriteria] = useState<ICriterion[]>(
+    filteredCriteria.slice(1)
   );
 
   const [
@@ -33,28 +38,37 @@ export function TradeOffContextProviderComponent({
 
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
-  const [value1, setValue1] = useState<number>(
-    (configuredUpperBound - configuredLowerBound) * 0.45 + configuredLowerBound
+  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
+    getInitialReferenceValueFrom(configuredLowerBound, configuredUpperBound)
   );
-  const [value2, setValue2] = useState<number>(
-    (configuredUpperBound - configuredLowerBound) * 0.55 + configuredLowerBound
+  const [referenceValueTo, setReferenceValueTo] = useState<number>(
+    getInitialReferenceValueTo(configuredLowerBound, configuredUpperBound)
   );
-  const weight = currentScenario.state.weights.mean[referenceCriterion.id];
+  const referenceWeight =
+    currentScenario.state.weights.mean[referenceCriterion.id];
   const [partOfInterval, setPartOfInterval] = useState<number>(
-    (value2 - value1) / ((configuredUpperBound - configuredLowerBound) * weight)
+    getPartOfInterval(
+      referenceValueFrom,
+      referenceValueTo,
+      configuredLowerBound,
+      configuredUpperBound
+    )
   );
 
-  useEffect(initValues, [referenceCriterion]);
+  useEffect(reset, [referenceCriterion]);
 
   useEffect(() => {
-    const weight = currentScenario.state.weights.mean[referenceCriterion.id];
     setPartOfInterval(
-      (value2 - value1) /
-        ((configuredUpperBound - configuredLowerBound) * weight)
+      getPartOfInterval(
+        referenceValueFrom,
+        referenceValueTo,
+        configuredLowerBound,
+        configuredUpperBound
+      )
     );
-  }, [value1, value2]);
+  }, [referenceValueFrom, referenceValueTo]);
 
-  function initValues() {
+  function reset() {
     const [
       configuredLowerBound,
       configuredUpperBound
@@ -63,13 +77,11 @@ export function TradeOffContextProviderComponent({
     ];
     setLowerBound(configuredLowerBound);
     setUpperBound(configuredUpperBound);
-    setValue1(
-      (configuredUpperBound - configuredLowerBound) * 0.45 +
-        configuredLowerBound
+    setReferenceValueFrom(
+      getInitialReferenceValueFrom(configuredLowerBound, configuredUpperBound)
     );
-    setValue2(
-      (configuredUpperBound - configuredLowerBound) * 0.55 +
-        configuredLowerBound
+    setReferenceValueTo(
+      getInitialReferenceValueTo(configuredLowerBound, configuredUpperBound)
     );
   }
 
@@ -81,15 +93,16 @@ export function TradeOffContextProviderComponent({
   return (
     <TradeOffContext.Provider
       value={{
-        criteria,
+        otherCriteria,
         lowerBound,
         partOfInterval,
         referenceCriterion,
         upperBound,
-        value1,
-        value2,
-        setValue1,
-        setValue2,
+        referenceValueFrom,
+        referenceValueTo,
+        referenceWeight,
+        setReferenceValueFrom,
+        setReferenceValueTo,
         updateReferenceCriterion
       }}
     >

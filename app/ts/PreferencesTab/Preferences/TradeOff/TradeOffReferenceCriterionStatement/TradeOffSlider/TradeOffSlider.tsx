@@ -32,7 +32,7 @@ export default function TradeOffSlider({
   const unit = referenceCriterion.dataSources[0].unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
 
-  function openSlider(event: React.MouseEvent<HTMLButtonElement>): void {
+  function openDialog(event: React.MouseEvent<HTMLButtonElement>): void {
     setDialogOpen(true);
     setAnchorElement(event.currentTarget);
   }
@@ -46,7 +46,7 @@ export default function TradeOffSlider({
 
   return (
     <>
-      <Button onClick={openSlider} variant="text">
+      <Button onClick={openDialog} variant="text">
         {getPercentifiedValue(value, usePercentage)}
       </Button>
       <Popover

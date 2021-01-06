@@ -6,7 +6,10 @@ import {
   TableRow
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
+import {
+  canBePercentage,
+  getPercentifiedValue
+} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
@@ -20,7 +23,9 @@ import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
 
 export default function TradeOffTable(): JSX.Element {
   const {showPercentages} = useContext(SettingsContext);
-  const {criteria, partOfInterval} = useContext(TradeOffContext);
+  const {otherCriteria: criteria, partOfInterval, referenceWeight} = useContext(
+    TradeOffContext
+  );
   const {pvfs, currentScenario} = useContext(PreferencesContext);
 
   function getRows(): JSX.Element[] {
@@ -29,15 +34,15 @@ export default function TradeOffTable(): JSX.Element {
       (criterion: ICriterion): JSX.Element => {
         const unit = criterion.dataSources[0].unitOfMeasurement;
         const usePercentage = showPercentages && canBePercentage(unit.type);
-        const b = getB(criterion, usePercentage);
+        const improvedValue = getImprovedValue(criterion, usePercentage);
         return (
           <TableRow key={criterion.id}>
             <TableCell>
               Changing {criterion.title} from{' '}
-              {getWorst(pvfs[criterion.id], usePercentage)} to {b}
+              {getWorst(pvfs[criterion.id], usePercentage)} to {improvedValue}
             </TableCell>
             <TableCell>
-              {isBRealistic(b, criterion, usePercentage)
+              {isImprovedValueRealistic(improvedValue, criterion, usePercentage)
                 ? ''
                 : `This value is unrealistic given the criterion's range`}
             </TableCell>
@@ -47,31 +52,33 @@ export default function TradeOffTable(): JSX.Element {
     );
   }
 
-  function getB(criterion: ICriterion, usePercentage: boolean): number {
-    const weight = currentScenario.state.weights.mean[criterion.id];
+  function getImprovedValue(
+    criterion: ICriterion,
+    usePercentage: boolean
+  ): number {
+    const criterionWeight = currentScenario.state.weights.mean[criterion.id];
     const pvf = pvfs[criterion.id];
-    const range = pvfs[criterion.id].range;
-    const interval = range[1] - range[0];
-    const change = weight * partOfInterval * interval;
-    const modifier = usePercentage ? 100 : 1;
+    const interval = pvf.range[1] - pvf.range[0];
+    const change =
+      (criterionWeight / referenceWeight) * partOfInterval * interval;
     if (pvf.direction === 'increasing') {
-      return significantDigits(modifier * (range[0] + change));
+      return getPercentifiedValue(pvf.range[0] + change, usePercentage);
     } else {
-      return significantDigits(modifier * (range[1] - change));
+      return getPercentifiedValue(pvf.range[1] - change, usePercentage);
     }
   }
 
-  function isBRealistic(
-    b: number,
+  function isImprovedValueRealistic(
+    value: number,
     criterion: ICriterion,
     usePercentage: boolean
   ): boolean {
     const pvf = pvfs[criterion.id];
     const best = getBest(pvf, usePercentage);
     if (pvf.direction === 'increasing') {
-      return b <= best;
+      return value <= best;
     } else {
-      return b >= best;
+      return value >= best;
     }
   }
 

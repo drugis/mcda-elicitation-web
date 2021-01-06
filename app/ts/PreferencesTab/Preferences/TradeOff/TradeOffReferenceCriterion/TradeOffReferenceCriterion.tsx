@@ -20,13 +20,11 @@ export default function TradeOffReferenceCriterion(): JSX.Element {
   function getReferenceCriterionOptions(): JSX.Element[] {
     return _.map(
       filteredCriteria,
-      (criterion: ICriterion): JSX.Element => {
-        return (
-          <option value={criterion.id} key={criterion.id}>
-            {criterion.title}
-          </option>
-        );
-      }
+      (criterion: ICriterion): JSX.Element => (
+        <option value={criterion.id} key={criterion.id}>
+          {criterion.title}
+        </option>
+      )
     );
   }
 

@@ -1,19 +1,16 @@
 import {Grid, Typography} from '@material-ui/core';
+import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
 import {TradeOffContextProviderComponent} from './TradeOffContext/TradeOffContext';
 import TradeOffReferenceCriterion from './TradeOffReferenceCriterion/TradeOffReferenceCriterion';
 import TradeOffReferenceCriterionStatement from './TradeOffReferenceCriterionStatement/TradeOffReferenceCriterionStatement';
 import TradeOffTable from './TradeOffTable/TradeOffTable';
-import _ from 'lodash';
-import IPvf from '@shared/interface/Problem/IPvf';
 
 export default function TradeOff(): JSX.Element {
   const {pvfs} = useContext(PreferencesContext);
 
-  const areAllPvfsLinear = _.every(pvfs, (pvf: IPvf): boolean => {
-    return pvf.type === 'linear';
-  });
+  const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
 
   return (
     <>
@@ -38,8 +35,7 @@ export default function TradeOff(): JSX.Element {
         </Grid>
       ) : (
         <Grid item xs={12}>
-          All partial value functions need to be linear in order to explore
-          trade offs.
+          Trade offs not available for nonlinear partial value functions.
         </Grid>
       )}
     </>

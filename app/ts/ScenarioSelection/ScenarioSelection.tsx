@@ -21,13 +21,11 @@ export default function ScenarioSelection({
   function getScenarioOptions(): JSX.Element[] {
     return _.map(
       scenarios,
-      (scenario: IMcdaScenario): JSX.Element => {
-        return (
-          <option value={scenario.id} key={scenario.id}>
-            {scenario.title}
-          </option>
-        );
-      }
+      (scenario: IMcdaScenario): JSX.Element => (
+        <option value={scenario.id} key={scenario.id}>
+          {scenario.title}
+        </option>
+      )
     );
   }
 
