@@ -791,9 +791,9 @@ describe('inProgressRepositoryService', () => {
               type: 'exact',
               value: 0.1,
               input: {
-                value: 10,
-                lowerBound: 5,
-                upperBound: 15
+                value: 0.1,
+                lowerBound: 0.05,
+                upperBound: 0.15
               }
             },
             distribution: {
@@ -814,7 +814,7 @@ describe('inProgressRepositoryService', () => {
               value: 0.1,
               input: {
                 lowerBound: 0,
-                upperBound: 20
+                upperBound: 0.2
               }
             },
             distribution: {

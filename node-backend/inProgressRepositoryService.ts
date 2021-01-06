@@ -470,12 +470,12 @@ function buildPerformance(
   const isPercentage = unitOfMeasurementType === 'percentage';
   let performance;
   if (effectCell) {
-    performance = {effect: buildEffectPerformance(effectCell, isPercentage)};
+    performance = {effect: buildEffectPerformance(effectCell)};
   }
   if (distributionCell) {
     performance = {
       ...performance,
-      distribution: buildDistributionPerformance(distributionCell, isPercentage)
+      distribution: buildDistributionPerformance(distributionCell)
     };
   }
   if (!performance) {
@@ -485,11 +485,7 @@ function buildPerformance(
   }
 }
 
-function buildEffectPerformance(
-  cell: Effect,
-  isPercentage: boolean
-): EffectPerformance {
-  const percentageModifier = isPercentage ? 100 : 1;
+function buildEffectPerformance(cell: Effect): EffectPerformance {
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
@@ -502,9 +498,9 @@ function buildEffectPerformance(
         type: 'exact',
         value: cell.value,
         input: {
-          value: significantDigits(cell.value * percentageModifier),
-          lowerBound: significantDigits(cell.lowerBound * percentageModifier),
-          upperBound: significantDigits(cell.upperBound * percentageModifier)
+          value: cell.value,
+          lowerBound: cell.lowerBound,
+          upperBound: cell.upperBound
         }
       };
       return valueCIPerformance;
@@ -513,8 +509,8 @@ function buildEffectPerformance(
         type: 'exact',
         value: significantDigits((cell.lowerBound + cell.upperBound) / 2),
         input: {
-          lowerBound: significantDigits(cell.lowerBound * percentageModifier),
-          upperBound: significantDigits(cell.upperBound * percentageModifier)
+          lowerBound: cell.lowerBound,
+          upperBound: cell.upperBound
         }
       };
       return rangePerformance;
@@ -533,8 +529,7 @@ function buildEffectPerformance(
 }
 
 function buildDistributionPerformance(
-  cell: Distribution,
-  isPercentage: boolean
+  cell: Distribution
 ): DistributionPerformance {
   switch (cell.type) {
     case 'value':
