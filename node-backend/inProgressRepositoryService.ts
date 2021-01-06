@@ -536,7 +536,6 @@ function buildDistributionPerformance(
   cell: Distribution,
   isPercentage: boolean
 ): DistributionPerformance {
-  const percentageModifier = isPercentage ? 100 : 1;
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
@@ -548,8 +547,8 @@ function buildDistributionPerformance(
       const rangePerformance: IRangeDistributionPerformance = {
         type: 'range',
         parameters: {
-          lowerBound: significantDigits(cell.lowerBound * percentageModifier),
-          upperBound: significantDigits(cell.upperBound * percentageModifier)
+          lowerBound: cell.lowerBound,
+          upperBound: cell.upperBound
         }
       };
       return rangePerformance;

@@ -800,7 +800,7 @@ describe('inProgressRepositoryService', () => {
               type: 'range',
               parameters: {
                 lowerBound: 0,
-                upperBound: 20
+                upperBound: 0.2
               }
             }
           }
