@@ -496,7 +496,8 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         if (
           isDataSourcePercentageMap[entry.dataSource] &&
           'effect' in entry.performance &&
-          'input' in entry.performance.effect
+          'input' in entry.performance.effect &&
+          'lowerBound' in entry.performance.effect.input
         ) {
           const inputBase = {
             lowerBound: entry.performance.effect.input.lowerBound / 100,

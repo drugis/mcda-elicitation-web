@@ -42,9 +42,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       'WorkspaceSetttingsService',
       ['usePercentage']
     );
-    var EffectsTableService = jasmine.createSpyObj('EffectsTableService', [
-      'createEffectsTableInfo'
-    ]);
     var tabServiceMock = jasmine.createSpyObj('TabService', ['getTabStatus']);
     var subProblems;
     var currentSubProblem = {
@@ -73,9 +70,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       }
     };
     var observedScalesDefer;
-    var effectsTableInfo = {
-      id: 'effectsTableInfo'
-    };
     var observedScales = {
       id: 'observedScales'
     };
@@ -103,9 +97,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       ScenarioResource.query.and.returnValue({
         $promise: $q.resolve(scenarios)
       });
-      EffectsTableService.createEffectsTableInfo.and.returnValue(
-        effectsTableInfo
-      );
       transitions.onStart.and.returnValue(() => {});
     }));
 
@@ -124,7 +115,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         ScenarioResource: ScenarioResource,
         WorkspaceService: WorkspaceService,
         WorkspaceSettingsService: WorkspaceSettingsService,
-        EffectsTableService: EffectsTableService,
         TabService: tabServiceMock,
         subProblems: subProblems,
         currentSubProblem: currentSubProblem,
@@ -213,10 +203,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           preferences: true,
           results: true
         });
-      });
-
-      it('should set the effects table info on the scope', () => {
-        expect(scope.effectsTableInfo).toBe(effectsTableInfo);
       });
     });
 
