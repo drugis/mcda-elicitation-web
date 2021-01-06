@@ -44,7 +44,17 @@ export function TradeOffContextProviderComponent({
     (value2 - value1) / ((configuredUpperBound - configuredLowerBound) * weight)
   );
 
+  useEffect(initValues, [referenceCriterion]);
+
   useEffect(() => {
+    const weight = currentScenario.state.weights.mean[referenceCriterion.id];
+    setPartOfInterval(
+      (value2 - value1) /
+        ((configuredUpperBound - configuredLowerBound) * weight)
+    );
+  }, [value1, value2]);
+
+  function initValues() {
     const [
       configuredLowerBound,
       configuredUpperBound
@@ -61,15 +71,7 @@ export function TradeOffContextProviderComponent({
       (configuredUpperBound - configuredLowerBound) * 0.55 +
         configuredLowerBound
     );
-  }, [referenceCriterion]);
-
-  useEffect(() => {
-    const weight = currentScenario.state.weights.mean[referenceCriterion.id];
-    setPartOfInterval(
-      (value2 - value1) /
-        ((configuredUpperBound - configuredLowerBound) * weight)
-    );
-  }, [value1, value2]);
+  }
 
   function updateReferenceCriterion(newId: string): void {
     setReferenceCriterion(_.find(filteredCriteria, ['id', newId]));

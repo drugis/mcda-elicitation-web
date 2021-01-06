@@ -1,17 +1,8 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  Grid,
-  Popover,
-  Slider
-} from '@material-ui/core';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import {Button, Grid, Popover, Slider} from '@material-ui/core';
 import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext, useState} from 'react';
 import {TradeOffContext} from '../../TradeOffContext/TradeOffContext';
