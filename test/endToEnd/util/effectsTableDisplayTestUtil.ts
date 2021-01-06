@@ -1,7 +1,7 @@
-import ICriterionRow from './ICriterionRow';
-import ICriterionRowWithUncertainty from './ICriterionRowWithUncertainty';
+import ITestCriterionRow from './ITestCriterionRow';
+import ITestCriterionRowWithUncertainty from './ITestCriterionRowWithUncertainty';
 
-export const percentageCriterionWithEffectsPercentifiedEntered: ICriterionRow = {
+export const percentageCriterionWithEffectsPercentifiedEntered: ITestCriterionRow = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -15,7 +15,7 @@ export const percentageCriterionWithEffectsPercentifiedEntered: ICriterionRow = 
   alt7Value: ''
 };
 
-export const decimalCriterionWithEffectsPercentifiedEntered: ICriterionRow = {
+export const decimalCriterionWithEffectsPercentifiedEntered: ITestCriterionRow = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -29,7 +29,7 @@ export const decimalCriterionWithEffectsPercentifiedEntered: ICriterionRow = {
   alt7Value: ''
 };
 
-export const percentageCriterionWithEffectsDepercentifiedEntered: ICriterionRow = {
+export const percentageCriterionWithEffectsDepercentifiedEntered: ITestCriterionRow = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -43,7 +43,7 @@ export const percentageCriterionWithEffectsDepercentifiedEntered: ICriterionRow 
   alt7Value: ''
 };
 
-export const decimalCriterionWithEffectsDepercentifiedEntered: ICriterionRow = {
+export const decimalCriterionWithEffectsDepercentifiedEntered: ITestCriterionRow = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -57,7 +57,7 @@ export const decimalCriterionWithEffectsDepercentifiedEntered: ICriterionRow = {
   alt7Value: ''
 };
 
-export const customCriterionWithEffectsEntered: ICriterionRow = {
+export const customCriterionWithEffectsEntered: ITestCriterionRow = {
   rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',
@@ -71,7 +71,7 @@ export const customCriterionWithEffectsEntered: ICriterionRow = {
   alt7Value: ''
 };
 
-export const percentageCriterionWithDistributionsPercentifiedEntered: ICriterionRow = {
+export const percentageCriterionWithDistributionsPercentifiedEntered: ITestCriterionRow = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -85,7 +85,7 @@ export const percentageCriterionWithDistributionsPercentifiedEntered: ICriterion
   alt7Value: 'text me'
 };
 
-export const decimalCriterionWithDistributionsPercentifiedEntered: ICriterionRow = {
+export const decimalCriterionWithDistributionsPercentifiedEntered: ITestCriterionRow = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -99,7 +99,7 @@ export const decimalCriterionWithDistributionsPercentifiedEntered: ICriterionRow
   alt7Value: 'text me'
 };
 
-export const percentageCriterionWithDistributionsDepercentifiedEntered: ICriterionRow = {
+export const percentageCriterionWithDistributionsDepercentifiedEntered: ITestCriterionRow = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -113,7 +113,7 @@ export const percentageCriterionWithDistributionsDepercentifiedEntered: ICriteri
   alt7Value: 'text me'
 };
 
-export const decimalCriterionWithDistributionsDepercentifiedEntered: ICriterionRow = {
+export const decimalCriterionWithDistributionsDepercentifiedEntered: ITestCriterionRow = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -127,7 +127,7 @@ export const decimalCriterionWithDistributionsDepercentifiedEntered: ICriterionR
   alt7Value: 'text me'
 };
 
-export const customCriterionWithDistributionsEntered: ICriterionRow = {
+export const customCriterionWithDistributionsEntered: ITestCriterionRow = {
   rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',
@@ -141,7 +141,7 @@ export const customCriterionWithDistributionsEntered: ICriterionRow = {
   alt7Value: 'text me'
 };
 
-export const percentageCriterionWithEffectsPercentifiedAnalysis: ICriterionRow = {
+export const percentageCriterionWithEffectsPercentifiedAnalysis: ITestCriterionRow = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -155,7 +155,7 @@ export const percentageCriterionWithEffectsPercentifiedAnalysis: ICriterionRow =
   alt7Value: 'No data entered'
 };
 
-export const decimalCriterionWithEffectsPercentifiedAnalysis: ICriterionRow = {
+export const decimalCriterionWithEffectsPercentifiedAnalysis: ITestCriterionRow = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -169,7 +169,7 @@ export const decimalCriterionWithEffectsPercentifiedAnalysis: ICriterionRow = {
   alt7Value: 'No data entered'
 };
 
-export const percentageCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow = {
+export const percentageCriterionWithEffectsDepercentifiedAnalysis: ITestCriterionRow = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -183,7 +183,7 @@ export const percentageCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow
   alt7Value: 'No data entered'
 };
 
-export const decimalCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow = {
+export const decimalCriterionWithEffectsDepercentifiedAnalysis: ITestCriterionRow = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -197,7 +197,7 @@ export const decimalCriterionWithEffectsDepercentifiedAnalysis: ICriterionRow = 
   alt7Value: 'No data entered'
 };
 
-export const customCriterionWithEffectsAnalysis: ICriterionRow = {
+export const customCriterionWithEffectsAnalysis: ITestCriterionRow = {
   rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',
@@ -211,7 +211,7 @@ export const customCriterionWithEffectsAnalysis: ICriterionRow = {
   alt7Value: 'No data entered'
 };
 
-export const percentageCriterionWithDistributionsPercentifiedAnalysis: ICriterionRowWithUncertainty = {
+export const percentageCriterionWithDistributionsPercentifiedAnalysis: ITestCriterionRowWithUncertainty = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -230,7 +230,7 @@ export const percentageCriterionWithDistributionsPercentifiedAnalysis: ICriterio
   alt7Value: 'No data entered'
 };
 
-export const decimalCriterionWithDistributionsPercentifiedAnalysis: ICriterionRowWithUncertainty = {
+export const decimalCriterionWithDistributionsPercentifiedAnalysis: ITestCriterionRowWithUncertainty = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -249,7 +249,7 @@ export const decimalCriterionWithDistributionsPercentifiedAnalysis: ICriterionRo
   alt7Value: 'No data entered'
 };
 
-export const percentageCriterionWithDistributionsDepercentifiedAnalysis: ICriterionRowWithUncertainty = {
+export const percentageCriterionWithDistributionsDepercentifiedAnalysis: ITestCriterionRowWithUncertainty = {
   rowNumber: 1,
   dataSourceId: 'ds1Id',
   title: 'percentages',
@@ -268,7 +268,7 @@ export const percentageCriterionWithDistributionsDepercentifiedAnalysis: ICriter
   alt7Value: 'No data entered'
 };
 
-export const decimalCriterionWithDistributionsDepercentifiedAnalysis: ICriterionRowWithUncertainty = {
+export const decimalCriterionWithDistributionsDepercentifiedAnalysis: ITestCriterionRowWithUncertainty = {
   rowNumber: 2,
   dataSourceId: 'ds2Id',
   title: 'decimals',
@@ -287,7 +287,7 @@ export const decimalCriterionWithDistributionsDepercentifiedAnalysis: ICriterion
   alt7Value: 'No data entered'
 };
 
-export const customCriterionWithDistributionsAnalysis: ICriterionRowWithUncertainty = {
+export const customCriterionWithDistributionsAnalysis: ITestCriterionRowWithUncertainty = {
   rowNumber: 3,
   dataSourceId: 'ds3Id',
   title: 'custom',

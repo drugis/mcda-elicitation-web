@@ -21,8 +21,8 @@ import {
   percentageCriterionWithEffectsPercentifiedAnalysis,
   percentageCriterionWithEffectsPercentifiedEntered
 } from './util/effectsTableDisplayTestUtil';
-import ICriterionRow from './util/ICriterionRow';
-import ICriterionRowWithUncertainty from './util/ICriterionRowWithUncertainty';
+import ITestCriterionRow from './util/ITestCriterionRow';
+import ITestCriterionRowWithUncertainty from './util/ITestCriterionRowWithUncertainty';
 import loginService from './util/loginService';
 import util from './util/util';
 import workspaceService from './util/workspaceService';
@@ -195,7 +195,7 @@ function assertCriterionRow(
     alt5Value,
     alt6Value,
     alt7Value
-  }: ICriterionRow
+  }: ITestCriterionRow
 ): void {
   const pathPrefix: string = `//*[@id="effects-table"]/tbody/tr[${rowNumber}]`;
   browser.useXpath();
@@ -231,7 +231,7 @@ function assertCriterionRowWithUncertainties(
     alt5Uncertainty,
     alt6Value,
     alt7Value
-  }: ICriterionRowWithUncertainty
+  }: ITestCriterionRowWithUncertainty
 ): void {
   const pathPrefix: string = `//*[@id="effects-table"]/tbody/tr[${rowNumber}]`;
   browser.useXpath();

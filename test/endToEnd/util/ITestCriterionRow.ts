@@ -1,4 +1,4 @@
-export default interface ICriterionRow {
+export default interface ITestCriterionRow {
   rowNumber: number;
   dataSourceId: string;
   title: string;
