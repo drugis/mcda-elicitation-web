@@ -36,7 +36,7 @@ export default function TradeOffReferenceCriterion(): JSX.Element {
       <Grid item xs={10}>
         <Select
           native
-          id="scenario-selector"
+          id="reference-criterion-selector"
           value={referenceCriterion.id}
           onChange={handleReferenceCriterionChanged}
           style={{minWidth: 220}}

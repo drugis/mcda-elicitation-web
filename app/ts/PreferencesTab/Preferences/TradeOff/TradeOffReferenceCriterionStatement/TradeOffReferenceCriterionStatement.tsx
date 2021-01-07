@@ -40,6 +40,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
         max={referenceValueTo - epsilon}
         stepSize={stepSize1}
         handleChange={handleSlider1Changed}
+        id="reference-slider-from"
       />
       to{' '}
       <TradeOffSlider
@@ -48,6 +49,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
         max={upperBound}
         stepSize={stepSize2}
         handleChange={handleSlider2Changed}
+        id="reference-slider-to"
       />
       is equivalent to:
     </div>

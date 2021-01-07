@@ -1,4 +1,5 @@
 import {Grid, Typography, useControlled} from '@material-ui/core';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -8,8 +9,14 @@ import TradeOffReferenceCriterionStatement from './TradeOffReferenceCriterionSta
 import TradeOffTable from './TradeOffTable/TradeOffTable';
 
 export default function TradeOff(): JSX.Element {
+  const {observedRanges} = useContext(SubproblemContext);
   const {pvfs, currentScenario} = useContext(PreferencesContext);
+
   const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
+  const canShowTradeOffs =
+    areAllPvfsLinear &&
+    currentScenario.state.weights &&
+    !_.isEqual(observedRanges, {});
 
   return (
     <>
@@ -18,7 +25,7 @@ export default function TradeOff(): JSX.Element {
           Trade off
         </Typography>
       </Grid>
-      {areAllPvfsLinear && currentScenario.state.weights ? (
+      {canShowTradeOffs ? (
         <Grid item xs={12}>
           <TradeOffContextProviderComponent>
             <Grid container>

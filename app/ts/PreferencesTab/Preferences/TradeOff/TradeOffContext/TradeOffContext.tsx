@@ -20,7 +20,7 @@ export function TradeOffContextProviderComponent({
 }: {
   children: any;
 }): JSX.Element {
-  const {filteredCriteria} = useContext(SubproblemContext);
+  const {filteredCriteria, observedRanges} = useContext(SubproblemContext);
   const {currentSubproblem} = useContext(WorkspaceContext);
   const {currentScenario} = useContext(PreferencesContext);
 
@@ -31,11 +31,7 @@ export function TradeOffContextProviderComponent({
     filteredCriteria.slice(1)
   );
 
-  const [
-    configuredLowerBound,
-    configuredUpperBound
-  ] = currentSubproblem.definition.ranges[referenceCriterion.dataSources[0].id];
-
+  const [configuredLowerBound, configuredUpperBound] = getBounds();
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
   const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
@@ -68,13 +64,8 @@ export function TradeOffContextProviderComponent({
     );
   }, [referenceValueFrom, referenceValueTo]);
 
-  function reset() {
-    const [
-      configuredLowerBound,
-      configuredUpperBound
-    ] = currentSubproblem.definition.ranges[
-      referenceCriterion.dataSources[0].id
-    ];
+  function reset(): void {
+    const [configuredLowerBound, configuredUpperBound] = getBounds();
     setLowerBound(configuredLowerBound);
     setUpperBound(configuredUpperBound);
     setReferenceValueFrom(
@@ -83,6 +74,15 @@ export function TradeOffContextProviderComponent({
     setReferenceValueTo(
       getInitialReferenceValueTo(configuredLowerBound, configuredUpperBound)
     );
+  }
+
+  function getBounds(): [number, number] {
+    const dataSourceId = referenceCriterion.dataSources[0].id;
+    if (_.isEqual(currentSubproblem.definition.ranges, {})) {
+      return observedRanges[dataSourceId];
+    } else {
+      return currentSubproblem.definition.ranges[dataSourceId];
+    }
   }
 
   function updateReferenceCriterion(newId: string): void {

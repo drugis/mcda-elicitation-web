@@ -12,13 +12,15 @@ export default function TradeOffSlider({
   min,
   max,
   stepSize,
-  handleChange
+  handleChange,
+  id
 }: {
   value: number;
   min: number;
   max: number;
   stepSize: number;
   handleChange: (event: React.ChangeEvent<any>, newValue: number) => void;
+  id: string;
 }): JSX.Element {
   const {showPercentages} = useContext(SettingsContext);
   const {referenceCriterion} = useContext(TradeOffContext);
@@ -46,7 +48,7 @@ export default function TradeOffSlider({
 
   return (
     <>
-      <Button onClick={openDialog} variant="text">
+      <Button id={id} onClick={openDialog} variant="text">
         {getPercentifiedValue(value, usePercentage)}
       </Button>
       <Popover

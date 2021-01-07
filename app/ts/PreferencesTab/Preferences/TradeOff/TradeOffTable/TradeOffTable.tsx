@@ -41,7 +41,7 @@ export default function TradeOffTable(): JSX.Element {
               Changing {criterion.title} from{' '}
               {getWorst(pvfs[criterion.id], usePercentage)} to {improvedValue}
             </TableCell>
-            <TableCell>
+            <TableCell id={`trade-off-warning-${criterion.id}`}>
               {isImprovedValueRealistic(improvedValue, criterion, usePercentage)
                 ? ''
                 : `This value is unrealistic given the criterion's range`}
