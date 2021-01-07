@@ -1,4 +1,9 @@
 'use strict';
+
+const {
+  default: significantDigits
+} = require('app/ts/ManualInput/Util/significantDigits');
+
 define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
   var dependencies = [
     'currentSchemaVersion',
@@ -493,28 +498,25 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         .value();
 
       const performanceTable = _.map(problem.performanceTable, (entry) => {
-        if (
-          isDataSourcePercentageMap[entry.dataSource] &&
-          'effect' in entry.performance &&
-          'input' in entry.performance.effect &&
-          'lowerBound' in entry.performance.effect.input
-        ) {
+        if (isInputPercentified(isDataSourcePercentageMap, entry)) {
           const inputBase = {
-            lowerBound: entry.performance.effect.input.lowerBound / 100,
-            upperBound: entry.performance.effect.input.upperBound / 100
+            lowerBound: significantDigits(
+              entry.performance.effect.input.lowerBound / 100
+            ),
+            upperBound: significantDigits(
+              entry.performance.effect.input.upperBound / 100
+            )
           };
           if ('value' in entry.performance.effect.input) {
             const input = {
               ...inputBase,
-              value: entry.performance.effect.input.value / 100
+              value: significantDigits(
+                entry.performance.effect.input.value / 100
+              )
             };
-            const effect = {...entry.performance.effect, input: input};
-            const performance = {...entry.performance, effect: effect};
-            return {...entry, performance: performance};
+            return {...entry, performance: buildPerformance(entry, input)};
           } else {
-            const effect = {...entry.performance.effect, input: inputBase};
-            const performance = {...entry.performance, effect: effect};
-            return {...entry, performance: performance};
+            return {...entry, performance: buildPerformance(entry, inputBase)};
           }
         } else {
           return entry;
@@ -525,6 +527,21 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         performanceTable: performanceTable,
         schemaVersion: '1.4.6'
       };
+    }
+
+    function isInputPercentified(isDataSourcePercentageMap, entry) {
+      return (
+        isDataSourcePercentageMap[entry.dataSource] &&
+        'effect' in entry.performance &&
+        'input' in entry.performance.effect &&
+        'lowerBound' in entry.performance.effect.input
+      );
+    }
+
+    function buildPerformance(entry, input) {
+      const effect = {...entry.performance.effect, input: input};
+      const performance = {...entry.performance, effect: effect};
+      return performance;
     }
 
     return {
