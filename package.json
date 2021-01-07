@@ -23,7 +23,6 @@
     "test-end-to-end": "tsc -p ts-end-to-end-config.json && nightwatch -c nightwatch.local.conf.js"
   },
   "resolutions": {
-    "@types/react": "^16.9.44",
     "js-yaml": "3.13.1",
     "lodash": "4.17.19",
     "minimist": "1.2.5",
@@ -68,7 +67,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/preset-env": "^7.10.0",
-    "@babel/preset-react": "^7.12.7",
+    "@babel/preset-react": "^7.12.10",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@types/axios": "^0.14.0",
@@ -77,9 +76,9 @@
     "@types/d3": "^5.7.2",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "^26.0.14",
-    "@types/react": "^16.9.49",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-router-dom": "^5.1.5",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.1.6",
     "ajv": "~6.10.2",
     "angular": "~1.8.0",
     "angular-animate": "~1.7.8",

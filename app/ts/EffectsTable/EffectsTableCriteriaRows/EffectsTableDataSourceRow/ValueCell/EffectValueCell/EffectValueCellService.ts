@@ -19,11 +19,7 @@ export function renderEffect(
   }
 }
 
-export function renderInputEffect(effect: Effect, usePercentage: boolean) {
-  return renderEnteredValues(effect, usePercentage, true);
-}
-
-function renderEnteredValues(
+export function renderEnteredValues(
   effect: Effect,
   usePercentage: boolean,
   isInput: boolean

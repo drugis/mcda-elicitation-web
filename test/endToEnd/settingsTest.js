@@ -52,6 +52,8 @@ function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
     .click('#settings-button')
     .click(settingsPath)
     .click('#save-settings-button')
+    .assert.not.elementPresent('#save-settings-button')
+    .pause(100)
     .waitForElementVisible('#sensitivity-measurements-header')
     .assert.not.visible(columnPath);
 }

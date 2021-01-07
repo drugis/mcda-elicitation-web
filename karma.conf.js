@@ -26,7 +26,16 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
-    files: ['./frontend-test/test-problems.js', './frontend-test/test-main.js'],
+    files: [
+      './frontend-test/test-main.js',
+      './frontend-test/exampleProblem.js',
+      './frontend-test/exampleProblem110.js',
+      './frontend-test/exampleProblem122.js',
+      './frontend-test/exampleProblem134.js',
+      './frontend-test/exampleProblem145.js',
+      './frontend-test/exampleRelativeProblem.js',
+      './frontend-test/ordinalTestProblem.js'
+    ],
 
     exclude: ['app/js/main.js'],
     reporters: ['progress', 'junit'],

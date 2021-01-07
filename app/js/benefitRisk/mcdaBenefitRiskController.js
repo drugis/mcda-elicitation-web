@@ -10,7 +10,6 @@ define(['lodash', 'angular'], function (_, angular) {
     'ScenarioResource',
     'WorkspaceService',
     'WorkspaceSettingsService',
-    'EffectsTableService',
     'TabService',
     'subProblems',
     'currentSubProblem',
@@ -28,7 +27,6 @@ define(['lodash', 'angular'], function (_, angular) {
     ScenarioResource,
     WorkspaceService,
     WorkspaceSettingsService,
-    EffectsTableService,
     TabService,
     subProblems,
     currentSubProblem,
@@ -39,11 +37,12 @@ define(['lodash', 'angular'], function (_, angular) {
     $scope.updateAngularScenario = updateAngularScenario;
 
     $scope.tabStatus = {};
-    $scope.deregisterTransitionListener = $transitions.onStart({}, function (
-      transition
-    ) {
-      initializeTabs(transition.to().name);
-    });
+    $scope.deregisterTransitionListener = $transitions.onStart(
+      {},
+      function (transition) {
+        initializeTabs(transition.to().name);
+      }
+    );
     var baseProblem = angular.copy($scope.workspace.problem);
     var baseState = {problem: baseProblem};
     var percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
@@ -60,9 +59,6 @@ define(['lodash', 'angular'], function (_, angular) {
       function (observedScales) {
         initState(observedScales, currentScenario);
       }
-    );
-    $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(
-      baseProblem.performanceTable
     );
 
     $scope.subProblems = subProblems;

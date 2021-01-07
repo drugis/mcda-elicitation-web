@@ -54,33 +54,14 @@ function getValuesAndBounds(
     .filter(['dataSourceId', dataSource.id])
     .flatMap((entry: Effect | Distribution): number[] => {
       if (hasValue(entry)) {
-        return getValue(entry, dataSource);
+        return [entry.value];
       } else if (hasRange(entry)) {
-        return getRange(entry, dataSource);
+        return [entry.lowerBound, entry.upperBound];
       } else {
         return [];
       }
     })
     .value();
-}
-
-function getValue(entry: IEffectWithValue, dataSource: IDataSource) {
-  if (dataSource.unitOfMeasurement.type === 'percentage') {
-    return [significantDigits(entry.value * 0.01)];
-  } else {
-    return [entry.value];
-  }
-}
-
-function getRange(entry: IRangeEffect, dataSource: IDataSource) {
-  if (dataSource.unitOfMeasurement.type === 'percentage') {
-    return [
-      significantDigits(entry.lowerBound * 0.01),
-      significantDigits(entry.upperBound * 0.01)
-    ];
-  } else {
-    return [entry.lowerBound, entry.upperBound];
-  }
 }
 
 function hasValue(effect: IEffect): effect is IEffectWithValue {
