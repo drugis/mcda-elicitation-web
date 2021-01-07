@@ -14,8 +14,8 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
   } = useContext(TradeOffContext);
 
   const epsilon = 0.01 * (upperBound - lowerBound);
-  const stepSize1 = (referenceValueTo - epsilon - lowerBound) * 0.1;
-  const stepSize2 = (upperBound - (referenceValueFrom + epsilon)) * 0.1;
+  const fromSliderStepSize = (referenceValueTo - epsilon - lowerBound) * 0.1;
+  const toSliderStepSize = (upperBound - (referenceValueFrom + epsilon)) * 0.1;
 
   function handleSlider1Changed(
     event: React.ChangeEvent<any>,
@@ -38,7 +38,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
         value={referenceValueFrom}
         min={lowerBound}
         max={referenceValueTo - epsilon}
-        stepSize={stepSize1}
+        stepSize={fromSliderStepSize}
         handleChange={handleSlider1Changed}
         id="reference-slider-from"
       />
@@ -47,7 +47,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
         value={referenceValueTo}
         min={referenceValueFrom + epsilon}
         max={upperBound}
-        stepSize={stepSize2}
+        stepSize={toSliderStepSize}
         handleChange={handleSlider2Changed}
         id="reference-slider-to"
       />
