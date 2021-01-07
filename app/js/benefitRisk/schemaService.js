@@ -514,9 +514,15 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
                 entry.performance.effect.input.value / 100
               )
             };
-            return {...entry, performance: buildPerformance(entry, input)};
+            return {
+              ...entry,
+              performance: buildPerformanceWithInput(entry, input)
+            };
           } else {
-            return {...entry, performance: buildPerformance(entry, inputBase)};
+            return {
+              ...entry,
+              performance: buildPerformanceWithInput(entry, inputBase)
+            };
           }
         } else {
           return entry;
@@ -538,10 +544,11 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       );
     }
 
-    function buildPerformance(entry, input) {
-      const effect = {...entry.performance.effect, input: input};
-      const performance = {...entry.performance, effect: effect};
-      return performance;
+    function buildPerformanceWithInput(entry, input) {
+      return {
+        ...entry.performance,
+        effect: {...entry.performance.effect, input: input}
+      };
     }
 
     return {
