@@ -489,23 +489,11 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         problem.criteria
       );
 
-      const performanceTable = _.map(problem.performanceTable, (entry) => {
-        if (isInputPercentified(isDataSourcePercentageMap, entry)) {
-          const inputBase = buildInputBase(entry);
-          if (
-            'value' in entry.performance.effect.input &&
-            'lowerBound' in entry.performance.effect.input
-          ) {
-            return buildValueCIInput(inputBase, entry);
-          } else if ('value' in entry.performance.effect.input) {
-            return buildValueInput(entry);
-          } else {
-            return buildRangeInput(inputBase, entry);
-          }
-        } else {
-          return entry;
-        }
-      });
+      const performanceTable = buildPerformaceTable(
+        problem.performanceTable,
+        isDataSourcePercentageMap
+      );
+
       return {
         ...problem,
         performanceTable: performanceTable,
@@ -525,6 +513,26 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         })
         .fromPairs()
         .value();
+    }
+
+    function buildPerformaceTable(performanceTable, isDataSourcePercentageMap) {
+      return _.map(performanceTable, (entry) => {
+        if (isInputPercentified(isDataSourcePercentageMap, entry)) {
+          const inputBase = buildInputBase(entry);
+          if (
+            'value' in entry.performance.effect.input &&
+            'lowerBound' in entry.performance.effect.input
+          ) {
+            return buildValueCIInput(inputBase, entry);
+          } else if ('value' in entry.performance.effect.input) {
+            return buildValueInput(entry);
+          } else {
+            return buildRangeInput(inputBase, entry);
+          }
+        } else {
+          return entry;
+        }
+      });
     }
 
     function buildInputBase(entry) {
