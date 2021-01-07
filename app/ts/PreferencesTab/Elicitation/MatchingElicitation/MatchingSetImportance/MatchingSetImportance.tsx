@@ -12,6 +12,7 @@ import {
 } from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
 import {
@@ -25,14 +26,15 @@ export default function MatchingSetImportance() {
   const {mostImportantCriterionId, currentStep} = useContext(
     ElicitationContext
   );
-  const {getCriterion, pvfs, criteria} = useContext(PreferencesContext);
+  const {getCriterion, pvfs} = useContext(PreferencesContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
 
   const mostImportantCriterion = getCriterion(mostImportantCriterionId);
   const mostImportantUnitType =
     mostImportantCriterion.dataSources[0].unitOfMeasurement.type;
 
   const currentCriterion = getCurrentCriterion(
-    criteria,
+    filteredCriteria,
     mostImportantCriterionId,
     currentStep
   );

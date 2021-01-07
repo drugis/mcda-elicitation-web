@@ -4,17 +4,17 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
-import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import CriterionOverview from './CriterionOverview/CriterionOverview';
 
 export default function OverviewTable() {
-  const {criteria} = useContext(PreferencesContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
 
   function renderCriterionOverviews(): JSX.Element[] {
     return _.map(
-      criteria,
+      filteredCriteria,
       (criterion: ICriterion): JSX.Element => (
         <CriterionOverview key={criterion.id} criterion={criterion} />
       )

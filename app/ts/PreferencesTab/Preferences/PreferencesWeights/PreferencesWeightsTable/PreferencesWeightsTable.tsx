@@ -11,6 +11,7 @@ import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {
@@ -21,13 +22,16 @@ import {buildImportance} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
   const {showPercentages} = useContext(SettingsContext);
-  const {criteria, pvfs, currentScenario} = useContext(PreferencesContext);
+  const {pvfs, currentScenario} = useContext(PreferencesContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
   const [importances, setImportances] = useState<Record<string, string>>(
-    buildImportance(criteria, currentScenario.state.prefs)
+    buildImportance(filteredCriteria, currentScenario.state.prefs)
   );
 
   useEffect(() => {
-    setImportances(buildImportance(criteria, currentScenario.state.prefs));
+    setImportances(
+      buildImportance(filteredCriteria, currentScenario.state.prefs)
+    );
   }, [currentScenario, pvfs]);
 
   function getWeight(criterionId: string) {
@@ -44,7 +48,7 @@ export default function PreferencesWeightsTable() {
 
   function renderCriterionPreferences(): JSX.Element[] {
     return _.map(
-      criteria,
+      filteredCriteria,
       (criterion: ICriterion): JSX.Element => {
         const unit = criterion.dataSources[0].unitOfMeasurement;
         const usePercentage = showPercentages && canBePercentage(unit.type);

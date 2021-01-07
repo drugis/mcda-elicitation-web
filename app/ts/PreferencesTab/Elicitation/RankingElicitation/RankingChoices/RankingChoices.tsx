@@ -3,6 +3,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
 import {UNRANKED} from 'app/ts/PreferencesTab/Elicitation/elicitationConstants';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 import CriterionChoice from '../../CriterionChoice/CriterionChoice';
@@ -15,7 +16,7 @@ export default function RankingChoices({
   selectedCriterionId: string;
   handleSelection: (event: ChangeEvent<HTMLInputElement>) => void;
 }) {
-  const {criteria} = useContext(PreferencesContext);
+  const {filteredCriteria: criteria} = useContext(SubproblemContext);
   const {rankings} = useContext(RankingElicitationContext);
   const filteredCriteria = _.filter(criteria, (criterion) => {
     return !rankings[criterion.id] || rankings[criterion.id].rank === UNRANKED;

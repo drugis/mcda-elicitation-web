@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {buildScenarioWithPreferences} from 'app/ts/PreferencesTab/PreferencesUtil';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ElicitationContext} from '../../ElicitationContext';
@@ -14,9 +15,10 @@ export default function MatchingButtons() {
     setCurrentStep,
     preferences
   } = useContext(ElicitationContext);
-  const {criteria, setActiveView, updateScenario, currentScenario} = useContext(
+  const {setActiveView, updateScenario, currentScenario} = useContext(
     PreferencesContext
   );
+  const {filteredCriteria} = useContext(SubproblemContext);
 
   function handleNextButtonClick(): void {
     matchingNext();
@@ -34,7 +36,7 @@ export default function MatchingButtons() {
   }
 
   function isLastStep() {
-    return currentStep === _.size(criteria);
+    return currentStep === _.size(filteredCriteria);
   }
 
   function handlePreviousClick(): void {

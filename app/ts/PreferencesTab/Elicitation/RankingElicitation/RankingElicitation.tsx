@@ -2,9 +2,9 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext, useState} from 'react';
-import {PreferencesContext} from '../../PreferencesContext';
 import RankingButtons from './RankingButtons/RankingButtons';
 import RankingChoices from './RankingChoices/RankingChoices';
 import {RankingElicitationContext} from './RankingElicitationContext';
@@ -13,8 +13,8 @@ import RankingSituation from './RankingSituation/RankingSituation';
 export default function RankingElicitation() {
   const [selectedCriterionId, setSelectedCriterionId] = useState('');
   const {currentStep} = useContext(RankingElicitationContext);
-  const {criteria} = useContext(PreferencesContext);
-  const totalSteps = _.size(criteria) - 1;
+  const {filteredCriteria} = useContext(SubproblemContext);
+  const totalSteps = _.size(filteredCriteria) - 1;
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
     setSelectedCriterionId(event.target.value);
