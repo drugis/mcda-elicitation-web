@@ -7,6 +7,7 @@ import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import React, {useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import DistributionCellDialog from '../DistributionCellDialog/DistributionCellDialog';
@@ -63,7 +64,7 @@ export default function DistributionCell({
     } else if (valueIsOutofBounds(distribution.value)) {
       return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `${distribution.value * 100}%`;
+      return `${significantDigits(distribution.value * 100)}%`;
     } else {
       return `${distribution.value}`;
     }
@@ -78,9 +79,9 @@ export default function DistributionCell({
     ) {
       return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `Normal(${distribution.mean * 100}%, ${
-        distribution.standardError * 100
-      }%)`;
+      return `Normal(${significantDigits(
+        distribution.mean * 100
+      )}%, ${significantDigits(distribution.standardError * 100)}%)`;
     } else {
       return `Normal(${distribution.mean}, ${distribution.standardError})`;
     }
@@ -93,9 +94,9 @@ export default function DistributionCell({
     ) {
       return INVALID_VALUE;
     } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `[${distribution.lowerBound * 100}%, ${
-        distribution.upperBound * 100
-      }%]`;
+      return `[${significantDigits(
+        distribution.lowerBound * 100
+      )}%, ${significantDigits(distribution.upperBound * 100)}%]`;
     } else {
       return `[${distribution.lowerBound}, ${distribution.upperBound}]`;
     }

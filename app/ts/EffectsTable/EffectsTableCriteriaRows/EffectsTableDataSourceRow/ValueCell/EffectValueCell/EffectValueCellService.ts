@@ -19,11 +19,7 @@ export function renderEffect(
   }
 }
 
-export function renderInputEffect(effect: Effect, usePercentage: boolean) {
-  return renderEnteredValues(effect, usePercentage, true);
-}
-
-function renderEnteredValues(
+export function renderEnteredValues(
   effect: Effect,
   usePercentage: boolean,
   isInput: boolean
@@ -145,16 +141,5 @@ function getValueFromScales(scale: IScale, usePercentage: boolean): string {
     return valueToString(scale['50%'], usePercentage, 'decimal');
   } else {
     return 'No data entered';
-  }
-}
-
-export function normalizeInputValue(
-  value: string,
-  unitType: UnitOfMeasurementType
-): number {
-  if (!value || unitType != 'percentage') {
-    return Number.parseFloat(value);
-  } else {
-    return Number.parseFloat(value) / 100;
   }
 }

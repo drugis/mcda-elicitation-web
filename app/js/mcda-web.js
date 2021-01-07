@@ -1,4 +1,7 @@
 'use strict';
+
+const {CURRENT_SCHEMA_VERSION} = require('app/ts/ManualInput/constants');
+
 define([
   'angular',
   './config',
@@ -80,7 +83,7 @@ define([
 
   app.constant('Tasks', Config.tasks);
   app.constant('isMcdaStandalone', true);
-  app.constant('currentSchemaVersion', '1.4.6');
+  app.constant('currentSchemaVersion', CURRENT_SCHEMA_VERSION);
 
   app.config([
     '$stateProvider',

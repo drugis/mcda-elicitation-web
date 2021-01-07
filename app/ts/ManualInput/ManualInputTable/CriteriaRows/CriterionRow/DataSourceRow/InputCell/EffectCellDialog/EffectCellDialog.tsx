@@ -11,7 +11,7 @@ import ITextEffect from '@shared/interface/ITextEffect';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {normalizeInputValue} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
+import {normalizeInputValue} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import React, {ChangeEvent, useContext} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../InputCellContext/InputCellContext';

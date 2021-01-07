@@ -485,44 +485,25 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
     }
 
     function updateToVersion146(problem) {
-      const isDataSourcePercentageMap = _(problem.criteria)
-        .flatMap((criterion) => {
-          return _.map(criterion.dataSources, (dataSource) => {
-            return [
-              dataSource.id,
-              dataSource.unitOfMeasurement.type === 'percentage'
-            ];
-          });
-        })
-        .fromPairs()
-        .value();
+      const isDataSourcePercentageMap = buildDataSourcePercentageMap(
+        problem.criteria
+      );
 
       const performanceTable = _.map(problem.performanceTable, (entry) => {
         if (isInputPercentified(isDataSourcePercentageMap, entry)) {
-          const inputBase = {
-            lowerBound: significantDigits(
-              entry.performance.effect.input.lowerBound / 100
-            ),
-            upperBound: significantDigits(
-              entry.performance.effect.input.upperBound / 100
-            )
-          };
-          if ('value' in entry.performance.effect.input) {
-            const input = {
-              ...inputBase,
-              value: significantDigits(
-                entry.performance.effect.input.value / 100
-              )
-            };
-            return {
-              ...entry,
-              performance: buildPerformanceWithInput(entry, input)
-            };
+          const inputBase = buildInputBase(entry);
+          if (
+            'value' in entry.performance.effect.input &&
+            'lowerBound' in entry.performance.effect.input
+          ) {
+            return buildValueCIInput(inputBase, entry);
+          } else if (
+            'value' in entry.performance.effect.input &&
+            'sampleSize' in entry.performance.effect.input
+          ) {
+            return buildSampleSizeInput(entry);
           } else {
-            return {
-              ...entry,
-              performance: buildPerformanceWithInput(entry, inputBase)
-            };
+            return buildRangeInput(inputBase, entry);
           }
         } else {
           return entry;
@@ -535,12 +516,63 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       };
     }
 
+    function buildDataSourcePercentageMap(criteria) {
+      return _(criteria)
+        .flatMap((criterion) => {
+          return _.map(criterion.dataSources, (dataSource) => {
+            return [
+              dataSource.id,
+              dataSource.unitOfMeasurement.type === 'percentage'
+            ];
+          });
+        })
+        .fromPairs()
+        .value();
+    }
+
+    function buildInputBase(entry) {
+      return {
+        lowerBound: entry.performance.effect.input.lowerBound / 100,
+        upperBound: entry.performance.effect.input.upperBound / 100
+      };
+    }
+
+    function buildValueCIInput(inputBase, entry) {
+      const input = {
+        ...inputBase,
+        value: entry.performance.effect.input.value / 100
+      };
+      return {
+        ...entry,
+        performance: buildPerformanceWithInput(entry, input)
+      };
+    }
+
+    function buildSampleSizeInput(entry) {
+      const input = {
+        ...entry.performance.effect.input,
+        value: entry.performance.effect.input.value / 100
+      };
+      return {
+        ...entry,
+        performance: buildPerformanceWithInput(entry, input)
+      };
+    }
+
+    function buildRangeInput(inputBase, entry) {
+      return {
+        ...entry,
+        performance: buildPerformanceWithInput(entry, inputBase)
+      };
+    }
+
     function isInputPercentified(isDataSourcePercentageMap, entry) {
       return (
         isDataSourcePercentageMap[entry.dataSource] &&
         'effect' in entry.performance &&
         'input' in entry.performance.effect &&
-        'lowerBound' in entry.performance.effect.input
+        ('lowerBound' in entry.performance.effect.input ||
+          'value' in entry.performance.effect.input)
       );
     }
 
@@ -554,7 +586,8 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
       updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema,
-      validateProblem: validateProblem
+      validateProblem: validateProblem,
+      isInputPercentified: isInputPercentified
     };
   };
 

@@ -4,8 +4,10 @@ import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
+import {renderEnteredValues} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import _ from 'lodash';
 import {hasInvalidCell} from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
@@ -204,4 +206,24 @@ function getBound(bound: number, defaultBound: number) {
   } else {
     return bound;
   }
+}
+
+export function normalizeInputValue(
+  value: string,
+  unitType: UnitOfMeasurementType
+): number {
+  const parsedValue = Number.parseFloat(value);
+  if (parsedValue === NaN) {
+    throw 'Input is not numeric';
+  } else {
+    if (unitType != 'percentage') {
+      return parsedValue;
+    } else {
+      return parsedValue / 100;
+    }
+  }
+}
+
+export function renderInputEffect(effect: Effect, usePercentage: boolean) {
+  return renderEnteredValues(effect, usePercentage, true);
 }

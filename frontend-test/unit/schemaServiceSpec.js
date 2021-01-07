@@ -441,6 +441,7 @@ define([
         expectedResult.problem.performanceTable[1].performance.effect.input.upperBound = 0.02;
         expectedResult.problem.performanceTable[2].performance.effect.input.lowerBound = 0.01;
         expectedResult.problem.performanceTable[2].performance.effect.input.upperBound = 0.9;
+        expectedResult.problem.performanceTable[3].performance.effect.input.value = 0.19;
         expectedResult.problem.schemaVersion = currentSchemaVersion;
         expect(result).toEqual(expectedResult);
       });
@@ -521,6 +522,86 @@ define([
         expect(function () {
           schemaService.validateProblem(inputJSON);
         }).toThrow();
+      });
+    });
+
+    describe('isInputPercentified', function () {
+      it('should return true if datasource unit type is percentage and there is an effect with lowerbound input', () => {
+        const isDataSourcePercentageMap = {dsId: true};
+        const entry = {
+          dataSource: 'dsId',
+          performance: {effect: {input: {lowerBound: 0.1}}}
+        };
+        const result = schemaService.isInputPercentified(
+          isDataSourcePercentageMap,
+          entry
+        );
+        expect(result).toBeTruthy();
+      });
+
+      it('should return true if datasource unit type is percentage and there is an effect with lowerbound input', () => {
+        const isDataSourcePercentageMap = {dsId: true};
+        const entry = {
+          dataSource: 'dsId',
+          performance: {effect: {input: {value: 42, sampleSize: 1337}}}
+        };
+        const result = schemaService.isInputPercentified(
+          isDataSourcePercentageMap,
+          entry
+        );
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false if datasource unit type is not percentage and there is an effect with lowerbound input', () => {
+        const isDataSourcePercentageMap = {dsId: false};
+        const entry = {
+          dataSource: 'dsId',
+          performance: {effect: {input: {lowerBound: 0.1}}}
+        };
+        const result = schemaService.isInputPercentified(
+          isDataSourcePercentageMap,
+          entry
+        );
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false if datasource unit type is percentage but there is no effect performance', () => {
+        const isDataSourcePercentageMap = {dsId: false};
+        const entry = {
+          dataSource: 'dsId',
+          performance: {}
+        };
+        const result = schemaService.isInputPercentified(
+          isDataSourcePercentageMap,
+          entry
+        );
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false if datasource unit type is percentage but effect has no input', () => {
+        const isDataSourcePercentageMap = {dsId: false};
+        const entry = {
+          dataSource: 'dsId',
+          performance: {effect: {}}
+        };
+        const result = schemaService.isInputPercentified(
+          isDataSourcePercentageMap,
+          entry
+        );
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false if datasource unit type is percentage but input has no lowerBound', () => {
+        const isDataSourcePercentageMap = {dsId: false};
+        const entry = {
+          dataSource: 'dsId',
+          performance: {effect: {sampleSize: 42}}
+        };
+        const result = schemaService.isInputPercentified(
+          isDataSourcePercentageMap,
+          entry
+        );
+        expect(result).toBeFalsy();
       });
     });
   });

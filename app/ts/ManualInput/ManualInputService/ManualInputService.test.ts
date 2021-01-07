@@ -17,6 +17,7 @@ import {
   createWarnings,
   generateDistribution,
   generateValueCIDistribution,
+  normalizeInputValue,
   replaceUndefinedBounds,
   swapItems
 } from './ManualInputService';
@@ -574,6 +575,32 @@ describe('manualInputService', () => {
     it('should return false for an empty link', () => {
       const link = '';
       expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+    });
+  });
+
+  describe('normalizeInputValue', () => {
+    it('should return a parsed value if unit type is not percentage', () => {
+      const value: string = '42';
+      const unitType: UnitOfMeasurementType = 'custom';
+      const result = normalizeInputValue(value, unitType);
+      expect(result).toEqual(42);
+    });
+
+    it('should return a parsed and normalized value if unit type is not percentage', () => {
+      const value: string = '42';
+      const unitType: UnitOfMeasurementType = 'percentage';
+      const result = normalizeInputValue(value, unitType);
+      expect(result).toEqual(0.42);
+    });
+
+    it('should return a parsed value if unit type is not percentage', () => {
+      const value: string = 'a';
+      const unitType: UnitOfMeasurementType = 'custom';
+      try {
+        const result = normalizeInputValue(value, unitType);
+      } catch (error) {
+        expect(error).toBe('Input is not numeric');
+      }
     });
   });
 });
