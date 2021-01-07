@@ -60,6 +60,10 @@ function exampleProblem145() {
       alt4Id: {
         id: 'alt4Id',
         title: 'alt4'
+      },
+      alt5Id: {
+        id: 'alt5Id',
+        title: 'alt5'
       }
     },
     performanceTable: [
@@ -121,6 +125,20 @@ function exampleProblem145() {
         }
       },
       {
+        alternative: 'alt5Id',
+        criterion: 'percentageCriterion',
+        dataSource: 'ds1Id',
+        performance: {
+          effect: {
+            type: 'exact',
+            value: 0.19,
+            input: {
+              value: 19
+            }
+          }
+        }
+      },
+      {
         alternative: 'alt1Id',
         criterion: 'decimalCriterion',
         dataSource: 'ds2Id',
@@ -171,8 +189,22 @@ function exampleProblem145() {
             type: 'exact',
             value: 0.19,
             input: {
-              value: 19,
+              value: 0.19,
               sampleSize: 922
+            }
+          }
+        }
+      },
+      {
+        alternative: 'alt5Id',
+        criterion: 'decimalCriterion',
+        dataSource: 'ds2Id',
+        performance: {
+          effect: {
+            type: 'exact',
+            value: 0.19,
+            input: {
+              value: 0.19
             }
           }
         }

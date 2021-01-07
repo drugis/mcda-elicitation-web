@@ -497,11 +497,8 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
             'lowerBound' in entry.performance.effect.input
           ) {
             return buildValueCIInput(inputBase, entry);
-          } else if (
-            'value' in entry.performance.effect.input &&
-            'sampleSize' in entry.performance.effect.input
-          ) {
-            return buildSampleSizeInput(entry);
+          } else if ('value' in entry.performance.effect.input) {
+            return buildValueInput(entry);
           } else {
             return buildRangeInput(inputBase, entry);
           }
@@ -548,7 +545,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       };
     }
 
-    function buildSampleSizeInput(entry) {
+    function buildValueInput(entry) {
       const input = {
         ...entry.performance.effect.input,
         value: entry.performance.effect.input.value / 100
