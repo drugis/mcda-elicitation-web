@@ -9,6 +9,8 @@ import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 
 export default function UncertaintyOptions() {
   const {
+    isMeasurementUncertaintyDisabled,
+    isWeightsUncertaintyDisabled,
     useMeasurementsUncertainty,
     useWeightsUncertainty,
     warnings,
@@ -44,8 +46,12 @@ export default function UncertaintyOptions() {
             control={
               <Checkbox
                 id="measurements-uncertainty-checkbox"
-                checked={useMeasurementsUncertainty}
+                checked={
+                  useMeasurementsUncertainty &&
+                  !isMeasurementUncertaintyDisabled
+                }
                 onChange={handleMeasurementsUncertainty}
+                disabled={isMeasurementUncertaintyDisabled}
                 color="primary"
               />
             }
@@ -60,8 +66,9 @@ export default function UncertaintyOptions() {
             control={
               <Checkbox
                 id="weights-uncertainty-checkbox"
-                checked={useWeightsUncertainty}
+                checked={useWeightsUncertainty && !isWeightsUncertaintyDisabled}
                 onChange={handleWeightsUncertainty}
+                disabled={isWeightsUncertaintyDisabled}
                 color="primary"
               />
             }
