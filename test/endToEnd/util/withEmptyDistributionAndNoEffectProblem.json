@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.4.6",
+  "title": "only distributions",
+  "description": "",
+  "criteria": {
+    "03d9da40-38ea-416e-9308-6d144197cf70": {
+      "id": "03d9da40-38ea-416e-9308-6d144197cf70",
+      "title": "criterion 1",
+      "description": "",
+      "dataSources": [
+        {
+          "id": "7c937701-0778-4195-abee-d66c4cdc35d1",
+          "source": "",
+          "sourceLink": "",
+          "uncertainties": "",
+          "strengthOfEvidence": "",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          },
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ],
+      "isFavorable": true
+    },
+    "28e10537-c6df-4e8d-8bfe-04cddb31cb70": {
+      "id": "28e10537-c6df-4e8d-8bfe-04cddb31cb70",
+      "title": "criterion 2",
+      "description": "",
+      "dataSources": [
+        {
+          "id": "9ec7fa19-c2ad-47c8-a429-b218226a6ddf",
+          "source": "",
+          "sourceLink": "",
+          "uncertainties": "",
+          "strengthOfEvidence": "",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          },
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ],
+      "isFavorable": true
+    }
+  },
+  "alternatives": {
+    "d4a5f523-daff-429d-a3c8-23c6edbdba7e": {
+      "id": "d4a5f523-daff-429d-a3c8-23c6edbdba7e",
+      "title": "alternative 1"
+    },
+    "c5e8f7a7-e4e5-4c10-9005-41331673b12e": {
+      "id": "c5e8f7a7-e4e5-4c10-9005-41331673b12e",
+      "title": "alternative 2"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "d4a5f523-daff-429d-a3c8-23c6edbdba7e",
+      "criterion": "03d9da40-38ea-416e-9308-6d144197cf70",
+      "dataSource": "7c937701-0778-4195-abee-d66c4cdc35d1",
+      "performance": {
+        "distribution": {
+          "type": "empty"
+        }
+      }
+    },
+    {
+      "alternative": "c5e8f7a7-e4e5-4c10-9005-41331673b12e",
+      "criterion": "03d9da40-38ea-416e-9308-6d144197cf70",
+      "dataSource": "7c937701-0778-4195-abee-d66c4cdc35d1",
+      "performance": {
+        "distribution": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    },
+    {
+      "alternative": "d4a5f523-daff-429d-a3c8-23c6edbdba7e",
+      "criterion": "28e10537-c6df-4e8d-8bfe-04cddb31cb70",
+      "dataSource": "9ec7fa19-c2ad-47c8-a429-b218226a6ddf",
+      "performance": {
+        "distribution": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    },
+    {
+      "alternative": "c5e8f7a7-e4e5-4c10-9005-41331673b12e",
+      "criterion": "28e10537-c6df-4e8d-8bfe-04cddb31cb70",
+      "dataSource": "9ec7fa19-c2ad-47c8-a429-b218226a6ddf",
+      "performance": {
+        "distribution": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    }
+  ]
+}

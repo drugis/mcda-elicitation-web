@@ -49,6 +49,8 @@ R/*.json
 app/js/interface/*.js
 app/js/type/*.js
 test/endToEnd/effectsTableDisplayTest.js*
+test/endToEnd/missingEffectTest.js*
+test/endToEnd/tradeOffTest.js
 test/endToEnd/util/effectsTableDisplayTestUtil.js*
 test/endToEnd/util/ITestCriterionRow.js*
 test/endToEnd/util/ITestCriterionRowWithUncertainty.js*
