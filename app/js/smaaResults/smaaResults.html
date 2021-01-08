@@ -1,4 +1,20 @@
-<div class="grid-x" ng-if="!state.results">
+<smaa-tab
+  ng-if="aggregateState && workspaceForReact && reactScenarios"
+  scenarios="reactScenarios"
+  current-scenario-id="scenario.id"
+  workspace-id="workspace.id"
+  problem="aggregateState.problem"
+  settings="workspaceSettings"
+  update-angular-scenario="updateAngularScenario"
+  toggled-columns="toggledColumns"
+  workspace="workspaceForReact"
+  subproblems="subProblems"
+  scales="workspace.scales.base"
+  current-subproblem="subProblem"
+  subproblems="subProblems"
+></smaa-tab>
+
+<!-- <div class="grid-x" ng-if="!state.results">
   <div class="cell text-centered">
     <a class="fa fa-spinner fa-2x fa-spin"></a>
   </div>
@@ -101,4 +117,4 @@
     scenario="scenario"
     state="state"
   ></central-weights>
-</div>
+</div> -->

@@ -14,7 +14,7 @@ module.exports = {
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#smaa-tab')
-      .waitForElementVisible('#uncertainty-measurements-checkbox:disabled')
+      .waitForElementVisible('#measurements-uncertainty-checkbox:disabled')
       .assert.containsText('#warning-0', 'Measurements are not stochastic');
 
     browser.click('#logo');

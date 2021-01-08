@@ -1,42 +1,39 @@
 'use strict';
 define([
+  'angular',
+  'react2angular',
+  '../../ts/SmaaTab/SmaaTab',
+
   './smaaResultsController',
-
-  './centralWeightsDirective',
-  './centralWeightsPlotDirective',
-  './smaaTableDirective',
-  './rankAcceptabilitiesDirective',
-  './rankPlotDirective',
-  './smaaWeightsTableDirective',
-
   './smaaResultsService',
 
-  'angular',
   'angular-patavi-client'
 ], function (
+  angular,
+  react2angular,
+  SmaaTab,
+
   SmaaResultsController,
-
-  centralWeightsDirective,
-  centralWeightsPlotDirective,
-  SmaaTableDirective,
-  rankAcceptabilitiesDirective,
-  rankPlotDirective,
-  smaaWeightsTableDirective,
-
-  SmaaResultsService,
-
-  angular
+  SmaaResultsService
 ) {
   return angular
     .module('elicit.smaaResults', ['patavi', 'elicit.results'])
+    .component(
+      'smaaTab',
+      react2angular.react2angular(SmaaTab.default, [
+        'scenarios',
+        'currentScenarioId',
+        'workspaceId',
+        'problem',
+        'settings',
+        'updateAngularScenario',
+        'toggledColumns',
+        'workspace',
+        'scales',
+        'subproblems',
+        'currentSubproblem'
+      ])
+    )
     .controller('SmaaResultsController', SmaaResultsController)
-
-    .directive('centralWeights', centralWeightsDirective)
-    .directive('centralWeightsPlot', centralWeightsPlotDirective)
-    .directive('smaaTable', SmaaTableDirective)
-    .directive('rankAcceptabilities', rankAcceptabilitiesDirective)
-    .directive('rankPlot', rankPlotDirective)
-    .directive('smaaWeightsTable', smaaWeightsTableDirective)
-
     .factory('SmaaResultsService', SmaaResultsService);
 });
