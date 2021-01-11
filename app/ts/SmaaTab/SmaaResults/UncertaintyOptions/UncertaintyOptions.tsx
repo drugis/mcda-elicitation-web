@@ -9,12 +9,12 @@ import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 
 export default function UncertaintyOptions() {
   const {
-    isMeasurementUncertaintyDisabled,
-    isWeightsUncertaintyDisabled,
+    problemHasStochasticMeasurements,
+    problemHasStochasticWeights,
     useMeasurementsUncertainty,
     useWeightsUncertainty,
     warnings,
-    calculateResults,
+    recalculate,
     setUseMeasurementsUncertainty,
     setUseWeightsUncertainty
   } = useContext(SmaaResultsContext);
@@ -33,7 +33,7 @@ export default function UncertaintyOptions() {
 
   function handleRecalculateClick(): void {
     setIsDirty(false);
-    calculateResults();
+    recalculate();
   }
 
   return (
@@ -50,7 +50,7 @@ export default function UncertaintyOptions() {
                 id="measurements-uncertainty-checkbox"
                 checked={useMeasurementsUncertainty}
                 onChange={handleMeasurementsUncertainty}
-                disabled={isMeasurementUncertaintyDisabled}
+                disabled={!problemHasStochasticMeasurements}
                 color="primary"
               />
             }
@@ -67,7 +67,7 @@ export default function UncertaintyOptions() {
                 id="weights-uncertainty-checkbox"
                 checked={useWeightsUncertainty}
                 onChange={handleWeightsUncertainty}
-                disabled={isWeightsUncertaintyDisabled}
+                disabled={!problemHasStochasticWeights}
                 color="primary"
               />
             }

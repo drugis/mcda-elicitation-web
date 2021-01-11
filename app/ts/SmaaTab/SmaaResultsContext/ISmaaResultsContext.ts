@@ -1,13 +1,13 @@
 import {ISmaaResults} from '../../../../shared/interface/Patavi/ISmaaResults';
 
 export interface ISmaaResultsContext {
-  isMeasurementUncertaintyDisabled: boolean;
-  isWeightsUncertaintyDisabled: boolean;
+  problemHasStochasticMeasurements: boolean;
+  problemHasStochasticWeights: boolean;
   results: ISmaaResults;
   useMeasurementsUncertainty: boolean;
   useWeightsUncertainty: boolean;
   warnings: string[];
-  calculateResults: () => void;
+  recalculate: () => void;
   setUseMeasurementsUncertainty: (useMeasurementsUncertainty: boolean) => void;
   setUseWeightsUncertainty: (useWeightsUncertainty: boolean) => void;
 }

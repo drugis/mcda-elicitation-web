@@ -28,48 +28,68 @@ export function SmaaResultsContextProviderComponent({
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
   const {filteredDistributions} = useContext(SubproblemContext);
-  const {currentScenario, problem} = useContext(PreferencesContext);
+  const {currentScenario, problem, updateScenario} = useContext(
+    PreferencesContext
+  );
+
+  const problemHasStochasticMeasurements = hasStochasticMeasurements(
+    filteredDistributions
+  );
+  const problemHasStochasticWeights = hasStochasticWeights(
+    currentScenario.state.prefs
+  );
 
   const [
     useMeasurementsUncertainty,
     setUseMeasurementsUncertainty
-  ] = useState<boolean>(true);
-  const [
-    isMeasurementUncertaintyDisabled,
-    setIsMeasurementUncertaintyDisabled
-  ] = useState<boolean>(!hasStochasticMeasurements(filteredDistributions));
-  const [
-    isWeightsUncertaintyDisabled,
-    setIsWeightsUncertaintyDisabled
-  ] = useState<boolean>(!hasStochasticWeights(currentScenario.state.prefs));
-  const [useWeightsUncertainty, setUseWeightsUncertainty] = useState<boolean>(
-    true
+  ] = useState<boolean>(
+    problemHasStochasticMeasurements &&
+      (currentScenario.state.uncertaintyOptions
+        ? currentScenario.state.uncertaintyOptions.measurements
+        : true)
   );
-  const [warnings, setWarnings] = useState<string[]>([]);
+  const [useWeightsUncertainty, setUseWeightsUncertainty] = useState<boolean>(
+    problemHasStochasticWeights &&
+      (currentScenario.state.uncertaintyOptions
+        ? currentScenario.state.uncertaintyOptions.weights
+        : true)
+  );
+
+  const [warnings, setWarnings] = useState<string[]>(
+    getSmaaWarnings(
+      useMeasurementsUncertainty,
+      useWeightsUncertainty,
+      problemHasStochasticMeasurements,
+      problemHasStochasticWeights
+    )
+  );
   const [results, setResults] = useState<ISmaaResults>();
 
+  useEffect(calculateResults, []);
+
   useEffect(() => {
-    const problemHasStochasticMeasurements = hasStochasticMeasurements(
-      filteredDistributions
-    );
-    const problemHasStochasticWeights = hasStochasticWeights(
-      currentScenario.state.prefs
-    );
     setWarnings(
       getSmaaWarnings(
         useMeasurementsUncertainty,
         useWeightsUncertainty,
-        isMeasurementUncertaintyDisabled,
-        isWeightsUncertaintyDisabled,
         problemHasStochasticMeasurements,
         problemHasStochasticWeights
       )
     );
-  }, [
-    useMeasurementsUncertainty,
-    useWeightsUncertainty,
-    filteredDistributions
-  ]);
+  }, [useMeasurementsUncertainty, useWeightsUncertainty]);
+
+  function recalculate(): void {
+    updateScenario({
+      ...currentScenario,
+      state: {
+        ...currentScenario.state,
+        uncertaintyOptions: {
+          measurements: useMeasurementsUncertainty,
+          weights: useWeightsUncertainty
+        }
+      }
+    }).then(calculateResults);
+  }
 
   function calculateResults(): void {
     const smaaResultsCommand: ISmaaResultsCommand = {
@@ -78,8 +98,8 @@ export function SmaaResultsContextProviderComponent({
       preferences: currentScenario.state.prefs,
       method: 'smaa',
       uncertaintyOptions: {
-        measurements: !isMeasurementUncertaintyDisabled,
-        weights: !isWeightsUncertaintyDisabled
+        measurements: useMeasurementsUncertainty,
+        weights: useWeightsUncertainty
       },
       seed: randomSeed,
       criteria: mergeDataSourceOntoCriterion(problem.criteria),
@@ -96,13 +116,13 @@ export function SmaaResultsContextProviderComponent({
   return (
     <SmaaResultsContext.Provider
       value={{
-        isMeasurementUncertaintyDisabled,
-        isWeightsUncertaintyDisabled,
+        problemHasStochasticMeasurements,
+        problemHasStochasticWeights,
         results,
         useMeasurementsUncertainty,
         useWeightsUncertainty,
         warnings,
-        calculateResults,
+        recalculate,
         setUseMeasurementsUncertainty,
         setUseWeightsUncertainty
       }}

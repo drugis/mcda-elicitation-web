@@ -31,26 +31,24 @@ export function hasStochasticMeasurements(
 
 export function hasStochasticWeights(preferences: TPreferences) {
   const NON_EXACT_PREFERENCE_TYPES = ['ordinal', 'ratio bound'];
-  return _.some(
-    preferences,
-    (preference: IRanking | IExactSwingRatio | IRatioBoundConstraint) =>
-      NON_EXACT_PREFERENCE_TYPES.indexOf(preference.type) >= 0
+  return (
+    _.isEmpty(preferences) ||
+    _.some(
+      preferences,
+      (preference: IRanking | IExactSwingRatio | IRatioBoundConstraint) =>
+        NON_EXACT_PREFERENCE_TYPES.indexOf(preference.type) >= 0
+    )
   );
 }
 
 export function getSmaaWarnings(
   useMeasurementsUncertainty: boolean,
   useWeightsUncertainty: boolean,
-  isMeasurementUncertaintyDisabled: boolean,
-  isWeightsUncertaintyDisabled: boolean,
   problemHasStochasticMeasurements: boolean,
   problemHasStochasticWeights: boolean
 ): string[] {
   let warnings: string[] = [];
-  if (
-    (!useMeasurementsUncertainty || isMeasurementUncertaintyDisabled) &&
-    (!useWeightsUncertainty || isWeightsUncertaintyDisabled)
-  ) {
+  if (!useMeasurementsUncertainty && !useWeightsUncertainty) {
     warnings.push(
       'SMAA results will be identical to the deterministic results because there are no stochastic inputs'
     );
