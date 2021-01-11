@@ -14,6 +14,7 @@ export default function UncertaintyOptions() {
     useMeasurementsUncertainty,
     useWeightsUncertainty,
     warnings,
+    calculateResults,
     setUseMeasurementsUncertainty,
     setUseWeightsUncertainty
   } = useContext(SmaaResultsContext);
@@ -32,6 +33,7 @@ export default function UncertaintyOptions() {
 
   function handleRecalculateClick(): void {
     setIsDirty(false);
+    calculateResults();
   }
 
   return (
