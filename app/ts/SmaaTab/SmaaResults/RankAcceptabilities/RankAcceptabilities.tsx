@@ -1,7 +1,7 @@
-import React from 'react';
-import _ from 'lodash';
 import {Grid, Typography} from '@material-ui/core';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import React from 'react';
+import RankAcceptabilitiesPlot from './RankAcceptabilitiesPlot/RankAcceptabilitiesPlot';
 import RankAcceptabilitiesTable from './RankAcceptabilitiesTable/RankAcceptabilitiesTable';
 
 export default function RankAcceptabilities(): JSX.Element {
@@ -12,7 +12,9 @@ export default function RankAcceptabilities(): JSX.Element {
           Rank acceptabilities <InlineHelp helpId="rank-acceptabilities" />
         </Typography>
       </Grid>
-      <Grid item xs={6}></Grid>
+      <Grid item xs={6}>
+        <RankAcceptabilitiesPlot />
+      </Grid>
       <Grid item xs={6}>
         <RankAcceptabilitiesTable />
       </Grid>

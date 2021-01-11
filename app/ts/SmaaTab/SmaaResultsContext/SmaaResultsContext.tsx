@@ -70,7 +70,7 @@ export function SmaaResultsContextProviderComponent({
   const [centralWeights, setCentralWeights] = useState<
     Record<string, ICentralWeight>
   >();
-  const [ranks, setRanks] = useState<Record<string, Record<number, number>>>();
+  const [ranks, setRanks] = useState<Record<string, number[]>>();
   const [smaaWeights, setSmaaWeights] = useState<IWeights>();
 
   useEffect(calculateResults, []);
