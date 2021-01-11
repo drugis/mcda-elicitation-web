@@ -48,10 +48,7 @@ export default function UncertaintyOptions() {
             control={
               <Checkbox
                 id="measurements-uncertainty-checkbox"
-                checked={
-                  useMeasurementsUncertainty &&
-                  !isMeasurementUncertaintyDisabled
-                }
+                checked={useMeasurementsUncertainty}
                 onChange={handleMeasurementsUncertainty}
                 disabled={isMeasurementUncertaintyDisabled}
                 color="primary"
@@ -68,7 +65,7 @@ export default function UncertaintyOptions() {
             control={
               <Checkbox
                 id="weights-uncertainty-checkbox"
-                checked={useWeightsUncertainty && !isWeightsUncertaintyDisabled}
+                checked={useWeightsUncertainty}
                 onChange={handleWeightsUncertainty}
                 disabled={isWeightsUncertaintyDisabled}
                 color="primary"

@@ -65,8 +65,6 @@ export function SmaaResultsContextProviderComponent({
         problemHasStochasticWeights
       )
     );
-    setIsMeasurementUncertaintyDisabled(!problemHasStochasticMeasurements);
-    setIsWeightsUncertaintyDisabled(!problemHasStochasticWeights);
   }, [
     useMeasurementsUncertainty,
     useWeightsUncertainty,
