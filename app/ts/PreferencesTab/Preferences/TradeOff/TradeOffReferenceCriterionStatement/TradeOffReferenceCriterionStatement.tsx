@@ -33,7 +33,8 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
 
   return (
     <div>
-      Changing {referenceCriterion.title} from{' '}
+      Based on the elicited preferences, changing {referenceCriterion.title}{' '}
+      from{' '}
       <TradeOffSlider
         value={referenceValueFrom}
         min={lowerBound}

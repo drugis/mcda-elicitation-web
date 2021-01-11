@@ -10,7 +10,6 @@ import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
@@ -60,7 +59,7 @@ export default function TradeOffTable(): JSX.Element {
     const pvf = pvfs[criterion.id];
     const interval = pvf.range[1] - pvf.range[0];
     const change =
-      (criterionWeight / referenceWeight) * partOfInterval * interval;
+      (referenceWeight / criterionWeight) * partOfInterval * interval;
     if (pvf.direction === 'increasing') {
       return getPercentifiedValue(pvf.range[0] + change, usePercentage);
     } else {
@@ -84,12 +83,6 @@ export default function TradeOffTable(): JSX.Element {
 
   return (
     <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Statement</TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      </TableHead>
       <TableBody>{getRows()}</TableBody>
     </Table>
   );
