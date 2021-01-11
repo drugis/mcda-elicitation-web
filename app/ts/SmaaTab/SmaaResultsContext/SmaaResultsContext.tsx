@@ -67,7 +67,6 @@ export function SmaaResultsContextProviderComponent({
       problemHasStochasticWeights
     )
   );
-  const [results, setResults] = useState<ISmaaResults>();
   const [centralWeights, setCentralWeights] = useState<
     Record<string, ICentralWeight>
   >();
