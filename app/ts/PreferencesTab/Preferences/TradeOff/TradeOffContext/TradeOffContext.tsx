@@ -78,11 +78,18 @@ export function TradeOffContextProviderComponent({
 
   function getBounds(): [number, number] {
     const dataSourceId = referenceCriterion.dataSources[0].id;
-    if (_.isEqual(currentSubproblem.definition.ranges, {})) {
+    if (hasNoRange(currentSubproblem.definition.ranges, dataSourceId)) {
       return observedRanges[dataSourceId];
     } else {
       return currentSubproblem.definition.ranges[dataSourceId];
     }
+  }
+
+  function hasNoRange(
+    ranges: Record<string, [number, number]>,
+    dataSourceId: string
+  ): boolean {
+    return _.isEqual(ranges, {}) || _.isEqual(ranges[dataSourceId], {});
   }
 
   function updateReferenceCriterion(newId: string): void {
