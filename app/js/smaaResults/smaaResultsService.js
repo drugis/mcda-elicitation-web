@@ -11,9 +11,7 @@ define(['lodash', 'angular', 'd3'], function (_, angular, d3) {
           preferences: state.prefs,
           method: 'smaa',
           uncertaintyOptions: uncertaintyOptions
-        }),
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
-        selectedRank: '0'
+        })
       };
       return run(nextState);
     }

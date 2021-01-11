@@ -14,6 +14,14 @@ define([], function () {
           "'s SMAA results"
       );
     });
+
+    $scope.smaaSettings = {
+      ...$scope.workspaceSettings,
+      ...{
+        displayMode: 'values',
+        analysisType: 'smaa'
+      }
+    };
   };
   return dependencies.concat(SmaaResultsController);
 });

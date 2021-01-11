@@ -1,5 +1,7 @@
+import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
+import IWeights from '@shared/interface/Scenario/IWeights';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
@@ -27,14 +29,16 @@ export function SmaaResultsContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
-  const {filteredDistributions} = useContext(SubproblemContext);
+  const {filteredDistributions, filteredRelativePerformances} = useContext(
+    SubproblemContext
+  );
   const {currentScenario, problem, updateScenario} = useContext(
     PreferencesContext
   );
 
-  const problemHasStochasticMeasurements = hasStochasticMeasurements(
-    filteredDistributions
-  );
+  const problemHasStochasticMeasurements =
+    hasStochasticMeasurements(filteredDistributions) ||
+    filteredRelativePerformances.length > 0;
   const problemHasStochasticWeights = hasStochasticWeights(
     currentScenario.state.prefs
   );
@@ -64,6 +68,11 @@ export function SmaaResultsContextProviderComponent({
     )
   );
   const [results, setResults] = useState<ISmaaResults>();
+  const [centralWeights, setCentralWeights] = useState<
+    Record<string, ICentralWeight>
+  >();
+  const [ranks, setRanks] = useState<Record<string, Record<number, number>>>();
+  const [smaaWeights, setSmaaWeights] = useState<IWeights>();
 
   useEffect(calculateResults, []);
 
@@ -108,7 +117,9 @@ export function SmaaResultsContextProviderComponent({
 
     Axios.post('/patavi/smaaResults', smaaResultsCommand)
       .then((result: AxiosResponse<ISmaaResults>) => {
-        setResults(result.data);
+        setCentralWeights(result.data.cw);
+        setRanks(result.data.ranks);
+        setSmaaWeights(result.data.weightsQuantiles);
       })
       .catch(setError);
   }
@@ -116,9 +127,11 @@ export function SmaaResultsContextProviderComponent({
   return (
     <SmaaResultsContext.Provider
       value={{
+        centralWeights,
         problemHasStochasticMeasurements,
         problemHasStochasticWeights,
-        results,
+        ranks,
+        smaaWeights,
         useMeasurementsUncertainty,
         useWeightsUncertainty,
         warnings,

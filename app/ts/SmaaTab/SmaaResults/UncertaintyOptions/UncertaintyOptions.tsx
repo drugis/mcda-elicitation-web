@@ -21,12 +21,12 @@ export default function UncertaintyOptions() {
 
   const [isDirty, setIsDirty] = useState<boolean>(false);
 
-  function handleMeasurementsUncertainty(): void {
+  function handleMeasurementsUncertaintyChanged(): void {
     setIsDirty(true);
     setUseMeasurementsUncertainty(!useMeasurementsUncertainty);
   }
 
-  function handleWeightsUncertainty(): void {
+  function handleWeightsUncertaintyChanged(): void {
     setIsDirty(true);
     setUseWeightsUncertainty(!useWeightsUncertainty);
   }
@@ -49,7 +49,7 @@ export default function UncertaintyOptions() {
               <Checkbox
                 id="measurements-uncertainty-checkbox"
                 checked={useMeasurementsUncertainty}
-                onChange={handleMeasurementsUncertainty}
+                onChange={handleMeasurementsUncertaintyChanged}
                 disabled={!problemHasStochasticMeasurements}
                 color="primary"
               />
@@ -66,7 +66,7 @@ export default function UncertaintyOptions() {
               <Checkbox
                 id="weights-uncertainty-checkbox"
                 checked={useWeightsUncertainty}
-                onChange={handleWeightsUncertainty}
+                onChange={handleWeightsUncertaintyChanged}
                 disabled={!problemHasStochasticWeights}
                 color="primary"
               />

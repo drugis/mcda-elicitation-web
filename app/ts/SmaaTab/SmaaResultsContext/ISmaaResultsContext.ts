@@ -1,9 +1,12 @@
-import {ISmaaResults} from '../../../../shared/interface/Patavi/ISmaaResults';
+import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
+import IWeights from '@shared/interface/Scenario/IWeights';
 
 export interface ISmaaResultsContext {
+  centralWeights: Record<string, ICentralWeight>;
   problemHasStochasticMeasurements: boolean;
   problemHasStochasticWeights: boolean;
-  results: ISmaaResults;
+  ranks: Record<string, Record<number, number>>;
+  smaaWeights: IWeights;
   useMeasurementsUncertainty: boolean;
   useWeightsUncertainty: boolean;
   warnings: string[];
