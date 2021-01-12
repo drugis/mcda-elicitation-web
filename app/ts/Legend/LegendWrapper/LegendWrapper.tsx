@@ -8,25 +8,25 @@ import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
 import LegendButtons from './LegendButtons/LegendButtons';
 import LegendTable from './LegendTable/LegendTable';
-import {generateLegendTooltip, initLegend} from './LegendUtil';
+import LegendTooltip from './LegendTooltip/LegendTooltip';
+import {initLegend} from './LegendUtil';
 
 export default function LegendWrapper({
   children
 }: {
   children: any;
 }): JSX.Element {
+  const canEdit = true; //FIXME
+
   const {legend, saveLegend} = useContext(LegendContext);
   const {filteredAlternatives} = useContext(SubproblemContext);
 
-  const canEdit = true; //FIXME
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [newTitles, setNewTitles] = useState<Record<string, string>>(
     initLegend(legend, filteredAlternatives)
   );
-
-  const tooltip = generateLegendTooltip(filteredAlternatives, legend, canEdit);
 
   useEffect(() => {
     if (isDialogOpen) {
@@ -76,7 +76,7 @@ export default function LegendWrapper({
         {children}
       </Grid>
       <Grid container item xs={4} alignContent="flex-start">
-        <Tooltip title={<div dangerouslySetInnerHTML={{__html: tooltip}} />}>
+        <Tooltip title={<LegendTooltip />}>
           <Button
             color="primary"
             variant="contained"
