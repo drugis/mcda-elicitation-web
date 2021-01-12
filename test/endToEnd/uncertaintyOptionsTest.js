@@ -62,7 +62,6 @@ function stochasticWeightsWarning(browser) {
       const smaaUrl = TEST_URL + '/' + result.value;
       browser.url(smaaUrl); // does not work via delayed click -- smaa tab is not clickable
     });
-  browser.expect.element('#weights-uncertainty-checkbox').to.not.be.visible;
   browser.assert.containsText(
     '#smaa-results-warning-0',
     hasNoStochasticWeightsWarning
