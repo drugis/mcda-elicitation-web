@@ -84,7 +84,7 @@ export function mergeDataSourceOntoCriterion(
   );
 }
 
-export function buildPataviPerformaceTable(
+export function buildPataviPerformanceTable(
   performanceTable: IPerformanceTableEntry[]
 ): IPataviTableEntry[] {
   return _.map(performanceTable, (entry: IPerformanceTableEntry) => {
@@ -95,7 +95,6 @@ export function buildPataviPerformaceTable(
 function getPerformance(
   performance: Performance
 ): EffectPerformance | DistributionPerformance | TRelativePerformance {
-  performance: Performance;
   if (
     isDistributionPerformance(performance) &&
     performance.distribution.type !== 'empty'
@@ -123,7 +122,7 @@ function isEffectPerformance(
 export function generateRankPlotSettings(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
-  legend: any
+  legend: Record<string, {newTitle: string}>
 ): ChartConfiguration {
   const rankTitles = _.map(alternatives, (alternative, index) => {
     return 'Rank ' + (index + 1);
@@ -175,7 +174,7 @@ export function generateRankPlotSettings(
 export function getRankPlotData(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
-  legend: any
+  legend: Record<string, {newTitle: string}>
 ): [string, ...Primitive[]][] {
   const titleRow = getPlotTitles(alternatives, legend);
   return [...titleRow, ...getRankPlotValues(ranks, alternatives)];
@@ -183,7 +182,7 @@ export function getRankPlotData(
 
 function getPlotTitles<T extends {id: string; title: string}>(
   items: T[],
-  legend: any
+  legend: Record<string, {newTitle: string}>
 ): [[string, ...string[]]] {
   return [
     [
@@ -208,7 +207,7 @@ export function generateCentralWeightsPlotSettings(
   centralWeights: Record<string, ICentralWeight>,
   criteria: ICriterion[],
   alternatives: IAlternative[],
-  legend: any
+  legend: Record<string, {newTitle: string}>
 ): ChartConfiguration {
   const centralWeightsPlotData = getCentralWeightsPlotData(
     centralWeights,
@@ -252,30 +251,38 @@ export function generateCentralWeightsPlotSettings(
   return settings;
 }
 
-function getCentralWeightsPlotData(
+export function getCentralWeightsPlotData(
   centralWeights: Record<string, ICentralWeight>,
   criteria: ICriterion[],
   alternatives: IAlternative[],
-  legend: any
+  legend: Record<string, {newTitle: string}>
 ): [string, ...Primitive[]][] {
-  const titleRow = getPlotTitles(criteria, legend);
+  const titleRow: [[string, ...string[]]] = [
+    ['x', ..._.map(criteria, 'title')]
+  ];
   return [
     ...titleRow,
-    ...getCentralWeightsPlotValues(centralWeights, criteria, alternatives)
+    ...getCentralWeightsPlotValues(
+      centralWeights,
+      criteria,
+      alternatives,
+      legend
+    )
   ];
 }
 
 function getCentralWeightsPlotValues(
   centralWeights: Record<string, ICentralWeight>,
   criteria: ICriterion[],
-  alternatives: IAlternative[]
+  alternatives: IAlternative[],
+  legend: Record<string, {newTitle: string}>
 ): [string, ...number[]][] {
   return _.map(alternatives, (alternative: IAlternative): [
     string,
     ...number[]
   ] => {
     return [
-      alternative.title,
+      legend ? legend[alternative.id].newTitle : alternative.title,
       ...getCentralWeightsForAlternative(
         centralWeights,
         alternative.id,
