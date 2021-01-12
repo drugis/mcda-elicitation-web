@@ -16,7 +16,8 @@ import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {TPreferences} from '@shared/types/Preferences';
-import {ChartConfiguration} from 'c3';
+import {ChartConfiguration, Primitive} from 'c3';
+import {format} from 'd3';
 import _ from 'lodash';
 
 export function hasStochasticMeasurements(
@@ -116,20 +117,21 @@ function isEffectPerformance(
 ): performance is IEffectPerformance {
   return performance.hasOwnProperty('effect');
 }
+
 export function generateRankPlotSettings(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
   legend: any
 ): ChartConfiguration {
-  const rankTitles = _.map(alternatives, function (alternative, index) {
+  const rankTitles = _.map(alternatives, (alternative, index) => {
     return 'Rank ' + (index + 1);
   });
-  const values = smaaResultsToRankPlotValues(ranks, alternatives, legend);
-  const settings = {
+  const rankPlotData = getRankPlotData(ranks, alternatives, legend);
+  const settings: ChartConfiguration = {
     bindto: '#rank-acceptability-plot',
     data: {
       x: 'x',
-      columns: values,
+      columns: rankPlotData,
       type: 'bar',
       groups: [rankTitles]
     },
@@ -142,8 +144,8 @@ export function generateRankPlotSettings(
       },
       y: {
         tick: {
-          count: 5
-          // format: d3.format(',.3g')
+          count: 5,
+          format: format(',.3g')
         },
         min: 0,
         max: 1,
@@ -165,43 +167,37 @@ export function generateRankPlotSettings(
       position: 'bottom'
     }
   };
-  return settings as ChartConfiguration;
+  return settings;
 }
 
-function smaaResultsToRankPlotValues(
+export function getRankPlotData(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
   legend: any
-) {
-  const values = getRankPlotTitles(alternatives, legend);
-  return values.concat(getRankPlotValues(ranks, alternatives));
+): [string, ...Primitive[]][] {
+  const titleRow = getRankPlotTitles(alternatives, legend);
+  return [...titleRow, ...getRankPlotValues(ranks, alternatives)];
 }
 
-function getRankPlotTitles(alternatives: IAlternative[], legend: any) {
+function getRankPlotTitles(
+  alternatives: IAlternative[],
+  legend: any
+): [[string, ...string[]]] {
   return [
-    ['x'].concat(
-      _.map(alternatives, function (alternative) {
-        return legend ? legend[alternative.id].newTitle : alternative.title;
-      })
-    )
+    [
+      'x',
+      ..._.map(alternatives, (alternative: IAlternative): string =>
+        legend ? legend[alternative.id].newTitle : alternative.title
+      )
+    ]
   ];
 }
 
 function getRankPlotValues(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[]
-) {
-  let values = _.map(alternatives, function (alternative, index) {
-    return ['Rank ' + (index + 1)];
+): [string, ...number[]][] {
+  return _.map(alternatives, (alternative: IAlternative, rankIndex: number) => {
+    return [`Rank ${rankIndex + 1}`, ..._.values(ranks[alternative.id])];
   });
-
-  _.forEach(alternatives, function (alternative, index) {
-    _.forEach(
-      ranks[alternative.id],
-      (rankResult: number[], key: number) =>
-        (values[key][index + 1] = rankResult)
-    );
-  });
-
-  return values;
 }

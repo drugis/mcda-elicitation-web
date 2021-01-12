@@ -14,4 +14,8 @@ describe('SmaaResultsService', () => {
   describe('mergeDataSourceOntoCriterion', () => {
     fail();
   });
+
+  describe('getRankPlotData', () => {
+    fail();
+  });
 });

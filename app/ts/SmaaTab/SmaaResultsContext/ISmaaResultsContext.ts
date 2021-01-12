@@ -5,7 +5,7 @@ export interface ISmaaResultsContext {
   centralWeights: Record<string, ICentralWeight>;
   problemHasStochasticMeasurements: boolean;
   problemHasStochasticWeights: boolean;
-  ranks: Record<string, Record<number, number>>;
+  ranks: Record<string, number[]>;
   smaaWeights: IWeights;
   useMeasurementsUncertainty: boolean;
   useWeightsUncertainty: boolean;
