@@ -1,6 +1,7 @@
 import {Grid, Typography} from '@material-ui/core';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import React from 'react';
+import CentralWeightsPlot from './CentralWeightsPlot/CentralWeightsPlot';
 import CentralWeightsTable from './CentralWeightsTable/CentralWeightsTable';
 
 export default function CentralWeights(): JSX.Element {
@@ -11,7 +12,9 @@ export default function CentralWeights(): JSX.Element {
           Central Weights <InlineHelp helpId="central-weights" />
         </Typography>
       </Grid>
-      <Grid item xs={12}></Grid>
+      <Grid item xs={12}>
+        <CentralWeightsPlot />
+      </Grid>
       <Grid item xs={12}>
         <CentralWeightsTable />
       </Grid>

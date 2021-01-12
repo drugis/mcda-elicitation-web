@@ -18,4 +18,8 @@ describe('SmaaResultsService', () => {
   describe('getRankPlotData', () => {
     fail();
   });
+
+  describe('getCentralWeightsPlotData', () => {
+    fail();
+  });
 });

@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SmaaResultsContext} from 'app/ts/SmaaTab/SmaaResultsContext/SmaaResultsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
@@ -24,7 +25,9 @@ export default function CentralWeightsTable() {
       <TableHead>
         <TableRow>
           <TableCell>Alternative</TableCell>
-          <TableCell>Confidence</TableCell>
+          <TableCell>
+            Confidence <InlineHelp helpId="confidence-factor" />
+          </TableCell>
           {_.map(filteredCriteria, (criterion: ICriterion) => (
             <TableCell key={criterion.id}>{criterion.title}</TableCell>
           ))}

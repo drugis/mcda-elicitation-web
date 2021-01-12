@@ -1,5 +1,7 @@
 import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
 import {Distribution} from '@shared/interface/IDistribution';
+import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
 import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
@@ -175,19 +177,19 @@ export function getRankPlotData(
   alternatives: IAlternative[],
   legend: any
 ): [string, ...Primitive[]][] {
-  const titleRow = getRankPlotTitles(alternatives, legend);
+  const titleRow = getPlotTitles(alternatives, legend);
   return [...titleRow, ...getRankPlotValues(ranks, alternatives)];
 }
 
-function getRankPlotTitles(
-  alternatives: IAlternative[],
+function getPlotTitles<T extends {id: string; title: string}>(
+  items: T[],
   legend: any
 ): [[string, ...string[]]] {
   return [
     [
       'x',
-      ..._.map(alternatives, (alternative: IAlternative): string =>
-        legend ? legend[alternative.id].newTitle : alternative.title
+      ..._.map(items, (item: T): string =>
+        legend ? legend[item.id].newTitle : item.title
       )
     ]
   ];
@@ -200,4 +202,96 @@ function getRankPlotValues(
   return _.map(alternatives, (alternative: IAlternative, rankIndex: number) => {
     return [`Rank ${rankIndex + 1}`, ..._.values(ranks[alternative.id])];
   });
+}
+
+export function generateCentralWeightsPlotSettings(
+  centralWeights: Record<string, ICentralWeight>,
+  criteria: ICriterion[],
+  alternatives: IAlternative[],
+  legend: any
+): ChartConfiguration {
+  const centralWeightsPlotData = getCentralWeightsPlotData(
+    centralWeights,
+    criteria,
+    alternatives,
+    legend
+  );
+  const settings: ChartConfiguration = {
+    bindto: '#central-weights-plot',
+    data: {
+      x: 'x',
+      columns: centralWeightsPlotData,
+      type: 'bar'
+    },
+    axis: {
+      x: {
+        type: 'category',
+        tick: {
+          centered: true
+        }
+      },
+      y: {
+        tick: {
+          count: 5,
+          format: format(',.3g')
+        }
+      }
+    },
+    grid: {
+      x: {
+        show: false
+      },
+      y: {
+        show: true
+      }
+    },
+    legend: {
+      position: 'bottom'
+    }
+  };
+  return settings;
+}
+
+function getCentralWeightsPlotData(
+  centralWeights: Record<string, ICentralWeight>,
+  criteria: ICriterion[],
+  alternatives: IAlternative[],
+  legend: any
+): [string, ...Primitive[]][] {
+  const titleRow = getPlotTitles(criteria, legend);
+  return [
+    ...titleRow,
+    ...getCentralWeightsPlotValues(centralWeights, criteria, alternatives)
+  ];
+}
+
+function getCentralWeightsPlotValues(
+  centralWeights: Record<string, ICentralWeight>,
+  criteria: ICriterion[],
+  alternatives: IAlternative[]
+): [string, ...number[]][] {
+  return _.map(alternatives, (alternative: IAlternative): [
+    string,
+    ...number[]
+  ] => {
+    return [
+      alternative.title,
+      ...getCentralWeightsForAlternative(
+        centralWeights,
+        alternative.id,
+        criteria
+      )
+    ];
+  });
+}
+
+function getCentralWeightsForAlternative(
+  centralWeights: Record<string, ICentralWeight>,
+  alternativeId: string,
+  criteria: ICriterion[]
+): number[] {
+  return _.map(
+    criteria,
+    (criterion: ICriterion) => centralWeights[alternativeId].w[criterion.id]
+  );
 }
