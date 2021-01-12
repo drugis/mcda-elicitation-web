@@ -10,7 +10,7 @@ import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
-  buildPataviPerformaceTable,
+  buildPataviPerformanceTable,
   getSmaaWarnings,
   hasStochasticMeasurements,
   hasStochasticWeights,
@@ -111,7 +111,7 @@ export function SmaaResultsContextProviderComponent({
       },
       seed: randomSeed,
       criteria: mergeDataSourceOntoCriterion(problem.criteria),
-      performanceTable: buildPataviPerformaceTable(problem.performanceTable)
+      performanceTable: buildPataviPerformanceTable(problem.performanceTable)
     };
 
     Axios.post('/patavi/smaaResults', smaaResultsCommand)
