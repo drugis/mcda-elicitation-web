@@ -322,7 +322,7 @@ describe('SmaaResultsUtil', () => {
 
   describe('getRankPlotData', () => {
     it('should format the ranking data for the plot', () => {
-      const legend: Record<string, {newTitle: string}> = undefined;
+      const legend: Record<string, string> = undefined;
       const ranks: Record<string, number[]> = {alt1: [0, 42], alt2: [1, 37]};
       const alternatives: IAlternative[] = [
         {id: 'alt1', title: 'alternative1'},
@@ -338,9 +338,9 @@ describe('SmaaResultsUtil', () => {
     });
 
     it('should format the ranking data for the plot, replacing titles using the legend', () => {
-      const legend: Record<string, {newTitle: string}> = {
-        alt1: {newTitle: 'Final'},
-        alt2: {newTitle: 'Smasher'}
+      const legend: Record<string, string> = {
+        alt1: 'Final',
+        alt2: 'Smasher'
       };
       const ranks: Record<string, number[]> = {alt1: [0, 42], alt2: [1, 37]};
       const alternatives: IAlternative[] = [
@@ -359,7 +359,7 @@ describe('SmaaResultsUtil', () => {
 
   describe('getCentralWeightsPlotData', () => {
     it('should format the central weights data for the plot', () => {
-      const legend: Record<string, {newTitle: string}> = undefined;
+      const legend: Record<string, string> = undefined;
       const centralWeights: Record<string, ICentralWeight> = {
         alt1: {cf: 13, w: {crit1: 1, crit2: 2}},
         alt2: {cf: 37, w: {crit1: 3, crit2: 4}}
@@ -387,9 +387,9 @@ describe('SmaaResultsUtil', () => {
     });
 
     it('should format the ranking data for the plot, replacing titles using the legend', () => {
-      const legend: Record<string, {newTitle: string}> = {
-        alt1: {newTitle: 'Final'},
-        alt2: {newTitle: 'Smasher'}
+      const legend: Record<string, string> = {
+        alt1: 'Final',
+        alt2: 'Smasher'
       };
       const centralWeights: Record<string, ICentralWeight> = {
         alt1: {cf: 13, w: {crit1: 1, crit2: 2}},

@@ -1,25 +1,14 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-  Tooltip
-} from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, Tooltip} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
-import IAlternative from '@shared/interface/IAlternative';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import _ from 'lodash';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
+import LegendButtons from './LegendButtons/LegendButtons';
+import LegendTable from './LegendTable/LegendTable';
+import {generateLegendTooltip, initLegend} from './LegendUtil';
 
 export default function LegendWrapper({
   children
@@ -37,23 +26,14 @@ export default function LegendWrapper({
     initLegend(legend, filteredAlternatives)
   );
 
-  const tooltip = legend ? 'show legend' : 'bla bla';
+  const tooltip = generateLegendTooltip(filteredAlternatives, legend, canEdit);
 
   useEffect(() => {
     if (isDialogOpen) {
       setIsButtonPressed(false);
     }
-    initLegend(legend, filteredAlternatives);
+    setNewTitles(initLegend(legend, filteredAlternatives));
   }, [isDialogOpen]);
-
-  function initLegend(
-    legend: Record<string, string>,
-    alternatives: IAlternative[]
-  ): Record<string, string> {
-    return legend
-      ? legend
-      : _(alternatives).keyBy('id').mapValues('title').value();
-  }
 
   const handleKey = createEnterHandler(handleLegendSave, isDisabled);
 
@@ -73,6 +53,8 @@ export default function LegendWrapper({
     setNewTitles({...newTitles, [alternativeId]: newTitle});
     if (newTitle === '') {
       setError('Names may not be empty.');
+    } else {
+      setError(undefined);
     }
   }
 
@@ -88,26 +70,13 @@ export default function LegendWrapper({
     return !!error || isButtonPressed;
   }
 
-  function handleSingleLettersClick(): void {
-    let letterValue = 65;
-    setNewTitles(
-      _.mapValues(newTitles, (newTitle) => String.fromCharCode(letterValue++))
-    );
-  }
-
-  function handleResetClick(): void {
-    setNewTitles(
-      _(filteredAlternatives).keyBy('id').mapValues('title').value()
-    );
-  }
-
   return (
     <>
       <Grid item xs={8}>
         {children}
       </Grid>
       <Grid container item xs={4} alignContent="flex-start">
-        <Tooltip title={tooltip}>
+        <Tooltip title={<div dangerouslySetInnerHTML={{__html: tooltip}} />}>
           <Button
             color="primary"
             variant="contained"
@@ -127,64 +96,16 @@ export default function LegendWrapper({
             Rename alternatives in plots
           </DialogTitleWithCross>
           <DialogContent>
-            <Grid container>
+            <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Button
-                  id="single-letter-button"
-                  color="primary"
-                  onClick={handleSingleLettersClick}
-                  variant="contained"
-                >
-                  Single-letter labels
-                </Button>
-                <Button
-                  id="reset-labels-button"
-                  color="primary"
-                  onClick={handleResetClick}
-                  variant="contained"
-                >
-                  Reset to original names
-                </Button>
+                <LegendButtons setNewTitles={setNewTitles} />
               </Grid>
               <Grid item xs={12}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Original name</TableCell>
-                      <TableCell></TableCell>
-                      <TableCell>New name</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {_.map(
-                      filteredAlternatives,
-                      (
-                        alternative: IAlternative,
-                        index: number
-                      ): JSX.Element => (
-                        <TableRow key={alternative.id}>
-                          <TableCell>{alternative.title}</TableCell>
-                          <TableCell>
-                            <ArrowRightAltIcon />
-                          </TableCell>
-                          <TableCell>
-                            <TextField
-                              id={`label-input-${index}`}
-                              value={newTitles[alternative.id]}
-                              onChange={_.partial(
-                                handleLegendChange,
-                                alternative.id
-                              )}
-                              type="text"
-                              error={!newTitles[alternative.id]}
-                              onKeyDown={handleKey}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
+                <LegendTable
+                  newTitles={newTitles}
+                  handleKey={handleKey}
+                  handleLegendChange={handleLegendChange}
+                />
               </Grid>
               <Grid
                 id={`title-error`}

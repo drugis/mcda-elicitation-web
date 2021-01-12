@@ -1,4 +1,5 @@
 import {Grid} from '@material-ui/core';
+import {LegendContext} from 'app/ts/Legend/LegendContext';
 import {SmaaResultsContext} from 'app/ts/SmaaTab/SmaaResultsContext/SmaaResultsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
@@ -9,6 +10,7 @@ export default function CentralWeightsPlot() {
   const {filteredAlternatives, filteredCriteria} = useContext(
     SubproblemContext
   );
+  const {legend} = useContext(LegendContext);
   const {centralWeights} = useContext(SmaaResultsContext);
   const width = '620px';
   const height = '350px';
@@ -17,7 +19,7 @@ export default function CentralWeightsPlot() {
     centralWeights,
     filteredCriteria,
     filteredAlternatives,
-    undefined
+    legend
   );
   generate(settings);
 

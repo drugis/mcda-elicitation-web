@@ -122,7 +122,7 @@ function isEffectPerformance(
 export function generateRankPlotSettings(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
-  legend: Record<string, {newTitle: string}>
+  legend: Record<string, string>
 ): ChartConfiguration {
   const rankTitles = _.map(alternatives, (alternative, index) => {
     return 'Rank ' + (index + 1);
@@ -174,7 +174,7 @@ export function generateRankPlotSettings(
 export function getRankPlotData(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
-  legend: Record<string, {newTitle: string}>
+  legend: Record<string, string>
 ): [string, ...Primitive[]][] {
   const titleRow = getPlotTitles(alternatives, legend);
   return [...titleRow, ...getRankPlotValues(ranks, alternatives)];
@@ -182,13 +182,13 @@ export function getRankPlotData(
 
 function getPlotTitles<T extends {id: string; title: string}>(
   items: T[],
-  legend: Record<string, {newTitle: string}>
+  legend: Record<string, string>
 ): [[string, ...string[]]] {
   return [
     [
       'x',
       ..._.map(items, (item: T): string =>
-        legend ? legend[item.id].newTitle : item.title
+        legend ? legend[item.id] : item.title
       )
     ]
   ];
@@ -207,7 +207,7 @@ export function generateCentralWeightsPlotSettings(
   centralWeights: Record<string, ICentralWeight>,
   criteria: ICriterion[],
   alternatives: IAlternative[],
-  legend: Record<string, {newTitle: string}>
+  legend: Record<string, string>
 ): ChartConfiguration {
   const centralWeightsPlotData = getCentralWeightsPlotData(
     centralWeights,
@@ -255,7 +255,7 @@ export function getCentralWeightsPlotData(
   centralWeights: Record<string, ICentralWeight>,
   criteria: ICriterion[],
   alternatives: IAlternative[],
-  legend: Record<string, {newTitle: string}>
+  legend: Record<string, string>
 ): [string, ...Primitive[]][] {
   const titleRow: [[string, ...string[]]] = [
     ['x', ..._.map(criteria, 'title')]
@@ -275,14 +275,14 @@ function getCentralWeightsPlotValues(
   centralWeights: Record<string, ICentralWeight>,
   criteria: ICriterion[],
   alternatives: IAlternative[],
-  legend: Record<string, {newTitle: string}>
+  legend: Record<string, string>
 ): [string, ...number[]][] {
   return _.map(alternatives, (alternative: IAlternative): [
     string,
     ...number[]
   ] => {
     return [
-      legend ? legend[alternative.id].newTitle : alternative.title,
+      legend ? legend[alternative.id] : alternative.title,
       ...getCentralWeightsForAlternative(
         centralWeights,
         alternative.id,
