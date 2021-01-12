@@ -5,7 +5,6 @@ define([
   '../../ts/SmaaTab/SmaaTab',
 
   './smaaResultsController',
-  './smaaResultsService',
 
   'angular-patavi-client'
 ], function (
@@ -13,8 +12,7 @@ define([
   react2angular,
   SmaaTab,
 
-  SmaaResultsController,
-  SmaaResultsService
+  SmaaResultsController
 ) {
   return angular
     .module('elicit.smaaResults', ['patavi', 'elicit.results'])
@@ -34,6 +32,5 @@ define([
         'currentSubproblem'
       ])
     )
-    .controller('SmaaResultsController', SmaaResultsController)
-    .factory('SmaaResultsService', SmaaResultsService);
+    .controller('SmaaResultsController', SmaaResultsController);
 });

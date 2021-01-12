@@ -1,4 +1,4 @@
-describe('SmaaResultsService', () => {
+describe('SmaaResultsUtil', () => {
   describe('hasStochasticMeasurements', () => {
     fail();
   });
