@@ -9,13 +9,7 @@ import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import {renderEnteredValues} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import _ from 'lodash';
-import {
-  hasInvalidCell,
-  isNormalDistribution,
-  isRange,
-  isValue,
-  isValueCI
-} from '../CellValidityService/CellValidityService';
+import {hasInvalidCell} from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
 
 export function createDistributions(
@@ -238,23 +232,33 @@ export function normalizeCells<T extends Effect | Distribution>(
   datasourceId: string,
   items: Record<string, Record<string, T>>
 ): Record<string, Record<string, T>> {
-  return _.mapValues(items, (itemForDS: Record<string, T>, key: string) => {
-    if (key !== datasourceId) {
-      return itemForDS;
-    } else {
-      return _.mapValues(itemForDS, (item: T) => {
-        if (isValue(item)) {
-          return normalizeValue(item);
-        } else if (isValueCI(item)) {
-          return normalizeValueCI(item);
-        } else if (isRange(item)) {
-          return normalizeRange(item);
-        } else if (isNormalDistribution(item)) {
-          return normalizeDistribution(item);
-        } else {
-          return item;
-        }
-      });
+  return _.mapValues(
+    items,
+    (itemForDS: Record<string, T>, key: string): Record<string, T> => {
+      if (key !== datasourceId) {
+        return itemForDS;
+      } else {
+        return normalizeItems(itemForDS);
+      }
+    }
+  );
+}
+
+function normalizeItems<T extends Effect | Distribution>(
+  items: Record<string, T>
+): Record<string, T> {
+  return _.mapValues(items, (item: any) => {
+    switch (item.type) {
+      case 'value':
+        return normalizeValue(item);
+      case 'valueCI':
+        return normalizeValueCI(item);
+      case 'range':
+        return normalizeRange(item);
+      case 'normal':
+        return normalizeDistribution(item);
+      default:
+        return item;
     }
   });
 }

@@ -1,13 +1,10 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import IDistribution, {Distribution} from '@shared/interface/IDistribution';
-import IEffect, {Effect} from '@shared/interface/IEffect';
+import {Distribution} from '@shared/interface/IDistribution';
+import {Effect} from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
-import IRangeEffect from '@shared/interface/IRangeEffect';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
-import IValueCIEffect from '@shared/interface/IValueCIEffect';
-import IValueEffect from '@shared/interface/IValueEffect';
 import _ from 'lodash';
 
 const NUMERIC_INPUT_ERROR = 'Please provide a numeric input';
@@ -167,8 +164,8 @@ export function getOutOfBoundsError(
   const upperBound = inputUpperBound;
   const lowerBound = 0;
   if (
-    hasOutOfDoundsEffect(effects[datasourceId], lowerBound, upperBound) ||
-    hasOutOfDoundsDistribution(
+    hasOutOfBoundsEffect(effects[datasourceId], lowerBound, upperBound) ||
+    hasOutOfBoundsDistribution(
       distributions[datasourceId],
       lowerBound,
       upperBound
@@ -180,41 +177,45 @@ export function getOutOfBoundsError(
   }
 }
 
-function hasOutOfDoundsEffect(
+function hasOutOfBoundsEffect(
   effects: Record<string, Effect>,
   lowerBound: number,
   upperBound: number
 ): boolean {
   return _.some(_.map(effects), (effect: Effect) => {
-    if (isValue(effect)) {
-      return isValueOutOfDounds(effect, lowerBound, upperBound);
-    } else if (isValueCI(effect) || isRange(effect)) {
-      return areBoundsInvalid(effect, lowerBound, upperBound);
-    } else {
-      return false;
+    switch (effect.type) {
+      case 'value':
+        return isValueOutOfBounds(effect, lowerBound, upperBound);
+      case 'valueCI':
+        return areBoundsInvalid(effect, lowerBound, upperBound);
+      case 'range':
+        return areBoundsInvalid(effect, lowerBound, upperBound);
+      default:
+        return false;
     }
   });
 }
 
-function hasOutOfDoundsDistribution(
+function hasOutOfBoundsDistribution(
   distributions: Record<string, Distribution>,
   lowerBound: number,
   upperBound: number
 ): boolean {
   return _.some(_.map(distributions), (distribution: Distribution) => {
-    if (isValue(distribution)) {
-      return isValueOutOfDounds(distribution, lowerBound, upperBound);
-    } else if (isRange(distribution)) {
-      return areBoundsInvalid(distribution, lowerBound, upperBound);
-    } else if (isNormalDistribution(distribution)) {
-      return areParametersOutOfBound(distribution, lowerBound, upperBound);
-    } else {
-      return false;
+    switch (distribution.type) {
+      case 'value':
+        return isValueOutOfBounds(distribution, lowerBound, upperBound);
+      case 'range':
+        return areBoundsInvalid(distribution, lowerBound, upperBound);
+      case 'normal':
+        return areParametersOutOfBound(distribution, lowerBound, upperBound);
+      default:
+        return false;
     }
   });
 }
 
-function isValueOutOfDounds<T extends {value: number}>(
+function isValueOutOfBounds<T extends {value: number}>(
   item: T,
   lowerBound: number,
   upperBound: number
@@ -238,25 +239,6 @@ function areParametersOutOfBound(
   return (
     distribution.mean < lowerBound ||
     distribution.mean > upperBound ||
-    distribution.standardError < lowerBound ||
     distribution.standardError > upperBound
   );
-}
-
-export function isValue(effect: IEffect): effect is IValueEffect {
-  return (effect as IValueEffect).type === 'value';
-}
-
-export function isValueCI(effect: IEffect): effect is IValueCIEffect {
-  return (effect as IValueCIEffect).type === 'valueCI';
-}
-
-export function isRange(effect: IEffect): effect is IRangeEffect {
-  return (effect as IRangeEffect).type === 'range';
-}
-
-export function isNormalDistribution(
-  distribution: IDistribution
-): distribution is INormalDistribution {
-  return (distribution as INormalDistribution).type === 'normal';
 }

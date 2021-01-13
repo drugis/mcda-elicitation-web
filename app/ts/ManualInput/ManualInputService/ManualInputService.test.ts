@@ -612,7 +612,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 50
@@ -621,7 +621,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 50
@@ -633,7 +633,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 0.5
@@ -642,7 +642,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 50
@@ -658,7 +658,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'valueCI',
             value: 50,
@@ -671,7 +671,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 50
@@ -683,7 +683,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'valueCI',
             value: 0.5,
@@ -696,7 +696,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 50
@@ -712,7 +712,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'range',
             lowerBound: 25,
@@ -722,7 +722,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 50
@@ -734,7 +734,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'range',
             lowerBound: 0.25,
@@ -744,7 +744,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'value',
             value: 50
@@ -760,7 +760,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'normal',
             mean: 20,
@@ -770,7 +770,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'beta',
             alpha: 0.5,
@@ -783,7 +783,7 @@ describe('manualInputService', () => {
         ds1Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds1Id',
             alternativeId: 'alt1Id',
             type: 'normal',
             mean: 0.2,
@@ -793,7 +793,7 @@ describe('manualInputService', () => {
         ds2Id: {
           alt1Id: {
             criterionId: 'crit1Id',
-            dataSourceId: 'd1Id',
+            dataSourceId: 'ds2Id',
             alternativeId: 'alt1Id',
             type: 'beta',
             alpha: 0.5,
