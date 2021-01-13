@@ -3,8 +3,11 @@ import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import IUnitOfMeasurement, {
+  UnitOfMeasurementType
+} from '@shared/interface/IUnitOfMeasurement';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
+import {normalizeCells} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import React, {useContext, useState} from 'react';
 import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import UnitOfMeasurementDialog from './UnitOfMeasurementDialog/UnitOfMeasurementDialog';
@@ -16,7 +19,13 @@ export default function UnitOfMeasurementCell({
   criterion: ICriterion;
   dataSource: IDataSource;
 }) {
-  const {setDataSource} = useContext(ManualInputContext);
+  const {
+    setDataSource,
+    updateEffects,
+    updateDistributions,
+    effects,
+    distributions
+  } = useContext(ManualInputContext);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const tooltipText = 'Edit unit of measurement';
 
@@ -36,6 +45,22 @@ export default function UnitOfMeasurementCell({
       ...dataSource,
       unitOfMeasurement: newUnitOfMeasurement
     });
+    if (
+      covertingFromCustomToPercentage(
+        dataSource.unitOfMeasurement.type,
+        newUnitOfMeasurement.type
+      )
+    ) {
+      updateEffects(normalizeCells(dataSource.id, effects));
+      updateDistributions(normalizeCells(dataSource.id, distributions));
+    }
+  }
+
+  function covertingFromCustomToPercentage(
+    typeFrom: UnitOfMeasurementType,
+    typeTo: UnitOfMeasurementType
+  ): boolean {
+    return typeFrom === 'custom' && typeTo === 'percentage';
   }
 
   function createLabel(): JSX.Element {
