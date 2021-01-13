@@ -9,7 +9,13 @@ export const LegendContext = createContext<ILegendContext>(
   {} as ILegendContext
 );
 
-export function LegendContextProviderComponent({children}: {children: any}) {
+export function LegendContextProviderComponent({
+  canEdit,
+  children
+}: {
+  canEdit: boolean;
+  children: any;
+}) {
   const {currentScenario, updateScenario} = useContext(PreferencesContext);
   const {filteredAlternatives} = useContext(SubproblemContext);
 
@@ -45,7 +51,7 @@ export function LegendContextProviderComponent({children}: {children: any}) {
   }
 
   return (
-    <LegendContext.Provider value={{legend, saveLegend}}>
+    <LegendContext.Provider value={{canEdit, legend, saveLegend}}>
       {children}
     </LegendContext.Provider>
   );

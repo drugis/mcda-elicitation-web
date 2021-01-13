@@ -29,7 +29,8 @@ define([
         'workspace',
         'scales',
         'subproblems',
-        'currentSubproblem'
+        'currentSubproblem',
+        'canEdit'
       ])
     )
     .controller('SmaaResultsController', SmaaResultsController);

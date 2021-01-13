@@ -5,10 +5,8 @@ import React, {useContext} from 'react';
 import {LegendContext} from '../../LegendContext';
 
 export default function LegendTooltip(): JSX.Element {
-  const canEdit = true; //FIXME
-
   const {filteredAlternatives} = useContext(SubproblemContext);
-  const {legend} = useContext(LegendContext);
+  const {canEdit, legend} = useContext(LegendContext);
 
   function generateLegendTooltip(
     alternatives: IAlternative[],

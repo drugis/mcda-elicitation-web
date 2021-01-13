@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
@@ -16,9 +17,7 @@ export default function LegendWrapper({
 }: {
   children: any;
 }): JSX.Element {
-  const canEdit = true; //FIXME
-
-  const {legend, saveLegend} = useContext(LegendContext);
+  const {canEdit, legend, saveLegend} = useContext(LegendContext);
   const {filteredAlternatives} = useContext(SubproblemContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -107,16 +106,7 @@ export default function LegendWrapper({
                   handleLegendChange={handleLegendChange}
                 />
               </Grid>
-              <Grid
-                id={`title-error`}
-                item
-                container
-                xs={12}
-                justify="flex-end"
-                className="alert"
-              >
-                {error}
-              </Grid>
+              <DisplayErrors errors={[error]} identifier="missing-title" />
             </Grid>
           </DialogContent>
           <DialogActions>
