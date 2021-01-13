@@ -19,10 +19,10 @@ export default function RankAcceptabilitiesPlot() {
   generate(settings);
 
   return (
-    <Grid item>
+    <Grid item xs={12}>
       <div
         style={{width: width, height: height}}
-        id={'rank-acceptability-plot'}
+        id="rank-acceptabilities-plot"
       />
     </Grid>
   );

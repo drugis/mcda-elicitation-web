@@ -17,7 +17,7 @@ export default function RankAcceptabilitiesTable() {
   const {ranks} = useContext(SmaaResultsContext);
 
   return (
-    <Table id="rank-acceptability-table">
+    <Table id="rank-acceptabilities-table">
       <TableHead>
         <TableRow>
           <TableCell />
