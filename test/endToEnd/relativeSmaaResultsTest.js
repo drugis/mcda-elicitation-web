@@ -18,17 +18,15 @@ function checkRelativeSmaaResults(browser) {
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
     .click('#smaa-tab')
-    .waitForElementVisible('#smaa-measurements-header')
-    .waitForElementVisible('#smaa-table')
-    .waitForElementVisible('#rank-plot')
-    .waitForElementVisible('#rank-table')
+    .waitForElementVisible('#effects-table-header')
+    .waitForElementVisible('#effects-table')
+    .waitForElementVisible('#rank-acceptability-plot')
+    .waitForElementVisible('#rank-acceptability-table')
     .waitForElementVisible('#central-weights-plot')
     .waitForElementVisible('#central-weights-table');
 
-  const measurementElementId = '#criterion-0-alternative-0-measurement';
-  const centralWightElementId = '#alternative-0-criterion-0-central-weight';
-  browser.assert.containsText(measurementElementId, '45.7');
-  browser.assert.containsText(centralWightElementId, '0.09');
+  const centralWightElementId = '#central-weight-Placebo-HAM-D';
+  browser.assert.containsText(centralWightElementId, '0.0904');
   checkRankTable(browser);
 
   browser.click('#logo');
@@ -37,9 +35,9 @@ function checkRelativeSmaaResults(browser) {
 
 function checkRankTable(browser) {
   browser.assert
-    .containsText('#alternative-0-rank-1', '0.604')
-    .assert.containsText('#alternative-1-rank-1', '0.021')
-    .assert.containsText('#alternative-2-rank-1', '0.151')
-    .assert.containsText('#alternative-3-rank-1', '0.083')
-    .assert.containsText('#alternative-4-rank-1', '0.141');
+    .containsText('#rank-Placebo-0', '0.604')
+    .assert.containsText('#rank-Fluox-0', '0.0213')
+    .assert.containsText('#rank-Parox-0', '0.151')
+    .assert.containsText('#rank-Sertra-0', '0.0828')
+    .assert.containsText('#rank-Venla-0', '0.141');
 }

@@ -38,6 +38,7 @@ function addTutorial(browser, title) {
 
 function copy(browser, index) {
   return browser
+    .waitForElementVisible('#workspaces-header')
     .useXpath()
     .click('//*[@id="copy-workspace-' + index + '"]/span/button')
     .useCss()
