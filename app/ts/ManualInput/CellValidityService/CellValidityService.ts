@@ -1,9 +1,13 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
+import IDistribution, {Distribution} from '@shared/interface/IDistribution';
+import IEffect, {Effect} from '@shared/interface/IEffect';
+import INormalDistribution from '@shared/interface/INormalDistribution';
+import IRangeEffect from '@shared/interface/IRangeEffect';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import IValueEffect from '@shared/interface/IValueEffect';
 import _ from 'lodash';
 
 const NUMERIC_INPUT_ERROR = 'Please provide a numeric input';
@@ -152,4 +156,72 @@ function isValidCell(cell: Effect | Distribution, unit: IUnitOfMeasurement) {
         !getNormalError(cell.standardError, unit)
       );
   }
+}
+
+export function getOutOfBoundsError(
+  dataSourceId: string,
+  effects: Record<string, Record<string, Effect>>,
+  distributions: Record<string, Record<string, Distribution>>,
+  inputUpperBound: number
+): string {
+  const upperBound = inputUpperBound;
+  const lowerBound = 0;
+  const effectsForDS: Effect[] = _.map(effects[dataSourceId]);
+  const distributionsForDS: Distribution[] = _.map(distributions[dataSourceId]);
+  const hasOutOfDoundsEffect = _.some(effectsForDS, (effect: Effect) => {
+    if (isValue(effect)) {
+      return effect.value < lowerBound || effect.value > upperBound;
+    } else if (isValueCI(effect) || isRange(effect)) {
+      return effect.lowerBound < lowerBound || effect.upperBound > upperBound;
+    } else {
+      return false;
+    }
+  });
+  const hasOutOfDoundsDistribution = _.some(
+    distributionsForDS,
+    (distribution: Distribution) => {
+      if (isValue(distribution)) {
+        return (
+          distribution.value < lowerBound || distribution.value > upperBound
+        );
+      } else if (isRange(distribution)) {
+        return (
+          distribution.lowerBound < lowerBound ||
+          distribution.upperBound > upperBound
+        );
+      } else if (isNormalDistribution(distribution)) {
+        return (
+          distribution.mean < lowerBound ||
+          distribution.mean > upperBound ||
+          distribution.standardError < lowerBound ||
+          distribution.standardError > upperBound
+        );
+      } else {
+        return false;
+      }
+    }
+  );
+  if (hasOutOfDoundsEffect || hasOutOfDoundsDistribution) {
+    return `Some cell values are out of bounds [0, ${upperBound}]`;
+  } else {
+    return '';
+  }
+}
+
+function isValue(effect: IEffect): effect is IValueEffect {
+  return (effect as IValueEffect).type === 'value';
+}
+
+function isValueCI(effect: IEffect): effect is IValueCIEffect {
+  return (effect as IValueCIEffect).type === 'valueCI';
+}
+
+function isRange(effect: IEffect): effect is IRangeEffect {
+  return (effect as IRangeEffect).type === 'range';
+}
+
+function isNormalDistribution(
+  distribution: IDistribution
+): distribution is INormalDistribution {
+  return (distribution as INormalDistribution).type === 'normal';
 }
