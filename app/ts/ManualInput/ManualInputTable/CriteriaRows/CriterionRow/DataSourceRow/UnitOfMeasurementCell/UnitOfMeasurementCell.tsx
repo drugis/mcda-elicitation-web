@@ -5,6 +5,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
+import {normalizeCells} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import React, {useContext, useState} from 'react';
 import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import UnitOfMeasurementDialog from './UnitOfMeasurementDialog/UnitOfMeasurementDialog';
@@ -16,7 +17,13 @@ export default function UnitOfMeasurementCell({
   criterion: ICriterion;
   dataSource: IDataSource;
 }) {
-  const {setDataSource} = useContext(ManualInputContext);
+  const {
+    setDataSource,
+    setEffects,
+    setDistributions,
+    effects,
+    distributions
+  } = useContext(ManualInputContext);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const tooltipText = 'Edit unit of measurement';
 
@@ -36,6 +43,18 @@ export default function UnitOfMeasurementCell({
       ...dataSource,
       unitOfMeasurement: newUnitOfMeasurement
     });
+    if (
+      dataSource.unitOfMeasurement.type === 'custom' &&
+      newUnitOfMeasurement.type === 'percentage'
+    ) {
+      setEffects(normalizeCells(dataSource.id, effects)); //not written to DB atm
+      setDistributions(normalizeCells(dataSource.id, distributions));
+    } else if (
+      dataSource.unitOfMeasurement.type === 'decimal' &&
+      newUnitOfMeasurement.type === 'percentage'
+    ) {
+      //multiply cells by 100 ?
+    }
   }
 
   function createLabel(): JSX.Element {

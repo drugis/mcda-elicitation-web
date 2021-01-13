@@ -9,7 +9,13 @@ import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import {renderEnteredValues} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import _ from 'lodash';
-import {hasInvalidCell} from '../CellValidityService/CellValidityService';
+import {
+  hasInvalidCell,
+  isNormalDistribution,
+  isRange,
+  isValue,
+  isValueCI
+} from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
 
 export function createDistributions(
@@ -226,4 +232,42 @@ export function normalizeInputValue(
 
 export function renderInputEffect(effect: Effect, usePercentage: boolean) {
   return renderEnteredValues(effect, usePercentage, true);
+}
+
+export function normalizeCells<T extends Effect | Distribution>(
+  datasourceId: string,
+  items: Record<string, Record<string, T>>
+): Record<string, Record<string, T>> {
+  return _.mapValues(items, (itemForDS: Record<string, T>, key: string) => {
+    if (key !== datasourceId) {
+      return itemForDS;
+    } else {
+      return _.mapValues(itemForDS, (item: T) => {
+        if (isValue(item)) {
+          return {...item, value: item.value / 100};
+        } else if (isValueCI(item)) {
+          return {
+            ...item,
+            value: item.value / 100,
+            lowerBound: item.lowerBound / 100,
+            upperBound: item.upperBound / 100
+          };
+        } else if (isRange(item)) {
+          return {
+            ...item,
+            lowerBound: item.lowerBound / 100,
+            upperBound: item.upperBound / 100
+          };
+        } else if (isNormalDistribution(item)) {
+          return {
+            ...item,
+            mean: item.mean / 100,
+            standardError: item.standardError / 100
+          };
+        } else {
+          return item;
+        }
+      });
+    }
+  });
 }

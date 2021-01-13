@@ -159,15 +159,15 @@ function isValidCell(cell: Effect | Distribution, unit: IUnitOfMeasurement) {
 }
 
 export function getOutOfBoundsError(
-  dataSourceId: string,
+  datasourceId: string,
   effects: Record<string, Record<string, Effect>>,
   distributions: Record<string, Record<string, Distribution>>,
   inputUpperBound: number
 ): string {
   const upperBound = inputUpperBound;
   const lowerBound = 0;
-  const effectsForDS: Effect[] = _.map(effects[dataSourceId]);
-  const distributionsForDS: Distribution[] = _.map(distributions[dataSourceId]);
+  const effectsForDS: Effect[] = _.map(effects[datasourceId]);
+  const distributionsForDS: Distribution[] = _.map(distributions[datasourceId]);
   const hasOutOfDoundsEffect = _.some(effectsForDS, (effect: Effect) => {
     if (isValue(effect)) {
       return effect.value < lowerBound || effect.value > upperBound;
@@ -208,19 +208,19 @@ export function getOutOfBoundsError(
   }
 }
 
-function isValue(effect: IEffect): effect is IValueEffect {
+export function isValue(effect: IEffect): effect is IValueEffect {
   return (effect as IValueEffect).type === 'value';
 }
 
-function isValueCI(effect: IEffect): effect is IValueCIEffect {
+export function isValueCI(effect: IEffect): effect is IValueCIEffect {
   return (effect as IValueCIEffect).type === 'valueCI';
 }
 
-function isRange(effect: IEffect): effect is IRangeEffect {
+export function isRange(effect: IEffect): effect is IRangeEffect {
   return (effect as IRangeEffect).type === 'range';
 }
 
-function isNormalDistribution(
+export function isNormalDistribution(
   distribution: IDistribution
 ): distribution is INormalDistribution {
   return (distribution as INormalDistribution).type === 'normal';
