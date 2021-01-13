@@ -21,7 +21,7 @@ export default function CentralWeightsTable() {
   const {centralWeights} = useContext(SmaaResultsContext);
 
   return (
-    <Table>
+    <Table id="central-weights-table">
       <TableHead>
         <TableRow>
           <TableCell>Alternative</TableCell>
@@ -41,7 +41,10 @@ export default function CentralWeightsTable() {
             {_.map(
               filteredCriteria,
               (criterion: ICriterion): JSX.Element => (
-                <TableCell key={alternative.id + criterion.id}>
+                <TableCell
+                  id={`central-weight-${alternative.id}-${criterion.id}`}
+                  key={alternative.id + criterion.id}
+                >
                   {significantDigits(
                     centralWeights[alternative.id].w[criterion.id]
                   )}

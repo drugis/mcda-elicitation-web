@@ -6,6 +6,7 @@ import {
   TableRow
 } from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SmaaResultsContext} from 'app/ts/SmaaTab/SmaaResultsContext/SmaaResultsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
@@ -16,7 +17,7 @@ export default function RankAcceptabilitiesTable() {
   const {ranks} = useContext(SmaaResultsContext);
 
   return (
-    <Table>
+    <Table id="rank-acceptability-table">
       <TableHead>
         <TableRow>
           <TableCell />
@@ -35,8 +36,11 @@ export default function RankAcceptabilitiesTable() {
             {_.map(
               ranks[alternative.id],
               (valueForRank: number, rank: number): JSX.Element => (
-                <TableCell key={alternative.id + rank}>
-                  {valueForRank}
+                <TableCell
+                  id={`rank-${alternative.id}-${rank}`}
+                  key={alternative.id + rank}
+                >
+                  {significantDigits(valueForRank)}
                 </TableCell>
               )
             )}
