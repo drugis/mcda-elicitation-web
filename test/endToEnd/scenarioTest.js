@@ -48,7 +48,7 @@ function create(browser) {
     .waitForElementVisible('#add-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', 'Default')
     .waitForElementVisible('#add-scenario-confirm-button:disabled')
-    .assert.containsText('#title-error', 'Duplicate title')
+    .assert.containsText('#title-error-0', 'Duplicate title')
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#add-scenario-confirm-button:enabled')
