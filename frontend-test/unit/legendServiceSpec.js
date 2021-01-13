@@ -11,7 +11,7 @@ define([
     const compileMock = jasmine.createSpy();
 
     beforeEach(function () {
-      angular.mock.module('elicit.smaaResults', function ($provide) {
+      angular.mock.module('elicit.results', function ($provide) {
         $provide.value('$compile', compileMock);
       });
     });
