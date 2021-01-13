@@ -19,8 +19,8 @@ function smaaResults(browser) {
     .click('#smaa-tab')
     .waitForElementVisible('#effects-table-header')
     .waitForElementVisible('#effects-table')
-    .waitForElementVisible('#rank-acceptability-plot')
-    .waitForElementVisible('#rank-acceptability-table')
+    .waitForElementVisible('#rank-acceptabilities-plot')
+    .waitForElementVisible('#rank-acceptabilities-table')
     .waitForElementVisible('#central-weights-plot')
     .waitForElementVisible('#central-weights-table');
 

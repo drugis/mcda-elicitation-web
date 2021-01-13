@@ -129,7 +129,7 @@ export function generateRankPlotSettings(
   });
   const rankPlotData = getRankPlotData(ranks, alternatives, legend);
   const settings: ChartConfiguration = {
-    bindto: '#rank-acceptability-plot',
+    bindto: '#rank-acceptabilities-plot',
     data: {
       x: 'x',
       columns: rankPlotData,

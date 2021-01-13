@@ -108,17 +108,11 @@ function unrealisticValues(browser: NightwatchBrowser) {
     .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementVisible('#trade-off-header');
-  browser.expect.element('#trade-off-warning-Diarrhea').text.to.equal('');
   browser.expect
-    .element('#trade-off-warning-Dizziness')
+    .element('#trade-off-warning-Diarrhea')
     .text.to.equal(`This value is unrealistic given the criterion's range`);
-  browser.expect
-    .element('#trade-off-warning-Headache')
-    .text.to.equal(`This value is unrealistic given the criterion's range`);
-  browser.expect
-    .element('#trade-off-warning-Insomnia')
-    .text.to.equal(`This value is unrealistic given the criterion's range`);
-  browser.expect
-    .element('#trade-off-warning-Nausea')
-    .text.to.equal(`This value is unrealistic given the criterion's range`);
+  browser.expect.element('#trade-off-warning-Dizziness').text.to.equal('');
+  browser.expect.element('#trade-off-warning-Headache').text.to.equal('');
+  browser.expect.element('#trade-off-warning-Insomnia').text.to.equal('');
+  browser.expect.element('#trade-off-warning-Nausea').text.to.equal('');
 }

@@ -15,6 +15,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 
 export default function SmaaWeightsTable(): JSX.Element {
   const {filteredCriteria} = useContext(SubproblemContext);
@@ -22,13 +23,16 @@ export default function SmaaWeightsTable(): JSX.Element {
 
   return (
     <Grid container item xs={12}>
-      <Grid item xs={12}>
+      <Grid item xs={9}>
         <Typography variant="h5">
           Weights <InlineHelp helpId="representative-weights" />
         </Typography>
       </Grid>
+      <Grid container item xs={3} justify="flex-end">
+        <ClipboardButton targetId="#weigths-table" />
+      </Grid>
       <Grid item xs={12}>
-        <Table>
+        <Table id="weigths-table">
           <TableHead>
             <TableRow>
               {_.map(filteredCriteria, (criterion: ICriterion) => (

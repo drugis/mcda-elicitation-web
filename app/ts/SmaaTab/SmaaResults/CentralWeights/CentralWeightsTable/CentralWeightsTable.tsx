@@ -37,7 +37,11 @@ export default function CentralWeightsTable() {
         {_.map(filteredAlternatives, (alternative: IAlternative) => (
           <TableRow key={alternative.id}>
             <TableCell>{alternative.title}</TableCell>
-            <TableCell>{centralWeights[alternative.id].cf}</TableCell>
+            <TableCell>
+              {centralWeights[alternative.id].cf
+                ? centralWeights[alternative.id].cf
+                : 0}
+            </TableCell>
             {_.map(
               filteredCriteria,
               (criterion: ICriterion): JSX.Element => (
@@ -45,9 +49,11 @@ export default function CentralWeightsTable() {
                   id={`central-weight-${alternative.id}-${criterion.id}`}
                   key={alternative.id + criterion.id}
                 >
-                  {significantDigits(
-                    centralWeights[alternative.id].w[criterion.id]
-                  )}
+                  {centralWeights[alternative.id].w[criterion.id]
+                    ? significantDigits(
+                        centralWeights[alternative.id].w[criterion.id]
+                      )
+                    : 0}
                 </TableCell>
               )
             )}

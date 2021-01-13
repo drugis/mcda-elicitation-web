@@ -124,9 +124,9 @@ function switchInSmaa(browser) {
     .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#smaa-tab')
-    .waitForElementVisible('#smaa-measurements-header')
+    .waitForElementVisible('#effects-table-header')
     .click('#scenario-selector')
-    .click('option[label="Default"]')
+    .click('#scenario-selector > option:nth-child(1)')
     .assert.containsText('#scenario-selector', 'Default');
 }
 function deleteScenario(browser) {
