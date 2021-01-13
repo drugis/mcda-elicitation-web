@@ -10,9 +10,14 @@ import {
   getGammaBetaError,
   getLowerBoundError,
   getNormalError,
+  getOutOfBoundsError,
   getUpperBoundError,
   getValueError,
-  hasInvalidCell
+  hasInvalidCell,
+  isNormalDistribution,
+  isRange,
+  isValue,
+  isValueCI
 } from './CellValidityService';
 
 const NUMERIC_INPUT_ERROR = 'Please provide a numeric input';
@@ -365,6 +370,275 @@ describe('CellValidityService', () => {
       };
       const result: boolean = hasInvalidCell(values, criteria, alternatives);
       expect(result).toBe(false);
+    });
+  });
+
+  describe('isValue', () => {
+    it('should return true if effect is of type "value"', () => {
+      const effect = {type: 'value'} as Effect;
+      const result = isValue(effect);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if effect is not of type "value"', () => {
+      const effect = {type: 'valueCI'} as Effect;
+      const result = isValue(effect);
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('isValueCI', () => {
+    it('should return true if effect is of type "valueCI"', () => {
+      const effect = {type: 'valueCI'} as Effect;
+      const result = isValueCI(effect);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if effect is not of type "valueCI"', () => {
+      const effect = {type: 'value'} as Effect;
+      const result = isValueCI(effect);
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('isRange', () => {
+    it('should return true if effect is of type "range"', () => {
+      const effect = {type: 'range'} as Effect;
+      const result = isRange(effect);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if effect is not of type "range"', () => {
+      const effect = {type: 'value'} as Effect;
+      const result = isRange(effect);
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('isNormalDistribution', () => {
+    it('should return true if distribution is of type "range"', () => {
+      const distribution = {type: 'normal'} as Distribution;
+      const result = isNormalDistribution(distribution);
+      expect(result).toBeTruthy();
+    });
+
+    it('should return true if distribution is not of type "range"', () => {
+      const distribution = {type: 'beta'} as Distribution;
+      const result = isNormalDistribution(distribution);
+      expect(result).toBeFalsy();
+    });
+  });
+
+  describe('getOutOfBoundsError', () => {
+    it('should return an error if a value effect is out of bounds', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 10
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 0.5
+          }
+        }
+      };
+      const distributions: Record<string, Record<string, Distribution>> = {};
+      const inputUpperBound = 1;
+      const result = getOutOfBoundsError(
+        datasourceId,
+        effects,
+        distributions,
+        inputUpperBound
+      );
+      const expectedResult = 'Some cell values are out of bounds [0, 1]';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return an error if a valueCI effect is out of bounds', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'valueCI',
+            value: 0.5,
+            lowerBound: 0,
+            upperBound: 10,
+            isNotEstimableLowerBound: false,
+            isNotEstimableUpperBound: false
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 0.5
+          }
+        }
+      };
+      const distributions: Record<string, Record<string, Distribution>> = {};
+      const inputUpperBound = 1;
+      const result = getOutOfBoundsError(
+        datasourceId,
+        effects,
+        distributions,
+        inputUpperBound
+      );
+      const expectedResult = 'Some cell values are out of bounds [0, 1]';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return an error if a range effect is out of bounds', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'range',
+            lowerBound: -1,
+            upperBound: 1
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 0.5
+          }
+        }
+      };
+      const distributions: Record<string, Record<string, Distribution>> = {};
+      const inputUpperBound = 1;
+      const result = getOutOfBoundsError(
+        datasourceId,
+        effects,
+        distributions,
+        inputUpperBound
+      );
+      const expectedResult = 'Some cell values are out of bounds [0, 1]';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return an error if a normal distribution mean is out of bounds', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {};
+      const distributions: Record<string, Record<string, Distribution>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'normal',
+            mean: 10,
+            standardError: 0.5
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 0.5
+          }
+        }
+      };
+      const inputUpperBound = 1;
+      const result = getOutOfBoundsError(
+        datasourceId,
+        effects,
+        distributions,
+        inputUpperBound
+      );
+      const expectedResult = 'Some cell values are out of bounds [0, 1]';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return an error if a normal distribution error is out of bounds', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {};
+      const distributions: Record<string, Record<string, Distribution>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'normal',
+            mean: 0.5,
+            standardError: 10
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 0.5
+          }
+        }
+      };
+      const inputUpperBound = 1;
+      const result = getOutOfBoundsError(
+        datasourceId,
+        effects,
+        distributions,
+        inputUpperBound
+      );
+      const expectedResult = 'Some cell values are out of bounds [0, 1]';
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return an empty error if aall entries are within bounds', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'empty'
+          }
+        }
+      };
+      const distributions: Record<string, Record<string, Distribution>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 0.5
+          }
+        }
+      };
+      const inputUpperBound = 1;
+      const result = getOutOfBoundsError(
+        datasourceId,
+        effects,
+        distributions,
+        inputUpperBound
+      );
+      const expectedResult = '';
+      expect(result).toEqual(expectedResult);
     });
   });
 });

@@ -3,7 +3,9 @@ import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import IUnitOfMeasurement, {
+  UnitOfMeasurementType
+} from '@shared/interface/IUnitOfMeasurement';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
 import {normalizeCells} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import React, {useContext, useState} from 'react';
@@ -19,8 +21,8 @@ export default function UnitOfMeasurementCell({
 }) {
   const {
     setDataSource,
-    setEffects,
-    setDistributions,
+    updateEffects,
+    updateDistributions,
     effects,
     distributions
   } = useContext(ManualInputContext);
@@ -44,17 +46,21 @@ export default function UnitOfMeasurementCell({
       unitOfMeasurement: newUnitOfMeasurement
     });
     if (
-      dataSource.unitOfMeasurement.type === 'custom' &&
-      newUnitOfMeasurement.type === 'percentage'
+      covertingFromCustomToPercentage(
+        dataSource.unitOfMeasurement.type,
+        newUnitOfMeasurement.type
+      )
     ) {
-      setEffects(normalizeCells(dataSource.id, effects)); //not written to DB atm
-      setDistributions(normalizeCells(dataSource.id, distributions));
-    } else if (
-      dataSource.unitOfMeasurement.type === 'decimal' &&
-      newUnitOfMeasurement.type === 'percentage'
-    ) {
-      //multiply cells by 100 ?
+      updateEffects(normalizeCells(dataSource.id, effects));
+      updateDistributions(normalizeCells(dataSource.id, distributions));
     }
+  }
+
+  function covertingFromCustomToPercentage(
+    typeFrom: UnitOfMeasurementType,
+    typeTo: UnitOfMeasurementType
+  ): boolean {
+    return typeFrom === 'custom' && typeTo === 'percentage';
   }
 
   function createLabel(): JSX.Element {

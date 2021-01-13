@@ -244,30 +244,47 @@ export function normalizeCells<T extends Effect | Distribution>(
     } else {
       return _.mapValues(itemForDS, (item: T) => {
         if (isValue(item)) {
-          return {...item, value: item.value / 100};
+          return normalizeValue(item);
         } else if (isValueCI(item)) {
-          return {
-            ...item,
-            value: item.value / 100,
-            lowerBound: item.lowerBound / 100,
-            upperBound: item.upperBound / 100
-          };
+          return normalizeValueCI(item);
         } else if (isRange(item)) {
-          return {
-            ...item,
-            lowerBound: item.lowerBound / 100,
-            upperBound: item.upperBound / 100
-          };
+          return normalizeRange(item);
         } else if (isNormalDistribution(item)) {
-          return {
-            ...item,
-            mean: item.mean / 100,
-            standardError: item.standardError / 100
-          };
+          return normalizeDistribution(item);
         } else {
           return item;
         }
       });
     }
   });
+}
+
+function normalizeValue<T extends {value: number}>(item: T): T {
+  return {...item, value: item.value / 100};
+}
+
+function normalizeValueCI<
+  T extends {value: number; lowerBound: number; upperBound: number}
+>(item: T): T {
+  return normalizeValue(normalizeRange(item));
+}
+
+function normalizeRange<T extends {lowerBound: number; upperBound: number}>(
+  item: T
+): T {
+  return {
+    ...item,
+    lowerBound: item.lowerBound / 100,
+    upperBound: item.upperBound / 100
+  };
+}
+
+function normalizeDistribution<T extends {mean: number; standardError: number}>(
+  item: T
+): T {
+  return {
+    ...item,
+    mean: item.mean / 100,
+    standardError: item.standardError / 100
+  };
 }

@@ -42,14 +42,14 @@ export default interface IManualInputContext {
     alternativeId: string
   ) => Effect;
   setEffect: (effect: Effect) => void;
-  setEffects: (effects: Record<string, Record<string, Effect>>) => void;
+  updateEffects: (effects: Record<string, Record<string, Effect>>) => void;
   getDistribution: (
     criterionId: string,
     dataSourceId: string,
     alternativeId: string
   ) => Distribution;
   setDistribution: (distribution: Distribution) => void;
-  setDistributions: (
+  updateDistributions: (
     distributions: Record<string, Record<string, Distribution>>
   ) => void;
   generateDistributions: () => void;

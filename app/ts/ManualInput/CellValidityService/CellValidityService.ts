@@ -166,46 +166,81 @@ export function getOutOfBoundsError(
 ): string {
   const upperBound = inputUpperBound;
   const lowerBound = 0;
-  const effectsForDS: Effect[] = _.map(effects[datasourceId]);
-  const distributionsForDS: Distribution[] = _.map(distributions[datasourceId]);
-  const hasOutOfDoundsEffect = _.some(effectsForDS, (effect: Effect) => {
-    if (isValue(effect)) {
-      return effect.value < lowerBound || effect.value > upperBound;
-    } else if (isValueCI(effect) || isRange(effect)) {
-      return effect.lowerBound < lowerBound || effect.upperBound > upperBound;
-    } else {
-      return false;
-    }
-  });
-  const hasOutOfDoundsDistribution = _.some(
-    distributionsForDS,
-    (distribution: Distribution) => {
-      if (isValue(distribution)) {
-        return (
-          distribution.value < lowerBound || distribution.value > upperBound
-        );
-      } else if (isRange(distribution)) {
-        return (
-          distribution.lowerBound < lowerBound ||
-          distribution.upperBound > upperBound
-        );
-      } else if (isNormalDistribution(distribution)) {
-        return (
-          distribution.mean < lowerBound ||
-          distribution.mean > upperBound ||
-          distribution.standardError < lowerBound ||
-          distribution.standardError > upperBound
-        );
-      } else {
-        return false;
-      }
-    }
-  );
-  if (hasOutOfDoundsEffect || hasOutOfDoundsDistribution) {
+  if (
+    hasOutOfDoundsEffect(effects[datasourceId], lowerBound, upperBound) ||
+    hasOutOfDoundsDistribution(
+      distributions[datasourceId],
+      lowerBound,
+      upperBound
+    )
+  ) {
     return `Some cell values are out of bounds [0, ${upperBound}]`;
   } else {
     return '';
   }
+}
+
+function hasOutOfDoundsEffect(
+  effects: Record<string, Effect>,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return _.some(_.map(effects), (effect: Effect) => {
+    if (isValue(effect)) {
+      return isValueOutOfDounds(effect, lowerBound, upperBound);
+    } else if (isValueCI(effect) || isRange(effect)) {
+      return areBoundsInvalid(effect, lowerBound, upperBound);
+    } else {
+      return false;
+    }
+  });
+}
+
+function hasOutOfDoundsDistribution(
+  distributions: Record<string, Distribution>,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return _.some(_.map(distributions), (distribution: Distribution) => {
+    if (isValue(distribution)) {
+      return isValueOutOfDounds(distribution, lowerBound, upperBound);
+    } else if (isRange(distribution)) {
+      return areBoundsInvalid(distribution, lowerBound, upperBound);
+    } else if (isNormalDistribution(distribution)) {
+      return areParametersOutOfBound(distribution, lowerBound, upperBound);
+    } else {
+      return false;
+    }
+  });
+}
+
+function isValueOutOfDounds<T extends {value: number}>(
+  item: T,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return item.value < lowerBound || item.value > upperBound;
+}
+
+function areBoundsInvalid<T extends {lowerBound: number; upperBound: number}>(
+  item: T,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return item.lowerBound < lowerBound || item.upperBound > upperBound;
+}
+
+function areParametersOutOfBound(
+  distribution: INormalDistribution,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return (
+    distribution.mean < lowerBound ||
+    distribution.mean > upperBound ||
+    distribution.standardError < lowerBound ||
+    distribution.standardError > upperBound
+  );
 }
 
 export function isValue(effect: IEffect): effect is IValueEffect {
