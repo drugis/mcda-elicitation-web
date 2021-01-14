@@ -127,7 +127,7 @@ function initApp(): void {
     }
     next();
   });
-  app.get('/', (request: Request, response: Response): void => {
+  app.get('/', (request: any, response: Response): void => {
     if (request.user || request.session.user) {
       response.sendFile(__dirname + '/dist/index.html');
     } else {
@@ -250,7 +250,7 @@ function rightsCallback(
 }
 
 function useSSLLogin(): void {
-  app.get('/signin', (request: Request, response: Response) => {
+  app.get('/signin', (request: any, response: Response) => {
     const clientString = request.header('X-SSL-CLIENT-DN');
     const emailRegex = /emailAddress=([^,]*)/;
     const email = clientString.match(emailRegex)[1];

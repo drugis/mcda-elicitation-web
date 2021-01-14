@@ -2,12 +2,11 @@ import {OurError} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
-import {Request} from 'express';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
 import logger from './logger';
 
-export function getUser(request: Request) {
+export function getUser(request: any) {
   if (request.user) {
     return request.user;
   } else if (
