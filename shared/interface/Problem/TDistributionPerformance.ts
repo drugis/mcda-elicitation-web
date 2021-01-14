@@ -7,7 +7,7 @@ import IStudentsTPerformance from './IStudentsTPerformance';
 import ITextPerformance from './ITextPerformance';
 import IValuePerformance from './IValuePerformance';
 
-export type DistributionPerformance =
+export type TDistributionPerformance =
   | IValuePerformance
   | IRangeDistributionPerformance
   | INormalPerformance

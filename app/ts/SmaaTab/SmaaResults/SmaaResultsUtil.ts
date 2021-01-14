@@ -4,7 +4,7 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
-import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
+import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {
   IDistributionPerformance,
@@ -94,7 +94,7 @@ export function buildPataviPerformanceTable(
 
 function getPerformance(
   performance: Performance
-): EffectPerformance | DistributionPerformance | TRelativePerformance {
+): EffectPerformance | TDistributionPerformance | TRelativePerformance {
   if (
     isDistributionPerformance(performance) &&
     performance.distribution.type !== 'empty'

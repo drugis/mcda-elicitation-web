@@ -16,7 +16,7 @@ import IValueCIEffect from './interface/IValueCIEffect';
 import IValueEffect from './interface/IValueEffect';
 import IWorkspace from './interface/IWorkspace';
 import IWorkspaceProperties from './interface/IWorkspaceProperties';
-import {DistributionPerformance} from './interface/Problem/IDistributionPerformance';
+import {TDistributionPerformance} from './interface/Problem/TDistributionPerformance';
 import IEmptyPerformance from './interface/Problem/IEmptyPerformance';
 import {
   IDistributionPerformance,
@@ -386,7 +386,7 @@ export function buildDistribution(
 }
 
 export function finishDistributionCreation(
-  performance: DistributionPerformance,
+  performance: TDistributionPerformance,
   distributionBase: IDistribution
 ): Distribution {
   switch (performance.type) {

@@ -8,7 +8,7 @@ import IValueEffect from '@shared/interface/IValueEffect';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
-import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
+import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -256,7 +256,7 @@ describe('SmaaResultsUtil', () => {
           alternative: 'alt1',
           performance: {
             effect: {type: 'exact'} as EffectPerformance,
-            distribution: {type: 'dnorm'} as DistributionPerformance
+            distribution: {type: 'dnorm'} as TDistributionPerformance
           }
         },
         {
@@ -273,7 +273,7 @@ describe('SmaaResultsUtil', () => {
           alternative: 'alt1',
           performance: {
             effect: {type: 'exact'} as EffectPerformance,
-            distribution: {type: 'empty'} as DistributionPerformance
+            distribution: {type: 'empty'} as TDistributionPerformance
           }
         }
       ];
@@ -283,7 +283,7 @@ describe('SmaaResultsUtil', () => {
           criterion: 'crit1',
           dataSource: 'ds1',
           alternative: 'alt1',
-          performance: {type: 'dnorm'} as DistributionPerformance
+          performance: {type: 'dnorm'} as TDistributionPerformance
         },
         {
           criterion: 'crit2',
@@ -308,7 +308,7 @@ describe('SmaaResultsUtil', () => {
           dataSource: 'ds4',
           alternative: 'alt1',
           performance: {
-            distribution: {type: 'empty'} as DistributionPerformance
+            distribution: {type: 'empty'} as TDistributionPerformance
           }
         }
       ];

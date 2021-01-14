@@ -15,7 +15,7 @@ import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
-import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
+import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
@@ -530,7 +530,7 @@ function buildEffectPerformance(cell: Effect): EffectPerformance {
 
 function buildDistributionPerformance(
   cell: Distribution
-): DistributionPerformance {
+): TDistributionPerformance {
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
