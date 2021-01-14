@@ -10,8 +10,8 @@ export default function Overview() {
     <Grid container spacing={2}>
       <DownloadWorkspace />
       <TherapeuticContext />
-      <OverviewCriteria />
       <OverviewAlternatives />
+      <OverviewCriteria />
     </Grid>
   );
 }

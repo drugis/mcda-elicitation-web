@@ -3,6 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
+import INormalDistribution from '@shared/interface/INormalDistribution';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import _ from 'lodash';
 
@@ -152,4 +153,92 @@ function isValidCell(cell: Effect | Distribution, unit: IUnitOfMeasurement) {
         !getNormalError(cell.standardError, unit)
       );
   }
+}
+
+export function getOutOfBoundsError(
+  datasourceId: string,
+  effects: Record<string, Record<string, Effect>>,
+  distributions: Record<string, Record<string, Distribution>>,
+  inputUpperBound: number
+): string {
+  const upperBound = inputUpperBound;
+  const lowerBound = 0;
+  if (
+    hasOutOfBoundsEffect(effects[datasourceId], lowerBound, upperBound) ||
+    hasOutOfBoundsDistribution(
+      distributions[datasourceId],
+      lowerBound,
+      upperBound
+    )
+  ) {
+    return `Some cell values are out of bounds [0, ${upperBound}]`;
+  } else {
+    return '';
+  }
+}
+
+function hasOutOfBoundsEffect(
+  effects: Record<string, Effect>,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return _.some(_.map(effects), (effect: Effect) => {
+    switch (effect.type) {
+      case 'value':
+        return isValueOutOfBounds(effect, lowerBound, upperBound);
+      case 'valueCI':
+        return areBoundsInvalid(effect, lowerBound, upperBound);
+      case 'range':
+        return areBoundsInvalid(effect, lowerBound, upperBound);
+      default:
+        return false;
+    }
+  });
+}
+
+function hasOutOfBoundsDistribution(
+  distributions: Record<string, Distribution>,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return _.some(_.map(distributions), (distribution: Distribution) => {
+    switch (distribution.type) {
+      case 'value':
+        return isValueOutOfBounds(distribution, lowerBound, upperBound);
+      case 'range':
+        return areBoundsInvalid(distribution, lowerBound, upperBound);
+      case 'normal':
+        return areParametersOutOfBound(distribution, lowerBound, upperBound);
+      default:
+        return false;
+    }
+  });
+}
+
+function isValueOutOfBounds<T extends {value: number}>(
+  item: T,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return item.value < lowerBound || item.value > upperBound;
+}
+
+function areBoundsInvalid<T extends {lowerBound: number; upperBound: number}>(
+  item: T,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return item.lowerBound < lowerBound || item.upperBound > upperBound;
+}
+
+function areParametersOutOfBound(
+  distribution: INormalDistribution,
+  lowerBound: number,
+  upperBound: number
+): boolean {
+  return (
+    distribution.mean < lowerBound ||
+    distribution.mean > upperBound ||
+    distribution.standardError > upperBound
+  );
 }

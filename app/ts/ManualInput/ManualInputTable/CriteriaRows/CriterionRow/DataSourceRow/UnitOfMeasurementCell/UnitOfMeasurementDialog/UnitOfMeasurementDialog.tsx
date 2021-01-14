@@ -9,8 +9,18 @@ import IUnitOfMeasurement, {
   UnitOfMeasurementType
 } from '@shared/interface/IUnitOfMeasurement';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import {getOutOfBoundsError} from 'app/ts/ManualInput/CellValidityService/CellValidityService';
+import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
+import DisplayErrors from 'app/ts/util/DisplayErrors';
 import _ from 'lodash';
-import React, {ChangeEvent, KeyboardEvent, useEffect, useState} from 'react';
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
+import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 
 export default function UnitOfMeasurementDialog({
   unitOfMeasurement,
@@ -22,7 +32,9 @@ export default function UnitOfMeasurementDialog({
   isDialogOpen: boolean;
   callback: (unit: IUnitOfMeasurement) => void;
   cancel: () => void;
-}) {
+}): JSX.Element {
+  const {dataSource} = useContext(DataSourceRowContext);
+  const {effects, distributions} = useContext(ManualInputContext);
   const lowerBoundOptions = [-Infinity, 0];
   const upperBoundOptions = [1, 100, Infinity];
   const [label, setLabel] = useState(unitOfMeasurement.label);
@@ -33,33 +45,54 @@ export default function UnitOfMeasurementDialog({
   const [upperBound, setUpperBound] = useState<number>(
     unitOfMeasurement.upperBound
   );
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     setLabel(unitOfMeasurement.label);
     setUnitType(unitOfMeasurement.type);
     setLowerBound(unitOfMeasurement.lowerBound);
     setUpperBound(unitOfMeasurement.upperBound);
+    switch (unitOfMeasurement.type) {
+      case 'custom':
+        setError('');
+        break;
+      case 'percentage':
+        setError(
+          getOutOfBoundsError(dataSource.id, effects, distributions, 100)
+        );
+        break;
+      case 'decimal':
+        setError(getOutOfBoundsError(dataSource.id, effects, distributions, 1));
+        break;
+    }
   }, [isDialogOpen, unitOfMeasurement]);
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  ): void {
     const newType = event.target.value as UnitOfMeasurementType;
     setUnitType(newType);
-    if (newType === 'custom') {
-      setLowerBound(-Infinity);
-      setUpperBound(Infinity);
-      setLabel('');
-    } else if (newType === 'percentage') {
-      setLowerBound(0);
-      setUpperBound(100);
-      setLabel('%');
-    } else if (newType === 'decimal') {
-      setLowerBound(0);
-      setUpperBound(1);
-      setLabel('');
-    } else {
-      throw `Invalid unit of measurement type: ${newType}`;
+    switch (newType) {
+      case 'custom':
+        setError('');
+        setLowerBound(-Infinity);
+        setUpperBound(Infinity);
+        setLabel('');
+        break;
+      case 'percentage':
+        setError(
+          getOutOfBoundsError(dataSource.id, effects, distributions, 100)
+        );
+        setLowerBound(0);
+        setUpperBound(100);
+        setLabel('%');
+        break;
+      case 'decimal':
+        setError(getOutOfBoundsError(dataSource.id, effects, distributions, 1));
+        setLowerBound(0);
+        setUpperBound(1);
+        setLabel('');
+        break;
     }
   }
 
@@ -175,6 +208,7 @@ export default function UnitOfMeasurementDialog({
               })}
             </Select>
           </Grid>
+          <DisplayErrors identifier="unit-of-measurement" errors={[error]} />
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -183,6 +217,7 @@ export default function UnitOfMeasurementDialog({
           color="primary"
           onClick={handleEditButtonClick}
           variant="contained"
+          disabled={!!error}
         >
           Edit
         </Button>

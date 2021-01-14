@@ -227,3 +227,68 @@ export function normalizeInputValue(
 export function renderInputEffect(effect: Effect, usePercentage: boolean) {
   return renderEnteredValues(effect, usePercentage, true);
 }
+
+export function normalizeCells<T extends Effect | Distribution>(
+  datasourceId: string,
+  items: Record<string, Record<string, T>>
+): Record<string, Record<string, T>> {
+  return _.mapValues(
+    items,
+    (itemForDS: Record<string, T>, key: string): Record<string, T> => {
+      if (key !== datasourceId) {
+        return itemForDS;
+      } else {
+        return normalizeItems(itemForDS);
+      }
+    }
+  );
+}
+
+function normalizeItems<T extends Effect | Distribution>(
+  items: Record<string, T>
+): Record<string, T> {
+  return _.mapValues(items, (item: any) => {
+    switch (item.type) {
+      case 'value':
+        return normalizeValue(item);
+      case 'valueCI':
+        return normalizeValueCI(item);
+      case 'range':
+        return normalizeRange(item);
+      case 'normal':
+        return normalizeDistribution(item);
+      default:
+        return item;
+    }
+  });
+}
+
+function normalizeValue<T extends {value: number}>(item: T): T {
+  return {...item, value: item.value / 100};
+}
+
+function normalizeValueCI<
+  T extends {value: number; lowerBound: number; upperBound: number}
+>(item: T): T {
+  return normalizeValue(normalizeRange(item));
+}
+
+function normalizeRange<T extends {lowerBound: number; upperBound: number}>(
+  item: T
+): T {
+  return {
+    ...item,
+    lowerBound: item.lowerBound / 100,
+    upperBound: item.upperBound / 100
+  };
+}
+
+function normalizeDistribution<T extends {mean: number; standardError: number}>(
+  item: T
+): T {
+  return {
+    ...item,
+    mean: item.mean / 100,
+    standardError: item.standardError / 100
+  };
+}
