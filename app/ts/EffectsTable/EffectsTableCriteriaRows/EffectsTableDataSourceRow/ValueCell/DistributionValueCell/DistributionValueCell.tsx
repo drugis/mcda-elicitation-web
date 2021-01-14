@@ -54,7 +54,9 @@ export default function DistributionValueCell({
       return 'No data entered';
     }
   }
+
   const renderedDistribution = render();
+
   return renderedDistribution ? (
     <TableCell
       id={`value-cell-${dataSourceId}-${alternativeId}`}

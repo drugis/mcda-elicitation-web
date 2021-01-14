@@ -1,6 +1,7 @@
 import {Distribution} from '@shared/interface/IDistribution';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
+import IStudentsTDistribution from '@shared/interface/IStudentsTDistribution';
 import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
 
 export function renderDistribution(
@@ -29,6 +30,8 @@ export function renderDistribution(
           usePercentage,
           distribution.unitOfMeasurementType
         );
+      case 'dt':
+        return renderStudentsTDistribution(distribution, usePercentage);
     }
   }
 }
@@ -61,4 +64,19 @@ function renderNormalDistribution(
     usePercentage,
     distribution.unitOfMeasurementType
   )})`;
+}
+
+function renderStudentsTDistribution(
+  distribution: IStudentsTDistribution,
+  usePercentage: boolean
+): string {
+  return `Student's t(${valueToString(
+    distribution.mean,
+    usePercentage,
+    distribution.unitOfMeasurementType
+  )}, ${valueToString(
+    distribution.standardError,
+    usePercentage,
+    distribution.unitOfMeasurementType
+  )}, ${distribution.dof})`;
 }

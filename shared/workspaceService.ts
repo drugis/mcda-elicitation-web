@@ -9,6 +9,7 @@ import IOldWorkspace from './interface/IOldWorkspace';
 import IOrdering from './interface/IOrdering';
 import IRangeEffect from './interface/IRangeEffect';
 import IRelativePerformance from './interface/IRelativePerformance';
+import IStudentsTDistribution from './interface/IStudentsTDistribution';
 import ITextEffect from './interface/ITextEffect';
 import {UnitOfMeasurementType} from './interface/IUnitOfMeasurement';
 import IValueCIEffect from './interface/IValueCIEffect';
@@ -26,6 +27,7 @@ import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
 import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
+import IStudentsTPerformance from './interface/Problem/IStudentsTPerformance';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
@@ -424,7 +426,22 @@ export function finishDistributionCreation(
       };
     case 'empty':
       return createEmptyOrTextEffect(performance, distributionBase);
+    case 'dt':
+      return createStudentsTDistribution(performance, distributionBase);
   }
+}
+
+function createStudentsTDistribution(
+  performance: IStudentsTPerformance,
+  distributionBase: IDistribution
+): IStudentsTDistribution {
+  return {
+    ...distributionBase,
+    type: performance.type,
+    mean: performance.parameters.mu,
+    standardError: performance.parameters.stdErr,
+    dof: performance.parameters.dof
+  };
 }
 
 function buildWorkspaceRelativePerformances(

@@ -3,6 +3,7 @@ import IEmptyPerformance from './IEmptyPerformance';
 import IGammaPerformance from './IGammaPerformance';
 import INormalPerformance from './INormalPerformance';
 import IRangeDistributionPerformance from './IRangeDistributionPerformance';
+import IStudentsTPerformance from './IStudentsTPerformance';
 import ITextPerformance from './ITextPerformance';
 import IValuePerformance from './IValuePerformance';
 
@@ -13,7 +14,8 @@ export type DistributionPerformance =
   | IBetaPerformance
   | IGammaPerformance
   | ITextPerformance
-  | IEmptyPerformance;
+  | IEmptyPerformance
+  | IStudentsTPerformance;
 
 export type distributionPerformanceType =
   | 'exact'
@@ -21,4 +23,5 @@ export type distributionPerformanceType =
   | 'dbeta'
   | 'dgamma'
   | 'range'
-  | 'empty';
+  | 'empty'
+  | 'dt';
