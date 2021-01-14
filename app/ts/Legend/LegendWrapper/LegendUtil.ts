@@ -9,3 +9,16 @@ export function initLegend(
     ? legend
     : _(alternatives).keyBy('id').mapValues('title').value();
 }
+
+export function generateSingleLetterLegend(
+  alternatives: IAlternative[]
+): Record<string, string> {
+  return _.fromPairs(
+    _.zip(
+      _.map(alternatives, 'id'),
+      _.map(_.range(65, 65 + alternatives.length), (value: number) =>
+        String.fromCharCode(value)
+      )
+    )
+  );
+}

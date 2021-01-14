@@ -6,7 +6,7 @@ import {LegendContext} from '../../LegendContext';
 
 export default function LegendTooltip(): JSX.Element {
   const {filteredAlternatives} = useContext(SubproblemContext);
-  const {canEdit, legend} = useContext(LegendContext);
+  const {canEdit, legendByAlternativeId} = useContext(LegendContext);
 
   function generateLegendTooltip(
     alternatives: IAlternative[],
@@ -51,5 +51,9 @@ export default function LegendTooltip(): JSX.Element {
     });
   }
 
-  return generateLegendTooltip(filteredAlternatives, legend, canEdit);
+  return generateLegendTooltip(
+    filteredAlternatives,
+    legendByAlternativeId,
+    canEdit
+  );
 }

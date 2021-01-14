@@ -10,7 +10,7 @@ export default function CentralWeightsPlot() {
   const {filteredAlternatives, filteredCriteria} = useContext(
     SubproblemContext
   );
-  const {legend} = useContext(LegendContext);
+  const {legendByAlternativeId} = useContext(LegendContext);
   const {centralWeights} = useContext(SmaaResultsContext);
   const width = '620px';
   const height = '350px';
@@ -19,7 +19,7 @@ export default function CentralWeightsPlot() {
     centralWeights,
     filteredCriteria,
     filteredAlternatives,
-    legend
+    legendByAlternativeId
   );
   generate(settings);
 

@@ -8,7 +8,7 @@ import {generateRankPlotSettings} from '../../SmaaResultsUtil';
 
 export default function RankAcceptabilitiesPlot() {
   const {filteredAlternatives} = useContext(SubproblemContext);
-  const {legend} = useContext(LegendContext);
+  const {legendByAlternativeId} = useContext(LegendContext);
   const {ranks} = useContext(SmaaResultsContext);
   const width = '400px';
   const height = '400px';
@@ -16,7 +16,7 @@ export default function RankAcceptabilitiesPlot() {
   const settings: ChartConfiguration = generateRankPlotSettings(
     ranks,
     filteredAlternatives,
-    legend
+    legendByAlternativeId
   );
   generate(settings);
 

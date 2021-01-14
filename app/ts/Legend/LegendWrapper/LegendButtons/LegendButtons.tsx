@@ -2,6 +2,7 @@ import {Button, ButtonGroup} from '@material-ui/core';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import {generateSingleLetterLegend} from '../LegendUtil';
 
 export default function LegendButtons({
   setNewTitles
@@ -11,13 +12,7 @@ export default function LegendButtons({
   const {filteredAlternatives} = useContext(SubproblemContext);
 
   function handleSingleLettersClick(): void {
-    let letterValue = 65;
-    setNewTitles(
-      _(filteredAlternatives)
-        .keyBy('id')
-        .mapValues((newTitle) => String.fromCharCode(letterValue++))
-        .value()
-    );
+    setNewTitles(generateSingleLetterLegend(filteredAlternatives));
   }
 
   function handleResetClick(): void {

@@ -18,7 +18,7 @@ import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {TPreferences} from '@shared/types/Preferences';
-import {ChartConfiguration, Primitive} from 'c3';
+import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
 
@@ -174,7 +174,7 @@ export function getRankPlotData(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
   legend: Record<string, string>
-): [string, ...Primitive[]][] {
+): [string, ...(string | number)[]][] {
   const titleRow = getPlotTitles(alternatives, legend);
   return [...titleRow, ...getRankPlotValues(ranks, alternatives)];
 }
@@ -254,7 +254,7 @@ export function getCentralWeightsPlotData(
   criteria: ICriterion[],
   alternatives: IAlternative[],
   legend: Record<string, string>
-): [string, ...Primitive[]][] {
+): [string, ...(string | number)[]][] {
   const titleRow: [[string, ...string[]]] = [
     ['x', ..._.map(criteria, 'title')]
   ];

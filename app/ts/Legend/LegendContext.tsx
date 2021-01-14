@@ -19,16 +19,20 @@ export function LegendContextProviderComponent({
   const {currentScenario, updateScenario} = useContext(PreferencesContext);
   const {filteredAlternatives} = useContext(SubproblemContext);
 
-  const [legend, setLegend] = useState<Record<string, string>>();
+  const [legendByAlternativeId, setLegendByAlternativeId] = useState<
+    Record<string, string>
+  >();
 
   useEffect(() => {
     if (currentScenario.state.legend) {
-      setLegend(_.mapValues(currentScenario.state.legend, 'newTitle'));
+      setLegendByAlternativeId(
+        _.mapValues(currentScenario.state.legend, 'newTitle')
+      );
     }
   }, []);
 
   function saveLegend(newLegend: Record<string, string>): void {
-    setLegend(newLegend);
+    setLegendByAlternativeId(newLegend);
     updateScenario({
       ...currentScenario,
       state: {
@@ -51,7 +55,9 @@ export function LegendContextProviderComponent({
   }
 
   return (
-    <LegendContext.Provider value={{canEdit, legend, saveLegend}}>
+    <LegendContext.Provider
+      value={{canEdit, legendByAlternativeId, saveLegend}}
+    >
       {children}
     </LegendContext.Provider>
   );

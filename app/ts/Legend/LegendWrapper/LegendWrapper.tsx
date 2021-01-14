@@ -17,21 +17,23 @@ export default function LegendWrapper({
 }: {
   children: any;
 }): JSX.Element {
-  const {canEdit, legend, saveLegend} = useContext(LegendContext);
+  const {canEdit, legendByAlternativeId, saveLegend} = useContext(
+    LegendContext
+  );
   const {filteredAlternatives} = useContext(SubproblemContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [newTitles, setNewTitles] = useState<Record<string, string>>(
-    initLegend(legend, filteredAlternatives)
+    initLegend(legendByAlternativeId, filteredAlternatives)
   );
 
   useEffect(() => {
     if (isDialogOpen) {
       setIsButtonPressed(false);
     }
-    setNewTitles(initLegend(legend, filteredAlternatives));
+    setNewTitles(initLegend(legendByAlternativeId, filteredAlternatives));
   }, [isDialogOpen]);
 
   const handleKey = createEnterHandler(handleLegendSave, isDisabled);
