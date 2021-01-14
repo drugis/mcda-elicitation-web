@@ -25,7 +25,7 @@ export default function CentralWeightsPlot() {
 
   return (
     <Grid item>
-      <div style={{width: width, height: height}} id={'central-weights-plot'} />
+      <div style={{width: width, height: height}} id="central-weights-plot" />
     </Grid>
   );
 }

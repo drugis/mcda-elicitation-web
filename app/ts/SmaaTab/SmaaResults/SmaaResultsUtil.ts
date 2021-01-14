@@ -41,7 +41,7 @@ export function hasStochasticWeights(preferences: TPreferences) {
     _.some(
       preferences,
       (preference: IRanking | IExactSwingRatio | IRatioBoundConstraint) =>
-        NON_EXACT_PREFERENCE_TYPES.indexOf(preference.type) >= 0
+        _.includes(NON_EXACT_PREFERENCE_TYPES, preference.type)
     )
   );
 }
@@ -128,7 +128,7 @@ export function generateRankPlotSettings(
     return 'Rank ' + (index + 1);
   });
   const rankPlotData = getRankPlotData(ranks, alternatives, legend);
-  const settings: ChartConfiguration = {
+  return {
     bindto: '#rank-acceptabilities-plot',
     data: {
       x: 'x',
@@ -168,7 +168,6 @@ export function generateRankPlotSettings(
       position: 'bottom'
     }
   };
-  return settings;
 }
 
 export function getRankPlotData(
@@ -215,7 +214,7 @@ export function generateCentralWeightsPlotSettings(
     alternatives,
     legend
   );
-  const settings: ChartConfiguration = {
+  return {
     bindto: '#central-weights-plot',
     data: {
       x: 'x',
@@ -248,7 +247,6 @@ export function generateCentralWeightsPlotSettings(
       position: 'bottom'
     }
   };
-  return settings;
 }
 
 export function getCentralWeightsPlotData(

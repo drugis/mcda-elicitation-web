@@ -20,19 +20,18 @@ export default function CentralWeightsTable() {
   );
   const {centralWeights} = useContext(SmaaResultsContext);
 
-  return (
-    <Table id="central-weights-table">
-      <TableHead>
-        <TableRow>
-          <TableCell>Alternative</TableCell>
-          <TableCell>
-            Confidence <InlineHelp helpId="confidence-factor" />
-          </TableCell>
-          {_.map(filteredCriteria, (criterion: ICriterion) => (
-            <TableCell key={criterion.id}>{criterion.title}</TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
+  function CriterionHeaders(): JSX.Element {
+    return (
+      <>
+        {_.map(filteredCriteria, (criterion: ICriterion) => (
+          <TableCell key={criterion.id}>{criterion.title}</TableCell>
+        ))}
+      </>
+    );
+  }
+
+  function CentralWeightsTableBody(): JSX.Element {
+    return (
       <TableBody>
         {_.map(filteredAlternatives, (alternative: IAlternative) => (
           <TableRow key={alternative.id}>
@@ -42,24 +41,51 @@ export default function CentralWeightsTable() {
                 ? centralWeights[alternative.id].cf
                 : 0}
             </TableCell>
-            {_.map(
-              filteredCriteria,
-              (criterion: ICriterion): JSX.Element => (
-                <TableCell
-                  id={`central-weight-${alternative.id}-${criterion.id}`}
-                  key={alternative.id + criterion.id}
-                >
-                  {centralWeights[alternative.id].w[criterion.id]
-                    ? significantDigits(
-                        centralWeights[alternative.id].w[criterion.id]
-                      )
-                    : 0}
-                </TableCell>
-              )
-            )}
+            <CentralWeightValues alternativeId={alternative.id} />
           </TableRow>
         ))}
       </TableBody>
+    );
+  }
+
+  function CentralWeightValues({
+    alternativeId
+  }: {
+    alternativeId: string;
+  }): JSX.Element {
+    return (
+      <>
+        {_.map(
+          filteredCriteria,
+          (criterion: ICriterion): JSX.Element => (
+            <TableCell
+              id={`central-weight-${alternativeId}-${criterion.id}`}
+              key={alternativeId + criterion.id}
+            >
+              {centralWeights[alternativeId].w[criterion.id]
+                ? significantDigits(
+                    centralWeights[alternativeId].w[criterion.id]
+                  )
+                : 0}
+            </TableCell>
+          )
+        )}
+      </>
+    );
+  }
+
+  return (
+    <Table id="central-weights-table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Alternative</TableCell>
+          <TableCell>
+            Confidence <InlineHelp helpId="confidence-factor" />
+          </TableCell>
+          <CriterionHeaders />
+        </TableRow>
+      </TableHead>
+      <CentralWeightsTableBody />
     </Table>
   );
 }

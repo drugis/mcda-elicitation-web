@@ -96,7 +96,7 @@ describe('SmaaResultsUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return a warning if there are not stochastic measurements', () => {
+    it('should return a warning if there are no stochastic measurements', () => {
       const useMeasurementsUncertainty = true;
       const useWeightsUncertainty = true;
       const problemHasStochasticMeasurements = false;
@@ -111,7 +111,7 @@ describe('SmaaResultsUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return a warning if there are not stochastic weights', () => {
+    it('should return a warning if there are no stochastic weights', () => {
       const useMeasurementsUncertainty = true;
       const useWeightsUncertainty = true;
       const problemHasStochasticMeasurements = true;
