@@ -93,7 +93,7 @@ describe('DistributionValueCellService', () => {
       expect(result).toBe('37');
     });
 
-    it('should reutrn the string for a students t distribution', () => {
+    it('should return the string for a students t distribution', () => {
       const distribution: IStudentsTDistribution = {
         ...baseDistribution,
         type: 'dt',
