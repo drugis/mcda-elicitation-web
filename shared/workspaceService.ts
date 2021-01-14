@@ -427,21 +427,8 @@ export function finishDistributionCreation(
     case 'empty':
       return createEmptyOrTextEffect(performance, distributionBase);
     case 'dt':
-      return createStudentsTDistribution(performance, distributionBase);
+      return {...distributionBase, type: 'empty'};
   }
-}
-
-function createStudentsTDistribution(
-  performance: IStudentsTPerformance,
-  distributionBase: IDistribution
-): IStudentsTDistribution {
-  return {
-    ...distributionBase,
-    type: performance.type,
-    mean: performance.parameters.mu,
-    standardError: performance.parameters.stdErr,
-    dof: performance.parameters.dof
-  };
 }
 
 function buildWorkspaceRelativePerformances(
