@@ -121,12 +121,14 @@ function switchInSmaa(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#add-scenario-confirm-button:enabled')
     .click('#add-scenario-confirm-button')
-    .pause(100)
+    .waitForElementNotPresent('#add-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#smaa-tab')
     .waitForElementVisible('#effects-table-header')
+    .waitForElementVisible('#scenario-selector')
     .click('#scenario-selector')
     .click('#scenario-selector > option:nth-child(1)')
+    .waitForElementNotPresent('#scenario-selector > option:nth-child(1)')
     .assert.containsText('#scenario-selector', 'Default');
 }
 function deleteScenario(browser) {
