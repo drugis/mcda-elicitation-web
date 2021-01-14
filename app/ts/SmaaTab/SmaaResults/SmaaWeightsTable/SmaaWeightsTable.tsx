@@ -21,6 +21,46 @@ export default function SmaaWeightsTable(): JSX.Element {
   const {filteredCriteria} = useContext(SubproblemContext);
   const {smaaWeights} = useContext(SmaaResultsContext);
 
+  function CriterionHeaders(): JSX.Element {
+    return (
+      <TableRow>
+        {_.map(filteredCriteria, (criterion: ICriterion) => (
+          <TableCell key={criterion.id}>{criterion.title}</TableCell>
+        ))}
+      </TableRow>
+    );
+  }
+
+  function SmaaWeightsValueRow(): JSX.Element {
+    return (
+      <TableRow>
+        {_.map(
+          filteredCriteria,
+          (criterion: ICriterion): JSX.Element => {
+            const weight = significantDigits(smaaWeights.mean[criterion.id]);
+            const lowerBound = significantDigits(
+              smaaWeights['2.5%'][criterion.id]
+            );
+            const upperBound = significantDigits(
+              smaaWeights['97.5%'][criterion.id]
+            );
+            return (
+              <TableCell key={criterion.id}>
+                <div className="text-centered">
+                  <UncertainValue
+                    value={weight}
+                    lowerBound={lowerBound}
+                    upperBound={upperBound}
+                  />
+                </div>
+              </TableCell>
+            );
+          }
+        )}
+      </TableRow>
+    );
+  }
+
   return (
     <Grid container item xs={12}>
       <Grid item xs={9}>
@@ -34,40 +74,10 @@ export default function SmaaWeightsTable(): JSX.Element {
       <Grid item xs={12}>
         <Table id="weigths-table">
           <TableHead>
-            <TableRow>
-              {_.map(filteredCriteria, (criterion: ICriterion) => (
-                <TableCell key={criterion.id}>{criterion.title}</TableCell>
-              ))}
-            </TableRow>
+            <CriterionHeaders />
           </TableHead>
           <TableBody>
-            <TableRow>
-              {_.map(
-                filteredCriteria,
-                (criterion: ICriterion): JSX.Element => {
-                  const weight = significantDigits(
-                    smaaWeights.mean[criterion.id]
-                  );
-                  const lowerBound = significantDigits(
-                    smaaWeights['2.5%'][criterion.id]
-                  );
-                  const upperBound = significantDigits(
-                    smaaWeights['97.5%'][criterion.id]
-                  );
-                  return (
-                    <TableCell key={criterion.id}>
-                      <div className="text-centered">
-                        <UncertainValue
-                          value={weight}
-                          lowerBound={lowerBound}
-                          upperBound={upperBound}
-                        />
-                      </div>
-                    </TableCell>
-                  );
-                }
-              )}
-            </TableRow>
+            <SmaaWeightsValueRow />
           </TableBody>
         </Table>
       </Grid>

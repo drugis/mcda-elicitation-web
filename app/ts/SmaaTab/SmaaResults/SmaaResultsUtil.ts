@@ -18,7 +18,7 @@ import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {TPreferences} from '@shared/types/Preferences';
-import {ChartConfiguration, Primitive} from 'c3';
+import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
 
@@ -41,7 +41,7 @@ export function hasStochasticWeights(preferences: TPreferences) {
     _.some(
       preferences,
       (preference: IRanking | IExactSwingRatio | IRatioBoundConstraint) =>
-        NON_EXACT_PREFERENCE_TYPES.indexOf(preference.type) >= 0
+        _.includes(NON_EXACT_PREFERENCE_TYPES, preference.type)
     )
   );
 }
@@ -128,7 +128,7 @@ export function generateRankPlotSettings(
     return 'Rank ' + (index + 1);
   });
   const rankPlotData = getRankPlotData(ranks, alternatives, legend);
-  const settings: ChartConfiguration = {
+  return {
     bindto: '#rank-acceptabilities-plot',
     data: {
       x: 'x',
@@ -168,14 +168,13 @@ export function generateRankPlotSettings(
       position: 'bottom'
     }
   };
-  return settings;
 }
 
 export function getRankPlotData(
   ranks: Record<string, number[]>,
   alternatives: IAlternative[],
   legend: Record<string, {newTitle: string}>
-): [string, ...Primitive[]][] {
+): [string, ...(string | number)[]][] {
   const titleRow = getPlotTitles(alternatives, legend);
   return [...titleRow, ...getRankPlotValues(ranks, alternatives)];
 }
@@ -215,7 +214,7 @@ export function generateCentralWeightsPlotSettings(
     alternatives,
     legend
   );
-  const settings: ChartConfiguration = {
+  return {
     bindto: '#central-weights-plot',
     data: {
       x: 'x',
@@ -248,7 +247,6 @@ export function generateCentralWeightsPlotSettings(
       position: 'bottom'
     }
   };
-  return settings;
 }
 
 export function getCentralWeightsPlotData(
@@ -256,7 +254,7 @@ export function getCentralWeightsPlotData(
   criteria: ICriterion[],
   alternatives: IAlternative[],
   legend: Record<string, {newTitle: string}>
-): [string, ...Primitive[]][] {
+): [string, ...(string | number)[]][] {
   const titleRow: [[string, ...string[]]] = [
     ['x', ..._.map(criteria, 'title')]
   ];
