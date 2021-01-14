@@ -1,7 +1,9 @@
 import {Distribution, distributionType} from '@shared/interface/IDistribution';
 import {Effect, effectType} from '@shared/interface/IEffect';
 import IInputCellContext from '@shared/interface/IInputCellContext';
-import React, {createContext, useEffect, useState} from 'react';
+import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 
 export const InputCellContext = createContext<IInputCellContext>(
   {} as IInputCellContext
@@ -40,18 +42,39 @@ export function InputCellContextProviderComponent({
     false
   );
 
+  const {dataSource} = useContext(DataSourceRowContext);
+
   useEffect(() => {
     setInputType(effectOrDistribution.type);
+    const unitType = dataSource.unitOfMeasurement.type;
+    const showPercentage = unitType === 'percentage';
+
     switch (effectOrDistribution.type) {
       case 'value':
         if (effectOrDistribution.value !== undefined) {
-          setValue(`${effectOrDistribution.value}`);
+          setValue(
+            valueToString(effectOrDistribution.value, showPercentage, unitType)
+          );
         }
         break;
       case 'valueCI':
-        setValue(`${effectOrDistribution.value}`);
-        setLowerBound(`${effectOrDistribution.lowerBound}`);
-        setUpperBound(`${effectOrDistribution.upperBound}`);
+        setValue(
+          valueToString(effectOrDistribution.value, showPercentage, unitType)
+        );
+        setLowerBound(
+          valueToString(
+            effectOrDistribution.lowerBound,
+            showPercentage,
+            unitType
+          )
+        );
+        setUpperBound(
+          valueToString(
+            effectOrDistribution.upperBound,
+            showPercentage,
+            unitType
+          )
+        );
         setIsNotEstimableLowerBound(
           !!effectOrDistribution.isNotEstimableLowerBound
         );
@@ -60,8 +83,20 @@ export function InputCellContextProviderComponent({
         );
         break;
       case 'range':
-        setLowerBound(`${effectOrDistribution.lowerBound}`);
-        setUpperBound(`${effectOrDistribution.upperBound}`);
+        setLowerBound(
+          valueToString(
+            effectOrDistribution.lowerBound,
+            showPercentage,
+            unitType
+          )
+        );
+        setUpperBound(
+          valueToString(
+            effectOrDistribution.upperBound,
+            showPercentage,
+            unitType
+          )
+        );
         break;
       case 'text':
         setText(`${effectOrDistribution.text}`);

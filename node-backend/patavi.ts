@@ -1,5 +1,7 @@
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
+import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
+import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
 import IProblem from '@shared/interface/Problem/IProblem';
 import Axios, {AxiosError, AxiosResponse} from 'axios';
 import fs from 'fs';
@@ -67,8 +69,8 @@ export default function createPataviTask(
 }
 
 export function postAndHandleResults(
-  problem: IProblem,
-  callback: (error: OurError, result?: IWeights) => void
+  problem: IProblem | ISmaaResultsCommand,
+  callback: (error: OurError, result?: IWeights | ISmaaResults) => void
 ) {
   Axios.post(pataviTaskUrl, problem, {httpsAgent})
     .then((pataviResponse: AxiosResponse) => {
@@ -92,7 +94,7 @@ export function postAndHandleResults(
 
 function handleUpdateResponse(
   pataviResponse: AxiosResponse,
-  callback: (error: OurError, result?: IWeights) => void
+  callback: (error: OurError, result?: IWeights | ISmaaResults) => void
 ) {
   if (
     pataviResponse.data &&
@@ -119,7 +121,7 @@ function failedConnectionCallback(
 
 function successfullConnectionCallback(
   httpsAgent: https.Agent,
-  callback: (error: AxiosError, result?: IWeights) => void,
+  callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void,
   connection: connection
 ) {
   connection.on('message', (message: IMessage) => {
@@ -136,7 +138,7 @@ function handleMessage(
   connection: connection,
   httpsAgent: https.Agent,
   messageData: {eventType: string; eventData: {href: string}},
-  callback: (error: AxiosError, result?: IWeights) => void
+  callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void
 ) {
   if (messageData.eventType === 'done') {
     connection.close();

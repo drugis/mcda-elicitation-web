@@ -1,10 +1,9 @@
 import _ from 'lodash';
-import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
 import IAlternative from './interface/IAlternative';
 import ICriterion from './interface/ICriterion';
 import IDataSource from './interface/IDataSource';
-import {Distribution} from './interface/IDistribution';
-import {Effect} from './interface/IEffect';
+import IDistribution, {Distribution} from './interface/IDistribution';
+import IEffect, {Effect} from './interface/IEffect';
 import IEmptyEffect from './interface/IEmptyEffect';
 import IOldWorkspace from './interface/IOldWorkspace';
 import IOrdering from './interface/IOrdering';
@@ -73,7 +72,7 @@ export function buildNewStyleCopy(
   workspaceId?: string,
   ordering?: IOrdering
 ): IWorkspace {
-  const unitTypeMap = buildUnitTypeMap(workspace.problem.criteria);
+  const unitTypesByDataSource = buildUnitTypeMap(workspace.problem.criteria);
 
   return {
     properties: buildWorkspaceProperties(workspace, title, workspaceId),
@@ -90,17 +89,17 @@ export function buildNewStyleCopy(
     effects: buildWorkspaceEffects(
       workspace.problem.performanceTable,
       idMapper,
-      unitTypeMap
+      unitTypesByDataSource
     ),
     distributions: buildWorkspaceDistributions(
       workspace.problem.performanceTable,
       idMapper,
-      unitTypeMap
+      unitTypesByDataSource
     ),
     relativePerformances: buildWorkspaceRelativePerformances(
       workspace.problem.performanceTable,
       idMapper,
-      unitTypeMap
+      unitTypesByDataSource
     )
   };
 }
@@ -141,7 +140,7 @@ export function buildIdMap(
 function buildGenericIdMap<T>(
   items: Record<string, T>
 ): Record<string, string> {
-  const values = _.map(items, (item: any, oldId: string): [string, string] => {
+  const values = _.map(items, (item: T, oldId: string): [string, string] => {
     return [oldId, generateUuid()];
   });
   return _.fromPairs(values);
@@ -259,13 +258,13 @@ export function buildWorkspaceAlternatives(
 export function buildWorkspaceEffects(
   performanceTable: IPerformanceTableEntry[],
   idMapper: (id: string) => string,
-  unitTypeMap: Record<string, UnitOfMeasurementType>
+  unitTypesByDataSource: Record<string, UnitOfMeasurementType>
 ): Effect[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
       return hasAlternativeId(entry) && 'effect' in entry.performance;
     })
-    .map(_.partial(buildEffect, idMapper, unitTypeMap))
+    .map(_.partial(buildEffect, idMapper, unitTypesByDataSource))
     .value();
 }
 
@@ -275,22 +274,21 @@ export function hasAlternativeId(entry: IPerformanceTableEntry) {
 
 export function buildEffect(
   idMapper: (id: string) => string,
-  unitTypeMap: Record<string, UnitOfMeasurementType>,
+  unitTypesByDataSource: Record<string, UnitOfMeasurementType>,
   entry: IPerformanceTableEntry
 ): Effect {
   const performance = entry.performance as IEffectPerformance;
   const effectPerformance = performance.effect;
-  const modifier = unitTypeMap[entry.dataSource] === 'percentage' ? 100 : 1;
-  const effectBase = {
+  const effectBase: IEffect = {
     alternativeId: idMapper(entry.alternative),
     dataSourceId: idMapper(entry.dataSource),
     criterionId: idMapper(entry.criterion),
-    unitOfMeasurementType: unitTypeMap[idMapper(entry.dataSource)]
+    unitOfMeasurementType: unitTypesByDataSource[entry.dataSource]
   };
   if (effectPerformance.type === 'empty') {
     return createEmptyOrTextEffect(effectPerformance, effectBase);
   } else if (effectPerformance.type === 'exact') {
-    return createExactEffect(effectPerformance, effectBase, modifier);
+    return createExactEffect(effectPerformance, effectBase);
   } else {
     throw 'unknown effect type';
   }
@@ -298,7 +296,7 @@ export function buildEffect(
 
 export function createEmptyOrTextEffect(
   effectPerformance: IEmptyPerformance | ITextPerformance,
-  effectBase: any
+  effectBase: IEffect
 ): ITextEffect | IEmptyEffect {
   if ('value' in effectPerformance) {
     return {...effectBase, type: 'text', text: effectPerformance.value};
@@ -312,8 +310,7 @@ export function createExactEffect(
     | IValuePerformance
     | IValueCIPerformance
     | IRangeEffectPerformance,
-  effectBase: any,
-  modifier: number
+  effectBase: IEffect
 ): IValueEffect | IValueCIEffect | IRangeEffect {
   if ('input' in performance && 'lowerBound' in performance.input) {
     const input = performance.input;
@@ -322,7 +319,7 @@ export function createExactEffect(
     return {
       ...effectBase,
       type: 'value',
-      value: significantDigits(performance.value * modifier)
+      value: performance.value
     };
   }
 }
@@ -333,19 +330,20 @@ export function createBoundEffect(
     lowerBound: number | 'NE';
     upperBound: number | 'NE';
   },
-  effectBase: any
+  effectBase: IEffect
 ): IValueCIEffect | IRangeEffect {
-  const lowerBound = input.lowerBound;
-  const upperBound = input.upperBound;
+  const lowerBound = input.lowerBound !== 'NE' ? input.lowerBound : undefined;
+  const upperBound = input.upperBound !== 'NE' ? input.upperBound : undefined;
+  const unitType = effectBase.unitOfMeasurementType;
   if ('value' in input) {
     return {
       ...effectBase,
       type: 'valueCI',
       value: input.value,
-      lowerBound: lowerBound !== 'NE' ? lowerBound : undefined,
-      upperBound: upperBound !== 'NE' ? upperBound : undefined,
-      isNotEstimableUpperBound: lowerBound === 'NE',
-      isNotEstimableLowerBound: upperBound === 'NE'
+      lowerBound: lowerBound,
+      upperBound: upperBound,
+      isNotEstimableUpperBound: input.lowerBound === 'NE',
+      isNotEstimableLowerBound: input.upperBound === 'NE'
     };
   } else {
     return {
@@ -360,47 +358,41 @@ export function createBoundEffect(
 export function buildWorkspaceDistributions(
   performanceTable: IPerformanceTableEntry[],
   idMapper: (id: string) => string,
-  unitTypeMap: Record<string, UnitOfMeasurementType>
+  unitTypesByDataSource: Record<string, UnitOfMeasurementType>
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
       return hasAlternativeId(entry) && 'distribution' in entry.performance;
     })
-    .map(_.partial(buildDistribution, idMapper, unitTypeMap))
+    .map(_.partial(buildDistribution, idMapper, unitTypesByDataSource))
     .value();
 }
 
 export function buildDistribution(
   idMapper: (id: string) => string,
-  unitTypeMap: Record<string, UnitOfMeasurementType>,
+  unitTypesByDataSource: Record<string, UnitOfMeasurementType>,
   entry: IPerformanceTableEntry
 ): Distribution {
   const performance = entry.performance as IDistributionPerformance;
-  const modifier = unitTypeMap[entry.dataSource] === 'percentage' ? 100 : 1;
   const distributionBase = {
     alternativeId: idMapper(entry.alternative),
     dataSourceId: idMapper(entry.dataSource),
     criterionId: idMapper(entry.criterion),
-    unitOfMeasurementType: unitTypeMap[idMapper(entry.dataSource)]
+    unitOfMeasurementType: unitTypesByDataSource[entry.dataSource]
   };
-  return finishDistributionCreation(
-    performance.distribution,
-    distributionBase,
-    modifier
-  );
+  return finishDistributionCreation(performance.distribution, distributionBase);
 }
 
 export function finishDistributionCreation(
   performance: DistributionPerformance,
-  distributionBase: any,
-  modifier: number
+  distributionBase: IDistribution
 ): Distribution {
   switch (performance.type) {
     case 'exact':
       return {
         ...distributionBase,
         type: 'value',
-        value: significantDigits(performance.value * modifier)
+        value: performance.value
       };
     case 'dbeta':
       return {
@@ -420,21 +412,15 @@ export function finishDistributionCreation(
       return {
         ...distributionBase,
         type: 'normal',
-        mean: significantDigits(performance.parameters.mu * modifier),
-        standardError: significantDigits(
-          performance.parameters.sigma * modifier
-        )
+        mean: performance.parameters.mu,
+        standardError: performance.parameters.sigma
       };
     case 'range':
       return {
         ...distributionBase,
         type: 'range',
-        lowerBound: significantDigits(
-          performance.parameters.lowerBound * modifier
-        ),
-        upperBound: significantDigits(
-          performance.parameters.upperBound * modifier
-        )
+        lowerBound: performance.parameters.lowerBound,
+        upperBound: performance.parameters.upperBound
       };
     case 'empty':
       return createEmptyOrTextEffect(performance, distributionBase);
@@ -471,7 +457,7 @@ function buildRelative(
     ...base,
     type: distribution.type,
     baseline: {
-      ..._.omit(parameters.baseline, name),
+      ..._.omit(parameters.baseline, 'name'),
       id: parameters.baseline.name
     },
     relative: parameters.relative

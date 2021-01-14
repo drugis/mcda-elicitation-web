@@ -1,8 +1,8 @@
 import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import {Effect} from '@shared/interface/IEffect';
-import {renderInputEffect} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
+import {renderInputEffect} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import React, {useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import EffectCellDialog from '../EffectCellDialog/EffectCellDialog';
@@ -20,7 +20,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
   useEffect(() => {
     setLabel(
       renderInputEffect(
-        effect,
+        {...effect, unitOfMeasurementType: dataSource.unitOfMeasurement.type},
         dataSource.unitOfMeasurement.type === 'percentage'
       )
     );

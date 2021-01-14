@@ -4,6 +4,7 @@ import {UNRANKED} from 'app/ts/PreferencesTab/Elicitation/elicitationConstants';
 import IRankingAnswer from 'app/ts/PreferencesTab/Elicitation/Interface/IRankingAnswer';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {buildScenarioWithPreferences} from 'app/ts/PreferencesTab/PreferencesUtil';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {RankingElicitationContext} from '../RankingElicitationContext';
@@ -23,9 +24,10 @@ export default function RankingButtons({
   const {currentStep, setRanking, setCurrentStep, rankings} = useContext(
     RankingElicitationContext
   );
-  const {criteria, currentScenario, updateScenario, setActiveView} = useContext(
+  const {currentScenario, updateScenario, setActiveView} = useContext(
     PreferencesContext
   );
+  const {filteredCriteria} = useContext(SubproblemContext);
 
   function handleNextButtonClick() {
     setRanking(selectedCriterionId, currentStep);
@@ -41,7 +43,7 @@ export default function RankingButtons({
       rankings,
       selectedCriterionId,
       currentStep,
-      criteria
+      filteredCriteria
     );
     const preferences = buildRankingPreferences(_.toArray(finishedRankings));
     updateScenario(buildScenarioWithPreferences(currentScenario, preferences));
@@ -58,12 +60,16 @@ export default function RankingButtons({
 
   function removeRankFromCriterion() {
     const lookupRank = currentStep - 1;
-    const criterionId = findCriterionIdForRank(criteria, rankings, lookupRank);
+    const criterionId = findCriterionIdForRank(
+      filteredCriteria,
+      rankings,
+      lookupRank
+    );
     setRanking(criterionId, UNRANKED);
   }
 
   function isLastStep(): boolean {
-    return currentStep === _.size(criteria) - 1;
+    return currentStep === _.size(filteredCriteria) - 1;
   }
 
   function cancel() {

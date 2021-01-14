@@ -13,6 +13,7 @@ import IRangeEffect from '@shared/interface/IRangeEffect';
 import ITextEffect from '@shared/interface/ITextEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import {normalizeInputValue} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import React, {ChangeEvent, useContext} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../InputCellContext/InputCellContext';
@@ -48,6 +49,7 @@ export default function DistributionCellDialog({
     isValidBeta
   } = useContext(InputCellContext);
   const {criterion, dataSource} = useContext(DataSourceRowContext);
+  const unitType = dataSource.unitOfMeasurement.type;
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -85,14 +87,14 @@ export default function DistributionCellDialog({
       case 'value':
         callback({
           ...newDistribution,
-          value: Number.parseFloat(value)
+          value: normalizeInputValue(value, unitType)
         } as IValueEffect);
         break;
       case 'normal':
         callback({
           ...newDistribution,
-          mean: Number.parseFloat(mean),
-          standardError: Number.parseFloat(standardError)
+          mean: normalizeInputValue(mean, unitType),
+          standardError: normalizeInputValue(standardError, unitType)
         } as INormalDistribution);
         break;
       case 'beta':
@@ -112,8 +114,8 @@ export default function DistributionCellDialog({
       case 'range':
         callback({
           ...newDistribution,
-          lowerBound: Number.parseFloat(lowerBound),
-          upperBound: Number.parseFloat(upperBound)
+          lowerBound: normalizeInputValue(lowerBound, unitType),
+          upperBound: normalizeInputValue(upperBound, unitType)
         } as IRangeEffect);
         break;
       case 'text':

@@ -21,30 +21,39 @@ import {
   percentageCriterionWithEffectsPercentifiedAnalysis,
   percentageCriterionWithEffectsPercentifiedEntered
 } from './util/effectsTableDisplayTestUtil';
-import ICriterionRow from './util/ICriterionRow';
-import ICriterionRowWithUncertainty from './util/ICriterionRowWithUncertainty';
+import ITestCriterionRow from './util/ITestCriterionRow';
+import ITestCriterionRowWithUncertainty from './util/ITestCriterionRowWithUncertainty';
 import loginService from './util/loginService';
 import util from './util/util';
 import workspaceService from './util/workspaceService';
 
 export = {
-  'Check displayed values for effects and distributions': checkDisplayedValues
+  beforeEach: beforeEach,
+  'Check displayed values for effects and distributions': checkDisplayedValues,
+  'Check displayed values after copying': checkCopiedValues
 };
 // Values used for analysis differ for 1st and 2nd criterion for distributions because they are randomly sampled
 
-function checkDisplayedValues(browser: NightwatchBrowser) {
+function beforeEach(browser: NightwatchBrowser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
   workspaceService.uploadTestWorkspace(
     browser,
     '/allEffectAndDistributionTypes.json'
   );
+}
+
+function checkDisplayedValues(browser: NightwatchBrowser) {
+  runAssertions(browser);
+  browser.end();
+}
+
+function runAssertions(browser: NightwatchBrowser) {
   util.delayedClick(
     browser,
     '#problem-definition-tab',
     '#effects-table-header'
   );
-
   assertCriterionRow(
     browser,
     percentageCriterionWithEffectsPercentifiedEntered
@@ -170,14 +179,12 @@ function checkDisplayedValues(browser: NightwatchBrowser) {
     browser,
     customCriterionWithDistributionsAnalysis
   );
-
-  browser.end();
 }
 
 function assertCriterionRow(
   browser: NightwatchBrowser,
   {
-    criterionId,
+    rowNumber,
     dataSourceId,
     title,
     unit,
@@ -188,42 +195,27 @@ function assertCriterionRow(
     alt5Value,
     alt6Value,
     alt7Value
-  }: ICriterionRow
+  }: ITestCriterionRow
 ): void {
-  browser.expect
-    .element('#criterion-title-' + criterionId)
-    .text.to.equal(title);
-  browser.expect
-    .element('#criterion-description-' + criterionId)
-    .text.to.equal('description');
-  browser.expect.element('#unit-cell-' + dataSourceId).text.to.equal(unit);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt1Id')
-    .text.to.equal(alt1Value);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt2Id')
-    .text.to.equal(alt2Value);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt3Id')
-    .text.to.equal(alt3Value);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt4Id')
-    .text.to.equal(alt4Value);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt5Id')
-    .text.to.equal(alt5Value);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt6Id')
-    .text.to.equal(alt6Value);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt7Id')
-    .text.to.equal(alt7Value);
+  const pathPrefix: string = `//*[@id="effects-table"]/tbody/tr[${rowNumber}]`;
+  browser.useXpath();
+  browser.expect.element(`${pathPrefix}/td[1]`).text.to.equal(title);
+  browser.expect.element(`${pathPrefix}/td[2]`).text.to.equal('description');
+  browser.expect.element(`${pathPrefix}/td[3]`).text.to.equal(unit);
+  browser.expect.element(`${pathPrefix}/td[4]`).text.to.equal(alt1Value);
+  browser.expect.element(`${pathPrefix}/td[5]`).text.to.equal(alt2Value);
+  browser.expect.element(`${pathPrefix}/td[6]`).text.to.equal(alt3Value);
+  browser.expect.element(`${pathPrefix}/td[7]`).text.to.equal(alt4Value);
+  browser.expect.element(`${pathPrefix}/td[8]`).text.to.equal(alt5Value);
+  browser.expect.element(`${pathPrefix}/td[9]`).text.to.equal(alt6Value);
+  browser.expect.element(`${pathPrefix}/td[10]`).text.to.equal(alt7Value);
+  browser.useCss();
 }
 
 function assertCriterionRowWithUncertainties(
   browser: NightwatchBrowser,
   {
-    criterionId,
+    rowNumber,
     dataSourceId,
     title,
     unit,
@@ -239,53 +231,46 @@ function assertCriterionRowWithUncertainties(
     alt5Uncertainty,
     alt6Value,
     alt7Value
-  }: ICriterionRowWithUncertainty
+  }: ITestCriterionRowWithUncertainty
 ): void {
-  browser.expect
-    .element('#criterion-title-' + criterionId)
-    .text.to.equal(title);
-  browser.expect
-    .element('#criterion-description-' + criterionId)
-    .text.to.equal('description');
-  browser.expect.element('#unit-cell-' + dataSourceId).text.to.equal(unit);
+  const pathPrefix: string = `//*[@id="effects-table"]/tbody/tr[${rowNumber}]`;
   browser.useXpath();
+  browser.expect.element(`${pathPrefix}/td[1]`).text.to.equal(title);
+  browser.expect.element(`${pathPrefix}/td[2]`).text.to.equal('description');
+  browser.expect.element(`${pathPrefix}/td[3]`).text.to.equal(unit);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt1Id"]/div/div[1]')
+    .element(`${pathPrefix}/td[4]/div/div[1]`)
     .text.to.equal(alt1Value);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt1Id"]/div/div[2]')
+    .element(`${pathPrefix}/td[4]/div/div[2]`)
     .text.to.equal(alt1Uncertainty);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt2Id"]/div/div[1]')
+    .element(`${pathPrefix}/td[5]/div/div[1]`)
     .text.to.equal(alt2Value);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt2Id"]/div/div[2]')
+    .element(`${pathPrefix}/td[5]/div/div[2]`)
     .text.to.equal(alt2Uncertainty);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt3Id"]/div/div[1]')
+    .element(`${pathPrefix}/td[6]/div/div[1]`)
     .text.to.equal(alt3Value);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt3Id"]/div/div[2]')
+    .element(`${pathPrefix}/td[6]/div/div[2]`)
     .text.to.equal(alt3Uncertainty);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt4Id"]/div/div[1]')
+    .element(`${pathPrefix}/td[7]/div/div[1]`)
     .text.to.equal(alt4Value);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt4Id"]/div/div[2]')
+    .element(`${pathPrefix}/td[7]/div/div[2]`)
     .text.to.equal(alt4Uncertainty);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt5Id"]/div/div[1]')
+    .element(`${pathPrefix}/td[8]/div/div[1]`)
     .text.to.equal(alt5Value);
   browser.expect
-    .element('//*[@id="value-cell-' + dataSourceId + '-alt5Id"]/div/div[2]')
+    .element(`${pathPrefix}/td[8]/div/div[2]`)
     .text.to.equal(alt5Uncertainty);
+  browser.expect.element(`${pathPrefix}/td[9]`).text.to.equal(alt6Value);
+  browser.expect.element(`${pathPrefix}/td[10]`).text.to.equal(alt7Value);
   browser.useCss();
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt6Id')
-    .text.to.equal(alt6Value);
-  browser.expect
-    .element('#value-cell-' + dataSourceId + '-alt7Id')
-    .text.to.equal(alt7Value);
 }
 
 function switchSettings(
@@ -304,4 +289,15 @@ function switchSettings(
     .click(deterministicOrSmaa)
     .click('#save-settings-button')
     .waitForElementNotPresent('#save-settings-button');
+}
+
+function checkCopiedValues(browser: NightwatchBrowser) {
+  browser
+    .click('#logo')
+    .click('#copy-workspace-0 > span > button')
+    .waitForElementVisible('#finish-creating-workspace')
+    .click('#finish-creating-workspace');
+
+  runAssertions(browser);
+  browser.end();
 }

@@ -36,18 +36,17 @@ function afterEach(browser) {
 }
 
 function defaultSelection(browser) {
-  browser
-    .click('#smaa-tab')
-    .waitForElementVisible('#uncertainty-measurements-checkbox:checked')
-    .waitForElementVisible('#uncertainty-weights-checkbox:checked');
+  browser.click('#smaa-tab');
+  browser.expect.element('#measurements-uncertainty-checkbox').to.be.selected;
+  browser.expect.element('#weights-uncertainty-checkbox').to.be.selected;
 }
 
 function bothDeselectedWarning(browser) {
   browser
     .click('#smaa-tab')
-    .click('#uncertainty-measurements-checkbox')
-    .click('#uncertainty-weights-checkbox')
-    .assert.containsText('#warning-0', deterministicWarning);
+    .click('#measurements-uncertainty-checkbox')
+    .click('#weights-uncertainty-checkbox')
+    .assert.containsText('#smaa-results-warning-0', deterministicWarning);
 }
 
 function stochasticWeightsWarning(browser) {
@@ -62,16 +61,18 @@ function stochasticWeightsWarning(browser) {
     .getAttribute('#smaa-tab', 'href', (result) => {
       const smaaUrl = TEST_URL + '/' + result.value;
       browser.url(smaaUrl); // does not work via delayed click -- smaa tab is not clickable
-    })
-    .waitForElementVisible('#uncertainty-weights-checkbox:disabled')
-    .assert.containsText('#warning-0', hasNoStochasticWeightsWarning);
+    });
+  browser.assert.containsText(
+    '#smaa-results-warning-0',
+    hasNoStochasticWeightsWarning
+  );
 }
 
 function save(browser) {
   browser
     .click('#smaa-tab')
-    .click('#uncertainty-weights-checkbox')
-    .click('#recalculate-button')
-    .waitForElementVisible('#uncertainty-measurements-checkbox:checked')
-    .assert.not.elementPresent('#uncertainty-weights-checkbox:checked');
+    .click('#weights-uncertainty-checkbox')
+    .click('#recalculate-button');
+  browser.expect.element('#measurements-uncertainty-checkbox').to.be.selected;
+  browser.expect.element('#weights-uncertainty-checkbox').to.not.be.selected;
 }

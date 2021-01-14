@@ -4,8 +4,10 @@ import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import INormalDistribution from '@shared/interface/INormalDistribution';
+import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
+import {renderEnteredValues} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellService';
 import _ from 'lodash';
 import {hasInvalidCell} from '../CellValidityService/CellValidityService';
 import significantDigits from '../Util/significantDigits';
@@ -204,4 +206,89 @@ function getBound(bound: number, defaultBound: number) {
   } else {
     return bound;
   }
+}
+
+export function normalizeInputValue(
+  value: string,
+  unitType: UnitOfMeasurementType
+): number {
+  const parsedValue = Number.parseFloat(value);
+  if (parsedValue === NaN) {
+    throw 'Input is not numeric';
+  } else {
+    if (unitType != 'percentage') {
+      return parsedValue;
+    } else {
+      return parsedValue / 100;
+    }
+  }
+}
+
+export function renderInputEffect(effect: Effect, usePercentage: boolean) {
+  return renderEnteredValues(effect, usePercentage, true);
+}
+
+export function normalizeCells<T extends Effect | Distribution>(
+  datasourceId: string,
+  items: Record<string, Record<string, T>>
+): Record<string, Record<string, T>> {
+  return _.mapValues(
+    items,
+    (itemForDS: Record<string, T>, key: string): Record<string, T> => {
+      if (key !== datasourceId) {
+        return itemForDS;
+      } else {
+        return normalizeItems(itemForDS);
+      }
+    }
+  );
+}
+
+function normalizeItems<T extends Effect | Distribution>(
+  items: Record<string, T>
+): Record<string, T> {
+  return _.mapValues(items, (item: any) => {
+    switch (item.type) {
+      case 'value':
+        return normalizeValue(item);
+      case 'valueCI':
+        return normalizeValueCI(item);
+      case 'range':
+        return normalizeRange(item);
+      case 'normal':
+        return normalizeDistribution(item);
+      default:
+        return item;
+    }
+  });
+}
+
+function normalizeValue<T extends {value: number}>(item: T): T {
+  return {...item, value: item.value / 100};
+}
+
+function normalizeValueCI<
+  T extends {value: number; lowerBound: number; upperBound: number}
+>(item: T): T {
+  return normalizeValue(normalizeRange(item));
+}
+
+function normalizeRange<T extends {lowerBound: number; upperBound: number}>(
+  item: T
+): T {
+  return {
+    ...item,
+    lowerBound: item.lowerBound / 100,
+    upperBound: item.upperBound / 100
+  };
+}
+
+function normalizeDistribution<T extends {mean: number; standardError: number}>(
+  item: T
+): T {
+  return {
+    ...item,
+    mean: item.mean / 100,
+    standardError: item.standardError / 100
+  };
 }

@@ -42,12 +42,16 @@ export default interface IManualInputContext {
     alternativeId: string
   ) => Effect;
   setEffect: (effect: Effect) => void;
+  updateEffects: (effects: Record<string, Record<string, Effect>>) => void;
   getDistribution: (
     criterionId: string,
     dataSourceId: string,
     alternativeId: string
   ) => Distribution;
   setDistribution: (distribution: Distribution) => void;
+  updateDistributions: (
+    distributions: Record<string, Record<string, Distribution>>
+  ) => void;
   generateDistributions: () => void;
   isDoneDisabled: boolean;
   warnings: string[];

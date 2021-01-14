@@ -166,7 +166,7 @@ function editTitle(browser) {
 
 function reorderCriteria(browser) {
   const firstCriterionTitlePath =
-    '/html/body/div[1]/div/div[3]/div[2]/div/overview/span/div/div[3]/div[2]/div/div[1]/div/div[1]/div[1]';
+    '//overview/span/div/div[4]/div[2]/div/div[1]/div/div/div[1]';
   const proximalDown = '//*[@id="move-down-proximalId"]';
   const proximalUp = '//*[@id="move-up-proximalId"]';
   loadTestWorkspace(browser, thrombolyticsTitle)
@@ -180,7 +180,7 @@ function reorderCriteria(browser) {
 
 function reorderAlternatives(browser) {
   const firstAlternativeTitlePath =
-    '//overview/span/div/div[4]/div[2]/table/tbody/tr[1]/td[1]';
+    '//overview/span/div/div[3]/div[2]/table/tbody/tr[1]/td[1]';
   const moveHeparinDown = '//*[@id="move-down-heparinId"]';
   const moveHeparinUp = '//*[@id="move-up-heparinId"]';
   loadTestWorkspace(browser, thrombolyticsTitle)
@@ -201,7 +201,7 @@ function reorderDataSources(browser) {
   );
 
   const firstDataSourceReferencePath =
-    '//overview/span/div/div[3]/div[2]/div/div[1]/div/div/div[5]/table/tbody/tr[1]/td[6]';
+    '//overview/span/div/div[4]/div[2]/div/div[1]/div/div/div[5]/table/tbody/tr[1]/td[6]';
   const ref1Down = '//*[@id="move-down-ds1Id"]';
   const ref1Up = '//*[@id="move-up-ds1Id"]';
 

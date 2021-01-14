@@ -9,6 +9,7 @@ import {
 } from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import CriterionSituation from '../../CriterionSituation/CriterionSituation';
@@ -16,8 +17,9 @@ import {RankingElicitationContext} from '../RankingElicitationContext';
 
 export default function RankingSituation() {
   const {showPercentages} = useContext(SettingsContext);
-  const {criteria, pvfs} = useContext(PreferencesContext);
+  const {pvfs} = useContext(PreferencesContext);
   const {rankings} = useContext(RankingElicitationContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
 
   function getValueToDisplay(criterion: ICriterion) {
     const unitType = criterion.dataSources[0].unitOfMeasurement.type;
@@ -29,7 +31,7 @@ export default function RankingSituation() {
 
   function renderCriterionSituations(): JSX.Element[] {
     return _.map(
-      criteria,
+      filteredCriteria,
       (criterion: ICriterion): JSX.Element => (
         <CriterionSituation
           key={criterion.id}

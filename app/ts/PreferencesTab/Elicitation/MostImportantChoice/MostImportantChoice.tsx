@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 import {getWorst} from '../../Preferences/PartialValueFunctions/PartialValueFunctionUtil';
@@ -19,7 +20,8 @@ export default function MostImportantChoice() {
     setIsNextDisabled
   } = useContext(ElicitationContext);
   const {showPercentages} = useContext(SettingsContext);
-  const {criteria, pvfs} = useContext(PreferencesContext);
+  const {pvfs} = useContext(PreferencesContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
 
   function handleSelection(event: ChangeEvent<HTMLInputElement>) {
     setMostImportantCriterionId(event.target.value);
@@ -28,7 +30,7 @@ export default function MostImportantChoice() {
 
   function renderCriterionSituations(): JSX.Element[] {
     return _.map(
-      criteria,
+      filteredCriteria,
       (criterion: ICriterion): JSX.Element => {
         const unitType = criterion.dataSources[0].unitOfMeasurement.type;
         const usePercentage = showPercentages && canBePercentage(unitType);
@@ -45,7 +47,7 @@ export default function MostImportantChoice() {
 
   function renderCriterionChoices(): JSX.Element[] {
     return _.map(
-      criteria,
+      filteredCriteria,
       (criterion: ICriterion): JSX.Element => (
         <CriterionChoice key={criterion.id} criterion={criterion} />
       )

@@ -1,8 +1,8 @@
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
-import {PreferencesContext} from '../PreferencesContext';
 import {TElicitationMethod} from '../TElicitationMethod';
 import IElicitationContext from './IElicitationContext';
 import {buildInitialImprecisePreferences} from './ImpreciseSwingElicitation/ImpreciseSwingElicitationUtil';
@@ -19,21 +19,26 @@ export function ElicitationContextProviderComponent({
   elicitationMethod: TElicitationMethod;
   children: any;
 }) {
-  const {criteria} = useContext(PreferencesContext);
+  const {filteredCriteria} = useContext(SubproblemContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
-  const [mostImportantCriterionId, setMostImportantCriterionId] = useState<
-    string
-  >();
+  const [
+    mostImportantCriterionId,
+    setMostImportantCriterionId
+  ] = useState<string>();
   const [preferences, setPreferences] = useState<
     Record<string, IExactSwingRatio> | Record<string, IRatioBoundConstraint>
   >({});
 
   function setMostImportantCriterionAndPreferences(criterionId: string) {
     if (elicitationMethod === 'precise') {
-      setPreferences(buildInitialPrecisePreferences(criteria, criterionId));
+      setPreferences(
+        buildInitialPrecisePreferences(filteredCriteria, criterionId)
+      );
     } else if (elicitationMethod === 'imprecise') {
-      setPreferences(buildInitialImprecisePreferences(criteria, criterionId));
+      setPreferences(
+        buildInitialImprecisePreferences(filteredCriteria, criterionId)
+      );
     }
     setMostImportantCriterionId(criterionId);
   }

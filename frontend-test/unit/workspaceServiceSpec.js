@@ -144,6 +144,76 @@ define([
           pataviResultsServiceMock.postAndHandleResults
         ).toHaveBeenCalledWith(expectedProblem);
       });
+
+      it('should call the pataviResultService with empty data if distribution data is empty', function () {
+        var problem = {
+          criteria: {
+            crit1: {
+              dataSources: [{id: 'ds1'}]
+            },
+            crit2: {
+              dataSources: [{id: 'ds2'}]
+            }
+          },
+          performanceTable: [
+            {
+              criterion: 'crit1',
+              dataSource: 'ds1',
+              performance: {
+                distribution: {
+                  type: 'empty'
+                }
+              }
+            },
+            {
+              criterion: 'crit2',
+              dataSource: 'ds2',
+              performance: {
+                effect: {
+                  prop: 'effect-ds2'
+                },
+                distribution: {
+                  type: 'empty'
+                }
+              }
+            }
+          ]
+        };
+
+        var expectedProblem = {
+          criteria: {
+            ds1: {
+              id: 'ds1'
+            },
+            ds2: {
+              id: 'ds2'
+            }
+          },
+          performanceTable: [
+            {
+              criterion: 'ds1',
+              dataSource: 'ds1',
+              performance: {
+                type: 'empty'
+              }
+            },
+            {
+              criterion: 'ds2',
+              dataSource: 'ds2',
+              performance: {
+                prop: 'effect-ds2'
+              }
+            }
+          ],
+          method: 'scales'
+        };
+
+        workspaceService.getObservedScales(problem);
+
+        expect(
+          pataviResultsServiceMock.postAndHandleResults
+        ).toHaveBeenCalledWith(expectedProblem);
+      });
     });
 
     describe('mergeBaseAndSubProblem', function () {

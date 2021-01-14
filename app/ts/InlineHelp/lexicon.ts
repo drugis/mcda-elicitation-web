@@ -114,12 +114,6 @@ export const lexicon: Record<string, IHelpInfo> = {
       'Choose whether to display the input values of the effects table or the values used for calculation during the analysis',
     link: '/manual.html#'
   },
-  'measurements-smaa-uncertainty': {
-    title: 'Uncertainty in measurements',
-    text:
-      'Some measurements may include uncertainty, usually expressed as a confidence interval. SMAA can take this uncertainty into account when calculating the rank acceptiblities.',
-    link: '/manual.html#mcda-smaa-analysis'
-  },
   'median-mode': {
     title: 'Median and mode selection',
     text:
@@ -209,11 +203,23 @@ export const lexicon: Record<string, IHelpInfo> = {
       'How the value of all alternatives changes as the weight of a specific criterion changes between 0 and 1.',
     link: '/manual.html#mcda-deterministic-analysis'
   },
+  'smaa-measurements-uncertainty': {
+    title: 'Uncertainty in measurements',
+    text:
+      'Some measurements may include uncertainty, usually expressed as a confidence interval. SMAA can take this uncertainty into account when calculating the rank acceptiblities.',
+    link: '/manual.html#mcda-smaa-analysis'
+  },
   'smaa-results': {
     title: 'SMAA results',
     text:
       'The results of stochastic multicriteria acceptability analysis (SMAA) for the given preferences.',
     link: '/manual.html#mcda-value-tradeoffs'
+  },
+  'smaa-weights-uncertainty': {
+    title: 'Uncertainty in weights',
+    text:
+      'Some preference scenarios may include uncertainty for example when alternatives are ranked, or no preference is expressed. SMAA can take this uncertainty into account when calculating the rank acceptiblities.',
+    link: '/manual.html#mcda-smaa-analysis'
   },
   'strength-of-evidence': {
     title: 'Strength of evidence',
@@ -272,12 +278,6 @@ export const lexicon: Record<string, IHelpInfo> = {
     text:
       'Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.',
     link: '/manual.html#mcda-value-tradeoffs'
-  },
-  'weights-smaa-uncertainty': {
-    title: 'Uncertainty in weights',
-    text:
-      'Some preference scenarios may include uncertainty for example when alternatives are ranked, or no preference is expressed. SMAA can take this uncertainty into account when calculating the rank acceptiblities.',
-    link: '/manual.html#mcda-smaa-analysis'
   },
   workspace: {
     title: 'Workspace',

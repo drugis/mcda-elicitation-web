@@ -238,7 +238,6 @@ export function PreferencesContextProviderComponent({
         currentScenario,
         problem,
         pvfs,
-        criteria: filteredCriteria,
         disableWeightsButtons,
         activeView,
         setCurrentScenario,

@@ -602,7 +602,7 @@ describe('inProgressRepositoryService', () => {
           ...criterionAndDataSourceIds,
           alternativeId: alternative1Id,
           type: 'value',
-          value: 1
+          value: 0.5
         },
         alt2Id: {
           ...criterionAndDataSourceIds,
@@ -613,9 +613,9 @@ describe('inProgressRepositoryService', () => {
           ...criterionAndDataSourceIds,
           alternativeId: 'alt3Id',
           type: 'valueCI',
-          value: 1,
-          lowerBound: 0,
-          upperBound: 2,
+          value: 0.1,
+          lowerBound: 0.05,
+          upperBound: 0.15,
           isNotEstimableLowerBound: false,
           isNotEstimableUpperBound: false
         },
@@ -624,7 +624,7 @@ describe('inProgressRepositoryService', () => {
           alternativeId: 'alt4Id',
           type: 'range',
           lowerBound: 0,
-          upperBound: 2
+          upperBound: 0.2
         },
         alt5Id: {
           ...criterionAndDataSourceIds,
@@ -650,14 +650,14 @@ describe('inProgressRepositoryService', () => {
           ...criterionAndDataSourceIds,
           alternativeId: alternative1Id,
           type: 'value',
-          value: 1
+          value: 0.1
         },
         alt3Id: {
           ...criterionAndDataSourceIds,
           alternativeId: 'alt3Id',
           type: 'range',
           lowerBound: 0,
-          upperBound: 2
+          upperBound: 0.2
         },
         alt4Id: {
           ...criterionAndDataSourceIds,
@@ -766,11 +766,11 @@ describe('inProgressRepositoryService', () => {
           performance: {
             effect: {
               type: 'exact',
-              value: 0.01
+              value: 0.5
             },
             distribution: {
               type: 'exact',
-              value: 0.01
+              value: 0.1
             }
           }
         },
@@ -789,18 +789,18 @@ describe('inProgressRepositoryService', () => {
           performance: {
             effect: {
               type: 'exact',
-              value: 0.01,
+              value: 0.1,
               input: {
-                value: 1,
-                lowerBound: 0,
-                upperBound: 2
+                value: 0.1,
+                lowerBound: 0.05,
+                upperBound: 0.15
               }
             },
             distribution: {
               type: 'range',
               parameters: {
                 lowerBound: 0,
-                upperBound: 0.02
+                upperBound: 0.2
               }
             }
           }
@@ -811,17 +811,17 @@ describe('inProgressRepositoryService', () => {
           performance: {
             effect: {
               type: 'exact',
-              value: 0.01,
+              value: 0.1,
               input: {
                 lowerBound: 0,
-                upperBound: 2
+                upperBound: 0.2
               }
             },
             distribution: {
               type: 'dnorm',
               parameters: {
-                mu: 0.01,
-                sigma: 0.005
+                mu: 1,
+                sigma: 0.5
               }
             }
           }

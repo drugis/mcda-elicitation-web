@@ -11,6 +11,7 @@ import ITextEffect from '@shared/interface/ITextEffect';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import {normalizeInputValue} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
 import React, {ChangeEvent, useContext} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../InputCellContext/InputCellContext';
@@ -40,6 +41,7 @@ export default function EffectCellDialog({
     isNotEstimableUpperBound
   } = useContext(InputCellContext);
   const {criterion, dataSource} = useContext(DataSourceRowContext);
+  const unitType = dataSource.unitOfMeasurement.type;
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -58,15 +60,15 @@ export default function EffectCellDialog({
       case 'value':
         callback({
           ...newEffect,
-          value: Number.parseFloat(value)
+          value: normalizeInputValue(value, unitType)
         } as IValueEffect);
         break;
       case 'valueCI':
         callback({
           ...newEffect,
-          value: Number.parseFloat(value),
-          lowerBound: Number.parseFloat(lowerBound),
-          upperBound: Number.parseFloat(upperBound),
+          value: normalizeInputValue(value, unitType),
+          lowerBound: normalizeInputValue(lowerBound, unitType),
+          upperBound: normalizeInputValue(upperBound, unitType),
           isNotEstimableLowerBound: isNotEstimableLowerBound,
           isNotEstimableUpperBound: isNotEstimableUpperBound
         } as IValueCIEffect);
@@ -74,8 +76,8 @@ export default function EffectCellDialog({
       case 'range':
         callback({
           ...newEffect,
-          lowerBound: Number.parseFloat(lowerBound),
-          upperBound: Number.parseFloat(upperBound)
+          lowerBound: normalizeInputValue(lowerBound, unitType),
+          upperBound: normalizeInputValue(upperBound, unitType)
         } as IRangeEffect);
         break;
       case 'text':

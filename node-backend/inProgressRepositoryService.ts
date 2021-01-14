@@ -470,12 +470,12 @@ function buildPerformance(
   const isPercentage = unitOfMeasurementType === 'percentage';
   let performance;
   if (effectCell) {
-    performance = {effect: buildEffectPerformance(effectCell, isPercentage)};
+    performance = {effect: buildEffectPerformance(effectCell)};
   }
   if (distributionCell) {
     performance = {
       ...performance,
-      distribution: buildDistributionPerformance(distributionCell, isPercentage)
+      distribution: buildDistributionPerformance(distributionCell)
     };
   }
   if (!performance) {
@@ -485,22 +485,18 @@ function buildPerformance(
   }
 }
 
-function buildEffectPerformance(
-  cell: Effect,
-  isPercentage: boolean
-): EffectPerformance {
-  const percentageModifier = isPercentage ? 100 : 1;
+function buildEffectPerformance(cell: Effect): EffectPerformance {
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: significantDigits(cell.value / percentageModifier)
+        value: cell.value
       };
       return valuePerformance;
     case 'valueCI':
       const valueCIPerformance: IValueCIPerformance = {
         type: 'exact',
-        value: significantDigits(cell.value / percentageModifier),
+        value: cell.value,
         input: {
           value: cell.value,
           lowerBound: cell.lowerBound,
@@ -511,9 +507,7 @@ function buildEffectPerformance(
     case 'range':
       const rangePerformance: IRangeEffectPerformance = {
         type: 'exact',
-        value: significantDigits(
-          (cell.lowerBound + cell.upperBound) / (2 * percentageModifier)
-        ),
+        value: significantDigits((cell.lowerBound + cell.upperBound) / 2),
         input: {
           lowerBound: cell.lowerBound,
           upperBound: cell.upperBound
@@ -535,23 +529,21 @@ function buildEffectPerformance(
 }
 
 function buildDistributionPerformance(
-  cell: Distribution,
-  isPercentage: boolean
+  cell: Distribution
 ): DistributionPerformance {
-  const percentageModifier = isPercentage ? 100 : 1;
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {
         type: 'exact',
-        value: significantDigits(cell.value / percentageModifier)
+        value: cell.value
       };
       return valuePerformance;
     case 'range':
       const rangePerformance: IRangeDistributionPerformance = {
         type: 'range',
         parameters: {
-          lowerBound: significantDigits(cell.lowerBound / percentageModifier),
-          upperBound: significantDigits(cell.upperBound / percentageModifier)
+          lowerBound: cell.lowerBound,
+          upperBound: cell.upperBound
         }
       };
       return rangePerformance;
@@ -559,8 +551,8 @@ function buildDistributionPerformance(
       const normalPerformace: INormalPerformance = {
         type: 'dnorm',
         parameters: {
-          mu: significantDigits(cell.mean / percentageModifier),
-          sigma: significantDigits(cell.standardError / percentageModifier)
+          mu: cell.mean,
+          sigma: cell.standardError
         }
       };
       return normalPerformace;

@@ -119,9 +119,9 @@ describe('ScalesTableUtil', () => {
         {
           type: 'valueCI',
           dataSourceId: 'percentAndExactDistribution',
-          value: 6,
-          lowerBound: 3,
-          upperBound: 9
+          value: 0.6,
+          lowerBound: 0.3,
+          upperBound: 0.9
         } as Effect
       ];
 
@@ -145,7 +145,7 @@ describe('ScalesTableUtil', () => {
         {
           type: 'value',
           dataSourceId: 'percentAndExactDistribution',
-          value: 5
+          value: 0.5
         } as Distribution
       ];
 
@@ -163,7 +163,7 @@ describe('ScalesTableUtil', () => {
         dataSourceNoDistributionId: [0.1, 0.9],
         dataSourceRangeAndExactId: [0, 0.9],
         dataSourceOverlappingRanges: [0.4, 1],
-        percentAndExactDistribution: [0.05, 0.06]
+        percentAndExactDistribution: [0.5, 0.6]
       };
       expect(result).toEqual(expectedResult);
     });

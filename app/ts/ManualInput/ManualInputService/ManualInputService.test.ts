@@ -17,6 +17,8 @@ import {
   createWarnings,
   generateDistribution,
   generateValueCIDistribution,
+  normalizeCells,
+  normalizeInputValue,
   replaceUndefinedBounds,
   swapItems
 } from './ManualInputService';
@@ -574,6 +576,232 @@ describe('manualInputService', () => {
     it('should return false for an empty link', () => {
       const link = '';
       expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+    });
+  });
+
+  describe('normalizeInputValue', () => {
+    it('should return a parsed value if unit type is not percentage', () => {
+      const value: string = '42';
+      const unitType: UnitOfMeasurementType = 'custom';
+      const result = normalizeInputValue(value, unitType);
+      expect(result).toEqual(42);
+    });
+
+    it('should return a parsed and normalized value if unit type is not percentage', () => {
+      const value: string = '42';
+      const unitType: UnitOfMeasurementType = 'percentage';
+      const result = normalizeInputValue(value, unitType);
+      expect(result).toEqual(0.42);
+    });
+
+    it('should return a parsed value if unit type is not percentage', () => {
+      const value: string = 'a';
+      const unitType: UnitOfMeasurementType = 'custom';
+      try {
+        const result = normalizeInputValue(value, unitType);
+      } catch (error) {
+        expect(error).toBe('Input is not numeric');
+      }
+    });
+  });
+
+  describe('normalizeCells', () => {
+    it('should return a normalized value effect', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 50
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 50
+          }
+        }
+      };
+      const result = normalizeCells(datasourceId, effects);
+      const expectedResult: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 0.5
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 50
+          }
+        }
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return a normalized valueCI effect', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'valueCI',
+            value: 50,
+            lowerBound: 25,
+            upperBound: 75,
+            isNotEstimableLowerBound: false,
+            isNotEstimableUpperBound: false
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 50
+          }
+        }
+      };
+      const result = normalizeCells(datasourceId, effects);
+      const expectedResult: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'valueCI',
+            value: 0.5,
+            lowerBound: 0.25,
+            upperBound: 0.75,
+            isNotEstimableLowerBound: false,
+            isNotEstimableUpperBound: false
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 50
+          }
+        }
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return a normalized range effect', () => {
+      const datasourceId = 'ds1Id';
+      const effects: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'range',
+            lowerBound: 25,
+            upperBound: 75
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 50
+          }
+        }
+      };
+      const result = normalizeCells(datasourceId, effects);
+      const expectedResult: Record<string, Record<string, Effect>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'range',
+            lowerBound: 0.25,
+            upperBound: 0.75
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'value',
+            value: 50
+          }
+        }
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return a normalized normal distribution', () => {
+      const datasourceId = 'ds1Id';
+      const distributions: Record<string, Record<string, Distribution>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'normal',
+            mean: 20,
+            standardError: 1
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'beta',
+            alpha: 0.5,
+            beta: 0.2
+          }
+        }
+      };
+      const result = normalizeCells(datasourceId, distributions);
+      const expectedResult: Record<string, Record<string, Distribution>> = {
+        ds1Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'normal',
+            mean: 0.2,
+            standardError: 0.01
+          }
+        },
+        ds2Id: {
+          alt1Id: {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds2Id',
+            alternativeId: 'alt1Id',
+            type: 'beta',
+            alpha: 0.5,
+            beta: 0.2
+          }
+        }
+      };
+      expect(result).toEqual(expectedResult);
     });
   });
 });

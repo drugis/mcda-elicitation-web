@@ -10,7 +10,6 @@ export default interface IPreferencesContext {
   currentScenario: IMcdaScenario;
   problem: IProblem;
   pvfs: Record<string, IPvf>;
-  criteria: ICriterion[];
   disableWeightsButtons: boolean;
   activeView: TPreferencesView;
   setCurrentScenario: (currentScenario: IMcdaScenario) => void;

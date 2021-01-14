@@ -380,6 +380,15 @@ export function ManualInputContextProviderComponent({
     setEffects(effectsCopy);
   }
 
+  function updateEffects(effects: Record<string, Record<string, Effect>>) {
+    setEffects(effects);
+    _.forEach(effects, (effectsForDS: Record<string, Effect>) => {
+      _.forEach(effectsForDS, (effects: Effect) => {
+        updateCell(effects, 'effect');
+      });
+    });
+  }
+
   function updateCell(
     cell: Effect | Distribution,
     cellType: TableInputMode
@@ -426,6 +435,20 @@ export function ManualInputContextProviderComponent({
     ] = distribution;
     updateCell(distribution, 'distribution');
     setDistributions(distributionsCopy);
+  }
+
+  function updateDistributions(
+    distributions: Record<string, Record<string, Distribution>>
+  ) {
+    setDistributions(distributions);
+    _.forEach(
+      distributions,
+      (distributionForDS: Record<string, Distribution>) => {
+        _.forEach(distributionForDS, (distribution: Distribution) => {
+          updateCell(distribution, 'distribution');
+        });
+      }
+    );
   }
 
   function generateDistributions(): void {
@@ -504,8 +527,10 @@ export function ManualInputContextProviderComponent({
         deleteAlternative: deleteAlternative,
         getEffect: getEffect,
         setEffect: setEffect,
+        updateEffects,
         getDistribution: getDistribution,
         setDistribution: setDistribution,
+        updateDistributions,
         generateDistributions: generateDistributions,
         isDoneDisabled: warnings.length > 0,
         warnings: warnings,

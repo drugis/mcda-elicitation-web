@@ -33,15 +33,25 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     function createPerformanceTable(performanceTable) {
-      return _.map(performanceTable, function (entry) {
-        entry.criterion = entry.dataSource;
-        entry.performance =
-          entry.performance.distribution &&
-          entry.performance.distribution.type !== 'empty'
-            ? entry.performance.distribution
-            : entry.performance.effect;
-        return entry;
-      });
+      return _.map(performanceTable, createEntry);
+    }
+
+    function createEntry(entry) {
+      let newEntry = {...entry, criterion: entry.dataSource};
+      if (entry.performance.distribution) {
+        newEntry.performance = getDistributionPerformance(entry.performance);
+      } else {
+        newEntry.performance = entry.performance.effect;
+      }
+      return newEntry;
+    }
+
+    function getDistributionPerformance(performance) {
+      if (performance.distribution.type === 'empty' && performance.effect) {
+        return performance.effect;
+      } else {
+        return performance.distribution;
+      }
     }
 
     function getDataSources(criteria) {
