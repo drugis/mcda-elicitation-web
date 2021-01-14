@@ -17,21 +17,20 @@ function smaaResults(browser) {
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
     .click('#smaa-tab')
-    .waitForElementVisible('#smaa-measurements-header')
-    .waitForElementVisible('#smaa-table')
-    .waitForElementVisible('#rank-plot')
-    .waitForElementVisible('#rank-table')
+    .waitForElementVisible('#effects-table-header')
+    .waitForElementVisible('#effects-table')
+    .waitForElementVisible('#rank-acceptabilities-plot')
+    .waitForElementVisible('#rank-acceptabilities-table')
     .waitForElementVisible('#central-weights-plot')
     .waitForElementVisible('#central-weights-table');
 
-  const measurementElementId = '#criterion-0-alternative-0-measurement';
-  const centralWightElementId = '#alternative-0-criterion-0-central-weight';
-  browser.assert.containsText(measurementElementId, '36.8');
+  const centralWightElementId =
+    '#central-weight-placeboId-treatmentRespondersId';
   browser.assert.containsText(centralWightElementId, '0.187');
 
-  browser.assert.containsText('#alternative-0-rank-1', '0.743');
-  browser.assert.containsText('#alternative-1-rank-1', '0.175');
-  browser.assert.containsText('#alternative-2-rank-1', '0.082');
+  browser.assert.containsText('#rank-placeboId-0', '0.743');
+  browser.assert.containsText('#rank-placeboId-1', '0.166');
+  browser.assert.containsText('#rank-placeboId-2', '0.0909');
 
   browser.click('#logo');
   workspaceService.deleteFromList(browser, 0).end();

@@ -130,7 +130,7 @@ function smaaResults(browser) {
     .click('#add-workspace-button');
 
   util
-    .delayedClick(browser, '#smaa-tab', '#smaa-measurements-header')
+    .delayedClick(browser, '#smaa-tab', '#effects-table-header')
     .getTitle(function (result) {
       browser.assert.equal(result, title + "'s SMAA results");
     });

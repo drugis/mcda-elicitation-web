@@ -43,7 +43,7 @@ export default function EffectsTable() {
           Effects Table <InlineHelp helpId="effects-table" />
         </Typography>
       </Grid>
-      <Grid item container xs={3} justify="flex-end">
+      <Grid container item xs={3} justify="flex-end">
         <ClipboardButton targetId="#effects-table" />
       </Grid>
       <Grid item xs={12}>

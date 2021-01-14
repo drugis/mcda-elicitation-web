@@ -1,4 +1,6 @@
 import IWeights from '@shared/interface/IWeights';
+import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
+import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
@@ -65,5 +67,22 @@ export default function PataviHandler(db: IDB) {
     );
   }
 
-  return {postTask, getWeights};
+  function getSmaaResults(request: Request, response: Response, next: any) {
+    const smaaResultsCommand: ISmaaResultsCommand = request.body;
+    postAndHandleResults(
+      smaaResultsCommand,
+      (error: Error, results: ISmaaResults) => {
+        if (error) {
+          logger.error(error);
+          return next({
+            message: error
+          });
+        } else {
+          response.json(results);
+        }
+      }
+    );
+  }
+
+  return {postTask, getWeights, getSmaaResults};
 }
