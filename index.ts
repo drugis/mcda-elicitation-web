@@ -33,6 +33,7 @@ import WorkspaceRepository from './node-backend/workspaceRepository';
 import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
 
+const USER_SESSION_EXPIRED = 'SESSION_EXPIRED';
 const db = DB(buildDBConfig());
 
 logger.info(buildDBUrl());
@@ -112,7 +113,7 @@ function initApp(): void {
 
   app.get('/logout', (request: Request, response: Response): void => {
     request.logout();
-    request.session.destroy(function (error) {
+    request.session.destroy((error) => {
       response.redirect('/');
     });
   });
@@ -142,6 +143,13 @@ function initApp(): void {
     express.static('examples/tutorial-examples', {index: 'index.json'})
   );
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
+  app.use((request: Request, response: Response, next: any): void => {
+    if (!request.user) {
+      response.status(403).send(USER_SESSION_EXPIRED);
+    } else {
+      next();
+    }
+  });
   app.use(rightsManagement.expressMiddleware);
 
   app.use('/api/v2/inProgress', inProgressRouter);
