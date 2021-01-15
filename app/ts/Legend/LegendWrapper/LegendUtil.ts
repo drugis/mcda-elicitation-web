@@ -14,11 +14,9 @@ export function generateSingleLetterLegend(
   alternatives: IAlternative[]
 ): Record<string, string> {
   return _.fromPairs(
-    _.zip(
-      _.map(alternatives, 'id'),
-      _.map(_.range(65, 65 + alternatives.length), (value: number) =>
-        String.fromCharCode(value)
-      )
-    )
+    _.map(alternatives, (alternative, index) => [
+      alternative.id,
+      String.fromCharCode(65 + index)
+    ])
   );
 }

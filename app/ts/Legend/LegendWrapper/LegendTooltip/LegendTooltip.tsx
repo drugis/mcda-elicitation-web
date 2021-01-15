@@ -14,7 +14,7 @@ export default function LegendTooltip(): JSX.Element {
     canEdit: boolean
   ): JSX.Element {
     if (legend) {
-      const legendInfo = (
+      return (
         <>
           <table className="legend-table">
             <tbody>{buildLegendCells(alternatives, legend)}</tbody>
@@ -22,7 +22,6 @@ export default function LegendTooltip(): JSX.Element {
           <div>{canEdit ? 'Click to change' : ''}</div>
         </>
       );
-      return legendInfo;
     } else {
       return canEdit ? (
         <div>

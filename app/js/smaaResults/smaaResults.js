@@ -30,7 +30,7 @@ define([
         'scales',
         'subproblems',
         'currentSubproblem',
-        'canEdit'
+        'editMode'
       ])
     )
     .controller('SmaaResultsController', SmaaResultsController);

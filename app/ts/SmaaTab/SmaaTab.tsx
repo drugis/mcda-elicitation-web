@@ -29,7 +29,7 @@ export default function SmaaTab({
   scales,
   subproblems,
   currentSubproblem,
-  canEdit
+  editMode
 }: {
   scenarios: IMcdaScenario[];
   currentScenarioId: string;
@@ -42,7 +42,7 @@ export default function SmaaTab({
   scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
-  canEdit: boolean;
+  editMode: {canEdit: boolean};
 }) {
   return (
     <ErrorContextProviderComponent>
@@ -67,7 +67,7 @@ export default function SmaaTab({
                 problem={problem}
                 updateAngularScenario={updateAngularScenario}
               >
-                <LegendContextProviderComponent canEdit={canEdit}>
+                <LegendContextProviderComponent canEdit={editMode.canEdit}>
                   <SmaaResultsContextProviderComponent>
                     <ErrorHandler>
                       <SmaaResults />
