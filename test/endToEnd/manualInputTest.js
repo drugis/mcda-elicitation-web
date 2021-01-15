@@ -117,6 +117,7 @@ function editTitle(browser) {
     .setValue('#workspace-title', 'another title')
     .pause(500) // wait for debounce?
     .click('#logo')
+    .waitForElementVisible('#in-progress-workspace-0')
     .assert.containsText('#in-progress-workspace-0', 'another title');
 }
 
@@ -125,6 +126,7 @@ function editContext(browser) {
     .setValue('#therapeutic-context', NEW_THERAPEUTIC_CONTEXT)
     .pause(500)
     .click('#logo')
+    .waitForElementVisible('#in-progress-workspace-0')
     .click('#in-progress-workspace-0')
     .assert.containsText('#therapeutic-context', NEW_THERAPEUTIC_CONTEXT);
 }

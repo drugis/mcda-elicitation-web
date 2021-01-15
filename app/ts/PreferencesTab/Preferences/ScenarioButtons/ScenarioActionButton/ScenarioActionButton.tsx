@@ -9,6 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
@@ -100,16 +101,7 @@ export default function ScenarioActionButton({
                 fullWidth
               />
             </Grid>
-            <Grid
-              id={`title-error`}
-              item
-              container
-              xs={12}
-              justify="flex-end"
-              className="alert"
-            >
-              {error}
-            </Grid>
+            <DisplayErrors errors={[error]} identifier="title" />
           </Grid>
         </DialogContent>
         <DialogActions>
