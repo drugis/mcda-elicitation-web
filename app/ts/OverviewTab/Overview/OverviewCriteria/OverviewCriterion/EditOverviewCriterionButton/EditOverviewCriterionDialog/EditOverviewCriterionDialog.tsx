@@ -9,6 +9,7 @@ import {
 import ICriterion from '@shared/interface/ICriterion';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
@@ -111,16 +112,7 @@ export default function EditOverviewCriterionDialog({
               setCriterion={setLocalCriterion}
             />
           </Grid>
-          <Grid
-            id={`title-error`}
-            item
-            container
-            xs={12}
-            justify="flex-end"
-            className="alert"
-          >
-            {error}
-          </Grid>
+          <DisplayErrors errors={[error]} identifier="title" />
         </Grid>
       </DialogContent>
       <DialogActions>

@@ -7,15 +7,15 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import React, {useContext} from 'react';
-import _ from 'lodash';
 import ICriterion from '@shared/interface/ICriterion';
-import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
-import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
+import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import _ from 'lodash';
+import React, {useContext} from 'react';
+import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 
 export default function SmaaWeightsTable(): JSX.Element {
   const {filteredCriteria} = useContext(SubproblemContext);
