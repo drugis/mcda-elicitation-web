@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
@@ -16,6 +17,12 @@ import {swapItems} from '../ManualInput/ManualInputService/ManualInputService';
 import {calculateObservedRanges} from '../Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import IWorkspaceContext from './IWorkspaceContext';
 import {transformCriterionToOldCriterion} from './transformUtil';
+import {
+  createCriteriaWithSwappedDataSources,
+  createNewOrdering,
+  hasScalevalues,
+  isOrdering
+} from './WorkspaceContextUtil';
 
 export const WorkspaceContext = createContext<IWorkspaceContext>(
   {} as IWorkspaceContext
@@ -67,19 +74,10 @@ export function WorkspaceContextProviderComponent({
   }, []);
 
   useEffect(() => {
-    if (scales && oldWorkspace) {
+    if (hasScalevalues(scales) && oldWorkspace) {
       setObservedRanges(calculateObservedRanges(scales, workspace));
     }
   }, [scales, oldWorkspace]);
-
-  function isOrdering(ordering: {} | IOrdering): ordering is IOrdering {
-    return (
-      _.difference(
-        ['criteria', 'alternatives', 'dataSources'],
-        _.keys(ordering)
-      ).length === 0
-    );
-  }
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};
@@ -171,7 +169,7 @@ export function WorkspaceContextProviderComponent({
     alternative1Id: string,
     alternative2Id: string
   ): void {
-    const newAlternatives = swapItems(
+    const newAlternatives: IAlternative[] = swapItems(
       alternative1Id,
       alternative2Id,
       workspace.alternatives
@@ -179,34 +177,28 @@ export function WorkspaceContextProviderComponent({
     setWorkspace(
       _.merge({}, _.cloneDeep(workspace), {alternatives: newAlternatives})
     );
-    const newOrdering: IOrdering = {
-      alternatives: _.map(newAlternatives, 'id'),
-      criteria: _.map(workspace.criteria, 'id'),
-      dataSources: _.flatMap(
-        workspace.criteria,
-        (criterion: ICriterion): string[] => _.map(criterion.dataSources, 'id')
-      )
-    };
+
+    const newOrdering: IOrdering = createNewOrdering(
+      newAlternatives,
+      workspace.criteria
+    );
     Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
       errorCallback
     );
   }
 
   function swapCriteria(criterion1Id: string, criterion2Id: string): void {
-    const newCriteria = swapItems(
+    const newCriteria: ICriterion[] = swapItems(
       criterion1Id,
       criterion2Id,
       workspace.criteria
     );
     setWorkspace(_.merge({}, _.cloneDeep(workspace), {criteria: newCriteria}));
-    const newOrdering: IOrdering = {
-      alternatives: _.map(workspace.alternatives, 'id'),
-      criteria: _.map(newCriteria, 'id'),
-      dataSources: _.flatMap(
-        workspace.criteria,
-        (criterion: ICriterion): string[] => _.map(criterion.dataSources, 'id')
-      )
-    };
+
+    const newOrdering: IOrdering = createNewOrdering(
+      workspace.alternatives,
+      newCriteria
+    );
     Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
       errorCallback
     );
@@ -217,26 +209,18 @@ export function WorkspaceContextProviderComponent({
     dataSource1Id: string,
     dataSource2Id: string
   ): void {
-    const criterionIndex = _.findIndex(workspace.criteria, ['id', criterionId]);
-    const criterion = workspace.criteria[criterionIndex];
-    const newCriterion = {
-      ...criterion,
-      dataSources: swapItems(
-        dataSource1Id,
-        dataSource2Id,
-        criterion.dataSources
-      )
-    };
-    let newCriteria = _.cloneDeep(workspace.criteria);
-    newCriteria[criterionIndex] = newCriterion;
+    const newCriteria = createCriteriaWithSwappedDataSources(
+      workspace.criteria,
+      criterionId,
+      dataSource1Id,
+      dataSource2Id
+    );
     setWorkspace(_.merge({}, _.cloneDeep(workspace), {criteria: newCriteria}));
-    const newOrdering: IOrdering = {
-      alternatives: _.map(workspace.alternatives, 'id'),
-      criteria: _.map(workspace.criteria, 'id'),
-      dataSources: _.flatMap(newCriteria, (criterion: ICriterion): string[] =>
-        _.map(criterion.dataSources, 'id')
-      )
-    };
+
+    const newOrdering: IOrdering = createNewOrdering(
+      workspace.alternatives,
+      newCriteria
+    );
     Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
       errorCallback
     );
