@@ -4,6 +4,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
+import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
@@ -13,7 +14,13 @@ import IDB from './interface/IDB';
 import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
-import {getRanges, getUser, handleError, reduceProblem} from './util';
+import {
+  createScenarioProblem,
+  getRanges,
+  getUser,
+  handleError,
+  omitPvfs
+} from './util';
 import WorkspaceRepository from './workspaceRepository';
 
 export default function WorkspaceHandler(db: IDB) {
@@ -71,20 +78,20 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createNewWorkspace(
     client: PoolClient,
-    request: Request,
+    request: Request<{}, {}, {title: string; problem: IUploadProblem}>,
     callback: (error: OurError, id: string) => void
   ): void {
     logger.debug('creating new workspace');
 
     const owner = getUser(request).id;
     const title = request.body.title;
-    const problem = request.body.problem;
+    const problem: IProblem = omitPvfs(request.body.problem);
     workspaceRepository.create(client, owner, title, problem, callback);
   }
 
   function createSubProblem(
     client: PoolClient,
-    request: Request<{}, {}, {problem: IProblem}>,
+    request: Request<{}, {}, {problem: IUploadProblem}>,
     workspaceId: string,
     callback: (
       error: OurError,
@@ -94,7 +101,7 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     logger.debug('creating subproblem');
     const definition = {
-      ranges: getRanges(request.body.problem) //FIXME don't allow ranges on uploads
+      ranges: getRanges(request.body.problem)
     };
     subproblemRepository.create(
       client,
@@ -138,7 +145,7 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createScenario(
     client: PoolClient,
-    request: Request,
+    request: Request<{}, {}, {problem: IUploadProblem}>,
     workspaceId: string,
     subproblemId: string,
     callback: (
@@ -153,7 +160,7 @@ export default function WorkspaceHandler(db: IDB) {
       subproblemId: subproblemId,
       workspaceId: workspaceId,
       state: {
-        problem: reduceProblem(request.body.problem),
+        problem: createScenarioProblem(request.body.problem),
         prefs: []
       }
     };

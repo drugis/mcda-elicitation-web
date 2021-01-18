@@ -1,7 +1,13 @@
 import {OurError} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
+import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
+import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
+import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
+import IUploadProblemDataSource from '@shared/interface/UploadProblem/IUploadProblemDataSource';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
 import logger from './logger';
@@ -29,27 +35,105 @@ export function handleError(error: OurError, next: any): void {
 }
 
 export function getRanges(
-  problem: IProblem
+  problem: IUploadProblem
 ): Record<string, [number, number] | undefined> {
   return _(problem.criteria)
     .flatMap('dataSources')
     .keyBy('id')
-    .mapValues((dataSource: IProblemDataSource) => {
+    .mapValues((dataSource: IUploadProblemDataSource) => {
       return dataSource.pvf ? dataSource.pvf.range : undefined;
     })
     .value();
 }
 
-export function reduceProblem(problem: IProblem): IScenarioProblem {
-  const criteria = _.reduce(
-    problem.criteria,
-    (accum: Record<string, any>, criterion, key): Record<string, any> => {
-      accum[key] = _.pick(criterion, ['scale', 'pvf', 'title']);
-      return accum;
-    },
-    {}
+export function createScenarioProblem(
+  problem: IUploadProblem
+): IScenarioProblem {
+  if (
+    hasTooManyDataSources(problem.criteria) ||
+    hasMissingPvf(problem.criteria)
+  ) {
+    return {criteria: {}};
+  } else {
+    return {
+      criteria: createScenarioCriteria(problem.criteria)
+    };
+  }
+}
+
+function hasTooManyDataSources(
+  criteria: Record<string, IUploadProblemCriterion>
+): boolean {
+  return _.some(
+    criteria,
+    (criterion: IUploadProblemCriterion): boolean =>
+      criterion.dataSources.length > 1
   );
+}
+
+function hasMissingPvf(
+  criteria: Record<string, IUploadProblemCriterion>
+): boolean {
+  return _.some(
+    criteria,
+    (criterion: IUploadProblemCriterion): boolean =>
+      !criterion.dataSources[0] ||
+      !criterion.dataSources[0].pvf ||
+      !criterion.dataSources[0].pvf.direction
+  );
+}
+
+function createScenarioCriteria(
+  criteria: Record<string, IUploadProblemCriterion>
+): Record<string, IScenarioCriterion> {
+  return _.mapValues(
+    criteria,
+    (uploadCriterion: IUploadProblemCriterion): IScenarioCriterion => {
+      return {dataSources: [pickPvfs(uploadCriterion.dataSources[0])]};
+    }
+  );
+}
+
+function pickPvfs(uploadDataSource: IUploadProblemDataSource) {
+  if (
+    uploadDataSource &&
+    uploadDataSource.pvf &&
+    uploadDataSource.pvf.direction
+  ) {
+    return {pvf: _.omit(uploadDataSource.pvf, 'range') as IScenarioPvf};
+  } else {
+    return undefined;
+  }
+}
+
+export function omitPvfs(uploadProblem: IUploadProblem): IProblem {
   return {
-    criteria: criteria
+    ...uploadProblem,
+    criteria: omitPvfsFromCriteria(uploadProblem.criteria)
   };
+}
+
+function omitPvfsFromCriteria(
+  uploadCriteria: Record<string, IUploadProblemCriterion>
+): Record<string, IProblemCriterion> {
+  return _.mapValues(
+    uploadCriteria,
+    (uploadCriterion: IUploadProblemCriterion): IProblemCriterion => {
+      return {
+        ...uploadCriterion,
+        dataSources: omitPvfsFromDataSources(uploadCriterion.dataSources)
+      };
+    }
+  );
+}
+
+function omitPvfsFromDataSources(
+  uploadDataSources: IUploadProblemDataSource[]
+): IProblemDataSource[] {
+  return _.map(
+    uploadDataSources,
+    (uploadDataSource: IUploadProblemDataSource): IProblemDataSource => {
+      return _.omit(uploadDataSource, 'pvf');
+    }
+  );
 }
