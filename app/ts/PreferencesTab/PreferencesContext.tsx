@@ -16,7 +16,7 @@ import {SettingsContext} from '../Settings/SettingsContext';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import IPreferencesContext from './IPreferencesContext';
-import {initPvfs} from './PreferencesUtil';
+import {filterScenariosWithPvfs, initPvfs} from './PreferencesUtil';
 import {TPreferencesView} from './TPreferencesView';
 
 export const PreferencesContext = createContext<IPreferencesContext>(
@@ -235,6 +235,7 @@ export function PreferencesContextProviderComponent({
     <PreferencesContext.Provider
       value={{
         scenarios: contextScenarios,
+        scenariosWithPvfs: filterScenariosWithPvfs(contextScenarios),
         currentScenario,
         problem,
         pvfs,

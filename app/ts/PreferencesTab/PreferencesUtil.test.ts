@@ -2,9 +2,14 @@ import ICriterion from '@shared/interface/ICriterion';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {TPreferences} from '@shared/types/Preferences';
-import {buildScenarioWithPreferences, initPvfs} from './PreferencesUtil';
+import {
+  buildScenarioWithPreferences,
+  filterScenariosWithPvfs,
+  initPvfs
+} from './PreferencesUtil';
 
 const criterion1: ICriterion = {
   id: 'crit1Id',
@@ -162,6 +167,50 @@ describe('PreferencesUtil', () => {
           prefs: preferences,
           problem: {criteria: {}}
         }
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('filterScenariosWithPvfs', () => {
+    it('should return scenarios that have datasources and set pvs', () => {
+      const scenarios: Record<string, IMcdaScenario> = {
+        scenarioId1: {
+          id: 'scenarioId1',
+          title: 'scenario 1',
+          state: {
+            prefs: [],
+            problem: {
+              criteria: {
+                crit2Id: {
+                  dataSources: [
+                    {pvf: {type: 'linear', direction: 'decreasing'}}
+                  ]
+                }
+              }
+            }
+          },
+          subproblemId: '37',
+          workspaceId: '42'
+        },
+        scenarioId2: {
+          id: 'scenarioId2',
+          title: 'scenario 2',
+          state: {
+            prefs: [],
+            problem: {
+              criteria: {
+                crit2Id: {} as IScenarioCriterion
+              }
+            }
+          },
+          subproblemId: '37',
+          workspaceId: '42'
+        }
+      };
+      const result = filterScenariosWithPvfs(scenarios);
+      const expectedResult = {
+        scenarioId1: scenarios['scenarioId1']
       };
       expect(result).toEqual(expectedResult);
     });

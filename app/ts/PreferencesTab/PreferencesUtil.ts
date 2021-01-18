@@ -2,6 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
 import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
@@ -66,4 +67,24 @@ export function buildScenarioWithPreferences(
     prefs: preferences
   };
   return {..._.omit(scenario, ['state']), state: newState};
+}
+
+export function filterScenariosWithPvfs(
+  scenarios: Record<string, IMcdaScenario>
+): Record<string, IMcdaScenario> {
+  return _(scenarios)
+    .filter((scenario: IMcdaScenario) => {
+      return _.every(
+        scenario.state.problem.criteria,
+        (criterion: IScenarioCriterion) => {
+          return (
+            !!criterion.dataSources &&
+            !!criterion.dataSources[0].pvf.direction &&
+            !!criterion.dataSources[0].pvf.type
+          );
+        }
+      );
+    })
+    .keyBy('id')
+    .value();
 }
