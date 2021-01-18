@@ -72,19 +72,13 @@ export function buildScenarioWithPreferences(
 export function filterScenariosWithPvfs(
   scenarios: Record<string, IMcdaScenario>
 ): Record<string, IMcdaScenario> {
-  return _(scenarios)
-    .filter((scenario: IMcdaScenario) => {
-      return _.every(
-        scenario.state.problem.criteria,
-        (criterion: IScenarioCriterion) => {
-          return (
-            !!criterion.dataSources &&
-            !!criterion.dataSources[0].pvf.direction &&
-            !!criterion.dataSources[0].pvf.type
-          );
-        }
-      );
-    })
-    .keyBy('id')
-    .value();
+  return _.pickBy(scenarios, (scenario: IMcdaScenario) =>
+    _.every(scenario.state.problem.criteria, (criterion: IScenarioCriterion) =>
+      Boolean(
+        criterion.dataSources &&
+          criterion.dataSources[0].pvf.direction &&
+          criterion.dataSources[0].pvf.type
+      )
+    )
+  );
 }
