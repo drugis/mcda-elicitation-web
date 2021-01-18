@@ -9,14 +9,12 @@ import IOldWorkspace from './interface/IOldWorkspace';
 import IOrdering from './interface/IOrdering';
 import IRangeEffect from './interface/IRangeEffect';
 import IRelativePerformance from './interface/IRelativePerformance';
-import IStudentsTDistribution from './interface/IStudentsTDistribution';
 import ITextEffect from './interface/ITextEffect';
 import {UnitOfMeasurementType} from './interface/IUnitOfMeasurement';
 import IValueCIEffect from './interface/IValueCIEffect';
 import IValueEffect from './interface/IValueEffect';
 import IWorkspace from './interface/IWorkspace';
 import IWorkspaceProperties from './interface/IWorkspaceProperties';
-import {TDistributionPerformance} from './interface/Problem/TDistributionPerformance';
 import IEmptyPerformance from './interface/Problem/IEmptyPerformance';
 import {
   IDistributionPerformance,
@@ -27,10 +25,10 @@ import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
 import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
-import IStudentsTPerformance from './interface/Problem/IStudentsTPerformance';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
+import {TDistributionPerformance} from './interface/Problem/TDistributionPerformance';
 import {generateUuid} from './util';
 import {applyOrdering} from './workspaceServiceUtil';
 
@@ -427,7 +425,13 @@ export function finishDistributionCreation(
     case 'empty':
       return createEmptyOrTextEffect(performance, distributionBase);
     case 'dt':
-      return {...distributionBase, type: 'empty'};
+      return {
+        ...distributionBase,
+        type: 'dt',
+        dof: performance.parameters.dof,
+        standardError: performance.parameters.stdErr,
+        mean: performance.parameters.mu
+      };
   }
 }
 
