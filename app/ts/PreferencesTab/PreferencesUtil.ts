@@ -70,15 +70,21 @@ export function buildScenarioWithPreferences(
 }
 
 export function filterScenariosWithPvfs(
-  scenarios: Record<string, IMcdaScenario>
+  scenarios: Record<string, IMcdaScenario>,
+  problemCriteria: Record<string, IProblemCriterion>
 ): Record<string, IMcdaScenario> {
   return _.pickBy(scenarios, (scenario: IMcdaScenario) =>
-    _.every(scenario.state.problem.criteria, (criterion: IScenarioCriterion) =>
-      Boolean(
-        criterion.dataSources &&
-          criterion.dataSources[0].pvf.direction &&
-          criterion.dataSources[0].pvf.type
-      )
+    _.every(
+      scenario.state.problem.criteria,
+      (criterion: IScenarioCriterion, criterionId: string) => {
+        const scenarioPvf = getScenarioPvf(criterionId, scenario);
+        const problemPvf = getProblemPvf(criterionId, problemCriteria);
+        return isPvfSet(scenarioPvf) || isPvfSet(problemPvf);
+      }
     )
   );
+}
+
+function isPvfSet(pvf: IScenarioPvf | IPvf): boolean {
+  return Boolean(pvf && pvf.direction && pvf.type);
 }

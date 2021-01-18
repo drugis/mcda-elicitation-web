@@ -235,7 +235,10 @@ export function PreferencesContextProviderComponent({
     <PreferencesContext.Provider
       value={{
         scenarios: contextScenarios,
-        scenariosWithPvfs: filterScenariosWithPvfs(contextScenarios),
+        scenariosWithPvfs: filterScenariosWithPvfs(
+          contextScenarios,
+          problem.criteria
+        ),
         currentScenario,
         problem,
         pvfs,

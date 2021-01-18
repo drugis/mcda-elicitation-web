@@ -1,5 +1,6 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
@@ -173,7 +174,7 @@ describe('PreferencesUtil', () => {
   });
 
   describe('filterScenariosWithPvfs', () => {
-    it('should return scenarios that have datasources and set pvfs', () => {
+    it('should return scenarios that have set pvfs on the scenario', () => {
       const scenarios: Record<string, IMcdaScenario> = {
         scenarioId1: {
           id: 'scenarioId1',
@@ -182,7 +183,7 @@ describe('PreferencesUtil', () => {
             prefs: [],
             problem: {
               criteria: {
-                crit2Id: {
+                crit1Id: {
                   dataSources: [
                     {pvf: {type: 'linear', direction: 'decreasing'}}
                   ]
@@ -200,7 +201,7 @@ describe('PreferencesUtil', () => {
             prefs: [],
             problem: {
               criteria: {
-                crit2Id: {} as IScenarioCriterion
+                crit1Id: {} as IScenarioCriterion
               }
             }
           },
@@ -208,11 +209,55 @@ describe('PreferencesUtil', () => {
           workspaceId: '42'
         }
       };
-      const result = filterScenariosWithPvfs(scenarios);
+      const result = filterScenariosWithPvfs(scenarios, {});
       const expectedResult = {
         scenarioId1: scenarios.scenarioId1
       };
       expect(result).toEqual(expectedResult);
+    });
+
+    it('should return all scenarios if the pvfs are set on the default problem', () => {
+      const scenarios: Record<string, IMcdaScenario> = {
+        scenarioId1: {
+          id: 'scenarioId1',
+          title: 'scenario 1',
+          state: {
+            prefs: [],
+            problem: {
+              criteria: {
+                crit1Id: {} as IScenarioCriterion
+              }
+            }
+          },
+          subproblemId: '37',
+          workspaceId: '42'
+        },
+        scenarioId2: {
+          id: 'scenarioId2',
+          title: 'scenario 2',
+          state: {
+            prefs: [],
+            problem: {
+              criteria: {
+                crit1Id: {} as IScenarioCriterion
+              }
+            }
+          },
+          subproblemId: '37',
+          workspaceId: '42'
+        }
+      };
+      const problemCriteria: Record<string, IProblemCriterion> = {
+        crit1Id: {
+          dataSources: [
+            {
+              pvf: {type: 'linear', direction: 'decreasing'} as IPvf
+            } as IProblemDataSource
+          ]
+        } as IProblemCriterion
+      };
+      const result = filterScenariosWithPvfs(scenarios, problemCriteria);
+      expect(result).toEqual(scenarios);
     });
   });
 });
