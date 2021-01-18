@@ -9,7 +9,7 @@ import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {
   IDistributionPerformance,
   IEffectPerformance,
-  Performance
+  TPerformance
 } from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -93,7 +93,7 @@ export function buildPataviPerformanceTable(
 }
 
 function getPerformance(
-  performance: Performance
+  performance: TPerformance
 ): EffectPerformance | TDistributionPerformance | TRelativePerformance {
   if (
     isDistributionPerformance(performance) &&
@@ -108,13 +108,13 @@ function getPerformance(
 }
 
 function isDistributionPerformance(
-  performance: Performance
+  performance: TPerformance
 ): performance is IDistributionPerformance {
   return performance.hasOwnProperty('distribution');
 }
 
 function isEffectPerformance(
-  performance: Performance
+  performance: TPerformance
 ): performance is IEffectPerformance {
   return performance.hasOwnProperty('effect');
 }

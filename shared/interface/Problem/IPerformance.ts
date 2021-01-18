@@ -1,8 +1,8 @@
-import {TDistributionPerformance} from './TDistributionPerformance';
 import {EffectPerformance} from './IEffectPerformance';
 import {IProblemRelativePerformance} from './IProblemRelativePerformance';
+import {TDistributionPerformance} from './TDistributionPerformance';
 
-export type Performance =
+export type TPerformance =
   | IDualPerformance
   | IEffectPerformance
   | IDistributionPerformance

@@ -20,7 +20,7 @@ import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import {Performance} from '@shared/interface/Problem/IPerformance';
+import {TPerformance} from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -466,7 +466,7 @@ function buildPerformance(
   effectCell: Effect,
   distributionCell: Distribution,
   unitOfMeasurementType: UnitOfMeasurementType
-): Performance {
+): TPerformance {
   const isPercentage = unitOfMeasurementType === 'percentage';
   let performance;
   if (effectCell) {
