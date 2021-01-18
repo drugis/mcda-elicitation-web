@@ -1,7 +1,7 @@
 import {calculateObservedRanges} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {WorkspaceContext} from '../WorkspaceContext';
-import {hasScalevalues} from '../WorkspaceContextUtil';
+import {hasScaleValues} from '../WorkspaceContextUtil';
 import ISubproblemContext from './ISubproblemContext';
 import {applySubproblem} from './SubproblemUtil';
 
@@ -30,7 +30,7 @@ export function SubproblemContextProviderComponent({
   >({});
 
   useEffect(() => {
-    if (hasScalevalues(scales) && filteredWorkspace) {
+    if (hasScaleValues(scales) && filteredWorkspace) {
       setObservedRanges(calculateObservedRanges(scales, filteredWorkspace));
     }
   }, [scales, filteredWorkspace]);

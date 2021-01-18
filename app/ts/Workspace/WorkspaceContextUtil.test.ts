@@ -6,24 +6,25 @@ import IScale from '@shared/interface/IScale';
 import {
   createCriteriaWithSwappedDataSources,
   createNewOrdering,
-  hasScalevalues
+  hasScaleValues
 } from './WorkspaceContextUtil';
 
 describe('WorkspaceContextUtil', () => {
   describe('hasScalevalues', () => {
-    it('should return true is there is atleast one value for the scales', () => {
+    it('should return true is there is at least one value for the scales', () => {
       const scales: Record<string, Record<string, IScale>> = {
         ds1id: {alt1Id: {'2.5%': 0, '50%': 50, '97.5%': 100, mode: 50}},
         ds2id: {alt1Id: {'2.5%': null, '50%': null, '97.5%': null, mode: null}}
       };
-      expect(hasScalevalues(scales)).toBeTruthy();
+      expect(hasScaleValues(scales)).toBeTruthy();
     });
-    it('should return false is there is no value for the scales', () => {
+
+    it('should return false if there is no value for the scales', () => {
       const scales: Record<string, Record<string, IScale>> = {
         ds1id: {alt1Id: {'2.5%': null, '50%': null, '97.5%': null, mode: null}},
         ds2id: {alt1Id: {'2.5%': null, '50%': null, '97.5%': null, mode: null}}
       };
-      expect(hasScalevalues(scales)).toBeFalsy();
+      expect(hasScaleValues(scales)).toBeFalsy();
     });
   });
 
@@ -69,41 +70,43 @@ describe('WorkspaceContextUtil', () => {
   });
 
   describe('createCriteriaWithSwappedDataSources', () => {
-    const criteria: ICriterion[] = [
-      {
-        id: 'crit1Id',
-        title: 'criterion1',
-        description: '',
-        isFavourable: undefined,
-        dataSources: [
-          {id: 'dontMoveThis'} as IDataSource,
-          {id: 'ds1Id'} as IDataSource,
-          {id: 'ds2Id'} as IDataSource
-        ]
-      }
-    ];
-    const criterionId: string = 'crit1Id';
-    const dataSource1Id: string = 'ds1Id';
-    const dataSource2Id: string = 'ds2Id';
-    const result = createCriteriaWithSwappedDataSources(
-      criteria,
-      criterionId,
-      dataSource1Id,
-      dataSource2Id
-    );
-    const expectedResult: ICriterion[] = [
-      {
-        id: 'crit1Id',
-        title: 'criterion1',
-        description: '',
-        isFavourable: undefined,
-        dataSources: [
-          {id: 'dontMoveThis'} as IDataSource,
-          {id: 'ds2Id'} as IDataSource,
-          {id: 'ds1Id'} as IDataSource
-        ]
-      }
-    ];
-    expect(result).toEqual(expectedResult);
+    it('should return criteria with data sources swapped', () => {
+      const criteria: ICriterion[] = [
+        {
+          id: 'crit1Id',
+          title: 'criterion1',
+          description: '',
+          isFavourable: undefined,
+          dataSources: [
+            {id: 'dontMoveThis'} as IDataSource,
+            {id: 'ds1Id'} as IDataSource,
+            {id: 'ds2Id'} as IDataSource
+          ]
+        }
+      ];
+      const criterionId: string = 'crit1Id';
+      const dataSource1Id: string = 'ds1Id';
+      const dataSource2Id: string = 'ds2Id';
+      const result = createCriteriaWithSwappedDataSources(
+        criteria,
+        criterionId,
+        dataSource1Id,
+        dataSource2Id
+      );
+      const expectedResult: ICriterion[] = [
+        {
+          id: 'crit1Id',
+          title: 'criterion1',
+          description: '',
+          isFavourable: undefined,
+          dataSources: [
+            {id: 'dontMoveThis'} as IDataSource,
+            {id: 'ds2Id'} as IDataSource,
+            {id: 'ds1Id'} as IDataSource
+          ]
+        }
+      ];
+      expect(result).toEqual(expectedResult);
+    });
   });
 });

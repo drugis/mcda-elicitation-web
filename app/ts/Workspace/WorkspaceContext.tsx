@@ -20,7 +20,7 @@ import {transformCriterionToOldCriterion} from './transformUtil';
 import {
   createCriteriaWithSwappedDataSources,
   createNewOrdering,
-  hasScalevalues,
+  hasScaleValues,
   isOrdering
 } from './WorkspaceContextUtil';
 
@@ -74,7 +74,7 @@ export function WorkspaceContextProviderComponent({
   }, []);
 
   useEffect(() => {
-    if (hasScalevalues(scales) && oldWorkspace) {
+    if (hasScaleValues(scales) && oldWorkspace) {
       setObservedRanges(calculateObservedRanges(scales, workspace));
     }
   }, [scales, oldWorkspace]);

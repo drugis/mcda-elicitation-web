@@ -5,7 +5,7 @@ import IScale from '@shared/interface/IScale';
 import _ from 'lodash';
 import {swapItems} from '../ManualInput/ManualInputService/ManualInputService';
 
-export function hasScalevalues(
+export function hasScaleValues(
   scales: Record<string, Record<string, IScale>>
 ): boolean {
   return _.some(scales, (scale) => hasScale(scale));
