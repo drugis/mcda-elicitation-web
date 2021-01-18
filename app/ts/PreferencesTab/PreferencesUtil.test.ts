@@ -173,7 +173,7 @@ describe('PreferencesUtil', () => {
   });
 
   describe('filterScenariosWithPvfs', () => {
-    it('should return scenarios that have datasources and set pvs', () => {
+    it('should return scenarios that have datasources and set pvfs', () => {
       const scenarios: Record<string, IMcdaScenario> = {
         scenarioId1: {
           id: 'scenarioId1',
@@ -210,7 +210,7 @@ describe('PreferencesUtil', () => {
       };
       const result = filterScenariosWithPvfs(scenarios);
       const expectedResult = {
-        scenarioId1: scenarios['scenarioId1']
+        scenarioId1: scenarios.scenarioId1
       };
       expect(result).toEqual(expectedResult);
     });
