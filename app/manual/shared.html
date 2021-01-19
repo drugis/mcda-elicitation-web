@@ -296,10 +296,10 @@ elicited.
 <p>
   For many users, it is helpful to illustrate the concrete consequences of the
   abstract weights which result from preference elicitation. The trade off table
-  below the weights does so by showing how much each secondary criterion should
-  change to be compensate for a certain change in a reference criterion. Any
-  criterion can be chosen as the reference, and the values between which this
-  reference criterion changes can also be set by the user.
+  below the weights table does so by showing how much each secondary criterion
+  should change to be compensate for a certain change in a reference criterion.
+  Any criterion can be chosen as the reference, and the values between which
+  this reference criterion changes can also be set by the user.
 </p>
 <div class="figure">
   <img src="img/tradeOffTable.png" />
@@ -310,21 +310,70 @@ elicited.
 </div>
 
 <h3 id="mcda-deterministic-analysis">Deterministic benefit-risk analysis</h3>
+
 <p>
-  In the figure below, we see the first part of the deterministic analysis part
-  of the benefit-risk interface. Here we can adjust the effect sizes to gain
-  further insight in what ranges of effects would tip the scales in favour of
-  specific criteria. In the example figure, we have increased the effectiveness
-  of Regorafenib upwards, and the total value plot shows that this changes the
-  total value to now be higher than placebo for the given preferences.
+  The deterministic analysis part of the ADDIS MCDA interface shows the
+  consequences of a given preference scenario for each alternative's value. It
+  is deterministic because in these analyses all uncertainty is disregarded: the
+  estimated weights are used in case of uncertainty in the preferences, and the
+  point estimates for each measured effect are used. This part of the interface
+  also lets the user perform sensitivity analysis (i.e. check how strongly the
+  value profile changes when the data and preferences are changed) in several
+  ways. Finally, it is also possible to quickly switch between preference
+  scenarios through the selector at the top of the page.
 </p>
+<p>
+  The value profile plot shows for each alternative how 'valuable' it is given
+  the available data and preferences. The value for an alternative is composed
+  of its values for each individual criterion, multiplied by the weight of that
+  criterion. So, if an alternative performs well on a given criterion but that
+  criterion has a low weight, it can still contribute relatively little to the
+  total value. The exact contribution of each criterion to the total value is
+  shown in the bar for that alternative. When hovering the mouse over a bar a
+  table is shown with the values for each criterion that it comprises.
+</p>
+
+<!-- FIXME: insert value plot fig -->
+
+<h4 id="mcda-sensitivity-analysis">Sensitivity analysis</h4>
+
+<p>
+  Sensitivity analysis lets one explore how sensitive the benefit-risk balance
+  of your analysis is to changes in either the data or the preferences. If
+  changing a given point estimate or the weight given to a criterion by a small
+  amount drastically alters which alternative is preferred, it decreases the
+  likelihood of this conclusion being correct, or at least invites further
+  scrutiny. If, on the other hand, a given alternative is preferred over the
+  others for a wide range of different measurements and preference
+  distributions, it increases one's confidence that this alternative really is
+  'better.'
+</p>
+
+<h5 id="mcda-adjusting-measurements">Adjusting measurements</h5>
+<p>
+  It is possible (by clicking on them and adjusting a slider) to change the
+  values in the measurements table. There are many possible reasons to want to
+  do so, e.g. because you know that one study underreported certain incidences
+  and you want to see how this might affect the benefit-risk balance. After
+  adjusting one or more measurements, the 'Recalculate' button can be pressed to
+  show a second value profile plot next to the first one, allowing easy
+  comparison between the two cases and showing how the value of each alternative
+  would change if the data were different.
+</p>
+
+<!-- FIXME: update figure  -->
 <div class="figure">
   <img src="img/deterministic1.png" />
   <div class="caption">
     Adjusting effect sizes to determine their influence on the value of
-    criteria.
+    criteria. The effectiveness of Regorafenib is increased, and the total value
+    plot shows that this changes the total value to now be higher than placebo
+    for the given preferences.
   </div>
 </div>
+
+<h5 id="mcda-one-way-sensitivity">One-way sensitivity analysis</h5>
+
 <p>
   In the following figure we see the second, one-way sensitivity, part of the
   deterministic analysis benefit-risk interface. Here we can see how the total
