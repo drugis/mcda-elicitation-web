@@ -52,10 +52,14 @@ export default function PreferencesWeightsTable() {
       (criterion: ICriterion): JSX.Element => {
         const unit = criterion.dataSources[0].unitOfMeasurement;
         const usePercentage = showPercentages && canBePercentage(unit.type);
+        const description = criterion.description ? criterion.description : '';
         return (
           <TableRow key={criterion.id}>
-            <TableCell>{criterion.title}</TableCell>
-            <TableCell>{criterion.description}</TableCell>
+            <TableCell>
+              <Tooltip disableHoverListener={!description} title={description}>
+                <span style={{color: '#0000ee'}}>{criterion.title}</span>
+              </Tooltip>
+            </TableCell>
             <TableCell id={`unit-${criterion.id}`}>
               {getUnitLabel(unit, showPercentages)}
             </TableCell>
@@ -84,7 +88,6 @@ export default function PreferencesWeightsTable() {
           <TableCell>
             Criterion <InlineHelp helpId="criterion" />
           </TableCell>
-          <TableCell>Description</TableCell>
           <TableCell>
             Unit <InlineHelp helpId="unit-of-measurement" />
           </TableCell>
