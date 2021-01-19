@@ -34,7 +34,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
       canEdit: user ? currentWorkspace.owner === user.id : false
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
-      const pvfs = SchemaService.extractPvfs(currentWorkspace);
+      const pvfs = SchemaService.extractPvfs(currentWorkspace.problem.criteria);
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(
         currentWorkspace
       );

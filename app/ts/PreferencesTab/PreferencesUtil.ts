@@ -1,5 +1,4 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
@@ -9,36 +8,19 @@ import _ from 'lodash';
 export function initPvfs(
   criteria: ICriterion[],
   currentScenario: IMcdaScenario,
-  ranges: Record<string, [number, number]>,
-  problemCriteria: Record<string, IProblemCriterion>
+  ranges: Record<string, [number, number]>
 ): Record<string, IPvf> {
   return _(criteria)
     .keyBy('id')
     .mapValues((criterion) => {
       const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
-      const problemPvf = getProblemPvf(criterion.id, problemCriteria);
       return _.merge(
         {},
-        problemPvf,
         {range: ranges[criterion.dataSources[0].id]},
         scenarioPvf
       );
     })
     .value();
-}
-
-function getProblemPvf(
-  criterionId: string,
-  problemCriteria: Record<string, IProblemCriterion>
-): IPvf | undefined {
-  if (
-    problemCriteria[criterionId] &&
-    problemCriteria[criterionId].dataSources[0].pvf
-  ) {
-    return problemCriteria[criterionId].dataSources[0].pvf;
-  } else {
-    return undefined;
-  }
 }
 
 function getScenarioPvf(

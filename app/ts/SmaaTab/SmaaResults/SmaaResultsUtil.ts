@@ -2,18 +2,6 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import {Distribution} from '@shared/interface/IDistribution';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
-import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
-import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
-import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
-import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
-import {
-  IDistributionPerformance,
-  IEffectPerformance,
-  TPerformance
-} from '@shared/interface/Problem/IPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import {TRelativePerformance} from '@shared/interface/Problem/IProblemRelativePerformance';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
@@ -65,58 +53,6 @@ export function getSmaaWarnings(
     warnings.push('Weights are not stochastic');
   }
   return warnings;
-}
-
-export function mergeDataSourceOntoCriterion(
-  criteria: Record<string, IProblemCriterion>
-): Record<string, IPataviCriterion> {
-  return _.mapValues(
-    criteria,
-    (criterion: IProblemCriterion): IPataviCriterion => {
-      return {
-        id: criterion.id,
-        title: criterion.title,
-        pvf: criterion.dataSources[0].pvf,
-        scale: criterion.dataSources[0].scale,
-        unitOfMeasurement: criterion.dataSources[0].unitOfMeasurement
-      };
-    }
-  );
-}
-
-export function buildPataviPerformanceTable(
-  performanceTable: IPerformanceTableEntry[]
-): IPataviTableEntry[] {
-  return _.map(performanceTable, (entry: IPerformanceTableEntry) => {
-    return {...entry, performance: getPerformance(entry.performance)};
-  });
-}
-
-function getPerformance(
-  performance: TPerformance
-): EffectPerformance | TDistributionPerformance | TRelativePerformance {
-  if (
-    isDistributionPerformance(performance) &&
-    performance.distribution.type !== 'empty'
-  ) {
-    return performance.distribution;
-  } else if (isEffectPerformance(performance)) {
-    return performance.effect;
-  } else {
-    throw 'Unrecognized performance';
-  }
-}
-
-function isDistributionPerformance(
-  performance: TPerformance
-): performance is IDistributionPerformance {
-  return performance.hasOwnProperty('distribution');
-}
-
-function isEffectPerformance(
-  performance: TPerformance
-): performance is IEffectPerformance {
-  return performance.hasOwnProperty('effect');
 }
 
 export function generateRankPlotSettings(

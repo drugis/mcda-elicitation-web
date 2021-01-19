@@ -1,5 +1,4 @@
 import IProblemCriterion from '../Problem/IProblemCriterion';
-import IProblemUnitOfMeasurement from '../Problem/IProblemUnitOfMeasurement';
 import IPvf from '../Problem/IPvf';
 
 export interface IPataviCriterion
@@ -9,5 +8,4 @@ export interface IPataviCriterion
   > {
   pvf: IPvf;
   scale: [number, number];
-  unitOfMeasurement: IProblemUnitOfMeasurement;
 }

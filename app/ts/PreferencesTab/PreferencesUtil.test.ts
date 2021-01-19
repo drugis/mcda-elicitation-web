@@ -95,24 +95,7 @@ describe('PreferencesUtil', () => {
         dsId1: [0, 1],
         dsId2: [2, 3]
       };
-      const problemCriteria: Record<string, IProblemCriterion> = {
-        crit2Id: {
-          dataSources: [
-            {pvf: {type: 'linear', direction: 'increasing', range: [0, 100]}}
-          ]
-        } as IProblemCriterion,
-        crit3Id: {
-          dataSources: [
-            {pvf: {type: 'linear', direction: 'increasing', range: [0, 100]}}
-          ]
-        } as IProblemCriterion
-      };
-      const result = initPvfs(
-        criteria,
-        currentScenario,
-        ranges,
-        problemCriteria
-      );
+      const result = initPvfs(criteria, currentScenario, ranges);
       const expectedResult: Record<string, IPvf> = {
         crit1Id: {range: [0, 1]},
         crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]},
@@ -123,7 +106,7 @@ describe('PreferencesUtil', () => {
   });
 
   describe('buildScenarioWithPreferences', () => {
-    it('should put preferenes on the scenario state and remove the weights', () => {
+    it('should put preferences on the scenario state and remove the weights', () => {
       const scenario: IMcdaScenario = {
         id: '1',
         title: 'scenario',
@@ -165,5 +148,13 @@ describe('PreferencesUtil', () => {
       };
       expect(result).toEqual(expectedResult);
     });
+  });
+
+  describe('getPvfProblem', () => {
+    it('should', () => fail());
+  });
+
+  describe('getPostProblemForWeights', () => {
+    it('should', () => fail());
   });
 });

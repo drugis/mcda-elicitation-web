@@ -1,9 +1,5 @@
 'use strict';
 
-const {
-  default: significantDigits
-} = require('app/ts/ManualInput/Util/significantDigits');
-
 define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
   var dependencies = [
     'currentSchemaVersion',
@@ -593,8 +589,8 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       };
     }
 
-    function extractPvfs(workspace) {
-      return _(workspace.problem.criteria)
+    function extractPvfs(criteria) {
+      return _(criteria)
         .map((criterion) => [
           criterion.id,
           _.pick(criterion.dataSources[0], 'pvf')

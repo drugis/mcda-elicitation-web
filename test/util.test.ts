@@ -6,7 +6,7 @@ import {
   getRanges,
   getUser,
   handleError,
-  reduceProblem
+  createScenarioProblem
 } from '../node-backend/util';
 
 describe('The utility', () => {
@@ -42,7 +42,7 @@ describe('The utility', () => {
     });
   });
 
-  describe('reduceProblem', () => {
+  describe('createScenarioProblem', () => {
     it('should reduce the problem to only the parts needed', () => {
       const problem: any = {
         prefs: 'some prefs',
@@ -56,7 +56,7 @@ describe('The utility', () => {
         }
       };
 
-      const result = reduceProblem(problem);
+      const result = createScenarioProblem(problem);
 
       const expectedResult = {
         criteria: {

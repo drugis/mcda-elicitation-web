@@ -5,16 +5,14 @@ import IWeights from '@shared/interface/Scenario/IWeights';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import Axios, {AxiosResponse} from 'axios';
-import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
-  buildPataviPerformanceTable,
   getSmaaWarnings,
   hasStochasticMeasurements,
-  hasStochasticWeights,
-  mergeDataSourceOntoCriterion
+  hasStochasticWeights
 } from '../SmaaResults/SmaaResultsUtil';
 import {ISmaaResultsContext} from './ISmaaResultsContext';
 
@@ -29,10 +27,13 @@ export function SmaaResultsContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
-  const {filteredDistributions, filteredRelativePerformances} = useContext(
-    SubproblemContext
-  );
-  const {currentScenario, problem, updateScenario} = useContext(
+  const {
+    filteredDistributions,
+    filteredRelativePerformances,
+    filteredAlternatives,
+    filteredCriteria
+  } = useContext(SubproblemContext);
+  const {currentScenario, problem, updateScenario, pvfs} = useContext(
     PreferencesContext
   );
 
@@ -100,18 +101,22 @@ export function SmaaResultsContextProviderComponent({
   }
 
   function calculateResults(): void {
+    const pataviProblem = getPataviProblem(
+      problem,
+      filteredCriteria,
+      filteredAlternatives,
+      pvfs
+    );
+
     const smaaResultsCommand: ISmaaResultsCommand = {
-      ..._.omit(problem, 'preferences'),
-      ...currentScenario.state.problem,
+      ...pataviProblem,
       preferences: currentScenario.state.prefs,
       method: 'smaa',
       uncertaintyOptions: {
         measurements: useMeasurementsUncertainty,
         weights: useWeightsUncertainty
       },
-      seed: randomSeed,
-      criteria: mergeDataSourceOntoCriterion(problem.criteria),
-      performanceTable: buildPataviPerformanceTable(problem.performanceTable)
+      seed: randomSeed
     };
 
     Axios.post('/patavi/smaaResults', smaaResultsCommand)

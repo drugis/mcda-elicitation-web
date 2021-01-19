@@ -618,5 +618,29 @@ define([
         expect(result).toBeFalsy();
       });
     });
+
+    describe('extractPvfs', () => {
+      it('should return pvfs keyed by criterion id', () => {
+        const criteria = {
+          crit1Id: {
+            id: 'crit1Id',
+            title: 'criterion1',
+            dataSources: [
+              {id: 'ds1Id', pvf: {range: [0, 1], direction: 'increasing'}}
+            ]
+          }
+        };
+        const result = schemaService.extractPvfs(criteria);
+        const expectedResult = {
+          crit1Id: {
+            range: [0, 1],
+            direction: 'increasing'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    // describe('mergePvfs', () => {});
   });
 });
