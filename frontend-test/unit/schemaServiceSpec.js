@@ -9,7 +9,7 @@ define([
   var generateUuidMock = function () {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.4.6';
+  var currentSchemaVersion = '1.4.7';
   var schemaService;
 
   describe('The SchemaService', function () {
@@ -641,6 +641,61 @@ define([
       });
     });
 
-    // describe('mergePvfs', () => {});
+    describe('mergePvfs', () => {
+      it('should merge pvfs onto scenario if there are none', () => {
+        const scenario = {
+          id: 1,
+          state: {problem: {criteria: {crit1Id: {id: 'crit1Id'}}}}
+        };
+        const pvfs = {crit1Id: {direction: 'increasing'}};
+        const result = schemaService.mergePvfs(scenario, pvfs);
+        const expectedResult = {
+          id: 1,
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  id: 'crit1Id',
+                  dataSources: [{pvf: {direction: 'increasing'}}]
+                }
+              }
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should not merge pvfs onto scenario if there are already', () => {
+        const scenario = {
+          id: 1,
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  id: 'crit1Id',
+                  dataSources: [{pvf: {direction: 'decreasing'}}]
+                }
+              }
+            }
+          }
+        };
+        const pvfs = {crit1Id: {direction: 'increasing'}};
+        const result = schemaService.mergePvfs(scenario, pvfs);
+        const expectedResult = {
+          id: 1,
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  id: 'crit1Id',
+                  dataSources: [{pvf: {direction: 'decreasing'}}]
+                }
+              }
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });

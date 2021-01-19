@@ -160,7 +160,9 @@ export default function WorkspaceHandler(db: IDB) {
       subproblemId: subproblemId,
       workspaceId: workspaceId,
       state: {
-        problem: createScenarioProblem(request.body.problem),
+        problem: {
+          criteria: createScenarioProblem(request.body.problem.criteria)
+        },
         prefs: []
       }
     };

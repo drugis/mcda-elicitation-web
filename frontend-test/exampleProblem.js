@@ -196,6 +196,6 @@ function exampleProblem() {
         }
       }
     ],
-    schemaVersion: '1.4.6'
+    schemaVersion: '1.4.7'
   };
 }

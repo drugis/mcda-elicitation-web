@@ -3,7 +3,6 @@ import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
-import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
 import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
 import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
@@ -47,17 +46,12 @@ export function getRanges(
 }
 
 export function createScenarioProblem(
-  problem: IUploadProblem
-): IScenarioProblem {
-  if (
-    hasTooManyDataSources(problem.criteria) ||
-    hasMissingPvf(problem.criteria)
-  ) {
-    return {criteria: {}};
+  criteria: Record<string, IUploadProblemCriterion>
+): Record<string, IScenarioCriterion> {
+  if (hasTooManyDataSources(criteria) || hasMissingPvf(criteria)) {
+    return {};
   } else {
-    return {
-      criteria: createScenarioCriteria(problem.criteria)
-    };
+    return createScenarioCriteria(criteria);
   }
 }
 
@@ -94,16 +88,10 @@ function createScenarioCriteria(
   );
 }
 
-function pickPvfs(uploadDataSource: IUploadProblemDataSource) {
-  if (
-    uploadDataSource &&
-    uploadDataSource.pvf &&
-    uploadDataSource.pvf.direction
-  ) {
-    return {pvf: _.omit(uploadDataSource.pvf, 'range') as IScenarioPvf};
-  } else {
-    return undefined;
-  }
+function pickPvfs(
+  uploadDataSource: IUploadProblemDataSource
+): {pvf: IScenarioPvf} {
+  return {pvf: _.omit(uploadDataSource.pvf, 'range') as IScenarioPvf};
 }
 
 export function omitPvfs(uploadProblem: IUploadProblem): IProblem {

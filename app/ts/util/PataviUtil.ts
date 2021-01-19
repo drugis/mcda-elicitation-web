@@ -22,27 +22,31 @@ export function getPataviProblem(
   filteredAlternatives: IAlternative[],
   pvfs: Record<string, IPvf>
 ): IPataviProblem {
-  return _.merge({}, _.omit(problem, ['criteria', 'alternatives']), {
-    performanceTable: buildPataviPerformanceTable(problem.performanceTable),
-    alternatives: _.keyBy(filteredAlternatives, 'id'),
-    criteria: _(filteredCriteria)
-      .keyBy('id')
-      .mapValues(
-        (criterion: ICriterion): IPataviCriterion => {
-          const scale: [number, number] = [
-            criterion.dataSources[0].unitOfMeasurement.lowerBound,
-            criterion.dataSources[0].unitOfMeasurement.upperBound
-          ];
-          return {
-            id: criterion.id,
-            title: criterion.title,
-            pvf: pvfs[criterion.id],
-            scale: scale
-          };
-        }
-      )
-      .value()
-  });
+  return _.merge(
+    {},
+    _.omit(problem, ['criteria', 'alternatives', 'performanceTable']),
+    {
+      performanceTable: buildPataviPerformanceTable(problem.performanceTable),
+      alternatives: _.keyBy(filteredAlternatives, 'id'),
+      criteria: _(filteredCriteria)
+        .keyBy('id')
+        .mapValues(
+          (criterion: ICriterion): IPataviCriterion => {
+            const scale: [number, number] = [
+              criterion.dataSources[0].unitOfMeasurement.lowerBound,
+              criterion.dataSources[0].unitOfMeasurement.upperBound
+            ];
+            return {
+              id: criterion.id,
+              title: criterion.title,
+              pvf: pvfs[criterion.id],
+              scale: scale
+            };
+          }
+        )
+        .value()
+    }
+  );
 }
 
 export function buildPataviPerformanceTable(

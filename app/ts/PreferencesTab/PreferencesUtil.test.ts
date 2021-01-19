@@ -1,5 +1,4 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IWeights from '@shared/interface/Scenario/IWeights';
@@ -73,7 +72,7 @@ const criterion3: ICriterion = {
 describe('PreferencesUtil', () => {
   describe('initPvfs', () => {
     it('should return a map of string id to the corresponding pvf', () => {
-      const criteria: ICriterion[] = [criterion1, criterion2, criterion3];
+      const criteria: ICriterion[] = [criterion1, criterion2];
 
       const currentScenario: IMcdaScenario = {
         id: 'scenarioId1',
@@ -98,8 +97,7 @@ describe('PreferencesUtil', () => {
       const result = initPvfs(criteria, currentScenario, ranges);
       const expectedResult: Record<string, IPvf> = {
         crit1Id: {range: [0, 1]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]},
-        crit3Id: {type: 'linear', direction: 'increasing', range: [0, 100]}
+        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
       };
       expect(result).toEqual(expectedResult);
     });
@@ -148,13 +146,5 @@ describe('PreferencesUtil', () => {
       };
       expect(result).toEqual(expectedResult);
     });
-  });
-
-  describe('getPvfProblem', () => {
-    it('should', () => fail());
-  });
-
-  describe('getPostProblemForWeights', () => {
-    it('should', () => fail());
   });
 });

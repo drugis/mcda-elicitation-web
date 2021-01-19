@@ -64,7 +64,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     function updateDefaultScenario(defaultScenarioId, pvfs, callback) {
       const coords = _.merge({}, $stateParams, {scenarioId: defaultScenarioId});
       ScenarioResource.get(coords).$promise.then((scenario) => {
-        const updatedScenario = SchemaService.mergePVFs(scenario, pvfs);
+        const updatedScenario = SchemaService.mergePvfs(scenario, pvfs);
         ScenarioResource.save(coords, updatedScenario).$promise.then(callback);
       });
     }

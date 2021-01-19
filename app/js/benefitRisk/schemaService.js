@@ -104,7 +104,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       }
 
       if (newProblem.schemaVersion === '1.4.6') {
-        newProblem.schemaVersion = '1.4.7';
+        newProblem = updateToVersion147(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -502,6 +502,14 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       };
     }
 
+    function updateToVersion147(problem) {
+      const updatedProblem = omitPvfs(problem);
+      return {
+        ...updatedProblem,
+        schemaVersion: '1.4.7'
+      };
+    }
+
     function buildDataSourcePercentageMap(criteria) {
       return _(criteria)
         .flatMap((criterion) => {
@@ -591,10 +599,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
     function extractPvfs(criteria) {
       return _(criteria)
-        .map((criterion) => [
-          criterion.id,
-          _.pick(criterion.dataSources[0], 'pvf')
-        ])
+        .map((criterion) => [criterion.id, criterion.dataSources[0].pvf])
         .filter(isUsablePvf)
         .fromPairs()
         .value();
@@ -626,6 +631,28 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
               ]
             };
       });
+    }
+
+    function omitPvfs(uploadProblem) {
+      return {
+        ...uploadProblem,
+        criteria: omitPvfsFromCriteria(uploadProblem.criteria)
+      };
+    }
+
+    function omitPvfsFromCriteria(uploadCriteria) {
+      return _.mapValues(uploadCriteria, (uploadCriterion) => {
+        return {
+          ...uploadCriterion,
+          dataSources: omitPvfsFromDataSources(uploadCriterion.dataSources)
+        };
+      });
+    }
+
+    function omitPvfsFromDataSources(uploadDataSources) {
+      return _.map(uploadDataSources, (uploadDataSource) =>
+        _.omit(uploadDataSource, 'pvf')
+      );
     }
 
     return {
