@@ -1,10 +1,12 @@
 'use strict';
-define(['angular'], function (angular) {
+
+define(['angular', 'async', 'lodash'], function (angular, async, _) {
   var dependencies = [
     '$scope',
     '$cookies',
     '$stateParams',
     'WorkspaceResource',
+    'ScenarioResource',
     'WorkspaceSettingsService',
     'SchemaService',
     'currentWorkspace',
@@ -15,6 +17,7 @@ define(['angular'], function (angular) {
     $cookies,
     $stateParams,
     WorkspaceResource,
+    ScenarioResource,
     WorkspaceSettingsService,
     SchemaService,
     currentWorkspace,
@@ -31,11 +34,18 @@ define(['angular'], function (angular) {
       canEdit: user ? currentWorkspace.owner === user.id : false
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
+      const pvfs = SchemaService.extractPvfs(currentWorkspace);
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(
         currentWorkspace
       );
       SchemaService.validateProblem($scope.workspace.problem);
-      WorkspaceResource.save($stateParams, $scope.workspace);
+      WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(
+        () => {
+          if (!_.isEmpty(pvfs)) {
+            updateDefaultScenario(currentWorkspace.defaultScenarioId, pvfs);
+          }
+        }
+      );
     } else {
       $scope.workspace = currentWorkspace;
     }
@@ -49,6 +59,14 @@ define(['angular'], function (angular) {
       $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings(
         $scope.workspace.problem.performanceTable
       );
+    }
+
+    function updateDefaultScenario(defaultScenarioId, pvfs, callback) {
+      const coords = _.merge({}, $stateParams, {scenarioId: defaultScenarioId});
+      ScenarioResource.get(coords).$promise.then((scenario) => {
+        const updatedScenario = SchemaService.mergePVFs(scenario, pvfs);
+        ScenarioResource.save(coords, updatedScenario).$promise.then(callback);
+      });
     }
 
     function editTitle() {

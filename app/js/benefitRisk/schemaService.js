@@ -35,6 +35,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
      * 1.4.4 Set proportion, decimal unit of measurement to empty label
      * 1.4.5 Put id on alternatives and criteria
      * 1.4.6 Store effect input as decimals
+     * 1.4.7 Move pvfs off problem onto default scenario
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -104,6 +105,10 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.4.5') {
         newProblem = updateToVersion146(newProblem);
+      }
+
+      if (newProblem.schemaVersion === '1.4.6') {
+        newProblem.schemaVersion = '1.4.7';
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -588,11 +593,52 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       };
     }
 
+    function extractPvfs(workspace) {
+      return _(workspace.problem.criteria)
+        .map((criterion) => [
+          criterion.id,
+          _.pick(criterion.dataSources[0], 'pvf')
+        ])
+        .filter(isUsablePvf)
+        .fromPairs()
+        .value();
+    }
+
+    function isUsablePvf([id, pvf]) {
+      return pvf.direction;
+    }
+
+    function mergePvfs(scenario, pvfs) {
+      const updatedCriteria = updateCriteriaWithPvfs(
+        scenario.state.problem.criteria,
+        pvfs
+      );
+      return _.merge({}, scenario, {
+        state: {problem: {criteria: updatedCriteria}}
+      });
+    }
+
+    function updateCriteriaWithPvfs(criteria, pvfs) {
+      return _.mapValues(criteria, (criterion) => {
+        return criterion.dataSources
+          ? criterion
+          : {
+              dataSources: [
+                {
+                  pvf: pvfs[criterion.id]
+                }
+              ]
+            };
+      });
+    }
+
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
       updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema,
       validateProblem: validateProblem,
-      isInputPercentified: isInputPercentified
+      isInputPercentified: isInputPercentified,
+      extractPvfs: extractPvfs,
+      mergePvfs: mergePvfs
     };
   };
 

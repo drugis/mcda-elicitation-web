@@ -9,3 +9,9 @@ export default interface IProblemDataSource {
   strengthOfEvidence: string;
   scale: [number, number];
 }
+
+upload -> (schema) -> backend -> createdefaults
+
+old backend -> (schema + side effects) -> backend, update defaults
+
+backend -> (schema) -> oldtonew
