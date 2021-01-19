@@ -633,7 +633,6 @@ define([
         const result = schemaService.extractPvfs(criteria);
         const expectedResult = {
           crit1Id: {
-            range: [0, 1],
             direction: 'increasing'
           }
         };
@@ -645,7 +644,7 @@ define([
       it('should merge pvfs onto scenario if there are none', () => {
         const scenario = {
           id: 1,
-          state: {problem: {criteria: {crit1Id: {id: 'crit1Id'}}}}
+          state: {problem: {criteria: {crit1Id: {}}}}
         };
         const pvfs = {crit1Id: {direction: 'increasing'}};
         const result = schemaService.mergePvfs(scenario, pvfs);
@@ -655,7 +654,6 @@ define([
             problem: {
               criteria: {
                 crit1Id: {
-                  id: 'crit1Id',
                   dataSources: [{pvf: {direction: 'increasing'}}]
                 }
               }

@@ -599,7 +599,10 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
     function extractPvfs(criteria) {
       return _(criteria)
-        .map((criterion) => [criterion.id, criterion.dataSources[0].pvf])
+        .map((criterion) => [
+          criterion.id,
+          _.omit(criterion.dataSources[0].pvf, 'range')
+        ])
         .filter(isUsablePvf)
         .fromPairs()
         .value();
@@ -607,6 +610,16 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
     function isUsablePvf([id, pvf]) {
       return pvf.direction;
+    }
+
+    function extractRanges(criteria) {
+      return _(criteria)
+        .flatMap('dataSources')
+        .keyBy('id')
+        .mapValues((dataSource) => {
+          return dataSource.pvf ? dataSource.pvf.range : undefined;
+        })
+        .value();
     }
 
     function mergePvfs(scenario, pvfs) {
@@ -619,14 +632,14 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       });
     }
 
-    function updateCriteriaWithPvfs(criteria, pvfs) {
-      return _.mapValues(criteria, (criterion) => {
-        return criterion.dataSources
-          ? criterion
+    function updateCriteriaWithPvfs(scenarioCriteria, pvfs) {
+      return _.mapValues(scenarioCriteria, (scnearioCriterion, criterionId) => {
+        return scnearioCriterion.dataSources
+          ? scnearioCriterion
           : {
               dataSources: [
                 {
-                  pvf: pvfs[criterion.id]
+                  pvf: pvfs[criterionId]
                 }
               ]
             };
@@ -661,6 +674,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       validateProblem: validateProblem,
       isInputPercentified: isInputPercentified,
       extractPvfs: extractPvfs,
+      extractRanges: extractRanges,
       mergePvfs: mergePvfs
     };
   };

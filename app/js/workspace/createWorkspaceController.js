@@ -54,12 +54,14 @@ define(['angular', 'lodash'], function (angular, _) {
           uploadedContent
         );
         if ($scope.workspaceValidity.isValid) {
+          const ranges = SchemaService.extractRanges(problem.criteria);
           var updatedProblem = SchemaService.updateProblemToCurrentSchema(
             uploadedContent
           );
           try {
             SchemaService.validateProblem(updatedProblem);
             $scope.updatedProblem = updatedProblem;
+            $scope.ranges = ranges;
           } catch (errors) {
             $scope.workspaceValidity.isValid = false;
             $scope.workspaceValidity.errorMessage = _.reduce(
@@ -89,10 +91,13 @@ define(['angular', 'lodash'], function (angular, _) {
     }
 
     function createWorkspaceFromFile() {
-      WorkspaceResource.create($scope.updatedProblem, function (workspace) {
-        callback($scope.model.choice, workspace);
-        $modalInstance.close();
-      });
+      WorkspaceResource.create(
+        {ranges: $scope.ranges, workspace: $scope.updatedProblem},
+        function (workspace) {
+          callback($scope.model.choice, workspace);
+          $modalInstance.close();
+        }
+      );
     }
 
     function createWorkspaceManually() {
@@ -107,13 +112,17 @@ define(['angular', 'lodash'], function (angular, _) {
         url: $scope.model.chosenExample.href
       };
       ExampleResource.get(example, function (problem) {
+        const ranges = SchemaService.extractRanges(problem.criteria);
+        const pvfs = SchemaService.extractPvfs(problem.criteria); //FIXME to other functions
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(
           problem
         );
         SchemaService.validateProblem(updatedProblem);
-        WorkspaceResource.create(updatedProblem).$promise.then(function (
-          workspace
-        ) {
+        WorkspaceResource.create({
+          ranges: ranges,
+          workspace: updatedProblem,
+          pvfs: pvfs
+        }).$promise.then(function (workspace) {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });
@@ -125,13 +134,15 @@ define(['angular', 'lodash'], function (angular, _) {
         url: $scope.model.chosenTutorial.href
       };
       TutorialResource.get(tutorial, function (problem) {
+        const ranges = SchemaService.extractRanges(problem.criteria);
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(
           problem
         );
         SchemaService.validateProblem(updatedProblem);
-        WorkspaceResource.create(updatedProblem).$promise.then(function (
-          workspace
-        ) {
+        WorkspaceResource.create({
+          ranges: ranges,
+          workspace: updatedProblem
+        }).$promise.then(function (workspace) {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });

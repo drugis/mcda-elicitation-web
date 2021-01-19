@@ -35,6 +35,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
       const pvfs = SchemaService.extractPvfs(currentWorkspace.problem.criteria);
+      //FIXME copy ranges to default subproblem?
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(
         currentWorkspace
       );

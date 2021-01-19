@@ -14,13 +14,7 @@ import IDB from './interface/IDB';
 import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
-import {
-  createScenarioProblem,
-  getRanges,
-  getUser,
-  handleError,
-  omitPvfs
-} from './util';
+import {createScenarioProblem, getUser, handleError, omitPvfs} from './util';
 import WorkspaceRepository from './workspaceRepository';
 
 export default function WorkspaceHandler(db: IDB) {
@@ -78,20 +72,35 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createNewWorkspace(
     client: PoolClient,
-    request: Request<{}, {}, {title: string; problem: IUploadProblem}>,
+    request: Request<
+      {},
+      {},
+      {
+        ranges: Record<string, [number, number]>;
+        title: string;
+        problem: IUploadProblem;
+      }
+    >,
     callback: (error: OurError, id: string) => void
   ): void {
     logger.debug('creating new workspace');
 
     const owner = getUser(request).id;
     const title = request.body.title;
-    const problem: IProblem = omitPvfs(request.body.problem);
+    const problem: IProblem = omitPvfs(request.body.problem); //FIXME already stripped!
     workspaceRepository.create(client, owner, title, problem, callback);
   }
 
   function createSubProblem(
     client: PoolClient,
-    request: Request<{}, {}, {problem: IUploadProblem}>,
+    request: Request<
+      {},
+      {},
+      {
+        ranges: Record<string, [number, number]>;
+        problem: IUploadProblem;
+      }
+    >,
     workspaceId: string,
     callback: (
       error: OurError,
@@ -101,7 +110,7 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     logger.debug('creating subproblem');
     const definition = {
-      ranges: getRanges(request.body.problem)
+      ranges: request.body.ranges
     };
     subproblemRepository.create(
       client,
@@ -145,7 +154,14 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createScenario(
     client: PoolClient,
-    request: Request<{}, {}, {problem: IUploadProblem}>,
+    request: Request<
+      {},
+      {},
+      {
+        ranges: Record<string, [number, number]>;
+        problem: IUploadProblem;
+      }
+    >,
     workspaceId: string,
     subproblemId: string,
     callback: (
