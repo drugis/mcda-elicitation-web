@@ -670,7 +670,6 @@ define([
             problem: {
               criteria: {
                 crit1Id: {
-                  id: 'crit1Id',
                   dataSources: [{pvf: {direction: 'decreasing'}}]
                 }
               }
@@ -685,7 +684,6 @@ define([
             problem: {
               criteria: {
                 crit1Id: {
-                  id: 'crit1Id',
                   dataSources: [{pvf: {direction: 'decreasing'}}]
                 }
               }

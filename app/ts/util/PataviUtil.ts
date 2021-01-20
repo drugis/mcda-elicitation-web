@@ -22,31 +22,34 @@ export function getPataviProblem(
   filteredAlternatives: IAlternative[],
   pvfs: Record<string, IPvf>
 ): IPataviProblem {
-  return _.merge(
-    {},
-    _.omit(problem, ['criteria', 'alternatives', 'performanceTable']),
-    {
-      performanceTable: buildPataviPerformanceTable(problem.performanceTable),
-      alternatives: _.keyBy(filteredAlternatives, 'id'),
-      criteria: _(filteredCriteria)
-        .keyBy('id')
-        .mapValues(
-          (criterion: ICriterion): IPataviCriterion => {
-            const scale: [number, number] = [
-              criterion.dataSources[0].unitOfMeasurement.lowerBound,
-              criterion.dataSources[0].unitOfMeasurement.upperBound
-            ];
-            return {
-              id: criterion.id,
-              title: criterion.title,
-              pvf: pvfs[criterion.id],
-              scale: scale
-            };
-          }
-        )
-        .value()
-    }
-  );
+  return {
+    schemaVersion: problem.schemaVersion,
+    title: problem.title,
+    description: problem.description,
+    preferences: problem.preferences ? problem.preferences : undefined,
+    performanceTable: buildPataviPerformanceTable(problem.performanceTable),
+    alternatives: _.keyBy(filteredAlternatives, 'id'),
+    criteria: _(filteredCriteria)
+      .keyBy('id')
+      .mapValues(_.partial(buildPataviCriterion, pvfs))
+      .value()
+  };
+}
+
+function buildPataviCriterion(
+  pvfs: Record<string, IPvf>,
+  criterion: ICriterion
+): IPataviCriterion {
+  const scale: [number, number] = [
+    criterion.dataSources[0].unitOfMeasurement.lowerBound,
+    criterion.dataSources[0].unitOfMeasurement.upperBound
+  ];
+  return {
+    id: criterion.id,
+    title: criterion.title,
+    pvf: pvfs[criterion.id],
+    scale: scale
+  };
 }
 
 export function buildPataviPerformanceTable(
@@ -61,7 +64,7 @@ function getPerformance(
   performance: TPerformance
 ): EffectPerformance | TDistributionPerformance | TRelativePerformance {
   if (
-    isDistributionPerformance(performance) &&
+    isDistributionOrRelativePerformance(performance) &&
     performance.distribution.type !== 'empty'
   ) {
     return performance.distribution;
@@ -72,7 +75,7 @@ function getPerformance(
   }
 }
 
-function isDistributionPerformance(
+function isDistributionOrRelativePerformance(
   performance: TPerformance
 ): performance is IDistributionPerformance {
   return performance.hasOwnProperty('distribution');

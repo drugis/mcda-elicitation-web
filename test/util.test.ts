@@ -4,6 +4,7 @@ import {
   getUser,
   handleError
 } from '../node-backend/util';
+import IProblemCriterion from '../shared/interface/Problem/IProblemCriterion';
 import IScenarioCriterion from '../shared/interface/Scenario/IScenarioCriterion';
 import IScenarioPvf from '../shared/interface/Scenario/IScenarioPvf';
 import IUploadProblem from '../shared/interface/UploadProblem/IUploadProblem';
@@ -45,7 +46,7 @@ describe('The utility', () => {
   describe('createScenarioProblem', () => {
     it('should create a scenario problem from an uploaded problem and pvfs', () => {
       const criteria = {
-        crit1Id: {} as IScenarioCriterion
+        crit1Id: {} as IProblemCriterion
       };
       const pvfs: Record<string, IScenarioPvf> = {
         crit1Id: {
@@ -66,7 +67,7 @@ describe('The utility', () => {
       const criteria = {
         crit1Id: {
           dataSources: [{id: 'ds1Id'}, {id: 'ds1Id'}]
-        }
+        } as IProblemCriterion
       };
       const pvfs: Record<string, IScenarioPvf> = {
         crit1Id: {
@@ -78,27 +79,6 @@ describe('The utility', () => {
       const expectedResult: Record<string, IScenarioCriterion> = {};
       expect(result).toEqual(expectedResult);
     });
-  });
-
-  it('should create a scenario problem from an uploaded problem without pvfs if data source contains pvf', () => {
-    const criteria = {
-      crit1Id: {
-        dataSources: [{pvf: {direction: 'decreasing', type: 'linear'}}]
-      } as IScenarioCriterion
-    };
-    const pvfs: Record<string, IScenarioPvf> = {
-      crit1Id: {
-        direction: 'increasing',
-        type: 'linear'
-      }
-    };
-    const result = createScenarioProblem(criteria, pvfs);
-    const expectedResult: Record<string, IScenarioCriterion> = {
-      crit1Id: {
-        dataSources: [{pvf: {direction: 'decreasing', type: 'linear'}}]
-      }
-    };
-    expect(result).toEqual(expectedResult);
   });
 
   describe('getRanges', () => {

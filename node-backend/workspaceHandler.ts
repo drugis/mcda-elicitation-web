@@ -14,7 +14,7 @@ import IDB from './interface/IDB';
 import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
-import {createScenarioProblem, getUser, handleError, omitPvfs} from './util';
+import {buildScenarioCriteria, getUser, handleError} from './util';
 import WorkspaceRepository from './workspaceRepository';
 
 export default function WorkspaceHandler(db: IDB) {
@@ -78,7 +78,7 @@ export default function WorkspaceHandler(db: IDB) {
       {
         ranges: Record<string, [number, number]>;
         title: string;
-        problem: any;
+        problem: IProblem;
         pvfs: Record<string, IScenarioPvf>;
       }
     >,
@@ -88,8 +88,13 @@ export default function WorkspaceHandler(db: IDB) {
 
     const owner = getUser(request).id;
     const title = request.body.title;
-    const problem: IProblem = omitPvfs(request.body.problem); //FIXME already stripped!
-    workspaceRepository.create(client, owner, title, problem, callback);
+    workspaceRepository.create(
+      client,
+      owner,
+      title,
+      request.body.problem,
+      callback
+    );
   }
 
   function createSubProblem(
@@ -100,7 +105,7 @@ export default function WorkspaceHandler(db: IDB) {
       {
         ranges: Record<string, [number, number]>;
         title: string;
-        problem: any;
+        problem: IProblem;
         pvfs: Record<string, IScenarioPvf>;
       }
     >,
@@ -163,7 +168,7 @@ export default function WorkspaceHandler(db: IDB) {
       {
         ranges: Record<string, [number, number]>;
         title: string;
-        problem: any;
+        problem: IProblem;
         pvfs: Record<string, IScenarioPvf>;
       }
     >,
@@ -182,7 +187,7 @@ export default function WorkspaceHandler(db: IDB) {
       workspaceId: workspaceId,
       state: {
         problem: {
-          criteria: createScenarioProblem(
+          criteria: buildScenarioCriteria(
             request.body.problem.criteria,
             request.body.pvfs
           )

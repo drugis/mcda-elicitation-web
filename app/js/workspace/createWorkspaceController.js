@@ -93,17 +93,14 @@ define(['angular', 'lodash'], function (angular, _) {
     }
 
     function createWorkspaceFromFile() {
-      WorkspaceResource.create(
-        {
-          ranges: $scope.ranges,
-          pvfs: $scope.pvfs,
-          workspace: $scope.updatedProblem
-        },
-        function (workspace) {
-          callback($scope.model.choice, workspace);
-          $modalInstance.close();
-        }
-      );
+      WorkspaceResource.create({
+        ranges: $scope.ranges,
+        pvfs: $scope.pvfs,
+        workspace: $scope.updatedProblem
+      }).$promise.then((workspace) => {
+        callback($scope.model.choice, workspace);
+        $modalInstance.close();
+      });
     }
 
     function createWorkspaceManually() {
@@ -128,7 +125,7 @@ define(['angular', 'lodash'], function (angular, _) {
           ranges: ranges,
           workspace: updatedProblem,
           pvfs: pvfs
-        }).$promise.then(function (workspace) {
+        }).$promise.then((workspace) => {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });
@@ -150,7 +147,7 @@ define(['angular', 'lodash'], function (angular, _) {
           ranges: ranges,
           workspace: updatedProblem,
           pvfs: pvfs
-        }).$promise.then(function (workspace) {
+        }).$promise.then((workspace) => {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['angular', 'async', 'lodash'], function (angular, async, _) {
+define(['angular', 'lodash'], function (angular, _) {
   var dependencies = [
     '$scope',
     '$cookies',
@@ -73,25 +73,23 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     }
 
     function updateDefaultSubproblem(defaultSubproblemId, ranges, callback) {
-      const coords = _.merge({}, $stateParams, {
-        problemId: defaultSubproblemId
-      });
-      SubProblemResource.get(coords).$promise.then((subproblem) => {
+      const params = {...$stateParams, problemId: defaultSubproblemId};
+      SubProblemResource.get(params).$promise.then((subproblem) => {
         const updatedSubproblem = {
           title: subproblem.title,
           definition: {ranges: ranges}
         };
-        SubProblemResource.save(coords, updatedSubproblem).$promise.then(
+        SubProblemResource.save(params, updatedSubproblem).$promise.then(
           callback
         );
       });
     }
 
     function updateDefaultScenario(defaultScenarioId, pvfs, callback) {
-      const coords = _.merge({}, $stateParams, {scenarioId: defaultScenarioId});
-      ScenarioResource.get(coords).$promise.then((scenario) => {
+      const params = {...$stateParams, scenarioId: defaultScenarioId};
+      ScenarioResource.get(params).$promise.then((scenario) => {
         const updatedScenario = SchemaService.mergePvfs(scenario, pvfs);
-        ScenarioResource.save(coords, updatedScenario).$promise.then(callback);
+        ScenarioResource.save(params, updatedScenario).$promise.then(callback);
       });
     }
 

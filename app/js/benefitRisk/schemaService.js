@@ -629,7 +629,9 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
     function updateCriteriaWithPvfs(scenarioCriteria, pvfs) {
       return _.mapValues(scenarioCriteria, (scenarioCriterion, criterionId) => {
-        return scenarioCriterion.dataSources
+        return scenarioCriterion.dataSources &&
+          scenarioCriterion.dataSources[0] &&
+          scenarioCriterion.dataSources[0].pvf
           ? scenarioCriterion
           : {
               dataSources: [

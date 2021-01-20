@@ -45,46 +45,44 @@ export function getRanges(
     .value();
 }
 
-export function createScenarioProblem(
-  criteria: Record<string, IScenarioCriterion>,
+export function buildScenarioCriteria(
+  criteria: Record<string, IProblemCriterion>,
   pvfs: Record<string, IScenarioPvf>
 ): Record<string, IScenarioCriterion> {
   if (hasTooManyDataSources(criteria)) {
     return {};
   } else {
-    return createScenarioCriteria(criteria, pvfs);
+    return !_.isEmpty(pvfs) ? createScenarioCriteria(criteria, pvfs) : {};
   }
 }
 
 function hasTooManyDataSources(
-  criteria: Record<string, IScenarioCriterion>
+  criteria: Record<string, IProblemCriterion>
 ): boolean {
   return _.some(
     criteria,
-    (criterion: IScenarioCriterion): boolean =>
+    (criterion: IProblemCriterion): boolean =>
       criterion.dataSources && criterion.dataSources.length > 1
   );
 }
 
 function createScenarioCriteria(
-  criteria: Record<string, IScenarioCriterion>,
+  criteria: Record<string, IProblemCriterion>,
   pvfs: Record<string, IScenarioPvf>
 ): Record<string, IScenarioCriterion> {
   return _.mapValues(
     criteria,
     (
-      scenarioCriterion: IScenarioCriterion,
+      problemCriterion: IProblemCriterion,
       criterionId: string
     ): IScenarioCriterion => {
-      return scenarioCriterion.dataSources[0].pvf
-        ? scenarioCriterion
-        : {
-            dataSources: [
-              {
-                pvf: pvfs[criterionId]
-              }
-            ]
-          };
+      return {
+        dataSources: [
+          {
+            pvf: pvfs[criterionId]
+          }
+        ]
+      };
     }
   );
 }
