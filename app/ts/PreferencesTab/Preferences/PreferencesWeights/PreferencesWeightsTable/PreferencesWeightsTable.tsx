@@ -5,6 +5,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
+import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
@@ -52,10 +53,15 @@ export default function PreferencesWeightsTable() {
       (criterion: ICriterion): JSX.Element => {
         const unit = criterion.dataSources[0].unitOfMeasurement;
         const usePercentage = showPercentages && canBePercentage(unit.type);
+        const description = criterion.description ? criterion.description : '';
         return (
           <TableRow key={criterion.id}>
-            <TableCell>{criterion.title}</TableCell>
-            <TableCell>{criterion.description}</TableCell>
+            <TableCell>
+              <CriterionTooltip
+                title={criterion.title}
+                description={criterion.description}
+              />
+            </TableCell>
             <TableCell id={`unit-${criterion.id}`}>
               {getUnitLabel(unit, showPercentages)}
             </TableCell>
@@ -84,7 +90,6 @@ export default function PreferencesWeightsTable() {
           <TableCell>
             Criterion <InlineHelp helpId="criterion" />
           </TableCell>
-          <TableCell>Description</TableCell>
           <TableCell>
             Unit <InlineHelp helpId="unit-of-measurement" />
           </TableCell>
