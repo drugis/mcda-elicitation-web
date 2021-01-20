@@ -5,6 +5,7 @@ import {
   handleError
 } from '../node-backend/util';
 import IScenarioCriterion from '../shared/interface/Scenario/IScenarioCriterion';
+import IScenarioPvf from '../shared/interface/Scenario/IScenarioPvf';
 import IUploadProblem from '../shared/interface/UploadProblem/IUploadProblem';
 import IUploadProblemCriterion from '../shared/interface/UploadProblem/IUploadProblemCriterion';
 
@@ -42,23 +43,17 @@ describe('The utility', () => {
   });
 
   describe('createScenarioProblem', () => {
-    it('should create a scenario problem from an uploaded problem with pvfs', () => {
+    it('should create a scenario problem from an uploaded problem and pvfs', () => {
       const criteria = {
-        crit1Id: {
-          id: 'crit1Id',
-          dataSources: [
-            {
-              id: 'ds1Id',
-              pvf: {
-                direction: 'increasing',
-                type: 'linear',
-                range: [0, 100]
-              }
-            }
-          ]
-        } as IUploadProblemCriterion
+        crit1Id: {} as IScenarioCriterion
       };
-      const result = createScenarioProblem(criteria);
+      const pvfs: Record<string, IScenarioPvf> = {
+        crit1Id: {
+          direction: 'increasing',
+          type: 'linear'
+        }
+      };
+      const result = createScenarioProblem(criteria, pvfs);
       const expectedResult: Record<string, IScenarioCriterion> = {
         crit1Id: {
           dataSources: [{pvf: {direction: 'increasing', type: 'linear'}}]
@@ -70,56 +65,39 @@ describe('The utility', () => {
     it('should create a scenario problem from an uploaded problem without pvfs if there are too many data sources', () => {
       const criteria = {
         crit1Id: {
-          id: 'crit1Id',
-          dataSources: [
-            {
-              id: 'ds1Id'
-            },
-            {
-              id: 'ds2Id'
-            }
-          ]
-        } as IUploadProblemCriterion
+          dataSources: [{id: 'ds1Id'}, {id: 'ds1Id'}]
+        }
       };
-      const result = createScenarioProblem(criteria);
+      const pvfs: Record<string, IScenarioPvf> = {
+        crit1Id: {
+          direction: 'increasing',
+          type: 'linear'
+        }
+      };
+      const result = createScenarioProblem(criteria, pvfs);
       const expectedResult: Record<string, IScenarioCriterion> = {};
       expect(result).toEqual(expectedResult);
     });
   });
 
-  it('should create a scenario problem from an uploaded problem without pvfs if there are no data sources', () => {
+  it('should create a scenario problem from an uploaded problem without pvfs if data source contains pvf', () => {
     const criteria = {
       crit1Id: {
-        id: 'crit1Id',
-        dataSources: []
-      } as IUploadProblemCriterion
+        dataSources: [{pvf: {direction: 'decreasing', type: 'linear'}}]
+      } as IScenarioCriterion
     };
-    const result = createScenarioProblem(criteria);
-    const expectedResult: Record<string, IScenarioCriterion> = {};
-    expect(result).toEqual(expectedResult);
-  });
-
-  it('should create a scenario problem from an uploaded problem without pvfs if there are no pvfs on data sources', () => {
-    const criteria = {
+    const pvfs: Record<string, IScenarioPvf> = {
       crit1Id: {
-        id: 'crit1Id',
-        dataSources: [{id: 'ds1Id'}]
-      } as IUploadProblemCriterion
+        direction: 'increasing',
+        type: 'linear'
+      }
     };
-    const result = createScenarioProblem(criteria);
-    const expectedResult: Record<string, IScenarioCriterion> = {};
-    expect(result).toEqual(expectedResult);
-  });
-
-  it('should create a scenario problem from an uploaded problem without pvfs if data source pvfs contain only range', () => {
-    const criteria = {
+    const result = createScenarioProblem(criteria, pvfs);
+    const expectedResult: Record<string, IScenarioCriterion> = {
       crit1Id: {
-        id: 'crit1Id',
-        dataSources: [{id: 'ds1Id', pvf: {range: [0, 100]}}]
-      } as IUploadProblemCriterion
+        dataSources: [{pvf: {direction: 'decreasing', type: 'linear'}}]
+      }
     };
-    const result = createScenarioProblem(criteria);
-    const expectedResult: Record<string, IScenarioCriterion> = {};
     expect(result).toEqual(expectedResult);
   });
 

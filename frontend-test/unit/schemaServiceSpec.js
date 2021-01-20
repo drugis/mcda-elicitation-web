@@ -696,4 +696,36 @@ define([
       });
     });
   });
+
+  describe('extractRanges', () => {
+    it('should return ranges keyed by data source id', () => {
+      const criteria = {
+        crit1Id: {
+          id: 'crit1Id',
+          title: 'criterion1',
+          dataSources: [
+            {id: 'ds1Id', pvf: {range: [0, 1], direction: 'increasing'}}
+          ]
+        }
+      };
+      const result = schemaService.extractRanges(criteria);
+      const expectedResult = {
+        ds1Id: [0, 1]
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return nothing if there are no pvf on the data source', () => {
+      const criteria = {
+        crit1Id: {
+          id: 'crit1Id',
+          title: 'criterion1',
+          dataSources: [{id: 'ds1Id'}]
+        }
+      };
+      const result = schemaService.extractRanges(criteria);
+      const expectedResult = {};
+      expect(result).toEqual(expectedResult);
+    });
+  });
 });

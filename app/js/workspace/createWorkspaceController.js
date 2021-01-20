@@ -54,7 +54,8 @@ define(['angular', 'lodash'], function (angular, _) {
           uploadedContent
         );
         if ($scope.workspaceValidity.isValid) {
-          const ranges = SchemaService.extractRanges(problem.criteria);
+          const ranges = SchemaService.extractRanges(uploadedContent.criteria);
+          const pvfs = SchemaService.extractPvfs(uploadedContent.criteria);
           var updatedProblem = SchemaService.updateProblemToCurrentSchema(
             uploadedContent
           );
@@ -62,6 +63,7 @@ define(['angular', 'lodash'], function (angular, _) {
             SchemaService.validateProblem(updatedProblem);
             $scope.updatedProblem = updatedProblem;
             $scope.ranges = ranges;
+            $scope.ranges = pvfs;
           } catch (errors) {
             $scope.workspaceValidity.isValid = false;
             $scope.workspaceValidity.errorMessage = _.reduce(
@@ -92,7 +94,11 @@ define(['angular', 'lodash'], function (angular, _) {
 
     function createWorkspaceFromFile() {
       WorkspaceResource.create(
-        {ranges: $scope.ranges, workspace: $scope.updatedProblem},
+        {
+          ranges: $scope.ranges,
+          pvfs: $scope.pvfs,
+          workspace: $scope.updatedProblem
+        },
         function (workspace) {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
@@ -113,7 +119,7 @@ define(['angular', 'lodash'], function (angular, _) {
       };
       ExampleResource.get(example, function (problem) {
         const ranges = SchemaService.extractRanges(problem.criteria);
-        const pvfs = SchemaService.extractPvfs(problem.criteria); //FIXME to other functions
+        const pvfs = SchemaService.extractPvfs(problem.criteria);
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(
           problem
         );
@@ -135,13 +141,15 @@ define(['angular', 'lodash'], function (angular, _) {
       };
       TutorialResource.get(tutorial, function (problem) {
         const ranges = SchemaService.extractRanges(problem.criteria);
+        const pvfs = SchemaService.extractPvfs(problem.criteria);
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(
           problem
         );
         SchemaService.validateProblem(updatedProblem);
         WorkspaceResource.create({
           ranges: ranges,
-          workspace: updatedProblem
+          workspace: updatedProblem,
+          pvfs: pvfs
         }).$promise.then(function (workspace) {
           callback($scope.model.choice, workspace);
           $modalInstance.close();

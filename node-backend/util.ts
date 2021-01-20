@@ -61,7 +61,8 @@ function hasTooManyDataSources(
 ): boolean {
   return _.some(
     criteria,
-    (criterion: IScenarioCriterion): boolean => criterion.dataSources.length > 1
+    (criterion: IScenarioCriterion): boolean =>
+      criterion.dataSources && criterion.dataSources.length > 1
   );
 }
 
@@ -75,7 +76,7 @@ function createScenarioCriteria(
       scenarioCriterion: IScenarioCriterion,
       criterionId: string
     ): IScenarioCriterion => {
-      return scenarioCriterion.dataSources[0].pvf
+      return scenarioCriterion.dataSources
         ? scenarioCriterion
         : {
             dataSources: [

@@ -611,10 +611,9 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
     function extractRanges(criteria) {
       return _(criteria)
         .flatMap('dataSources')
+        .filter('pvf')
         .keyBy('id')
-        .mapValues((dataSource) => {
-          return dataSource.pvf ? dataSource.pvf.range : undefined;
-        })
+        .mapValues((dataSource) => dataSource.pvf.range)
         .value();
     }
 
@@ -629,9 +628,9 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
     }
 
     function updateCriteriaWithPvfs(scenarioCriteria, pvfs) {
-      return _.mapValues(scenarioCriteria, (scnearioCriterion, criterionId) => {
-        return scnearioCriterion.dataSources
-          ? scnearioCriterion
+      return _.mapValues(scenarioCriteria, (scenarioCriterion, criterionId) => {
+        return scenarioCriterion.dataSources
+          ? scenarioCriterion
           : {
               dataSources: [
                 {
