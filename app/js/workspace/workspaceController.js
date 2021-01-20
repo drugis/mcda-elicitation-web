@@ -7,7 +7,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     '$stateParams',
     'WorkspaceResource',
     'ScenarioResource',
-    'SubproblemResource',
+    'SubProblemResource',
     'WorkspaceSettingsService',
     'SchemaService',
     'currentWorkspace',
@@ -19,7 +19,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     $stateParams,
     WorkspaceResource,
     ScenarioResource,
-    SubproblemResource,
+    SubProblemResource,
     WorkspaceSettingsService,
     SchemaService,
     currentWorkspace,
@@ -48,7 +48,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
         () => {
           if (!_.isEmpty(ranges)) {
             updateDefaultSubproblem(
-              currentWorkspace.defaultSubproblemId,
+              currentWorkspace.defaultSubProblemId,
               ranges
             );
           }
@@ -76,12 +76,12 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
       const coords = _.merge({}, $stateParams, {
         problemId: defaultSubproblemId
       });
-      SubproblemResource.get(coords).$promise.then((subproblem) => {
+      SubProblemResource.get(coords).$promise.then((subproblem) => {
         const updatedSubproblem = {
           title: subproblem.title,
           definition: {ranges: ranges}
         };
-        SubproblemResource.save(coords, updatedSubproblem).$promise.then(
+        SubProblemResource.save(coords, updatedSubproblem).$promise.then(
           callback
         );
       });
