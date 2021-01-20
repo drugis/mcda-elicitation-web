@@ -1,5 +1,5 @@
 import {
-  createScenarioProblem,
+  buildScenarioCriteria,
   getRanges,
   getUser,
   handleError
@@ -54,7 +54,7 @@ describe('The utility', () => {
           type: 'linear'
         }
       };
-      const result = createScenarioProblem(criteria, pvfs);
+      const result = buildScenarioCriteria(criteria, pvfs);
       const expectedResult: Record<string, IScenarioCriterion> = {
         crit1Id: {
           dataSources: [{pvf: {direction: 'increasing', type: 'linear'}}]
@@ -75,7 +75,7 @@ describe('The utility', () => {
           type: 'linear'
         }
       };
-      const result = createScenarioProblem(criteria, pvfs);
+      const result = buildScenarioCriteria(criteria, pvfs);
       const expectedResult: Record<string, IScenarioCriterion> = {};
       expect(result).toEqual(expectedResult);
     });
