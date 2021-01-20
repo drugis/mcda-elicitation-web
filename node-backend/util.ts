@@ -76,7 +76,7 @@ function createScenarioCriteria(
       scenarioCriterion: IScenarioCriterion,
       criterionId: string
     ): IScenarioCriterion => {
-      return scenarioCriterion.dataSources
+      return scenarioCriterion.dataSources[0].pvf
         ? scenarioCriterion
         : {
             dataSources: [

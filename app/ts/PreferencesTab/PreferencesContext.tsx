@@ -45,7 +45,7 @@ export function PreferencesContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
-  const {currentSubproblem} = useContext(WorkspaceContext);
+  const {currentSubproblem, observedRanges} = useContext(WorkspaceContext);
   const {filteredCriteria, filteredAlternatives} = useContext(
     SubproblemContext
   );
@@ -57,16 +57,23 @@ export function PreferencesContextProviderComponent({
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
     _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
-  const [pvfs, setPvfs] = useState<Record<string, IPvf>>(
-    initPvfs(
-      filteredCriteria,
-      currentScenario,
-      currentSubproblem.definition.ranges
-    )
-  );
+  const [pvfs, setPvfs] = useState<Record<string, IPvf>>({});
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);
   const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
+
+  useEffect(() => {
+    if (!_.isEmpty(observedRanges)) {
+      setPvfs(
+        initPvfs(
+          filteredCriteria,
+          currentScenario,
+          currentSubproblem.definition.ranges,
+          observedRanges
+        )
+      );
+    }
+  }, [observedRanges]);
 
   useEffect(() => {
     if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {

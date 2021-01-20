@@ -1,9 +1,8 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {TPreferences} from '@shared/types/Preferences';
-import {buildScenarioWithPreferences, initPvfs} from './PreferencesUtil';
+import {buildScenarioWithPreferences} from './PreferencesUtil';
 
 const criterion1: ICriterion = {
   id: 'crit1Id',
@@ -72,34 +71,35 @@ const criterion3: ICriterion = {
 describe('PreferencesUtil', () => {
   describe('initPvfs', () => {
     it('should return a map of string id to the corresponding pvf', () => {
-      const criteria: ICriterion[] = [criterion1, criterion2];
+      // const criteria: ICriterion[] = [criterion1, criterion2];
 
-      const currentScenario: IMcdaScenario = {
-        id: 'scenarioId1',
-        title: 'scenario 1',
-        state: {
-          prefs: [],
-          problem: {
-            criteria: {
-              crit2Id: {
-                dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
-              }
-            }
-          }
-        },
-        subproblemId: '37',
-        workspaceId: '42'
-      };
-      const ranges: Record<string, [number, number]> = {
-        dsId1: [0, 1],
-        dsId2: [2, 3]
-      };
-      const result = initPvfs(criteria, currentScenario, ranges);
-      const expectedResult: Record<string, IPvf> = {
-        crit1Id: {range: [0, 1]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
-      };
-      expect(result).toEqual(expectedResult);
+      // const currentScenario: IMcdaScenario = {
+      //   id: 'scenarioId1',
+      //   title: 'scenario 1',
+      //   state: {
+      //     prefs: [],
+      //     problem: {
+      //       criteria: {
+      //         crit2Id: {
+      //           dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
+      //         }
+      //       }
+      //     }
+      //   },
+      //   subproblemId: '37',
+      //   workspaceId: '42'
+      // };
+      // const ranges: Record<string, [number, number]> = {
+      //   dsId1: [0, 1],
+      //   dsId2: [2, 3]
+      // };
+      // const result = initPvfs(criteria, currentScenario, ranges);
+      // const expectedResult: Record<string, IPvf> = {
+      //   crit1Id: {range: [0, 1]},
+      //   crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
+      // };
+      // expect(result).toEqual(expectedResult);
+      fail();
     });
   });
 

@@ -63,7 +63,7 @@ define(['angular', 'lodash'], function (angular, _) {
             SchemaService.validateProblem(updatedProblem);
             $scope.updatedProblem = updatedProblem;
             $scope.ranges = ranges;
-            $scope.ranges = pvfs;
+            $scope.pvfs = pvfs;
           } catch (errors) {
             $scope.workspaceValidity.isValid = false;
             $scope.workspaceValidity.errorMessage = _.reduce(

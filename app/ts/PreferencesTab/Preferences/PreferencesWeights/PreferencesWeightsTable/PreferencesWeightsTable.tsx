@@ -98,7 +98,9 @@ export default function PreferencesWeightsTable() {
           </TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>{renderCriterionPreferences()}</TableBody>
+      <TableBody>
+        {!_.isEmpty(pvfs) ? renderCriterionPreferences() : <></>}
+      </TableBody>
     </Table>
   );
 }

@@ -274,6 +274,7 @@ function switchMedianInDeterministic(browser) {
     .click('#settings-button')
     .click('#show-mode-radio')
     .click('#save-settings-button')
+    .pause(200)
     .waitForElementVisible('#sensitivity-measurements-header');
 }
 

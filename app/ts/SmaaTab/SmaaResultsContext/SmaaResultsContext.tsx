@@ -8,6 +8,7 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import Axios, {AxiosResponse} from 'axios';
+import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
   getSmaaWarnings,
@@ -74,7 +75,11 @@ export function SmaaResultsContextProviderComponent({
   const [ranks, setRanks] = useState<Record<string, number[]>>();
   const [smaaWeights, setSmaaWeights] = useState<IWeights>();
 
-  useEffect(calculateResults, []);
+  useEffect(() => {
+    if (!_.isEmpty(pvfs)) {
+      calculateResults();
+    }
+  }, [pvfs]);
 
   useEffect(() => {
     setWarnings(
