@@ -7,6 +7,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     '$stateParams',
     'WorkspaceResource',
     'ScenarioResource',
+    'SubproblemResource',
     'WorkspaceSettingsService',
     'SchemaService',
     'currentWorkspace',
@@ -18,6 +19,7 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     $stateParams,
     WorkspaceResource,
     ScenarioResource,
+    SubproblemResource,
     WorkspaceSettingsService,
     SchemaService,
     currentWorkspace,
@@ -35,13 +37,21 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
       const pvfs = SchemaService.extractPvfs(currentWorkspace.problem.criteria);
-      //FIXME copy ranges to default subproblem?
+      const ranges = SchemaService.extractRanges(
+        currentWorkspace.problem.criteria
+      );
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(
         currentWorkspace
       );
       SchemaService.validateProblem($scope.workspace.problem);
       WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(
         () => {
+          if (!_.isEmpty(ranges)) {
+            updateDefaultSubproblem(
+              currentWorkspace.defaultSubproblemId,
+              ranges
+            );
+          }
           if (!_.isEmpty(pvfs)) {
             updateDefaultScenario(currentWorkspace.defaultScenarioId, pvfs);
           }
@@ -60,6 +70,21 @@ define(['angular', 'async', 'lodash'], function (angular, async, _) {
       $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings(
         $scope.workspace.problem.performanceTable
       );
+    }
+
+    function updateDefaultSubproblem(defaultSubproblemId, ranges, callback) {
+      const coords = _.merge({}, $stateParams, {
+        problemId: defaultSubproblemId
+      });
+      SubproblemResource.get(coords).$promise.then((subproblem) => {
+        const updatedSubproblem = {
+          title: subproblem.title,
+          definition: {ranges: ranges}
+        };
+        SubproblemResource.save(coords, updatedSubproblem).$promise.then(
+          callback
+        );
+      });
     }
 
     function updateDefaultScenario(defaultScenarioId, pvfs, callback) {
