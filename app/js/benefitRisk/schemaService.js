@@ -599,16 +599,12 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
     function extractPvfs(criteria) {
       return _(criteria)
-        .map((criterion) => [
-          criterion.id,
-          _.omit(criterion.dataSources[0].pvf, 'range')
-        ])
-        .filter(isUsablePvf)
-        .fromPairs()
+        .mapValues((criterion) => _.omit(criterion.dataSources[0].pvf, 'range'))
+        .pickBy(isUsablePvf)
         .value();
     }
 
-    function isUsablePvf([id, pvf]) {
+    function isUsablePvf(pvf) {
       return pvf.direction;
     }
 

@@ -4,7 +4,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
-import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
+import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
@@ -78,7 +78,8 @@ export default function WorkspaceHandler(db: IDB) {
       {
         ranges: Record<string, [number, number]>;
         title: string;
-        problem: IUploadProblem;
+        problem: any;
+        pvfs: Record<string, IScenarioPvf>;
       }
     >,
     callback: (error: OurError, id: string) => void
@@ -98,7 +99,9 @@ export default function WorkspaceHandler(db: IDB) {
       {},
       {
         ranges: Record<string, [number, number]>;
-        problem: IUploadProblem;
+        title: string;
+        problem: any;
+        pvfs: Record<string, IScenarioPvf>;
       }
     >,
     workspaceId: string,
@@ -159,7 +162,9 @@ export default function WorkspaceHandler(db: IDB) {
       {},
       {
         ranges: Record<string, [number, number]>;
-        problem: IUploadProblem;
+        title: string;
+        problem: any;
+        pvfs: Record<string, IScenarioPvf>;
       }
     >,
     workspaceId: string,
@@ -177,7 +182,10 @@ export default function WorkspaceHandler(db: IDB) {
       workspaceId: workspaceId,
       state: {
         problem: {
-          criteria: createScenarioProblem(request.body.problem.criteria)
+          criteria: createScenarioProblem(
+            request.body.problem.criteria,
+            request.body.pvfs
+          )
         },
         prefs: []
       }

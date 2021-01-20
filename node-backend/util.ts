@@ -46,52 +46,46 @@ export function getRanges(
 }
 
 export function createScenarioProblem(
-  criteria: Record<string, IUploadProblemCriterion>
+  criteria: Record<string, IScenarioCriterion>,
+  pvfs: Record<string, IScenarioPvf>
 ): Record<string, IScenarioCriterion> {
-  if (hasTooManyDataSources(criteria) || hasMissingPvf(criteria)) {
+  if (hasTooManyDataSources(criteria)) {
     return {};
   } else {
-    return createScenarioCriteria(criteria);
+    return createScenarioCriteria(criteria, pvfs);
   }
 }
 
 function hasTooManyDataSources(
-  criteria: Record<string, IUploadProblemCriterion>
+  criteria: Record<string, IScenarioCriterion>
 ): boolean {
   return _.some(
     criteria,
-    (criterion: IUploadProblemCriterion): boolean =>
-      criterion.dataSources.length > 1
-  );
-}
-
-function hasMissingPvf(
-  criteria: Record<string, IUploadProblemCriterion>
-): boolean {
-  return _.some(
-    criteria,
-    (criterion: IUploadProblemCriterion): boolean =>
-      !criterion.dataSources[0] ||
-      !criterion.dataSources[0].pvf ||
-      !criterion.dataSources[0].pvf.direction
+    (criterion: IScenarioCriterion): boolean => criterion.dataSources.length > 1
   );
 }
 
 function createScenarioCriteria(
-  criteria: Record<string, IUploadProblemCriterion>
+  criteria: Record<string, IScenarioCriterion>,
+  pvfs: Record<string, IScenarioPvf>
 ): Record<string, IScenarioCriterion> {
   return _.mapValues(
     criteria,
-    (uploadCriterion: IUploadProblemCriterion): IScenarioCriterion => {
-      return {dataSources: [pickPvfs(uploadCriterion.dataSources[0])]};
+    (
+      scenarioCriterion: IScenarioCriterion,
+      criterionId: string
+    ): IScenarioCriterion => {
+      return scenarioCriterion.dataSources[0].pvf
+        ? scenarioCriterion
+        : {
+            dataSources: [
+              {
+                pvf: pvfs[criterionId]
+              }
+            ]
+          };
     }
   );
-}
-
-function pickPvfs(
-  uploadDataSource: IUploadProblemDataSource
-): {pvf: IScenarioPvf} {
-  return {pvf: _.omit(uploadDataSource.pvf, 'range') as IScenarioPvf};
 }
 
 export function omitPvfs(uploadProblem: IUploadProblem): IProblem {
