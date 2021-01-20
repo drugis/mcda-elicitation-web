@@ -665,6 +665,29 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       );
     }
 
+    function earlierThan147(version) {
+      const n1 = Number(version[0]);
+      const n2 = Number(version[1]);
+      const n3 = Number(version[2]);
+      if (n1 > 1) {
+        return false;
+      } else if (n1 < 1) {
+        return true;
+      } else {
+        if (n2 > 4) {
+          return false;
+        } else if (n2 < 4) {
+          return true;
+        } else {
+          if (n3 >= 7) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+    }
+
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
       updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema,
@@ -672,7 +695,8 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       isInputPercentified: isInputPercentified,
       extractPvfs: extractPvfs,
       extractRanges: extractRanges,
-      mergePvfs: mergePvfs
+      mergePvfs: mergePvfs,
+      earlierThan147: earlierThan147
     };
   };
 

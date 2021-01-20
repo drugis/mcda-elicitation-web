@@ -725,5 +725,43 @@ define([
         expect(result).toEqual(expectedResult);
       });
     });
+
+    describe('earlierThan147', () => {
+      it('should return true', () => {
+        const splitVersion = '0.10.99'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return true', () => {
+        const splitVersion = '1.3.99'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return true', () => {
+        const splitVersion = '1.4.6'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false', () => {
+        const splitVersion = '2.0.99'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false', () => {
+        const splitVersion = '1.4.7'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false', () => {
+        const splitVersion = '1.5.0'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeFalsy();
+      });
+    });
   });
 });

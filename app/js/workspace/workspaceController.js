@@ -36,27 +36,35 @@ define(['angular', 'lodash'], function (angular, _) {
       canEdit: user ? currentWorkspace.owner === user.id : false
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
-      const pvfs = SchemaService.extractPvfs(currentWorkspace.problem.criteria);
-      const ranges = SchemaService.extractRanges(
-        currentWorkspace.problem.criteria
-      );
+      const splitVersion = currentWorkspace.problem.schemaVersion.split('.');
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(
         currentWorkspace
       );
       SchemaService.validateProblem($scope.workspace.problem);
-      WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(
-        () => {
-          if (!_.isEmpty(ranges)) {
-            updateDefaultSubproblem(
-              currentWorkspace.defaultSubProblemId,
-              ranges
-            );
+
+      if (SchemaService.earlierThan147(splitVersion)) {
+        const pvfs = SchemaService.extractPvfs(
+          currentWorkspace.problem.criteria
+        );
+        const ranges = SchemaService.extractRanges(
+          currentWorkspace.problem.criteria
+        );
+        WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(
+          () => {
+            if (!_.isEmpty(ranges)) {
+              updateDefaultSubproblem(
+                currentWorkspace.defaultSubProblemId,
+                ranges
+              );
+            }
+            if (!_.isEmpty(pvfs)) {
+              updateDefaultScenario(currentWorkspace.defaultScenarioId, pvfs);
+            }
           }
-          if (!_.isEmpty(pvfs)) {
-            updateDefaultScenario(currentWorkspace.defaultScenarioId, pvfs);
-          }
-        }
-      );
+        );
+      } else {
+        WorkspaceResource.save($stateParams, $scope.workspace);
+      }
     } else {
       $scope.workspace = currentWorkspace;
     }
