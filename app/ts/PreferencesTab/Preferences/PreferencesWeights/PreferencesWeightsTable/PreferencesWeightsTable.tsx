@@ -5,6 +5,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
+import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
@@ -56,9 +57,10 @@ export default function PreferencesWeightsTable() {
         return (
           <TableRow key={criterion.id}>
             <TableCell>
-              <Tooltip disableHoverListener={!description} title={description}>
-                <span style={{color: '#0000ee'}}>{criterion.title}</span>
-              </Tooltip>
+              <CriterionTooltip
+                title={criterion.title}
+                description={criterion.description}
+              />
             </TableCell>
             <TableCell id={`unit-${criterion.id}`}>
               {getUnitLabel(unit, showPercentages)}
