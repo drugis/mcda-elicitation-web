@@ -13,11 +13,6 @@ function exampleProblem() {
               type: 'custom',
               label: 'mg/h'
             },
-            pvf: {
-              range: [0.0, 0.25],
-              type: 'linear',
-              direction: 'decreasing'
-            },
             scale: [0, 1]
           }
         ]
@@ -31,11 +26,6 @@ function exampleProblem() {
             unitOfMeasurement: {
               type: 'decimal',
               label: ''
-            },
-            pvf: {
-              range: [0.15, 0.4],
-              type: 'linear',
-              direction: 'decreasing'
             },
             scale: [0, 1]
           }
@@ -51,11 +41,6 @@ function exampleProblem() {
               type: 'percentage',
               label: '%'
             },
-            pvf: {
-              range: [0.0, 0.1],
-              type: 'linear',
-              direction: 'decreasing'
-            },
             scale: [0, 100]
           }
         ]
@@ -69,11 +54,6 @@ function exampleProblem() {
             unitOfMeasurement: {
               type: 'custom',
               label: ''
-            },
-            pvf: {
-              range: [0.0, 0.1],
-              type: 'linear',
-              direction: 'decreasing'
             },
             scale: [-Infinity, Infinity]
           }
@@ -89,11 +69,6 @@ function exampleProblem() {
               type: 'custom',
               label: ''
             },
-            pvf: {
-              range: [0.0, 0.1],
-              type: 'linear',
-              direction: 'decreasing'
-            },
             scale: [-Infinity, Infinity]
           }
         ]
@@ -107,11 +82,6 @@ function exampleProblem() {
             unitOfMeasurement: {
               type: 'custom',
               label: ''
-            },
-            pvf: {
-              range: [0.0, 0.1],
-              type: 'linear',
-              direction: 'decreasing'
             },
             scale: [null, null]
           }
@@ -196,6 +166,6 @@ function exampleProblem() {
         }
       }
     ],
-    schemaVersion: '1.4.6'
+    schemaVersion: '1.4.7'
   };
 }

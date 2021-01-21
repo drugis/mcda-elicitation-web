@@ -9,10 +9,12 @@ define(['angular'], function (angular) {
       {
         create: {
           method: 'POST',
-          transformRequest: function (problem) {
+          transformRequest: function (command) {
             return angular.toJson({
-              title: problem.title,
-              problem: problem
+              ranges: command.ranges,
+              pvfs: command.pvfs,
+              title: command.workspace.title,
+              problem: command.workspace
             });
           }
         }

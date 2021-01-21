@@ -1,9 +1,5 @@
 'use strict';
 
-const {
-  default: significantDigits
-} = require('app/ts/ManualInput/Util/significantDigits');
-
 define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
   var dependencies = [
     'currentSchemaVersion',
@@ -35,6 +31,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
      * 1.4.4 Set proportion, decimal unit of measurement to empty label
      * 1.4.5 Put id on alternatives and criteria
      * 1.4.6 Store effect input as decimals
+     * 1.4.7 Move pvfs off problem onto default scenario
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -104,6 +101,10 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.4.5') {
         newProblem = updateToVersion146(newProblem);
+      }
+
+      if (newProblem.schemaVersion === '1.4.6') {
+        newProblem = updateToVersion147(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -501,6 +502,14 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       };
     }
 
+    function updateToVersion147(problem) {
+      const updatedProblem = omitPvfs(problem);
+      return {
+        ...updatedProblem,
+        schemaVersion: '1.4.7'
+      };
+    }
+
     function buildDataSourcePercentageMap(criteria) {
       return _(criteria)
         .flatMap((criterion) => {
@@ -588,11 +597,106 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       };
     }
 
+    function extractPvfs(criteria) {
+      return _(criteria)
+        .mapValues((criterion) => _.omit(criterion.dataSources[0].pvf, 'range'))
+        .pickBy(isUsablePvf)
+        .value();
+    }
+
+    function isUsablePvf(pvf) {
+      return pvf.direction;
+    }
+
+    function extractRanges(criteria) {
+      return _(criteria)
+        .flatMap('dataSources')
+        .filter('pvf')
+        .keyBy('id')
+        .mapValues((dataSource) => dataSource.pvf.range)
+        .value();
+    }
+
+    function mergePvfs(scenario, pvfs) {
+      const updatedCriteria = updateCriteriaWithPvfs(
+        scenario.state.problem.criteria,
+        pvfs
+      );
+      return _.merge({}, scenario, {
+        state: {problem: {criteria: updatedCriteria}}
+      });
+    }
+
+    function updateCriteriaWithPvfs(scenarioCriteria, pvfs) {
+      return _.mapValues(scenarioCriteria, (scenarioCriterion, criterionId) => {
+        return scenarioCriterion.dataSources &&
+          scenarioCriterion.dataSources[0] &&
+          scenarioCriterion.dataSources[0].pvf
+          ? scenarioCriterion
+          : {
+              dataSources: [
+                {
+                  pvf: pvfs[criterionId]
+                }
+              ]
+            };
+      });
+    }
+
+    function omitPvfs(uploadProblem) {
+      return {
+        ...uploadProblem,
+        criteria: omitPvfsFromCriteria(uploadProblem.criteria)
+      };
+    }
+
+    function omitPvfsFromCriteria(uploadCriteria) {
+      return _.mapValues(uploadCriteria, (uploadCriterion) => {
+        return {
+          ...uploadCriterion,
+          dataSources: omitPvfsFromDataSources(uploadCriterion.dataSources)
+        };
+      });
+    }
+
+    function omitPvfsFromDataSources(uploadDataSources) {
+      return _.map(uploadDataSources, (uploadDataSource) =>
+        _.omit(uploadDataSource, 'pvf')
+      );
+    }
+
+    function earlierThan147(version) {
+      const n1 = Number(version[0]);
+      const n2 = Number(version[1]);
+      const n3 = Number(version[2]);
+      if (n1 > 1) {
+        return false;
+      } else if (n1 < 1) {
+        return true;
+      } else {
+        if (n2 > 4) {
+          return false;
+        } else if (n2 < 4) {
+          return true;
+        } else {
+          if (n3 >= 7) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+    }
+
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
       updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema,
       validateProblem: validateProblem,
-      isInputPercentified: isInputPercentified
+      isInputPercentified: isInputPercentified,
+      extractPvfs: extractPvfs,
+      extractRanges: extractRanges,
+      mergePvfs: mergePvfs,
+      earlierThan147: earlierThan147
     };
   };
 

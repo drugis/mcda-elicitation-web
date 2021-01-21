@@ -1,6 +1,8 @@
 import IWeights from '@shared/interface/IWeights';
+import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
+import {IWeightsCommand} from '@shared/interface/Patavi/IWeightsCommand';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
@@ -13,7 +15,12 @@ import ScenarioRepository from './scenarioRepository';
 
 export default function PataviHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
-  function postTask(request: Request, response: Response, next: any): void {
+
+  function postTask(
+    request: Request<{}, {}, IPataviProblem>,
+    response: Response,
+    next: any
+  ): void {
     // FIXME: separate routes for scales and results
     createPataviTask(request.body, (error: Error, taskUri: string): void => {
       if (error) {
@@ -31,7 +38,11 @@ export default function PataviHandler(db: IDB) {
     });
   }
 
-  function getWeights(request: Request, response: Response, next: any) {
+  function getWeights(
+    request: Request<{}, {}, IWeightsCommand>,
+    response: Response,
+    next: any
+  ) {
     const problem = request.body.problem;
     const scenario = request.body.scenario;
     waterfall(
@@ -67,8 +78,12 @@ export default function PataviHandler(db: IDB) {
     );
   }
 
-  function getSmaaResults(request: Request, response: Response, next: any) {
-    const smaaResultsCommand: ISmaaResultsCommand = request.body;
+  function getSmaaResults(
+    request: Request<{}, {}, ISmaaResultsCommand>,
+    response: Response,
+    next: any
+  ) {
+    const smaaResultsCommand = request.body;
     postAndHandleResults(
       smaaResultsCommand,
       (error: Error, results: ISmaaResults) => {

@@ -102,11 +102,11 @@ function switchinPreferences(browser) {
 
 function switchInDeterministic(browser) {
   browser
-    .click('#add-scenario-button')
+    .click('#copy-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-confirm-button:enabled')
-    .click('#add-scenario-confirm-button')
-    .pause(100)
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
+    .waitForElementNotPresent('#copy-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#deterministic-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
@@ -117,11 +117,11 @@ function switchInDeterministic(browser) {
 
 function switchInSmaa(browser) {
   browser
-    .click('#add-scenario-button')
+    .click('#copy-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-confirm-button:enabled')
-    .click('#add-scenario-confirm-button')
-    .waitForElementNotPresent('#add-scenario-confirm-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
+    .waitForElementNotPresent('#copy-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#smaa-tab')
     .waitForElementVisible('#effects-table-header')

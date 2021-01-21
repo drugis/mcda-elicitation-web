@@ -1,6 +1,4 @@
-import {UnitOfMeasurementType} from '../IUnitOfMeasurement';
 import IProblemUnitOfMeasurement from './IProblemUnitOfMeasurement';
-import IPvf from './IPvf';
 
 export default interface IProblemDataSource {
   id: string;
@@ -10,5 +8,4 @@ export default interface IProblemDataSource {
   uncertainties: string;
   strengthOfEvidence: string;
   scale: [number, number];
-  pvf?: IPvf;
 }

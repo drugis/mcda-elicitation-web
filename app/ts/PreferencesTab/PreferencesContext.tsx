@@ -1,6 +1,10 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
+import {
+  IWeightsCommand,
+  IWeightsProblem
+} from '@shared/interface/Patavi/IWeightsCommand';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
@@ -13,6 +17,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import {SettingsContext} from '../Settings/SettingsContext';
+import {getPataviProblem} from '../util/PataviUtil';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import IPreferencesContext from './IPreferencesContext';
@@ -40,8 +45,10 @@ export function PreferencesContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
-  const {currentSubproblem} = useContext(WorkspaceContext);
-  const {filteredCriteria} = useContext(SubproblemContext);
+  const {currentSubproblem, observedRanges} = useContext(WorkspaceContext);
+  const {filteredCriteria, filteredAlternatives} = useContext(
+    SubproblemContext
+  );
 
   const [contextScenarios, setScenarios] = useState<
     Record<string, IMcdaScenario>
@@ -50,17 +57,23 @@ export function PreferencesContextProviderComponent({
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
     _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
-  const [pvfs, setPvfs] = useState<Record<string, IPvf>>(
-    initPvfs(
-      filteredCriteria,
-      currentScenario,
-      currentSubproblem.definition.ranges,
-      problem.criteria
-    )
-  );
+  const [pvfs, setPvfs] = useState<Record<string, IPvf>>({});
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);
   const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
+
+  useEffect(() => {
+    if (!_.isEmpty(observedRanges)) {
+      setPvfs(
+        initPvfs(
+          filteredCriteria,
+          currentScenario,
+          currentSubproblem.definition.ranges,
+          observedRanges
+        )
+      );
+    }
+  }, [observedRanges]);
 
   useEffect(() => {
     if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {
@@ -120,17 +133,19 @@ export function PreferencesContextProviderComponent({
   }
 
   function getWeights(scenario: IMcdaScenario) {
-    const postProblem = _.merge(
-      {},
-      _.omit(problem, 'preferences'),
-      scenario.state.problem,
-      {
-        preferences: scenario.state.prefs,
-        method: 'representativeWeights',
-        seed: randomSeed
-      }
+    const pataviProblem = getPataviProblem(
+      problem,
+      filteredCriteria,
+      filteredAlternatives,
+      pvfs
     );
-    const postCommand = {
+    const postProblem: IWeightsProblem = {
+      ...pataviProblem,
+      preferences: scenario.state.prefs,
+      method: 'representativeWeights',
+      seed: randomSeed
+    };
+    const postCommand: IWeightsCommand = {
       problem: postProblem,
       scenario: scenario
     };

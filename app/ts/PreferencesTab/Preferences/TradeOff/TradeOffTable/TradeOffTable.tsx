@@ -1,10 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from '@material-ui/core';
+import {Table, TableBody, TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import {
   canBePercentage,
@@ -83,7 +77,7 @@ export default function TradeOffTable(): JSX.Element {
 
   return (
     <Table>
-      <TableBody>{getRows()}</TableBody>
+      <TableBody>{!_.isEmpty(pvfs) ? getRows() : <></>}</TableBody>
     </Table>
   );
 }

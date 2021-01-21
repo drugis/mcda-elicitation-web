@@ -1,8 +1,9 @@
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
+import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
-import IProblem from '@shared/interface/Problem/IProblem';
+import {IWeightsProblem} from '@shared/interface/Patavi/IWeightsCommand';
 import Axios, {AxiosError, AxiosResponse} from 'axios';
 import fs from 'fs';
 import {IncomingMessage} from 'http';
@@ -37,7 +38,7 @@ const httpsOptions = ca ? {...httpsOptionsNoCa, ca: ca} : httpsOptionsNoCa;
 const httpsAgent = new https.Agent({...httpsOptions, path: pataviTaskUrl});
 
 export default function createPataviTask(
-  problem: IProblem,
+  problem: IPataviProblem,
   callback: (error: OurError, location?: string) => void
 ): void {
   logger.debug('pataviTaskRepository.createPataviTask');
@@ -69,7 +70,7 @@ export default function createPataviTask(
 }
 
 export function postAndHandleResults(
-  problem: IProblem | ISmaaResultsCommand,
+  problem: IPataviProblem | IWeightsProblem | ISmaaResultsCommand,
   callback: (error: OurError, result?: IWeights | ISmaaResults) => void
 ) {
   Axios.post(pataviTaskUrl, problem, {httpsAgent})

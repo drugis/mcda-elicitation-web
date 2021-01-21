@@ -4,6 +4,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
+import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
@@ -13,7 +14,7 @@ import IDB from './interface/IDB';
 import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
-import {getRanges, getUser, handleError, reduceProblem} from './util';
+import {buildScenarioCriteria, getUser, handleError} from './util';
 import WorkspaceRepository from './workspaceRepository';
 
 export default function WorkspaceHandler(db: IDB) {
@@ -71,20 +72,43 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createNewWorkspace(
     client: PoolClient,
-    request: Request,
+    request: Request<
+      {},
+      {},
+      {
+        ranges: Record<string, [number, number]>;
+        title: string;
+        problem: IProblem;
+        pvfs: Record<string, IScenarioPvf>;
+      }
+    >,
     callback: (error: OurError, id: string) => void
   ): void {
     logger.debug('creating new workspace');
 
     const owner = getUser(request).id;
     const title = request.body.title;
-    const problem = request.body.problem;
-    workspaceRepository.create(client, owner, title, problem, callback);
+    workspaceRepository.create(
+      client,
+      owner,
+      title,
+      request.body.problem,
+      callback
+    );
   }
 
   function createSubProblem(
     client: PoolClient,
-    request: Request<{}, {}, {problem: IProblem}>,
+    request: Request<
+      {},
+      {},
+      {
+        ranges: Record<string, [number, number]>;
+        title: string;
+        problem: IProblem;
+        pvfs: Record<string, IScenarioPvf>;
+      }
+    >,
     workspaceId: string,
     callback: (
       error: OurError,
@@ -94,7 +118,7 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     logger.debug('creating subproblem');
     const definition = {
-      ranges: getRanges(request.body.problem) //FIXME don't allow ranges on uploads
+      ranges: request.body.ranges
     };
     subproblemRepository.create(
       client,
@@ -138,7 +162,16 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createScenario(
     client: PoolClient,
-    request: Request,
+    request: Request<
+      {},
+      {},
+      {
+        ranges: Record<string, [number, number]>;
+        title: string;
+        problem: IProblem;
+        pvfs: Record<string, IScenarioPvf>;
+      }
+    >,
     workspaceId: string,
     subproblemId: string,
     callback: (
@@ -153,7 +186,12 @@ export default function WorkspaceHandler(db: IDB) {
       subproblemId: subproblemId,
       workspaceId: workspaceId,
       state: {
-        problem: reduceProblem(request.body.problem),
+        problem: {
+          criteria: buildScenarioCriteria(
+            request.body.problem.criteria,
+            request.body.pvfs
+          )
+        },
         prefs: []
       }
     };
