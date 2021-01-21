@@ -1,10 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from '@material-ui/core';
+import {Table, TableBody, TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import {
   canBePercentage,
@@ -37,8 +31,10 @@ export default function TradeOffTable(): JSX.Element {
         return (
           <TableRow key={criterion.id}>
             <TableCell id={`trade-off-statement-${criterion.id}`}>
-              Changing {criterion.title} from{' '}
-              {getWorst(pvfs[criterion.id], usePercentage)} to {improvedValue}
+              {`Changing ${criterion.title} from ${getWorst(
+                pvfs[criterion.id],
+                usePercentage
+              )} to ${improvedValue}`}
             </TableCell>
             <TableCell id={`trade-off-warning-${criterion.id}`}>
               {isImprovedValueRealistic(improvedValue, criterion, usePercentage)
