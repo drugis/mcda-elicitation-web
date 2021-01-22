@@ -23,7 +23,7 @@
     "test-end-to-end": "tsc -p ts-end-to-end-config.json && nightwatch -c nightwatch.local.conf.js"
   },
   "resolutions": {
-    "@types/react": "^16.9.44",
+    "@types/react": "^17.0.0",
     "axios": "0.21.1",
     "dot-prop": "6.0.1",
     "js-yaml": "3.13.1",
