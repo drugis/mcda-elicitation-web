@@ -92,7 +92,7 @@
     "angular-ui-router": "~1.0.23",
     "angular1-templateurl-loader": "^1.0.0",
     "angularjs-slider": "~7.0.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-loader": "^8.0.6",
     "bcrypt-cli": "^1.1.0",
     "bowser": "2.7.0",
