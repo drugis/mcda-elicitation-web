@@ -42,6 +42,7 @@ function set(browser) {
     .click('#piece-wise-next-button')
     .click('#piece-wise-next-button')
     .click('#piece-wise-save-button')
+    .pause(200)
     .waitForElementVisible('#ranking-button:enabled');
 }
 

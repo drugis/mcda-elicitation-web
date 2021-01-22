@@ -1,3 +1,4 @@
+import {CircularProgress} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
@@ -48,7 +49,7 @@ export default function PartialValueFunctions() {
           </Typography>
         </Grid>
         <Grid container item xs={12} spacing={2}>
-          {getPartialValueFunctions()}
+          {!_.isEmpty(pvfs) ? getPartialValueFunctions() : <CircularProgress />}
         </Grid>
       </Grid>
     </>

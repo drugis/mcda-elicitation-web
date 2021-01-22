@@ -113,10 +113,9 @@ define(['lodash', 'angular'], function (_, angular) {
   function getDataSourcesById() {
     return function (criteria) {
       return _(criteria)
-        .map(function (criterion) {
+        .flatMap(function (criterion) {
           return criterion.dataSources;
-        }, [])
-        .flatten()
+        })
         .keyBy('id')
         .value();
     };

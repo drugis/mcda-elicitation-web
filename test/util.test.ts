@@ -1,13 +1,14 @@
-'use strict';
-import IProblem from '@shared/interface/Problem/IProblem';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import {
+  buildScenarioCriteria,
   getRanges,
   getUser,
-  handleError,
-  reduceProblem
+  handleError
 } from '../node-backend/util';
+import IProblemCriterion from '../shared/interface/Problem/IProblemCriterion';
+import IScenarioCriterion from '../shared/interface/Scenario/IScenarioCriterion';
+import IScenarioPvf from '../shared/interface/Scenario/IScenarioPvf';
+import IUploadProblem from '../shared/interface/UploadProblem/IUploadProblem';
+import IUploadProblemCriterion from '../shared/interface/UploadProblem/IUploadProblemCriterion';
 
 describe('The utility', () => {
   describe('getUser', () => {
@@ -42,39 +43,47 @@ describe('The utility', () => {
     });
   });
 
-  describe('reduceProblem', () => {
-    it('should reduce the problem to only the parts needed', () => {
-      const problem: any = {
-        prefs: 'some prefs',
-        criteria: {
-          critId1: {
-            id: 'critId1',
-            pvf: {},
-            scale: [1, 2],
-            title: 'crit 1 title'
-          }
+  describe('createScenarioProblem', () => {
+    it('should create a scenario problem from an uploaded problem and pvfs', () => {
+      const criteria = {
+        crit1Id: {} as IProblemCriterion
+      };
+      const pvfs: Record<string, IScenarioPvf> = {
+        crit1Id: {
+          direction: 'increasing',
+          type: 'linear'
         }
       };
-
-      const result = reduceProblem(problem);
-
-      const expectedResult = {
-        criteria: {
-          critId1: {
-            scale: [1, 2],
-            pvf: {},
-            title: 'crit 1 title'
-          }
-        },
-        prefs: problem.preferences
+      const result = buildScenarioCriteria(criteria, pvfs);
+      const expectedResult: Record<string, IScenarioCriterion> = {
+        crit1Id: {
+          dataSources: [{pvf: {direction: 'increasing', type: 'linear'}}]
+        }
       };
-      expect(expectedResult).toEqual(result);
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should create a scenario problem from an uploaded problem without pvfs if there are too many data sources', () => {
+      const criteria = {
+        crit1Id: {
+          dataSources: [{id: 'ds1Id'}, {id: 'ds1Id'}]
+        } as IProblemCriterion
+      };
+      const pvfs: Record<string, IScenarioPvf> = {
+        crit1Id: {
+          direction: 'increasing',
+          type: 'linear'
+        }
+      };
+      const result = buildScenarioCriteria(criteria, pvfs);
+      const expectedResult: Record<string, IScenarioCriterion> = {};
+      expect(result).toEqual(expectedResult);
     });
   });
 
   describe('getRanges', () => {
     it('should return the scales ranges from a problem', () => {
-      const problem: IProblem = {
+      const problem: IUploadProblem = {
         schemaVersion: 'schemaVersion,',
         alternatives: {},
         description: 'desc',
@@ -82,15 +91,11 @@ describe('The utility', () => {
         title: 'title',
         criteria: {
           critId1: {
-            dataSources: [
-              {id: 'ds1Id', pvf: {range: [3, 5]}} as IProblemDataSource
-            ]
-          } as IProblemCriterion,
+            dataSources: [{id: 'ds1Id', pvf: {range: [3, 5]}}]
+          } as IUploadProblemCriterion,
           critId2: {
-            dataSources: [
-              {id: 'ds2Id', pvf: {range: [1, 3]}} as IProblemDataSource
-            ]
-          } as IProblemCriterion
+            dataSources: [{id: 'ds2Id', pvf: {range: [1, 3]}}]
+          } as IUploadProblemCriterion
         }
       };
 

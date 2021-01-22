@@ -1,13 +1,17 @@
 import {OurError} from '@shared/interface/IError';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
-import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
-import {Request} from 'express';
+import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
+import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
+import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
+import IUploadProblemDataSource from '@shared/interface/UploadProblem/IUploadProblemDataSource';
 import {INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import _ from 'lodash';
 import logger from './logger';
 
-export function getUser(request: Request) {
+export function getUser(request: any) {
   if (request.user) {
     return request.user;
   } else if (
@@ -30,27 +34,87 @@ export function handleError(error: OurError, next: any): void {
 }
 
 export function getRanges(
-  problem: IProblem
+  problem: IUploadProblem
 ): Record<string, [number, number] | undefined> {
   return _(problem.criteria)
     .flatMap('dataSources')
     .keyBy('id')
-    .mapValues((dataSource: IProblemDataSource) => {
+    .mapValues((dataSource: IUploadProblemDataSource) => {
       return dataSource.pvf ? dataSource.pvf.range : undefined;
     })
     .value();
 }
 
-export function reduceProblem(problem: IProblem): IScenarioProblem {
-  const criteria = _.reduce(
-    problem.criteria,
-    (accum: Record<string, any>, criterion, key): Record<string, any> => {
-      accum[key] = _.pick(criterion, ['scale', 'pvf', 'title']);
-      return accum;
-    },
-    {}
+export function buildScenarioCriteria(
+  criteria: Record<string, IProblemCriterion>,
+  pvfs: Record<string, IScenarioPvf>
+): Record<string, IScenarioCriterion> {
+  if (hasTooManyDataSources(criteria)) {
+    return {};
+  } else {
+    return !_.isEmpty(pvfs) ? createScenarioCriteria(criteria, pvfs) : {};
+  }
+}
+
+function hasTooManyDataSources(
+  criteria: Record<string, IProblemCriterion>
+): boolean {
+  return _.some(
+    criteria,
+    (criterion: IProblemCriterion): boolean =>
+      criterion.dataSources && criterion.dataSources.length > 1
   );
+}
+
+function createScenarioCriteria(
+  criteria: Record<string, IProblemCriterion>,
+  pvfs: Record<string, IScenarioPvf>
+): Record<string, IScenarioCriterion> {
+  return _.mapValues(
+    criteria,
+    (
+      problemCriterion: IProblemCriterion,
+      criterionId: string
+    ): IScenarioCriterion => {
+      return {
+        dataSources: [
+          {
+            pvf: pvfs[criterionId]
+          }
+        ]
+      };
+    }
+  );
+}
+
+export function omitPvfs(uploadProblem: IUploadProblem): IProblem {
   return {
-    criteria: criteria
+    ...uploadProblem,
+    criteria: omitPvfsFromCriteria(uploadProblem.criteria)
   };
+}
+
+function omitPvfsFromCriteria(
+  uploadCriteria: Record<string, IUploadProblemCriterion>
+): Record<string, IProblemCriterion> {
+  return _.mapValues(
+    uploadCriteria,
+    (uploadCriterion: IUploadProblemCriterion): IProblemCriterion => {
+      return {
+        ...uploadCriterion,
+        dataSources: omitPvfsFromDataSources(uploadCriterion.dataSources)
+      };
+    }
+  );
+}
+
+function omitPvfsFromDataSources(
+  uploadDataSources: IUploadProblemDataSource[]
+): IProblemDataSource[] {
+  return _.map(
+    uploadDataSources,
+    (uploadDataSource: IUploadProblemDataSource): IProblemDataSource => {
+      return _.omit(uploadDataSource, 'pvf');
+    }
+  );
 }

@@ -33,6 +33,7 @@ import WorkspaceRepository from './node-backend/workspaceRepository';
 import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
 
+const USER_SESSION_EXPIRED = 'SESSION_EXPIRED';
 const db = DB(buildDBConfig());
 
 logger.info(buildDBUrl());
@@ -112,7 +113,7 @@ function initApp(): void {
 
   app.get('/logout', (request: Request, response: Response): void => {
     request.logout();
-    request.session.destroy(function (error) {
+    request.session.destroy((error) => {
       response.redirect('/');
     });
   });
@@ -127,7 +128,7 @@ function initApp(): void {
     }
     next();
   });
-  app.get('/', (request: Request, response: Response): void => {
+  app.get('/', (request: any, response: Response): void => {
     if (request.user || request.session.user) {
       response.sendFile(__dirname + '/dist/index.html');
     } else {
@@ -142,6 +143,13 @@ function initApp(): void {
     express.static('examples/tutorial-examples', {index: 'index.json'})
   );
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
+  app.use((request: Request, response: Response, next: any): void => {
+    if (!request.user) {
+      response.status(403).send(USER_SESSION_EXPIRED);
+    } else {
+      next();
+    }
+  });
   app.use(rightsManagement.expressMiddleware);
 
   app.use('/api/v2/inProgress', inProgressRouter);
@@ -250,7 +258,7 @@ function rightsCallback(
 }
 
 function useSSLLogin(): void {
-  app.get('/signin', (request: Request, response: Response) => {
+  app.get('/signin', (request: any, response: Response) => {
     const clientString = request.header('X-SSL-CLIENT-DN');
     const emailRegex = /emailAddress=([^,]*)/;
     const email = clientString.match(emailRegex)[1];

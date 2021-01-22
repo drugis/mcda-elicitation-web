@@ -6,25 +6,17 @@ import IEmptyEffect from '@shared/interface/IEmptyEffect';
 import ITextEffect from '@shared/interface/ITextEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
-import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
-import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
-import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
-import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import {TPreferences} from '@shared/types/Preferences';
 import {Primitive} from 'c3';
 import {
-  buildPataviPerformanceTable,
   getCentralWeightsPlotData,
   getRankPlotData,
   getSmaaWarnings,
   hasStochasticMeasurements,
-  hasStochasticWeights,
-  mergeDataSourceOntoCriterion
+  hasStochasticWeights
 } from './SmaaResultsUtil';
 
 describe('SmaaResultsUtil', () => {
@@ -188,141 +180,9 @@ describe('SmaaResultsUtil', () => {
     });
   });
 
-  describe('mergeDataSourceOntoCriterion', () => {
-    it('should merge the data sources onto the criteria', () => {
-      const criteria: Record<string, IProblemCriterion> = {
-        crit1: {
-          id: 'crit1',
-          title: 'criterion1',
-          description: '',
-          dataSources: [
-            {
-              id: 'ds1',
-              scale: [0, 1],
-              source: '',
-              sourceLink: '',
-              strengthOfEvidence: '',
-              uncertainties: '',
-              unitOfMeasurement: {label: '', type: 'decimal'},
-              pvf: {range: [1, 2]}
-            }
-          ]
-        },
-        crit2: {
-          id: 'crit2',
-          title: 'criterion2',
-          description: '',
-          dataSources: [
-            {
-              id: 'ds1',
-              scale: [0, 100],
-              source: '',
-              sourceLink: '',
-              strengthOfEvidence: '',
-              uncertainties: '',
-              unitOfMeasurement: {label: '123', type: 'custom'},
-              pvf: {range: [5, 37]}
-            }
-          ]
-        }
-      };
-      const result = mergeDataSourceOntoCriterion(criteria);
-      const expectedResult: Record<string, IPataviCriterion> = {
-        crit1: {
-          id: 'crit1',
-          title: 'criterion1',
-          scale: [0, 1],
-          unitOfMeasurement: {label: '', type: 'decimal'},
-          pvf: {range: [1, 2]}
-        },
-        crit2: {
-          id: 'crit2',
-          title: 'criterion2',
-          scale: [0, 100],
-          unitOfMeasurement: {label: '123', type: 'custom'},
-          pvf: {range: [5, 37]}
-        }
-      };
-      expect(result).toEqual(expectedResult);
-    });
-  });
-
-  describe('buildPataviPerformaceTable', () => {
-    it('should transform the performance table into a patavi ready version', () => {
-      const performanceTable: IPerformanceTableEntry[] = [
-        {
-          criterion: 'crit1',
-          dataSource: 'ds1',
-          alternative: 'alt1',
-          performance: {
-            effect: {type: 'exact'} as EffectPerformance,
-            distribution: {type: 'dnorm'} as DistributionPerformance
-          }
-        },
-        {
-          criterion: 'crit2',
-          dataSource: 'ds2',
-          alternative: 'alt1',
-          performance: {
-            effect: {type: 'exact'} as EffectPerformance
-          }
-        },
-        {
-          criterion: 'crit3',
-          dataSource: 'ds3',
-          alternative: 'alt1',
-          performance: {
-            effect: {type: 'exact'} as EffectPerformance,
-            distribution: {type: 'empty'} as DistributionPerformance
-          }
-        }
-      ];
-      const result = buildPataviPerformanceTable(performanceTable);
-      const expectedResult: IPataviTableEntry[] = [
-        {
-          criterion: 'crit1',
-          dataSource: 'ds1',
-          alternative: 'alt1',
-          performance: {type: 'dnorm'} as DistributionPerformance
-        },
-        {
-          criterion: 'crit2',
-          dataSource: 'ds2',
-          alternative: 'alt1',
-          performance: {type: 'exact'} as EffectPerformance
-        },
-        {
-          criterion: 'crit3',
-          dataSource: 'ds3',
-          alternative: 'alt1',
-          performance: {type: 'exact'} as EffectPerformance
-        }
-      ];
-      expect(result).toEqual(expectedResult);
-    });
-
-    it('should throw an error if there is an invalid performance', () => {
-      const performanceTable: IPerformanceTableEntry[] = [
-        {
-          criterion: 'crit4',
-          dataSource: 'ds4',
-          alternative: 'alt1',
-          performance: {
-            distribution: {type: 'empty'} as DistributionPerformance
-          }
-        }
-      ];
-      try {
-        buildPataviPerformanceTable(performanceTable);
-      } catch (error) {
-        expect(error).toBe('Unrecognized performance');
-      }
-    });
-  });
-
   describe('getRankPlotData', () => {
     it('should format the ranking data for the plot', () => {
-      const legend: Record<string, {newTitle: string}> = undefined;
+      const legend: Record<string, string> = undefined;
       const ranks: Record<string, number[]> = {alt1: [0, 42], alt2: [1, 37]};
       const alternatives: IAlternative[] = [
         {id: 'alt1', title: 'alternative1'},
@@ -338,9 +198,9 @@ describe('SmaaResultsUtil', () => {
     });
 
     it('should format the ranking data for the plot, replacing titles using the legend', () => {
-      const legend: Record<string, {newTitle: string}> = {
-        alt1: {newTitle: 'Final'},
-        alt2: {newTitle: 'Smasher'}
+      const legend: Record<string, string> = {
+        alt1: 'Final',
+        alt2: 'Smasher'
       };
       const ranks: Record<string, number[]> = {alt1: [0, 42], alt2: [1, 37]};
       const alternatives: IAlternative[] = [
@@ -359,7 +219,7 @@ describe('SmaaResultsUtil', () => {
 
   describe('getCentralWeightsPlotData', () => {
     it('should format the central weights data for the plot', () => {
-      const legend: Record<string, {newTitle: string}> = undefined;
+      const legend: Record<string, string> = undefined;
       const centralWeights: Record<string, ICentralWeight> = {
         alt1: {cf: 13, w: {crit1: 1, crit2: 2}},
         alt2: {cf: 37, w: {crit1: 3, crit2: 4}}
@@ -387,9 +247,9 @@ describe('SmaaResultsUtil', () => {
     });
 
     it('should format the ranking data for the plot, replacing titles using the legend', () => {
-      const legend: Record<string, {newTitle: string}> = {
-        alt1: {newTitle: 'Final'},
-        alt2: {newTitle: 'Smasher'}
+      const legend: Record<string, string> = {
+        alt1: 'Final',
+        alt2: 'Smasher'
       };
       const centralWeights: Record<string, ICentralWeight> = {
         alt1: {cf: 13, w: {crit1: 1, crit2: 2}},

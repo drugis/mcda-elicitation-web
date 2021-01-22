@@ -9,7 +9,7 @@ define([
   var generateUuidMock = function () {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.4.6';
+  var currentSchemaVersion = '1.4.7';
   var schemaService;
 
   describe('The SchemaService', function () {
@@ -615,6 +615,151 @@ define([
           isDataSourcePercentageMap,
           entry
         );
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('extractPvfs', () => {
+      it('should return pvfs keyed by criterion id', () => {
+        const criteria = {
+          crit1Id: {
+            id: 'crit1Id',
+            title: 'criterion1',
+            dataSources: [
+              {id: 'ds1Id', pvf: {range: [0, 1], direction: 'increasing'}}
+            ]
+          }
+        };
+        const result = schemaService.extractPvfs(criteria);
+        const expectedResult = {
+          crit1Id: {
+            direction: 'increasing'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('mergePvfs', () => {
+      it('should merge pvfs onto scenario if there are none', () => {
+        const scenario = {
+          id: 1,
+          state: {problem: {criteria: {crit1Id: {}}}}
+        };
+        const pvfs = {crit1Id: {direction: 'increasing'}};
+        const result = schemaService.mergePvfs(scenario, pvfs);
+        const expectedResult = {
+          id: 1,
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  dataSources: [{pvf: {direction: 'increasing'}}]
+                }
+              }
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should not merge pvfs onto scenario if there are already', () => {
+        const scenario = {
+          id: 1,
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  dataSources: [{pvf: {direction: 'decreasing'}}]
+                }
+              }
+            }
+          }
+        };
+        const pvfs = {crit1Id: {direction: 'increasing'}};
+        const result = schemaService.mergePvfs(scenario, pvfs);
+        const expectedResult = {
+          id: 1,
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  dataSources: [{pvf: {direction: 'decreasing'}}]
+                }
+              }
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('extractRanges', () => {
+      it('should return ranges keyed by data source id', () => {
+        const criteria = {
+          crit1Id: {
+            id: 'crit1Id',
+            title: 'criterion1',
+            dataSources: [
+              {id: 'ds1Id', pvf: {range: [0, 1], direction: 'increasing'}}
+            ]
+          }
+        };
+        const result = schemaService.extractRanges(criteria);
+        const expectedResult = {
+          ds1Id: [0, 1]
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return nothing if there are no pvf on the data source', () => {
+        const criteria = {
+          crit1Id: {
+            id: 'crit1Id',
+            title: 'criterion1',
+            dataSources: [{id: 'ds1Id'}]
+          }
+        };
+        const result = schemaService.extractRanges(criteria);
+        const expectedResult = {};
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('earlierThan147', () => {
+      it('should return true', () => {
+        const splitVersion = '0.10.99'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return true', () => {
+        const splitVersion = '1.3.99'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return true', () => {
+        const splitVersion = '1.4.6'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false', () => {
+        const splitVersion = '2.0.99'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false', () => {
+        const splitVersion = '1.4.7'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false', () => {
+        const splitVersion = '1.5.0'.split('.');
+        const result = schemaService.earlierThan147(splitVersion);
         expect(result).toBeFalsy();
       });
     });

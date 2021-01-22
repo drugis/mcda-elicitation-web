@@ -7,6 +7,7 @@ import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import ITextEffect from '@shared/interface/ITextEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
+import IStudentsTDistribution from '@shared/interface/IStudentsTDistribution';
 
 describe('DistributionValueCellService', () => {
   describe('renderDistribution', () => {
@@ -71,6 +72,7 @@ describe('DistributionValueCellService', () => {
       const result = renderDistribution(distribution, usePercentage);
       expect(result).toBe('[1, 2]');
     });
+
     it('should return the string for a text distribution', () => {
       const distribution: ITextEffect = {
         ...baseDistribution,
@@ -89,6 +91,18 @@ describe('DistributionValueCellService', () => {
       };
       const result = renderDistribution(distribution, usePercentage);
       expect(result).toBe('37');
+    });
+
+    it('should return the string for a students t distribution', () => {
+      const distribution: IStudentsTDistribution = {
+        ...baseDistribution,
+        type: 'dt',
+        mean: 10,
+        standardError: 1,
+        dof: 123
+      };
+      const result = renderDistribution(distribution, usePercentage);
+      expect(result).toBe(`Student's t(10, 1, 123)`);
     });
   });
 });

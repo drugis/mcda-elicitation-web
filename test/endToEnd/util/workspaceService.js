@@ -48,6 +48,7 @@ function copy(browser, index) {
 function deleteFromList(browser, index) {
   browser
     .useXpath()
+    .waitForElementVisible('//*[@id="delete-workspace-' + index + '"]')
     .click('//*[@id="delete-workspace-' + index + '"]/span/button')
     .useCss()
     .click('#delete-workspace-confirm-button');

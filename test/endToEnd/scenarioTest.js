@@ -48,7 +48,7 @@ function create(browser) {
     .waitForElementVisible('#add-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', 'Default')
     .waitForElementVisible('#add-scenario-confirm-button:disabled')
-    .assert.containsText('#title-error', 'Duplicate title')
+    .assert.containsText('#title-error-0', 'Duplicate title')
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#add-scenario-confirm-button:enabled')
@@ -92,21 +92,21 @@ function switchinPreferences(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#add-scenario-confirm-button:enabled')
     .click('#add-scenario-confirm-button')
-    .pause(1000) //pause needed to not get 'stale element' error
+    .waitForElementNotPresent('#add-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
     .click('#scenario-selector > option:nth-child(1)')
-    .pause(100) //pause needed to not get 'stale element' error
+    .pause(200) //pause needed to not get 'stale element' error
     .assert.containsText('#scenario-selector', 'Default');
 }
 
 function switchInDeterministic(browser) {
   browser
-    .click('#add-scenario-button')
+    .click('#copy-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-confirm-button:enabled')
-    .click('#add-scenario-confirm-button')
-    .pause(100)
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
+    .waitForElementNotPresent('#copy-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#deterministic-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
@@ -117,16 +117,18 @@ function switchInDeterministic(browser) {
 
 function switchInSmaa(browser) {
   browser
-    .click('#add-scenario-button')
+    .click('#copy-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-confirm-button:enabled')
-    .click('#add-scenario-confirm-button')
-    .pause(100)
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
+    .waitForElementNotPresent('#copy-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#smaa-tab')
     .waitForElementVisible('#effects-table-header')
+    .waitForElementVisible('#scenario-selector')
     .click('#scenario-selector')
     .click('#scenario-selector > option:nth-child(1)')
+    .waitForElementNotPresent('#scenario-selector > option:nth-child(1)')
     .assert.containsText('#scenario-selector', 'Default');
 }
 function deleteScenario(browser) {

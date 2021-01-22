@@ -1,8 +1,8 @@
-import {DistributionPerformance} from './IDistributionPerformance';
 import {EffectPerformance} from './IEffectPerformance';
 import {IProblemRelativePerformance} from './IProblemRelativePerformance';
+import {TDistributionPerformance} from './TDistributionPerformance';
 
-export type Performance =
+export type TPerformance =
   | IDualPerformance
   | IEffectPerformance
   | IDistributionPerformance
@@ -10,7 +10,7 @@ export type Performance =
 
 export interface IDualPerformance {
   effect: EffectPerformance;
-  distribution: DistributionPerformance;
+  distribution: TDistributionPerformance;
 }
 
 export interface IEffectPerformance {
@@ -18,5 +18,5 @@ export interface IEffectPerformance {
 }
 
 export interface IDistributionPerformance {
-  distribution: DistributionPerformance;
+  distribution: TDistributionPerformance;
 }

@@ -1,5 +1,4 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IWeights from '@shared/interface/Scenario/IWeights';
@@ -72,58 +71,68 @@ const criterion3: ICriterion = {
 
 describe('PreferencesUtil', () => {
   describe('initPvfs', () => {
-    it('should return a map of string id to the corresponding pvf', () => {
-      const criteria: ICriterion[] = [criterion1, criterion2, criterion3];
+    const criteria: ICriterion[] = [criterion1, criterion2];
 
-      const currentScenario: IMcdaScenario = {
-        id: 'scenarioId1',
-        title: 'scenario 1',
-        state: {
-          prefs: [],
-          problem: {
-            criteria: {
-              crit2Id: {
-                dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
-              }
+    const currentScenario: IMcdaScenario = {
+      id: 'scenarioId1',
+      title: 'scenario 1',
+      state: {
+        prefs: [],
+        problem: {
+          criteria: {
+            crit2Id: {
+              dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
             }
           }
-        },
-        subproblemId: '37',
-        workspaceId: '42'
-      };
+        }
+      },
+      subproblemId: '37',
+      workspaceId: '42'
+    };
+    it('should return a map of string id to the corresponding pvf with configured ranges', () => {
       const ranges: Record<string, [number, number]> = {
         dsId1: [0, 1],
         dsId2: [2, 3]
       };
-      const problemCriteria: Record<string, IProblemCriterion> = {
-        crit2Id: {
-          dataSources: [
-            {pvf: {type: 'linear', direction: 'increasing', range: [0, 100]}}
-          ]
-        } as IProblemCriterion,
-        crit3Id: {
-          dataSources: [
-            {pvf: {type: 'linear', direction: 'increasing', range: [0, 100]}}
-          ]
-        } as IProblemCriterion
+      const observedRanges: Record<string, [number, number]> = {
+        dsId1: [10, 11],
+        dsId2: [12, 13]
       };
       const result = initPvfs(
         criteria,
         currentScenario,
         ranges,
-        problemCriteria
+        observedRanges
       );
       const expectedResult: Record<string, IPvf> = {
         crit1Id: {range: [0, 1]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]},
-        crit3Id: {type: 'linear', direction: 'increasing', range: [0, 100]}
+        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return a map of string id to the corresponding pvf with observed ranges', () => {
+      const ranges: Record<string, [number, number]> = {};
+      const observedRanges: Record<string, [number, number]> = {
+        dsId1: [10, 11],
+        dsId2: [12, 13]
+      };
+      const result = initPvfs(
+        criteria,
+        currentScenario,
+        ranges,
+        observedRanges
+      );
+      const expectedResult: Record<string, IPvf> = {
+        crit1Id: {range: [10, 11]},
+        crit2Id: {type: 'linear', direction: 'decreasing', range: [12, 13]}
       };
       expect(result).toEqual(expectedResult);
     });
   });
 
   describe('buildScenarioWithPreferences', () => {
-    it('should put preferenes on the scenario state and remove the weights', () => {
+    it('should put preferences on the scenario state and remove the weights', () => {
       const scenario: IMcdaScenario = {
         id: '1',
         title: 'scenario',

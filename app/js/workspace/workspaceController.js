@@ -1,10 +1,13 @@
 'use strict';
-define(['angular'], function (angular) {
+
+define(['angular', 'lodash'], function (angular, _) {
   var dependencies = [
     '$scope',
     '$cookies',
     '$stateParams',
     'WorkspaceResource',
+    'ScenarioResource',
+    'SubProblemResource',
     'WorkspaceSettingsService',
     'SchemaService',
     'currentWorkspace',
@@ -15,6 +18,8 @@ define(['angular'], function (angular) {
     $cookies,
     $stateParams,
     WorkspaceResource,
+    ScenarioResource,
+    SubProblemResource,
     WorkspaceSettingsService,
     SchemaService,
     currentWorkspace,
@@ -31,11 +36,35 @@ define(['angular'], function (angular) {
       canEdit: user ? currentWorkspace.owner === user.id : false
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
+      const splitVersion = currentWorkspace.problem.schemaVersion.split('.');
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(
         currentWorkspace
       );
       SchemaService.validateProblem($scope.workspace.problem);
-      WorkspaceResource.save($stateParams, $scope.workspace);
+
+      if (SchemaService.earlierThan147(splitVersion)) {
+        const pvfs = SchemaService.extractPvfs(
+          currentWorkspace.problem.criteria
+        );
+        const ranges = SchemaService.extractRanges(
+          currentWorkspace.problem.criteria
+        );
+        WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(
+          () => {
+            if (!_.isEmpty(ranges)) {
+              updateDefaultSubproblem(
+                currentWorkspace.defaultSubProblemId,
+                ranges
+              );
+            }
+            if (!_.isEmpty(pvfs)) {
+              updateDefaultScenario(currentWorkspace.defaultScenarioId, pvfs);
+            }
+          }
+        );
+      } else {
+        WorkspaceResource.save($stateParams, $scope.workspace);
+      }
     } else {
       $scope.workspace = currentWorkspace;
     }
@@ -49,6 +78,27 @@ define(['angular'], function (angular) {
       $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings(
         $scope.workspace.problem.performanceTable
       );
+    }
+
+    function updateDefaultSubproblem(defaultSubproblemId, ranges, callback) {
+      const params = {...$stateParams, problemId: defaultSubproblemId};
+      SubProblemResource.get(params).$promise.then((subproblem) => {
+        const updatedSubproblem = {
+          title: subproblem.title,
+          definition: {ranges: ranges}
+        };
+        SubProblemResource.save(params, updatedSubproblem).$promise.then(
+          callback
+        );
+      });
+    }
+
+    function updateDefaultScenario(defaultScenarioId, pvfs, callback) {
+      const params = {...$stateParams, scenarioId: defaultScenarioId};
+      ScenarioResource.get(params).$promise.then((scenario) => {
+        const updatedScenario = SchemaService.mergePvfs(scenario, pvfs);
+        ScenarioResource.save(params, updatedScenario).$promise.then(callback);
+      });
     }
 
     function editTitle() {

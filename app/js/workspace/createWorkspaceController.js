@@ -54,12 +54,16 @@ define(['angular', 'lodash'], function (angular, _) {
           uploadedContent
         );
         if ($scope.workspaceValidity.isValid) {
+          const ranges = SchemaService.extractRanges(uploadedContent.criteria);
+          const pvfs = SchemaService.extractPvfs(uploadedContent.criteria);
           var updatedProblem = SchemaService.updateProblemToCurrentSchema(
             uploadedContent
           );
           try {
             SchemaService.validateProblem(updatedProblem);
             $scope.updatedProblem = updatedProblem;
+            $scope.ranges = ranges;
+            $scope.pvfs = pvfs;
           } catch (errors) {
             $scope.workspaceValidity.isValid = false;
             $scope.workspaceValidity.errorMessage = _.reduce(
@@ -89,7 +93,11 @@ define(['angular', 'lodash'], function (angular, _) {
     }
 
     function createWorkspaceFromFile() {
-      WorkspaceResource.create($scope.updatedProblem, function (workspace) {
+      WorkspaceResource.create({
+        ranges: $scope.ranges,
+        pvfs: $scope.pvfs,
+        workspace: $scope.updatedProblem
+      }).$promise.then((workspace) => {
         callback($scope.model.choice, workspace);
         $modalInstance.close();
       });
@@ -107,13 +115,17 @@ define(['angular', 'lodash'], function (angular, _) {
         url: $scope.model.chosenExample.href
       };
       ExampleResource.get(example, function (problem) {
+        const ranges = SchemaService.extractRanges(problem.criteria);
+        const pvfs = SchemaService.extractPvfs(problem.criteria);
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(
           problem
         );
         SchemaService.validateProblem(updatedProblem);
-        WorkspaceResource.create(updatedProblem).$promise.then(function (
-          workspace
-        ) {
+        WorkspaceResource.create({
+          ranges: ranges,
+          workspace: updatedProblem,
+          pvfs: pvfs
+        }).$promise.then((workspace) => {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });
@@ -125,13 +137,17 @@ define(['angular', 'lodash'], function (angular, _) {
         url: $scope.model.chosenTutorial.href
       };
       TutorialResource.get(tutorial, function (problem) {
+        const ranges = SchemaService.extractRanges(problem.criteria);
+        const pvfs = SchemaService.extractPvfs(problem.criteria);
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(
           problem
         );
         SchemaService.validateProblem(updatedProblem);
-        WorkspaceResource.create(updatedProblem).$promise.then(function (
-          workspace
-        ) {
+        WorkspaceResource.create({
+          ranges: ranges,
+          workspace: updatedProblem,
+          pvfs: pvfs
+        }).$promise.then((workspace) => {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });

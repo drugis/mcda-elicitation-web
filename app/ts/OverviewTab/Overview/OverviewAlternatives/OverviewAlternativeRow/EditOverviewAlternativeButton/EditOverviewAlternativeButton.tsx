@@ -10,6 +10,7 @@ import Edit from '@material-ui/icons/Edit';
 import IAlternative from '@shared/interface/IAlternative';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
+import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
@@ -95,16 +96,7 @@ export default function EditOverviewAlternativeButton({
                 fullWidth
               />
             </Grid>
-            <Grid
-              id={`title-error`}
-              item
-              container
-              xs={12}
-              justify="flex-end"
-              className="alert"
-            >
-              {error}
-            </Grid>
+            <DisplayErrors errors={[error]} identifier="title" />
           </Grid>
         </DialogContent>
         <DialogActions>

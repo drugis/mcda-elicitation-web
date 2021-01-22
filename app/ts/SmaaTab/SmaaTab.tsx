@@ -9,6 +9,7 @@ import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
+import {LegendContextProviderComponent} from '../Legend/LegendContext';
 import {PreferencesContextProviderComponent} from '../PreferencesTab/PreferencesContext';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {SubproblemContextProviderComponent} from '../Workspace/SubproblemContext/SubproblemContext';
@@ -27,7 +28,8 @@ export default function SmaaTab({
   workspace,
   scales,
   subproblems,
-  currentSubproblem
+  currentSubproblem,
+  editMode
 }: {
   scenarios: IMcdaScenario[];
   currentScenarioId: string;
@@ -40,6 +42,7 @@ export default function SmaaTab({
   scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
+  editMode: {canEdit: boolean};
 }) {
   return (
     <ErrorContextProviderComponent>
@@ -64,11 +67,13 @@ export default function SmaaTab({
                 problem={problem}
                 updateAngularScenario={updateAngularScenario}
               >
-                <SmaaResultsContextProviderComponent>
-                  <ErrorHandler>
-                    <SmaaResults />
-                  </ErrorHandler>
-                </SmaaResultsContextProviderComponent>
+                <LegendContextProviderComponent canEdit={editMode.canEdit}>
+                  <SmaaResultsContextProviderComponent>
+                    <ErrorHandler>
+                      <SmaaResults />
+                    </ErrorHandler>
+                  </SmaaResultsContextProviderComponent>
+                </LegendContextProviderComponent>
               </PreferencesContextProviderComponent>
             </SettingsContextProviderComponent>
           </SubproblemContextProviderComponent>

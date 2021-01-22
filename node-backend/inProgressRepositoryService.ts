@@ -15,12 +15,12 @@ import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
-import {DistributionPerformance} from '@shared/interface/Problem/IDistributionPerformance';
+import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import {Performance} from '@shared/interface/Problem/IPerformance';
+import {TPerformance} from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
@@ -466,7 +466,7 @@ function buildPerformance(
   effectCell: Effect,
   distributionCell: Distribution,
   unitOfMeasurementType: UnitOfMeasurementType
-): Performance {
+): TPerformance {
   const isPercentage = unitOfMeasurementType === 'percentage';
   let performance;
   if (effectCell) {
@@ -530,7 +530,7 @@ function buildEffectPerformance(cell: Effect): EffectPerformance {
 
 function buildDistributionPerformance(
   cell: Distribution
-): DistributionPerformance {
+): TDistributionPerformance {
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {

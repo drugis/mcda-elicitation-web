@@ -6,15 +6,16 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
+import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
-import _ from 'lodash';
-import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
-import {OverviewDataSourceContext} from '../../../OverviewDataSourceTable/OverviewDataSourceContext/OverviewDataSourceContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import ICriterion from '@shared/interface/ICriterion';
+import DisplayErrors from 'app/ts/util/DisplayErrors';
+import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
+import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {OverviewDataSourceContext} from '../../../OverviewDataSourceTable/OverviewDataSourceContext/OverviewDataSourceContext';
 
 export default function EditOverviewDataSourceDialog({
   isDialogOpen,
@@ -177,16 +178,7 @@ export default function EditOverviewDataSourceDialog({
               fullWidth
             />
           </Grid>
-          <Grid
-            id={`error`}
-            item
-            container
-            xs={12}
-            justify="flex-end"
-            className="alert"
-          >
-            {error}
-          </Grid>
+          <DisplayErrors errors={[error]} identifier="uncertainties" />
         </Grid>
       </DialogContent>
       <DialogActions>

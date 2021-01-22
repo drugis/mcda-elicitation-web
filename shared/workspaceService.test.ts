@@ -57,6 +57,8 @@ import {
 } from '@shared/workspaceService';
 import _ from 'lodash';
 import IEffect from './interface/IEffect';
+import IStudentsTDistribution from './interface/IStudentsTDistribution';
+import IStudentsTPerformance from './interface/Problem/IStudentsTPerformance';
 
 const criterion1Id = 'crit1Id';
 const percentageDSID = 'percentageDataSourceId';
@@ -565,6 +567,23 @@ describe('buildWorkspace', () => {
         ...effectBase,
         type: 'empty',
         unitOfMeasurementType: 'percentage'
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should create an students t distribution if the input is a students t distribution', () => {
+      const performance: IStudentsTPerformance = {
+        type: 'dt',
+        parameters: {mu: 42, stdErr: 0.42, dof: 37}
+      };
+      const result = finishDistributionCreation(performance, effectBase);
+      const expectedResult: IStudentsTDistribution = {
+        ...effectBase,
+        type: 'dt',
+        unitOfMeasurementType: 'percentage',
+        dof: 37,
+        mean: 42,
+        standardError: 0.42
       };
       expect(result).toEqual(expectedResult);
     });

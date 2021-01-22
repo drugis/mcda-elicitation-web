@@ -20,13 +20,17 @@ export default function ScaleRanges({}: {}) {
           Scale ranges <InlineHelp helpId="scale-ranges" />
         </Typography>
       </Grid>
-      <Grid item container xs={3} justify="flex-end">
-        <ClipboardButton targetId="#scales-table" />
-      </Grid>
       {warnings.length ? (
-        <DisplayWarnings warnings={warnings} identifier="no-scales" />
+        <>
+          <DisplayWarnings warnings={warnings} identifier="no-scales" />
+        </>
       ) : (
-        <ScalesTable />
+        <>
+          <Grid item container xs={3} justify="flex-end">
+            <ClipboardButton targetId="#scales-table" />
+          </Grid>
+          <ScalesTable />
+        </>
       )}
     </Grid>
   ) : (
