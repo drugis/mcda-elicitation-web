@@ -57,7 +57,7 @@ export function PreferencesContextProviderComponent({
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
     _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
-  const [pvfs, setPvfs] = useState<Record<string, IPvf>>({});
+  const [pvfs, setPvfs] = useState<Record<string, IPvf>>();
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);
   const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
@@ -102,9 +102,14 @@ export function PreferencesContextProviderComponent({
   }
 
   function areAllPvfsSet(newPvfs: Record<string, IPvf>): boolean {
-    return _.every(newPvfs, (pvf) => {
-      return !!pvf.direction && !!pvf.type;
-    });
+    return (
+      newPvfs &&
+      _.every(filteredCriteria, (criterion: ICriterion): boolean => {
+        return (
+          !!newPvfs[criterion.id].direction && !!newPvfs[criterion.id].type
+        );
+      })
+    );
   }
 
   function createScenarioWithPvf(

@@ -34,20 +34,8 @@ export function TradeOffContextProviderComponent({
   const [configuredLowerBound, configuredUpperBound] = getBounds();
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
-  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
-    getInitialReferenceValueFrom(
-      configuredLowerBound,
-      configuredUpperBound,
-      pvfs[referenceCriterion.id]
-    )
-  );
-  const [referenceValueTo, setReferenceValueTo] = useState<number>(
-    getInitialReferenceValueTo(
-      configuredLowerBound,
-      configuredUpperBound,
-      pvfs[referenceCriterion.id]
-    )
-  );
+  const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
+  const [referenceValueTo, setReferenceValueTo] = useState<number>();
   const referenceWeight =
     currentScenario.state.weights.mean[referenceCriterion.id];
   const [partOfInterval, setPartOfInterval] = useState<number>(
@@ -59,7 +47,7 @@ export function TradeOffContextProviderComponent({
     )
   );
 
-  useEffect(reset, [referenceCriterion]);
+  useEffect(reset, [referenceCriterion, pvfs]);
 
   useEffect(() => {
     setPartOfInterval(
@@ -73,23 +61,25 @@ export function TradeOffContextProviderComponent({
   }, [referenceValueFrom, referenceValueTo]);
 
   function reset(): void {
-    const [configuredLowerBound, configuredUpperBound] = getBounds();
-    setLowerBound(configuredLowerBound);
-    setUpperBound(configuredUpperBound);
-    setReferenceValueFrom(
-      getInitialReferenceValueFrom(
-        configuredLowerBound,
-        configuredUpperBound,
-        pvfs[referenceCriterion.id]
-      )
-    );
-    setReferenceValueTo(
-      getInitialReferenceValueTo(
-        configuredLowerBound,
-        configuredUpperBound,
-        pvfs[referenceCriterion.id]
-      )
-    );
+    if (pvfs) {
+      const [configuredLowerBound, configuredUpperBound] = getBounds();
+      setLowerBound(configuredLowerBound);
+      setUpperBound(configuredUpperBound);
+      setReferenceValueFrom(
+        getInitialReferenceValueFrom(
+          configuredLowerBound,
+          configuredUpperBound,
+          pvfs[referenceCriterion.id]
+        )
+      );
+      setReferenceValueTo(
+        getInitialReferenceValueTo(
+          configuredLowerBound,
+          configuredUpperBound,
+          pvfs[referenceCriterion.id]
+        )
+      );
+    }
   }
 
   function getBounds(): [number, number] {

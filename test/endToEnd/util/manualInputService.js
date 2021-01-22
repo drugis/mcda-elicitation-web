@@ -97,22 +97,22 @@ function clickElement(browser, rowNumber, columnNumber, element) {
 }
 
 module.exports = {
-  addCriterion: addCriterion,
-  addDataSource: addDataSource,
-  addAlternative: addAlternative,
-  createCriterion: createCriterion,
-  createDataSource: createDataSource,
-  createAlternative: createAlternative,
-  createInputDefault: createInputDefault,
-  setValuesForRow: setValuesForRow,
+  addCriterion,
+  addDataSource,
+  addAlternative,
+  createCriterion,
+  createDataSource,
+  createAlternative,
+  createInputDefault,
+  setValuesForRow,
 
-  ALTERNATIVE1: ALTERNATIVE1,
-  ALTERNATIVE2: ALTERNATIVE2,
-  CRITERION1: CRITERION1,
-  CRITERION2: CRITERION2,
-  TITLE: TITLE,
-  THERAPEUTIC_CONTEXT: THERAPEUTIC_CONTEXT,
-  CRITERION1_ADD_DATA_SOURCE: CRITERION1_ADD_DATA_SOURCE,
-  DATA_SOURCE1: DATA_SOURCE1,
-  DATA_SOURCE2: DATA_SOURCE2
+  ALTERNATIVE1,
+  ALTERNATIVE2,
+  CRITERION1,
+  CRITERION2,
+  TITLE,
+  THERAPEUTIC_CONTEXT,
+  CRITERION1_ADD_DATA_SOURCE,
+  DATA_SOURCE1,
+  DATA_SOURCE2
 };
