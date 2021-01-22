@@ -375,12 +375,13 @@ elicited.
 <h5 id="mcda-one-way-sensitivity">One-way sensitivity analysis</h5>
 
 <p>
-  The one-way sensitivity section of the deterministic analysis shows how
-  changing a single aspect of a single criterion over its entire range of
-  possible values affects how valuable the alternatives are. The exact values in
-  the plots are less important than using them to detect where the points lie
-  (if any) where one alternative's value passes another's. This is another way
-  of getting
+  The one-way sensitivity section of the deterministic analysis can be used to
+  visually inspect how changing a single aspect of a single criterion over the
+  entire range of possible values affects how valuable the alternatives are. The
+  plots show whether there are points where one alternative's value passes
+  another's, and where they lie. This is another way of getting a feeling for
+  how robust the recommendation of one alternative over another might be against
+  possible difference in the preferences or data.
 </p>
 
 <div class="figure">
@@ -393,15 +394,15 @@ elicited.
 <h3 id="mcda-smaa">SMAA benefit-risk analysis</h3>
 
 <p>
-  SMAA explores the possibility space defined by the uncertainty (if any) in
+  SMAA</a> explores the possibility space (that is, the N-dimensional space with each alternative's measurements and and weights as axes) defined by any uncertainty in
   both the data and the preferences for a given problem and scenario. For
   example, if the user has used ranking elicitation to define their preferences,
-  and the data consists of poitn estimates and normally-distributed confidence
-  intervale, SMAA will sample combinations of exact preference weights and data
-  values and calculate the value of each alternative for the sampled situation.
-  These sample values, when taken as a whole, can be analysed to show in what
+  and the data consists of point estimates and normally-distributed confidence
+  intervals, SMAA will create combinations of exact preference weights and data
+  values by sampling from these distribution and calculate the value of each alternative for the sampled situation.
+  These alternative values, when taken as a whole, can be analysed to show in what
   fraction of the possibility space, for example, a given alternative
-  outperforms all others (i.e. has rank 1 in the rank acceptability plot).
+  outperforms all others (i.e. has rank 1 in the rank acceptability plot). For more detail, see the <a href="#mcda-smaa-theory">theoretical section on SMAA</a>.
 </p>
 
 <div class="figure">
