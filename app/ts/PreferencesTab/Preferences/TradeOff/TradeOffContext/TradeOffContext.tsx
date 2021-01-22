@@ -5,9 +5,9 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
-  getPartOfInterval,
   getInitialReferenceValueFrom,
-  getInitialReferenceValueTo
+  getInitialReferenceValueTo,
+  getPartOfInterval
 } from '../tradeOffUtil';
 import ITradeOffContext from './ITradeOffContext';
 
@@ -22,7 +22,7 @@ export function TradeOffContextProviderComponent({
 }): JSX.Element {
   const {filteredCriteria, observedRanges} = useContext(SubproblemContext);
   const {currentSubproblem} = useContext(WorkspaceContext);
-  const {currentScenario} = useContext(PreferencesContext);
+  const {currentScenario, pvfs} = useContext(PreferencesContext);
 
   const [referenceCriterion, setReferenceCriterion] = useState<ICriterion>(
     filteredCriteria[0]
@@ -35,10 +35,18 @@ export function TradeOffContextProviderComponent({
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
   const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
-    getInitialReferenceValueFrom(configuredLowerBound, configuredUpperBound)
+    getInitialReferenceValueFrom(
+      configuredLowerBound,
+      configuredUpperBound,
+      pvfs[referenceCriterion.id]
+    )
   );
   const [referenceValueTo, setReferenceValueTo] = useState<number>(
-    getInitialReferenceValueTo(configuredLowerBound, configuredUpperBound)
+    getInitialReferenceValueTo(
+      configuredLowerBound,
+      configuredUpperBound,
+      pvfs[referenceCriterion.id]
+    )
   );
   const referenceWeight =
     currentScenario.state.weights.mean[referenceCriterion.id];
@@ -69,10 +77,18 @@ export function TradeOffContextProviderComponent({
     setLowerBound(configuredLowerBound);
     setUpperBound(configuredUpperBound);
     setReferenceValueFrom(
-      getInitialReferenceValueFrom(configuredLowerBound, configuredUpperBound)
+      getInitialReferenceValueFrom(
+        configuredLowerBound,
+        configuredUpperBound,
+        pvfs[referenceCriterion.id]
+      )
     );
     setReferenceValueTo(
-      getInitialReferenceValueTo(configuredLowerBound, configuredUpperBound)
+      getInitialReferenceValueTo(
+        configuredLowerBound,
+        configuredUpperBound,
+        pvfs[referenceCriterion.id]
+      )
     );
   }
 
