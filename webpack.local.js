@@ -1,11 +1,11 @@
 'use strict';
-const merge = require('webpack-merge');
+const {merge} = require('webpack-merge');
 const prod = require('./webpack.prod');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let fs = require('fs');
 
-module.exports = merge.smart(prod, {
+module.exports = merge(prod, {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'signin.html',
