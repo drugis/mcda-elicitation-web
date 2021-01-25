@@ -22,7 +22,8 @@ let config = {
     // Output directory
     path: basePath + '/tscomp/dist/',
     filename: '[name].bundle.js',
-    chunkFilename: '[name].bundle.js'
+    chunkFilename: '[name].bundle.js',
+    publicPath: ''
   },
 
   module: {
@@ -45,7 +46,7 @@ let config = {
       },
       {
         test: /\.html$/,
-        use: 'raw-loader'
+        use: [{loader: 'raw-loader', options: {esModule: false}}]
       },
       {
         test: /.(ttf|otf|eot|woff(2)?)(\?[a-z0-9]+)?$/,
