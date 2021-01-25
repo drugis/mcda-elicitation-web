@@ -33,19 +33,9 @@ jobs:
       - name: run yarn
         run: yarn
 
-      - name: build backend
-        run: yarn build-backend
-
-      - name: run webpack
-        run: npm run build-prod
-
       - name: back-end tests
         id: jest
         run: npx jest
-
-      - name: front-end tests
-        id: karma
-        run: npx karma start --singleRun
 
       - name: pull latest from drugis
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && git checkout develop && git pull'
