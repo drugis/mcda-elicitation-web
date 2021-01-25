@@ -1,6 +1,6 @@
 'use strict';
 
-const merge = require('webpack-merge');
+const {merge} = require('webpack-merge');
 const common = require('./webpack.common.js');
 
 let config = merge(common, {
@@ -10,7 +10,7 @@ let config = merge(common, {
     rules: [
       {
         test: /\.css$/,
-        loaders: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader']
       }
     ]
   }

@@ -12,7 +12,7 @@ module.exports = merge.smart(common, {
     rules: [
       {
         test: /\.css$/,
-        loaders: [MiniCssExtractPlugin.loader, 'css-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
         test: /\.m?js$/,
