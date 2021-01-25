@@ -5,9 +5,9 @@ import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
-  getPartOfInterval,
   getInitialReferenceValueFrom,
-  getInitialReferenceValueTo
+  getInitialReferenceValueTo,
+  getPartOfInterval
 } from '../tradeOffUtil';
 import ITradeOffContext from './ITradeOffContext';
 
@@ -22,7 +22,7 @@ export function TradeOffContextProviderComponent({
 }): JSX.Element {
   const {filteredCriteria, observedRanges} = useContext(SubproblemContext);
   const {currentSubproblem} = useContext(WorkspaceContext);
-  const {currentScenario} = useContext(PreferencesContext);
+  const {currentScenario, pvfs} = useContext(PreferencesContext);
 
   const [referenceCriterion, setReferenceCriterion] = useState<ICriterion>(
     filteredCriteria[0]
@@ -34,12 +34,8 @@ export function TradeOffContextProviderComponent({
   const [configuredLowerBound, configuredUpperBound] = getBounds();
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
-  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
-    getInitialReferenceValueFrom(configuredLowerBound, configuredUpperBound)
-  );
-  const [referenceValueTo, setReferenceValueTo] = useState<number>(
-    getInitialReferenceValueTo(configuredLowerBound, configuredUpperBound)
-  );
+  const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
+  const [referenceValueTo, setReferenceValueTo] = useState<number>();
   const referenceWeight =
     currentScenario.state.weights.mean[referenceCriterion.id];
   const [partOfInterval, setPartOfInterval] = useState<number>(
@@ -51,7 +47,7 @@ export function TradeOffContextProviderComponent({
     )
   );
 
-  useEffect(reset, [referenceCriterion]);
+  useEffect(reset, [referenceCriterion, pvfs]);
 
   useEffect(() => {
     setPartOfInterval(
@@ -65,15 +61,25 @@ export function TradeOffContextProviderComponent({
   }, [referenceValueFrom, referenceValueTo]);
 
   function reset(): void {
-    const [configuredLowerBound, configuredUpperBound] = getBounds();
-    setLowerBound(configuredLowerBound);
-    setUpperBound(configuredUpperBound);
-    setReferenceValueFrom(
-      getInitialReferenceValueFrom(configuredLowerBound, configuredUpperBound)
-    );
-    setReferenceValueTo(
-      getInitialReferenceValueTo(configuredLowerBound, configuredUpperBound)
-    );
+    if (pvfs) {
+      const [configuredLowerBound, configuredUpperBound] = getBounds();
+      setLowerBound(configuredLowerBound);
+      setUpperBound(configuredUpperBound);
+      setReferenceValueFrom(
+        getInitialReferenceValueFrom(
+          configuredLowerBound,
+          configuredUpperBound,
+          pvfs[referenceCriterion.id]
+        )
+      );
+      setReferenceValueTo(
+        getInitialReferenceValueTo(
+          configuredLowerBound,
+          configuredUpperBound,
+          pvfs[referenceCriterion.id]
+        )
+      );
+    }
   }
 
   function getBounds(): [number, number] {

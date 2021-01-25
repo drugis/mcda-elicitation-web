@@ -128,6 +128,7 @@ function editContext(browser) {
     .click('#logo')
     .waitForElementVisible('#in-progress-workspace-0')
     .click('#in-progress-workspace-0')
+    .waitForElementVisible('#workspace-title')
     .assert.containsText('#therapeutic-context', NEW_THERAPEUTIC_CONTEXT);
 }
 

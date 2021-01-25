@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
 import TradeOffSlider from './TradeOffSlider/TradeOffSlider';
+import _ from 'lodash';
 
 export default function TradeOffReferenceCriterionStatement(): JSX.Element {
   const {
@@ -31,7 +32,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
     setReferenceValueTo(newValue);
   }
 
-  return (
+  return _.isNumber(referenceValueFrom) && _.isNumber(referenceValueTo) ? (
     <div>
       Based on the elicited preferences, changing {referenceCriterion.title}{' '}
       from{' '}
@@ -54,5 +55,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
       />
       is equivalent to:
     </div>
+  ) : (
+    <></>
   );
 }
