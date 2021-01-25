@@ -137,11 +137,19 @@
 
 <h3 id="mcda-preference-elicitation">Preferences</h3>
 
-For each <a href="#mcda-problems">MCDA analysis problem</a>, there can be one or
-more preference scenarios. These contain definitions for the partial value
-functions (see below) and any preferences about the criteria that may have been
-elicited.
+<p>
+  For each <a href="#mcda-problems">MCDA analysis problem</a>, there can be one
+  or more preference scenarios. These contain definitions for the partial value
+  functions (see below) and any preferences about the criteria that may have
+  been elicited.
+</p>
 
+<p id="mcda-scenarios">
+  Note that it is possible to create multiple different scenarios with different
+  preferences for each different defined problem. It is then easy to switch
+  between these problems and scenarios in order to compare the model outcomes
+  for the different cases.
+</p>
 <h4 id="mcda-setting-pvfs">Partial value functions</h4>
 
 <p>
@@ -151,7 +159,7 @@ elicited.
   see <a href="#mcda-mavt">the theoretical section on value functions</a> for
   more detail. A partial value function must be specified for each criterion
   before MCDA can proceed. Generally it is assumed that partial value functions
-  are linear. This means meaning that going from 10 to 20 out of 100 people
+  are linear. This means meaning that e.g. going from 10 to 20 out of 100 people
   getting a headache is as bad as going from 80 to 90 percent. Specifying a
   linear partial value function for a criterion is as simple as clicking the
   button for that criterion that has the desired direction.
@@ -394,15 +402,22 @@ elicited.
 <h3 id="mcda-smaa">SMAA benefit-risk analysis</h3>
 
 <p>
-  SMAA</a> explores the possibility space (that is, the N-dimensional space with each alternative's measurements and and weights as axes) defined by any uncertainty in
-  both the data and the preferences for a given problem and scenario. For
-  example, if the user has used ranking elicitation to define their preferences,
-  and the data consists of point estimates and normally-distributed confidence
-  intervals, SMAA will create combinations of exact preference weights and data
-  values by sampling from these distribution and calculate the value of each alternative for the sampled situation.
-  These alternative values, when taken as a whole, can be analysed to show in what
-  fraction of the possibility space, for example, a given alternative
-  outperforms all others (i.e. has rank 1 in the rank acceptability plot). For more detail, see the <a href="#mcda-smaa-theory">theoretical section on SMAA</a>.
+  <a href="#mcda-smaa-theory">SMAA</a> explores the possibility space (that is,
+  the N-dimensional space with each alternative's measurements and and weights
+  as axes) defined by any uncertainty in both the data and the preferences for a
+  given problem and scenario. For example, when a user has used ranking
+  elicitation to define their preferences, and the data consists of point
+  estimates with normally-distributed confidence intervals, there is uncertainty
+  in both. SMAA will sample from these distributions while respecting any
+  constraints (ranking or otherwise) to create a combination of exact preference
+  weights and data values, and use the same process as on the
+  <a href="#mcda-deterministic-analysis">deterministic</a> page to calculate the
+  value of each alternative for this sampled situation. The set of values for
+  each sampled combination, when taken as a whole, can be analysed to show in
+  what fraction of the possibility space, for example, a given alternative
+  outperforms all others (i.e. has rank 1 in the rank acceptability plot). For
+  more detail, see the
+  <a href="#mcda-smaa-theory">theoretical section on SMAA</a>.
 </p>
 
 <div class="figure">
@@ -419,18 +434,19 @@ elicited.
 <h2 id="mcda-benefit-risk-analysis">Benefit-risk analysis</h2>
 <p>
   In a benefit-risk analysis, two or more alternatives are evaluated on multiple
-  criteria in order to identify the best alternative ,or to rank them from best
-  to worst. Unless there is one alternative that performs best on all the
-  criteria, this requires decision makers to make value trade-offs among the
-  performance levels on these criteria. This can be done in many different ways,
-  ranging from a completely informal manner to a fully quantitative manner.
+  criteria in order to identify the best alternative, or to rank them from best
+  to worst. Unless there is one alternative that performs best for all criteria,
+  this requires decision makers to make value trade-offs among the performance
+  levels for these criteria. This can be done in many different ways, ranging
+  from completely informal to fully quantitative. ADDIS supports the latter.
 </p>
 <p>
   Quantitative benefit-risk analysis in ADDIS is based on a mathematical
-  approach called SMAA, which combines MAVT to formally represent a decision
-  maker's preference structure with stochastic simulation to handle uncertainty
-  in the effect size estimates and incompleteness or imprecision in the provided
-  preference statements.
+  approach called SMAA, which combines
+  <a href="#mcda-mavt">Multi-attribute value theory (MAVT)</a> to formally
+  represent a decision maker's preference structure with stochastic simulation
+  to handle uncertainty in the effect size estimates and incompleteness or
+  imprecision in the provided preference statements.
 </p>
 <p>
   Although in reality a benefit-risk assessment usually includes more than two
@@ -438,9 +454,9 @@ elicited.
   the preference structures underlying the constructed preference models can
   still be presented graphically. Most of the discussion below will therefore be
   centered around a simple benefit-risk assessment problem in which there are
-  only two criteria. This toy problem is introduced in the next section.
+  only two criteria, as described in the following section.
 </p>
-<h3 id="mcda-running-example">Running example</h3>
+<h3 id="mcda-running-example">Rimonabant example</h3>
 <p>
   Although nowadays withdrawn from the market due to the high incidence of
   severe depression and suicidal thoughts in post-marketing surveillance
@@ -498,9 +514,9 @@ elicited.
     </tr>
   </tbody>
   <caption>
-    Table 1: Effects Table for rimonabant 5 mg/day, rimonabant 20 mg/day, and
-    placebo. The data used to construct this table were taken from a single
-    study published in the Lancet in 2006.
+    Effects Table for rimonabant 5 mg/day, rimonabant 20 mg/day, and placebo.
+    The data used to construct this table were taken from a single study
+    published in the Lancet in 2006.
   </caption>
 </table>
 <h3 id="mcda-mavt">Multi-attribute value theory</h3>
@@ -532,7 +548,7 @@ elicited.
   only a few parameters? An answer to these two fundamental questions is
   provided in the next sections.
 </p>
-<h4 id="calculating-value">Calculating value</h4>
+<h4 id="mcda-calculating-value">Calculating value</h4>
 <p>
   The first step in a quantitative benefit-risk assessment is to explicitly
   define the scale ranges over which the decision maker will be asked to provide
@@ -550,7 +566,7 @@ elicited.
   To make thinks more concrete, consider the rimonabant case study introduced in
   the previous section. For fasting glucose, we construct a local scale by
   setting \([x^{\min}_{1},x^{\max}_{1}]\) equal to \([-0.7,0.4]\), which are the
-  to one digit rounded minimum and maximum values listed in Table 1. For
+  to one digit rounded minimum and maximum values listed in the table. For
   hypoglyceamia, however, we consider the use of a global scale more appropriate
   as this allows us at a later stage of the analysis to perform an extensive
   sensitivity analysis with respect to the performance measurements on this
@@ -889,162 +905,7 @@ elicited.
   constants. How this can be achieved is illustrated in the case study conducted
   in the next chapter.
 </p>
-<h2 id="mcda-interface">Benefit-risk analysis interface</h2>
-<p>
-  To illustrate how the methods and visualizations discussed in the previous
-  chapters have been implemented in the benefit-risk user interface, we consider
-  the problem of assessing the benefit-risk balance of regorafenib using the
-  data available at the time of the initial marketing authorization application
-  of this product for human use in the European Union. The value judgments
-  provided throughout this example are those of a hypothetical decision maker
-  (e.g., an assessor from one of the national competent authorities) and do not
-  reflect the opinion of the CHMP.
-</p>
-<h3 id="mcda-problem-definition">Problem definition</h3>
-<p>
-  The initially proposed indication for regorafenib was the treatment of adult
-  patients with metastatic colorectal cancer (mCRC) who have been previously
-  treated with, or are not considered candidates for, available therapies. Data
-  in support of this indication were mainly obtained from one pivotal study, in
-  which 760 patients were randomized to receive either regorafenib or matching
-  placebo 160 mg (4 x 40 mg tablets) once daily orally for 3 weeks followed by 1
-  week off therapy (cycle of 4 weeks) plus best supportive care. Patients were
-  treated until disease progression according to RECIST 1.1, clinical
-  progression, unacceptable toxicity, and/or consent withdrawal. The primary
-  study endpoint was overall survival, defined as the time from randomization to
-  death due to any cause. Secondary endpoints included progression-free
-  survival, objective response rate, and disease control rate. Patients were
-  followed for adverse events up to 30 days after the last dose of study drug. A
-  detailed description of the design of this phase III study can be found in the
-  EPAR of this product (EPAR EMA/CHMP/403683/2013 available from the EMA
-  website).
-</p>
-<p>
-  From this EPAR, we selected the following four criteria to be included in the
-  benefit-risk assessment:
-</p>
-<ul>
-  <li>Overall survival</li>
-  <li>Hand-foot skin reaction</li>
-  <li>Hypertension</li>
-  <li>Haemorrhage</li>
-</ul>
-<p>
-  The overall survival endpoint can both be reached through death associated
-  with disease progression and death not associated with disease progression.
-  This implies that there is an overlap between overall survival and haemorrhage
-  as some of the bleeding events occurring in the regorafenib group were fatal.
-  However, as the vast majority of deaths were associated with disease
-  progression (out of the 68 reported deaths in the regorafenib group, 57 were
-  assessed as disease-related and 4 as drug-related), we decided to ignore this
-  small amount of double counting in our formulation of the decision problem.
-</p>
-<h3 id="mcda-summary-of-data">Summary of the available data</h3>
-<p>
-  The performance of regorafenib and placebo with respect to the criteria is
-  summarized in the Effects Table provided below. The effect size estimates
-  displayed in this table were directly obtained from the EPAR of this product.
-</p>
-<div class="figure">
-  <img src="img/ADDIS-ET.png" />
-  <div class="caption">
-    Effects Table for regorafenib for the indication of the treatment of adult
-    patients with mCRC who have been previously treated with, or are not
-    considered candidates for, available therapies.
-  </div>
-</div>
-<h3 id="mcda-value-tradeoffs">Value trade-offs</h3>
-<p>
-  The first step in formalizing the decision maker's preferences is to define
-  suitable scale ranges for each of the criteria. By default, ADDIS generates
-  local scales based on the effect size estimates provided in the Effects Table.
-  Each of these local scales can be transformed into a global scale by moving
-  the sliders away from the red area reflecting the local scale range. This is
-  illustrated in below, where we have created a global scale for each of the
-  four criteria. Note that it is also possible here to create a new subproblem
-  with fewer criteria and alternatives to investigate a less-complex situation.
-</p>
-<div class="figure">
-  <img src="img/ADDIS-scales.png" />
-  <div class="caption">Defining scale ranges for each of the criteria.</div>
-</div>
-<p>
-  After having configured the scale ranges, the next step is to specify the
-  decision maker's partial value functions. For the unfavourable effects, it
-  holds that equal size ranges in percentages (e.g., 5-10% and 10-15%) reflect
-  the same number of affected patients. The partial value functions for these
-  criteria were therefore assumed to be linear. The partial value function for
-  overall survival was obtained through application of the bisection method (see
-  the figure below).
-</p>
-<div class="figure">
-  <img src="img/ADDIS-bisection.png" />
-  <div class="caption">
-    Using the bisection method to specify the partial value function for overall
-    survival.
-  </div>
-</div>
-<p>
-  Once all the partial value functions have been specified, one can proceed with
-  eliciting the weights. As the values of the weights reflect the relative
-  importance of the swing from worst to best on one criterion compared to that
-  on another criterion (e.g., the relative importance of an increase in the
-  median overall survival time from 4 months to 8 months compared to a reduction
-  in the incidence of haemorrhage from 5% to 0%), an ordinal ranking of the
-  weights can be easily obtained by asking the decision maker to rank the
-  criteria scale swings from most important to least important. Suppose that for
-  our case study we have obtained the following ranking of the criteria scale
-  swings: overall survival \(\succ\) haemorrhage \(\succ\) hand-foot skin
-  reaction \(\succ\) hypertension. In terms of the weights, we then know that
-  \(w_{1} > w_{4} > w_{2} > w_{3}\), but we do not know how much larger one
-  weight is compared to another. For this, we need to further assess the
-  trade-offs that the decision maker is willing to make between the different
-  criteria.
-</p>
-<p>
-  The next figure shows how the trade-off between overall survival and
-  haemorrhage was assessed using the ADDIS software. Under the additive value
-  model, the amount by which the median overall survival time needs to be
-  increased in order to compensate for an increase in the incidence of
-  haemorrhage from 0% to 5% may depend on the level of survival that is
-  currently achieved (4 months in the situation provided), but it does not
-  depend on the levels of achievement on the other three criteria. Because of
-  this, the levels of achievement on the remaining criteria are not explicitly
-  mentioned in the text provided in Figure 8. From the position of the slider,
-  it follows that the decision maker is indifferent between an alternative with
-  a median overall survival time of 4 months and an incidence of haemorrhage of
-  0% and an alternative with a median overall survival time of 5 months and an
-  incidence of haemorrhage of 5%. For the underlying value function, it must
-  therefore hold that \[ w_{1} v_{1}(4) + w_{4} v_{4}(0) = w_{1} v_{1}(5) +
-  w_{4} v_{4}(5). \] From the previously defined partial value functions, it
-  follows that \(v_{1}(4)=0\), \(v_{4}(0)=1\), \(v_{1}(5)=0.3125\), and
-  \(v_{4}(5)=0\). After substituting these values, we obtain \[ w_{4} = 0.3125
-  \cdot w_{1}, \] which, when expressed as a ratio between \(w_{1}\) and
-  \(w_{4}\), results in the constraint \(\frac{w_{1}}{w_{4}} = 3.2\).
-</p>
-<div class="figure">
-  <img src="img/ADDIS-exact1.png" />
-  <div class="caption">
-    Using exaxct swing weighting to specify the trade-off between overall
-    survival and haemorrhage.
-  </div>
-</div>
-<p>
-  From the decision maker's response to the other two exact swing weighting
-  questions (screenshots not shown), it similarly follows that
-  \(\frac{w_{4}}{w_{2}} = 2.5\) and \(\frac{w_{4}}{w_{2}} = 2.5\). If we combine
-  these ratio constraints with the normalization constraint
-  \(w_{1}+w_{2}+w_{3}+w_{4}=1\), we obtain the following values of the weights:
-  \(w_{1}=0.672\), \(w_{2}=0.084\), \(w_{3}=0.034\), \(w_{4}=0.210\). Together
-  with the previously defined partial value functions, this completes the
-  specification of the decision maker's additive value function.
-</p>
-<p id="mcda-scenarios">
-  Note that it is possible to create multiple different scenarios with different
-  preferences for each different defined problem. It is then easy to switch
-  between these problems and scenarios in order to compare the model outcomes
-  for the different cases.
-</p>
+
 <h3 id="mcda-benefit-risk-balance">Benefit-risk balance</h3>
 <p>
   Once the decision maker's value function has been completely specified, we can
@@ -1065,3 +926,46 @@ elicited.
   unfavourable effects, we conclude that the benefit-risk balance of regorafenib
   is positive.
 </p>
+
+<h2 id="mcda-smaa-theory">Stochastic multi-criteria acceptability analyis</h2>
+<p>
+  We here cite the most important parts of our publication on SMAA. Please see
+  the original paper for full details.
+</p>
+<p>
+  SMAA-2 considers a discrete multicriteria decision problem consisting of a set
+  of \(m\) alternatives that are evaluated in terms of \(n\) criteria. The
+  vector of criteria measurements corresponding to alternative \(i\) is denoted
+  by \(\xi^i = (\xi_1^i, ..., \xi_n^i)\), where \(xi^i_k\) is a random variable
+  representing the performance of alternative \(i\) on criterion \(k\), modeled
+  using some density function. For each criterion, a partial value function
+  \(\nu_k (\xi_k^i)\) is defined to normalize the criteria measurements so that
+  they are represented by values between 0 (the worst value) and 1 (the best
+  value). The overall value function is then defined as a weighted additive
+  combination of the partial value functions: \[ \nu(\xi^i, w) = \sum_{k-i}^{n}
+  w_k \cdot \nu_k(\xi_k^i),\] where \(\nu(\xi^i, w) > \nu(\xi^j, w)\) implies
+  that alternative \(i\) is preferred to alternative \(j\) given the weight
+  vector \(w\). The weights define the relative importances of the scale swings
+  (changes from the worst to the best criterion values), and \(w_k > w_l\)
+  implies that if the decision maker would have to choose between improving
+  either criterion \(k\) or criterion \(l\) from the worst to the best value, he
+  or she would increase the performance on criterion \(k\) . The decision
+  maker's preferences may be unknown or partially known, and therefore the
+  weights \(w\) are also represented by a probability density. A total lack of
+  preference information is represented by a uniform distribution in the
+  feasible weight space. Partial information, such as importance ranking of the
+  criteria, can easily be included by restricting the feasible weight space
+  accordingly.
+</p>
+<p>
+  For given (exact) values of \(x\) and \(w\) , the rank of each alternative is
+  defined as an integer from the best rank (1) to the worst rank (\(m\)) by
+  means of a ranking function rank(\(i, \xi, w)\). The main decision aiding
+  measure is the rank acceptability index , denoted by \(b^r_i\). It describes
+  the share of all possible values of the weight vector \(w\) and criteria
+  measurements \(x\) for which rank(\(i, \xi, w) = r\). For example, \(b^5_2 =
+  0.3\) means alternative 2 has fifth rank acceptability 0.3. The preferred
+  (best) alternatives are those with high acceptabilities for the best ranks
+</p>
+<p>&nbsp</p>
+<hr />
