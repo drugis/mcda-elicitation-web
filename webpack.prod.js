@@ -1,9 +1,17 @@
 'use strict';
+const path = require('path');
 const {merge} = require('webpack-merge');
 const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+let basePath = path.join(__dirname, '/');
+let fs = require('fs');
+const MATOMO_VERSION = process.env.MATOMO_VERSION
+  ? process.env.MATOMO_VERSION
+  : 'Test';
 
 module.exports = merge(common, {
   mode: 'production',
@@ -37,6 +45,16 @@ module.exports = merge(common, {
       // both options are optional
       filename: 'css/[name].css',
       chunkFilename: 'css/[id].css'
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'signin.html',
+      template: 'app/signin.ejs',
+      inject: 'head',
+      chunks: ['signin'],
+      signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
+      matomo: fs.readFileSync(
+        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
+      )
     })
   ]
 });
