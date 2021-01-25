@@ -1,9 +1,10 @@
+import ICriterion from '@shared/interface/ICriterion';
 import {calculateObservedRanges} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {WorkspaceContext} from '../WorkspaceContext';
 import {hasScaleValues} from '../WorkspaceContextUtil';
 import ISubproblemContext from './ISubproblemContext';
-import {applySubproblem} from './SubproblemUtil';
+import {applySubproblem, getStepSize} from './SubproblemUtil';
 
 export const SubproblemContext = createContext<ISubproblemContext>(
   {} as ISubproblemContext
@@ -39,6 +40,13 @@ export function SubproblemContextProviderComponent({
     setFilteredWorkspace(applySubproblem(workspace, currentSubproblem));
   }, [workspace, currentSubproblem]);
 
+  function getStepSizeForCriterion(criterion: ICriterion) {
+    return getStepSize(
+      currentSubproblem.definition.ranges[criterion.dataSources[0].id],
+      currentSubproblem.definition.stepSizes[criterion.id]
+    );
+  }
+
   return (
     <SubproblemContext.Provider
       value={{
@@ -48,7 +56,8 @@ export function SubproblemContextProviderComponent({
         filteredDistributions: distributions,
         filteredRelativePerformances: relativePerformances,
         filteredWorkspace,
-        observedRanges
+        observedRanges,
+        getStepSizeForCriterion
       }}
     >
       {children}
