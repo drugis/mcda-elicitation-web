@@ -101,7 +101,7 @@ jobs:
         run: yarn build-backend
 
       - name: run webpack
-        run: npm run build-local-login
+        run: npm run build-local-login-dev
 
       - name: run mcda
         run: yarn start &
