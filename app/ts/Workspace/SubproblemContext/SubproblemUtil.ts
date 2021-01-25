@@ -149,3 +149,31 @@ function cleanUpMu(
 ): Record<string, number> {
   return _.omit(mu, excludedAlternatives);
 }
+
+export function getMagnitude(
+  [lowerConfiguredValue, upperConfiguredValue]: [number, number],
+  predefinedStepSize: number | undefined
+): number {
+  if (predefinedStepSize) {
+    return Math.log10(predefinedStepSize);
+  } else {
+    const interval = upperConfiguredValue - lowerConfiguredValue;
+    const magnitude = Math.floor(Math.log10(interval)) - 1;
+    return magnitude;
+  }
+}
+
+export function getStepSize(
+  [lowerConfiguredValue, upperConfiguredValue]: [number, number],
+  predefinedStepSize: number | undefined
+) {
+  if (predefinedStepSize) {
+    return predefinedStepSize;
+  } else {
+    const magnitude = getMagnitude(
+      [lowerConfiguredValue, upperConfiguredValue],
+      predefinedStepSize
+    );
+    return Math.pow(10, magnitude);
+  }
+}

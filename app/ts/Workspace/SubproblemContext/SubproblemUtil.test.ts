@@ -6,8 +6,7 @@ import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import {relative} from 'path';
-import {applySubproblem} from './SubproblemUtil';
+import {applySubproblem, getMagnitude, getStepSize} from './SubproblemUtil';
 
 describe('The Subproblem util', () => {
   describe('applySubproblem', () => {
@@ -322,6 +321,38 @@ describe('The Subproblem util', () => {
         distributions: reducedEffects
       };
       const result = applySubproblem(baseWorkspace, exclusions);
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getStepSize', () => {
+    it('should return the calculated step size and magnitude for a configured range', () => {
+      const configuredRange: [number, number] = [0, 1];
+      const result = getStepSize(configuredRange, undefined);
+      const expectedResult = 0.1;
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the predefined step size and magnitude ', () => {
+      const configuredRange: [number, number] = [0, 1];
+      const result = getStepSize(configuredRange, 0.01);
+      const expectedResult = 0.01;
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getMagnitude', () => {
+    it('should return the calculated step size and magnitude for a configured range', () => {
+      const configuredRange: [number, number] = [0, 1];
+      const result = getMagnitude(configuredRange, undefined);
+      const expectedResult = -1;
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the predefined step size and magnitude ', () => {
+      const configuredRange: [number, number] = [0, 1];
+      const result = getMagnitude(configuredRange, 0.01);
+      const expectedResult = -2;
       expect(result).toEqual(expectedResult);
     });
   });
