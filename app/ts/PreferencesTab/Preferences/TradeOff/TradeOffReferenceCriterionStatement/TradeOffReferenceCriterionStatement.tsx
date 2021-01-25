@@ -3,6 +3,7 @@ import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
+import {determineStepSize} from 'app/ts/PreferencesTab/Elicitation/MatchingElicitation/MatchingElicitationUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
@@ -25,9 +26,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
     null
   );
 
-  const epsilon = 0.01 * (upperBound - lowerBound);
-  const fromSliderStepSize = (referenceValueTo - epsilon - lowerBound) * 0.1;
-  // const toSliderStepSize = (upperBound - (referenceValueFrom + epsilon)) * 0.1;
+  const stepSize = determineStepSize([lowerBound, upperBound]);
 
   const unit = referenceCriterion.dataSources[0].unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
@@ -96,7 +95,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
               min={lowerBound}
               max={upperBound}
               onChange={handleSliderChanged}
-              step={fromSliderStepSize} //FIXME
+              step={stepSize}
             />
           </Grid>
           <Grid item xs={2} style={{...marginTop, textAlign: 'center'}}>
