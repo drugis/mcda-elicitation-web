@@ -134,7 +134,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
     }
 
     function loadSchemas() {
-      var ajv = new Ajv();
+      var ajv = new Ajv.default({allErrors: true});
       loadSchema(ajv, 'problem.json');
       loadSchema(ajv, 'dataSource.json');
       loadSchema(ajv, 'relativeEntry.json');
