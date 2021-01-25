@@ -37,26 +37,26 @@ jobs:
         id: jest
         run: npx jest
 
-      - name: pull latest from drugis
+      - name: pull latest from drugis on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && git checkout develop && git pull'
       # StrictHostKeyChecking=no ensures no prompt for 'add to known hosts'
 
-      - name: build docker container in test server
+      - name: build docker container in test server on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && docker build --no-cache --tag mcda .'
 
-      - name: stop MCDA docker container
+      - name: stop MCDA docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
 
-      - name: liquify database
+      - name: liquify database on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
 
-      - name: delete docker container
+      - name: delete docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
 
-      - name: run MCDA container
+      - name: run MCDA container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/run-mcda.sh'
 
-      - name: prune docker
+      - name: prune docker on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
 
       - name: notify on slack channel on failure
