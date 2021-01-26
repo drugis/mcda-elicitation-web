@@ -3,9 +3,9 @@ import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import {determineStepSize} from 'app/ts/PreferencesTab/Elicitation/MatchingElicitation/MatchingElicitationUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import React, {useContext} from 'react';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import React, {useContext, useEffect, useState} from 'react';
 import {TradeOffContext} from '../../TradeOffContext/TradeOffContext';
 
 export default function TradeOffSlider({
@@ -27,10 +27,17 @@ export default function TradeOffSlider({
     referenceCriterion
   } = useContext(TradeOffContext);
   const {showPercentages} = useContext(SettingsContext);
+  const {getStepSizeForCriterion} = useContext(SubproblemContext);
+
+  const [stepSize, setStepSize] = useState<number>(
+    getStepSizeForCriterion(referenceCriterion)
+  );
+
+  useEffect(() => {
+    setStepSize(getStepSizeForCriterion(referenceCriterion));
+  }, [referenceCriterion]);
 
   const marginTop = {marginTop: '50px'};
-
-  const stepSize = determineStepSize([lowerBound, upperBound]);
 
   const unit = referenceCriterion.dataSources[0].unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
@@ -60,6 +67,7 @@ export default function TradeOffSlider({
         </Grid>
         <Grid item xs={8} style={marginTop}>
           <Slider
+            id="trade-off-slider"
             marks
             valueLabelDisplay="on"
             valueLabelFormat={(x: number) => {
