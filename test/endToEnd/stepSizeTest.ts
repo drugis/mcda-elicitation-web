@@ -47,20 +47,10 @@ function setupSubProblem(browser: NightwatchBrowser) {
     .click('#add-subproblem-button')
     .waitForElementVisible('#add-subproblem-header')
     .waitForElementVisible('#add-subproblem-confirm-button:enabled')
-    .assert.containsText(
-      '#scale-ranges-warning-0',
-      'Effects table contains missing values'
-    )
-    .assert.containsText(
-      '#scale-ranges-warning-1',
-      'Effects table contains multiple data sources per criterion'
-    )
     .waitForElementVisible('#add-subproblem-confirm-button:enabled')
     .click('#inclusion-alt2Id-checkbox')
     .click('#inclusion-deselectionDataSourceId-checkbox')
-    .assert.not.elementPresent('#scale-ranges-warning-1')
-    .click('#inclusion-deselectionCriterionId-checkbox')
-    .assert.not.elementPresent('#scale-ranges-warning-0');
+    .click('#inclusion-deselectionCriterionId-checkbox');
 }
 
 function setStepSize(
@@ -99,7 +89,7 @@ function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
 
   browser
     .click('//*[@id="reference-criterion-selector"]')
-    .click('//*[@id="reference-criterion-selector"]/option[2]')
+    .click('//*[@id="reference-criterion-selector"]/option[@value="crit2Id"]')
     .click('//*[@id="reference-slider-from"]')
     .click('//*[@id="trade-off-slider"]/span[4]')
     .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
