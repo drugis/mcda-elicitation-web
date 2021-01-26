@@ -8,7 +8,7 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 import {TradeOffContext} from '../../TradeOffContext/TradeOffContext';
 
-export default function TradeOffSliderPopover({
+export default function TradeOffSlider({
   anchorElement,
   isDialogOpen,
   closeDialog

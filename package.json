@@ -11,10 +11,10 @@
   "main": "index.js",
   "scripts": {
     "build-backend": "rm -rf tscomp/*  && tsc -p ts-backend-config.json",
-    "build-dev": "webpack --config webpack.dev.js",
+    "build-dev": "webpack --config webpack.google.dev.js",
     "build-local-login": "webpack --config webpack.local.js",
     "build-local-login-dev": "webpack --config webpack.local.dev.js",
-    "build-prod": "webpack --config webpack.prod.js",
+    "build-prod": "webpack --config webpack.google.js",
     "dev": "webpack --config webpack.dev.js --watch",
     "dev-local": "webpack --config webpack.local.js --watch",
     "start": "node tscomp/index",

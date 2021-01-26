@@ -123,17 +123,7 @@ let config = {
         require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
       )
     }),
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      filename: 'signin.html',
-      template: 'app/signin.ejs',
-      inject: 'head',
-      chunks: ['signin'],
-      signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
-      matomo: fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      )
-    })
+    new CleanWebpackPlugin()
   ],
 
   optimization: {

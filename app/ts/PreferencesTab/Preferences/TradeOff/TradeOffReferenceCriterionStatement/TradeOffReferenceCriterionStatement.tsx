@@ -7,7 +7,7 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
-import TradeOffSliderPopover from './TradeOffSliderPopover/TradeOffSliderPopover';
+import TradeOffSlider from './TradeOffSlider/TradeOffSlider';
 
 export default function TradeOffReferenceCriterionStatement(): JSX.Element {
   const {referenceValueFrom, referenceValueTo, referenceCriterion} = useContext(
@@ -47,7 +47,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
         </Button>
         is equivalent to:
       </div>
-      <TradeOffSliderPopover
+      <TradeOffSlider
         anchorElement={anchorElement}
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}
