@@ -2,7 +2,6 @@
 const {merge} = require('webpack-merge');
 const prod = require('./webpack.prod');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const _ = require('lodash');
 
 let fs = require('fs');
 
