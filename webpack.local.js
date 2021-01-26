@@ -1,11 +1,17 @@
 'use strict';
-const {merge} = require('webpack-merge');
+const {mergeWithCustomize, unique} = require('webpack-merge');
 const prod = require('./webpack.prod');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let fs = require('fs');
 
-module.exports = merge(prod, {
+module.exports = mergeWithCustomize({
+  customizeArray: unique(
+    'plugins',
+    ['HtmlWebpackPlugin'],
+    (plugin) => plugin.constructor && plugin.constructor.name
+  )
+})(prod, {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'signin.html',
