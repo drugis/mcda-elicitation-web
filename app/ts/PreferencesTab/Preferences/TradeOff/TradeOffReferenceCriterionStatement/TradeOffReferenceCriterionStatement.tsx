@@ -38,13 +38,21 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
       <div>
         Based on the elicited preferences, changing {referenceCriterion.title}{' '}
         from{' '}
-        <Button id="reference-slider-from" onClick={openDialog} variant="text">
+        <Button
+          id="reference-slider-from"
+          onClick={openDialog}
+          variant="outlined"
+        >
           {getPercentifiedValue(referenceValueFrom, usePercentage)}
-        </Button>
+        </Button>{' '}
         to{' '}
-        <Button id="reference-slider-to" onClick={openDialog} variant="text">
+        <Button
+          id="reference-slider-to"
+          onClick={openDialog}
+          variant="outlined"
+        >
           {getPercentifiedValue(referenceValueTo, usePercentage)}
-        </Button>
+        </Button>{' '}
         is equivalent to:
       </div>
       <TradeOffSlider

@@ -52,8 +52,11 @@ export default function TradeOffSlider({
   return (
     <Popover open={isDialogOpen} onClose={closeDialog} anchorEl={anchorElement}>
       <Grid container style={{minWidth: '400px', minHeight: '50px'}}>
-        <Grid item xs={2} style={{...marginTop, textAlign: 'center'}}>
-          {getPercentifiedValue(lowerBound, usePercentage)}
+        <Grid item xs={2} style={{marginTop: '25px', textAlign: 'center'}}>
+          <div>
+            <b>{isDecreasingPvf ? 'To' : 'From'}</b>
+          </div>
+          <div>{getPercentifiedValue(lowerBound, usePercentage)}</div>
         </Grid>
         <Grid item xs={8} style={marginTop}>
           <Slider
@@ -73,8 +76,11 @@ export default function TradeOffSlider({
             step={stepSize}
           />
         </Grid>
-        <Grid item xs={2} style={{...marginTop, textAlign: 'center'}}>
-          {getPercentifiedValue(upperBound, usePercentage)}
+        <Grid item xs={2} style={{marginTop: '25px', textAlign: 'center'}}>
+          <div>
+            <b>{isDecreasingPvf ? 'From' : 'To'}</b>
+          </div>
+          <div>{getPercentifiedValue(upperBound, usePercentage)}</div>
         </Grid>
       </Grid>
     </Popover>
