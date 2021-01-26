@@ -1,60 +1,66 @@
-import React, {useContext} from 'react';
+import Button from '@material-ui/core/Button';
+import {
+  canBePercentage,
+  getPercentifiedValue
+} from 'app/ts/DisplayUtil/DisplayUtil';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import _ from 'lodash';
+import React, {useContext, useState} from 'react';
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
 import TradeOffSlider from './TradeOffSlider/TradeOffSlider';
-import _ from 'lodash';
 
 export default function TradeOffReferenceCriterionStatement(): JSX.Element {
-  const {
-    lowerBound,
-    upperBound,
-    referenceValueFrom,
-    referenceValueTo,
-    setReferenceValueFrom,
-    setReferenceValueTo,
-    referenceCriterion
-  } = useContext(TradeOffContext);
+  const {referenceValueFrom, referenceValueTo, referenceCriterion} = useContext(
+    TradeOffContext
+  );
+  const {showPercentages} = useContext(SettingsContext);
 
-  const epsilon = 0.01 * (upperBound - lowerBound);
-  const fromSliderStepSize = (referenceValueTo - epsilon - lowerBound) * 0.1;
-  const toSliderStepSize = (upperBound - (referenceValueFrom + epsilon)) * 0.1;
+  const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [anchorElement, setAnchorElement] = useState<HTMLButtonElement | null>(
+    null
+  );
 
-  function handleSlider1Changed(
-    event: React.ChangeEvent<any>,
-    newValue: number
-  ) {
-    setReferenceValueFrom(newValue);
+  const unit = referenceCriterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unit);
+
+  function openDialog(event: React.MouseEvent<HTMLButtonElement>): void {
+    setDialogOpen(true);
+    setAnchorElement(event.currentTarget);
   }
 
-  function handleSlider2Changed(
-    event: React.ChangeEvent<any>,
-    newValue: number
-  ) {
-    setReferenceValueTo(newValue);
+  function closeDialog(): void {
+    setDialogOpen(false);
+    setAnchorElement(null);
   }
 
   return _.isNumber(referenceValueFrom) && _.isNumber(referenceValueTo) ? (
-    <div>
-      Based on the elicited preferences, changing {referenceCriterion.title}{' '}
-      from{' '}
+    <>
+      <div>
+        Based on the elicited preferences, changing {referenceCriterion.title}{' '}
+        from{' '}
+        <Button
+          id="reference-slider-from"
+          onClick={openDialog}
+          variant="outlined"
+        >
+          {getPercentifiedValue(referenceValueFrom, usePercentage)}
+        </Button>{' '}
+        to{' '}
+        <Button
+          id="reference-slider-to"
+          onClick={openDialog}
+          variant="outlined"
+        >
+          {getPercentifiedValue(referenceValueTo, usePercentage)}
+        </Button>{' '}
+        is equivalent to:
+      </div>
       <TradeOffSlider
-        value={referenceValueFrom}
-        min={lowerBound}
-        max={referenceValueTo - epsilon}
-        stepSize={fromSliderStepSize}
-        handleChange={handleSlider1Changed}
-        id="reference-slider-from"
+        anchorElement={anchorElement}
+        isDialogOpen={isDialogOpen}
+        closeDialog={closeDialog}
       />
-      to{' '}
-      <TradeOffSlider
-        value={referenceValueTo}
-        min={referenceValueFrom + epsilon}
-        max={upperBound}
-        stepSize={toSliderStepSize}
-        handleChange={handleSlider2Changed}
-        id="reference-slider-to"
-      />
-      is equivalent to:
-    </div>
+    </>
   ) : (
     <></>
   );

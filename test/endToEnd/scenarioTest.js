@@ -17,6 +17,7 @@ module.exports = {
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
+const {SELENIUM_DELAY} = require('./util/constants');
 
 const title =
   'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
@@ -44,15 +45,15 @@ function afterEach(browser) {
 
 function create(browser) {
   browser
-    .click('#add-scenario-button')
-    .waitForElementVisible('#add-scenario-confirm-button:disabled')
+    .click('#copy-scenario-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:disabled')
     .setValue('#new-scenario-title', 'Default')
-    .waitForElementVisible('#add-scenario-confirm-button:disabled')
+    .waitForElementVisible('#copy-scenario-confirm-button:disabled')
     .assert.containsText('#title-error-0', 'Duplicate title')
     .clearValue('#new-scenario-title')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-confirm-button:enabled')
-    .click('#add-scenario-confirm-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
     .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
@@ -88,11 +89,11 @@ function copy(browser) {
 
 function switchinPreferences(browser) {
   browser
-    .click('#add-scenario-button')
+    .click('#copy-scenario-button')
     .setValue('#new-scenario-title', scenarioTitle)
-    .waitForElementVisible('#add-scenario-confirm-button:enabled')
-    .click('#add-scenario-confirm-button')
-    .waitForElementNotPresent('#add-scenario-confirm-button')
+    .waitForElementVisible('#copy-scenario-confirm-button:enabled')
+    .click('#copy-scenario-confirm-button')
+    .waitForElementNotPresent('#copy-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#scenario-selector')
     .click('#scenario-selector > option:nth-child(1)')
@@ -106,7 +107,7 @@ function switchInDeterministic(browser) {
     .setValue('#new-scenario-title', scenarioTitle)
     .waitForElementVisible('#copy-scenario-confirm-button:enabled')
     .click('#copy-scenario-confirm-button')
-    .waitForElementNotPresent('#copy-scenario-confirm-button')
+    .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
     .click('#deterministic-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
@@ -127,10 +128,12 @@ function switchInSmaa(browser) {
     .waitForElementVisible('#effects-table-header')
     .waitForElementVisible('#scenario-selector')
     .click('#scenario-selector')
+    .waitForElementVisible('#scenario-selector > option:nth-child(1)')
     .click('#scenario-selector > option:nth-child(1)')
-    .waitForElementNotPresent('#scenario-selector > option:nth-child(1)')
+    .pause(SELENIUM_DELAY)
     .assert.containsText('#scenario-selector', 'Default');
 }
+
 function deleteScenario(browser) {
   browser
     .waitForElementVisible('#delete-scenario-button:disabled')
