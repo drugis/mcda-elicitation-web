@@ -31,12 +31,17 @@ export default function DistributionValueCell({
     if (displayMode === 'enteredData') {
       return renderDistribution(distribution, usePercentage);
     } else {
-      return renderValuesForAnalysis(scale);
+      return renderValuesForAnalysis(scale, distribution);
     }
   }
 
-  function renderValuesForAnalysis(scale: IScale): JSX.Element | string {
-    if (scale['50%'] !== null) {
+  function renderValuesForAnalysis(
+    scale: IScale,
+    distribution: Distribution
+  ): JSX.Element | string {
+    if (scalesCalculationMethod === 'mode' && distribution.type === 'range') {
+      return 'NA';
+    } else if (scale['50%'] !== null) {
       const lowerBound = getPercentifiedValue(scale['2.5%'], usePercentage);
       const upperBound = getPercentifiedValue(scale['97.5%'], usePercentage);
       const modeOrMedian =
