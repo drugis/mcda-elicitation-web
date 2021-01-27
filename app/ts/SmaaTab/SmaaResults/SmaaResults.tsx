@@ -11,13 +11,13 @@ import SmaaWeightsTable from './SmaaWeightsTable/SmaaWeightsTable';
 import UncertaintyOptions from './UncertaintyOptions/UncertaintyOptions';
 
 export default function SmaaResults() {
-  const {currentScenario, scenarios} = useContext(PreferencesContext);
+  const {currentScenario, scenariosWithPvfs} = useContext(PreferencesContext);
   const {smaaWeights, ranks, centralWeights} = useContext(SmaaResultsContext);
 
   return (
     <Grid container spacing={2}>
       <ScenarioSelection
-        scenarios={scenarios}
+        scenarios={scenariosWithPvfs}
         currentScenario={currentScenario}
       />
       <UncertaintyOptions />

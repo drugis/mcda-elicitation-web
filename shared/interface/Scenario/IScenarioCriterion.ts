@@ -1,5 +1,5 @@
 import IScenarioPvf from './IScenarioPvf';
 
-export default interface IProblemCriterion {
+export default interface IScenarioCriterion {
   dataSources: [{pvf: IScenarioPvf}];
 }

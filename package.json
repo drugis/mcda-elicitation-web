@@ -18,7 +18,7 @@
     "dev": "webpack --config webpack.dev.js --watch",
     "dev-local": "webpack --config webpack.local.js --watch",
     "start": "node tscomp/index",
-    "test": "jest && karma start --singleRun && yarn test-R",
+    "test": "jest && yarn test-R",
     "test-R": "Rscript R/unit-tests/run-tests.R root",
     "test-end-to-end": "tsc -p ts-end-to-end-config.json && nightwatch -c nightwatch.local.conf.js"
   },
