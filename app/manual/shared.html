@@ -32,7 +32,7 @@
   benefit-risk analysis. They are presented in a list on the overview,
   optionally grouped into favorable and unfavorable categories. For each
   criterion, there can be one or more sources of data. These data sources supply
-  measurements for one or more alternatives, as well as a reference describing
+  measurements any number of alternatives, as well as a reference describing
   where the measurements originate, and an optional textual description of the
   data's strength of evidence and/or uncertainties.
 </p>
@@ -52,11 +52,13 @@
 
 <h3 id="mcda-problems">Problem definition</h3>
 
-<p>To be suitable for MCDA analysis in ADDIS MCDA, several criteria apply:</p>
+<p>
+  To be suitable for MCDA analysis in ADDIS MCDA, several requirements apply:
+</p>
 <ul>
   <li>
     There must be valid data for each cell in the effects table, i.e. data for
-    each combination of criterion and analysis. This means either an entered
+    each combination of criterion and alternative. This means either an entered
     effect, or a distribution.
   </li>
   <li>There may only be one data source per criterion.</li>
@@ -193,7 +195,7 @@
   as well as a button to let you reset the weights to neutral.
 </p>
 <div class="figure">
-  <img src="img/weightsPreferenceElicitation.png" />
+  <img src="img/weightsElicitationMethods.png" />
   <div class="caption">
     The weights table and the buttons to perform the supported methods of
     preference elicitation.
@@ -242,9 +244,9 @@
   criterion, and the best possible value for the secondary criterion.
   Alternative B is the same but has the worst possible value for the seconday
   criterion (and therefore is by definition worse than alternative A). The user
-  is asked to adjust the value of most important criterion in alternative B so
-  that each scenario is approximately equivalent. Note that there is no
-  uncertainty in the elicited preferences
+  is asked to adjust the value of the most important criterion in alternative B
+  so that each scenario is approximately equivalent. Note that there is no
+  uncertainty in the elicited preferences.
 </p>
 <div class="figure">
   <img src="img/matchingElicitation.png" />
@@ -305,9 +307,9 @@
   For many users, it is helpful to illustrate the concrete consequences of the
   abstract weights which result from preference elicitation. The trade off table
   below the weights table does so by showing how much each secondary criterion
-  should change to be compensate for a certain change in a reference criterion.
-  Any criterion can be chosen as the reference, and the values between which
-  this reference criterion changes can also be set by the user.
+  should change to compensate for a certain change in a reference criterion. Any
+  criterion can be chosen as the reference, and the values between which this
+  reference criterion changes can also be set by the user.
 </p>
 <div class="figure">
   <img src="img/tradeOffTable.png" />
@@ -403,14 +405,15 @@
 
 <p>
   <a href="#mcda-smaa-theory">SMAA</a> explores the possibility space (that is,
-  the N-dimensional space with each alternative's measurements and and weights
-  as axes) defined by any uncertainty in both the data and the preferences for a
+  the N-dimensional space with each alternative's measurements and weights as
+  axes) defined by any uncertainty in both the data and the preferences for a
   given problem and scenario. For example, when a user has used ranking
   elicitation to define their preferences, and the data consists of point
   estimates with normally-distributed confidence intervals, there is uncertainty
   in both. SMAA will sample from these distributions while respecting any
-  constraints (ranking or otherwise) to create a combination of exact preference
-  weights and data values, and use the same process as on the
+  constraints (such as preserving the order indicated by ranking elicitation) to
+  create a combination of exact preference weights and data values, and use the
+  same process as on the
   <a href="#mcda-deterministic-analysis">deterministic</a> page to calculate the
   value of each alternative for this sampled situation. The set of values for
   each sampled combination, when taken as a whole, can be analysed to show in
@@ -420,6 +423,34 @@
   <a href="#mcda-smaa-theory">theoretical section on SMAA</a>.
 </p>
 
+<h4 id="mcda-smaa-uncertainty-settings">Uncertainty settings</h4>
+<p>
+  As stated above, SMAA explores the consequences of uncertainty, both in
+  weights and measurements. The ADDIS MCDA interface lets you separately toggle
+  whether to take the uncertainty in either of those aspects into account. After
+  changing this setting, the 'Recalculate' button becomes available to
+  recalculate the results and update the page.
+</p>
+<div class="figure">
+  <img src="img/smaaUncertainty.png" />
+  <div class="caption">
+    SMAA uncertainty settings, allowing individual enabling/disabling of
+    uncertainty for weights and measurements.
+  </div>
+</div>
+
+<p>
+  An effects table and weights table are shown on the SMAA page for context. The
+  values shown include any relevant uncertainties expressed as confidence
+  intervals. Note however that for the measurements, the uncertainty is only
+  relevant when the <a href="mcda-settings">display settings</a> are set to show
+  SMAA values.
+</p>
+
+<h4 id="mcda-rank-acceptability"></h4>
+
+<p>The rank acceptability</p>
+
 <div class="figure">
   <img src="img/smaa1.png" />
   <div class="caption">SMAA, ranking part.</div>
@@ -428,6 +459,54 @@
 <div class="figure">
   <img src="img/smaa2.png" />
   <div class="caption">SMAA, central weights.</div>
+</div>
+
+<h3 id="mcda-settings">Settings</h3>
+<p>The view of ADDIS MCDA can be customised in several ways:</p>
+<ul>
+  <li>
+    <b>Percentages or decimals</b>: This toggle switches between decimal and
+    percentage values in effects tables and plots. This only affects data
+    sources where the unit of measurement has been set as a percentage or
+    decimal fraction.
+  </li>
+  <li>
+    <b>Measurements display mode</b>: This controls whether the values shown in
+    effects tables are the effects or distributions as entered when creating the
+    workspace, or their numerical values as used in
+    <a href="#mcda-deterministic-analysis">deterministic analysis</a>. Note that
+    one of the options may be disabled if there are no valid data (e.g. no
+    effects in case of a workspace with relative data or only distributions).
+  </li>
+  <li>
+    <b>Analysis type</b>: This controls whether effects tables show data as used
+    by either deterministic analysis or SMAA. In the first case, effects are
+    shown when available, and otherwise the values which the available
+    distributions boil down to. In the second case, either the distributions are
+    shown or their point estimate and confidence interval, depending on the
+    measurements display mode setting.
+  </li>
+  <li>
+    <b>Show median or mode</b>: This controls hether the point estimate that is
+    shown for SMAA values is the median or mode.
+  </li>
+  <li>
+    <b>Effects table columns to show</b>: This controls which columns are shown
+    in effects tables throughout the application.
+  </li>
+</ul>
+<p>
+  Finally, to allow for reproducible results, all stochastic calculations
+  performed by the system can use a predetermined random number, which you can
+  set here. The default is 1234.
+</p>
+<h4 id="mcda-percentage-setting">Percentage or decimal</h4>
+<div class="figure">
+  <img src="img/settings.png" />
+  <div class="caption">
+    MCDA settings, controlling various aspects of the display as well as the
+    random seed used in stochastic calculations.
+  </div>
 </div>
 
 <!-- theoretical section -->
@@ -930,7 +1009,10 @@
 <h2 id="mcda-smaa-theory">Stochastic multi-criteria acceptability analyis</h2>
 <p>
   We here cite the most important parts of our publication on SMAA. Please see
-  the original paper for full details.
+  <a href="http://dx.doi.org/10.1016/j.jclinepi.2011.09.005"
+    >the original paper</a
+  >
+  for full details.
 </p>
 <p>
   SMAA-2 considers a discrete multicriteria decision problem consisting of a set
@@ -965,7 +1047,7 @@
   the share of all possible values of the weight vector \(w\) and criteria
   measurements \(x\) for which rank(\(i, \xi, w) = r\). For example, \(b^5_2 =
   0.3\) means alternative 2 has fifth rank acceptability 0.3. The preferred
-  (best) alternatives are those with high acceptabilities for the best ranks
+  (best) alternatives are those with high acceptabilities for the best ranks.
 </p>
 <p>&nbsp</p>
 <hr />
