@@ -59,17 +59,14 @@ export function filterScenariosWithPvfs(
   scenarios: Record<string, IMcdaScenario>,
   criteria: ICriterion[]
 ): Record<string, IMcdaScenario> {
-  return _(scenarios)
-    .reject((scenario: IMcdaScenario) => {
-      return _.some(criteria, (criterion: ICriterion) => {
-        const scenarioCriterion = scenario.state.problem.criteria[criterion.id];
-        return (
-          !scenarioCriterion ||
-          !scenarioCriterion.dataSources ||
-          !scenarioCriterion.dataSources[0].pvf.direction
-        );
-      });
-    })
-    .keyBy('id')
-    .value();
+  return _.omitBy(scenarios, (scenario: IMcdaScenario) => {
+    return _.some(criteria, (criterion: ICriterion) => {
+      const scenarioCriterion = scenario.state.problem.criteria[criterion.id];
+      return (
+        !scenarioCriterion ||
+        !scenarioCriterion.dataSources ||
+        !scenarioCriterion.dataSources[0].pvf.direction
+      );
+    });
+  });
 }
