@@ -48,8 +48,8 @@ export default function TradeOffSlider({
     newValue: [number, number]
   ) {
     if (isDecreasingPvf) {
-      setReferenceValueFrom(newValue[1]);
-      setReferenceValueTo(newValue[0]);
+      setReferenceValueFrom(-newValue[0]);
+      setReferenceValueTo(-newValue[1]);
     } else {
       setReferenceValueFrom(newValue[0]);
       setReferenceValueTo(newValue[1]);
@@ -61,9 +61,14 @@ export default function TradeOffSlider({
       <Grid container style={{minWidth: '400px', minHeight: '50px'}}>
         <Grid item xs={2} style={{marginTop: '25px', textAlign: 'center'}}>
           <div>
-            <b>{isDecreasingPvf ? 'To' : 'From'}</b>
+            <b>From</b>
           </div>
-          <div>{getPercentifiedValue(lowerBound, usePercentage)}</div>
+          <div>
+            {getPercentifiedValue(
+              isDecreasingPvf ? upperBound : lowerBound,
+              usePercentage
+            )}
+          </div>
         </Grid>
         <Grid item xs={8} style={marginTop}>
           <Slider
@@ -71,24 +76,32 @@ export default function TradeOffSlider({
             marks
             valueLabelDisplay="on"
             valueLabelFormat={(x: number) => {
-              return getPercentifiedValue(x, usePercentage);
+              return getPercentifiedValue(
+                isDecreasingPvf ? -x : x,
+                usePercentage
+              );
             }}
             value={
               isDecreasingPvf
-                ? [referenceValueTo, referenceValueFrom]
+                ? [-referenceValueFrom, -referenceValueTo]
                 : [referenceValueFrom, referenceValueTo]
             }
-            min={lowerBound}
-            max={upperBound}
+            min={isDecreasingPvf ? -upperBound : lowerBound}
+            max={isDecreasingPvf ? -lowerBound : upperBound}
             onChange={handleSliderChanged}
             step={stepSize}
           />
         </Grid>
         <Grid item xs={2} style={{marginTop: '25px', textAlign: 'center'}}>
           <div>
-            <b>{isDecreasingPvf ? 'From' : 'To'}</b>
+            <b>To</b>
           </div>
-          <div>{getPercentifiedValue(upperBound, usePercentage)}</div>
+          <div>
+            {getPercentifiedValue(
+              isDecreasingPvf ? lowerBound : upperBound,
+              usePercentage
+            )}
+          </div>
         </Grid>
       </Grid>
     </Popover>

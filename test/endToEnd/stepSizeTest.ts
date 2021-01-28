@@ -71,7 +71,7 @@ function setPvfs(browser: NightwatchBrowser): void {
   );
   browser
     .click('#increasing-pvf-button-crit1Id')
-    .click('#increasing-pvf-button-crit2Id');
+    .click('#decreasing-pvf-button-crit2Id');
 }
 
 function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
@@ -97,7 +97,7 @@ function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
 
   browser.expect
     .element('//*[@id="reference-slider-from"]')
-    .text.to.equal('-198');
+    .text.to.equal('-2');
 
   browser.useCss();
 }
