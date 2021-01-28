@@ -13,7 +13,7 @@ import {
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext, useEffect} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
@@ -27,7 +27,7 @@ import StepSizeSelector from './StepSizeSelector/StepSizeSelector';
 
 export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   const {showPercentages} = useContext(SettingsContext);
-  const {observedRanges} = useContext(WorkspaceContext);
+  const {observedRanges} = useContext(SubproblemContext);
   const {
     configuredRanges,
     getIncludedDataSourceForCriterion,

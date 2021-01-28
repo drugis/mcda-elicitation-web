@@ -10,7 +10,6 @@ export default interface IWorkspaceContext {
   alternatives: Record<string, IAlternative>;
   criteria: Record<string, ICriterion>;
   currentSubproblem: IOldSubproblem;
-  observedRanges: Record<string, [number, number]>;
   oldProblem: IProblem;
   scales: Record<string, Record<string, IScale>>;
   subproblems: Record<string, IOldSubproblem>;

@@ -57,6 +57,20 @@ describe('ScalesTableUtil', () => {
             '97.5%': 0.99,
             mode: 0.95
           }
+        },
+        percentAndExactDistribution: {
+          alt1Id: {
+            '2.5%': 0.5,
+            '50%': 0.55,
+            '97.5%': 0.6,
+            mode: 0.55
+          },
+          alt2Id: {
+            '2.5%': 0.5,
+            '50%': 0.55,
+            '97.5%': 0.6,
+            mode: 0.55
+          }
         }
       };
       const criteria: ICriterion[] = [

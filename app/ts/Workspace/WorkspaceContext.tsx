@@ -1,6 +1,5 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import IDataSource from '@shared/interface/IDataSource';
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
@@ -14,13 +13,11 @@ import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import {swapItems} from '../ManualInput/ManualInputService/ManualInputService';
-import {calculateObservedRanges} from '../Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import IWorkspaceContext from './IWorkspaceContext';
 import {transformCriterionToOldCriterion} from './transformUtil';
 import {
   createCriteriaWithSwappedDataSources,
   createNewOrdering,
-  hasScaleValues,
   isOrdering
 } from './WorkspaceContextUtil';
 
@@ -52,10 +49,6 @@ export function WorkspaceContextProviderComponent({
   const [currentSubproblem, setCurrentSubproblem] = useState<IOldSubproblem>(
     currentAngularSubproblem
   );
-  const [observedRanges, setObservedRanges] = useState<
-    Record<string, [number, number]>
-  >({});
-
   const [workspace, setWorkspace] = useState<IWorkspace>(
     buildWorkspace(oldWorkspace, workspaceId)
   );
@@ -72,12 +65,6 @@ export function WorkspaceContextProviderComponent({
       })
       .catch(errorCallback);
   }, []);
-
-  useEffect(() => {
-    if (hasScaleValues(scales) && oldWorkspace) {
-      setObservedRanges(calculateObservedRanges(scales, workspace));
-    }
-  }, [scales, oldWorkspace]);
 
   function editTitle(newTitle: string): void {
     const newSubproblem = {...currentSubproblem, title: newTitle};
@@ -232,7 +219,6 @@ export function WorkspaceContextProviderComponent({
         alternatives: _.keyBy(workspace.alternatives, 'id'),
         criteria: _.keyBy(workspace.criteria, 'id'),
         currentSubproblem,
-        observedRanges,
         oldProblem: oldWorkspace.problem,
         scales,
         subproblems,

@@ -1,6 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -30,12 +31,18 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     workspace,
     criteria,
     currentSubproblem,
-    observedRanges,
     addSubproblem
   } = useContext(WorkspaceContext);
+  const {observedRanges} = useContext(SubproblemContext);
 
   const dataSourcesById: Record<string, IDataSource> = _(criteria)
     .flatMap('dataSources')
+    .keyBy('id')
+    .value();
+  const dataSourcesWithValues: Record<string, IDataSource> = _(dataSourcesById)
+    .filter((dataSource: IDataSource): boolean => {
+      return Boolean(observedRanges[dataSource.id]);
+    })
     .keyBy('id')
     .value();
   const baselineMap: Record<string, boolean> = getBaselineMap(
@@ -130,12 +137,12 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
       const initialConfiguredRanges = initConfiguredRanges(
-        dataSourcesById,
+        dataSourcesWithValues,
         observedRanges,
         currentSubproblem.definition.ranges
       );
       const stepSizeOptions = initializeStepSizeOptions(
-        dataSourcesById,
+        dataSourcesWithValues,
         observedRanges
       );
       const stepSizes = intializeStepSizes(
@@ -216,7 +223,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   function resetToDefault(): void {
     const initialConfiguredRanges = initConfiguredRanges(
-      dataSourcesById,
+      dataSourcesWithValues,
       observedRanges
     );
     setCriterionInclusions(_.mapValues(criteria, () => true));

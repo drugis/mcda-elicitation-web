@@ -8,6 +8,7 @@ import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {hasScale} from 'app/ts/Workspace/WorkspaceContextUtil';
 import _ from 'lodash';
 
 export function calculateObservedRanges(
@@ -16,6 +17,9 @@ export function calculateObservedRanges(
 ): Record<string, [number, number]> {
   return _(workspace.criteria)
     .flatMap('dataSources')
+    .filter((dataSource: IDataSource) => {
+      return hasScale(scales[dataSource.id]);
+    })
     .keyBy('id')
     .mapValues(_.partial(calculateObservedRange, scales, workspace))
     .value();

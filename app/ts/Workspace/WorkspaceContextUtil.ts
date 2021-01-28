@@ -11,7 +11,7 @@ export function hasScaleValues(
   return _.some(scales, (scale) => hasScale(scale));
 }
 
-function hasScale(scales: Record<string, IScale>): boolean {
+export function hasScale(scales: Record<string, IScale>): boolean {
   return _.some(scales, (scale) => hasValue(scale));
 }
 

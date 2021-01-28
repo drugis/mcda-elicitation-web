@@ -45,8 +45,8 @@ export function PreferencesContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
-  const {currentSubproblem, observedRanges} = useContext(WorkspaceContext);
-  const {filteredCriteria, filteredAlternatives} = useContext(
+  const {currentSubproblem} = useContext(WorkspaceContext);
+  const {filteredCriteria, filteredAlternatives, observedRanges} = useContext(
     SubproblemContext
   );
 
