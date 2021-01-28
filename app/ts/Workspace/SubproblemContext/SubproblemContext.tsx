@@ -4,7 +4,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {WorkspaceContext} from '../WorkspaceContext';
 import {hasScaleValues} from '../WorkspaceContextUtil';
 import ISubproblemContext from './ISubproblemContext';
-import {applySubproblem, getStepSize} from './SubproblemUtil';
+import {applySubproblem, getStepSize, hasNoRange} from './SubproblemUtil';
 
 export const SubproblemContext = createContext<ISubproblemContext>(
   {} as ISubproblemContext
@@ -41,10 +41,18 @@ export function SubproblemContextProviderComponent({
   }, [workspace, currentSubproblem]);
 
   function getStepSizeForCriterion(criterion: ICriterion) {
-    return getStepSize(
-      currentSubproblem.definition.ranges[criterion.dataSources[0].id],
-      currentSubproblem.definition.stepSizes[criterion.dataSources[0].id]
-    );
+    const dataSourceId = criterion.dataSources[0].id;
+    if (hasNoRange(currentSubproblem.definition.ranges, dataSourceId)) {
+      return getStepSize(
+        observedRanges[dataSourceId],
+        currentSubproblem.definition.stepSizes[dataSourceId]
+      );
+    } else {
+      return getStepSize(
+        currentSubproblem.definition.ranges[dataSourceId],
+        currentSubproblem.definition.stepSizes[dataSourceId]
+      );
+    }
   }
 
   return (

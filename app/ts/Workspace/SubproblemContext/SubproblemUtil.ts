@@ -177,3 +177,10 @@ export function getStepSize(
     return Math.pow(10, magnitude);
   }
 }
+
+export function hasNoRange(
+  ranges: Record<string, [number, number]>,
+  dataSourceId: string
+): boolean {
+  return _.isEqual(ranges, {}) || _.isEqual(ranges[dataSourceId], {});
+}

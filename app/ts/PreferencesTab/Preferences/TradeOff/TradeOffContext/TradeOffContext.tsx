@@ -1,6 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {hasNoRange} from 'app/ts/Workspace/SubproblemContext/SubproblemUtil';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -89,13 +90,6 @@ export function TradeOffContextProviderComponent({
     } else {
       return currentSubproblem.definition.ranges[dataSourceId];
     }
-  }
-
-  function hasNoRange(
-    ranges: Record<string, [number, number]>,
-    dataSourceId: string
-  ): boolean {
-    return _.isEqual(ranges, {}) || _.isEqual(ranges[dataSourceId], {});
   }
 
   function updateReferenceCriterion(newId: string): void {
