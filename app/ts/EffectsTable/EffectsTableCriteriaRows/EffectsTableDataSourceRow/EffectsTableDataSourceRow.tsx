@@ -1,17 +1,11 @@
 import TableRow from '@material-ui/core/TableRow';
-import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import EffectsTableCriterionDescriptionCell from './EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
 import EffectsTableCriterionTitleCell from './EffectsTableCriterionTitleCell/EffectsTableCriterionTitleCell';
-import EffectsTableReferenceCell from './EffectsTableReferenceCell/EffectsTableReferenceCell';
-import EffectsTableStrengthsAndUncertainties from './EffectsTableStrengthsAndUncertainties/EffectsTableStrengthsAndUncertainties';
-import EffectsTableUnitOfMeasurementCell from './EffectsTableUnitOfMeasurementCell/EffectsTableUnitOfMeasurementCell';
 import EffectTableDataSourceCells from './EffectTableDataSourceCells/EffectTableDataSourceCells';
-import ValueCell from './ValueCell/ValueCell';
 
 export default function EffectsTableDataSourceRow({
   criterion,

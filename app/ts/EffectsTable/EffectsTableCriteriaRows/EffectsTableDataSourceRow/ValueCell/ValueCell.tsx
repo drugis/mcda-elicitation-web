@@ -70,7 +70,7 @@ export default function ValueCell({
   }
 
   function renderEffectCell(): JSX.Element {
-    if (effect || distribution) {
+    if (effect || distribution || hasScaleValues) {
       return (
         <EffectValueCell
           effect={effect}
@@ -79,16 +79,6 @@ export default function ValueCell({
           isExcluded={isExcluded}
           dataSourceId={dataSourceId}
           alternativeId={alternativeId}
-        />
-      );
-    } else if (hasScaleValues) {
-      return (
-        <NMACell
-          dataSourceId={dataSourceId}
-          alternativeId={alternativeId}
-          scale={scale}
-          usePercentage={usePercentage}
-          isExcluded={isExcluded}
         />
       );
     } else {

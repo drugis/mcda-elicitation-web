@@ -21,6 +21,7 @@ import {
   IEffectPerformance
 } from './interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from './interface/Problem/IPerformanceTableEntry';
+import IProblem from './interface/Problem/IProblem';
 import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
 import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
@@ -45,7 +46,42 @@ export function buildWorkspace(
 export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
   const idMapper = buildInProgressIdMapper(workspace);
   const title = `Copy of ${workspace.problem.title}`;
-  return buildNewStyleCopy(workspace, idMapper, title);
+  const workspaceWithoutStudentsT = {
+    ...workspace,
+    problem: getProblemWithoutStudentsT(workspace.problem)
+  };
+  return buildNewStyleCopy(workspaceWithoutStudentsT, idMapper, title);
+}
+
+function getProblemWithoutStudentsT(problem: IProblem): IProblem {
+  return {
+    ...problem,
+    performanceTable: getPerformanceTableWithoutStudentsT(
+      problem.performanceTable
+    )
+  };
+}
+
+function getPerformanceTableWithoutStudentsT(
+  table: IPerformanceTableEntry[]
+): IPerformanceTableEntry[] {
+  return _(table)
+    .map((entry) => {
+      if (
+        'distribution' in entry.performance &&
+        entry.performance.distribution.type === 'dt'
+      ) {
+        if ('effect' in entry.performance) {
+          return {...entry, performance: {effect: entry.performance.effect}};
+        } else {
+          return undefined;
+        }
+      } else {
+        return entry;
+      }
+    })
+    .filter()
+    .value();
 }
 
 export function buildInProgressIdMapper(
@@ -362,11 +398,7 @@ export function buildWorkspaceDistributions(
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
-      return (
-        hasAlternativeId(entry) &&
-        'distribution' in entry.performance &&
-        !(entry.performance.distribution.type === 'dt')
-      );
+      return hasAlternativeId(entry) && 'distribution' in entry.performance;
     })
     .map(_.partial(buildDistribution, idMapper, unitTypesByDataSource))
     .value();
