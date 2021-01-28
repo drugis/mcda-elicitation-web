@@ -43,6 +43,28 @@ export default function TradeOffSlider({
   const usePercentage = showPercentages && canBePercentage(unit);
   const isDecreasingPvf = referenceValueFrom > referenceValueTo;
 
+  const sliderParameters = isDecreasingPvf
+    ? {
+        displayFrom: getPercentifiedValue(upperBound, usePercentage),
+        displayTo: getPercentifiedValue(lowerBound, usePercentage),
+        min: -upperBound,
+        max: -lowerBound,
+        values: [-referenceValueFrom, -referenceValueTo],
+        formatFunction: (x: number) => {
+          return getPercentifiedValue(-x, usePercentage);
+        }
+      }
+    : {
+        displayFrom: getPercentifiedValue(lowerBound, usePercentage),
+        displayTo: getPercentifiedValue(upperBound, usePercentage),
+        min: lowerBound,
+        max: upperBound,
+        values: [referenceValueFrom, referenceValueTo],
+        formatFunction: (x: number) => {
+          return getPercentifiedValue(x, usePercentage);
+        }
+      };
+
   function handleSliderChanged(
     event: React.ChangeEvent<any>,
     newValue: [number, number]
@@ -63,31 +85,17 @@ export default function TradeOffSlider({
           <div>
             <b>From</b>
           </div>
-          <div>
-            {getPercentifiedValue(
-              isDecreasingPvf ? upperBound : lowerBound,
-              usePercentage
-            )}
-          </div>
+          <div>{sliderParameters.displayFrom}</div>
         </Grid>
         <Grid item xs={8} style={marginTop}>
           <Slider
             id="trade-off-slider"
             marks
             valueLabelDisplay="on"
-            valueLabelFormat={(x: number) => {
-              return getPercentifiedValue(
-                isDecreasingPvf ? -x : x,
-                usePercentage
-              );
-            }}
-            value={
-              isDecreasingPvf
-                ? [-referenceValueFrom, -referenceValueTo]
-                : [referenceValueFrom, referenceValueTo]
-            }
-            min={isDecreasingPvf ? -upperBound : lowerBound}
-            max={isDecreasingPvf ? -lowerBound : upperBound}
+            valueLabelFormat={sliderParameters.formatFunction}
+            value={sliderParameters.values}
+            min={sliderParameters.min}
+            max={sliderParameters.max}
             onChange={handleSliderChanged}
             step={stepSize}
           />
@@ -96,12 +104,7 @@ export default function TradeOffSlider({
           <div>
             <b>To</b>
           </div>
-          <div>
-            {getPercentifiedValue(
-              isDecreasingPvf ? lowerBound : upperBound,
-              usePercentage
-            )}
-          </div>
+          <div>{sliderParameters.displayTo}</div>
         </Grid>
       </Grid>
     </Popover>
