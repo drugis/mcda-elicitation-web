@@ -52,6 +52,10 @@
     "alt2": {
       "id": "alt2",
       "title": "alternative 2"
+    },
+    "alt3": {
+      "id": "alt3",
+      "title": "alternative 3"
     }
   },
   "performanceTable": [
@@ -61,10 +65,10 @@
       "dataSource": "ds1",
       "performance": {
         "distribution": {
-          "type": "dnorm",
+          "type": "dbeta",
           "parameters": {
-            "mu": 0,
-            "sigma": 0.5
+            "alpha": 10,
+            "beta": 20
           }
         }
       }
@@ -75,10 +79,10 @@
       "dataSource": "ds1",
       "performance": {
         "distribution": {
-          "type": "dnorm",
+          "type": "dgamma",
           "parameters": {
-            "mu": 1,
-            "sigma": 0.5
+            "alpha": 30,
+            "beta": 50
           }
         }
       }
@@ -91,7 +95,7 @@
         "distribution": {
           "type": "dnorm",
           "parameters": {
-            "mu": 2,
+            "mu": 5,
             "sigma": 0.5
           }
         }
@@ -103,9 +107,38 @@
       "dataSource": "ds2",
       "performance": {
         "distribution": {
+          "type": "range",
+          "parameters": {
+            "lowerBound": 2,
+            "upperBound": 4
+          }
+        }
+      }
+    },
+    {
+      "alternative": "alt3",
+      "criterion": "crit1",
+      "dataSource": "ds1",
+      "performance": {
+        "distribution": {
+          "type": "dt",
+          "parameters": {
+            "mu": 5,
+            "stdErr": 0.5,
+            "dof": 2
+          }
+        }
+      }
+    },
+    {
+      "alternative": "alt3",
+      "criterion": "crit2",
+      "dataSource": "ds2",
+      "performance": {
+        "distribution": {
           "type": "dnorm",
           "parameters": {
-            "mu": 3,
+            "mu": 5,
             "sigma": 0.5
           }
         }

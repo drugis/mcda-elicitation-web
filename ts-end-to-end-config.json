@@ -5,7 +5,8 @@
     "esModuleInterop": true,
     "module": "commonjs",
     "sourceMap": true,
-    "allowJs": false
+    "allowJs": false,
+    "skipLibCheck": true
   },
   "include": ["test/endToEnd/*.ts"],
   "exclude": ["node_modules"]

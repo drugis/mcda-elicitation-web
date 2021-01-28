@@ -43,7 +43,7 @@ export function SubproblemContextProviderComponent({
   function getStepSizeForCriterion(criterion: ICriterion) {
     return getStepSize(
       currentSubproblem.definition.ranges[criterion.dataSources[0].id],
-      currentSubproblem.definition.stepSizes[criterion.id]
+      currentSubproblem.definition.stepSizes[criterion.dataSources[0].id]
     );
   }
 
