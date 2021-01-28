@@ -1,9 +1,17 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
+import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
+import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {TPreferences} from '@shared/types/Preferences';
-import {buildScenarioWithPreferences, initPvfs} from './PreferencesUtil';
+import {
+  buildScenarioWithPreferences,
+  filterScenariosWithPvfs,
+  initPvfs
+} from './PreferencesUtil';
 
 const criterion1: ICriterion = {
   id: 'crit1Id',
@@ -172,6 +180,88 @@ describe('PreferencesUtil', () => {
           problem: {criteria: {}}
         }
       };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('filterScenariosWithPvfs', () => {
+    it('should filter out all the scenarios without pvfs for every criterion', () => {
+      const scenarios = {
+        scenarioWithPvfs: {
+          id: 'scenarioWithPvfs',
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  dataSources: [
+                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                  ]
+                },
+                crit2Id: {
+                  dataSources: [
+                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                  ]
+                }
+              }
+            } as IScenarioProblem
+          } as IScenarioState
+        } as IMcdaScenario,
+        scenarioWithSomePvfs: {
+          id: 'scenarioWithSomePvfs',
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  dataSources: [
+                    {pvf: {direction: 'increasing'} as IScenarioPvf}
+                  ]
+                },
+                crit2Id: {
+                  dataSources: [{pvf: {} as IScenarioPvf}]
+                }
+              }
+            } as IScenarioProblem
+          } as IScenarioState
+        } as IMcdaScenario,
+        scenarioWithNoPvfs: {
+          id: 'scenarioWithNoPvfs',
+          state: {
+            problem: {
+              criteria: {}
+            } as IScenarioProblem
+          } as IScenarioState
+        } as IMcdaScenario
+      };
+
+      const criteria = [
+        {id: 'crit1Id'} as ICriterion,
+        {id: 'crit2Id'} as ICriterion
+      ];
+
+      const result = filterScenariosWithPvfs(scenarios, criteria);
+
+      const expectedResult: Record<string, IMcdaScenario> = {
+        scenarioWithPvfs: {
+          id: 'scenarioWithPvfs',
+          state: {
+            problem: {
+              criteria: {
+                crit1Id: {
+                  dataSources: [
+                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                  ]
+                },
+                crit2Id: {
+                  dataSources: [
+                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                  ]
+                }
+              }
+            } as IScenarioProblem
+          } as IScenarioState
+        } as IMcdaScenario
+      };
+
       expect(result).toEqual(expectedResult);
     });
   });

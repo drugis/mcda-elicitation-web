@@ -7,6 +7,7 @@ import {TPreferencesView} from './TPreferencesView';
 
 export default interface IPreferencesContext {
   scenarios: Record<string, IMcdaScenario>;
+  scenariosWithPvfs: Record<string, IMcdaScenario>;
   currentScenario: IMcdaScenario;
   problem: IProblem;
   pvfs: Record<string, IPvf>;

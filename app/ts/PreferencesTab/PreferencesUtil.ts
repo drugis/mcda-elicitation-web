@@ -54,3 +54,19 @@ export function buildScenarioWithPreferences(
   };
   return {..._.omit(scenario, ['state']), state: newState};
 }
+
+export function filterScenariosWithPvfs(
+  scenarios: Record<string, IMcdaScenario>,
+  criteria: ICriterion[]
+): Record<string, IMcdaScenario> {
+  return _.omitBy(scenarios, (scenario: IMcdaScenario) => {
+    return _.some(criteria, (criterion: ICriterion) => {
+      const scenarioCriterion = scenario.state.problem.criteria[criterion.id];
+      return (
+        !scenarioCriterion ||
+        !scenarioCriterion.dataSources ||
+        !scenarioCriterion.dataSources[0].pvf.direction
+      );
+    });
+  });
+}

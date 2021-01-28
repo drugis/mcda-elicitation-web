@@ -1,5 +1,5 @@
-import IProblemCriterion from './IScenarioCriterion';
+import IScenarioCriterion from './IScenarioCriterion';
 
 export default interface IScenarioProblem {
-  criteria: Record<string, IProblemCriterion>;
+  criteria: Record<string, IScenarioCriterion>;
 }
