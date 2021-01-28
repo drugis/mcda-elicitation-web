@@ -451,8 +451,9 @@ describe('buildWorkspace', () => {
   });
 
   describe('buildWorkspaceDistributions', () => {
+    const unitTypeMap: Record<string, UnitOfMeasurementType> = {};
+
     it('should filter out non distribution entries', () => {
-      const unitTypeMap: Record<string, UnitOfMeasurementType> = {};
       const performanceTable: IPerformanceTableEntry[] = [
         {
           alternative: alternative1Id,
@@ -460,6 +461,39 @@ describe('buildWorkspace', () => {
           criterion: criterion1Id,
           performance: {effect: {type: 'empty'}}
         }
+      ];
+      const result = buildWorkspaceDistributions(
+        performanceTable,
+        idMapper,
+        unitTypeMap
+      );
+      expect(result.length).toBe(0);
+    });
+
+    it('should filter out students t distributions', () => {
+      const performanceTable: IPerformanceTableEntry[] = [
+        {
+          alternative: alternative1Id,
+          dataSource: percentageDSID,
+          criterion: criterion1Id,
+          performance: {distribution: {type: 'dt'}}
+        } as IPerformanceTableEntry
+      ];
+      const result = buildWorkspaceDistributions(
+        performanceTable,
+        idMapper,
+        unitTypeMap
+      );
+      expect(result.length).toBe(0);
+    });
+
+    it('should filter out relative entries', () => {
+      const performanceTable: IPerformanceTableEntry[] = [
+        {
+          dataSource: percentageDSID,
+          criterion: criterion1Id,
+          performance: {distribution: {}}
+        } as IPerformanceTableEntry
       ];
       const result = buildWorkspaceDistributions(
         performanceTable,

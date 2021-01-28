@@ -362,7 +362,11 @@ export function buildWorkspaceDistributions(
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
-      return hasAlternativeId(entry) && 'distribution' in entry.performance;
+      return (
+        hasAlternativeId(entry) &&
+        'distribution' in entry.performance &&
+        !(entry.performance.distribution.type === 'dt')
+      );
     })
     .map(_.partial(buildDistribution, idMapper, unitTypesByDataSource))
     .value();
