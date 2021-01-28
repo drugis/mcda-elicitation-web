@@ -43,13 +43,35 @@ export default function TradeOffSlider({
   const usePercentage = showPercentages && canBePercentage(unit);
   const isDecreasingPvf = referenceValueFrom > referenceValueTo;
 
+  const sliderParameters = isDecreasingPvf
+    ? {
+        displayFrom: getPercentifiedValue(upperBound, usePercentage),
+        displayTo: getPercentifiedValue(lowerBound, usePercentage),
+        min: -upperBound,
+        max: -lowerBound,
+        values: [-referenceValueFrom, -referenceValueTo],
+        formatFunction: (x: number) => {
+          return getPercentifiedValue(-x, usePercentage);
+        }
+      }
+    : {
+        displayFrom: getPercentifiedValue(lowerBound, usePercentage),
+        displayTo: getPercentifiedValue(upperBound, usePercentage),
+        min: lowerBound,
+        max: upperBound,
+        values: [referenceValueFrom, referenceValueTo],
+        formatFunction: (x: number) => {
+          return getPercentifiedValue(x, usePercentage);
+        }
+      };
+
   function handleSliderChanged(
     event: React.ChangeEvent<any>,
     newValue: [number, number]
   ) {
     if (isDecreasingPvf) {
-      setReferenceValueFrom(newValue[1]);
-      setReferenceValueTo(newValue[0]);
+      setReferenceValueFrom(-newValue[0]);
+      setReferenceValueTo(-newValue[1]);
     } else {
       setReferenceValueFrom(newValue[0]);
       setReferenceValueTo(newValue[1]);
@@ -61,34 +83,28 @@ export default function TradeOffSlider({
       <Grid container style={{minWidth: '400px', minHeight: '50px'}}>
         <Grid item xs={2} style={{marginTop: '25px', textAlign: 'center'}}>
           <div>
-            <b>{isDecreasingPvf ? 'To' : 'From'}</b>
+            <b>From</b>
           </div>
-          <div>{getPercentifiedValue(lowerBound, usePercentage)}</div>
+          <div>{sliderParameters.displayFrom}</div>
         </Grid>
         <Grid item xs={8} style={marginTop}>
           <Slider
             id="trade-off-slider"
             marks
             valueLabelDisplay="on"
-            valueLabelFormat={(x: number) => {
-              return getPercentifiedValue(x, usePercentage);
-            }}
-            value={
-              isDecreasingPvf
-                ? [referenceValueTo, referenceValueFrom]
-                : [referenceValueFrom, referenceValueTo]
-            }
-            min={lowerBound}
-            max={upperBound}
+            valueLabelFormat={sliderParameters.formatFunction}
+            value={sliderParameters.values}
+            min={sliderParameters.min}
+            max={sliderParameters.max}
             onChange={handleSliderChanged}
             step={stepSize}
           />
         </Grid>
         <Grid item xs={2} style={{marginTop: '25px', textAlign: 'center'}}>
           <div>
-            <b>{isDecreasingPvf ? 'From' : 'To'}</b>
+            <b>To</b>
           </div>
-          <div>{getPercentifiedValue(upperBound, usePercentage)}</div>
+          <div>{sliderParameters.displayTo}</div>
         </Grid>
       </Grid>
     </Popover>
