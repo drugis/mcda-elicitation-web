@@ -176,7 +176,7 @@
   },
   "sensitivity-measurements": {
     "title": "Measurements sensitivity analysis",
-    "text": "How the value of a specific alternative changes as the weight of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
+    "text": "How the value of a specific alternative changes as the measured value of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
     "link": "/manual.html#mcda-deterministic-analysis"
   },
   "sensitivity-preferences": {
