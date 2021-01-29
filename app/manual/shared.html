@@ -429,7 +429,9 @@
   weights and measurements. The ADDIS MCDA interface lets you separately toggle
   whether to take the uncertainty in either of those aspects into account. After
   changing this setting, the 'Recalculate' button becomes available to
-  recalculate the results and update the page.
+  recalculate the results and update the page. Note that disabling all
+  uncertainty will only take point estimates into account, and is functionally
+  equivalent to deterministic analysis.
 </p>
 <div class="figure">
   <img src="img/smaaUncertainty.png" />
@@ -449,20 +451,51 @@
 
 <h4 id="mcda-rank-acceptability"></h4>
 
-<p>The rank acceptability</p>
+<p>
+  The rank acceptability index indicates for each alternative which proportion
+  of all possible* cases gives it a particular rank, with lower ranks being
+  better. So, for example, Lixisenatide might have rank 1 approximately 30% of
+  the time and rank 2 approximately 70% of the time, given the uncertainties in
+  the user's preferences and the data. If there is no uncertainty, for example
+  due to disabling it in the settings at the top of the page, each alternative
+  will have a 100% rating for one rank, since the possibility space is
+  essentially a point.
+</p>
+<p>
+  These rank acceptabilities are another way of studying the sensitivity of the
+  risk-benefit balance to perturbances in either preferences or data. If a
+  certain alternative is rank 1 in a large proportion of the possibility space,
+  it increases one's confidence in that alternative being the best one.
+</p>
+<p>
+  * It is assumed that the number of samples drawn is high enough that they
+  represent an accurate picture of what is possible.
+</p>
 
 <div class="figure">
-  <img src="img/smaa1.png" />
-  <div class="caption">SMAA, ranking part.</div>
+  <img src="img/rankAcceptabilities.png" />
+  <div class="caption">SMAA, ranking acceptabilities.</div>
 </div>
 
+<h4 id="mcda-central-weights"></h4>
+
+<p>
+  The central weights plot and table show how important a criterion needs to be
+  for it to have the best rank (1). For example in the figure below, it is clear
+  that only by placing a relatively high importance of approximately 0.65 on
+  effectiveness (the blood pressure reduction HbA1c) can the treatment
+  Lixisenatide be seen as better than placebo.
+</p>
 <div class="figure">
   <img src="img/smaa2.png" />
   <div class="caption">SMAA, central weights.</div>
 </div>
 
 <h3 id="mcda-settings">Settings</h3>
-<p>The view of ADDIS MCDA can be customised in several ways:</p>
+<p>
+  ADDIS MCDA can be customised in several ways, as outlined below. The settings
+  dialog is available from any page through the button at the top-right.
+</p>
 <ul>
   <li>
     <b>Percentages or decimals</b>: This toggle switches between decimal and
