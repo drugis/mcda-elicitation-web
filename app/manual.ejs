@@ -171,155 +171,18 @@
               <h4 id="data-upload">Data upload</h4>
               <p>
                 Datasets can be uploaded in
-                <a href="http://www.json.org/">JSON</a> format. The JSON may
-                contain the following entries (note that JSON is
-                case-sensitive):
-              </p>
-              <ul>
-                <li>schemaVersion</li>
-                <li>title</li>
-                <li>description</li>
-                <li>criteria</li>
-                <li>alternatives</li>
-                <li>performanceTable</li>
-                <li>preferences</li>
-              </ul>
-              <p>
-                The `schemaversion` property should indicate which version of
+                <a href="http://www.json.org/">JSON</a> format, and must follow
                 our
                 <a
                   href="https://github.com/drugis/mcda-elicitation-web/tree/master/schema"
                   >JSON schema</a
-                >
-                the file follows. The `title` and `description` properties
-                should contain text.
-              </p>
-              <p>
-                The `criteria` property should contain a series of properties
-                with the names and details of the different criteria in your
-                analysis. The following is an example of JSON describing a
-                single criterion (HAM-D):
-              </p>
-              <pre>
-              "criteria": {
-                "hamd-id": {
-                  "title": "HAM-D",
-                  "id": "hamd-id",
-                  "description": "Responders on the HAM-D rating scale",
-                  "dataSources": [{
-                    "source": "A certain study",
-                    "sourceLink": "https://example.com/studies/3",
-                    "scale": [0, 1]
-                    ],
-                    "unitOfMeasurement": "",
-                  }]
-                }
-              }
-            </pre
-              >
-              <p>
-                The `alternatives` property should contain the alternatives
-                under investigation. For example:
-              </p>
-              <pre>
-              "alternatives": {
-                "placebo-id": {
-                  "title": "Placebo"
-                },
-                "fluox-id": {
-                  "title": "Fluoxetine"
-                },
-                "parox-id": {
-                  "title": "Paroxetine"
-                }
-              }
-            </pre
-              >
-              <p>
-                The `performanceTable` property should contain the actual data
-                of the measurements for each criterion for each alternative.
-                Performance can be measured either in relative or exact terms.
-                If relative, the performance should contain a baseline plus a
-                matrix of relative deviations. If exact, simply the value
-                suffices.
-              </p>
-              <p>An example of exact performance:</p>
-              <pre>
-              "performanceTable": [
-                {
-                  "alternative": "placebo-id,
-                  "criterion": "hamd-id",
-                  "performance": {
-                    "effect": {
-                      "type": "exact",
-                      "value": 0.249,
-                      "input": {
-                        "value": 0.249,
-                        "lowerBound": 0.215,
-                        "upperBound": 0.283
-                      }
-                    },
-                    "distribution": {
-                      "type": "dnorm",
-                      "parameters": {
-                        "mu": 0.249,
-                        "sigma": 0.0173
-                      }
-                    }
-                  }
-                }
-              ]
-            </pre
-              >
-              <p>An example of relative performance:</p>
-              <pre>
-              "performanceTable": [{
-                "criterion": "hamd-id",
-                "performance": {
-                  "type": "relative-logit-normal",
-                  "parameters": {
-                    "baseline": {
-                      "type": "dnorm",
-                      "name": "Placebo",
-                      "mu": -0.17
-                      "sigma": 0.11
-                    },
-                    "relative": {
-                      "type": "dmnorm",
-                      "mu": {
-                        "Placebo": 0,
-                        "Fluoxetine": 0.471,
-                        "Paroxetine": 0.725
-                      },
-                      "cov": {
-                        "rownames": ["placebo-id", "fluox-id", "parox-id"],
-                        "colnames": ["placebo-id", "fluox-id", "parox-id"],
-                        "data":
-                          [ [0, 0,      0],
-                            [0, 0.0134, 0.0103],
-                            [0, 0.0103, 0.023] ]
-                      }
-                    }
-                  }
-                }
-              }]
-            </pre
-              >
-              <p>
-                The `preferences` property is optional and should generally be
-                omitted. It will be filled in by performing preference
-                elicitation within the MCDA app after the upload step.
-              </p>
-              <p>
-                A list of examples is available on the
+                >, with the `schemaversion` property indicating which version of
+                the schema the file follows. A list of examples is available on
+                the
                 <a
                   href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples"
                   target="_blank"
                   >MCDA repository</a
-                >. The JSON schema is available from our
-                <a
-                  href="https://github.com/drugis/mcda-elicitation-web/tree/master/schema"
-                  >GitHub repository</a
                 >.
               </p>
               <h4 id="mcda-manual-entry">Manual entry</h4>
@@ -346,7 +209,7 @@
                 alternatives, criteria and data sources.
               </p>
               <div class="figure">
-                <img src="img/manualEntry1.jpg" />
+                <img src="img/manualEntry.jpg" />
                 <div class="caption">
                   Manual entry, effects input mode. Controls to add
                   alternatives, criteria and data sources are outlined in red.
