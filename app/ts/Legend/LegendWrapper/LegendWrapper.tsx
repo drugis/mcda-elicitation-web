@@ -73,10 +73,10 @@ export default function LegendWrapper({
 
   return (
     <>
-      <Grid item xs={8}>
+      <Grid item md={12} lg={8}>
         {children}
       </Grid>
-      <Grid container item xs={4} alignContent="flex-start">
+      <Grid container item md={12} lg={4} alignContent="flex-start">
         <Tooltip title={<LegendTooltip />}>
           <Button
             color="primary"
