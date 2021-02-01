@@ -8,11 +8,14 @@ import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableD
 import TableWithFavourability from './TableWithFavourability/TableWithFavourability';
 
 export default function EffectsTableCriteriaRows() {
-  const {filteredWorkspace} = useContext(SubproblemContext);
+  const {
+    filteredWorkspace,
+    filteredCriteria,
+    filteredAlternatives
+  } = useContext(SubproblemContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
   const useFavourability = filteredWorkspace.properties.useFavourability;
-  const numberOfColumns =
-    numberOfToggledColumns + _.size(filteredWorkspace.alternatives);
+  const numberOfColumns = numberOfToggledColumns + _.size(filteredAlternatives);
 
   function createCriteriaRows(criteria: ICriterion[]): JSX.Element[][] {
     return _.map(criteria, buildDataSourceRows);
@@ -34,14 +37,12 @@ export default function EffectsTableCriteriaRows() {
   if (useFavourability) {
     return (
       <TableWithFavourability
-        criteria={filteredWorkspace.criteria}
+        criteria={filteredCriteria}
         numberOfColumns={numberOfColumns}
         createCriteriaRows={createCriteriaRows}
       />
     );
   } else {
-    return (
-      <TableBody>{createCriteriaRows(filteredWorkspace.criteria)}</TableBody>
-    );
+    return <TableBody>{createCriteriaRows(filteredCriteria)}</TableBody>;
   }
 }

@@ -1,6 +1,7 @@
 'use strict';
 define([
   './deterministicResultsController',
+  '../../ts/DeterministicTab/DeterministicTab',
 
   './deterministicWeightsTableDirective',
   './lineChartDirective',
@@ -15,9 +16,11 @@ define([
   './deterministicResultsService',
 
   'angular',
+  'react2angular',
   'angular-patavi-client'
 ], function (
   DeterministicResultsController,
+  DeterministicTab,
 
   deterministicWeightsTableDirective,
   lineChartDirective,
@@ -31,7 +34,8 @@ define([
 
   DeterministicResultsService,
 
-  angular
+  angular,
+  react2angular
 ) {
   return angular
     .module('elicit.deterministicResults', ['patavi', 'elicit.results'])
@@ -50,5 +54,22 @@ define([
     .directive('valueProfilePlot', valueProfilePlotDirective)
     .directive('valueProfiles', valueProfilesDirective)
 
-    .factory('DeterministicResultsService', DeterministicResultsService);
+    .factory('DeterministicResultsService', DeterministicResultsService)
+    .component(
+      'deterministicTab',
+      react2angular.react2angular(DeterministicTab.default, [
+        'scenarios',
+        'currentScenarioId',
+        'workspaceId',
+        'problem',
+        'settings',
+        'updateAngularScenario',
+        'toggledColumns',
+        'workspace',
+        'scales',
+        'subproblems',
+        'currentSubproblem',
+        'editMode'
+      ])
+    );
 });

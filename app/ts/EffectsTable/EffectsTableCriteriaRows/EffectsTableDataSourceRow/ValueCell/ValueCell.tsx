@@ -2,7 +2,11 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {AnalysisType} from '@shared/interface/ISettings';
-import {canDSBePercentage} from 'app/ts/EffectsTable/EffectsTableUtil';
+import {
+  canDSBePercentage,
+  findScale,
+  findValue
+} from 'app/ts/EffectsTable/EffectsTableUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
@@ -35,31 +39,6 @@ export default function ValueCell({
   );
   const scale = findScale(scales, dataSourceId, alternativeId);
   const hasScaleValues = scale['50%'] !== null && scale['50%'] !== undefined;
-
-  function findValue<T extends Effect | Distribution>(
-    items: T[],
-    dataSourceId: string,
-    alternativeId: string
-  ): T {
-    return _.find(items, (item: T) => {
-      return (
-        item.alternativeId === alternativeId &&
-        item.dataSourceId === dataSourceId
-      );
-    });
-  }
-
-  function findScale(
-    scales: Record<string, Record<string, IScale>>,
-    dataSourceId: string,
-    alternativeId: string
-  ): IScale {
-    if (scales[dataSourceId] && scales[dataSourceId][alternativeId]) {
-      return scales[dataSourceId][alternativeId];
-    } else {
-      return undefined;
-    }
-  }
 
   function buildValueLabel(analysisType: AnalysisType): JSX.Element {
     if (analysisType === 'deterministic') {

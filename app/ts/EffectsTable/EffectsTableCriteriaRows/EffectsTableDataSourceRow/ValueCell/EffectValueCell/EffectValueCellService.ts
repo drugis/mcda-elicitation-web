@@ -94,7 +94,7 @@ function getBound(
   }
 }
 
-function renderValuesForAnalysis(
+export function renderValuesForAnalysis(
   effect: Effect,
   usePercentage: boolean,
   scale: IScale
@@ -132,7 +132,7 @@ function renderRangeValueForAnalysis(
   );
 }
 
-function effectIsViable(effect: Effect): boolean {
+export function effectIsViable(effect: Effect): boolean {
   return effect.type !== 'empty' && effect.type !== 'text';
 }
 
