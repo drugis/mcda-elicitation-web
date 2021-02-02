@@ -1,4 +1,6 @@
 import IWeights from '@shared/interface/IWeights';
+import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
+import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
@@ -99,5 +101,26 @@ export default function PataviHandler(db: IDB) {
     );
   }
 
-  return {postTask, getWeights, getSmaaResults};
+  function getDeterministicResults(
+    request: Request<{}, {}, IDeterministicResultsCommand>,
+    response: Response,
+    next: any
+  ) {
+    const deterministicResultsCommand = request.body;
+    postAndHandleResults(
+      deterministicResultsCommand,
+      (error: Error, results: IDeterministicResults) => {
+        if (error) {
+          logger.error(error);
+          return next({
+            message: error
+          });
+        } else {
+          response.json(results);
+        }
+      }
+    );
+  }
+
+  return {postTask, getWeights, getSmaaResults, getDeterministicResults};
 }
