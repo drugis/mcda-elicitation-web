@@ -1,4 +1,12 @@
-import {Button, Popover, TableCell, TextField} from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Popover,
+  Slider,
+  TableCell,
+  TextField
+} from '@material-ui/core';
+import {CSSProperties} from '@material-ui/core/styles/withStyles';
 import ICriterion from '@shared/interface/ICriterion';
 import {DeterministicResultsContext} from 'app/ts/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import {
@@ -8,6 +16,7 @@ import {
 } from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {
   ChangeEvent,
@@ -25,6 +34,7 @@ export default function SensitivityMeasurementsTableCell({
   alternativeId: string;
 }): JSX.Element {
   const {showPercentages} = useContext(SettingsContext);
+  const {getStepSizeForCriterion} = useContext(SubproblemContext);
   const {sensitivityTableValues, setCurrentValue} = useContext(
     DeterministicResultsContext
   );
@@ -51,6 +61,11 @@ export default function SensitivityMeasurementsTableCell({
     currentSubproblem.definition.ranges[criterion.dataSources[0].id][1],
     usePercentage
   );
+  const stepSize = getPercentifiedValue(
+    getStepSizeForCriterion(criterion),
+    usePercentage
+  );
+  const marginTop: CSSProperties = {marginTop: '50px', textAlign: 'center'};
 
   useEffect(() => {
     if (isDirty && values.currentValue === values.originalValue) {
@@ -76,11 +91,17 @@ export default function SensitivityMeasurementsTableCell({
       setAnchorEl(null);
     }
   }
-
-  function valueChanged(
+  function inputChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const newValue = Number.parseFloat(event.target.value);
+  ): void {
+    valueChanged(Number.parseFloat(event.target.value));
+  }
+
+  function sliderChanged(event: ChangeEvent<any>, newValue: number): void {
+    valueChanged(newValue);
+  }
+
+  function valueChanged(newValue: number) {
     if (isNaN(newValue)) {
       setInputError('Invalid value');
     } else if (newValue < min || newValue > max) {
@@ -117,19 +138,47 @@ export default function SensitivityMeasurementsTableCell({
         }}
         anchorEl={anchorEl}
       >
-        <TextField
-          id="sensitivity-value-input"
-          value={localValue}
-          onChange={valueChanged}
-          type="number"
-          inputProps={{
-            min: min,
-            max: max
-          }}
-          error={!!inputError}
-          helperText={inputError ? inputError : ''}
-          autoFocus
-        />
+        <Grid container style={{minWidth: '300px', minHeight: '100px'}}>
+          <Grid item xs={2} style={marginTop}>
+            {min}
+          </Grid>
+          <Grid item xs={8} style={marginTop}>
+            <Slider
+              id="sensitivity-value-slider"
+              marks
+              valueLabelDisplay="on"
+              value={localValue}
+              min={min}
+              max={max}
+              onChange={sliderChanged}
+              step={stepSize}
+              track={false}
+            />
+          </Grid>
+          <Grid item xs={2} style={marginTop}>
+            {max}
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            style={{textAlign: 'center', marginBottom: '20px'}}
+          >
+            <TextField
+              id="sensitivity-value-input"
+              value={localValue}
+              onChange={inputChanged}
+              type="number"
+              inputProps={{
+                min: min,
+                max: max,
+                step: stepSize
+              }}
+              error={!!inputError}
+              helperText={inputError ? inputError : ''}
+              autoFocus
+            />
+          </Grid>
+        </Grid>
       </Popover>
     </TableCell>
   );

@@ -5,7 +5,12 @@ import {DeterministicResultsContext} from '../../DeterministicResultsContext/Det
 import ValueProfile from './ValueProfile/ValueProfile';
 
 export default function ValueProfiles(): JSX.Element {
-  const {totalValues, valueProfiles} = useContext(DeterministicResultsContext);
+  const {
+    baseTotalValues,
+    baseValueProfiles,
+    recalculatedTotalValues,
+    recalculatedValueProfiles
+  } = useContext(DeterministicResultsContext);
 
   return (
     <Grid container item xs={12} spacing={2}>
@@ -15,25 +20,25 @@ export default function ValueProfiles(): JSX.Element {
         </Typography>
       </Grid>
       <Grid item xs={6}>
-        {totalValues && valueProfiles ? (
+        {baseTotalValues && baseValueProfiles ? (
           <ValueProfile
             profileCase="Base case"
-            totalValues={totalValues}
-            valueProfiles={valueProfiles}
+            totalValues={baseTotalValues}
+            valueProfiles={baseValueProfiles}
           />
         ) : (
           <CircularProgress />
         )}
       </Grid>
       <Grid item xs={6}>
-        {totalValues && valueProfiles ? (
+        {recalculatedTotalValues && recalculatedValueProfiles ? (
           <ValueProfile
             profileCase="Recalculated case"
-            totalValues={totalValues}
-            valueProfiles={valueProfiles}
+            totalValues={recalculatedTotalValues}
+            valueProfiles={recalculatedValueProfiles}
           />
         ) : (
-          <CircularProgress />
+          <></>
         )}
       </Grid>
     </Grid>

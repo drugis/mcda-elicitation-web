@@ -4,6 +4,8 @@ import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
+import {IRecalculatedCell} from '@shared/interface/Patavi/IRecalculatedCell';
+import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {findScale, findValue} from 'app/ts/EffectsTable/EffectsTableUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
@@ -44,9 +46,20 @@ export function DeterministicResultsContextProviderComponent({
       scales
     )
   );
-  const [deterministicWeights, setDeterministicWeights] = useState<IWeights>();
-  const [totalValues, setTotalValues] = useState<Record<string, number>>();
-  const [valueProfiles, setValueProfiles] = useState<
+  const [recalculatedCells, setRecalculatedCells] = useState<
+    IRecalculatedCell[]
+  >([]);
+  const [weights, setWeights] = useState<IWeights>();
+  const [baseTotalValues, setBaseTotalValues] = useState<
+    Record<string, number>
+  >();
+  const [baseValueProfiles, setBaseValueProfiles] = useState<
+    Record<string, Record<string, number>>
+  >();
+  const [recalculatedTotalValues, setRecalculatedTotalValues] = useState<
+    Record<string, number>
+  >();
+  const [recalculatedValueProfiles, setRecalculatedValueProfiles] = useState<
     Record<string, Record<string, number>>
   >();
 
@@ -73,12 +86,13 @@ export function DeterministicResultsContextProviderComponent({
     axios
       .post('/patavi/deterministicResults', deterministicResultsCommand)
       .then((result: AxiosResponse<IDeterministicResults>) => {
-        setDeterministicWeights(result.data.weights);
-        setTotalValues(result.data.total);
-        setValueProfiles(result.data.value);
+        setWeights(result.data.weights);
+        setBaseTotalValues(result.data.total);
+        setBaseValueProfiles(result.data.value);
       })
       .catch(setError);
   }
+
   function getInitialSensitivityValues(
     criteria: ICriterion[],
     alternatives: IAlternative[],
@@ -138,6 +152,18 @@ export function DeterministicResultsContextProviderComponent({
       }
     };
     setSensitivityTableValues(newValues);
+    const filteredRecalculatedCells = _.reject(
+      recalculatedCells,
+      (cell: IRecalculatedCell) =>
+        cell.criterion === criterionId && cell.alternative === alternativeId
+    );
+    setRecalculatedCells(
+      filteredRecalculatedCells.concat({
+        alternative: alternativeId,
+        criterion: criterionId,
+        value: newValue
+      })
+    );
   }
 
   function resetSensitivityTable(): void {
@@ -149,16 +175,48 @@ export function DeterministicResultsContextProviderComponent({
         scales
       )
     );
+    setRecalculatedCells([]);
+    setRecalculatedTotalValues(undefined);
+    setRecalculatedValueProfiles(undefined);
   }
 
-  function recalculateValuePlots(): void {}
+  function recalculateValuePlots(): void {
+    const pataviProblem = getPataviProblem(
+      problem,
+      filteredCriteria,
+      filteredAlternatives,
+      pvfs
+    );
+
+    const deterministicResultsCommand: IRecalculatedDeterministicResultsCommand = {
+      ...pataviProblem,
+      preferences: currentScenario.state.prefs,
+      method: 'sensitivityMeasurements',
+      sensitivityAnalysis: {
+        meas: recalculatedCells
+      }
+    };
+
+    axios
+      .post(
+        '/patavi/recalculateDeterministicResults',
+        deterministicResultsCommand
+      )
+      .then((result: AxiosResponse<IDeterministicResults>) => {
+        setRecalculatedTotalValues(result.data.total);
+        setRecalculatedValueProfiles(result.data.value);
+      })
+      .catch(setError);
+  }
 
   return (
     <DeterministicResultsContext.Provider
       value={{
-        deterministicWeights,
-        totalValues,
-        valueProfiles,
+        weights,
+        baseTotalValues,
+        baseValueProfiles,
+        recalculatedTotalValues,
+        recalculatedValueProfiles,
         sensitivityTableValues,
         recalculateValuePlots,
         resetSensitivityTable,

@@ -7,11 +7,16 @@ export default function PataviRouter(db: IDB) {
     postTask,
     getWeights,
     getSmaaResults,
-    getDeterministicResults
+    getDeterministicResults,
+    getRecalculatedDeterministicResults
   } = PataviHandler(db);
   return Router()
     .post('/weights', getWeights)
     .post('/smaaResults', getSmaaResults)
     .post('/deterministicResults', getDeterministicResults)
+    .post(
+      '/recalculateDeterministicResults',
+      getRecalculatedDeterministicResults
+    )
     .post('/', postTask);
 }

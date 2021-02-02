@@ -20,6 +20,7 @@ export default function getRequiredRights(
     makeRights('/patavi/weights', 'POST', 'none'),
     makeRights('/patavi/smaaResults', 'POST', 'none'),
     makeRights('/patavi/deterministicResults', 'POST', 'none'),
+    makeRights('/patavi/recalculateDeterministicResults', 'POST', 'none'),
 
     makeRights('/workspaces', 'GET', 'none'),
     makeRights('/workspaces', 'POST', 'none'),

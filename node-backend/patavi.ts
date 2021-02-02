@@ -3,6 +3,7 @@ import IWeights from '@shared/interface/IWeights';
 import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
+import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
 import {IWeightsProblem} from '@shared/interface/Patavi/IWeightsCommand';
@@ -76,7 +77,8 @@ export function postAndHandleResults(
     | IPataviProblem
     | IWeightsProblem
     | ISmaaResultsCommand
-    | IDeterministicResultsCommand,
+    | IDeterministicResultsCommand
+    | IRecalculatedDeterministicResultsCommand,
   callback: (
     error: OurError,
     result?: IWeights | ISmaaResults | IDeterministicResults

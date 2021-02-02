@@ -8,17 +8,17 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import React, {useContext} from 'react';
-import _ from 'lodash';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import ICriterion from '@shared/interface/ICriterion';
-import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
+import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import _ from 'lodash';
+import React, {useContext} from 'react';
+import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
   const {filteredCriteria} = useContext(SubproblemContext);
-  const {deterministicWeights} = useContext(DeterministicResultsContext);
+  const {weights} = useContext(DeterministicResultsContext);
 
   return (
     <Grid container item xs={12}>
@@ -28,7 +28,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        {deterministicWeights ? (
+        {weights ? (
           <Table>
             <TableHead>
               <TableRow>
@@ -45,9 +45,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
                 {_.map(filteredCriteria, (criterion: ICriterion) => {
                   return (
                     <TableCell key={criterion.id}>
-                      {significantDigits(
-                        deterministicWeights.mean[criterion.id]
-                      )}
+                      {significantDigits(weights.mean[criterion.id])}
                     </TableCell>
                   );
                 })}
