@@ -4,6 +4,7 @@ import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import React, {useContext} from 'react';
 import DeterministicWeightsTable from './DeterministicWeightsTable/DeterministicWeightsTable';
 import SensitivityMeasurementsTable from './SensitivityMeasurementsTable/SensitivityMeasurementsTable';
+import ValueProfiles from './ValueProfiles/ValueProfiles';
 
 export default function DeterministicResults(): JSX.Element {
   const {currentScenario, scenariosWithPvfs} = useContext(PreferencesContext);
@@ -15,6 +16,7 @@ export default function DeterministicResults(): JSX.Element {
       />
       <SensitivityMeasurementsTable />
       <DeterministicWeightsTable />
+      <ValueProfiles />
     </Grid>
   );
 }
