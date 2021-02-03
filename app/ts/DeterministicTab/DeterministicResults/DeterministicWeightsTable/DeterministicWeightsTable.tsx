@@ -9,6 +9,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
+import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
@@ -22,14 +23,17 @@ export default function DeterministicWeightsTable(): JSX.Element {
 
   return (
     <Grid container item xs={12}>
-      <Grid item xs={12}>
+      <Grid item xs={9}>
         <Typography variant="h5">
           Weights <InlineHelp helpId="representative-weights" />
         </Typography>
       </Grid>
+      <Grid container item xs={3} justify="flex-end">
+        <ClipboardButton targetId="#deterministic-weights-table" />
+      </Grid>
       <Grid item xs={12}>
         {weights ? (
-          <Table>
+          <Table id="deterministic-weights-table">
             <TableHead>
               <TableRow>
                 {_.map(

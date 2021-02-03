@@ -5,11 +5,11 @@ import {
   TableHead,
   TableRow
 } from '@material-ui/core';
-import React, {useContext} from 'react';
-import _ from 'lodash';
 import IAlternative from '@shared/interface/IAlternative';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import _ from 'lodash';
+import React, {useContext} from 'react';
 
 export default function TotalValueTable({
   totalValues

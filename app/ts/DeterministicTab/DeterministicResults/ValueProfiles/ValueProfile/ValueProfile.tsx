@@ -1,4 +1,5 @@
 import {Grid, Typography} from '@material-ui/core';
+import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import LegendWrapper from 'app/ts/Legend/LegendWrapper/LegendWrapper';
 import React from 'react';
 import TotalValueTable from './TotalValueTable/TotalValueTable';
@@ -15,7 +16,7 @@ export default function ValueProfile({
   valueProfiles: Record<string, Record<string, number>>;
 }): JSX.Element {
   return (
-    <Grid container>
+    <Grid container spacing={1}>
       <Grid item xs={12}>
         <Typography variant="h6">
           {profileCase.charAt(0).toUpperCase() + profileCase.substr(1)} case
@@ -29,18 +30,24 @@ export default function ValueProfile({
           />
         </LegendWrapper>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={9}>
         <Typography variant="h6">Total value ({profileCase} case)</Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid container item xs={3} justify="flex-end">
+        <ClipboardButton targetId={`#${profileCase}-total-value-table`} />
+      </Grid>
+      <Grid item xs={12} id={`${profileCase}-total-value-table`}>
         <TotalValueTable totalValues={totalValues} />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={9}>
         <Typography variant="h6">
           Value profiles table ({profileCase} case)
         </Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid container item xs={3} justify="flex-end">
+        <ClipboardButton targetId={`#${profileCase}-value-profiles-table`} />
+      </Grid>
+      <Grid item xs={12} id={`${profileCase}-value-profiles-table`}>
         <ValueProfilesTable valueProfiles={valueProfiles} />
       </Grid>
     </Grid>

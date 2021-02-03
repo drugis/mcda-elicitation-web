@@ -36,7 +36,7 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
   }
 
   return (
-    <Grid container item xs={12}>
+    <Grid container item xs={12} spacing={1}>
       <Grid item xs={12}>
         <Typography variant="h5">
           Measurements <InlineHelp helpId="effects-table" />
