@@ -13,6 +13,7 @@ export default interface IPreferencesContext {
   pvfs: Record<string, IPvf>;
   disableWeightsButtons: boolean;
   activeView: TPreferencesView;
+  elicitationMethod: string;
   setCurrentScenario: (currentScenario: IMcdaScenario) => void;
   updateScenario: (newScenario: IMcdaScenario) => Promise<void>;
   deleteScenario: (id: string) => void;
@@ -23,5 +24,4 @@ export default interface IPreferencesContext {
   setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
   resetPreferences: (scenario: IMcdaScenario) => void;
   setActiveView: (newView: TPreferencesView) => void;
-  determineElicitationMethod: () => string;
 }
