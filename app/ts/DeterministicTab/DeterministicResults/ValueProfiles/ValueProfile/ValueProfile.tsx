@@ -1,6 +1,7 @@
 import {Grid, Typography} from '@material-ui/core';
 import React from 'react';
 import TotalValueTable from './TotalValueTable/TotalValueTable';
+import ValueProfilePlot from './ValueProfilePlot/ValueProfilePlot';
 import ValueProfilesTable from './ValueProfilesTable/ValueProfilesTable';
 
 export default function ValueProfile({
@@ -15,17 +16,25 @@ export default function ValueProfile({
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Typography variant="h6">{profileCase}</Typography>
+        <Typography variant="h6">
+          {profileCase.charAt(0).toUpperCase() + profileCase.substr(1)} case
+        </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography variant="h6">Total value ({profileCase})</Typography>
+        <ValueProfilePlot
+          profileCase={profileCase}
+          valueProfiles={valueProfiles}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="h6">Total value ({profileCase} case)</Typography>
       </Grid>
       <Grid item xs={12}>
         <TotalValueTable totalValues={totalValues} />
       </Grid>
       <Grid item xs={12}>
         <Typography variant="h6">
-          Value profiles table ({profileCase})
+          Value profiles table ({profileCase} case)
         </Typography>
       </Grid>
       <Grid item xs={12}>

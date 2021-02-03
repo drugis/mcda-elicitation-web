@@ -8,6 +8,7 @@ import ValueProfiles from './ValueProfiles/ValueProfiles';
 
 export default function DeterministicResults(): JSX.Element {
   const {currentScenario, scenariosWithPvfs} = useContext(PreferencesContext);
+
   return (
     <Grid container spacing={2}>
       <ScenarioSelection

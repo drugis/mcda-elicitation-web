@@ -22,7 +22,7 @@ export default function ValueProfiles(): JSX.Element {
       <Grid item xs={6}>
         {baseTotalValues && baseValueProfiles ? (
           <ValueProfile
-            profileCase="Base case"
+            profileCase="base"
             totalValues={baseTotalValues}
             valueProfiles={baseValueProfiles}
           />
@@ -33,7 +33,7 @@ export default function ValueProfiles(): JSX.Element {
       <Grid item xs={6}>
         {recalculatedTotalValues && recalculatedValueProfiles ? (
           <ValueProfile
-            profileCase="Recalculated case"
+            profileCase="recalculated"
             totalValues={recalculatedTotalValues}
             valueProfiles={recalculatedValueProfiles}
           />
