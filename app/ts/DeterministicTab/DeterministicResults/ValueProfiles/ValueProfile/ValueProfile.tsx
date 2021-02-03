@@ -1,4 +1,5 @@
 import {Grid, Typography} from '@material-ui/core';
+import LegendWrapper from 'app/ts/Legend/LegendWrapper/LegendWrapper';
 import React from 'react';
 import TotalValueTable from './TotalValueTable/TotalValueTable';
 import ValueProfilePlot from './ValueProfilePlot/ValueProfilePlot';
@@ -20,11 +21,13 @@ export default function ValueProfile({
           {profileCase.charAt(0).toUpperCase() + profileCase.substr(1)} case
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <ValueProfilePlot
-          profileCase={profileCase}
-          valueProfiles={valueProfiles}
-        />
+      <Grid container item xs={12}>
+        <LegendWrapper>
+          <ValueProfilePlot
+            profileCase={profileCase}
+            valueProfiles={valueProfiles}
+          />
+        </LegendWrapper>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="h6">Total value ({profileCase} case)</Typography>
