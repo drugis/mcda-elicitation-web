@@ -1,5 +1,10 @@
+import IAlternative from '@shared/interface/IAlternative';
+import ICriterion from '@shared/interface/ICriterion';
 import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
+import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
+import {IMeasurementsSensitivityResults} from '@shared/interface/Patavi/IMeasurementsSensitivityResults';
+import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRecalculatedCell} from '@shared/interface/Patavi/IRecalculatedCell';
 import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import IWeights from '@shared/interface/Scenario/IWeights';
@@ -57,21 +62,45 @@ export function DeterministicResultsContextProviderComponent({
   const [recalculatedValueProfiles, setRecalculatedValueProfiles] = useState<
     Record<string, Record<string, number>>
   >();
+  const [
+    measurementSensitivityCriterion,
+    setMeasurementSensitivityCriterion
+  ] = useState<ICriterion>(filteredCriteria[0]);
+  const [
+    measurementSensitivityAlternative,
+    setMeasurementSensitivityAlternative
+  ] = useState<IAlternative>(filteredAlternatives[0]);
+  const [
+    measurementsSensitivityResults,
+    setMeasurementsSensitivityResults
+  ] = useState<Record<string, Record<number, number>>>();
 
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
-      calculateResults();
+      const pataviProblem = getPataviProblem(
+        problem,
+        filteredCriteria,
+        filteredAlternatives,
+        pvfs
+      );
+      getDeterministicResults(pataviProblem);
+      getMeasurementsSensitivityResults(pataviProblem);
     }
   }, [pvfs]);
 
-  function calculateResults(): void {
-    const pataviProblem = getPataviProblem(
-      problem,
-      filteredCriteria,
-      filteredAlternatives,
-      pvfs
-    );
+  useEffect(() => {
+    if (!_.isEmpty(pvfs)) {
+      const pataviProblem = getPataviProblem(
+        problem,
+        filteredCriteria,
+        filteredAlternatives,
+        pvfs
+      );
+      getMeasurementsSensitivityResults(pataviProblem);
+    }
+  }, [measurementSensitivityCriterion, measurementSensitivityAlternative]);
 
+  function getDeterministicResults(pataviProblem: IPataviProblem): void {
     const deterministicResultsCommand: IDeterministicResultsCommand = {
       ...pataviProblem,
       preferences: currentScenario.state.prefs,
@@ -84,6 +113,27 @@ export function DeterministicResultsContextProviderComponent({
         setWeights(result.data.weights);
         setBaseTotalValues(result.data.total);
         setBaseValueProfiles(result.data.value);
+      })
+      .catch(setError);
+  }
+
+  function getMeasurementsSensitivityResults(
+    pataviProblem: IPataviProblem
+  ): void {
+    const measurementsSensitivityCommand: IMeasurementsSensitivityCommand = {
+      ...pataviProblem,
+      preferences: currentScenario.state.prefs,
+      method: 'sensitivityMeasurementsPlot',
+      sensitivityAnalysis: {
+        alternative: measurementSensitivityAlternative.id,
+        criterion: measurementSensitivityCriterion.id
+      }
+    };
+
+    axios
+      .post('/patavi/measurementsSensitivity', measurementsSensitivityCommand)
+      .then((result: AxiosResponse<IMeasurementsSensitivityResults>) => {
+        setMeasurementsSensitivityResults(result.data.total);
       })
       .catch(setError);
   }
@@ -172,9 +222,14 @@ export function DeterministicResultsContextProviderComponent({
         recalculatedTotalValues,
         recalculatedValueProfiles,
         sensitivityTableValues,
+        measurementSensitivityCriterion,
+        measurementSensitivityAlternative,
+        measurementsSensitivityResults,
         recalculateValuePlots,
         resetSensitivityTable,
-        setCurrentValue
+        setCurrentValue,
+        setMeasurementSensitivityCriterion,
+        setMeasurementSensitivityAlternative
       }}
     >
       {children}

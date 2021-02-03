@@ -1,6 +1,8 @@
 import IWeights from '@shared/interface/IWeights';
 import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
+import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
+import {IMeasurementsSensitivityResults} from '@shared/interface/Patavi/IMeasurementsSensitivityResults';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
@@ -144,11 +146,32 @@ export default function PataviHandler(db: IDB) {
     );
   }
 
+  function getMeasurementsSensitivity(
+    request: Request<{}, {}, IMeasurementsSensitivityCommand>,
+    response: Response,
+    next: any
+  ) {
+    postAndHandleResults(
+      request.body,
+      (error: Error, results: IMeasurementsSensitivityResults) => {
+        if (error) {
+          logger.error(error);
+          return next({
+            message: error
+          });
+        } else {
+          response.json(results);
+        }
+      }
+    );
+  }
+
   return {
     postTask,
     getWeights,
     getSmaaResults,
     getDeterministicResults,
-    getRecalculatedDeterministicResults
+    getRecalculatedDeterministicResults,
+    getMeasurementsSensitivity
   };
 }

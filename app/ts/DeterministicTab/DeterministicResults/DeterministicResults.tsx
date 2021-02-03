@@ -3,6 +3,7 @@ import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import React, {useContext} from 'react';
 import DeterministicWeightsTable from './DeterministicWeightsTable/DeterministicWeightsTable';
+import SensitivityAnalysis from './SensitivityAnalysis/SensitivityAnalysis';
 import SensitivityMeasurementsTable from './SensitivityMeasurementsTable/SensitivityMeasurementsTable';
 import ValueProfiles from './ValueProfiles/ValueProfiles';
 
@@ -18,6 +19,7 @@ export default function DeterministicResults(): JSX.Element {
       <SensitivityMeasurementsTable />
       <DeterministicWeightsTable />
       <ValueProfiles />
+      <SensitivityAnalysis />
     </Grid>
   );
 }

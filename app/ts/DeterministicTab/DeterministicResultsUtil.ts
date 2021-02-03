@@ -4,10 +4,10 @@ import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
+import _ from 'lodash';
 import {findScale, findValue} from '../EffectsTable/EffectsTableUtil';
 import ISensitivityValue from '../interface/ISensitivityValue';
 import significantDigits from '../ManualInput/Util/significantDigits';
-import _ from 'lodash';
 
 export function getInitialSensitivityValues(
   criteria: ICriterion[],
@@ -106,7 +106,7 @@ function pataviResultToValueProfile(
 ): [string, ...(string | number)[]][] {
   const alternativeTitles = getAlternativesTitles(alternatives, legend);
   return [
-    ...alternativeTitles,
+    alternativeTitles,
     ...getValueProfilePlotValues(valueProfiles, criteria, alternatives)
   ];
 }
@@ -114,14 +114,12 @@ function pataviResultToValueProfile(
 function getAlternativesTitles(
   alternatives: IAlternative[],
   legend: Record<string, string>
-): [[string, ...string[]]] {
+): [string, ...string[]] {
   return [
-    [
-      'x',
-      ..._.map(alternatives, (alternative: IAlternative): string =>
-        legend ? legend[alternative.id] : alternative.title
-      )
-    ]
+    'x',
+    ..._.map(alternatives, (alternative: IAlternative): string =>
+      legend ? legend[alternative.id] : alternative.title
+    )
   ];
 }
 
@@ -148,4 +146,94 @@ function getValueData(
         valueProfiles[alternative.id][criterion.id]
     )
   ];
+}
+export function getSensitivityLineChartSettings(
+  criterion: ICriterion,
+  measurementsSensitivityResults: Record<string, Record<number, number>>,
+  alternatives: IAlternative[],
+  legend: Record<string, string>
+): ChartConfiguration {
+  const plotValues = pataviResultToLineValues(
+    measurementsSensitivityResults,
+    alternatives,
+    legend
+  );
+  const numericalPlotValues = _.map(plotValues[0].slice(1), parseFloat);
+  return {
+    bindto: '#measurements-sensitivity-plot',
+    data: {
+      x: 'x',
+      columns: plotValues
+    },
+    axis: {
+      x: {
+        label: {
+          text: criterion.title,
+          position: 'outer-center'
+        },
+        min: _.min(numericalPlotValues),
+        max: _.max(numericalPlotValues),
+        padding: {
+          left: 0,
+          right: 0
+        },
+        tick: {
+          count: 5,
+          format: format(',.3g')
+        }
+      },
+      y: {
+        label: {
+          text: 'Total value',
+          position: 'outer-middle'
+        }
+      }
+    },
+    grid: {
+      x: {
+        show: false
+      },
+      y: {
+        show: true
+      }
+    },
+    point: {
+      show: false
+    },
+    tooltip: {
+      show: false
+    }
+  };
+}
+
+function pataviResultToLineValues(
+  measurementsSensitivityResults: Record<string, Record<number, number>>,
+  alternatives: IAlternative[],
+  legend: Record<string, string>
+): [string, ...(string | number)[]][] {
+  return [
+    getLineXValues(measurementsSensitivityResults, alternatives),
+    ...getLineYValues(measurementsSensitivityResults, alternatives, legend)
+  ];
+}
+
+function getLineXValues(
+  measurementsSensitivityResults: Record<string, Record<number, number>>,
+  alternatives: IAlternative[]
+): ['x', ...string[]] {
+  return ['x', ..._.keys(measurementsSensitivityResults[alternatives[0].id])];
+}
+
+function getLineYValues(
+  measurementsSensitivityResults: Record<string, Record<number, number>>,
+  alternatives: IAlternative[],
+  legend: Record<string, string>
+): [string, ...number[]][] {
+  return _.map(alternatives, (alternative: IAlternative): [
+    string,
+    ...number[]
+  ] => [
+    legend ? legend[alternative.id] : alternative.title,
+    ..._.values(measurementsSensitivityResults[alternative.id])
+  ]);
 }

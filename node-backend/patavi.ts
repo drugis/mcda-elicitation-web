@@ -2,6 +2,8 @@ import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
 import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
+import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
+import {IMeasurementsSensitivityResults} from '@shared/interface/Patavi/IMeasurementsSensitivityResults';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
@@ -78,10 +80,15 @@ export function postAndHandleResults(
     | IWeightsProblem
     | ISmaaResultsCommand
     | IDeterministicResultsCommand
-    | IRecalculatedDeterministicResultsCommand,
+    | IRecalculatedDeterministicResultsCommand
+    | IMeasurementsSensitivityCommand,
   callback: (
     error: OurError,
-    result?: IWeights | ISmaaResults | IDeterministicResults
+    result?:
+      | IWeights
+      | ISmaaResults
+      | IDeterministicResults
+      | IMeasurementsSensitivityResults
   ) => void
 ) {
   Axios.post(pataviTaskUrl, problem, {httpsAgent})

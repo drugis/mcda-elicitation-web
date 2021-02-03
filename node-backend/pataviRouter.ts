@@ -8,7 +8,8 @@ export default function PataviRouter(db: IDB) {
     getWeights,
     getSmaaResults,
     getDeterministicResults,
-    getRecalculatedDeterministicResults
+    getRecalculatedDeterministicResults,
+    getMeasurementsSensitivity
   } = PataviHandler(db);
   return Router()
     .post('/weights', getWeights)
@@ -18,5 +19,6 @@ export default function PataviRouter(db: IDB) {
       '/recalculateDeterministicResults',
       getRecalculatedDeterministicResults
     )
+    .post('/measurementsSensitivity', getMeasurementsSensitivity)
     .post('/', postTask);
 }
