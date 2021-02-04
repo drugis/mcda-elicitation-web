@@ -22,7 +22,7 @@ export default function ValueProfile({
           {profileCase.charAt(0).toUpperCase() + profileCase.substr(1)} case
         </Typography>
       </Grid>
-      <Grid container item xs={12}>
+      <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
         <LegendWrapper>
           <ValueProfilePlot
             profileCase={profileCase}
