@@ -112,7 +112,9 @@ function switchInDeterministic(browser) {
     .click('#deterministic-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
     .click('#scenario-selector')
-    .click('option[label="Default"]')
+    .waitForElementVisible('#scenario-selector > option:nth-child(1)')
+    .click('#scenario-selector > option:nth-child(1)')
+    .pause(SELENIUM_DELAY)
     .assert.containsText('#scenario-selector', 'Default');
 }
 
