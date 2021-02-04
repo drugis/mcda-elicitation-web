@@ -11,7 +11,7 @@ export default function ValueProfile({
   totalValues,
   valueProfiles
 }: {
-  profileCase: string;
+  profileCase: 'base' | 'recalculated';
   totalValues: Record<string, number>;
   valueProfiles: Record<string, Record<string, number>>;
 }): JSX.Element {

@@ -3,8 +3,7 @@ define([
   './deterministicResultsController',
   '../../ts/DeterministicTab/DeterministicTab',
   'angular',
-  'react2angular',
-  'angular-patavi-client'
+  'react2angular'
 ], function (
   DeterministicResultsController,
   DeterministicTab,

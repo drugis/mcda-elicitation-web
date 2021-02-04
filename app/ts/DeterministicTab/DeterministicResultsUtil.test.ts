@@ -118,7 +118,7 @@ describe('DeterministicResultsUtil', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return value profile plot data, with alterantive title replaced by a legend', () => {
+    it('should return value profile plot data, with alternative title replaced by a legend', () => {
       const legend: Record<string, string> = {alt1Id: 'legend'};
       const valueProfiles: Record<string, Record<string, number>> = {
         alt1Id: {crit1Id: 10}

@@ -4,9 +4,7 @@ define([
   'react2angular',
   '../../ts/SmaaTab/SmaaTab',
 
-  './smaaResultsController',
-
-  'angular-patavi-client'
+  './smaaResultsController'
 ], function (
   angular,
   react2angular,

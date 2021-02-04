@@ -18,15 +18,13 @@ export default function SensitivityMeasurementsTableRow({
   const {filteredAlternatives} = useContext(SubproblemContext);
 
   function renderCells(): JSX.Element[] {
-    return _.map(filteredAlternatives, (alternative) => {
-      return (
-        <SensitivityMeasurementsTableCell
-          key={criterion.id + alternative.id}
-          criterion={criterion}
-          alternativeId={alternative.id}
-        />
-      );
-    });
+    return _.map(filteredAlternatives, (alternative) => (
+      <SensitivityMeasurementsTableCell
+        key={criterion.id + alternative.id}
+        criterion={criterion}
+        alternativeId={alternative.id}
+      />
+    ));
   }
 
   return (

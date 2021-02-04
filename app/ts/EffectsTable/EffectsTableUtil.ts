@@ -18,11 +18,11 @@ export function findValue<T extends Effect | Distribution>(
   dataSourceId: string,
   alternativeId: string
 ): T {
-  return _.find(items, (item: T) => {
-    return (
+  return _.find(
+    items,
+    (item: T) =>
       item.alternativeId === alternativeId && item.dataSourceId === dataSourceId
-    );
-  });
+  );
 }
 
 export function findScale(
