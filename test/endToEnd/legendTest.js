@@ -65,7 +65,7 @@ function changeAlternativeLabels(browser) {
 
   browser
     .click('#deterministic-tab')
-    .waitForElementVisible('#sensitivity-table')
+    .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
     .useCss();
@@ -96,7 +96,7 @@ function reset(browser) {
 
   browser
     .click('#deterministic-tab')
-    .waitForElementVisible('#sensitivity-table')
+    .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
     .useCss();
@@ -111,7 +111,7 @@ function reset(browser) {
     .assert.containsText(thirdAlternative, 'C')
 
     .click('#deterministic-tab')
-    .waitForElementVisible('#sensitivity-table')
+    .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
     .useCss()
