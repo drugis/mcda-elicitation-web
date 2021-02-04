@@ -3,15 +3,15 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  // 'Verifying all components are visible': verifyComponents,
-  // 'Default button resetting options': reset,
-  // '(De)select all button deselects and selects all column options': deselectAll,
-  // 'Verify that save can not be pressed if there are not values for entered smaa': checkEnteredSmaaDisabled,
-  // 'Switching settings in problem definition tab': switchSettingsInProblemDefinition,
-  // 'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
-  // 'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
-  // 'Unselecting uncertainties column in problem definition tab': unselectUncertaintiesInProblemDefinition,
-  // 'Unselecting reference column in problem definition tab': unselectReferenceInProblemDefinition,
+  'Verifying all components are visible': verifyComponents,
+  'Default button resetting options': reset,
+  '(De)select all button deselects and selects all column options': deselectAll,
+  'Verify that save can not be pressed if there are not values for entered smaa': checkEnteredSmaaDisabled,
+  'Switching settings in problem definition tab': switchSettingsInProblemDefinition,
+  'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
+  'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
+  'Unselecting uncertainties column in problem definition tab': unselectUncertaintiesInProblemDefinition,
+  'Unselecting reference column in problem definition tab': unselectReferenceInProblemDefinition,
   'Unselecting description column in deterministic results tab': unselectDescriptionInDeterministic,
   'Unselecting units column in deterministic results tab': unselectUnitsInDeterministic,
   'Unselecting uncertainties column in deterministic results tab': unselectUncertaintiesInDeterministic,
@@ -174,9 +174,8 @@ function checkEnteredSmaaDisabled(browser) {
 }
 
 function switchSettingsInProblemDefinition(browser) {
-  var effectTableCellPath =
-    '#value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1';
-  var unitsCellPath = '#unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e';
+  var effectTableCellPath = '#value-cell-dsOS-alt1';
+  var unitsCellPath = '#unit-cell-dsOS';
   var scaleRangeCellPath = '#observed-range-OS';
   util
     .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
@@ -279,8 +278,8 @@ function switchMedianInDeterministic(browser) {
 }
 
 function switchSettingsInOverview(browser) {
-  var effectCellPath = '#value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1';
-  var unitsCellPath = '#unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e';
+  var effectCellPath = '#value-cell-dsOS-alt1';
+  var unitsCellPath = '#unit-cell-dsOS';
 
   browser
     .getValue(unitsCellPath, _.partial(checkValue, browser, null))

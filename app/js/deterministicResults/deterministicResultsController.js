@@ -22,10 +22,6 @@ define([], function () {
           "'s deterministic results"
       );
     });
-
-    $scope.$on('elicit.settingsChanged', () => {
-      $state.reload(); // discard broadcast argument, keep in anonymous function
-    });
   };
   return dependencies.concat(DeterministicResultsController);
 });
