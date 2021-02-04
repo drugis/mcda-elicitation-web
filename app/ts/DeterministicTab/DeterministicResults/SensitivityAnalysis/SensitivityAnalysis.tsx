@@ -3,11 +3,13 @@ import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import React, {useContext} from 'react';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 import MeasurementSensitivity from './MeasurementSensitivity/MeasurementSensitivity';
+import PreferencesSensitivity from './PreferencesSensitivity/PreferencesSensitivity';
 
 export default function SensitivityAnalysis(): JSX.Element {
-  const {measurementsSensitivityResults} = useContext(
-    DeterministicResultsContext
-  );
+  const {
+    measurementsSensitivityResults,
+    preferencesSensitivityResults
+  } = useContext(DeterministicResultsContext);
   return (
     <Grid container item xs={12} spacing={1}>
       <Grid item xs={12}>
@@ -24,7 +26,13 @@ export default function SensitivityAnalysis(): JSX.Element {
         <CircularProgress />
       )}
 
-      <Grid item xs={6}></Grid>
+      {preferencesSensitivityResults ? (
+        <Grid item xs={6}>
+          <PreferencesSensitivity />
+        </Grid>
+      ) : (
+        <CircularProgress />
+      )}
     </Grid>
   );
 }

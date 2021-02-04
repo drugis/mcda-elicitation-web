@@ -5,6 +5,8 @@ import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterminis
 import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
 import {IMeasurementsSensitivityResults} from '@shared/interface/Patavi/IMeasurementsSensitivityResults';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
+import {IPreferencesSensitivityCommand} from '@shared/interface/Patavi/IPreferencesSensitivityCommand';
+import {IPreferencesSensitivityResults} from '@shared/interface/Patavi/IPreferencesSensitivityResults';
 import {IRecalculatedCell} from '@shared/interface/Patavi/IRecalculatedCell';
 import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import IWeights from '@shared/interface/Scenario/IWeights';
@@ -62,6 +64,7 @@ export function DeterministicResultsContextProviderComponent({
   const [recalculatedValueProfiles, setRecalculatedValueProfiles] = useState<
     Record<string, Record<string, number>>
   >();
+
   const [
     measurementSensitivityCriterion,
     setMeasurementSensitivityCriterion
@@ -75,6 +78,15 @@ export function DeterministicResultsContextProviderComponent({
     setMeasurementsSensitivityResults
   ] = useState<Record<string, Record<number, number>>>();
 
+  const [
+    preferencesSensitivityCriterion,
+    setPreferencesSensitivityCriterion
+  ] = useState<ICriterion>(filteredCriteria[0]);
+  const [
+    preferencesSensitivityResults,
+    setPreferencesSensitivityResults
+  ] = useState<Record<string, Record<number, number>>>();
+
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
@@ -85,6 +97,7 @@ export function DeterministicResultsContextProviderComponent({
       );
       getDeterministicResults(pataviProblem);
       getMeasurementsSensitivityResults(pataviProblem);
+      getPreferencesSensitivityResults(pataviProblem);
     }
   }, [pvfs]);
 
@@ -100,15 +113,27 @@ export function DeterministicResultsContextProviderComponent({
     }
   }, [measurementSensitivityCriterion, measurementSensitivityAlternative]);
 
+  useEffect(() => {
+    if (!_.isEmpty(pvfs)) {
+      const pataviProblem = getPataviProblem(
+        problem,
+        filteredCriteria,
+        filteredAlternatives,
+        pvfs
+      );
+      getPreferencesSensitivityResults(pataviProblem);
+    }
+  }, [preferencesSensitivityCriterion]);
+
   function getDeterministicResults(pataviProblem: IPataviProblem): void {
-    const deterministicResultsCommand: IDeterministicResultsCommand = {
+    const pataviCommand: IDeterministicResultsCommand = {
       ...pataviProblem,
       preferences: currentScenario.state.prefs,
       method: 'deterministic'
     };
 
     axios
-      .post('/patavi/deterministicResults', deterministicResultsCommand)
+      .post('/patavi/deterministicResults', pataviCommand)
       .then((result: AxiosResponse<IDeterministicResults>) => {
         setWeights(result.data.weights);
         setBaseTotalValues(result.data.total);
@@ -120,7 +145,7 @@ export function DeterministicResultsContextProviderComponent({
   function getMeasurementsSensitivityResults(
     pataviProblem: IPataviProblem
   ): void {
-    const measurementsSensitivityCommand: IMeasurementsSensitivityCommand = {
+    const pataviCommand: IMeasurementsSensitivityCommand = {
       ...pataviProblem,
       preferences: currentScenario.state.prefs,
       method: 'sensitivityMeasurementsPlot',
@@ -131,9 +156,29 @@ export function DeterministicResultsContextProviderComponent({
     };
 
     axios
-      .post('/patavi/measurementsSensitivity', measurementsSensitivityCommand)
+      .post('/patavi/measurementsSensitivity', pataviCommand)
       .then((result: AxiosResponse<IMeasurementsSensitivityResults>) => {
         setMeasurementsSensitivityResults(result.data.total);
+      })
+      .catch(setError);
+  }
+
+  function getPreferencesSensitivityResults(
+    pataviProblem: IPataviProblem
+  ): void {
+    const pataviCommand: IPreferencesSensitivityCommand = {
+      ...pataviProblem,
+      preferences: currentScenario.state.prefs,
+      method: 'sensitivityWeightPlot',
+      sensitivityAnalysis: {
+        criterion: preferencesSensitivityCriterion.id
+      }
+    };
+
+    axios
+      .post('/patavi/preferencesSensitivity', pataviCommand)
+      .then((result: AxiosResponse<IPreferencesSensitivityResults>) => {
+        setPreferencesSensitivityResults(result.data.total);
       })
       .catch(setError);
   }
@@ -192,7 +237,7 @@ export function DeterministicResultsContextProviderComponent({
       pvfs
     );
 
-    const deterministicResultsCommand: IRecalculatedDeterministicResultsCommand = {
+    const pataviCommand: IRecalculatedDeterministicResultsCommand = {
       ...pataviProblem,
       preferences: currentScenario.state.prefs,
       method: 'sensitivityMeasurements',
@@ -202,10 +247,7 @@ export function DeterministicResultsContextProviderComponent({
     };
 
     axios
-      .post(
-        '/patavi/recalculateDeterministicResults',
-        deterministicResultsCommand
-      )
+      .post('/patavi/recalculateDeterministicResults', pataviCommand)
       .then((result: AxiosResponse<IDeterministicResults>) => {
         setRecalculatedTotalValues(result.data.total);
         setRecalculatedValueProfiles(result.data.value);
@@ -225,11 +267,14 @@ export function DeterministicResultsContextProviderComponent({
         measurementSensitivityCriterion,
         measurementSensitivityAlternative,
         measurementsSensitivityResults,
+        preferencesSensitivityCriterion,
+        preferencesSensitivityResults,
         recalculateValuePlots,
         resetSensitivityTable,
         setCurrentValue,
         setMeasurementSensitivityCriterion,
-        setMeasurementSensitivityAlternative
+        setMeasurementSensitivityAlternative,
+        setPreferencesSensitivityCriterion
       }}
     >
       {children}

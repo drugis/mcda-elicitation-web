@@ -13,6 +13,8 @@ export default interface IDeterministicResultsContext {
   measurementSensitivityCriterion: ICriterion;
   measurementSensitivityAlternative: IAlternative;
   measurementsSensitivityResults: Record<string, Record<number, number>>;
+  preferencesSensitivityCriterion: ICriterion;
+  preferencesSensitivityResults: Record<string, Record<number, number>>;
   recalculateValuePlots: () => void;
   resetSensitivityTable: () => void;
   setCurrentValue: (
@@ -22,4 +24,5 @@ export default interface IDeterministicResultsContext {
   ) => void;
   setMeasurementSensitivityCriterion: (criterion: ICriterion) => void;
   setMeasurementSensitivityAlternative: (criterion: IAlternative) => void;
+  setPreferencesSensitivityCriterion: (criterion: ICriterion) => void;
 }

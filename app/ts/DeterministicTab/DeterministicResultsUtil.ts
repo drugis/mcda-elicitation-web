@@ -98,7 +98,8 @@ export function generateValuePlotSettings(
     }
   };
 }
-function pataviResultToValueProfile(
+
+export function pataviResultToValueProfile(
   valueProfiles: Record<string, Record<string, number>>,
   criteria: ICriterion[],
   alternatives: IAlternative[],
@@ -147,11 +148,14 @@ function getValueData(
     )
   ];
 }
+
 export function getSensitivityLineChartSettings(
-  criterion: ICriterion,
   measurementsSensitivityResults: Record<string, Record<number, number>>,
   alternatives: IAlternative[],
-  legend: Record<string, string>
+  legend: Record<string, string>,
+  Xlabel: string,
+  useTooltip: boolean,
+  plotId: string
 ): ChartConfiguration {
   const plotValues = pataviResultToLineValues(
     measurementsSensitivityResults,
@@ -160,7 +164,7 @@ export function getSensitivityLineChartSettings(
   );
   const numericalPlotValues = _.map(plotValues[0].slice(1), parseFloat);
   return {
-    bindto: '#measurements-sensitivity-plot',
+    bindto: plotId,
     data: {
       x: 'x',
       columns: plotValues
@@ -168,7 +172,7 @@ export function getSensitivityLineChartSettings(
     axis: {
       x: {
         label: {
-          text: criterion.title,
+          text: Xlabel,
           position: 'outer-center'
         },
         min: _.min(numericalPlotValues),
@@ -201,12 +205,12 @@ export function getSensitivityLineChartSettings(
       show: false
     },
     tooltip: {
-      show: false
+      show: useTooltip
     }
   };
 }
 
-function pataviResultToLineValues(
+export function pataviResultToLineValues(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
   alternatives: IAlternative[],
   legend: Record<string, string>

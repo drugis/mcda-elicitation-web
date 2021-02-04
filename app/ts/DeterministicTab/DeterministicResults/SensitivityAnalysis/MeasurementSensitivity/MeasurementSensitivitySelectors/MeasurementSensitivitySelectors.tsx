@@ -1,5 +1,6 @@
 import {Grid, Select} from '@material-ui/core';
 import {DeterministicResultsContext} from 'app/ts/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
+import SelectOptions from 'app/ts/SelectOptions/SelectOptions';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
@@ -28,19 +29,6 @@ export default function MeasurementSensitivitySelectors(): JSX.Element {
     setMeasurementSensitivityAlternative(newAlternative);
   }
 
-  function getSelectorOptions<T extends {id: string; title: string}>(
-    items: T[]
-  ): JSX.Element[] {
-    return _.map(
-      items,
-      (item: T): JSX.Element => (
-        <option value={item.id} key={item.id}>
-          {item.title}
-        </option>
-      )
-    );
-  }
-
   return (
     <Grid container item xs={12}>
       <Grid item xs={3}>
@@ -54,7 +42,7 @@ export default function MeasurementSensitivitySelectors(): JSX.Element {
           onChange={handleCriterionChanged}
           style={{minWidth: 220}}
         >
-          {getSelectorOptions(filteredCriteria)}
+          <SelectOptions items={filteredCriteria} />
         </Select>
       </Grid>
       <Grid item xs={3}>
@@ -68,7 +56,7 @@ export default function MeasurementSensitivitySelectors(): JSX.Element {
           onChange={handleAlternativeChanged}
           style={{minWidth: 220}}
         >
-          {getSelectorOptions(filteredAlternatives)}
+          <SelectOptions items={filteredAlternatives} />
         </Select>
       </Grid>
     </Grid>

@@ -1,14 +1,9 @@
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
-import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
-import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
-import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
-import {IMeasurementsSensitivityResults} from '@shared/interface/Patavi/IMeasurementsSensitivityResults';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
-import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
-import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
-import {IWeightsProblem} from '@shared/interface/Patavi/IWeightsCommand';
+import {TPataviCommands} from '@shared/types/PataviCommands';
+import {TPataviResults} from '@shared/types/PataviResults';
 import Axios, {AxiosError, AxiosResponse} from 'axios';
 import fs from 'fs';
 import {IncomingMessage} from 'http';
@@ -75,21 +70,8 @@ export default function createPataviTask(
 }
 
 export function postAndHandleResults(
-  problem:
-    | IPataviProblem
-    | IWeightsProblem
-    | ISmaaResultsCommand
-    | IDeterministicResultsCommand
-    | IRecalculatedDeterministicResultsCommand
-    | IMeasurementsSensitivityCommand,
-  callback: (
-    error: OurError,
-    result?:
-      | IWeights
-      | ISmaaResults
-      | IDeterministicResults
-      | IMeasurementsSensitivityResults
-  ) => void
+  problem: TPataviCommands,
+  callback: (error: OurError, result?: TPataviResults) => void
 ) {
   Axios.post(pataviTaskUrl, problem, {httpsAgent})
     .then((pataviResponse: AxiosResponse) => {

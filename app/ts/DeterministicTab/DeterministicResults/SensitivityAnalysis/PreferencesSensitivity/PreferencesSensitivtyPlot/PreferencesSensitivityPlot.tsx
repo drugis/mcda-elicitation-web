@@ -5,30 +5,30 @@ import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemCo
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext} from 'react';
 
-export default function MeasurementSensitivityPlot(): JSX.Element {
+export default function PreferencesSensitivityPlot(): JSX.Element {
   const {filteredAlternatives} = useContext(SubproblemContext);
   const {legendByAlternativeId} = useContext(LegendContext);
   const {
-    measurementSensitivityCriterion,
-    measurementsSensitivityResults
+    preferencesSensitivityCriterion,
+    preferencesSensitivityResults
   } = useContext(DeterministicResultsContext);
   const width = '400px';
   const height = '400px';
 
   const settings: ChartConfiguration = getSensitivityLineChartSettings(
-    measurementsSensitivityResults,
+    preferencesSensitivityResults,
     filteredAlternatives,
     legendByAlternativeId,
-    measurementSensitivityCriterion.title,
-    false,
-    '#measurements-sensitivity-plot'
+    'Weight given to ' + preferencesSensitivityCriterion.title,
+    true,
+    '#preferences-sensitivity-plot'
   );
   generate(settings);
 
   return (
     <div
       style={{width: width, height: height}}
-      id="measurements-sensitivity-plot"
+      id="preferences-sensitivity-plot"
     />
   );
 }
