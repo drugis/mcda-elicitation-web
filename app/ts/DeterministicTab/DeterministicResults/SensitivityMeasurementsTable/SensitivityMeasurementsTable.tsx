@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Grid,
   Table,
   TableBody,
@@ -22,7 +23,7 @@ import SensitivityMeasurementsTableRow from './SensitivityMeasurementsTableRow/S
 import SensitivityTableButtons from './SensitivityTableButtons/SensitivityTableButtons';
 
 export default function SensitivityMeasurementsTable(): JSX.Element {
-  const {filteredAlternatives, filteredCriteria} = useContext(
+  const {filteredAlternatives, filteredCriteria, configuredRanges} = useContext(
     SubproblemContext
   );
 
@@ -42,32 +43,40 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
           Measurements <InlineHelp helpId="effects-table" />
         </Typography>
       </Grid>
-      <Grid item xs={9}>
-        <em>Values can be changed by clicking them.</em>
-      </Grid>
-      <Grid container item xs={3} justify="flex-end">
-        <ClipboardButton targetId="#sensitivity-measurements-table" />
-      </Grid>
-      <Grid item xs={12}>
-        <Table id="sensitivity-measurements-table" size="small">
-          <TableHead>
-            <TableRow>
-              <CriteriaHeader colSpan={1} />
-              <DescriptionHeader />
-              <UnitsHeader />
-              <EffectsTableAlternativeHeaders
-                alternatives={filteredAlternatives}
-              />
-              <SoEUncHeader />
-              <ReferencesHeader />
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderRows()}</TableBody>
-        </Table>
-      </Grid>
-      <Grid item xs={12}>
-        <SensitivityTableButtons />
-      </Grid>
+      {!_.isEmpty(configuredRanges) ? (
+        <>
+          <Grid item xs={9}>
+            <em>Values can be changed by clicking them.</em>
+          </Grid>
+          <Grid container item xs={3} justify="flex-end">
+            <ClipboardButton targetId="#sensitivity-measurements-table" />
+          </Grid>
+          <Grid item xs={12}>
+            <Table id="sensitivity-measurements-table" size="small">
+              <TableHead>
+                <TableRow>
+                  <CriteriaHeader colSpan={1} />
+                  <DescriptionHeader />
+                  <UnitsHeader />
+                  <EffectsTableAlternativeHeaders
+                    alternatives={filteredAlternatives}
+                  />
+                  <SoEUncHeader />
+                  <ReferencesHeader />
+                </TableRow>
+              </TableHead>
+              <TableBody>{renderRows()}</TableBody>
+            </Table>
+          </Grid>
+          <Grid item xs={12}>
+            <SensitivityTableButtons />
+          </Grid>
+        </>
+      ) : (
+        <Grid item xs={12}>
+          <CircularProgress />
+        </Grid>
+      )}
     </Grid>
   );
 }

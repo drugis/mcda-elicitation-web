@@ -6,7 +6,12 @@ import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import {applySubproblem, getMagnitude, getStepSize} from './SubproblemUtil';
+import {
+  applySubproblem,
+  getConfiguredRanges,
+  getMagnitude,
+  getStepSize
+} from './SubproblemUtil';
 
 describe('The Subproblem util', () => {
   describe('applySubproblem', () => {
@@ -353,6 +358,49 @@ describe('The Subproblem util', () => {
       const configuredRange: [number, number] = [0, 1];
       const result = getMagnitude(configuredRange, 0.01);
       const expectedResult = -2;
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getConfiguredRanges', () => {
+    it('should return the configured ranges', () => {
+      const criteria: ICriterion[] = [
+        {
+          id: 'crit1Id',
+          dataSources: [{id: 'ds1Id'}, {id: 'ds2Id'}]
+        } as ICriterion
+      ];
+      const observedRanges: Record<string, [number, number]> = {
+        ds1Id: [0, 100]
+      };
+      const configuredRanges: Record<string, [number, number]> = {
+        ds1Id: [0, 10]
+      };
+      const result = getConfiguredRanges(
+        criteria,
+        observedRanges,
+        configuredRanges
+      );
+      const expectedResult: Record<string, [number, number]> = {ds1Id: [0, 10]};
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the observed ranges', () => {
+      const criteria: ICriterion[] = [
+        {id: 'crit1Id', dataSources: [{id: 'ds1Id'}]} as ICriterion
+      ];
+      const observedRanges: Record<string, [number, number]> = {
+        ds1Id: [0, 100]
+      };
+      const configuredRanges = {};
+      const result = getConfiguredRanges(
+        criteria,
+        observedRanges,
+        configuredRanges
+      );
+      const expectedResult: Record<string, [number, number]> = {
+        ds1Id: [0, 100]
+      };
       expect(result).toEqual(expectedResult);
     });
   });

@@ -1,4 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import IEffect from '@shared/interface/IEffect';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
@@ -183,4 +184,23 @@ export function hasNoRange(
   dataSourceId: string
 ): boolean {
   return _.isEqual(ranges, {}) || _.isEqual(ranges[dataSourceId], {});
+}
+
+export function getConfiguredRanges(
+  criteria: ICriterion[],
+  observedRanges: Record<string, [number, number]>,
+  configuredRanges?: Record<string, [number, number]>
+): Record<string, [number, number]> {
+  const dataSourcesWithValues: Record<string, IDataSource> = _(criteria)
+    .flatMap('dataSources')
+    .filter((dataSource: IDataSource): boolean =>
+      Boolean(observedRanges[dataSource.id])
+    )
+    .keyBy('id')
+    .value();
+  return _.mapValues(dataSourcesWithValues, (dataSource: IDataSource) => {
+    return configuredRanges && configuredRanges[dataSource.id]
+      ? configuredRanges[dataSource.id]
+      : observedRanges[dataSource.id];
+  });
 }

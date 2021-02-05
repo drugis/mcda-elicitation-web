@@ -9,7 +9,6 @@ import {
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {MouseEvent, useContext, useEffect, useState} from 'react';
 import SensitivityMeasurementsTablePopover from './SensitivityMeasurementsTablePopover/SensitivityMeasurementsTablePopover';
 
@@ -21,11 +20,12 @@ export default function SensitivityMeasurementsTableCell({
   alternativeId: string;
 }): JSX.Element {
   const {showPercentages} = useContext(SettingsContext);
-  const {getStepSizeForCriterion} = useContext(SubproblemContext);
+  const {getStepSizeForCriterion, configuredRanges} = useContext(
+    SubproblemContext
+  );
   const {sensitivityTableValues, setCurrentValue} = useContext(
     DeterministicResultsContext
   );
-  const {currentSubproblem} = useContext(WorkspaceContext);
 
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -39,12 +39,13 @@ export default function SensitivityMeasurementsTableCell({
     getPercentifiedValue(values.currentValue, usePercentage)
   );
 
+  const dataSourceId = criterion.dataSources[0].id;
   const min = getPercentifiedValue(
-    currentSubproblem.definition.ranges[criterion.dataSources[0].id][0],
+    configuredRanges[dataSourceId][0],
     usePercentage
   );
   const max = getPercentifiedValue(
-    currentSubproblem.definition.ranges[criterion.dataSources[0].id][1],
+    configuredRanges[dataSourceId][1],
     usePercentage
   );
   const stepSize = getPercentifiedValue(

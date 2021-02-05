@@ -7,11 +7,13 @@ module.exports = {
   'Go to previous step': navigate,
   'Set linear partial value functions via button': setLinearPVF,
   'Display weights when all PVFs are set': displayWeights,
-  'Reset set trade-offs when setting a PVF': resetTradeOffs
+  'Reset set trade-offs when setting a PVF': resetTradeOffs,
+  'Display deterministic results without initialized configured ranges': deterministic
 };
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
+const util = require('./util/util');
 
 const workspacePath = '/partialValueFunctionTestProblem.json';
 
@@ -92,4 +94,19 @@ function resetTradeOffs(browser) {
     .click('#decreasing-pvf-button-c1')
     .assert.containsText('#importance-criterion-c1', '?')
     .assert.containsText('#importance-criterion-c2', '?');
+}
+
+function deterministic(browser) {
+  setLinearPVF(browser);
+  util.delayedClick(
+    browser,
+    '#deterministic-tab',
+    '#deterministic-weights-table'
+  );
+  browser
+    .waitForElementVisible('#value-profile-plot-base')
+    .waitForElementVisible('#base-total-value-table')
+    .waitForElementVisible('#base-value-profiles-table')
+    .waitForElementVisible('#measurements-sensitivity-plot')
+    .waitForElementVisible('#preferences-sensitivity-plot');
 }

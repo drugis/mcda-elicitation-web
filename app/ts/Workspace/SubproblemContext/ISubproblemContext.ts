@@ -6,6 +6,7 @@ import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
 
 export default interface ISubproblemContext {
+  configuredRanges: Record<string, [number, number]>;
   filteredAlternatives: IAlternative[];
   filteredCriteria: ICriterion[];
   filteredEffects: Effect[];
