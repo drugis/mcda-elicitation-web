@@ -1,23 +1,23 @@
-import { Dialog, DialogActions, DialogContent, Tooltip } from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, Tooltip} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
-import { SubproblemContext } from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
-import { LegendContext } from '../LegendContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {LegendContext} from '../LegendContext';
 import LegendButtons from './LegendButtons/LegendButtons';
 import LegendTable from './LegendTable/LegendTable';
 import LegendTooltip from './LegendTooltip/LegendTooltip';
-import { initLegend } from './LegendUtil';
+import {initLegend} from './LegendUtil';
 
 export default function LegendWrapper({
   children,
   buttonId
 }: {
   children: any;
-  buttonId:string
+  buttonId: string;
 }): JSX.Element {
   const {canEdit, legendByAlternativeId, saveLegend} = useContext(
     LegendContext
@@ -81,7 +81,7 @@ export default function LegendWrapper({
       <Grid container item md={12} lg={4} alignContent="flex-start">
         <Tooltip title={<LegendTooltip />}>
           <Button
-          id={buttonId}
+            id={buttonId}
             color="primary"
             variant="contained"
             onClick={openDialog}
