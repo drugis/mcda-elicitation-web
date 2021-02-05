@@ -1,15 +1,9 @@
 'use strict';
 define([], function () {
-  var dependencies = [
-    '$scope',
-    '$state',
-    'currentScenario',
-    'PageTitleService'
-  ];
+  var dependencies = ['$scope', 'currentScenario', 'PageTitleService'];
 
   var DeterministicResultsController = function (
     $scope,
-    $state,
     currentScenario,
     PageTitleService
   ) {

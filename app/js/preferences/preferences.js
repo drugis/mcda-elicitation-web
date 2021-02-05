@@ -11,8 +11,7 @@ define([
 
   './partialValuePlotDirective',
 
-  '../workspace/workspace',
-  '../results/results'
+  '../workspace/workspace'
 ], function (
   angular,
   react2angular,
@@ -25,7 +24,7 @@ define([
   partialValuePlotDirective
 ) {
   return angular
-    .module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
+    .module('elicit.preferences', ['elicit.workspace'])
     .component(
       'preferences',
       react2angular.react2angular(PreferencesTab.default, [

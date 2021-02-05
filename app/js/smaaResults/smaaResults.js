@@ -13,7 +13,7 @@ define([
   SmaaResultsController
 ) {
   return angular
-    .module('elicit.smaaResults', ['patavi', 'elicit.results'])
+    .module('elicit.smaaResults', [])
     .component(
       'smaaTab',
       react2angular.react2angular(SmaaTab.default, [

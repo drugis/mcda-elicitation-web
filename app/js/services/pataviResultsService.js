@@ -14,20 +14,6 @@ define(['lodash', 'angular'], function (_) {
     PataviService,
     WorkspaceSettingsService
   ) {
-    function getWeights(problem, scenario) {
-      const newProblem = {
-        ..._.cloneDeep(problem),
-        method: 'representativeWeights',
-        seed: WorkspaceSettingsService.getRandomSeed()
-      };
-      return $http
-        .post('/patavi/weights', {problem: newProblem, scenario: scenario})
-        .then((result) => {
-          return result.data;
-        }, errorHandler)
-        .catch(errorHandler);
-    }
-
     function postAndHandleResults(problem, successHandler) {
       problem.seed = WorkspaceSettingsService.getRandomSeed();
       return $http
@@ -61,8 +47,7 @@ define(['lodash', 'angular'], function (_) {
     }
 
     return {
-      postAndHandleResults,
-      getWeights
+      postAndHandleResults
     };
   };
   return dependencies.concat(PataviResultsService);

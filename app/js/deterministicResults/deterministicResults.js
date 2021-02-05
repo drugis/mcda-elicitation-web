@@ -11,7 +11,7 @@ define([
   react2angular
 ) {
   return angular
-    .module('elicit.deterministicResults', ['patavi', 'elicit.results'])
+    .module('elicit.deterministicResults', [])
     .controller(
       'DeterministicResultsController',
       DeterministicResultsController

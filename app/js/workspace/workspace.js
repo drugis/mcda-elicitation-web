@@ -9,8 +9,8 @@ define([
 
   '../services/workspaceService',
   '../services/performanceTableService',
-  './orderingService',
   './workspaceSettingsService',
+  '../services/pataviResultsService',
 
   './exampleResource',
   './tutorialResource',
@@ -23,8 +23,7 @@ define([
   'react2angular',
 
   'angular',
-  '../util',
-  '../results/results'
+  '../util'
 ], function (
   ChooseProblemController,
   CreateWorkspaceController,
@@ -34,8 +33,8 @@ define([
 
   WorkspaceService,
   PerformanceTableService,
-  OrderingService,
   WorkspaceSettingService,
+  PataviResultsService,
 
   ExampleResource,
   TutorialResource,
@@ -50,7 +49,7 @@ define([
   angular
 ) {
   return angular
-    .module('elicit.workspace', ['elicit.util', 'elicit.results'])
+    .module('elicit.workspace', ['elicit.util'])
     .controller('ChooseProblemController', ChooseProblemController)
     .controller('CreateWorkspaceController', CreateWorkspaceController)
     .controller('DeleteInProgressController', DeleteInProgressController)
@@ -59,8 +58,8 @@ define([
 
     .factory('WorkspaceService', WorkspaceService)
     .factory('PerformanceTableService', PerformanceTableService)
-    .factory('OrderingService', OrderingService)
     .factory('WorkspaceSettingsService', WorkspaceSettingService)
+    .factory('PataviResultsService', PataviResultsService)
 
     .service('ExampleResource', ExampleResource)
     .service('TutorialResource', TutorialResource)

@@ -23,29 +23,12 @@ define(['lodash', 'angular'], function (_) {
     // init
     $scope.scalesPromise.then(() => {
       $scope.subProblems = subProblems;
-      $scope.scales = $scope.workspace.scales;
       PageTitleService.setPageTitle(
         'SubProblemController',
         ($scope.aggregateState.problem.title || $scope.workspace.title) +
           `'s problem definition`
       );
     });
-
-    $scope.$watch(
-      'workspace.scales',
-      function (newScales, oldScales) {
-        if (
-          newScales &&
-          oldScales &&
-          newScales.observed === oldScales.observed
-        ) {
-          return;
-        } else {
-          $scope.scales = newScales;
-        }
-      },
-      true
-    );
 
     function subproblemChanged(newSubProblem) {
       var coords = _.omit($stateParams, 'id');
