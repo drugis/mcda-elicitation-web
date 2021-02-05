@@ -29,7 +29,7 @@ export default function ValueProfilesTable({
           {_.map(
             filteredAlternatives,
             (alternative: IAlternative): JSX.Element => (
-              <TableCell key={alternative.id}>{alternative.id}</TableCell>
+              <TableCell key={alternative.id}>{alternative.title}</TableCell>
             )
           )}
         </TableRow>
