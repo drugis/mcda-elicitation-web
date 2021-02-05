@@ -9,8 +9,29 @@ export default function ValueProfiles(): JSX.Element {
     baseTotalValues,
     baseValueProfiles,
     recalculatedTotalValues,
-    recalculatedValueProfiles
+    recalculatedValueProfiles,
+    areRecalculatedPlotsLoading
   } = useContext(DeterministicResultsContext);
+
+  function renderRecalculatedCase(): JSX.Element {
+    if (
+      !areRecalculatedPlotsLoading &&
+      recalculatedTotalValues &&
+      recalculatedValueProfiles
+    ) {
+      return (
+        <ValueProfile
+          profileCase="recalculated"
+          totalValues={recalculatedTotalValues}
+          valueProfiles={recalculatedValueProfiles}
+        />
+      );
+    } else if (areRecalculatedPlotsLoading) {
+      return <CircularProgress />;
+    } else {
+      return <></>;
+    }
+  }
 
   return (
     <Grid container item xs={12} spacing={2}>
@@ -31,15 +52,7 @@ export default function ValueProfiles(): JSX.Element {
         )}
       </Grid>
       <Grid item xs={6}>
-        {recalculatedTotalValues && recalculatedValueProfiles ? (
-          <ValueProfile
-            profileCase="recalculated"
-            totalValues={recalculatedTotalValues}
-            valueProfiles={recalculatedValueProfiles}
-          />
-        ) : (
-          <></>
-        )}
+        {renderRecalculatedCase()}
       </Grid>
     </Grid>
   );

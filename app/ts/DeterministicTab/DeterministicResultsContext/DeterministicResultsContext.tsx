@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IError from '@shared/interface/IError';
 import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
 import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
@@ -86,6 +87,10 @@ export function DeterministicResultsContextProviderComponent({
     preferencesSensitivityResults,
     setPreferencesSensitivityResults
   ] = useState<Record<string, Record<number, number>>>();
+  const [
+    areRecalculatedPlotsLoading,
+    setAreRecalculatedPlotsLoading
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
@@ -230,6 +235,7 @@ export function DeterministicResultsContextProviderComponent({
   }
 
   function recalculateValuePlots(): void {
+    setAreRecalculatedPlotsLoading(true);
     const pataviProblem = getPataviProblem(
       problem,
       filteredCriteria,
@@ -251,29 +257,34 @@ export function DeterministicResultsContextProviderComponent({
       .then((result: AxiosResponse<IDeterministicResults>) => {
         setRecalculatedTotalValues(result.data.total);
         setRecalculatedValueProfiles(result.data.value);
+        setAreRecalculatedPlotsLoading(false);
       })
-      .catch(setError);
+      .catch((error: IError) => {
+        setAreRecalculatedPlotsLoading(false);
+        setError(error);
+      });
   }
 
   return (
     <DeterministicResultsContext.Provider
       value={{
-        weights,
+        areRecalculatedPlotsLoading,
         baseTotalValues,
         baseValueProfiles,
-        recalculatedTotalValues,
-        recalculatedValueProfiles,
-        sensitivityTableValues,
-        measurementSensitivityCriterion,
         measurementSensitivityAlternative,
+        measurementSensitivityCriterion,
         measurementsSensitivityResults,
         preferencesSensitivityCriterion,
         preferencesSensitivityResults,
+        recalculatedTotalValues,
+        recalculatedValueProfiles,
+        sensitivityTableValues,
+        weights,
         recalculateValuePlots,
         resetSensitivityTable,
         setCurrentValue,
-        setMeasurementSensitivityCriterion,
         setMeasurementSensitivityAlternative,
+        setMeasurementSensitivityCriterion,
         setPreferencesSensitivityCriterion
       }}
     >

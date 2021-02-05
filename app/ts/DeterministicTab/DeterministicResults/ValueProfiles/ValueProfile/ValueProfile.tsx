@@ -23,7 +23,7 @@ export default function ValueProfile({
         </Typography>
       </Grid>
       <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
-        <LegendWrapper>
+        <LegendWrapper buttonId={`${profileCase}-profile-plot-legend`}>
           <ValueProfilePlot
             profileCase={profileCase}
             valueProfiles={valueProfiles}

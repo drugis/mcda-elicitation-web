@@ -18,21 +18,21 @@ export default function SensitivityAnalysis(): JSX.Element {
           <InlineHelp helpId="one-way-sensitivity-analysis" />
         </Typography>
       </Grid>
-      {measurementsSensitivityResults ? (
-        <Grid item xs={6}>
+      <Grid item xs={6}>
+        {measurementsSensitivityResults ? (
           <MeasurementSensitivity />
-        </Grid>
-      ) : (
-        <CircularProgress />
-      )}
+        ) : (
+          <CircularProgress />
+        )}
+      </Grid>
 
-      {preferencesSensitivityResults ? (
-        <Grid item xs={6}>
+      <Grid item xs={6}>
+        {preferencesSensitivityResults ? (
           <PreferencesSensitivity />
-        </Grid>
-      ) : (
-        <CircularProgress />
-      )}
+        ) : (
+          <CircularProgress />
+        )}
+      </Grid>
     </Grid>
   );
 }

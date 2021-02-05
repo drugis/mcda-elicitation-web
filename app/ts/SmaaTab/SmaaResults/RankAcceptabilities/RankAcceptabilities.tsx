@@ -15,7 +15,7 @@ export default function RankAcceptabilities(): JSX.Element {
         </Typography>
       </Grid>
       <Grid container item xs={6}>
-        <LegendWrapper>
+        <LegendWrapper buttonId={'rank-acceptabilities-plot-legend'}>
           <RankAcceptabilitiesPlot />
         </LegendWrapper>
       </Grid>
