@@ -12,28 +12,6 @@ module.exports = {
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 
-const chai = require('chai');
-
-function checkElementValueGreaterThan(browser, path, value) {
-  browser
-    .useXpath()
-    .getLocationInView(path)
-    .getText(path, function (result) {
-      chai.expect(parseFloat(result.value)).to.be.above(value);
-    })
-    .useCss();
-}
-
-function checkResetMeasurementValue(browser, path) {
-  browser
-    .useXpath()
-    .getText(path, function (result) {
-      chai.expect(parseFloat(result.value)).to.be.below(60);
-      chai.expect(parseFloat(result.value)).to.be.above(36);
-    })
-    .useCss();
-}
-
 const title =
   'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
@@ -47,7 +25,7 @@ function beforeEach(browser) {
     .waitForElementVisible('#workspace-title')
     .click('#deterministic-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
-    .waitForElementVisible('#sensitivity-table');
+    .waitForElementVisible('#sensitivity-measurements-table');
 }
 
 function afterEach(browser) {
@@ -57,55 +35,62 @@ function afterEach(browser) {
 
 function results(browser) {
   browser
-    .waitForElementVisible('#representative-weights-table')
-    .waitForElementVisible('#base-case-table')
-    .waitForElementVisible('#base-case-plot')
+    .waitForElementVisible('#deterministic-weights-table')
+    .waitForElementVisible('#value-profile-plot-base')
+    .waitForElementVisible('#base-total-value-table')
+    .waitForElementVisible('#base-value-profiles-table')
     .waitForElementVisible('#measurements-sensitivity-plot')
-    .waitForElementVisible('#preferences-sensitivity-plot')
-    .waitForElementVisible('#base-value-profile-table');
+    .waitForElementVisible('#preferences-sensitivity-plot');
 
-  const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
-  const weightValuePath = '//*[@id="criterion-0-weight"]';
-  const baseCaseValuePath = '//*[@id="alternative-0-base-case"]';
-  const baseCaseValueTablePath =
-    '//*[@id="base-value-profile-table"]/tbody/tr[1]/td[2]';
+  const measurementValuePath =
+    '//*[@id="sensitivity-cell-treatmentRespondersId-placeboId"]/button/span[1]';
+  const weightValuePath =
+    '//*[@id="deterministic-weights-table"]/tbody/tr/td[1]';
+  const baseTotalValuePath =
+    '//*[@id="base-total-value-table"]/table/tbody/tr/td[1]';
+  const baseValueProfilePath =
+    '//*[@id="base-value-profiles-table"]/table/tbody/tr[1]/td[2]';
 
-  checkElementValueGreaterThan(browser, measurementValuePath, 30);
-  checkElementValueGreaterThan(browser, weightValuePath, 0.2);
-  checkElementValueGreaterThan(browser, baseCaseValuePath, 0.7);
-  checkElementValueGreaterThan(browser, baseCaseValueTablePath, 0.01);
+  browser.useXpath();
+  browser.expect.element(measurementValuePath).text.to.equal('36.6');
+  browser.expect.element(weightValuePath).text.to.equal('0.25');
+  browser.expect.element(baseTotalValuePath).text.to.equal('0.698');
+  browser.expect.element(baseValueProfilePath).text.to.equal('0.063');
+  browser.useCss();
 }
 
 function recalculatedResults(browser) {
-  const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
-  const measurementValueInputPath =
-    '//sensitivity-table//tr[2]/td[4]/sensitivity-input//div[2]/label/input';
+  const measurementValuePath =
+    '//*[@id="sensitivity-cell-treatmentRespondersId-placeboId"]/button/span[1]';
+  const measurementValueInputPath = '//*[@id="sensitivity-value-input"]';
 
   browser
     .useXpath()
     .click(measurementValuePath)
     .clearValue(measurementValueInputPath)
     .setValue(measurementValueInputPath, 63)
+    .sendKeys(measurementValueInputPath, browser.Keys.ESCAPE)
     .pause(1000)
     .click('//*[@id="sensitivity-measurements-header"]')
     .click('//*[@id="recalculate-button"]')
-    .assert.containsText(measurementValuePath, '63 (36.')
-    .waitForElementVisible('//*[@id="recalculated-case-table"]')
-    .waitForElementVisible('//*[@id="recalculated-case-plot"]')
-    .waitForElementVisible('//*[@id="recalculated-value-profile-table"]')
-    .useCss();
+    .assert.containsText(measurementValuePath, '63 (36.6)')
+    .waitForElementVisible('//*[@id="value-profile-plot-recalculated"]')
+    .waitForElementVisible('//*[@id="recalculated-total-value-table"]')
+    .waitForElementVisible('//*[@id="recalculated-value-profiles-table"]');
 
-  const recalculatedCaseValuePath =
-    '//*[@id="alternative-0-recalculated-case"]';
-  const recalculatedCaseValueTablePath =
-    '//*[@id="recalculated-value-profile-table"]/tbody/tr[1]/td[2]';
-  checkElementValueGreaterThan(browser, recalculatedCaseValuePath, 0.85);
-  checkElementValueGreaterThan(browser, recalculatedCaseValueTablePath, 0.1);
+  const recalculatedTotalValuePath =
+    '//*[@id="recalculated-total-value-table"]/table/tbody/tr/td[1]';
+  const recalculatedValueProfilePath =
+    '//*[@id="recalculated-value-profiles-table"]/table/tbody/tr[1]/td[2]';
 
-  browser.click('#reset-button');
+  browser.expect.element(recalculatedTotalValuePath).text.to.equal('0.885');
+  browser.expect.element(recalculatedValueProfilePath).text.to.equal('0.25');
 
-  checkResetMeasurementValue(browser, measurementValuePath);
+  browser.click('//*[@id="reset-button"]');
 
+  browser.expect.element(measurementValuePath).text.to.equal('36.6');
+
+  browser.useCss();
   browser.assert.not
     .elementPresent('#recalculated-case-table')
     .assert.not.elementPresent('#recalculated-case-plot')
@@ -115,17 +100,17 @@ function recalculatedResults(browser) {
 function modifyMeasurementsPlot(browser) {
   browser
     .click('#measurements-alternative-selector')
-    .click('option[label="Fluoxetine"]')
+    .click('option[value="fluoxetineId"]')
     .assert.containsText('#measurements-alternative-selector', 'Fluoxetine')
 
     .click('#measurements-criterion-selector')
-    .click('option[label="Nausea ADRs"]')
+    .click('option[value="nauseaId"]')
     .assert.containsText('#measurements-criterion-selector', 'Nausea ADRs');
 }
 
 function modifyPreferencesPlot(browser) {
   browser
     .click('#preferences-criterion-selector')
-    .click('option[label="Nausea ADRs"]')
+    .click('option[value="nauseaId"]')
     .assert.containsText('#preferences-criterion-selector', 'Nausea ADRs');
 }

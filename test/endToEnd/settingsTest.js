@@ -55,7 +55,7 @@ function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
     .assert.not.elementPresent('#save-settings-button')
     .pause(100)
     .waitForElementVisible('#sensitivity-measurements-header')
-    .assert.not.visible(columnPath);
+    .assert.not.elementPresent(columnPath);
 }
 
 function changeProblemDefinitionTabSetting(browser, settingsPath, columnPath) {
@@ -174,9 +174,8 @@ function checkEnteredSmaaDisabled(browser) {
 }
 
 function switchSettingsInProblemDefinition(browser) {
-  var effectTableCellPath =
-    '#value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1';
-  var unitsCellPath = '#unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e';
+  var effectTableCellPath = '#value-cell-dsOS-alt1';
+  var unitsCellPath = '#unit-cell-dsOS';
   var scaleRangeCellPath = '#observed-range-OS';
   util
     .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
@@ -279,8 +278,8 @@ function switchMedianInDeterministic(browser) {
 }
 
 function switchSettingsInOverview(browser) {
-  var effectCellPath = '#value-cell-c4607341-6760-4653-8587-7bd4847f0e4e-alt1';
-  var unitsCellPath = '#unit-cell-c4607341-6760-4653-8587-7bd4847f0e4e';
+  var effectCellPath = '#value-cell-dsOS-alt1';
+  var unitsCellPath = '#unit-cell-dsOS';
 
   browser
     .getValue(unitsCellPath, _.partial(checkValue, browser, null))
@@ -411,18 +410,17 @@ function switchSettingsMidRanking(browser) {
 }
 
 function switchSettingsOnDeterministicTab(browser) {
-  var OSUnitCell = '#sensitivity-unit-OS';
-  var firstOSSensitivityCell = '#sensitivity-value-alt1-OS';
+  var OSUnitCell = '#unit-cell-dsOS';
+  var firstOSSensitivityCell = '#sensitivity-cell-OS-alt1';
 
-  util
-    .delayedClick(
-      browser,
-      '#deterministic-tab',
-      '#sensitivity-measurements-header'
-    )
-    .assert.containsText(OSUnitCell, '%')
-    .assert.containsText(firstOSSensitivityCell, '60');
-  showDecimals(browser)
-    .assert.containsText(OSUnitCell, '')
-    .assert.containsText(firstOSSensitivityCell, '0.6');
+  util.delayedClick(
+    browser,
+    '#deterministic-tab',
+    '#sensitivity-measurements-header'
+  );
+  browser.expect.element(OSUnitCell).text.to.equal('%');
+  browser.expect.element(firstOSSensitivityCell).text.to.equal('60');
+  showDecimals(browser);
+  browser.expect.element(OSUnitCell).text.to.equal('');
+  browser.expect.element(firstOSSensitivityCell).text.to.equal('0.6');
 }

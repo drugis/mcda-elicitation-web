@@ -55,17 +55,17 @@ function afterEach(browser) {
 }
 
 function changeAlternativeLabels(browser) {
-  const legendButton = '//*[@id="value-profile-container"]/div[2]/button';
+  const legendButton = '//*[@id="base-profile-plot-legend"]';
   const firstAlternative =
-    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+    '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-plac > text';
   const secondAlternative =
-    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+    '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-B > text';
   const thirdAlternative =
-    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
+    '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-C > text';
 
   browser
     .click('#deterministic-tab')
-    .waitForElementVisible('#sensitivity-table')
+    .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
     .useCss();
@@ -86,17 +86,17 @@ function changeAlternativeLabels(browser) {
 }
 
 function reset(browser) {
-  const legendButton = '//*[@id="value-profile-container"]/div[2]/button';
+  const legendButton = '//*[@id="base-profile-plot-legend"]';
   const firstAlternative =
-    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+    '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-A > text';
   const secondAlternative =
-    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+    '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-B > text';
   const thirdAlternative =
-    '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
+    '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-C > text';
 
   browser
     .click('#deterministic-tab')
-    .waitForElementVisible('#sensitivity-table')
+    .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
     .useCss();
@@ -111,7 +111,7 @@ function reset(browser) {
     .assert.containsText(thirdAlternative, 'C')
 
     .click('#deterministic-tab')
-    .waitForElementVisible('#sensitivity-table')
+    .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
     .useCss()

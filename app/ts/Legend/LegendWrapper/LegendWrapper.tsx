@@ -13,9 +13,11 @@ import LegendTooltip from './LegendTooltip/LegendTooltip';
 import {initLegend} from './LegendUtil';
 
 export default function LegendWrapper({
-  children
+  children,
+  buttonId
 }: {
   children: any;
+  buttonId: string;
 }): JSX.Element {
   const {canEdit, legendByAlternativeId, saveLegend} = useContext(
     LegendContext
@@ -79,6 +81,7 @@ export default function LegendWrapper({
       <Grid container item md={12} lg={4} alignContent="flex-start">
         <Tooltip title={<LegendTooltip />}>
           <Button
+            id={buttonId}
             color="primary"
             variant="contained"
             onClick={openDialog}

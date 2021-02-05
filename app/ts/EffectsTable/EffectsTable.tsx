@@ -39,7 +39,7 @@ export default function EffectsTable() {
   return scales ? (
     <Grid container>
       <Grid item xs={9} id="effects-table-header">
-        <Typography variant={'h5'}>
+        <Typography variant="h5">
           Effects Table <InlineHelp helpId="effects-table" />
         </Typography>
       </Grid>

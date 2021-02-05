@@ -14,7 +14,7 @@
             "direction": "increasing"
           },
           "scale": [0, 100],
-          "id": "c4607341-6760-4653-8587-7bd4847f0e4e",
+          "id": "dsOS",
           "unitOfMeasurement": {
             "type": "percentage",
             "label": "%"
@@ -35,7 +35,7 @@
             "direction": "decreasing"
           },
           "scale": [0, 100],
-          "id": "c27f66c0-8f2b-4592-98d1-29719d2f0242",
+          "id": "dsSevere",
           "unitOfMeasurement": {
             "type": "percentage",
             "label": "%"
@@ -56,7 +56,7 @@
             "direction": "decreasing"
           },
           "scale": [0, 100],
-          "id": "a9e5b4fd-bae8-4d1a-b44d-608f5ebac80c",
+          "id": "dsModerate",
           "unitOfMeasurement": {
             "type": "percentage",
             "label": "%"
@@ -90,7 +90,7 @@
           }
         }
       },
-      "dataSource": "c4607341-6760-4653-8587-7bd4847f0e4e"
+      "dataSource": "dsOS"
     },
     {
       "alternative": "alt2",
@@ -105,7 +105,7 @@
           }
         }
       },
-      "dataSource": "c4607341-6760-4653-8587-7bd4847f0e4e"
+      "dataSource": "dsOS"
     },
     {
       "alternative": "alt1",
@@ -120,7 +120,7 @@
           }
         }
       },
-      "dataSource": "c27f66c0-8f2b-4592-98d1-29719d2f0242"
+      "dataSource": "dsSevere"
     },
     {
       "alternative": "alt2",
@@ -135,7 +135,7 @@
           }
         }
       },
-      "dataSource": "c27f66c0-8f2b-4592-98d1-29719d2f0242"
+      "dataSource": "dsSevere"
     },
     {
       "alternative": "alt1",
@@ -150,7 +150,7 @@
           }
         }
       },
-      "dataSource": "a9e5b4fd-bae8-4d1a-b44d-608f5ebac80c"
+      "dataSource": "dsModerate"
     },
     {
       "alternative": "alt2",
@@ -165,7 +165,7 @@
           }
         }
       },
-      "dataSource": "a9e5b4fd-bae8-4d1a-b44d-608f5ebac80c"
+      "dataSource": "dsModerate"
     }
   ],
   "schemaVersion": "1.4.5"

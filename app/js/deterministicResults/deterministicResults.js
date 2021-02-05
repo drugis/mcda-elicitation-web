@@ -1,37 +1,14 @@
 'use strict';
 define([
   './deterministicResultsController',
-
-  './deterministicWeightsTableDirective',
-  './lineChartDirective',
-  './measurementSensitivityDirective',
-  './preferencesSensitivityDirective',
-  './sensitivityInputDirective',
-  './sensitivityTableDirective',
-  './valueProfileTableDirective',
-  './valueProfilePlotDirective',
-  './valueProfilesDirective',
-
-  './deterministicResultsService',
-
+  '../../ts/DeterministicTab/DeterministicTab',
   'angular',
-  'angular-patavi-client'
+  'react2angular'
 ], function (
   DeterministicResultsController,
-
-  deterministicWeightsTableDirective,
-  lineChartDirective,
-  measurementSensitivityDirective,
-  preferencesSensitivityDirective,
-  sensitivityInputDirective,
-  sensitivityTableDirective,
-  valueProfileTableDirective,
-  valueProfilePlotDirective,
-  valueProfilesDirective,
-
-  DeterministicResultsService,
-
-  angular
+  DeterministicTab,
+  angular,
+  react2angular
 ) {
   return angular
     .module('elicit.deterministicResults', ['patavi', 'elicit.results'])
@@ -39,16 +16,21 @@ define([
       'DeterministicResultsController',
       DeterministicResultsController
     )
-
-    .directive('deterministicWeightsTable', deterministicWeightsTableDirective)
-    .directive('lineChart', lineChartDirective)
-    .directive('measurementSensitivity', measurementSensitivityDirective)
-    .directive('preferencesSensitivity', preferencesSensitivityDirective)
-    .directive('sensitivityInput', sensitivityInputDirective)
-    .directive('sensitivityTable', sensitivityTableDirective)
-    .directive('valueProfileTable', valueProfileTableDirective)
-    .directive('valueProfilePlot', valueProfilePlotDirective)
-    .directive('valueProfiles', valueProfilesDirective)
-
-    .factory('DeterministicResultsService', DeterministicResultsService);
+    .component(
+      'deterministicTab',
+      react2angular.react2angular(DeterministicTab.default, [
+        'scenarios',
+        'currentScenarioId',
+        'workspaceId',
+        'problem',
+        'settings',
+        'updateAngularScenario',
+        'toggledColumns',
+        'workspace',
+        'scales',
+        'subproblems',
+        'currentSubproblem',
+        'editMode'
+      ])
+    );
 });
