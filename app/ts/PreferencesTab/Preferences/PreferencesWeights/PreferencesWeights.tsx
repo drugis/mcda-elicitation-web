@@ -7,7 +7,7 @@ import PreferencesWeightsButtons from './PreferencesWeightsButtons/PreferencesWe
 import PreferencesWeightsTable from './PreferencesWeightsTable/PreferencesWeightsTable';
 
 export default function PreferencesWeights() {
-  const {determineElicitationMethod} = useContext(PreferencesContext);
+  const {elicitationMethod} = useContext(PreferencesContext);
 
   return (
     <Grid item container>
@@ -18,7 +18,7 @@ export default function PreferencesWeights() {
       </Grid>
       <Grid item xs={12}>
         <Typography id="elicitation-method">
-          Elicitation method: {determineElicitationMethod()}
+          Elicitation method: {elicitationMethod}
         </Typography>
       </Grid>
       <Grid item xs={12}>

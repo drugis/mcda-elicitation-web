@@ -1,7 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
+import IRanking from '@shared/interface/Scenario/IRanking';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
 import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
@@ -9,6 +9,7 @@ import IWeights from '@shared/interface/Scenario/IWeights';
 import {TPreferences} from '@shared/types/Preferences';
 import {
   buildScenarioWithPreferences,
+  determineElicitationMethod,
   filterScenariosWithPvfs,
   initPvfs
 } from './PreferencesUtil';
@@ -263,6 +264,46 @@ describe('PreferencesUtil', () => {
       };
 
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('determineElicitationMethod', () => {
+    it('should return "None" if preferences are not set', () => {
+      const preferences: TPreferences = [];
+      const result = determineElicitationMethod(preferences);
+      expect(result).toEqual('None');
+    });
+
+    it('should return "Ranking"', () => {
+      const preferences: TPreferences = [
+        {elicitationMethod: 'ranking'} as IRanking
+      ];
+      const result = determineElicitationMethod(preferences);
+      expect(result).toEqual('Ranking');
+    });
+
+    it('should return "Precise Swing Weighting"', () => {
+      const preferences: TPreferences = [
+        {elicitationMethod: 'precise'} as IRanking
+      ];
+      const result = determineElicitationMethod(preferences);
+      expect(result).toEqual('Precise Swing Weighting');
+    });
+
+    it('should return "Matching"', () => {
+      const preferences: TPreferences = [
+        {elicitationMethod: 'matching'} as IRanking
+      ];
+      const result = determineElicitationMethod(preferences);
+      expect(result).toEqual('Matching');
+    });
+
+    it('should return "Imprecise Swing Weighting"', () => {
+      const preferences: TPreferences = [
+        {elicitationMethod: 'imprecise'} as IRanking
+      ];
+      const result = determineElicitationMethod(preferences);
+      expect(result).toEqual('Imprecise Swing Weighting');
     });
   });
 });

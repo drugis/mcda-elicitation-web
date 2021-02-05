@@ -70,3 +70,20 @@ export function filterScenariosWithPvfs(
     });
   });
 }
+
+export function determineElicitationMethod(preferences: TPreferences): string {
+  if (!preferences.length) {
+    return 'None';
+  } else {
+    switch (preferences[0].elicitationMethod) {
+      case 'ranking':
+        return 'Ranking';
+      case 'precise':
+        return 'Precise Swing Weighting';
+      case 'matching':
+        return 'Matching';
+      case 'imprecise':
+        return 'Imprecise Swing Weighting';
+    }
+  }
+}

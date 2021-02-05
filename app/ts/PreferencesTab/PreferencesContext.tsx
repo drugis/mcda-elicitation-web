@@ -21,7 +21,11 @@ import {getPataviProblem} from '../util/PataviUtil';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import IPreferencesContext from './IPreferencesContext';
-import {filterScenariosWithPvfs, initPvfs} from './PreferencesUtil';
+import {
+  determineElicitationMethod,
+  filterScenariosWithPvfs,
+  initPvfs
+} from './PreferencesUtil';
 import {TPreferencesView} from './TPreferencesView';
 
 export const PreferencesContext = createContext<IPreferencesContext>(
@@ -61,6 +65,9 @@ export function PreferencesContextProviderComponent({
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);
   const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
+  const [elicitationMethod, setElicitationMethod] = useState<string>(
+    determineElicitationMethod(currentScenario.state.prefs)
+  );
 
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
@@ -79,6 +86,9 @@ export function PreferencesContextProviderComponent({
     if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {
       getWeights(currentScenario);
     }
+    setElicitationMethod(
+      determineElicitationMethod(currentScenario.state.prefs)
+    );
   }, [currentScenario, pvfs]);
 
   function getPvf(criterionId: string): IPvf {
@@ -234,23 +244,6 @@ export function PreferencesContextProviderComponent({
     return _.find(filteredCriteria, ['id', id]);
   }
 
-  function determineElicitationMethod(): string {
-    if (!currentScenario.state.prefs.length) {
-      return 'None';
-    } else {
-      switch (currentScenario.state.prefs[0].elicitationMethod) {
-        case 'ranking':
-          return 'Ranking';
-        case 'precise':
-          return 'Precise Swing Weighting';
-        case 'matching':
-          return 'Matching';
-        case 'imprecise':
-          return 'Imprecise Swing Weighting';
-      }
-    }
-  }
-
   return (
     <PreferencesContext.Provider
       value={{
@@ -264,6 +257,7 @@ export function PreferencesContextProviderComponent({
         pvfs,
         disableWeightsButtons,
         activeView,
+        elicitationMethod,
         setCurrentScenario,
         updateScenario,
         deleteScenario,
@@ -273,8 +267,7 @@ export function PreferencesContextProviderComponent({
         getPvf,
         setLinearPvf,
         resetPreferences,
-        setActiveView,
-        determineElicitationMethod
+        setActiveView
       }}
     >
       {children}

@@ -14,12 +14,12 @@ export default function RankAcceptabilities(): JSX.Element {
           Rank acceptabilities <InlineHelp helpId="rank-acceptabilities" />
         </Typography>
       </Grid>
-      <Grid container item xs={6}>
+      <Grid container item xs={12} md={6}>
         <LegendWrapper buttonId={'rank-acceptabilities-plot-legend'}>
           <RankAcceptabilitiesPlot />
         </LegendWrapper>
       </Grid>
-      <Grid container item xs={6}>
+      <Grid container item xs={12} md={6}>
         <Grid container item xs={12} justify="flex-end">
           <ClipboardButton targetId="#rank-acceptabilities-table" />
         </Grid>
