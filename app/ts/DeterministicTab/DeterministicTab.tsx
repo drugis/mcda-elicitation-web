@@ -1,3 +1,4 @@
+import IEditMode from '@shared/interface/IEditMode';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
@@ -40,7 +41,7 @@ export default function DeterministicTab({
   scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
-  editMode: {canEdit: boolean};
+  editMode: IEditMode;
 }) {
   return (
     <ErrorContextProviderComponent>

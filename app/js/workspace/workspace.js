@@ -16,9 +16,9 @@ define([
   './tutorialResource',
 
   './fileReaderDirective',
-  './workspaceSettingsDirective',
   './inProgressWorkspacesDirective',
 
+  '../../ts/WorkspaceSettings/WorkspaceSettings',
   '../../ts/Workspaces/Workspaces',
   'react2angular',
 
@@ -40,9 +40,9 @@ define([
   TutorialResource,
 
   fileReaderDirective,
-  WorkspaceSettings,
   InProgressWorkspaces,
 
+  WorkspaceSettings,
   Workspaces,
   react2angular,
 
@@ -65,9 +65,16 @@ define([
     .service('TutorialResource', TutorialResource)
 
     .directive('fileReader', fileReaderDirective)
-    .directive('workspaceSettings', WorkspaceSettings)
     .directive('inProgressWorkspaces', InProgressWorkspaces)
 
+    .component(
+      'workspaceSettings',
+      react2angular.react2angular(WorkspaceSettings.default, [
+        'editMode',
+        'workspaceSettings',
+        'toggledColumns'
+      ])
+    )
     .component(
       'workspaces',
       react2angular.react2angular(Workspaces.default, [])

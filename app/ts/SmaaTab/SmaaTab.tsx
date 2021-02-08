@@ -1,9 +1,9 @@
+import IEditMode from '@shared/interface/IEditMode';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import ISettings from '@shared/interface/ISettings';
 import IToggledColumns from '@shared/interface/IToggledColumns';
-import IProblem from '@shared/interface/Problem/IProblem';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
@@ -40,7 +40,7 @@ export default function SmaaTab({
   scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
-  editMode: {canEdit: boolean};
+  editMode: IEditMode;
 }) {
   return (
     <ErrorContextProviderComponent>
