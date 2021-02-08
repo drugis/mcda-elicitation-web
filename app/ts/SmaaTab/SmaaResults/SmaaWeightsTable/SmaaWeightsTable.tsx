@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Grid,
   Table,
   TableBody,
@@ -68,19 +69,27 @@ export default function SmaaWeightsTable(): JSX.Element {
           Weights <InlineHelp helpId="representative-weights" />
         </Typography>
       </Grid>
-      <Grid container item xs={3} justify="flex-end">
-        <ClipboardButton targetId="#weigths-table" />
-      </Grid>
-      <Grid item xs={12}>
-        <Table id="weigths-table">
-          <TableHead>
-            <CriterionHeaders />
-          </TableHead>
-          <TableBody>
-            <SmaaWeightsValueRow />
-          </TableBody>
-        </Table>
-      </Grid>
+      {smaaWeights ? (
+        <>
+          <Grid container item xs={3} justify="flex-end">
+            <ClipboardButton targetId="#weigths-table" />
+          </Grid>
+          <Grid item xs={12}>
+            <Table id="weigths-table">
+              <TableHead>
+                <CriterionHeaders />
+              </TableHead>
+              <TableBody>
+                <SmaaWeightsValueRow />
+              </TableBody>
+            </Table>
+          </Grid>
+        </>
+      ) : (
+        <Grid item xs={12}>
+          <CircularProgress />
+        </Grid>
+      )}
     </Grid>
   );
 }
