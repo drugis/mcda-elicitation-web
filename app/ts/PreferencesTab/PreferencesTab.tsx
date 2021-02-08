@@ -19,7 +19,6 @@ export default function PreferencesTab({
   scenarios,
   currentScenarioId,
   workspaceId,
-  problem,
   settings,
   updateAngularScenario,
   toggledColumns,
@@ -31,7 +30,6 @@ export default function PreferencesTab({
   scenarios: IMcdaScenario[];
   currentScenarioId: string;
   workspaceId: string;
-  problem: IProblem;
   settings: ISettings;
   updateAngularScenario: (scenario: IMcdaScenario) => void;
   toggledColumns: IToggledColumns;
@@ -40,7 +38,7 @@ export default function PreferencesTab({
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
 }) {
-  return scenarios && problem ? (
+  return scenarios && workspace ? (
     <ErrorContextProviderComponent>
       <HelpContextProviderComponent>
         <WorkspaceContextProviderComponent
@@ -60,7 +58,6 @@ export default function PreferencesTab({
                 scenarios={scenarios}
                 currentScenarioId={currentScenarioId}
                 workspaceId={workspaceId}
-                problem={problem}
                 updateAngularScenario={updateAngularScenario}
               >
                 <ErrorHandler>

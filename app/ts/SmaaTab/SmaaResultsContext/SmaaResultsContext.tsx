@@ -7,6 +7,7 @@ import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -34,9 +35,10 @@ export function SmaaResultsContextProviderComponent({
     filteredAlternatives,
     filteredCriteria
   } = useContext(SubproblemContext);
-  const {currentScenario, problem, updateScenario, pvfs} = useContext(
+  const {currentScenario, updateScenario, pvfs} = useContext(
     PreferencesContext
   );
+  const {oldProblem} = useContext(WorkspaceContext);
 
   const problemHasStochasticMeasurements =
     hasStochasticMeasurements(filteredDistributions) ||
@@ -107,7 +109,7 @@ export function SmaaResultsContextProviderComponent({
 
   function calculateResults(): void {
     const pataviProblem = getPataviProblem(
-      problem,
+      oldProblem,
       filteredCriteria,
       filteredAlternatives,
       pvfs

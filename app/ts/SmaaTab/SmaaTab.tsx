@@ -21,7 +21,6 @@ export default function SmaaTab({
   scenarios,
   currentScenarioId,
   workspaceId,
-  problem,
   settings,
   updateAngularScenario,
   toggledColumns,
@@ -34,7 +33,6 @@ export default function SmaaTab({
   scenarios: IMcdaScenario[];
   currentScenarioId: string;
   workspaceId: string;
-  problem: IProblem;
   settings: ISettings;
   updateAngularScenario: (scenario: IMcdaScenario) => void;
   toggledColumns: IToggledColumns;
@@ -64,7 +62,6 @@ export default function SmaaTab({
                 scenarios={scenarios}
                 currentScenarioId={currentScenarioId}
                 workspaceId={workspaceId}
-                problem={problem}
                 updateAngularScenario={updateAngularScenario}
               >
                 <LegendContextProviderComponent canEdit={editMode.canEdit}>

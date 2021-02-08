@@ -33,11 +33,11 @@ export function DeterministicResultsContextProviderComponent({
   children: any;
 }): JSX.Element {
   const {setError} = useContext(ErrorContext);
-  const {scales} = useContext(WorkspaceContext);
+  const {scales, oldProblem} = useContext(WorkspaceContext);
   const {filteredCriteria, filteredAlternatives, filteredEffects} = useContext(
     SubproblemContext
   );
-  const {pvfs, problem, currentScenario} = useContext(PreferencesContext);
+  const {pvfs, currentScenario} = useContext(PreferencesContext);
 
   const [sensitivityTableValues, setSensitivityTableValues] = useState<
     Record<string, Record<string, ISensitivityValue>>
@@ -95,7 +95,7 @@ export function DeterministicResultsContextProviderComponent({
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
-        problem,
+        oldProblem,
         filteredCriteria,
         filteredAlternatives,
         pvfs
@@ -109,7 +109,7 @@ export function DeterministicResultsContextProviderComponent({
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
-        problem,
+        oldProblem,
         filteredCriteria,
         filteredAlternatives,
         pvfs
@@ -121,7 +121,7 @@ export function DeterministicResultsContextProviderComponent({
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
-        problem,
+        oldProblem,
         filteredCriteria,
         filteredAlternatives,
         pvfs
@@ -237,7 +237,7 @@ export function DeterministicResultsContextProviderComponent({
   function recalculateValuePlots(): void {
     setAreRecalculatedPlotsLoading(true);
     const pataviProblem = getPataviProblem(
-      problem,
+      oldProblem,
       filteredCriteria,
       filteredAlternatives,
       pvfs

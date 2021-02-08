@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
@@ -40,16 +41,21 @@ function buildPataviCriterion(
   pvfs: Record<string, IPvf>,
   criterion: ICriterion
 ): IPataviCriterion {
-  const scale: [number, number] = [
-    criterion.dataSources[0].unitOfMeasurement.lowerBound,
-    criterion.dataSources[0].unitOfMeasurement.upperBound
-  ];
+  const scale = getScale(criterion.dataSources[0].unitOfMeasurement);
   return {
     id: criterion.id,
     title: criterion.title,
     pvf: pvfs[criterion.id],
     scale: scale
   };
+}
+
+function getScale(unit: IUnitOfMeasurement): [number, number] {
+  if (unit.type === 'percentage') {
+    return [0, 1];
+  } else {
+    return [unit.lowerBound, unit.upperBound];
+  }
 }
 
 export function buildPataviPerformanceTable(

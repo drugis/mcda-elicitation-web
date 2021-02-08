@@ -5,7 +5,6 @@ import {
   IWeightsCommand,
   IWeightsProblem
 } from '@shared/interface/Patavi/IWeightsCommand';
-import IProblem from '@shared/interface/Problem/IProblem';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
@@ -37,19 +36,17 @@ export function PreferencesContextProviderComponent({
   scenarios,
   currentScenarioId,
   workspaceId,
-  problem,
   updateAngularScenario
 }: {
   children: any;
   scenarios: IMcdaScenario[];
   currentScenarioId: string;
   workspaceId: string;
-  problem: IProblem;
   updateAngularScenario: (scenario: IMcdaScenario) => void;
 }) {
   const {setError} = useContext(ErrorContext);
   const {randomSeed} = useContext(SettingsContext);
-  const {currentSubproblem} = useContext(WorkspaceContext);
+  const {currentSubproblem, oldProblem} = useContext(WorkspaceContext);
   const {filteredCriteria, filteredAlternatives, observedRanges} = useContext(
     SubproblemContext
   );
@@ -149,7 +146,7 @@ export function PreferencesContextProviderComponent({
 
   function getWeights(scenario: IMcdaScenario) {
     const pataviProblem = getPataviProblem(
-      problem,
+      oldProblem,
       filteredCriteria,
       filteredAlternatives,
       pvfs
@@ -253,7 +250,6 @@ export function PreferencesContextProviderComponent({
           filteredCriteria
         ),
         currentScenario,
-        problem,
         pvfs,
         disableWeightsButtons,
         activeView,

@@ -1,5 +1,4 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IProblem from '@shared/interface/Problem/IProblem';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPvfDirection} from '@shared/types/PvfTypes';
@@ -9,7 +8,6 @@ export default interface IPreferencesContext {
   scenarios: Record<string, IMcdaScenario>;
   scenariosWithPvfs: Record<string, IMcdaScenario>;
   currentScenario: IMcdaScenario;
-  problem: IProblem;
   pvfs: Record<string, IPvf>;
   disableWeightsButtons: boolean;
   activeView: TPreferencesView;

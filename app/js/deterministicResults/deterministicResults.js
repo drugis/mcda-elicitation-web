@@ -22,7 +22,6 @@ define([
         'scenarios',
         'currentScenarioId',
         'workspaceId',
-        'problem',
         'settings',
         'updateAngularScenario',
         'toggledColumns',
