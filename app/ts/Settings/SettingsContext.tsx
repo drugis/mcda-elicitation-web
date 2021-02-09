@@ -1,13 +1,12 @@
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import ISettings from '@shared/interface/Settings/ISettings';
-import ISettingsAndToggledColumns from '@shared/interface/Settings/ISettingsAndToggledColumns';
 import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
 import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
 import React, {createContext, useEffect, useState} from 'react';
 import ISettingsContext from './ISettingsContext';
-import {calculateNumberOfToggledColumns} from './SettingsUtil';
+import {calculateNumberOfToggledColumns, settingsChanged} from './SettingsUtil';
 
 export const SettingsContext = createContext<ISettingsContext>(
   {} as ISettingsContext
@@ -16,11 +15,16 @@ export const SettingsContext = createContext<ISettingsContext>(
 export function SettingsContextProviderComponent({
   children,
   settings,
-  toggledColumns
+  toggledColumns,
+  updateAngularSettings
 }: {
   children: any;
   settings: ISettings;
   toggledColumns: IToggledColumns;
+  updateAngularSettings: (
+    settings: ISettings,
+    toggledColumns: IToggledColumns
+  ) => void;
 }) {
   const [
     scalesCalculationMethod,
@@ -30,13 +34,15 @@ export function SettingsContextProviderComponent({
     'percentage'
   );
 
-  const [displayMode, setDisplayMode] = useState<TDisplayMode>('enteredData');
+  const [isRelativeProblem, setIsRelativeProblem] = useState<boolean>(false);
+  const [displayMode, setDisplayMode] = useState<TDisplayMode>(
+    isRelativeProblem ? 'values' : 'enteredData'
+  );
   const [analysisType, setAnalysisType] = useState<TAnalysisType>(
     'deterministic'
   );
   const [hasNoEffects, setHasNoEffects] = useState<boolean>(false);
   const [hasNoDistributions, setHasNoDistributions] = useState<boolean>(false);
-  const [isRelativeProblem, setIsRelativeProblem] = useState<boolean>(false);
   const [randomSeed, setRandomSeed] = useState<number>(1234);
   const [showDescriptions, setShowDescriptions] = useState<boolean>(true);
   const [showUnitsOfMeasurement, setShowUnitsOfMeasurement] = useState<boolean>(
@@ -49,14 +55,20 @@ export function SettingsContextProviderComponent({
   ] = useState<boolean>(true);
   const [currentSettings, setCurrentSettings] = useState<ISettings>();
   const [
+    currentToggledColumns,
+    setCurrentToggledColumns
+  ] = useState<IToggledColumns>();
+  const [
     numberOfToggledColumns,
     setNumberOfToggledColumns
   ] = useState<number>();
 
   useEffect(() => {
     setScalesCalculationMethod(settings.calculationMethod);
-    setShowPercentages(settings.showPercentages ? 'percentage' : 'decimal');
-    setDisplayMode(settings.displayMode);
+    setShowPercentages(settings.showPercentages);
+    setDisplayMode(
+      settings.isRelativeProblem ? 'values' : settings.displayMode
+    );
     setAnalysisType(settings.analysisType);
     setHasNoEffects(settings.hasNoEffects);
     setHasNoDistributions(settings.hasNoDistributions);
@@ -67,26 +79,50 @@ export function SettingsContextProviderComponent({
     setShowReferences(toggledColumns.references);
     setShowStrengthsAndUncertainties(toggledColumns.strength);
     setCurrentSettings(settings);
+    setCurrentToggledColumns(toggledColumns);
     setNumberOfToggledColumns(calculateNumberOfToggledColumns(toggledColumns));
   }, []);
+  //FIXME: axios the settings
 
-  function updateSettings(updatedSettings: ISettingsAndToggledColumns): void {
-    setScalesCalculationMethod(updatedSettings.calculationMethod);
-    setShowPercentages(
-      updatedSettings.showPercentages ? 'percentage' : 'decimal'
-    );
-    setDisplayMode(updatedSettings.displayMode);
-    setAnalysisType(updatedSettings.analysisType);
-    setHasNoEffects(updatedSettings.hasNoEffects);
-    setHasNoDistributions(updatedSettings.hasNoDistributions);
-    setIsRelativeProblem(updatedSettings.isRelativeProblem);
-    setRandomSeed(updatedSettings.randomSeed);
-    setShowDescriptions(updatedSettings.description);
-    setShowUnitsOfMeasurement(updatedSettings.units);
-    setShowReferences(updatedSettings.references);
-    setShowStrengthsAndUncertainties(updatedSettings.strength);
-    setNumberOfToggledColumns(calculateNumberOfToggledColumns(updatedSettings));
-    // callback
+  function updateSettings(
+    updatedSettings: Omit<
+      ISettings,
+      'isRelativeProblem' | 'hasNoEffects' | 'hasNoDistributions'
+    >,
+    updatedToggledColumns: IToggledColumns
+  ): void {
+    if (
+      settingsChanged(
+        currentSettings,
+        currentToggledColumns,
+        updatedSettings,
+        updatedToggledColumns
+      )
+    ) {
+      setScalesCalculationMethod(updatedSettings.calculationMethod);
+      setShowPercentages(
+        updatedSettings.showPercentages ? 'percentage' : 'decimal'
+      );
+      setDisplayMode(updatedSettings.displayMode);
+      setAnalysisType(updatedSettings.analysisType);
+      setRandomSeed(updatedSettings.randomSeed);
+      setShowDescriptions(updatedToggledColumns.description);
+      setShowUnitsOfMeasurement(updatedToggledColumns.units);
+      setShowReferences(updatedToggledColumns.references);
+      setShowStrengthsAndUncertainties(updatedToggledColumns.strength);
+      setNumberOfToggledColumns(
+        calculateNumberOfToggledColumns(updatedToggledColumns)
+      );
+      updateAngularSettings(
+        {
+          ...updatedSettings,
+          isRelativeProblem: isRelativeProblem,
+          hasNoEffects: hasNoEffects,
+          hasNoDistributions: hasNoDistributions
+        },
+        updatedToggledColumns
+      );
+    }
   }
 
   return (

@@ -11,6 +11,5 @@ export default interface ISettings {
   hasNoEffects: boolean;
   hasNoDistributions: boolean;
   isRelativeProblem: boolean;
-  changed: boolean;
   randomSeed: number;
 }

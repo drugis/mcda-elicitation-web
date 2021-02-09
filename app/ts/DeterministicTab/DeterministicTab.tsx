@@ -57,6 +57,7 @@ export default function DeterministicTab({
             <SettingsContextProviderComponent
               settings={settings}
               toggledColumns={toggledColumns}
+              updateAngularSettings={() => {}}
             >
               <PreferencesContextProviderComponent
                 scenarios={scenarios}

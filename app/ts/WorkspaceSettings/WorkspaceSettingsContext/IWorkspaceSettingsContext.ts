@@ -15,6 +15,8 @@ export default interface IWorkspaceSettingsContext {
   localShowReferences: boolean;
   localShowStrengthsAndUncertainties: boolean;
   warnings: string[];
+  resetToDefaults: () => void;
+  saveSettings: () => void;
   setLocalShowPercentages: (newSetting: TPercentageOrDecimal) => void;
   setLocalScalesCalculationMethod: (
     newSetting: TScalesCalculationMethod

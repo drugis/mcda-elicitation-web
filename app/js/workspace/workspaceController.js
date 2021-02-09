@@ -29,6 +29,7 @@ define(['angular', 'lodash'], function (angular, _) {
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
+    $scope.updateSettings = updateSettings;
 
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
@@ -114,6 +115,13 @@ define(['angular', 'lodash'], function (angular, _) {
 
     function cancelTitle() {
       $scope.isEditTitleVisible = false;
+    }
+
+    function updateSettings(newWorkspaceSettings, newToggledColumns) {
+      WorkspaceSettingsService.saveSettings(
+        newWorkspaceSettings,
+        newToggledColumns
+      );
     }
   };
   return dependencies.concat(WorkspaceController);

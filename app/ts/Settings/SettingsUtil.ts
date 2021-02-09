@@ -1,4 +1,5 @@
 import IToggledColumns from '@shared/interface/IToggledColumns';
+import ISettings from '@shared/interface/Settings/ISettings';
 import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import _ from 'lodash';
@@ -62,5 +63,27 @@ function hasNoEnteredDistribution(
     hasNoDistributions &&
     displayMode === 'enteredData' &&
     analysisType === 'smaa'
+  );
+}
+
+export function settingsChanged(
+  currentSettings: ISettings,
+  toggledColumns: IToggledColumns,
+  updatedSettings: Omit<
+    ISettings,
+    'isRelativeProblem' | 'hasNoEffects' | 'hasNoDistributions'
+  >,
+  updatedToggledColumns: IToggledColumns
+): boolean {
+  return !_.isEqual(
+    {
+      ...toggledColumns,
+      ..._.omit(currentSettings, [
+        'isRelativeProblem',
+        'hasNoEffects',
+        'hasNoDistributions'
+      ])
+    },
+    {...updatedSettings, ...updatedToggledColumns}
   );
 }

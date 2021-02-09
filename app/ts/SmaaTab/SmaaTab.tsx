@@ -57,6 +57,7 @@ export default function SmaaTab({
             <SettingsContextProviderComponent
               settings={settings}
               toggledColumns={toggledColumns}
+              updateAngularSettings={() => {}}
             >
               <PreferencesContextProviderComponent
                 scenarios={scenarios}

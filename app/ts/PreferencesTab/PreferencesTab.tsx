@@ -52,6 +52,7 @@ export default function PreferencesTab({
             <SettingsContextProviderComponent
               settings={settings}
               toggledColumns={toggledColumns}
+              updateAngularSettings={() => {}}
             >
               <PreferencesContextProviderComponent
                 scenarios={scenarios}

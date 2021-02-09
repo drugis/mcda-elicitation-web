@@ -111,26 +111,12 @@ define(['angular', 'lodash'], function (angular, _) {
         settings: newWorkspaceSettings,
         toggledColumns: newToggledColumns
       };
-      newSettings.settings.changed = true;
       return WorkspaceSettingsResource.put(
         $state.params,
         newSettings
       ).$promise.then(function () {
-        var randomSeedChanged = hasRandomSeedChanged(
-          newWorkspaceSettings.randomSeed
-        );
-        workspaceSettings = newWorkspaceSettings;
-        toggledColumns = newToggledColumns;
-        if (randomSeedChanged) {
-          $state.reload();
-        } else {
-          $rootScope.$broadcast('elicit.settingsChanged', newSettings);
-        }
+        $state.reload();
       });
-    }
-
-    function hasRandomSeedChanged(newRandomSeed) {
-      return workspaceSettings.randomSeed !== newRandomSeed;
     }
 
     function getDefaults() {

@@ -8,16 +8,22 @@ import WorkspaceSettings from './WorkspaceSettings';
 export default function WorkspaceSettingsWrapper({
   workspaceSettings,
   toggledColumns,
-  editMode
+  editMode,
+  updateAngularSettings
 }: {
   workspaceSettings: ISettings;
   toggledColumns: IToggledColumns;
   editMode: IEditMode;
+  updateAngularSettings: (
+    settings: ISettings,
+    toggledColumns: IToggledColumns
+  ) => void;
 }): JSX.Element {
   return (
     <SettingsContextProviderComponent
       settings={workspaceSettings}
       toggledColumns={toggledColumns}
+      updateAngularSettings={updateAngularSettings}
     >
       <WorkspaceSettings editMode={editMode} />
     </SettingsContextProviderComponent>

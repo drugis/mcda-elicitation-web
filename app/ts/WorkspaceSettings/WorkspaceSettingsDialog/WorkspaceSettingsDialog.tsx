@@ -23,10 +23,15 @@ export default function WorkspaceSettingsDialog({
   isDialogOpen: boolean;
   closeDialog: () => void;
 }): JSX.Element {
-  const {warnings, isSaveButtonDisabled} = useContext(WorkspaceSettingsContext);
+  const {
+    warnings,
+    isSaveButtonDisabled,
+    resetToDefaults,
+    saveSettings
+  } = useContext(WorkspaceSettingsContext);
 
   function handleSaveButtonClicked(): void {
-    //save stuff
+    saveSettings();
     closeDialog();
   }
 
@@ -42,6 +47,7 @@ export default function WorkspaceSettingsDialog({
               id="reset-default-button"
               variant="contained"
               color="primary"
+              onClick={resetToDefaults}
             >
               Reset to default
             </Button>

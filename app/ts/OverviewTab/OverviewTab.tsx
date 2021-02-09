@@ -42,6 +42,7 @@ export default function OverviewTab({
           <SettingsContextProviderComponent
             settings={settings}
             toggledColumns={toggledColumns}
+            updateAngularSettings={() => {}}
           >
             <ErrorHandler>
               <Overview />

@@ -72,7 +72,8 @@ define([
       react2angular.react2angular(WorkspaceSettingsWrapper.default, [
         'editMode',
         'workspaceSettings',
-        'toggledColumns'
+        'toggledColumns',
+        'updateAngularSettings'
       ])
     )
     .component(

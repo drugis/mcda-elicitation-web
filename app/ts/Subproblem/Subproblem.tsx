@@ -49,6 +49,7 @@ export default function Subproblem({
             <SettingsContextProviderComponent
               settings={settings}
               toggledColumns={toggledColumns}
+              updateAngularSettings={() => {}}
             >
               <ErrorHandler>
                 <SubproblemSelection subproblemChanged={subproblemChanged} />
