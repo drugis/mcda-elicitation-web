@@ -1,7 +1,4 @@
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
-import IScale from '@shared/interface/IScale';
-import {AnalysisType} from '@shared/interface/ISettings';
+import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {
   canDSBePercentage,
   findScale,
@@ -10,7 +7,6 @@ import {
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
 import EffectValueCell from './EffectValueCell/EffectValueCell';
@@ -40,7 +36,7 @@ export default function ValueCell({
   const scale = findScale(scales, dataSourceId, alternativeId);
   const hasScaleValues = scale['50%'] !== null && scale['50%'] !== undefined;
 
-  function buildValueLabel(analysisType: AnalysisType): JSX.Element {
+  function buildValueLabel(analysisType: TAnalysisType): JSX.Element {
     if (analysisType === 'deterministic') {
       return renderEffectCell();
     } else {

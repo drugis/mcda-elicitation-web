@@ -1,6 +1,6 @@
 import IEditMode from '@shared/interface/IEditMode';
-import ISettings from '@shared/interface/ISettings';
 import IToggledColumns from '@shared/interface/IToggledColumns';
+import ISettings from '@shared/interface/Settings/ISettings';
 import React from 'react';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import WorkspaceSettings from './WorkspaceSettings';

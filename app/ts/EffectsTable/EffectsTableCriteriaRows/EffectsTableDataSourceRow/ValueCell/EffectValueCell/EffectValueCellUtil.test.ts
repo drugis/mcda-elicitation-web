@@ -2,11 +2,11 @@ import {Effect} from '@shared/interface/IEffect';
 import IEmptyEffect from '@shared/interface/IEmptyEffect';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
-import {DisplayMode} from '@shared/interface/ISettings';
 import ITextEffect from '@shared/interface/ITextEffect';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
-import {renderEffect} from './EffectValueCellService';
+import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
+import {renderEffect} from './EffectValueCellUtil';
 
 describe('EffectValueCellService', () => {
   describe('renderEffect', () => {
@@ -93,7 +93,7 @@ describe('EffectValueCellService', () => {
     });
 
     it('should get the value string for a range effect', () => {
-      const displayMode: DisplayMode = 'values';
+      const displayMode: TDisplayMode = 'values';
       const effect: IRangeEffect = {
         ...baseEffect,
         type: 'range',

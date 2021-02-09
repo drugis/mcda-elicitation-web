@@ -18,7 +18,7 @@ define([
   './fileReaderDirective',
   './inProgressWorkspacesDirective',
 
-  '../../ts/WorkspaceSettings/WorkspaceSettings',
+  '../../ts/WorkspaceSettings/WorkspaceSettingsWrapper',
   '../../ts/Workspaces/Workspaces',
   'react2angular',
 
@@ -42,7 +42,7 @@ define([
   fileReaderDirective,
   InProgressWorkspaces,
 
-  WorkspaceSettings,
+  WorkspaceSettingsWrapper,
   Workspaces,
   react2angular,
 
@@ -69,7 +69,7 @@ define([
 
     .component(
       'workspaceSettings',
-      react2angular.react2angular(WorkspaceSettings.default, [
+      react2angular.react2angular(WorkspaceSettingsWrapper.default, [
         'editMode',
         'workspaceSettings',
         'toggledColumns'

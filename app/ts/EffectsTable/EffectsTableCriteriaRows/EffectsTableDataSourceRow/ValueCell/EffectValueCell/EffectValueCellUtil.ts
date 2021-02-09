@@ -1,14 +1,14 @@
 import {Effect} from '@shared/interface/IEffect';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
-import {DisplayMode} from '@shared/interface/ISettings';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
+import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
 
 export function renderEffect(
   effect: Effect,
-  displayMode: DisplayMode,
+  displayMode: TDisplayMode,
   usePercentage: boolean,
   scale: IScale
 ): string {

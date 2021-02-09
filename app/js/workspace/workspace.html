@@ -41,7 +41,12 @@
     </div>
   </div>
   <div class="cell large-2">
-    <workspace-settings edit-mode="editMode"></workspace-settings>
+    <workspace-settings
+      ng-if="workspaceSettings"
+      edit-mode="editMode"
+      workspace-settings="workspaceSettings"
+      toggled-columns="toggledColumns"
+    ></workspace-settings>
   </div>
   <div ui-view class="cell"></div>
 </div>

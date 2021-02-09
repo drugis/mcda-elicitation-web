@@ -1,22 +1,21 @@
-import {
-  AnalysisType,
-  DisplayMode,
-  ScalesCalculationMethod
-} from '@shared/interface/ISettings';
+import ISettingsAndToggledColumns from '@shared/interface/Settings/ISettingsAndToggledColumns';
+import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
+import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
+import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
 
 export default interface ISettingsContext {
-  scalesCalculationMethod: ScalesCalculationMethod;
+  scalesCalculationMethod: TScalesCalculationMethod;
   showPercentages: boolean;
-  displayMode: DisplayMode;
-  analysisType: AnalysisType;
+  displayMode: TDisplayMode;
+  analysisType: TAnalysisType;
   hasNoEffects: boolean;
   hasNoDistributions: boolean;
   isRelativeProblem: boolean;
-  changed: boolean;
   randomSeed: number;
   showDescriptions: boolean;
   showUnitsOfMeasurement: boolean;
   showReferences: boolean;
   showStrengthsAndUncertainties: boolean;
   numberOfToggledColumns: number;
+  updateSettings: (updatedSettings: ISettingsAndToggledColumns) => void;
 }

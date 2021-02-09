@@ -4,61 +4,81 @@ import {
   DialogActions,
   DialogContent,
   Grid,
-  Radio,
-  RadioGroup,
   Tooltip
 } from '@material-ui/core';
 import Settings from '@material-ui/icons/Settings';
 import IEditMode from '@shared/interface/IEditMode';
+import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
+import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
+import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
+import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
 import React, {ChangeEvent, useContext, useState} from 'react';
 import DialogTitleWithCross from '../DialogTitleWithCross/DialogTitleWithCross';
 import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import InlineHelp from '../InlineHelp/InlineHelp';
 import {SettingsContext} from '../Settings/SettingsContext';
+import {getWarnings} from '../Settings/SettingsUtil';
+import DisplayWarnings from '../util/DisplayWarnings';
+import AnalysisType from './AnalysisType/AnalysisType';
+import DisplayMode from './DisplayMode/DisplayMode';
+import ScalesCalculationMethod from './ScalesCalculationMethod/ScalesCalculationMethod';
+import ShowPercentages from './ShowPercentages/ShowPercentages';
 
 export default function WorkspaceSettings({
   editMode
 }: {
   editMode: IEditMode;
 }): JSX.Element {
-  const {} = useContext(SettingsContext);
-  // const [scalesCalculationMethod, setScalesCalculationMethod] = useState(
-  //   workspaceSettings.calculationMethod
-  // );
-  // const [showPercentages, setShowPercentages] = useState<string>(
-  //   workspaceSettings.showPercentages ? 'percentage' : 'decimal'
-  // );
+  const {
+    scalesCalculationMethod,
+    showPercentages,
+    displayMode,
+    analysisType,
+    hasNoEffects,
+    hasNoDistributions,
+    isRelativeProblem,
+    randomSeed,
+    showDescriptions,
+    showUnitsOfMeasurement,
+    showReferences,
+    showStrengthsAndUncertainties
+  } = useContext(SettingsContext);
 
-  // const [displayMode, setdisplayMode] = useState(workspaceSettings.displayMode);
-  // const [analysisType, setanalysisType] = useState(
-  //   workspaceSettings.analysisType
-  // );
-  // const [hasNoEffects, sethasNoEffects] = useState(
-  //   workspaceSettings.hasNoEffects
-  // );
-  // const [hasNoDistributions, sethasNoDistributions] = useState(
-  //   workspaceSettings.hasNoDistributions
-  // );
-  // const [isRelativeProblem, setisRelativeProblem] = useState(
-  //   workspaceSettings.isRelativeProblem
-  // );
-  // const [changed, setchanged] = useState(workspaceSettings.changed);
-  // const [randomSeed, setrandomSeed] = useState(workspaceSettings.randomSeed);
-  // const [showDescriptions, setshowDescriptions] = useState(
-  //   toggledColumns.description
-  // );
-  // const [showUnitsOfMeasurement, setshowUnitsOfMeasurement] = useState(
-  //   toggledColumns.units
-  // );
-  // const [showReferences, setshowReferences] = useState(
-  //   toggledColumns.references
-  // );
-  // const [
-  //   showStrengthsAndUncertainties,
-  //   setshowStrengthsAndUncertainties
-  // ] = useState(toggledColumns.strength);
+  const [
+    localScalesCalculationMethod,
+    setLocalScalesCalculationMethod
+  ] = useState(scalesCalculationMethod);
+  const [
+    localShowPercentages,
+    setLocalShowPercentages
+  ] = useState<TPercentageOrDecimal>(
+    showPercentages ? 'percentage' : 'decimal'
+  );
+  const [localDisplayMode, setLocalDisplayMode] = useState<TDisplayMode>(
+    displayMode
+  );
+  const [localAnalysisType, setLocalAnalysisType] = useState<TAnalysisType>(
+    analysisType
+  );
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [localRandomSeed, setLocalRandomSeed] = useState<number>(randomSeed);
+  const [localShowDescriptions, setLocalShowDescriptions] = useState<boolean>(
+    showDescriptions
+  );
+  const [
+    localShowUnitsOfMeasurement,
+    setLocalShowUnitsOfMeasurement
+  ] = useState<boolean>(showUnitsOfMeasurement);
+  const [localShowReferences, setLocalShowReferences] = useState<boolean>(
+    showReferences
+  );
+  const [
+    localShowStrengthsAndUncertainties,
+    setLocalShowStrengthsAndUncertainties
+  ] = useState<boolean>(showStrengthsAndUncertainties);
+
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [warnings, setWarnings] = useState<string[]>([]);
 
   const tooltip = `Change workspace settings`;
 
@@ -77,10 +97,50 @@ export default function WorkspaceSettings({
   function handlePercentagesChanged(
     event: ChangeEvent<HTMLInputElement>
   ): void {
-    setShowPercentages(event.target.value);
+    setLocalShowPercentages(event.target.value as TPercentageOrDecimal);
   }
 
-  return editMode.canEdit && workspaceSettings ? (
+  function handleDisplayModeChanged(
+    event: ChangeEvent<HTMLInputElement>
+  ): void {
+    const newDisplayMode = event.target.value as TDisplayMode;
+    setWarnings(
+      getWarnings(
+        isRelativeProblem,
+        newDisplayMode,
+        analysisType,
+        hasNoEffects,
+        hasNoDistributions
+      )
+    );
+    setLocalDisplayMode(newDisplayMode);
+  }
+
+  function handleAnalysisTypeChanged(
+    event: ChangeEvent<HTMLInputElement>
+  ): void {
+    const newAnalysisType = event.target.value as TAnalysisType;
+    setWarnings(
+      getWarnings(
+        isRelativeProblem,
+        displayMode,
+        newAnalysisType,
+        hasNoEffects,
+        hasNoDistributions
+      )
+    );
+    setLocalAnalysisType(newAnalysisType);
+  }
+
+  function handleScalesCalculationMethodChanged(
+    event: ChangeEvent<HTMLInputElement>
+  ): void {
+    setLocalScalesCalculationMethod(
+      event.target.value as TScalesCalculationMethod
+    );
+  }
+
+  return editMode.canEdit ? (
     <HelpContextProviderComponent>
       <Tooltip title={tooltip}>
         <Button
@@ -112,33 +172,23 @@ export default function WorkspaceSettings({
                 Reset to default
               </Button>
             </Grid>
-            <Grid item xs={12}>
-              Show percentages or decimals (eligible data sources only){' '}
-              <InlineHelp helpId="percentages" />
-            </Grid>
-            <Grid item xs={12}>
-              <RadioGroup
-                name="percentages-radio"
-                value={showPercentages}
-                onChange={handlePercentagesChanged}
-              >
-                <Radio value="percentage" /> Percentages
-                <Radio value="decimal" /> Decimals
-              </RadioGroup>
-            </Grid>
-            <Grid item xs={12}>
-              Measurements display mode{' '}
-              <InlineHelp helpId="measurements-display-mode" />
-            </Grid>
-            <Grid item xs={12}></Grid>
-            <Grid item xs={12}>
-              Analysis type <InlineHelp helpId="analysis-type" />
-            </Grid>
-            <Grid item xs={12}></Grid>
-            <Grid item xs={12}>
-              Show median or mode <InlineHelp helpId="median-mode" />
-            </Grid>
-            <Grid item xs={12}></Grid>
+            <ShowPercentages
+              showPercentages={localShowPercentages}
+              handleRadioChanged={handlePercentagesChanged}
+            />
+            <DisplayMode
+              displayMode={localDisplayMode}
+              isRelativeProblem={isRelativeProblem}
+              handleRadioChanged={handleDisplayModeChanged}
+            />
+            <AnalysisType
+              analysisType={localAnalysisType}
+              handleRadioChanged={handleAnalysisTypeChanged}
+            />
+            <ScalesCalculationMethod
+              scalesCalculationMethod={localScalesCalculationMethod}
+              handleRadioChanged={handleScalesCalculationMethodChanged}
+            />
             <Grid item xs={12}>
               Effect table Columns to show{' '}
               <InlineHelp helpId="toggled-columns" />
@@ -157,6 +207,7 @@ export default function WorkspaceSettings({
             </Grid>
             <Grid item xs={12}></Grid>
           </Grid>
+          <DisplayWarnings warnings={warnings} identifier="settings" />
         </DialogContent>
         <DialogActions>
           <Button

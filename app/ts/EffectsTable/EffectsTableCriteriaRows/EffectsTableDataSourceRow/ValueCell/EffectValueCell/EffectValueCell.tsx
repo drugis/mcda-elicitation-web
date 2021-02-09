@@ -5,7 +5,7 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React, {useContext} from 'react';
 import EmptyCell from '../EmptyCell/EmptyCell';
-import {renderEffect} from './EffectValueCellService';
+import {renderEffect} from './EffectValueCellUtil';
 
 export default function EffectValueCell({
   effect,
