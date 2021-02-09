@@ -1,15 +1,18 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
 import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useContext} from 'react';
+import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
-export default function AnalysisType({
-  analysisType,
-  handleRadioChanged
-}: {
-  analysisType: TAnalysisType;
-  handleRadioChanged: (event: ChangeEvent<HTMLInputElement>) => void;
-}): JSX.Element {
+export default function AnalysisType(): JSX.Element {
+  const {localAnalysisType, setLocalAnalysisType} = useContext(
+    WorkspaceSettingsContext
+  );
+
+  function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
+    const newAnalysisType = event.target.value as TAnalysisType;
+    setLocalAnalysisType(newAnalysisType);
+  }
   return (
     <>
       <Grid item xs={12}>
@@ -18,7 +21,7 @@ export default function AnalysisType({
       <Grid item xs={12}>
         <RadioGroup
           name="analysis-type-radio"
-          value={analysisType}
+          value={localAnalysisType}
           onChange={handleRadioChanged}
         >
           <label>

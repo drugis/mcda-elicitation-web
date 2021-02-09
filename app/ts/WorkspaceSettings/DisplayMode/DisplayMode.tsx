@@ -1,17 +1,21 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import React, {ChangeEvent} from 'react';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import React, {ChangeEvent, useContext} from 'react';
+import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
-export default function DisplayMode({
-  displayMode,
-  isRelativeProblem,
-  handleRadioChanged
-}: {
-  displayMode: TDisplayMode;
-  isRelativeProblem: boolean;
-  handleRadioChanged: (event: ChangeEvent<HTMLInputElement>) => void;
-}): JSX.Element {
+export default function DisplayMode(): JSX.Element {
+  const {setLocalDisplayMode, localDisplayMode} = useContext(
+    WorkspaceSettingsContext
+  );
+  const {isRelativeProblem} = useContext(SettingsContext);
+
+  function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
+    const newDisplayMode = event.target.value as TDisplayMode;
+    setLocalDisplayMode(newDisplayMode);
+  }
+
   return (
     <>
       <Grid item xs={12}>
@@ -21,7 +25,7 @@ export default function DisplayMode({
       <Grid item xs={12}>
         <RadioGroup
           name="percentages-radio"
-          value={displayMode}
+          value={localDisplayMode}
           onChange={handleRadioChanged}
         >
           <label>

@@ -22,18 +22,6 @@ export function SettingsContextProviderComponent({
   settings: ISettings;
   toggledColumns: IToggledColumns;
 }) {
-  const DEFAULT_SETTINGS = {
-    calculationMethod: 'median',
-    showPercentages: true,
-    displayMode: 'enteredData',
-    analysisType: 'deterministic',
-    hasNoEffects: false,
-    hasNoDistributions: false,
-    isRelativeProblem: false,
-    changed: false,
-    randomSeed: 1234
-  };
-
   const [
     scalesCalculationMethod,
     setScalesCalculationMethod
@@ -59,7 +47,7 @@ export function SettingsContextProviderComponent({
     showStrengthsAndUncertainties,
     setShowStrengthsAndUncertainties
   ] = useState<boolean>(true);
-  const [inputSettings, setInputSettings] = useState<ISettings>();
+  const [currentSettings, setCurrentSettings] = useState<ISettings>();
   const [
     numberOfToggledColumns,
     setNumberOfToggledColumns
@@ -78,7 +66,7 @@ export function SettingsContextProviderComponent({
     setShowUnitsOfMeasurement(toggledColumns.units);
     setShowReferences(toggledColumns.references);
     setShowStrengthsAndUncertainties(toggledColumns.strength);
-    setInputSettings(settings);
+    setCurrentSettings(settings);
     setNumberOfToggledColumns(calculateNumberOfToggledColumns(toggledColumns));
   }, []);
 

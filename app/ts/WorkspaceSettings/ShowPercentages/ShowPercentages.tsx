@@ -1,15 +1,18 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
 import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useContext} from 'react';
+import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
-export default function ShowPercentages({
-  showPercentages,
-  handleRadioChanged
-}: {
-  showPercentages: TPercentageOrDecimal;
-  handleRadioChanged: (event: ChangeEvent<HTMLInputElement>) => void;
-}): JSX.Element {
+export default function ShowPercentages(): JSX.Element {
+  const {localShowPercentages, setLocalShowPercentages} = useContext(
+    WorkspaceSettingsContext
+  );
+
+  function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
+    setLocalShowPercentages(event.target.value as TPercentageOrDecimal);
+  }
+
   return (
     <>
       <Grid item xs={12}>
@@ -19,7 +22,7 @@ export default function ShowPercentages({
       <Grid item xs={12}>
         <RadioGroup
           name="percentages-radio"
-          value={showPercentages}
+          value={localShowPercentages}
           onChange={handleRadioChanged}
         >
           <label>
