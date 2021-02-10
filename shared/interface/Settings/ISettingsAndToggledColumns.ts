@@ -1,4 +1,4 @@
-import IToggledColumns from '../IToggledColumns';
+import IToggledColumns from './IToggledColumns';
 import {TAnalysisType} from './TAnalysisType';
 import {TDisplayMode} from './TDisplayMode';
 import {TPercentageOrDecimal} from './TPercentageOrDecimal';

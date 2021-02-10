@@ -25,11 +25,11 @@ export default function ShowPercentages(): JSX.Element {
           value={localShowPercentages}
           onChange={handleRadioChanged}
         >
-          <label>
-            <Radio id="show-percentages-radio" value="percentage" /> Percentages
+          <label id="show-percentages-radio">
+            <Radio value="percentage" /> Percentages
           </label>
-          <label>
-            <Radio id="show-decimals-radio" value="decimal" /> Decimals
+          <label id="show-decimals-radio">
+            <Radio value="decimal" /> Decimals
           </label>
         </RadioGroup>
       </Grid>

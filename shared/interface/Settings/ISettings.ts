@@ -8,8 +8,5 @@ export default interface ISettings {
   showPercentages: TPercentageOrDecimal;
   displayMode: TDisplayMode;
   analysisType: TAnalysisType;
-  hasNoEffects: boolean;
-  hasNoDistributions: boolean;
-  isRelativeProblem: boolean;
   randomSeed: number;
 }

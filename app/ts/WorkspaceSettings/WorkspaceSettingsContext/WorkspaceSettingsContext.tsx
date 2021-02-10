@@ -1,11 +1,11 @@
-import IToggledColumns from '@shared/interface/IToggledColumns';
 import ISettings from '@shared/interface/Settings/ISettings';
+import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {getWarnings} from '../../Settings/SettingsUtil';
+import {getWarning} from '../../Settings/SettingsUtil';
 import IWorkspaceSettingsContext from './IWorkspaceSettingsContext';
 
 export const WorkspaceSettingsContext = createContext<IWorkspaceSettingsContext>(
@@ -67,14 +67,14 @@ export function WorkspaceSettingsContextProviderComponent({
     setLocalShowStrengthsAndUncertainties
   ] = useState<boolean>(showStrengthsAndUncertainties);
 
-  const [warnings, setWarnings] = useState<string[]>([]);
+  const [warning, setWarning] = useState<string>('');
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState<boolean>(
     false
   );
 
   useEffect(() => {
     if (isDialogOpen) {
-      setWarnings([]);
+      setWarning('');
       setIsSaveButtonDisabled(false);
       setLocalScalesCalculationMethod(scalesCalculationMethod);
       setLocalShowPercentages(showPercentages ? 'percentage' : 'decimal');
@@ -89,27 +89,15 @@ export function WorkspaceSettingsContextProviderComponent({
 
   function setLocalDisplayModeWrapper(newMode: TDisplayMode) {
     setLocalDisplayMode(newMode);
-    setWarnings(
-      getWarnings(
-        isRelativeProblem,
-        newMode,
-        analysisType,
-        hasNoEffects,
-        hasNoDistributions
-      )
+    setWarning(
+      getWarning(newMode, analysisType, hasNoEffects, hasNoDistributions)
     );
   }
 
   function setLocalAnalysisTypeWrapper(newType: TAnalysisType) {
     setLocalAnalysisType(newType);
-    setWarnings(
-      getWarnings(
-        isRelativeProblem,
-        displayMode,
-        newType,
-        hasNoEffects,
-        hasNoDistributions
-      )
+    setWarning(
+      getWarning(displayMode, newType, hasNoEffects, hasNoDistributions)
     );
   }
 
@@ -127,10 +115,7 @@ export function WorkspaceSettingsContextProviderComponent({
   }
 
   function saveSettings(): void {
-    const newSettings: Omit<
-      ISettings,
-      'isRelativeProblem' | 'hasNoEffects' | 'hasNoDistributions'
-    > = {
+    const newSettings: ISettings = {
       analysisType: localAnalysisType,
       calculationMethod: localScalesCalculationMethod,
       displayMode: localDisplayMode,
@@ -159,7 +144,7 @@ export function WorkspaceSettingsContextProviderComponent({
         localShowUnitsOfMeasurement,
         localShowReferences,
         localShowStrengthsAndUncertainties,
-        warnings,
+        warning,
         resetToDefaults,
         saveSettings,
         setLocalShowPercentages,

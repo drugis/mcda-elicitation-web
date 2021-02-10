@@ -27,11 +27,11 @@ export default function ScalesCalculationMethod(): JSX.Element {
           value={localScalesCalculationMethod}
           onChange={handleRadioChanged}
         >
-          <label>
-            <Radio id="show-median-radio" value="median" /> Median
+          <label id="show-median-radio">
+            <Radio value="median" /> Median
           </label>
-          <label>
-            <Radio id="show-mode-radio" value="mode" /> Mode
+          <label id="show-mode-radio">
+            <Radio value="mode" /> Mode
           </label>
         </RadioGroup>
       </Grid>

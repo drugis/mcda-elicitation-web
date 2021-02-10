@@ -36,7 +36,7 @@ export default function RandomSeed(): JSX.Element {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          id="sensitivity-value-input"
+          id="random-seed"
           value={localRandomSeed}
           onChange={inputChanged}
           type="number"

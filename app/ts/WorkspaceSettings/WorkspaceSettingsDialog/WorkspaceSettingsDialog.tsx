@@ -24,7 +24,7 @@ export default function WorkspaceSettingsDialog({
   closeDialog: () => void;
 }): JSX.Element {
   const {
-    warnings,
+    warning,
     isSaveButtonDisabled,
     resetToDefaults,
     saveSettings
@@ -59,7 +59,7 @@ export default function WorkspaceSettingsDialog({
           <ToggledColumns />
           <RandomSeed />
         </Grid>
-        <DisplayWarnings warnings={warnings} identifier="settings" />
+        <DisplayWarnings warnings={[warning]} identifier="settings" />
       </DialogContent>
       <DialogActions>
         <Button

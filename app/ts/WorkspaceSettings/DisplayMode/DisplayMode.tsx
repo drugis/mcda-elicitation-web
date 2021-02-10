@@ -28,16 +28,12 @@ export default function DisplayMode(): JSX.Element {
           value={localDisplayMode}
           onChange={handleRadioChanged}
         >
-          <label>
-            <Radio
-              id="entered-radio"
-              value="enteredData"
-              disabled={isRelativeProblem}
-            />{' '}
-            Entered effects / distributions
+          <label id="entered-radio">
+            <Radio value="enteredData" disabled={isRelativeProblem} /> Entered
+            effects / distributions
           </label>
-          <label>
-            <Radio id="values-radio" value="values" /> Values used for analysis
+          <label id="values-radio">
+            <Radio value="values" /> Values used for analysis
           </label>
         </RadioGroup>
       </Grid>

@@ -1,7 +1,7 @@
 import {OurError} from '@shared/interface/IError';
-import IToggledColumns from '@shared/interface/IToggledColumns';
 import ISettings from '@shared/interface/Settings/ISettings';
 import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
+import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
@@ -11,7 +11,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';
-import {calculateNumberOfToggledColumns, settingsChanged} from './SettingsUtil';
+import {calculateNumberOfToggledColumns} from './SettingsUtil';
 
 export const SettingsContext = createContext<ISettingsContext>(
   {} as ISettingsContext
@@ -21,21 +21,33 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
   const {workspace} = useContext(WorkspaceContext);
   const {setError} = useContext(ErrorContext);
 
+  const [hasNoEffects, setHasNoEffects] = useState<boolean>(
+    _.isEmpty(workspace.effects)
+  );
+  const [hasNoDistributions, setHasNoDistributions] = useState<boolean>(
+    _.isEmpty(workspace.distributions)
+  );
+  const [isRelativeProblem, setIsRelativeProblem] = useState<boolean>(
+    !_.isEmpty(
+      workspace.relativePerformances &&
+        _.isEmpty(workspace.effects) &&
+        _.isEmpty(workspace.distributions)
+    )
+  );
+
   const [
     scalesCalculationMethod,
     setScalesCalculationMethod
   ] = useState<TScalesCalculationMethod>('median');
   const [showPercentages, setShowPercentages] = useState<boolean>(true);
 
-  const [isRelativeProblem, setIsRelativeProblem] = useState<boolean>(false);
   const [displayMode, setDisplayMode] = useState<TDisplayMode>(
     isRelativeProblem ? 'values' : 'enteredData'
   );
   const [analysisType, setAnalysisType] = useState<TAnalysisType>(
-    'deterministic'
+    isRelativeProblem ? 'smaa' : 'deterministic'
   );
-  const [hasNoEffects, setHasNoEffects] = useState<boolean>(false);
-  const [hasNoDistributions, setHasNoDistributions] = useState<boolean>(false);
+
   const [randomSeed, setRandomSeed] = useState<number>(1234);
   const [showDescriptions, setShowDescriptions] = useState<boolean>(true);
   const [showUnitsOfMeasurement, setShowUnitsOfMeasurement] = useState<boolean>(
@@ -65,13 +77,8 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
         if (!_.isEmpty(settings)) {
           setScalesCalculationMethod(settings.calculationMethod);
           setShowPercentages(settings.showPercentages === 'percentage');
-          setDisplayMode(
-            settings.isRelativeProblem ? 'values' : settings.displayMode
-          );
+          setDisplayMode(isRelativeProblem ? 'values' : settings.displayMode);
           setAnalysisType(settings.analysisType);
-          setHasNoEffects(settings.hasNoEffects);
-          setHasNoDistributions(settings.hasNoDistributions);
-          setIsRelativeProblem(settings.isRelativeProblem);
           setRandomSeed(settings.randomSeed);
           setShowDescriptions(toggledColumns.description);
           setShowUnitsOfMeasurement(toggledColumns.units);
@@ -92,19 +99,12 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
   }
 
   function updateSettings(
-    updatedSettings: Omit<
-      ISettings,
-      'isRelativeProblem' | 'hasNoEffects' | 'hasNoDistributions'
-    >,
+    updatedSettings: ISettings,
     updatedToggledColumns: IToggledColumns
   ): void {
     if (
-      settingsChanged(
-        currentSettings,
-        currentToggledColumns,
-        updatedSettings,
-        updatedToggledColumns
-      )
+      !_.isEqual(currentSettings, updatedSettings) ||
+      !_.isEqual(currentToggledColumns, updatedToggledColumns)
     ) {
       setScalesCalculationMethod(updatedSettings.calculationMethod);
       setShowPercentages(updatedSettings.showPercentages === 'percentage');
@@ -118,8 +118,21 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
       setNumberOfToggledColumns(
         calculateNumberOfToggledColumns(updatedToggledColumns)
       );
-      // axios put
-      window.location.reload();
+      const settingsCommand: ISettingsMessage = {
+        settings: {
+          ...updatedSettings
+        },
+        toggledColumns: {...updatedToggledColumns}
+      };
+      axios
+        .put(
+          `/workspaces/${workspace.properties.id}/workspaceSettings`,
+          settingsCommand
+        )
+        .then(() => {
+          window.location.reload();
+        })
+        .catch(errorCallback);
     }
   }
 

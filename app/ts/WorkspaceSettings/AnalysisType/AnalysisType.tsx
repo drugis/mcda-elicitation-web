@@ -24,12 +24,11 @@ export default function AnalysisType(): JSX.Element {
           value={localAnalysisType}
           onChange={handleRadioChanged}
         >
-          <label>
-            <Radio id="deterministic-radio" value="deterministic" />{' '}
-            Deterministic
+          <label id="deterministic-radio">
+            <Radio value="deterministic" /> Deterministic
           </label>
-          <label>
-            <Radio id="smaa-radio" value="smaa" /> SMAA
+          <label id="smaa-radio">
+            <Radio value="smaa" /> SMAA
           </label>
         </RadioGroup>
       </Grid>

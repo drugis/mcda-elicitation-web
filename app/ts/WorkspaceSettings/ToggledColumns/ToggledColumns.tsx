@@ -2,7 +2,6 @@ import {Button, Checkbox, Grid} from '@material-ui/core';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
-import _ from 'lodash';
 
 export default function ToggledColumns(): JSX.Element {
   const {
@@ -84,9 +83,8 @@ export default function ToggledColumns(): JSX.Element {
       </Grid>
       <Grid item xs={12}>
         {' '}
-        <label>
+        <label id="description-column-checkbox">
           <Checkbox
-            id="description-column-checkbox"
             checked={localShowDescriptions}
             onChange={handleShowDescriptionsChanged}
             color="primary"
@@ -96,9 +94,8 @@ export default function ToggledColumns(): JSX.Element {
       </Grid>
       <Grid item xs={12}>
         {' '}
-        <label>
+        <label id="units-column-checkbox">
           <Checkbox
-            id="units-column-checkbox"
             checked={localShowUnitsOfMeasurement}
             onChange={handleShowUnitsChanged}
             color="primary"
@@ -108,9 +105,8 @@ export default function ToggledColumns(): JSX.Element {
       </Grid>
       <Grid item xs={12}>
         {' '}
-        <label>
+        <label id="reference-column-checkbox">
           <Checkbox
-            id="reference-column-checkbox"
             checked={localShowReferences}
             onChange={handleShowReferencesChanged}
             color="primary"
@@ -119,9 +115,8 @@ export default function ToggledColumns(): JSX.Element {
         </label>
       </Grid>
       <Grid item xs={12}>
-        <label>
+        <label id="uncertainties-column-checkbox">
           <Checkbox
-            id="uncertainties-column-checkbox"
             checked={localShowStrengthsAndUncertainties}
             onChange={handleShowStrengthChanged}
             color="primary"

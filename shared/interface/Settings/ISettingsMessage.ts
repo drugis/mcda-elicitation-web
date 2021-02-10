@@ -1,5 +1,5 @@
-import IToggledColumns from '../IToggledColumns';
 import ISettings from './ISettings';
+import IToggledColumns from './IToggledColumns';
 
 export default interface ISettingsMessage {
   toggledColumns: IToggledColumns;
