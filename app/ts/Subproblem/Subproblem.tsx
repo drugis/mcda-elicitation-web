@@ -46,11 +46,7 @@ export default function Subproblem({
           scales={scales}
         >
           <SubproblemContextProviderComponent>
-            <SettingsContextProviderComponent
-              settings={settings}
-              toggledColumns={toggledColumns}
-              updateAngularSettings={() => {}}
-            >
+            <SettingsContextProviderComponent>
               <ErrorHandler>
                 <SubproblemSelection subproblemChanged={subproblemChanged} />
                 <SubproblemButtons />

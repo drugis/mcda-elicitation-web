@@ -1,9 +1,15 @@
+import {OurError} from '@shared/interface/IError';
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import ISettings from '@shared/interface/Settings/ISettings';
+import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
 import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
-import React, {createContext, useEffect, useState} from 'react';
+import axios, {AxiosResponse} from 'axios';
+import _ from 'lodash';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {ErrorContext} from '../Error/ErrorContext';
+import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';
 import {calculateNumberOfToggledColumns, settingsChanged} from './SettingsUtil';
 
@@ -11,20 +17,10 @@ export const SettingsContext = createContext<ISettingsContext>(
   {} as ISettingsContext
 );
 
-export function SettingsContextProviderComponent({
-  children,
-  settings,
-  toggledColumns,
-  updateAngularSettings
-}: {
-  children: any;
-  settings: ISettings;
-  toggledColumns: IToggledColumns;
-  updateAngularSettings: (
-    settings: ISettings,
-    toggledColumns: IToggledColumns
-  ) => void;
-}) {
+export function SettingsContextProviderComponent({children}: {children: any}) {
+  const {workspace} = useContext(WorkspaceContext);
+  const {setError} = useContext(ErrorContext);
+
   const [
     scalesCalculationMethod,
     setScalesCalculationMethod
@@ -61,25 +57,39 @@ export function SettingsContextProviderComponent({
   ] = useState<number>();
 
   useEffect(() => {
-    setScalesCalculationMethod(settings.calculationMethod);
-    setShowPercentages(settings.showPercentages === 'percentage');
-    setDisplayMode(
-      settings.isRelativeProblem ? 'values' : settings.displayMode
-    );
-    setAnalysisType(settings.analysisType);
-    setHasNoEffects(settings.hasNoEffects);
-    setHasNoDistributions(settings.hasNoDistributions);
-    setIsRelativeProblem(settings.isRelativeProblem);
-    setRandomSeed(settings.randomSeed);
-    setShowDescriptions(toggledColumns.description);
-    setShowUnitsOfMeasurement(toggledColumns.units);
-    setShowReferences(toggledColumns.references);
-    setShowStrengthsAndUncertainties(toggledColumns.strength);
-    setCurrentSettings(settings);
-    setCurrentToggledColumns(toggledColumns);
-    setNumberOfToggledColumns(calculateNumberOfToggledColumns(toggledColumns));
+    axios
+      .get(`/workspaces/${workspace.properties.id}/workspaceSettings`)
+      .then((response: AxiosResponse<ISettingsMessage>) => {
+        const settings: ISettings = response.data.settings;
+        const toggledColumns: IToggledColumns = response.data.toggledColumns;
+        if (!_.isEmpty(settings)) {
+          setScalesCalculationMethod(settings.calculationMethod);
+          setShowPercentages(settings.showPercentages === 'percentage');
+          setDisplayMode(
+            settings.isRelativeProblem ? 'values' : settings.displayMode
+          );
+          setAnalysisType(settings.analysisType);
+          setHasNoEffects(settings.hasNoEffects);
+          setHasNoDistributions(settings.hasNoDistributions);
+          setIsRelativeProblem(settings.isRelativeProblem);
+          setRandomSeed(settings.randomSeed);
+          setShowDescriptions(toggledColumns.description);
+          setShowUnitsOfMeasurement(toggledColumns.units);
+          setShowReferences(toggledColumns.references);
+          setShowStrengthsAndUncertainties(toggledColumns.strength);
+          setCurrentSettings(settings);
+          setCurrentToggledColumns(toggledColumns);
+          setNumberOfToggledColumns(
+            calculateNumberOfToggledColumns(toggledColumns)
+          );
+        }
+      })
+      .catch(errorCallback);
   }, []);
-  //FIXME: axios the settings
+
+  function errorCallback(error: OurError) {
+    setError(error);
+  }
 
   function updateSettings(
     updatedSettings: Omit<
@@ -108,15 +118,8 @@ export function SettingsContextProviderComponent({
       setNumberOfToggledColumns(
         calculateNumberOfToggledColumns(updatedToggledColumns)
       );
-      updateAngularSettings(
-        {
-          ...updatedSettings,
-          isRelativeProblem: isRelativeProblem,
-          hasNoEffects: hasNoEffects,
-          hasNoDistributions: hasNoDistributions
-        },
-        updatedToggledColumns
-      );
+      // axios put
+      window.location.reload();
     }
   }
 

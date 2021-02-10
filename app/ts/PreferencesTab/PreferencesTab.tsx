@@ -49,11 +49,7 @@ export default function PreferencesTab({
           scales={scales}
         >
           <SubproblemContextProviderComponent>
-            <SettingsContextProviderComponent
-              settings={settings}
-              toggledColumns={toggledColumns}
-              updateAngularSettings={() => {}}
-            >
+            <SettingsContextProviderComponent>
               <PreferencesContextProviderComponent
                 scenarios={scenarios}
                 currentScenarioId={currentScenarioId}

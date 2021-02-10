@@ -39,11 +39,7 @@ export default function OverviewTab({
           subproblemChanged={() => {}}
           scales={scales}
         >
-          <SettingsContextProviderComponent
-            settings={settings}
-            toggledColumns={toggledColumns}
-            updateAngularSettings={() => {}}
-          >
+          <SettingsContextProviderComponent>
             <ErrorHandler>
               <Overview />
             </ErrorHandler>

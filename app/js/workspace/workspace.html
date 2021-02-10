@@ -42,11 +42,9 @@
   </div>
   <div class="cell large-2">
     <workspace-settings
-      ng-if="workspaceSettings && toggledColumns"
+      ng-if="workspaceSettings && toggledColumns && workspaceForReact"
       edit-mode="editMode"
-      workspace-settings="workspaceSettings"
-      toggled-columns="toggledColumns"
-      update-angular-settings="updateSettings"
+      workspace="workspaceForReact"
     ></workspace-settings>
   </div>
   <div ui-view class="cell"></div>
