@@ -33,7 +33,7 @@ export default function WorkspaceSettings({
           <Settings /> Settings
         </Button>
       </Tooltip>
-      <WorkspaceSettingsContextProviderComponent>
+      <WorkspaceSettingsContextProviderComponent isDialogOpen={isDialogOpen}>
         <WorkspaceSettingsDialog
           isDialogOpen={isDialogOpen}
           closeDialog={closeDialog}

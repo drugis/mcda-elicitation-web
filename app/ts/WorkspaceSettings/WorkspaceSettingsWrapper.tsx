@@ -1,3 +1,4 @@
+import {Grid} from '@material-ui/core';
 import IEditMode from '@shared/interface/IEditMode';
 import IToggledColumns from '@shared/interface/IToggledColumns';
 import ISettings from '@shared/interface/Settings/ISettings';
@@ -25,7 +26,9 @@ export default function WorkspaceSettingsWrapper({
       toggledColumns={toggledColumns}
       updateAngularSettings={updateAngularSettings}
     >
-      <WorkspaceSettings editMode={editMode} />
+      <Grid container justify="flex-end">
+        <WorkspaceSettings editMode={editMode} />
+      </Grid>
     </SettingsContextProviderComponent>
   );
 }

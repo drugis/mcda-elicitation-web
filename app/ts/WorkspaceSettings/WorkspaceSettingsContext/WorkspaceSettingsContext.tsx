@@ -4,7 +4,7 @@ import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getWarnings} from '../../Settings/SettingsUtil';
 import IWorkspaceSettingsContext from './IWorkspaceSettingsContext';
 
@@ -13,9 +13,11 @@ export const WorkspaceSettingsContext = createContext<IWorkspaceSettingsContext>
 );
 
 export function WorkspaceSettingsContextProviderComponent({
-  children
+  children,
+  isDialogOpen
 }: {
   children: any;
+  isDialogOpen: boolean;
 }) {
   const {
     scalesCalculationMethod,
@@ -70,6 +72,21 @@ export function WorkspaceSettingsContextProviderComponent({
     false
   );
 
+  useEffect(() => {
+    if (isDialogOpen) {
+      setWarnings([]);
+      setIsSaveButtonDisabled(false);
+      setLocalScalesCalculationMethod(scalesCalculationMethod);
+      setLocalShowPercentages(showPercentages ? 'percentage' : 'decimal');
+      setLocalDisplayModeWrapper(displayMode);
+      setLocalAnalysisTypeWrapper(analysisType);
+      setLocalRandomSeed(randomSeed);
+      setLocalShowDescriptions(showDescriptions);
+      setLocalShowUnitsOfMeasurement(showUnitsOfMeasurement);
+      setLocalShowReferences(showReferences);
+    }
+  }, [isDialogOpen]);
+
   function setLocalDisplayModeWrapper(newMode: TDisplayMode) {
     setLocalDisplayMode(newMode);
     setWarnings(
@@ -99,7 +116,7 @@ export function WorkspaceSettingsContextProviderComponent({
   function resetToDefaults(): void {
     setLocalScalesCalculationMethod('median');
     setLocalShowPercentages('percentage');
-    setLocalDisplayModeWrapper(isRelativeProblem ? 'enteredData' : 'values');
+    setLocalDisplayModeWrapper(isRelativeProblem ? 'values' : 'enteredData');
     setLocalAnalysisTypeWrapper('deterministic');
     setLocalRandomSeed(1234);
     setLocalShowDescriptions(true);

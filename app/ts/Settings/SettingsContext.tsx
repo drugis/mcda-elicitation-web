@@ -2,7 +2,6 @@ import IToggledColumns from '@shared/interface/IToggledColumns';
 import ISettings from '@shared/interface/Settings/ISettings';
 import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
-import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
 import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
 import React, {createContext, useEffect, useState} from 'react';
 import ISettingsContext from './ISettingsContext';
@@ -30,9 +29,7 @@ export function SettingsContextProviderComponent({
     scalesCalculationMethod,
     setScalesCalculationMethod
   ] = useState<TScalesCalculationMethod>('median');
-  const [showPercentages, setShowPercentages] = useState<TPercentageOrDecimal>(
-    'percentage'
-  );
+  const [showPercentages, setShowPercentages] = useState<boolean>(true);
 
   const [isRelativeProblem, setIsRelativeProblem] = useState<boolean>(false);
   const [displayMode, setDisplayMode] = useState<TDisplayMode>(
@@ -65,7 +62,7 @@ export function SettingsContextProviderComponent({
 
   useEffect(() => {
     setScalesCalculationMethod(settings.calculationMethod);
-    setShowPercentages(settings.showPercentages);
+    setShowPercentages(settings.showPercentages === 'percentage');
     setDisplayMode(
       settings.isRelativeProblem ? 'values' : settings.displayMode
     );
@@ -100,9 +97,7 @@ export function SettingsContextProviderComponent({
       )
     ) {
       setScalesCalculationMethod(updatedSettings.calculationMethod);
-      setShowPercentages(
-        updatedSettings.showPercentages ? 'percentage' : 'decimal'
-      );
+      setShowPercentages(updatedSettings.showPercentages === 'percentage');
       setDisplayMode(updatedSettings.displayMode);
       setAnalysisType(updatedSettings.analysisType);
       setRandomSeed(updatedSettings.randomSeed);
@@ -129,7 +124,7 @@ export function SettingsContextProviderComponent({
     <SettingsContext.Provider
       value={{
         scalesCalculationMethod,
-        showPercentages: showPercentages === 'percentage',
+        showPercentages,
         displayMode,
         analysisType,
         hasNoEffects,

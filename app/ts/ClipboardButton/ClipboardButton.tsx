@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import FileCopy from '@material-ui/icons/FileCopy';
 import ClipboardJS from 'clipboard';
 import React from 'react';
 
@@ -13,7 +14,7 @@ export default function ClipboardButton({targetId}: {targetId: string}) {
         variant="contained"
         data-clipboard-target={targetId}
       >
-        <i className="fa fa-clipboard"></i> Copy to clipboard
+        <FileCopy /> Copy to clipboard
       </Button>
     </Grid>
   );
