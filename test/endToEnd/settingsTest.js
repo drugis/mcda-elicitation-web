@@ -132,34 +132,70 @@ function reset(browser) {
     .click('#values-radio')
     .click('#show-mode-radio')
     .click('#reset-default-button')
-    // .waitForElementVisible('#show-percentages-radio:checked')
-    // .waitForElementVisible('#deterministic-radio:checked')
-    // .waitForElementVisible('#entered-radio:checked')
-    // .waitForElementVisible('#show-median-radio:checked')
-    // .waitForElementVisible('#description-column-checkbox:checked')
-    // .waitForElementVisible('#units-column-checkbox:checked')
-    // .waitForElementVisible('#reference-column-checkbox:checked')
-    // .waitForElementVisible('#uncertainties-column-checkbox:checked')
-    // .getValue('#random-seed', function (result) {
-    //   browser.assert.equal(result.value, 1234);
-    // })
-    .click('#save-settings-button');
+    .useXpath()
+    .waitForElementVisible(
+      '//*[@id="show-percentages-radio"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="deterministic-radio"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="entered-radio"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="show-median-radio"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="description-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="units-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="reference-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="uncertainties-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    );
+
+  browser.useCss();
+  browser.expect.element('#random-seed').value.to.equal('1234');
+  browser.click('#save-settings-button');
 }
 
 function deselectAll(browser) {
-  browser.click('#settings-button').click('#toggle-selection-button');
-
-  browser.expect.element('#description-column-checkbox').to.not.be.selected;
-  browser.expect.element('#units-column-checkbox').to.not.be.selected;
-  browser.expect.element('#reference-column-checkbox').to.not.be.selected;
-  browser.expect.element('#uncertainties-column-checkbox').to.not.be.selected;
+  browser
+    .click('#settings-button')
+    .click('#toggle-selection-button')
+    .useXpath();
 
   browser
-    .click('#toggle-selection-button')
-    .waitForElementVisible('#description-column-checkbox:checked')
-    .waitForElementVisible('#units-column-checkbox:checked')
-    .waitForElementVisible('#reference-column-checkbox:checked')
-    .waitForElementVisible('#uncertainties-column-checkbox:checked')
+    .waitForElementNotPresent(
+      '//*[@id="description-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementNotPresent(
+      '//*[@id="units-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementNotPresent(
+      '//*[@id="reference-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementNotPresent(
+      '//*[@id="uncertainties-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .click('//*[@id="toggle-selection-button"]')
+    .waitForElementVisible(
+      '//*[@id="description-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="units-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="reference-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .waitForElementVisible(
+      '//*[@id="uncertainties-column-checkbox"]/*[contains(@class, "Mui-checked")]'
+    )
+    .useCss()
     .click('#save-settings-button');
 }
 
