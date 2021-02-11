@@ -18,10 +18,10 @@ export default function ScalesCalculationMethod(): JSX.Element {
 
   return (
     <>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         Show median or mode <InlineHelp helpId="median-mode" />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         <RadioGroup
           name="scales-calculation-method-radio"
           value={localScalesCalculationMethod}

@@ -19,21 +19,21 @@ describe('EffectValueCellService', () => {
     const scale: IScale = {'2.5%': 1, '50%': 2, '97.5%': 3, mode: 4};
 
     it('should return an empty string when there is no effect', () => {
-      const displayMode = 'enteredData';
+      const displayMode = 'enteredEffects';
       const effect: Effect = undefined;
       const result = renderEffect(effect, displayMode, usePercentage, scale);
       expect(result).toBe('');
     });
 
     it('should return an empty string for an empty effect', () => {
-      const displayMode = 'enteredData';
+      const displayMode = 'enteredEffects';
       const effect: IEmptyEffect = {...baseEffect, type: 'empty'};
       const result = renderEffect(effect, displayMode, usePercentage, scale);
       expect(result).toBe('');
     });
 
     it('should return a range value for a range effect', () => {
-      const displayMode = 'enteredData';
+      const displayMode = 'enteredEffects';
       const effect: IRangeEffect = {
         ...baseEffect,
         type: 'range',
@@ -45,7 +45,7 @@ describe('EffectValueCellService', () => {
     });
 
     it('should return the text of a text effect', () => {
-      const displayMode = 'enteredData';
+      const displayMode = 'enteredEffects';
       const effect: ITextEffect = {
         ...baseEffect,
         type: 'text',
@@ -56,14 +56,14 @@ describe('EffectValueCellService', () => {
     });
 
     it('should return a string for an effect', () => {
-      const displayMode = 'enteredData';
+      const displayMode = 'enteredEffects';
       const effect: IValueEffect = {...baseEffect, type: 'value', value: 2};
       const result = renderEffect(effect, displayMode, usePercentage, scale);
       expect(result).toBe('2');
     });
 
     it('should return a string for a confidence interval effect', () => {
-      const displayMode = 'enteredData';
+      const displayMode = 'enteredEffects';
       const effect: IValueCIEffect = {
         ...baseEffect,
         type: 'valueCI',
@@ -78,7 +78,7 @@ describe('EffectValueCellService', () => {
     });
 
     it('should return a string for a confidence interval effect with not estimable bounds', () => {
-      const displayMode = 'enteredData';
+      const displayMode = 'enteredEffects';
       const effect: IValueCIEffect = {
         ...baseEffect,
         type: 'valueCI',
@@ -93,7 +93,7 @@ describe('EffectValueCellService', () => {
     });
 
     it('should get the value string for a range effect', () => {
-      const displayMode: TDisplayMode = 'values';
+      const displayMode: TDisplayMode = 'deterministicValues';
       const effect: IRangeEffect = {
         ...baseEffect,
         type: 'range',
@@ -105,14 +105,14 @@ describe('EffectValueCellService', () => {
     });
 
     it('should return a value string for an effect', () => {
-      const displayMode = 'values';
+      const displayMode = 'deterministicValues';
       const effect: IValueEffect = {...baseEffect, type: 'value', value: 2};
       const result = renderEffect(effect, displayMode, usePercentage, scale);
       expect(result).toBe('2');
     });
 
     it('should return a value string for a confidence interval effect', () => {
-      const displayMode = 'values';
+      const displayMode = 'deterministicValues';
       const effect: IValueCIEffect = {
         ...baseEffect,
         type: 'valueCI',
@@ -127,21 +127,21 @@ describe('EffectValueCellService', () => {
     });
 
     it('should return a value string made from the scale if the effect is not preset', () => {
-      const displayMode = 'values';
+      const displayMode = 'deterministicValues';
       const effect: Effect = undefined;
       const result = renderEffect(effect, displayMode, usePercentage, scale);
       expect(result).toBe('2');
     });
 
     it('should return a value string made from the scale if the effect is empty', () => {
-      const displayMode = 'values';
+      const displayMode = 'deterministicValues';
       const effect: IEmptyEffect = {...baseEffect, type: 'empty'};
       const result = renderEffect(effect, displayMode, usePercentage, scale);
       expect(result).toBe('2');
     });
 
     it('should return a value string made from the scale if the effect is text', () => {
-      const displayMode = 'values';
+      const displayMode = 'deterministicValues';
       const effect: ITextEffect = {
         ...baseEffect,
         type: 'text',
@@ -152,7 +152,7 @@ describe('EffectValueCellService', () => {
     });
 
     it('should return a no data message if there is no scale value', () => {
-      const displayMode = 'values';
+      const displayMode = 'deterministicValues';
       const effect: IEmptyEffect = {...baseEffect, type: 'empty'};
       const emptyScale: IScale = {
         '2.5%': null,

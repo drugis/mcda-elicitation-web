@@ -1,11 +1,9 @@
 import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
-import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {getWarning} from '../../Settings/SettingsUtil';
 import IWorkspaceSettingsContext from './IWorkspaceSettingsContext';
 
 export const WorkspaceSettingsContext = createContext<IWorkspaceSettingsContext>(
@@ -23,7 +21,6 @@ export function WorkspaceSettingsContextProviderComponent({
     scalesCalculationMethod,
     showPercentages,
     displayMode,
-    analysisType,
     hasNoEffects,
     hasNoDistributions,
     isRelativeProblem,
@@ -48,9 +45,6 @@ export function WorkspaceSettingsContextProviderComponent({
   const [localDisplayMode, setLocalDisplayMode] = useState<TDisplayMode>(
     displayMode
   );
-  const [localAnalysisType, setLocalAnalysisType] = useState<TAnalysisType>(
-    analysisType
-  );
   const [localRandomSeed, setLocalRandomSeed] = useState<number>(randomSeed);
   const [localShowDescriptions, setLocalShowDescriptions] = useState<boolean>(
     showDescriptions
@@ -67,19 +61,16 @@ export function WorkspaceSettingsContextProviderComponent({
     setLocalShowStrengthsAndUncertainties
   ] = useState<boolean>(showStrengthsAndUncertainties);
 
-  const [warning, setWarning] = useState<string>();
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState<boolean>(
     false
   );
 
   useEffect(() => {
     if (isDialogOpen) {
-      setWarning(undefined);
       setIsSaveButtonDisabled(false);
       setLocalScalesCalculationMethod(scalesCalculationMethod);
       setLocalShowPercentages(showPercentages ? 'percentage' : 'decimal');
-      setLocalDisplayModeWrapper(displayMode);
-      setLocalAnalysisTypeWrapper(analysisType);
+      setLocalDisplayMode(displayMode);
       setLocalRandomSeed(randomSeed);
       setLocalShowDescriptions(showDescriptions);
       setLocalShowUnitsOfMeasurement(showUnitsOfMeasurement);
@@ -87,25 +78,10 @@ export function WorkspaceSettingsContextProviderComponent({
     }
   }, [isDialogOpen]);
 
-  function setLocalDisplayModeWrapper(newMode: TDisplayMode) {
-    setLocalDisplayMode(newMode);
-    setWarning(
-      getWarning(newMode, analysisType, hasNoEffects, hasNoDistributions)
-    );
-  }
-
-  function setLocalAnalysisTypeWrapper(newType: TAnalysisType) {
-    setLocalAnalysisType(newType);
-    setWarning(
-      getWarning(displayMode, newType, hasNoEffects, hasNoDistributions)
-    );
-  }
-
   function resetToDefaults(): void {
     setLocalScalesCalculationMethod('median');
     setLocalShowPercentages('percentage');
-    setLocalDisplayModeWrapper(isRelativeProblem ? 'values' : 'enteredData');
-    setLocalAnalysisTypeWrapper('deterministic');
+    setLocalDisplayMode(isRelativeProblem ? 'smaaValues' : 'enteredEffects');
     setLocalRandomSeed(1234);
     setLocalShowDescriptions(true);
     setLocalShowUnitsOfMeasurement(true);
@@ -116,7 +92,6 @@ export function WorkspaceSettingsContextProviderComponent({
 
   function saveSettings(): void {
     const newSettings: ISettings = {
-      analysisType: localAnalysisType,
       calculationMethod: localScalesCalculationMethod,
       displayMode: localDisplayMode,
       showPercentages: localShowPercentages,
@@ -138,19 +113,16 @@ export function WorkspaceSettingsContextProviderComponent({
         localShowPercentages,
         localScalesCalculationMethod,
         localDisplayMode,
-        localAnalysisType,
         localRandomSeed,
         localShowDescriptions,
         localShowUnitsOfMeasurement,
         localShowReferences,
         localShowStrengthsAndUncertainties,
-        warning,
         resetToDefaults,
         saveSettings,
         setLocalShowPercentages,
         setLocalScalesCalculationMethod,
-        setLocalDisplayMode: setLocalDisplayModeWrapper,
-        setLocalAnalysisType: setLocalAnalysisTypeWrapper,
+        setLocalDisplayMode,
         setLocalRandomSeed,
         setLocalShowDescriptions,
         setLocalShowUnitsOfMeasurement,

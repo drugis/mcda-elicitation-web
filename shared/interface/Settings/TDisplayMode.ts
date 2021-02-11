@@ -1,1 +1,5 @@
-export type TDisplayMode = 'enteredData' | 'values';
+export type TDisplayMode =
+  | 'enteredEffects'
+  | 'enteredDistributions'
+  | 'deterministicValues'
+  | 'smaaValues';

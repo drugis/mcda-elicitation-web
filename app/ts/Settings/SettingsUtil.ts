@@ -1,5 +1,4 @@
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
-import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import _ from 'lodash';
 
@@ -14,43 +13,12 @@ export function calculateNumberOfToggledColumns(
   );
 }
 
-export function getWarning(
-  displayMode: TDisplayMode,
-  analysisType: TAnalysisType,
-  hasNoEffects: boolean,
-  hasNoDistributions: boolean
-): string {
-  if (hasNoEnteredEffect(hasNoEffects, displayMode, analysisType)) {
-    return 'No entered data available for deterministic analysis.';
-  } else if (
-    hasNoEnteredDistribution(hasNoDistributions, displayMode, analysisType)
-  ) {
-    return 'No entered data available for SMAA analysis.';
-  } else {
-    return undefined;
-  }
-}
-
-function hasNoEnteredEffect(
-  hasNoEffects: boolean,
-  displayMode: TDisplayMode,
-  analysisType: TAnalysisType
+export function getDisplayMode(
+  isRelativeProblem: boolean,
+  displayMode: TDisplayMode
 ) {
-  return (
-    hasNoEffects &&
-    displayMode === 'enteredData' &&
-    analysisType === 'deterministic'
-  );
-}
-
-function hasNoEnteredDistribution(
-  hasNoDistributions: boolean,
-  displayMode: TDisplayMode,
-  analysisType: TAnalysisType
-) {
-  return (
-    hasNoDistributions &&
-    displayMode === 'enteredData' &&
-    analysisType === 'smaa'
-  );
+  return isRelativeProblem &&
+    (displayMode === 'enteredDistributions' || displayMode === 'enteredEffects')
+    ? 'smaaValues'
+    : displayMode;
 }

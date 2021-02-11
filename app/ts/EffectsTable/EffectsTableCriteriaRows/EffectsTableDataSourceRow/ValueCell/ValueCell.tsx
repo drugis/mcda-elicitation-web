@@ -1,4 +1,4 @@
-import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
+import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {
   canDSBePercentage,
   findScale,
@@ -22,7 +22,7 @@ export default function ValueCell({
   isExcluded?: boolean;
 }) {
   const {workspace, scales} = useContext(WorkspaceContext);
-  const {analysisType, showPercentages} = useContext(SettingsContext);
+  const {displayMode, showPercentages} = useContext(SettingsContext);
   const {setErrorMessage} = useContext(ErrorContext);
 
   const usePercentage =
@@ -36,8 +36,11 @@ export default function ValueCell({
   const scale = findScale(scales, dataSourceId, alternativeId);
   const hasScaleValues = scale['50%'] !== null && scale['50%'] !== undefined;
 
-  function buildValueLabel(analysisType: TAnalysisType): JSX.Element {
-    if (analysisType === 'deterministic') {
+  function buildValueLabel(displayMode: TDisplayMode): JSX.Element {
+    if (
+      displayMode === 'enteredEffects' ||
+      displayMode === 'deterministicValues'
+    ) {
       return renderEffectCell();
     } else {
       return renderDistributionCell();
@@ -88,5 +91,5 @@ export default function ValueCell({
     }
   }
 
-  return buildValueLabel(analysisType);
+  return buildValueLabel(displayMode);
 }

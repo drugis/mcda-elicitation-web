@@ -15,11 +15,10 @@ export default function ShowPercentages(): JSX.Element {
 
   return (
     <>
-      <Grid item xs={12}>
-        Show percentages or decimals (eligible data sources only){' '}
-        <InlineHelp helpId="percentages" />
+      <Grid item xs={6}>
+        Show percentages or decimals <InlineHelp helpId="percentages" />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         <RadioGroup
           name="percentages-radio"
           value={localShowPercentages}

@@ -28,9 +28,9 @@ export default function DistributionValueCell({
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function render(): JSX.Element | string {
-    if (displayMode === 'enteredData') {
+    if (displayMode === 'enteredDistributions') {
       return renderDistribution(distribution, usePercentage);
-    } else {
+    } else if (displayMode === 'smaaValues') {
       return renderValuesForAnalysis(scale, distribution);
     }
   }

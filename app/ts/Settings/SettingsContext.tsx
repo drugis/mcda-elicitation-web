@@ -2,7 +2,6 @@ import {OurError} from '@shared/interface/IError';
 import ISettings from '@shared/interface/Settings/ISettings';
 import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
-import {TAnalysisType} from '@shared/interface/Settings/TAnalysisType';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
 import axios, {AxiosResponse} from 'axios';
@@ -11,7 +10,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';
-import {calculateNumberOfToggledColumns} from './SettingsUtil';
+import {calculateNumberOfToggledColumns, getDisplayMode} from './SettingsUtil';
 
 export const SettingsContext = createContext<ISettingsContext>(
   {} as ISettingsContext
@@ -21,13 +20,11 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
   const {workspace} = useContext(WorkspaceContext);
   const {setError} = useContext(ErrorContext);
 
-  const [hasNoEffects, setHasNoEffects] = useState<boolean>(
-    _.isEmpty(workspace.effects)
-  );
-  const [hasNoDistributions, setHasNoDistributions] = useState<boolean>(
+  const [hasNoEffects] = useState<boolean>(_.isEmpty(workspace.effects));
+  const [hasNoDistributions] = useState<boolean>(
     _.isEmpty(workspace.distributions)
   );
-  const [isRelativeProblem, setIsRelativeProblem] = useState<boolean>(
+  const [isRelativeProblem] = useState<boolean>(
     !_.isEmpty(
       workspace.relativePerformances &&
         _.isEmpty(workspace.effects) &&
@@ -42,10 +39,7 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
   const [showPercentages, setShowPercentages] = useState<boolean>(true);
 
   const [displayMode, setDisplayMode] = useState<TDisplayMode>(
-    isRelativeProblem ? 'values' : 'enteredData'
-  );
-  const [analysisType, setAnalysisType] = useState<TAnalysisType>(
-    isRelativeProblem ? 'smaa' : 'deterministic'
+    isRelativeProblem ? 'smaaValues' : 'enteredEffects'
   );
 
   const [randomSeed, setRandomSeed] = useState<number>(1234);
@@ -63,10 +57,9 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
     currentToggledColumns,
     setCurrentToggledColumns
   ] = useState<IToggledColumns>();
-  const [
-    numberOfToggledColumns,
-    setNumberOfToggledColumns
-  ] = useState<number>();
+  const [numberOfToggledColumns, setNumberOfToggledColumns] = useState<number>(
+    5
+  );
 
   useEffect(() => {
     axios
@@ -77,8 +70,9 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
         if (!_.isEmpty(settings)) {
           setScalesCalculationMethod(settings.calculationMethod);
           setShowPercentages(settings.showPercentages === 'percentage');
-          setDisplayMode(isRelativeProblem ? 'values' : settings.displayMode);
-          setAnalysisType(settings.analysisType);
+          setDisplayMode(
+            getDisplayMode(isRelativeProblem, settings.displayMode)
+          );
           setRandomSeed(settings.randomSeed);
           setShowDescriptions(toggledColumns.description);
           setShowUnitsOfMeasurement(toggledColumns.units);
@@ -109,7 +103,6 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
       setScalesCalculationMethod(updatedSettings.calculationMethod);
       setShowPercentages(updatedSettings.showPercentages === 'percentage');
       setDisplayMode(updatedSettings.displayMode);
-      setAnalysisType(updatedSettings.analysisType);
       setRandomSeed(updatedSettings.randomSeed);
       setShowDescriptions(updatedToggledColumns.description);
       setShowUnitsOfMeasurement(updatedToggledColumns.units);
@@ -142,7 +135,6 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
         scalesCalculationMethod,
         showPercentages,
         displayMode,
-        analysisType,
         hasNoEffects,
         hasNoDistributions,
         isRelativeProblem,

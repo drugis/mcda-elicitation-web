@@ -3,12 +3,11 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Grid
+  Grid,
+  Paper
 } from '@material-ui/core';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import React, {useContext} from 'react';
-import AnalysisType from '../AnalysisType/AnalysisType';
 import DisplayMode from '../DisplayMode/DisplayMode';
 import RandomSeed from '../RandomSeed/RandomSeed';
 import ScalesCalculationMethod from '../ScalesCalculationMethod/ScalesCalculationMethod';
@@ -23,12 +22,9 @@ export default function WorkspaceSettingsDialog({
   isDialogOpen: boolean;
   closeDialog: () => void;
 }): JSX.Element {
-  const {
-    warning,
-    isSaveButtonDisabled,
-    resetToDefaults,
-    saveSettings
-  } = useContext(WorkspaceSettingsContext);
+  const {isSaveButtonDisabled, resetToDefaults, saveSettings} = useContext(
+    WorkspaceSettingsContext
+  );
 
   function handleSaveButtonClicked(): void {
     saveSettings();
@@ -52,14 +48,22 @@ export default function WorkspaceSettingsDialog({
               Reset to default
             </Button>
           </Grid>
-          <ShowPercentages />
-          <DisplayMode />
-          <AnalysisType />
-          <ScalesCalculationMethod />
-          <ToggledColumns />
-          <RandomSeed />
+          <Paper>
+            <DisplayMode />
+          </Paper>
+          <Paper>
+            <ShowPercentages />
+          </Paper>
+          <Paper>
+            <ScalesCalculationMethod />
+          </Paper>
+          <Paper>
+            <ToggledColumns />
+          </Paper>
+          <Paper>
+            <RandomSeed />
+          </Paper>
         </Grid>
-        <DisplayWarnings warnings={[warning]} identifier="settings" />
       </DialogContent>
       <DialogActions>
         <Button

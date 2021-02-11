@@ -491,3 +491,76 @@ WHERE
 ALTER TABLE workspace ADD COLUMN creationDate TIMESTAMP DEFAULT NOW() NOT NULL;
 
 --rollback ALTER TABLE workspace DROP COLUMN creationDate
+
+--changeset zalitek:27
+START TRANSACTION;
+WITH oldSettings AS (
+  SELECT
+    workspaceId,
+    settings#>'{settings}'->>'analysisType' AS analysisType,
+    settings#>'{settings}'->>'displayMode' AS displayMode
+  FROM workspacesettings
+  WHERE settings#>'{settings, analysisType}' IS NOT NULL
+  AND settings#>'{settings, displayMode}' IS NOT NULL
+),
+newSettings AS (
+  SELECT
+    workspaceId,
+    CASE
+      WHEN analysisType = 'deterministic' AND displayMode = 'enteredData' THEN '{"displayMode": "enteredEffects"}'::jsonb
+      WHEN analysisType = 'smaa' AND displayMode = 'enteredData' THEN '{"displayMode": "enteredDistributions"}'::jsonb
+      WHEN analysisType = 'deterministic' AND displayMode = 'values' THEN '{"displayMode": "deterministicValues"}'::jsonb
+      WHEN analysisType = 'smaa' AND displayMode = 'values' THEN '{"displayMode": "smaaValues"}'::jsonb
+    END AS displayMode
+  FROM oldSettings
+)
+UPDATE workspacesettings
+SET settings = jsonb_set(settings, '{settings, displayMode}', newSettings.displayMode->'displayMode')
+FROM newSettings
+WHERE workspacesettings.workspaceId = newSettings.workspaceId;
+UPDATE workspacesettings
+SET settings = settings #-'{settings, analysisType}';
+COMMIT;
+
+--rollback START TRANSACTION;
+--rollback WITH oldDisplayMode AS (
+--rollback   SELECT
+--rollback     workspaceId,
+--rollback     settings #> '{settings}' ->> 'displayMode' AS oldDisplayMode
+--rollback   FROM
+--rollback     workspacesettings
+--rollback   WHERE
+--rollback     settings #> '{settings, displayMode}' IS NOT NULL
+--rollback ),
+--rollback newSettings AS (
+--rollback   SELECT
+--rollback     workspaceId,
+--rollback     CASE WHEN oldDisplayMode = 'enteredEffects' THEN
+--rollback       '{"displayMode": "enteredData"}'::jsonb
+--rollback     WHEN oldDisplayMode = 'enteredDistributions' THEN
+--rollback       '{"displayMode": "enteredData"}'::jsonb
+--rollback     WHEN oldDisplayMode = 'smaaValues' THEN
+--rollback       '{"displayMode": "values"}'::jsonb
+--rollback     WHEN oldDisplayMode = 'deterministicValues' THEN
+--rollback       '{"displayMode": "values"}'::jsonb
+--rollback     END AS displayMode,
+--rollback     CASE WHEN oldDisplayMode = 'enteredEffects' THEN
+--rollback       '{"analysisType": "deterministic"}'::jsonb
+--rollback     WHEN oldDisplayMode = 'enteredDistributions' THEN
+--rollback       '{"analysisType": "smaa"}'::jsonb
+--rollback     WHEN oldDisplayMode = 'smaaValues' THEN
+--rollback       '{"analysisType": "smaa"}'::jsonb
+--rollback     WHEN oldDisplayMode = 'deterministicValues' THEN
+--rollback       '{"analysisType": "deterministic"}'::jsonb
+--rollback     END AS analysisType
+--rollback   FROM
+--rollback     oldDisplayMode)
+--rollback UPDATE
+--rollback   workspacesettings
+--rollback SET
+--rollback   settings = jsonb_set(jsonb_set(settings, '{settings, analysisType}', newSettings.--rollback analysisType -> 'analysisType'), '{settings, displayMode}', newSettings.displayMode -> --rollback 'displayMode')
+--rollback FROM
+--rollback   newSettings
+--rollback WHERE
+--rollback   workspacesettings.workspaceId = newSettings.workspaceId;
+--rollback COMMIT;

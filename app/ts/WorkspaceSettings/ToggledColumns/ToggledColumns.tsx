@@ -69,7 +69,7 @@ export default function ToggledColumns(): JSX.Element {
   return (
     <>
       <Grid item xs={12}>
-        Effect table Columns to show <InlineHelp helpId="toggled-columns" />
+        Effects table columns to show <InlineHelp helpId="toggled-columns" />
       </Grid>
       <Grid item xs={12}>
         <Button

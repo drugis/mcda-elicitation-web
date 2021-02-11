@@ -12,9 +12,9 @@ export function renderEffect(
   usePercentage: boolean,
   scale: IScale
 ): string {
-  if (displayMode === 'enteredData') {
+  if (displayMode === 'enteredEffects') {
     return renderEnteredValues(effect, usePercentage, false);
-  } else {
+  } else if (displayMode === 'deterministicValues') {
     return renderValuesForAnalysis(effect, usePercentage, scale);
   }
 }

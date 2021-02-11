@@ -14,22 +14,6 @@ define([], function () {
           "'s SMAA results"
       );
     });
-
-    initSmaaSettings();
-
-    $scope.$on('elicit.settingsChanged', function () {
-      initSmaaSettings();
-    });
-
-    function initSmaaSettings() {
-      $scope.smaaSettings = {
-        ...$scope.workspaceSettings,
-        ...{
-          displayMode: 'values',
-          analysisType: 'smaa'
-        }
-      };
-    }
   };
   return dependencies.concat(SmaaResultsController);
 });
