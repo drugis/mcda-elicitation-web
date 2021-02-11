@@ -67,14 +67,14 @@ export function WorkspaceSettingsContextProviderComponent({
     setLocalShowStrengthsAndUncertainties
   ] = useState<boolean>(showStrengthsAndUncertainties);
 
-  const [warning, setWarning] = useState<string>('');
+  const [warning, setWarning] = useState<string>();
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState<boolean>(
     false
   );
 
   useEffect(() => {
     if (isDialogOpen) {
-      setWarning('');
+      setWarning(undefined);
       setIsSaveButtonDisabled(false);
       setLocalScalesCalculationMethod(scalesCalculationMethod);
       setLocalShowPercentages(showPercentages ? 'percentage' : 'decimal');

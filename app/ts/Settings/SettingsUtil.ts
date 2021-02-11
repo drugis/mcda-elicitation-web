@@ -27,7 +27,7 @@ export function getWarning(
   ) {
     return 'No entered data available for SMAA analysis.';
   } else {
-    return '';
+    return undefined;
   }
 }
 

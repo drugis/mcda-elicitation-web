@@ -60,8 +60,7 @@ describe('SettingsUtil', () => {
         hasNoEffects,
         hasNoDistributions
       );
-      const expectedResult = '';
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(undefined);
     });
   });
 });
