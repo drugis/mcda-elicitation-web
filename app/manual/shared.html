@@ -1,11 +1,12 @@
 <!-- continuing user interface section -->
 <h3 id="mcda-overview-tab">Overview</h3>
 <p>
-  The foundation of a workspace is its data: the alternatives to compare, by
-  which criteria to compare them, and which sources of data are used for each
-  criterion, as well as any measurements that are known for each combination of
-  data source, alternative and criterion. This information is shown in the
-  overview tab, along with a description of the therapeutic context. See
+  The foundation of a workspace are its data, which consist of the alternatives
+  to compare, the criteria by which to compare them, the sources of data that
+  are used for each criterion, and any measurements that are known for each
+  combination of data source, alternative and criterion. This information is
+  shown in the overview tab, along with a description of the therapeutic
+  context. See
   <a href="#mcda-benefit-risk-analysis">the theoretical section</a> of the
   manual for a more thorough explanation of the underlying concepts.
 </p>
@@ -20,11 +21,12 @@
 <h4 id="mcda-editing-customisation">Editing and customisation</h4>
 <p>
   On the overview tab, you can edit all aspects of your workspace that are not
-  directly involved in analysis (since this would lead to inconsistencies). This
-  includes the names of alternatives, criteria and data sources, the order in
-  which they appear in tables and figures and their references, strength of
-  evidence and uncertainties where applicable. To change the order of elements
-  in a list, use the up and down arrows on their left side.
+  directly involved in analysis (i.e., anything apart from entered effects or
+  distributions, since this would lead to inconsistencies). This includes the
+  names of alternatives, criteria and data sources, the order in which they
+  appear in tables and figures and their references, strength of evidence and
+  uncertainties where applicable. To change the order of elements in a list, use
+  the up and down arrows on their left side.
 </p>
 <h4 id="mcda-overview-criteria">Criteria, data sources, alternatives</h4>
 <p>
@@ -32,9 +34,9 @@
   benefit-risk analysis. They are presented in a list on the overview,
   optionally grouped into favorable and unfavorable categories. For each
   criterion, there can be one or more sources of data. These data sources supply
-  measurements any number of alternatives, as well as a reference describing
-  where the measurements originate, and an optional textual description of the
-  data's strength of evidence and/or uncertainties.
+  measurements about any number of alternatives, as well as a reference
+  describing where the measurements originate, and an optional textual
+  description of the data's strength of evidence and/or uncertainties.
 </p>
 <div class="figure">
   <img src="img/criterion.png" />
@@ -45,8 +47,8 @@
 </div>
 
 <p>
-  Alternatives are the things that are compared according to the criteria. In a
-  medical context these would be the treatments. They can be renamed and
+  Alternatives are the entities that are compared according to the criteria. In
+  a medical context these would be the treatments. They can be renamed and
   reordered just like criteria and data sources.
 </p>
 
@@ -147,28 +149,30 @@
 </p>
 
 <p id="mcda-scenarios">
-  Note that it is possible to create multiple different scenarios with different
-  preferences for each different defined problem. It is then easy to switch
-  between these problems and scenarios in order to compare the model outcomes
-  for the different cases.
+  Note that it is possible to create multiple scenarios with different
+  preferences for each defined problem. It is then easy to switch between these
+  problems and scenarios in order to compare the model outcomes for the
+  different cases.
 </p>
 <h4 id="mcda-setting-pvfs">Partial value functions</h4>
 
 <p>
-  ADDIS MCDA uses partial value functions to determine how the 'value' of each
-  criterion depends on its measurements. For example, overall mortality should
-  go down, so lower values for this criterion should have higher value. Please
-  see <a href="#mcda-mavt">the theoretical section on value functions</a> for
-  more detail. A partial value function must be specified for each criterion
-  before MCDA can proceed. Generally it is assumed that partial value functions
-  are linear. This means meaning that e.g. going from 10 to 20 out of 100 people
+  ADDIS MCDA uses partial value functions to represent the relative importance
+  of different levels of achievement of each criterion. For example, we want
+  overall mortality to go down, so its preference direction is 'decreasing' and
+  lower measurement values for this criterion (i.e. less mortality) receive
+  higher partial value. Please see
+  <a href="#mcda-mavt">the theoretical section on value functions</a> for more
+  detail. A partial value function must be specified for each criterion before
+  MCDA can proceed. Generally it is assumed that partial value functions are
+  linear. This means meaning that e.g. going from 10 to 20 out of 100 people
   getting a headache is as bad as going from 80 to 90 percent. Specifying a
   linear partial value function for a criterion is as simple as clicking the
   button for that criterion that has the desired direction.
 </p>
 
 <p>
-  In the case where value doesn't change at the same rate across different
+  In situations where value does not change at the same rate across different
   measurement values for a criterion, the partial value function is nonlinear.
   To specify such a function, click the 'Advanced' button below a criterion,
   select the 'Piece-wise linear' option on the subsequent screen and answer the
@@ -220,9 +224,9 @@
   always sum up to one and are distributed over the criteria, including more
   criteria automatically makes the most important criterion
   <i>relatively</i> less important. You can verify this by comparing the weights
-  table after ranking elicitaiton for problems with different numbers of
-  criteria. This is something to keep in mind if you want to use ranking
-  elicitation.
+  table after ranking elicitation for problems with different numbers of
+  criteria. This is something to keep in mind when considering whether to use
+  this method.
 </p>
 <div class="figure">
   <img src="img/rankingElicitation.png" />
@@ -309,7 +313,8 @@
   below the weights table does so by showing how much each secondary criterion
   should change to compensate for a certain change in a reference criterion. Any
   criterion can be chosen as the reference, and the values between which this
-  reference criterion changes can also be set by the user.
+  reference criterion changes can also be set by the user. This trade-off table
+  is only available for scenarios with linear partial value functions.
 </p>
 <div class="figure">
   <img src="img/tradeOffTable.png" />
@@ -480,11 +485,15 @@
 <h4 id="mcda-central-weights"></h4>
 
 <p>
-  The central weights plot and table show how important a criterion needs to be
-  for it to have the best rank (1). For example in the figure below, it is clear
-  that only by placing a relatively high importance of approximately 0.65 on
-  effectiveness (the blood pressure reduction HbA1c) can the treatment
-  Lixisenatide be seen as better than placebo.
+  The central weights plot and table show for each alternative the 'typical'
+  weights that make this alternative have the best rank (1). For example in the
+  figure below, it is clear that only by placing a relatively high importance of
+  approximately 0.65 on effectiveness (the blood pressure reduction HbA1c) can
+  the treatment Lixisenatide be seen as better than placebo. Note that even with
+  these typical weights, another alternative may still have the best rank with
+  some probability in scenarios with uncertainty in the measurement. This
+  information is captured by the confidence factors that are also displayed the
+  central weights table.
 </p>
 <div class="figure">
   <img src="img/centralWeights.png" />
@@ -514,10 +523,10 @@
   <li>
     <b>Analysis type</b>: This controls whether effects tables show data as used
     by either deterministic analysis or SMAA. In the first case, effects are
-    shown when available, and otherwise the values which the available
-    distributions boil down to. In the second case, either the distributions are
-    shown or their point estimate and confidence interval, depending on the
-    measurements display mode setting.
+    shown when available, and otherwise the point estimates of the entered
+    distributions. In the second case, either the distributions are shown or
+    their point estimate and confidence interval, depending on the measurements
+    display mode setting.
   </li>
   <li>
     <b>Show median or mode</b>: This controls hether the point estimate that is
