@@ -102,14 +102,22 @@
 <p>
   To create a new analysis problem, click the '+' icon in the problem controls.
   A dialog will open which shows the effects table, including checkboxes which
-  let you select the alternatives, criteria and data sources to include. Once
-  the problem is analysable, the dialog will also include a set of sliders below
-  the table that you can use to set the scale range for each criterion. The
-  width of a scale range for a criterion should be as large as you think makes
-  sense given your expectations about the possible values for that criterion.
-  Note however that making the scale range wider lessens the impact of the
-  differences between measurements, since they will be a smaller portion of a
-  larger scale range.
+  let you select the alternatives, criteria and data sources to include. A
+  problem is suitable for analysis when 1) there is one data source per
+  criterion 2) there are no empty measurement cells. Note that a cell only
+  counts as empty if it has neither an effect nor a distribution defined. If
+  only one of these is missing the other value will be substituted where
+  appropriate. The system will guide you with warnings as long as the problem is
+  not analysable.
+</p>
+<p>
+  Once the problem is analysable, the dialog will also include a set of sliders
+  below the table that you can use to set the scale range for each criterion.
+  The width of a scale range for a criterion should be as large as you think
+  makes sense given your expectations about the possible values for that
+  criterion. Note however that making the scale range wider lessens the impact
+  of the differences between measurements, since they will be a smaller portion
+  of a larger scale range.
 </p>
 <div class="figure">
   <img src="img/createProblem.png" />
