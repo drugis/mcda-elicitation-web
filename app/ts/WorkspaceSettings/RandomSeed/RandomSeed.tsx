@@ -30,11 +30,11 @@ export default function RandomSeed(): JSX.Element {
   }
 
   return (
-    <>
-      <Grid item xs={12}>
+    <Grid container item xs={12}>
+      <Grid item xs={6}>
         Set random seed <InlineHelp helpId="random-seed" />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         <TextField
           id="random-seed"
           value={localRandomSeed}
@@ -48,6 +48,6 @@ export default function RandomSeed(): JSX.Element {
           helperText={inputError ? inputError : ''}
         />
       </Grid>
-    </>
+    </Grid>
   );
 }

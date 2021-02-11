@@ -9,7 +9,6 @@ define(['lodash', 'angular'], function (_, angular) {
     'TaskDependencies',
     'ScenarioResource',
     'WorkspaceService',
-    'WorkspaceSettingsService',
     'TabService',
     'subProblems',
     'currentSubProblem',
@@ -26,7 +25,6 @@ define(['lodash', 'angular'], function (_, angular) {
     TaskDependencies,
     ScenarioResource,
     WorkspaceService,
-    WorkspaceSettingsService,
     TabService,
     subProblems,
     currentSubProblem,
@@ -71,14 +69,8 @@ define(['lodash', 'angular'], function (_, angular) {
     $scope.$on('$destroy', function () {
       $scope.deregisterTransitionListener();
     });
-    $scope.$on('elicit.settingsChanged', function () {
-      updateAggregatedState(); // prevent event as first argument
-      updateScales();
-      updateScenarios();
-    });
     $scope.$on('elicit.resultsAccessible', function (event, scenario) {
       updateAggregatedState(scenario);
-      updateScales();
       updateScenarios();
       updateTaskAccessibility();
       initializeTabs($state.current.name);
@@ -101,7 +93,6 @@ define(['lodash', 'angular'], function (_, angular) {
         )
       };
       updateAggregatedState(scenario);
-      updateScales();
       updateScenarios();
       updateTaskAccessibility();
       initializeTabs($state.current.name);
@@ -136,15 +127,6 @@ define(['lodash', 'angular'], function (_, angular) {
           scales
         )
       });
-    }
-
-    function updateScales() {
-      if (WorkspaceSettingsService.usePercentage()) {
-        $scope.workspace.scales.observed =
-          $scope.workspace.scales.basePercentified;
-      } else {
-        $scope.workspace.scales.observed = $scope.workspace.scales.base;
-      }
     }
 
     function updateScenarios() {

@@ -3,8 +3,6 @@ import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import ISettings from '@shared/interface/Settings/ISettings';
-import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
@@ -21,9 +19,7 @@ export default function DeterministicTab({
   scenarios,
   currentScenarioId,
   workspaceId,
-  settings,
   updateAngularScenario,
-  toggledColumns,
   workspace,
   scales,
   subproblems,
@@ -33,9 +29,7 @@ export default function DeterministicTab({
   scenarios: IMcdaScenario[];
   currentScenarioId: string;
   workspaceId: string;
-  settings: ISettings;
   updateAngularScenario: (scenario: IMcdaScenario) => void;
-  toggledColumns: IToggledColumns;
   workspace: IOldWorkspace;
   scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];

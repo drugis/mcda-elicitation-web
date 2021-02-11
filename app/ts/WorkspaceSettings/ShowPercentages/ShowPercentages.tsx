@@ -14,7 +14,7 @@ export default function ShowPercentages(): JSX.Element {
   }
 
   return (
-    <>
+    <Grid container item xs={12}>
       <Grid item xs={6}>
         Show percentages or decimals <InlineHelp helpId="percentages" />
       </Grid>
@@ -32,6 +32,6 @@ export default function ShowPercentages(): JSX.Element {
           </label>
         </RadioGroup>
       </Grid>
-    </>
+    </Grid>
   );
 }

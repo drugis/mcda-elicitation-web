@@ -8,7 +8,6 @@ define(['angular', 'lodash'], function (angular, _) {
     'WorkspaceResource',
     'ScenarioResource',
     'SubProblemResource',
-    'WorkspaceSettingsService',
     'SchemaService',
     'currentWorkspace',
     'currentSchemaVersion'
@@ -20,7 +19,6 @@ define(['angular', 'lodash'], function (angular, _) {
     WorkspaceResource,
     ScenarioResource,
     SubProblemResource,
-    WorkspaceSettingsService,
     SchemaService,
     currentWorkspace,
     currentSchemaVersion
@@ -29,7 +27,6 @@ define(['angular', 'lodash'], function (angular, _) {
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
-    $scope.updateSettings = updateSettings;
 
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
@@ -70,16 +67,7 @@ define(['angular', 'lodash'], function (angular, _) {
       $scope.workspace = currentWorkspace;
     }
     $scope.workspaceForReact = angular.copy($scope.workspace);
-    getWorkspaceSettings();
-    $scope.$on('elicit.settingsChanged', getWorkspaceSettings);
     $scope.isEditTitleVisible = false;
-
-    function getWorkspaceSettings() {
-      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-      $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings(
-        $scope.workspace.problem.performanceTable
-      );
-    }
 
     function updateDefaultSubproblem(defaultSubproblemId, ranges, callback) {
       const params = {...$stateParams, problemId: defaultSubproblemId};
@@ -115,13 +103,6 @@ define(['angular', 'lodash'], function (angular, _) {
 
     function cancelTitle() {
       $scope.isEditTitleVisible = false;
-    }
-
-    function updateSettings(newWorkspaceSettings, newToggledColumns) {
-      WorkspaceSettingsService.saveSettings(
-        newWorkspaceSettings,
-        newToggledColumns
-      );
     }
   };
   return dependencies.concat(WorkspaceController);

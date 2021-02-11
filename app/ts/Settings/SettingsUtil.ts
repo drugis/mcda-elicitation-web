@@ -22,3 +22,16 @@ export function getDisplayMode(
     ? 'smaaValues'
     : displayMode;
 }
+
+export function getInitialDisplayMode(
+  isRelativeProblem: boolean,
+  hasNoEffects: boolean
+): TDisplayMode {
+  if (isRelativeProblem) {
+    return 'smaaValues';
+  } else if (hasNoEffects) {
+    return 'enteredDistributions';
+  } else {
+    return 'enteredEffects';
+  }
+}

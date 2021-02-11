@@ -32,12 +32,12 @@ export default function WorkspaceSettingsDialog({
   }
 
   return (
-    <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth={'md'}>
+    <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth={'sm'}>
       <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
         Settings
       </DialogTitleWithCross>
       <DialogContent>
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Button
               id="reset-default-button"
@@ -48,21 +48,11 @@ export default function WorkspaceSettingsDialog({
               Reset to default
             </Button>
           </Grid>
-          <Paper>
-            <DisplayMode />
-          </Paper>
-          <Paper>
-            <ShowPercentages />
-          </Paper>
-          <Paper>
-            <ScalesCalculationMethod />
-          </Paper>
-          <Paper>
-            <ToggledColumns />
-          </Paper>
-          <Paper>
-            <RandomSeed />
-          </Paper>
+          <DisplayMode />
+          <ShowPercentages />
+          <ScalesCalculationMethod />
+          <ToggledColumns />
+          <RandomSeed />
         </Grid>
       </DialogContent>
       <DialogActions>

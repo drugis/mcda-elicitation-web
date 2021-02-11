@@ -67,63 +67,65 @@ export default function ToggledColumns(): JSX.Element {
   }
 
   return (
-    <>
-      <Grid item xs={12}>
+    <Grid container item xs={12}>
+      <Grid item xs={6}>
         Effects table columns to show <InlineHelp helpId="toggled-columns" />
       </Grid>
-      <Grid item xs={12}>
-        <Button
-          id="toggle-selection-button"
-          variant="contained"
-          color="primary"
-          onClick={toggleSelection}
-        >
-          (De)select all
-        </Button>
-      </Grid>
-      <Grid item xs={12}>
-        {' '}
-        <label id="description-column-checkbox">
-          <Checkbox
-            checked={localShowDescriptions}
-            onChange={handleShowDescriptionsChanged}
+      <Grid container item xs={6}>
+        <Grid item xs={12}>
+          <Button
+            id="toggle-selection-button"
+            variant="contained"
             color="primary"
-          />{' '}
-          Description
-        </label>
+            onClick={toggleSelection}
+          >
+            (De)select all
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          {' '}
+          <label id="description-column-checkbox">
+            <Checkbox
+              checked={localShowDescriptions}
+              onChange={handleShowDescriptionsChanged}
+              color="primary"
+            />{' '}
+            Description
+          </label>
+        </Grid>
+        <Grid item xs={12}>
+          {' '}
+          <label id="units-column-checkbox">
+            <Checkbox
+              checked={localShowUnitsOfMeasurement}
+              onChange={handleShowUnitsChanged}
+              color="primary"
+            />{' '}
+            Units
+          </label>
+        </Grid>
+        <Grid item xs={12}>
+          {' '}
+          <label id="reference-column-checkbox">
+            <Checkbox
+              checked={localShowReferences}
+              onChange={handleShowReferencesChanged}
+              color="primary"
+            />{' '}
+            Reference
+          </label>
+        </Grid>
+        <Grid item xs={12}>
+          <label id="uncertainties-column-checkbox">
+            <Checkbox
+              checked={localShowStrengthsAndUncertainties}
+              onChange={handleShowStrengthChanged}
+              color="primary"
+            />{' '}
+            Strength of evidence / Uncertainties
+          </label>
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        {' '}
-        <label id="units-column-checkbox">
-          <Checkbox
-            checked={localShowUnitsOfMeasurement}
-            onChange={handleShowUnitsChanged}
-            color="primary"
-          />{' '}
-          Units
-        </label>
-      </Grid>
-      <Grid item xs={12}>
-        {' '}
-        <label id="reference-column-checkbox">
-          <Checkbox
-            checked={localShowReferences}
-            onChange={handleShowReferencesChanged}
-            color="primary"
-          />{' '}
-          Reference
-        </label>
-      </Grid>
-      <Grid item xs={12}>
-        <label id="uncertainties-column-checkbox">
-          <Checkbox
-            checked={localShowStrengthsAndUncertainties}
-            onChange={handleShowStrengthChanged}
-            color="primary"
-          />{' '}
-          Strength of evidence / Uncertainties
-        </label>
-      </Grid>
-    </>
+    </Grid>
   );
 }

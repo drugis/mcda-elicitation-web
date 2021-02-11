@@ -1,8 +1,6 @@
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IScale from '@shared/interface/IScale';
-import ISettings from '@shared/interface/Settings/ISettings';
-import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
@@ -14,16 +12,12 @@ import Overview from './Overview/Overview';
 export default function OverviewTab({
   workspace,
   scales,
-  settings,
-  toggledColumns,
   subproblems,
   currentSubproblem,
   workspaceId
 }: {
   workspace: IOldWorkspace;
   scales: Record<string, Record<string, IScale>>;
-  settings: ISettings;
-  toggledColumns: IToggledColumns;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
   workspaceId: string;

@@ -71,7 +71,8 @@ function showPercentagesAndValues(browser) {
   browser
     .click('#settings-button')
     .click('#show-percentages-radio')
-    .click('#values-radio')
+    .click('#display-mode-selector')
+    .click('option[value="deterministicValues"]')
     .click('#save-settings-button');
   return browser;
 }
@@ -80,8 +81,8 @@ function showPercentagesAndSmaaValues(browser) {
   browser
     .click('#settings-button')
     .click('#show-percentages-radio')
-    .click('#values-radio')
-    .click('#smaa-radio')
+    .click('#display-mode-selector')
+    .click('option[value="smaaValues"]')
     .click('#save-settings-button');
   return browser;
 }
@@ -107,10 +108,7 @@ function verifyComponents(browser) {
     .click('#settings-button')
     .waitForElementVisible('#show-percentages-radio')
     .waitForElementVisible('#show-decimals-radio')
-    .waitForElementVisible('#deterministic-radio')
-    .waitForElementVisible('#smaa-radio')
-    .waitForElementVisible('#values-radio')
-    .waitForElementVisible('#entered-radio')
+    .waitForElementVisible('#display-mode-selector')
     .waitForElementVisible('#show-median-radio')
     .waitForElementVisible('#show-mode-radio')
     .waitForElementVisible('#toggle-selection-button')
@@ -128,20 +126,18 @@ function reset(browser) {
   browser
     .click('#settings-button')
     .click('#show-decimals-radio')
-    .click('#smaa-radio')
-    .click('#values-radio')
+    .click('#display-mode-selector')
+    .click('option[value="smaaValues"]')
     .click('#show-mode-radio')
     .click('#reset-default-button')
     .useXpath()
     .waitForElementVisible(
       '//*[@id="show-percentages-radio"]/*[contains(@class, "Mui-checked")]'
-    )
-    .waitForElementVisible(
-      '//*[@id="deterministic-radio"]/*[contains(@class, "Mui-checked")]'
-    )
-    .waitForElementVisible(
-      '//*[@id="entered-radio"]/*[contains(@class, "Mui-checked")]'
-    )
+    );
+  browser.expect
+    .element('//*[@id="display-mode-selector"]')
+    .value.to.equal('enteredEffects');
+  browser
     .waitForElementVisible(
       '//*[@id="show-median-radio"]/*[contains(@class, "Mui-checked")]'
     )
@@ -197,16 +193,6 @@ function deselectAll(browser) {
     )
     .useCss()
     .click('#save-settings-button');
-}
-
-function checkEnteredSmaaDisabled(browser) {
-  browser
-    .click('#settings-button')
-    .click('#show-percentages-radio')
-    .click('#entered-radio')
-    .click('#smaa-radio')
-    .waitForElementVisible('#save-settings-button:disabled')
-    .click('#close-modal-button');
 }
 
 function switchSettingsInProblemDefinition(browser) {

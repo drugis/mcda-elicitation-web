@@ -20,7 +20,6 @@ define([
   'page-title-service',
   './benefitRisk/benefitRisk',
   './deterministicResults/deterministicResults',
-  './effectsTable/effectsTable',
   './evidence/evidence',
   './services/routeFactory',
   './services/workspaceResource',
@@ -32,7 +31,6 @@ define([
   './subProblem/subProblemResource',
   './subProblem/subProblem',
   './workspace/workspace',
-  './workspace/workspaceSettingsResource',
   './navbar/navbar',
   './preferences/preferences'
 ], function (angular, Config) {
@@ -40,7 +38,6 @@ define([
     'ui.router',
     'elicit.benefitRisk',
     'elicit.deterministicResults',
-    'elicit.effectsTable',
     'elicit.evidence',
     'elicit.manualInput',
     'elicit.navbar',
@@ -54,7 +51,6 @@ define([
     'elicit.util',
     'elicit.workspace',
     'elicit.workspaceResource',
-    'elicit.workspaceSettingsResource',
     'errorReporting',
     'export-directive',
     'help-directive',
@@ -96,15 +92,6 @@ define([
             'WorkspaceResource',
             function ($stateParams, WorkspaceResource) {
               return WorkspaceResource.get($stateParams).$promise;
-            }
-          ],
-          workspaceSettings: [
-            'WorkspaceSettingsService',
-            '$stateParams',
-            function (WorkspaceSettingsService, $stateParams) {
-              return WorkspaceSettingsService.loadWorkspaceSettings(
-                $stateParams
-              );
             }
           ]
         }

@@ -10,7 +10,11 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';
-import {calculateNumberOfToggledColumns, getDisplayMode} from './SettingsUtil';
+import {
+  calculateNumberOfToggledColumns,
+  getDisplayMode,
+  getInitialDisplayMode
+} from './SettingsUtil';
 
 export const SettingsContext = createContext<ISettingsContext>(
   {} as ISettingsContext
@@ -25,11 +29,9 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
     _.isEmpty(workspace.distributions)
   );
   const [isRelativeProblem] = useState<boolean>(
-    !_.isEmpty(
-      workspace.relativePerformances &&
-        _.isEmpty(workspace.effects) &&
-        _.isEmpty(workspace.distributions)
-    )
+    !_.isEmpty(workspace.relativePerformances) &&
+      hasNoEffects &&
+      hasNoDistributions
   );
 
   const [
@@ -39,7 +41,7 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
   const [showPercentages, setShowPercentages] = useState<boolean>(true);
 
   const [displayMode, setDisplayMode] = useState<TDisplayMode>(
-    isRelativeProblem ? 'smaaValues' : 'enteredEffects'
+    getInitialDisplayMode(isRelativeProblem, hasNoEffects)
   );
 
   const [randomSeed, setRandomSeed] = useState<number>(1234);

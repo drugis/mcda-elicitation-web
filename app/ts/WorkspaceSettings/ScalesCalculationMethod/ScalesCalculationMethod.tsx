@@ -17,7 +17,7 @@ export default function ScalesCalculationMethod(): JSX.Element {
   }
 
   return (
-    <>
+    <Grid container item xs={12}>
       <Grid item xs={6}>
         Show median or mode <InlineHelp helpId="median-mode" />
       </Grid>
@@ -35,6 +35,6 @@ export default function ScalesCalculationMethod(): JSX.Element {
           </label>
         </RadioGroup>
       </Grid>
-    </>
+    </Grid>
   );
 }

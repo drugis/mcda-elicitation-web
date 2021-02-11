@@ -5,11 +5,9 @@ define([
   './createWorkspaceController',
   './deleteInProgressController',
   './workspaceController',
-  './workspaceSettingsController',
 
   '../services/workspaceService',
   '../services/performanceTableService',
-  './workspaceSettingsService',
   '../services/pataviResultsService',
 
   './exampleResource',
@@ -29,11 +27,9 @@ define([
   CreateWorkspaceController,
   DeleteInProgressController,
   WorkspaceController,
-  WorkspaceSettingsController,
 
   WorkspaceService,
   PerformanceTableService,
-  WorkspaceSettingService,
   PataviResultsService,
 
   ExampleResource,
@@ -54,11 +50,9 @@ define([
     .controller('CreateWorkspaceController', CreateWorkspaceController)
     .controller('DeleteInProgressController', DeleteInProgressController)
     .controller('WorkspaceController', WorkspaceController)
-    .controller('WorkspaceSettingsController', WorkspaceSettingsController)
 
     .factory('WorkspaceService', WorkspaceService)
     .factory('PerformanceTableService', PerformanceTableService)
-    .factory('WorkspaceSettingsService', WorkspaceSettingService)
     .factory('PataviResultsService', PataviResultsService)
 
     .service('ExampleResource', ExampleResource)

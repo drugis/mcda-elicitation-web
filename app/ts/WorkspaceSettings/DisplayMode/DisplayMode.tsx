@@ -55,7 +55,7 @@ export default function DisplayMode(): JSX.Element {
   }
 
   return (
-    <>
+    <Grid container item xs={12}>
       <Grid item xs={6}>
         Measurements display mode{' '}
         <InlineHelp helpId="measurements-display-mode" />
@@ -71,6 +71,6 @@ export default function DisplayMode(): JSX.Element {
           {getDisplayModeOptions()}
         </Select>
       </Grid>
-    </>
+    </Grid>
   );
 }
