@@ -5,8 +5,8 @@ import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSet
 
 export default function RandomSeed(): JSX.Element {
   const {
-    localRandomSeed,
-    setLocalRandomSeed,
+    localSettings: {randomSeed},
+    setSetting,
     setIsSaveButtonDisabled
   } = useContext(WorkspaceSettingsContext);
 
@@ -26,7 +26,7 @@ export default function RandomSeed(): JSX.Element {
       setInputError('');
       setIsSaveButtonDisabled(false);
     }
-    setLocalRandomSeed(newValue);
+    setSetting('randomSeed', newValue);
   }
 
   return (
@@ -37,7 +37,7 @@ export default function RandomSeed(): JSX.Element {
       <Grid item xs={6}>
         <TextField
           id="random-seed"
-          value={localRandomSeed}
+          value={randomSeed}
           onChange={inputChanged}
           type="number"
           inputProps={{

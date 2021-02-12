@@ -7,7 +7,7 @@ import {
 
 describe('SettingsUtil', () => {
   describe('calculateNumberOfToggledColumns', () => {
-    it('should return the number of columns selected plus one', () => {
+    it('should return the number of columns selected plus one (for the criterion title column)', () => {
       const toggledColumns: IToggledColumns = {
         description: true,
         units: true,
@@ -34,7 +34,7 @@ describe('SettingsUtil', () => {
       expect(result).toEqual('smaaValues');
     });
 
-    it('should return the set display mode if the settings is legal', () => {
+    it('should return the set display mode if the settings are legal for a relative problem', () => {
       const isRelativeProblem = true;
       const displayMode = 'deterministicValues';
       const result = getDisplayMode(isRelativeProblem, displayMode);

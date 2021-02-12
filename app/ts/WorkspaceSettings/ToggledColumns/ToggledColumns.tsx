@@ -5,45 +5,35 @@ import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSet
 
 export default function ToggledColumns(): JSX.Element {
   const {
-    localShowDescriptions,
-    localShowUnitsOfMeasurement,
-    localShowReferences,
-    localShowStrengthsAndUncertainties,
-    setLocalShowDescriptions,
-    setLocalShowUnitsOfMeasurement,
-    setLocalShowReferences,
-    setLocalShowStrengthsAndUncertainties
+    localToggledColumns: {description, references, strength, units},
+    setShowColumn,
+    setAllColumnsTo
   } = useContext(WorkspaceSettingsContext);
 
   function handleShowDescriptionsChanged(
     event: ChangeEvent<HTMLInputElement>
   ): void {
-    setLocalShowDescriptions(event.target.checked);
+    setShowColumn('description', event.target.checked);
   }
 
   function handleShowUnitsChanged(event: ChangeEvent<HTMLInputElement>): void {
-    setLocalShowUnitsOfMeasurement(event.target.checked);
+    setShowColumn('units', event.target.checked);
   }
 
   function handleShowReferencesChanged(
     event: ChangeEvent<HTMLInputElement>
   ): void {
-    setLocalShowReferences(event.target.checked);
+    setShowColumn('references', event.target.checked);
   }
 
   function handleShowStrengthChanged(
     event: ChangeEvent<HTMLInputElement>
   ): void {
-    setLocalShowStrengthsAndUncertainties(event.target.checked);
+    setShowColumn('strength', event.target.checked);
   }
 
   function toggleSelection(): void {
-    const areAllSelected =
-      localShowDescriptions &&
-      localShowUnitsOfMeasurement &&
-      localShowReferences &&
-      localShowStrengthsAndUncertainties;
-
+    const areAllSelected = description && units && references && strength;
     if (areAllSelected) {
       deselectAll();
     } else {
@@ -52,18 +42,11 @@ export default function ToggledColumns(): JSX.Element {
   }
 
   function selectAll(): void {
-    setAllTo(true);
+    setAllColumnsTo(true);
   }
 
   function deselectAll(): void {
-    setAllTo(false);
-  }
-
-  function setAllTo(newValue: boolean) {
-    setLocalShowDescriptions(newValue);
-    setLocalShowUnitsOfMeasurement(newValue);
-    setLocalShowReferences(newValue);
-    setLocalShowStrengthsAndUncertainties(newValue);
+    setAllColumnsTo(false);
   }
 
   return (
@@ -86,7 +69,7 @@ export default function ToggledColumns(): JSX.Element {
           {' '}
           <label id="description-column-checkbox">
             <Checkbox
-              checked={localShowDescriptions}
+              checked={description}
               onChange={handleShowDescriptionsChanged}
               color="primary"
             />{' '}
@@ -97,7 +80,7 @@ export default function ToggledColumns(): JSX.Element {
           {' '}
           <label id="units-column-checkbox">
             <Checkbox
-              checked={localShowUnitsOfMeasurement}
+              checked={units}
               onChange={handleShowUnitsChanged}
               color="primary"
             />{' '}
@@ -108,7 +91,7 @@ export default function ToggledColumns(): JSX.Element {
           {' '}
           <label id="reference-column-checkbox">
             <Checkbox
-              checked={localShowReferences}
+              checked={references}
               onChange={handleShowReferencesChanged}
               color="primary"
             />{' '}
@@ -118,7 +101,7 @@ export default function ToggledColumns(): JSX.Element {
         <Grid item xs={12}>
           <label id="uncertainties-column-checkbox">
             <Checkbox
-              checked={localShowStrengthsAndUncertainties}
+              checked={strength}
               onChange={handleShowStrengthChanged}
               color="primary"
             />{' '}

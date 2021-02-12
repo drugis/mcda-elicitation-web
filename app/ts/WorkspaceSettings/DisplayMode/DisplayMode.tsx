@@ -6,36 +6,36 @@ import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
 export default function DisplayMode(): JSX.Element {
-  const {setLocalDisplayMode, localDisplayMode} = useContext(
-    WorkspaceSettingsContext
-  );
+  const {
+    localSettings: {displayMode},
+    setSetting
+  } = useContext(WorkspaceSettingsContext);
   const {isRelativeProblem, hasNoEffects, hasNoDistributions} = useContext(
     SettingsContext
-  ); //FIXME limitations
+  );
 
   function handleSelectionChanged(event: ChangeEvent<HTMLInputElement>): void {
-    const newDisplayMode = event.target.value as TDisplayMode;
-    setLocalDisplayMode(newDisplayMode);
+    setSetting('displayMode', event.target.value);
   }
 
   function getDisplayModeOptions(): JSX.Element[] {
     const enteredEffects = (
-      <option key="1" value={'enteredEffects'}>
+      <option key="enteredEffects" value={'enteredEffects'}>
         Entered effects
       </option>
     );
     const enteredDistributions = (
-      <option key="2" value={'enteredDistributions'}>
+      <option key="enteredDistributions" value={'enteredDistributions'}>
         Entered distributions
       </option>
     );
     const deterministicValues = (
-      <option key="3" value={'deterministicValues'}>
+      <option key="deterministicValues" value={'deterministicValues'}>
         Values used in deterministic analysis
       </option>
     );
     const smaaValues = (
-      <option key="4" value={'smaaValues'}>
+      <option key="smaaValues" value={'smaaValues'}>
         Values used in SMAA
       </option>
     );
@@ -64,7 +64,7 @@ export default function DisplayMode(): JSX.Element {
         <Select
           native
           id="display-mode-selector"
-          value={localDisplayMode}
+          value={displayMode}
           onChange={handleSelectionChanged}
           style={{minWidth: 220}}
         >

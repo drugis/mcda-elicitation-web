@@ -1,19 +1,16 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
-import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
 export default function ScalesCalculationMethod(): JSX.Element {
   const {
-    localScalesCalculationMethod,
-    setLocalScalesCalculationMethod
+    localSettings: {calculationMethod},
+    setSetting
   } = useContext(WorkspaceSettingsContext);
 
   function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
-    setLocalScalesCalculationMethod(
-      event.target.value as TScalesCalculationMethod
-    );
+    setSetting('calculationMethod', event.target.value);
   }
 
   return (
@@ -24,7 +21,7 @@ export default function ScalesCalculationMethod(): JSX.Element {
       <Grid item xs={6}>
         <RadioGroup
           name="scales-calculation-method-radio"
-          value={localScalesCalculationMethod}
+          value={calculationMethod}
           onChange={handleRadioChanged}
         >
           <label id="show-median-radio">

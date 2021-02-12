@@ -1,28 +1,26 @@
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
-import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
-import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
+import ISettings from '@shared/interface/Settings/ISettings';
+import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
+
+export type TTogglableColumns =
+  | 'description'
+  | 'units'
+  | 'references'
+  | 'strength';
+
+export type TSettings =
+  | 'calculationMethod'
+  | 'displayMode'
+  | 'randomSeed'
+  | 'showPercentages';
 
 export default interface IWorkspaceSettingsContext {
   isSaveButtonDisabled: boolean;
-  localShowPercentages: TPercentageOrDecimal;
-  localScalesCalculationMethod: TScalesCalculationMethod;
-  localDisplayMode: TDisplayMode;
-  localRandomSeed: number;
-  localShowDescriptions: boolean;
-  localShowUnitsOfMeasurement: boolean;
-  localShowReferences: boolean;
-  localShowStrengthsAndUncertainties: boolean;
+  localSettings: ISettings;
+  localToggledColumns: IToggledColumns;
   resetToDefaults: () => void;
   saveSettings: () => void;
-  setLocalShowPercentages: (newSetting: TPercentageOrDecimal) => void;
-  setLocalScalesCalculationMethod: (
-    newSetting: TScalesCalculationMethod
-  ) => void;
-  setLocalDisplayMode: (newSetting: TDisplayMode) => void;
-  setLocalRandomSeed: (newSeed: number) => void;
-  setLocalShowDescriptions: (newValue: boolean) => void;
-  setLocalShowUnitsOfMeasurement: (newValue: boolean) => void;
-  setLocalShowReferences: (newValue: boolean) => void;
-  setLocalShowStrengthsAndUncertainties: (newValue: boolean) => void;
+  setSetting: (setting: TSettings, value: any) => void;
+  setShowColumn: (column: TTogglableColumns, value: boolean) => void;
+  setAllColumnsTo: (value: boolean) => void;
   setIsSaveButtonDisabled: (newValue: boolean) => void;
 }

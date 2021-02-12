@@ -3,21 +3,7 @@ import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
-
-export function renderEffect(
-  effect: Effect,
-  displayMode: TDisplayMode,
-  usePercentage: boolean,
-  scale: IScale
-): string {
-  if (displayMode === 'enteredEffects') {
-    return renderEnteredValues(effect, usePercentage, false);
-  } else if (displayMode === 'deterministicValues') {
-    return renderValuesForAnalysis(effect, usePercentage, scale);
-  }
-}
 
 export function renderEnteredValues(
   effect: Effect,

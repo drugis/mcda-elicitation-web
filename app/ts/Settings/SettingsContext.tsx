@@ -62,6 +62,18 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
   const [numberOfToggledColumns, setNumberOfToggledColumns] = useState<number>(
     5
   );
+  const settings: ISettings = {
+    calculationMethod: scalesCalculationMethod,
+    displayMode: displayMode,
+    randomSeed: randomSeed,
+    showPercentages: showPercentages ? 'percentage' : 'decimal'
+  };
+  const toggledColumns: IToggledColumns = {
+    description: showDescriptions,
+    references: showReferences,
+    strength: showStrengthsAndUncertainties,
+    units: showUnitsOfMeasurement
+  };
 
   useEffect(() => {
     axios
@@ -146,6 +158,8 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
         showReferences,
         showStrengthsAndUncertainties,
         numberOfToggledColumns,
+        settings,
+        toggledColumns,
         updateSettings
       }}
     >

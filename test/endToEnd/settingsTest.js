@@ -22,7 +22,7 @@ module.exports = {
   // 'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF,
   // 'Switching settings mid-elicitation': switchSettingsMidRanking,
   'Switching settings on the deterministic tab': switchSettingsOnDeterministicTab
-};
+}; // FIXME re-enable test after angular is gone
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');

@@ -1,10 +1,12 @@
 import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
-import {TPercentageOrDecimal} from '@shared/interface/Settings/TPercentageOrDecimal';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {getInitialDisplayMode} from 'app/ts/Settings/SettingsUtil';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import IWorkspaceSettingsContext from './IWorkspaceSettingsContext';
+import IWorkspaceSettingsContext, {
+  TSettings,
+  TTogglableColumns
+} from './IWorkspaceSettingsContext';
 
 export const WorkspaceSettingsContext = createContext<IWorkspaceSettingsContext>(
   {} as IWorkspaceSettingsContext
@@ -18,116 +20,88 @@ export function WorkspaceSettingsContextProviderComponent({
   isDialogOpen: boolean;
 }) {
   const {
-    scalesCalculationMethod,
-    showPercentages,
-    displayMode,
-    hasNoEffects,
-    hasNoDistributions,
     isRelativeProblem,
-    randomSeed,
-    showDescriptions,
-    showUnitsOfMeasurement,
-    showReferences,
-    showStrengthsAndUncertainties,
+    hasNoEffects,
+    settings,
+    toggledColumns,
     updateSettings
   } = useContext(SettingsContext);
 
+  const [localSettings, setLocalSettings] = useState<ISettings>(settings);
   const [
-    localScalesCalculationMethod,
-    setLocalScalesCalculationMethod
-  ] = useState(scalesCalculationMethod);
-  const [
-    localShowPercentages,
-    setLocalShowPercentages
-  ] = useState<TPercentageOrDecimal>(
-    showPercentages ? 'percentage' : 'decimal'
-  );
-  const [localDisplayMode, setLocalDisplayMode] = useState<TDisplayMode>(
-    displayMode
-  );
-  const [localRandomSeed, setLocalRandomSeed] = useState<number>(randomSeed);
-  const [localShowDescriptions, setLocalShowDescriptions] = useState<boolean>(
-    showDescriptions
-  );
-  const [
-    localShowUnitsOfMeasurement,
-    setLocalShowUnitsOfMeasurement
-  ] = useState<boolean>(showUnitsOfMeasurement);
-  const [localShowReferences, setLocalShowReferences] = useState<boolean>(
-    showReferences
-  );
-  const [
-    localShowStrengthsAndUncertainties,
-    setLocalShowStrengthsAndUncertainties
-  ] = useState<boolean>(showStrengthsAndUncertainties);
-
+    localToggledColumns,
+    setLocalToggledColumns
+  ] = useState<IToggledColumns>(toggledColumns);
   const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState<boolean>(
     false
   );
 
+  const defaultSettings: ISettings = {
+    displayMode: getInitialDisplayMode(isRelativeProblem, hasNoEffects),
+    randomSeed: 1234,
+    calculationMethod: 'median',
+    showPercentages: 'percentage'
+  };
+
+  const defaultToggledColumns: IToggledColumns = {
+    references: true,
+    strength: true,
+    units: true,
+    description: true
+  };
+
   useEffect(() => {
     if (isDialogOpen) {
       setIsSaveButtonDisabled(false);
-      setLocalScalesCalculationMethod(scalesCalculationMethod);
-      setLocalShowPercentages(showPercentages ? 'percentage' : 'decimal');
-      setLocalDisplayMode(displayMode);
-      setLocalRandomSeed(randomSeed);
-      setLocalShowDescriptions(showDescriptions);
-      setLocalShowUnitsOfMeasurement(showUnitsOfMeasurement);
-      setLocalShowReferences(showReferences);
+      setSettings(settings, toggledColumns);
     }
   }, [isDialogOpen]);
 
-  function resetToDefaults(): void {
-    setLocalScalesCalculationMethod('median');
-    setLocalShowPercentages('percentage');
-    setLocalDisplayMode(isRelativeProblem ? 'smaaValues' : 'enteredEffects');
-    setLocalRandomSeed(1234);
-    setLocalShowDescriptions(true);
-    setLocalShowUnitsOfMeasurement(true);
-    setLocalShowReferences(true);
-    setLocalShowStrengthsAndUncertainties(true);
-    setIsSaveButtonDisabled(false);
+  function setSettings(
+    newSettings: ISettings,
+    newToggledColumns: IToggledColumns
+  ): void {
+    setLocalSettings(newSettings);
+    setLocalToggledColumns(newToggledColumns);
   }
 
   function saveSettings(): void {
-    const newSettings: ISettings = {
-      calculationMethod: localScalesCalculationMethod,
-      displayMode: localDisplayMode,
-      showPercentages: localShowPercentages,
-      randomSeed: localRandomSeed
-    };
-    const newToggledColumns: IToggledColumns = {
-      description: localShowDescriptions,
-      references: localShowReferences,
-      units: localShowUnitsOfMeasurement,
-      strength: localShowStrengthsAndUncertainties
-    };
-    updateSettings(newSettings, newToggledColumns);
+    updateSettings(localSettings, localToggledColumns);
+  }
+
+  function resetToDefaults() {
+    setSettings(defaultSettings, defaultToggledColumns);
+    setIsSaveButtonDisabled(false);
+  }
+
+  function setShowColumn(column: TTogglableColumns, value: boolean): void {
+    setLocalToggledColumns({...localToggledColumns, [column]: value});
+  }
+
+  function setSetting(setting: TSettings, value: any): void {
+    setLocalSettings({...localSettings, [setting]: value});
+  }
+
+  function setAllColumnsTo(value: boolean): void {
+    setLocalToggledColumns({
+      units: value,
+      strength: value,
+      references: value,
+      description: value
+    });
   }
 
   return (
     <WorkspaceSettingsContext.Provider
       value={{
         isSaveButtonDisabled,
-        localShowPercentages,
-        localScalesCalculationMethod,
-        localDisplayMode,
-        localRandomSeed,
-        localShowDescriptions,
-        localShowUnitsOfMeasurement,
-        localShowReferences,
-        localShowStrengthsAndUncertainties,
+        localSettings,
+        localToggledColumns,
         resetToDefaults,
         saveSettings,
-        setLocalShowPercentages,
-        setLocalScalesCalculationMethod,
-        setLocalDisplayMode,
-        setLocalRandomSeed,
-        setLocalShowDescriptions,
-        setLocalShowUnitsOfMeasurement,
-        setLocalShowReferences,
-        setLocalShowStrengthsAndUncertainties,
+        setSetting,
+        setShowColumn,
+        setAllColumnsTo,
         setIsSaveButtonDisabled
       }}
     >

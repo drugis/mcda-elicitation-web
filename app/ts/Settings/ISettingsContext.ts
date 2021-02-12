@@ -11,11 +11,13 @@ export default interface ISettingsContext {
   hasNoDistributions: boolean;
   isRelativeProblem: boolean;
   randomSeed: number;
+  settings: ISettings;
   showDescriptions: boolean;
   showUnitsOfMeasurement: boolean;
   showReferences: boolean;
   showStrengthsAndUncertainties: boolean;
   numberOfToggledColumns: number;
+  toggledColumns: IToggledColumns;
   updateSettings: (
     updatedSettings: ISettings,
     updatedToggledColumns: IToggledColumns

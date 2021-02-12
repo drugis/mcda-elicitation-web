@@ -2,6 +2,7 @@ import TableCell from '@material-ui/core/TableCell';
 import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React, {useContext} from 'react';
@@ -24,6 +25,7 @@ export default function DistributionValueCell({
   alternativeId: string;
   isExcluded?: boolean;
 }): JSX.Element {
+  const {setErrorMessage} = useContext(ErrorContext);
   const {displayMode, scalesCalculationMethod} = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
@@ -32,6 +34,8 @@ export default function DistributionValueCell({
       return renderDistribution(distribution, usePercentage);
     } else if (displayMode === 'smaaValues') {
       return renderValuesForAnalysis(scale, distribution);
+    } else {
+      setErrorMessage('Cannot render distribution');
     }
   }
 

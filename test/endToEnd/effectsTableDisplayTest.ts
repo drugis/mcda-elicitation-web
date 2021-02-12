@@ -60,13 +60,7 @@ function runAssertions(browser: NightwatchBrowser) {
   );
   assertCriterionRow(browser, decimalCriterionWithEffectsPercentifiedEntered);
   assertCriterionRow(browser, customCriterionWithEffectsEntered);
-  browser.elementIdAttribute(
-    '//*[@id="show-percentages-radio"]/span/span[1]/input',
-    'checked',
-    (result) => {
-      console.log(result);
-    }
-  );
+
   switchSettings(
     browser,
     '#show-decimals-radio',
@@ -191,7 +185,6 @@ function assertCriterionRow(
   browser: NightwatchBrowser,
   {
     rowNumber,
-    dataSourceId,
     title,
     unit,
     alt1Value,
@@ -222,7 +215,6 @@ function assertCriterionRowWithUncertainties(
   browser: NightwatchBrowser,
   {
     rowNumber,
-    dataSourceId,
     title,
     unit,
     alt1Value,
