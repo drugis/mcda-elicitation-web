@@ -53,7 +53,6 @@ export default function PreferencesWeightsTable() {
       (criterion: ICriterion): JSX.Element => {
         const unit = criterion.dataSources[0].unitOfMeasurement;
         const usePercentage = showPercentages && canBePercentage(unit.type);
-        const description = criterion.description ? criterion.description : '';
         return (
           <TableRow key={criterion.id}>
             <TableCell>

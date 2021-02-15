@@ -21,7 +21,6 @@ export default function SmaaTab({
   workspaceId,
   updateAngularScenario,
   workspace,
-  scales,
   subproblems,
   currentSubproblem,
   editMode
@@ -31,7 +30,6 @@ export default function SmaaTab({
   workspaceId: string;
   updateAngularScenario: (scenario: IMcdaScenario) => void;
   workspace: IOldWorkspace;
-  scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
   editMode: IEditMode;
@@ -45,7 +43,6 @@ export default function SmaaTab({
           currentAngularSubproblem={currentSubproblem}
           workspaceId={workspaceId}
           subproblemChanged={() => {}}
-          scales={scales}
         >
           <SubproblemContextProviderComponent>
             <SettingsContextProviderComponent>

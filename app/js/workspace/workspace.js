@@ -7,8 +7,6 @@ define([
   './workspaceController',
 
   '../services/workspaceService',
-  '../services/performanceTableService',
-  '../services/pataviResultsService',
 
   './exampleResource',
   './tutorialResource',
@@ -29,8 +27,6 @@ define([
   WorkspaceController,
 
   WorkspaceService,
-  PerformanceTableService,
-  PataviResultsService,
 
   ExampleResource,
   TutorialResource,
@@ -52,8 +48,6 @@ define([
     .controller('WorkspaceController', WorkspaceController)
 
     .factory('WorkspaceService', WorkspaceService)
-    .factory('PerformanceTableService', PerformanceTableService)
-    .factory('PataviResultsService', PataviResultsService)
 
     .service('ExampleResource', ExampleResource)
     .service('TutorialResource', TutorialResource)

@@ -22,7 +22,6 @@ define([
         'workspaceId',
         'updateAngularScenario',
         'workspace',
-        'scales',
         'subproblems',
         'currentSubproblem',
         'editMode'

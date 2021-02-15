@@ -32,6 +32,7 @@ export function SmaaResultsContextProviderComponent({
     settings: {randomSeed}
   } = useContext(SettingsContext);
   const {
+    filteredEffects,
     filteredDistributions,
     filteredRelativePerformances,
     filteredAlternatives,

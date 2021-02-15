@@ -38,7 +38,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function (
     // init
     $scope.pvf = PartialValueFunctionService;
 
-    $scope.scalesPromise.then(resetWizard);
+    resetWizard();
 
     function updatePlot(criterion) {
       $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinatesForCriterion(
@@ -192,7 +192,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function (
     }
 
     function resetWizard() {
-      var problem = $scope.aggregateState.dePercentified.problem;
+      var problem = $scope.aggregateState.problem;
       $injector.invoke(
         Wizard,
         {},

@@ -21,14 +21,12 @@ define(['lodash', 'angular'], function (_) {
     $scope.subproblemChanged = subproblemChanged;
 
     // init
-    $scope.scalesPromise.then(() => {
-      $scope.subProblems = subProblems;
-      PageTitleService.setPageTitle(
-        'SubProblemController',
-        ($scope.aggregateState.problem.title || $scope.workspace.title) +
-          `'s problem definition`
-      );
-    });
+    $scope.subProblems = subProblems;
+    PageTitleService.setPageTitle(
+      'SubProblemController',
+      ($scope.aggregateState.problem.title || $scope.workspace.title) +
+        `'s problem definition`
+    );
 
     function subproblemChanged(newSubProblem) {
       var coords = _.omit($stateParams, 'id');

@@ -14,7 +14,6 @@ define([
       react2angular.react2angular(OverviewTab.default, [
         'workspace',
         'subproblems',
-        'scales',
         'subproblem',
         'workspaceId'
       ])

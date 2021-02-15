@@ -7,13 +7,11 @@ define([], function () {
 
     PageTitleService
   ) {
-    $scope.scalesPromise.then(function () {
-      PageTitleService.setPageTitle(
-        'SmaaResultsController',
-        ($scope.aggregateState.problem.title || $scope.workspace.title) +
-          "'s SMAA results"
-      );
-    });
+    PageTitleService.setPageTitle(
+      'SmaaResultsController',
+      ($scope.aggregateState.problem.title || $scope.workspace.title) +
+        "'s SMAA results"
+    );
   };
   return dependencies.concat(SmaaResultsController);
 });

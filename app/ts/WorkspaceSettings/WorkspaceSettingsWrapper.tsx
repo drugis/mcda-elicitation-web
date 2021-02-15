@@ -23,7 +23,6 @@ export default function WorkspaceSettingsWrapper({
         currentAngularSubproblem={{} as IOldSubproblem}
         workspaceId={workspace.id}
         subproblemChanged={() => {}}
-        scales={{}}
       >
         <SettingsContextProviderComponent>
           <Grid container justify="flex-end">

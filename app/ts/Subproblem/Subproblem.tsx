@@ -15,14 +15,12 @@ import SubproblemSelection from './SubproblemSelection/SubproblemSelection';
 
 export default function Subproblem({
   workspace,
-  scales,
   subproblems,
   currentSubproblem,
   subproblemChanged,
   workspaceId
 }: {
   workspace: IOldWorkspace;
-  scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
   subproblemChanged: (subproblem: IOldSubproblem) => void;
@@ -37,7 +35,6 @@ export default function Subproblem({
           currentAngularSubproblem={currentSubproblem}
           workspaceId={workspaceId}
           subproblemChanged={subproblemChanged}
-          scales={scales}
         >
           <SubproblemContextProviderComponent>
             <SettingsContextProviderComponent>
