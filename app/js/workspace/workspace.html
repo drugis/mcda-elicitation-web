@@ -41,7 +41,11 @@
     </div>
   </div>
   <div class="cell large-2">
-    <workspace-settings edit-mode="editMode"></workspace-settings>
+    <workspace-settings
+      ng-if="workspaceForReact"
+      edit-mode="editMode"
+      workspace="workspaceForReact"
+    ></workspace-settings>
   </div>
   <div ui-view class="cell"></div>
 </div>

@@ -12,19 +12,17 @@ export default function DisplayWarnings({
 }) {
   return (
     <>
-      {_.map(warnings, (warning, index) => {
-        return (
-          <Grid
-            item
-            xs={12}
-            key={`${identifier}-warning-${index}`}
-            id={`${identifier}-warning-${index}`}
-          >
-            <Warning />
-            {warning}
-          </Grid>
-        );
-      })}
+      {_.map(warnings, (warning, index) => (
+        <Grid
+          item
+          xs={12}
+          key={`${identifier}-warning-${index}`}
+          id={`${identifier}-warning-${index}`}
+        >
+          <Warning />
+          {warning}
+        </Grid>
+      ))}
     </>
   );
 }

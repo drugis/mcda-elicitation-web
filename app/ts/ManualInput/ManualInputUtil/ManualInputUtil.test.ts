@@ -21,7 +21,7 @@ import {
   normalizeInputValue,
   replaceUndefinedBounds,
   swapItems
-} from './ManualInputService';
+} from './ManualInputUtil';
 
 const criterionId = 'critId';
 const dataSourceId = 'dsId';

@@ -11,10 +11,12 @@ export default function EffectsTableCriterionDescriptionCell({
   criterion: ICriterion;
   isExcluded?: boolean;
 }) {
-  const {showDescriptions} = useContext(SettingsContext);
+  const {
+    toggledColumns: {description}
+  } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
-  return showDescriptions ? (
+  return description ? (
     <TableCell
       id={`criterion-description-${criterion.id}`}
       rowSpan={criterion.dataSources.length}

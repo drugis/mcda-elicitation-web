@@ -1,22 +1,16 @@
-import {
-  AnalysisType,
-  DisplayMode,
-  ScalesCalculationMethod
-} from '@shared/interface/ISettings';
+import ISettings from '@shared/interface/Settings/ISettings';
+import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 
 export default interface ISettingsContext {
-  scalesCalculationMethod: ScalesCalculationMethod;
-  showPercentages: boolean;
-  displayMode: DisplayMode;
-  analysisType: AnalysisType;
   hasNoEffects: boolean;
   hasNoDistributions: boolean;
   isRelativeProblem: boolean;
-  changed: boolean;
-  randomSeed: number;
-  showDescriptions: boolean;
-  showUnitsOfMeasurement: boolean;
-  showReferences: boolean;
-  showStrengthsAndUncertainties: boolean;
+  settings: ISettings;
   numberOfToggledColumns: number;
+  showPercentages: boolean;
+  toggledColumns: IToggledColumns;
+  updateSettings: (
+    updatedSettings: ISettings,
+    updatedToggledColumns: IToggledColumns
+  ) => void;
 }

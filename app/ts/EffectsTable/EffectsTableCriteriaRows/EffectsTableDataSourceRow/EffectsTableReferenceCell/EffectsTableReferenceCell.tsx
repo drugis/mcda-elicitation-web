@@ -11,7 +11,9 @@ export default function EffectsTableReferenceCell({
   dataSource: IDataSource;
   isExcluded?: boolean;
 }) {
-  const {showReferences} = useContext(SettingsContext);
+  const {
+    toggledColumns: {references}
+  } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function renderReference(): JSX.Element | string {
@@ -26,7 +28,7 @@ export default function EffectsTableReferenceCell({
     }
   }
 
-  return showReferences ? (
+  return references ? (
     <TableCell id={`reference-${dataSource.id}`} style={cellStyle}>
       {renderReference()}
     </TableCell>

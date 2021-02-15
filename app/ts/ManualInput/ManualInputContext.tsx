@@ -18,7 +18,7 @@ import {
   createWarnings,
   replaceUndefinedBounds,
   swapItems
-} from './ManualInputService/ManualInputService';
+} from './ManualInputUtil/ManualInputUtil';
 
 const defaultUnitOfMeasurement: IUnitOfMeasurement = {
   label: '',

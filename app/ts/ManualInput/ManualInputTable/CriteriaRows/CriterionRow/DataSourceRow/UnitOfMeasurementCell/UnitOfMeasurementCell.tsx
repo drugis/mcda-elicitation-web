@@ -7,7 +7,7 @@ import IUnitOfMeasurement, {
   UnitOfMeasurementType
 } from '@shared/interface/IUnitOfMeasurement';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
-import {normalizeCells} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
+import {normalizeCells} from 'app/ts/ManualInput/ManualInputUtil/ManualInputUtil';
 import React, {useContext, useState} from 'react';
 import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import UnitOfMeasurementDialog from './UnitOfMeasurementDialog/UnitOfMeasurementDialog';

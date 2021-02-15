@@ -12,9 +12,7 @@ define([
       'subproblem',
       react2angular.react2angular(Subproblem.default, [
         'workspace',
-        'settings',
         'scales',
-        'toggledColumns',
         'subproblems',
         'currentSubproblem',
         'subproblemChanged',

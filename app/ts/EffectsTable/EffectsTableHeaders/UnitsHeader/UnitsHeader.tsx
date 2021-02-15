@@ -4,8 +4,11 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 
 export default function UnitsHeader() {
-  const {showUnitsOfMeasurement} = useContext(SettingsContext);
-  if (showUnitsOfMeasurement) {
+  const {
+    toggledColumns: {units}
+  } = useContext(SettingsContext);
+
+  if (units) {
     return (
       <TableCell id="units-header" align="center">
         Units <InlineHelp helpId="unit-of-measurement" />

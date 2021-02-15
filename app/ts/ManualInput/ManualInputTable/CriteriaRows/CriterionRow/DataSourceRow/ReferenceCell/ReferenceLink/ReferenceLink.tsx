@@ -3,7 +3,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
-import {checkIfLinkIsInvalid} from 'app/ts/ManualInput/ManualInputService/ManualInputService';
+import {checkIfLinkIsInvalid} from 'app/ts/ManualInput/ManualInputUtil/ManualInputUtil';
 import React, {ChangeEvent, KeyboardEvent, useContext, useState} from 'react';
 import InlineTooltip from '../../InlineTooltip/InlineTooltip';
 

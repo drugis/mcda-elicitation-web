@@ -1,21 +1,9 @@
 'use strict';
 define(['lodash', 'angular'], function (_) {
-  var dependencies = [
-    '$http',
-    '$q',
-    '$rootScope',
-    'PataviService',
-    'WorkspaceSettingsService'
-  ];
-  var PataviResultsService = function (
-    $http,
-    $q,
-    $rootScope,
-    PataviService,
-    WorkspaceSettingsService
-  ) {
+  var dependencies = ['$http', '$q', '$rootScope', 'PataviService'];
+  var PataviResultsService = function ($http, $q, $rootScope, PataviService) {
     function postAndHandleResults(problem, successHandler) {
-      problem.seed = WorkspaceSettingsService.getRandomSeed();
+      problem.seed = 1234; //FIXME
       return $http
         .post('/patavi', problem)
         .then(function (result) {

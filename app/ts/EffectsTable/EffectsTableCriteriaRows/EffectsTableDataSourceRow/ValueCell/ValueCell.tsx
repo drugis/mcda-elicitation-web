@@ -1,7 +1,4 @@
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
-import IScale from '@shared/interface/IScale';
-import {AnalysisType} from '@shared/interface/ISettings';
+import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {
   canDSBePercentage,
   findScale,
@@ -10,7 +7,6 @@ import {
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
 import EffectValueCell from './EffectValueCell/EffectValueCell';
@@ -26,7 +22,10 @@ export default function ValueCell({
   isExcluded?: boolean;
 }) {
   const {workspace, scales} = useContext(WorkspaceContext);
-  const {analysisType, showPercentages} = useContext(SettingsContext);
+  const {
+    showPercentages,
+    settings: {displayMode}
+  } = useContext(SettingsContext);
   const {setErrorMessage} = useContext(ErrorContext);
 
   const usePercentage =
@@ -40,8 +39,11 @@ export default function ValueCell({
   const scale = findScale(scales, dataSourceId, alternativeId);
   const hasScaleValues = scale['50%'] !== null && scale['50%'] !== undefined;
 
-  function buildValueLabel(analysisType: AnalysisType): JSX.Element {
-    if (analysisType === 'deterministic') {
+  function buildValueLabel(displayMode: TDisplayMode): JSX.Element {
+    if (
+      displayMode === 'enteredEffects' ||
+      displayMode === 'deterministicValues'
+    ) {
       return renderEffectCell();
     } else {
       return renderDistributionCell();
@@ -92,5 +94,5 @@ export default function ValueCell({
     }
   }
 
-  return buildValueLabel(analysisType);
+  return buildValueLabel(displayMode);
 }

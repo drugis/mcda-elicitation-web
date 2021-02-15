@@ -28,7 +28,9 @@ export function SmaaResultsContextProviderComponent({
   children: any;
 }) {
   const {setError} = useContext(ErrorContext);
-  const {randomSeed} = useContext(SettingsContext);
+  const {
+    settings: {randomSeed}
+  } = useContext(SettingsContext);
   const {
     filteredDistributions,
     filteredRelativePerformances,

@@ -185,7 +185,6 @@ function assertCriterionRow(
   browser: NightwatchBrowser,
   {
     rowNumber,
-    dataSourceId,
     title,
     unit,
     alt1Value,
@@ -216,7 +215,6 @@ function assertCriterionRowWithUncertainties(
   browser: NightwatchBrowser,
   {
     rowNumber,
-    dataSourceId,
     title,
     unit,
     alt1Value,

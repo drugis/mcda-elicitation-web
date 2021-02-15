@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IOrdering from '@shared/interface/IOrdering';
 import IScale from '@shared/interface/IScale';
 import _ from 'lodash';
-import {swapItems} from '../ManualInput/ManualInputService/ManualInputService';
+import {swapItems} from '../ManualInput/ManualInputUtil/ManualInputUtil';
 
 export function hasScaleValues(
   scales: Record<string, Record<string, IScale>>

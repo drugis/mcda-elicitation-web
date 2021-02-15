@@ -2,6 +2,7 @@ import TableCell from '@material-ui/core/TableCell';
 import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React, {useContext} from 'react';
@@ -24,14 +25,19 @@ export default function DistributionValueCell({
   alternativeId: string;
   isExcluded?: boolean;
 }): JSX.Element {
-  const {displayMode, scalesCalculationMethod} = useContext(SettingsContext);
+  const {setErrorMessage} = useContext(ErrorContext);
+  const {
+    settings: {displayMode, calculationMethod}
+  } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function render(): JSX.Element | string {
-    if (displayMode === 'enteredData') {
+    if (displayMode === 'enteredDistributions') {
       return renderDistribution(distribution, usePercentage);
-    } else {
+    } else if (displayMode === 'smaaValues') {
       return renderValuesForAnalysis(scale, distribution);
+    } else {
+      setErrorMessage('Cannot render distribution');
     }
   }
 
@@ -39,13 +45,13 @@ export default function DistributionValueCell({
     scale: IScale,
     distribution: Distribution
   ): JSX.Element | string {
-    if (scalesCalculationMethod === 'mode' && distribution.type === 'range') {
+    if (calculationMethod === 'mode' && distribution.type === 'range') {
       return 'NA';
     } else if (scale['50%'] !== null) {
       const lowerBound = getPercentifiedValue(scale['2.5%'], usePercentage);
       const upperBound = getPercentifiedValue(scale['97.5%'], usePercentage);
       const modeOrMedian =
-        scalesCalculationMethod === 'mode'
+        calculationMethod === 'mode'
           ? getPercentifiedValue(scale.mode, usePercentage)
           : getPercentifiedValue(scale['50%'], usePercentage);
       return (

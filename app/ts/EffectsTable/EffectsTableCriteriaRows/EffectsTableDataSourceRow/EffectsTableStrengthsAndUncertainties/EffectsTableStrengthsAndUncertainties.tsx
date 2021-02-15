@@ -13,10 +13,12 @@ export default function EffectsTableStrengthsAndUncertainties({
   dataSource: IDataSource;
   isExcluded?: boolean;
 }) {
-  const {showStrengthsAndUncertainties} = useContext(SettingsContext);
+  const {
+    toggledColumns: {strength}
+  } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
-  return showStrengthsAndUncertainties ? (
+  return strength ? (
     <TableCell style={cellStyle}>
       <Box p={1}>
         <Grid id={`soe-unc-${dataSource.id}`} container>

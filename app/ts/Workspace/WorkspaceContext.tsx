@@ -12,7 +12,7 @@ import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
-import {swapItems} from '../ManualInput/ManualInputService/ManualInputService';
+import {swapItems} from '../ManualInput/ManualInputUtil/ManualInputUtil';
 import IWorkspaceContext from './IWorkspaceContext';
 import {transformCriterionToOldCriterion} from './transformUtil';
 import {

@@ -8,7 +8,6 @@ define(['angular', 'lodash'], function (angular, _) {
     'WorkspaceResource',
     'ScenarioResource',
     'SubProblemResource',
-    'WorkspaceSettingsService',
     'SchemaService',
     'currentWorkspace',
     'currentSchemaVersion'
@@ -20,7 +19,6 @@ define(['angular', 'lodash'], function (angular, _) {
     WorkspaceResource,
     ScenarioResource,
     SubProblemResource,
-    WorkspaceSettingsService,
     SchemaService,
     currentWorkspace,
     currentSchemaVersion
@@ -69,16 +67,7 @@ define(['angular', 'lodash'], function (angular, _) {
       $scope.workspace = currentWorkspace;
     }
     $scope.workspaceForReact = angular.copy($scope.workspace);
-    getWorkspaceSettings();
-    $scope.$on('elicit.settingsChanged', getWorkspaceSettings);
     $scope.isEditTitleVisible = false;
-
-    function getWorkspaceSettings() {
-      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-      $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings(
-        $scope.workspace.problem.performanceTable
-      );
-    }
 
     function updateDefaultSubproblem(defaultSubproblemId, ranges, callback) {
       const params = {...$stateParams, problemId: defaultSubproblemId};

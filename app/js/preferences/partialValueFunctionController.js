@@ -14,7 +14,6 @@ define(['angular', 'lodash', '../controllers/wizard'], function (
     'taskDefinition',
     'PartialValueFunctionService',
     'PageTitleService',
-    'WorkspaceSettingsService',
     'numberFilter'
   ];
 
@@ -28,7 +27,6 @@ define(['angular', 'lodash', '../controllers/wizard'], function (
     taskDefinition,
     PartialValueFunctionService,
     PageTitleService,
-    WorkspaceSettingsService,
     numberFilter
   ) {
     // functions
@@ -39,7 +37,6 @@ define(['angular', 'lodash', '../controllers/wizard'], function (
 
     // init
     $scope.pvf = PartialValueFunctionService;
-    $scope.$on('elicit.settingsChanged', resetWizard);
 
     $scope.scalesPromise.then(resetWizard);
 
@@ -195,9 +192,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function (
     }
 
     function resetWizard() {
-      var problem = WorkspaceSettingsService.usePercentage()
-        ? $scope.aggregateState.percentified.problem
-        : $scope.aggregateState.dePercentified.problem;
+      var problem = $scope.aggregateState.dePercentified.problem;
       $injector.invoke(
         Wizard,
         {},

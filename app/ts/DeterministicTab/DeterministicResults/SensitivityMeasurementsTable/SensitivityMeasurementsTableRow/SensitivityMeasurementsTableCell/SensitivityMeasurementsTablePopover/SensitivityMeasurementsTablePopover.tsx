@@ -33,7 +33,7 @@ export default function SensitivityMeasurementsTablePopover({
     valueChanged(newValue);
   }
 
-  function valueChanged(newValue: number) {
+  function valueChanged(newValue: number): void {
     if (isNaN(newValue)) {
       setInputError('Invalid value');
     } else if (newValue < min || newValue > max) {
