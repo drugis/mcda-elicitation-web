@@ -45,7 +45,7 @@ describe('SettingsUtil', () => {
   });
 
   describe('getInitialDisplayMode', () => {
-    it('should return smaaValues if the problem is relative', () => {
+    it('should return smaaValues if the problem is relative and there are effects', () => {
       const isRelativeProblem = true;
       const hasNoEffect = false;
       const result = getInitialDisplayMode(isRelativeProblem, hasNoEffect);
@@ -57,6 +57,13 @@ describe('SettingsUtil', () => {
       const hasNoEffect = true;
       const result = getInitialDisplayMode(isRelativeProblem, hasNoEffect);
       expect(result).toEqual('enteredDistributions');
+    });
+
+    it('should return smaaValues if the problem is relative and there are no effects', () => {
+      const isRelativeProblem = true;
+      const hasNoEffect = true;
+      const result = getInitialDisplayMode(isRelativeProblem, hasNoEffect);
+      expect(result).toEqual('smaaValues');
     });
 
     it('should return enteredEffects in the other case', () => {
