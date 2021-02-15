@@ -21,7 +21,6 @@ export default function PataviHandler(db: IDB) {
     response: Response,
     next: any
   ): void {
-    // FIXME: separate routes for scales and results
     createPataviTask(request.body, (error: Error, taskUri: string): void => {
       if (error) {
         logger.error(error);
@@ -42,7 +41,7 @@ export default function PataviHandler(db: IDB) {
     request: Request<{}, {}, IWeightsCommand>,
     response: Response,
     next: any
-  ) {
+  ): void {
     const problem = request.body.problem;
     const scenario = request.body.scenario;
     waterfall(
@@ -67,7 +66,7 @@ export default function PataviHandler(db: IDB) {
     scenario: IMcdaScenario,
     weights: IWeights,
     callback: (error: Error, weights?: IWeights) => void
-  ) {
+  ): void {
     scenarioRepository.update(
       {...scenario.state, weights: weights},
       scenario.title,
@@ -82,7 +81,7 @@ export default function PataviHandler(db: IDB) {
     request: Request<{}, {}, TPataviCommands>,
     response: Response,
     next: any
-  ) {
+  ): void {
     postAndHandleResults(
       request.body,
       (error: Error, results: TPataviResults) => {

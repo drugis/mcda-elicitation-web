@@ -9,13 +9,11 @@ define([], function () {
   ) {
     $scope.scenario = currentScenario;
 
-    $scope.scalesPromise.then(function () {
-      PageTitleService.setPageTitle(
-        'DeterministicResultsController',
-        ($scope.aggregateState.problem.title || $scope.workspace.title) +
-          "'s deterministic results"
-      );
-    });
+    PageTitleService.setPageTitle(
+      'DeterministicResultsController',
+      ($scope.aggregateState.problem.title || $scope.workspace.title) +
+        "'s deterministic results"
+    );
   };
   return dependencies.concat(DeterministicResultsController);
 });

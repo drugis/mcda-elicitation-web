@@ -1,3 +1,4 @@
+import {CircularProgress} from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
@@ -13,6 +14,7 @@ import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import {swapItems} from '../ManualInput/ManualInputUtil/ManualInputUtil';
+import {getScalesCommand} from '../util/PataviUtil';
 import IWorkspaceContext from './IWorkspaceContext';
 import {transformCriterionToOldCriterion} from './transformUtil';
 import {
@@ -31,8 +33,7 @@ export function WorkspaceContextProviderComponent({
   oldSubproblems,
   currentAngularSubproblem,
   workspaceId,
-  subproblemChanged,
-  scales
+  subproblemChanged
 }: {
   children: any;
   oldWorkspace: IOldWorkspace;
@@ -40,7 +41,6 @@ export function WorkspaceContextProviderComponent({
   currentAngularSubproblem: IOldSubproblem;
   workspaceId: string;
   subproblemChanged: (subproblem: IOldSubproblem) => void;
-  scales: Record<string, Record<string, IScale>>;
 }) {
   const {setError} = useContext(ErrorContext);
   const [subproblems, setSubproblems] = useState<
@@ -53,8 +53,23 @@ export function WorkspaceContextProviderComponent({
     buildWorkspace(oldWorkspace, workspaceId)
   );
   const [ordering, setOrdering] = useState<IOrdering>();
+  const [scales, setScales] = useState<
+    Record<string, Record<string, IScale>>
+  >();
 
   useEffect(() => {
+    const pataviCommand = getScalesCommand(
+      oldWorkspace.problem,
+      workspace.criteria,
+      workspace.alternatives
+    );
+
+    Axios.post(`/patavi/scales`, pataviCommand)
+      .then((result: AxiosResponse<Record<string, Record<string, IScale>>>) => {
+        setScales(result.data);
+      })
+      .catch(errorCallback);
+
     Axios.get(`/workspaces/${workspaceId}/ordering`)
       .then((response: AxiosResponse<{ordering: IOrdering | {}}>) => {
         const newOrdering: IOrdering | {} = response.data.ordering;
@@ -145,7 +160,7 @@ export function WorkspaceContextProviderComponent({
       .catch(errorCallback)
       .then(() => {
         window.location.reload();
-      }); // FIXME: needed to update the angular scope
+      });
   }
 
   function errorCallback(error: OurError) {
@@ -235,7 +250,7 @@ export function WorkspaceContextProviderComponent({
         swapDataSources
       }}
     >
-      {children}
+      {scales ? children : <CircularProgress />}
     </WorkspaceContext.Provider>
   );
 }

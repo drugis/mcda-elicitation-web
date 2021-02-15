@@ -189,16 +189,16 @@ export function DeterministicResultsContextProviderComponent({
   }
 
   function setCurrentValue(
-    criterionId: string,
+    dataSourceId: string,
     alternativeId: string,
     newValue: number
   ): void {
     const originalValue =
-      sensitivityTableValues[criterionId][alternativeId].originalValue;
+      sensitivityTableValues[dataSourceId][alternativeId].originalValue;
     const newValues = {
       ...sensitivityTableValues,
-      [criterionId]: {
-        ...sensitivityTableValues[criterionId],
+      [dataSourceId]: {
+        ...sensitivityTableValues[dataSourceId],
         [alternativeId]: {
           originalValue: originalValue,
           currentValue: newValue
@@ -209,12 +209,12 @@ export function DeterministicResultsContextProviderComponent({
     const filteredRecalculatedCells = _.reject(
       recalculatedCells,
       (cell: IRecalculatedCell) =>
-        cell.criterion === criterionId && cell.alternative === alternativeId
+        cell.criterion === dataSourceId && cell.alternative === alternativeId
     );
     setRecalculatedCells(
       filteredRecalculatedCells.concat({
         alternative: alternativeId,
-        criterion: criterionId,
+        criterion: dataSourceId,
         value: newValue
       })
     );

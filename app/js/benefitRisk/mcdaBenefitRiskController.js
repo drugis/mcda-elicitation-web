@@ -42,26 +42,17 @@ define(['lodash', 'angular'], function (_, angular) {
       }
     );
     var baseProblem = angular.copy($scope.workspace.problem);
-    var baseState = {problem: baseProblem};
-    var percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
-    var dePercentifiedBaseState = WorkspaceService.dePercentifyCriteria(
-      baseState
-    );
+
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
     $scope.isDuplicateScenarioTitle = false;
     $scope.tasks = _.keyBy(Tasks.available, 'id');
 
-    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(
-      function (observedScales) {
-        initState(observedScales, currentScenario);
-      }
-    );
+    initState(currentScenario);
 
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
-    $scope.workspace.scales = {};
     $scope.isStandalone = isMcdaStandalone;
 
     $scope.$watch('scenario.state', updateTaskAccessibility);
@@ -76,22 +67,7 @@ define(['lodash', 'angular'], function (_, angular) {
       initializeTabs($state.current.name);
     });
 
-    function initState(observedScales, scenario) {
-      $scope.workspace.scales.base = observedScales;
-      $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(
-        percentifiedBaseState.problem.criteria,
-        observedScales
-      );
-      $scope.baseState = {
-        percentified: addScales(
-          percentifiedBaseState,
-          $scope.workspace.scales.basePercentified
-        ),
-        dePercentified: addScales(
-          dePercentifiedBaseState,
-          $scope.workspace.scales.base
-        )
-      };
+    function initState(scenario) {
       updateAggregatedState(scenario);
       updateScenarios();
       updateTaskAccessibility();
@@ -105,28 +81,11 @@ define(['lodash', 'angular'], function (_, angular) {
         scenario = $scope.scenario;
       }
       var aggregateState = WorkspaceService.buildAggregateState(
-        $scope.baseState.dePercentified.problem,
+        baseProblem,
         currentSubProblem,
         scenario
       );
-      var stateCopy = angular.copy(aggregateState);
-      aggregateState.percentified = WorkspaceService.percentifyCriteria(
-        stateCopy
-      );
-      aggregateState.dePercentified = WorkspaceService.dePercentifyCriteria(
-        stateCopy
-      );
-
       $scope.aggregateState = aggregateState;
-    }
-
-    function addScales(state, scales) {
-      return _.merge({}, state, {
-        problem: WorkspaceService.setDefaultObservedScales(
-          state.problem,
-          scales
-        )
-      });
     }
 
     function updateScenarios() {
@@ -141,11 +100,6 @@ define(['lodash', 'angular'], function (_, angular) {
               subproblemId: scenario.subProblemId
             };
           });
-          $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(
-            baseProblem,
-            currentSubProblem,
-            scenarios
-          );
         }
       );
     }

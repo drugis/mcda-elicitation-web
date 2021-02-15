@@ -1,9 +1,11 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
+import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
 import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {
   IDistributionPerformance,
@@ -28,11 +30,11 @@ export function getPataviProblem(
     title: problem.title,
     description: problem.description,
     preferences: problem.preferences ? problem.preferences : undefined,
-    performanceTable: buildPataviPerformanceTable(problem.performanceTable),
+    performanceTable: buildScalesPerformanceTable(problem.performanceTable),
     alternatives: _.keyBy(filteredAlternatives, 'id'),
     criteria: _(filteredCriteria)
+      .map(_.partial(buildPataviCriterion, pvfs))
       .keyBy('id')
-      .mapValues(_.partial(buildPataviCriterion, pvfs))
       .value()
   };
 }
@@ -41,9 +43,10 @@ function buildPataviCriterion(
   pvfs: Record<string, IPvf>,
   criterion: ICriterion
 ): IPataviCriterion {
-  const scale = getScale(criterion.dataSources[0].unitOfMeasurement);
+  const dataSource = criterion.dataSources[0];
+  const scale = getScale(dataSource.unitOfMeasurement);
   return {
-    id: criterion.id,
+    id: dataSource.id,
     title: criterion.title,
     pvf: pvfs[criterion.id],
     scale: scale
@@ -91,4 +94,51 @@ function isEffectPerformance(
   performance: TPerformance
 ): performance is IEffectPerformance {
   return performance.hasOwnProperty('effect');
+}
+
+export function getScalesCommand(
+  problem: IProblem,
+  criteria: ICriterion[],
+  alternatives: IAlternative[]
+): IScalesCommand {
+  return {
+    schemaVersion: problem.schemaVersion,
+    title: problem.title,
+    description: problem.description,
+    preferences: problem.preferences ? problem.preferences : undefined,
+    performanceTable: buildScalesPerformanceTable(problem.performanceTable),
+    alternatives: _.keyBy(alternatives, 'id'),
+    criteria: _(criteria)
+      .flatMap('dataSources')
+      .keyBy('id')
+      .mapValues(buildPataviScalesCriterion)
+      .value(),
+    method: 'scales'
+  };
+}
+
+function buildPataviScalesCriterion(dataSource: IDataSource): IPataviCriterion {
+  const scale = getScale(dataSource.unitOfMeasurement);
+  return {
+    title: undefined,
+    id: dataSource.id,
+    pvf: undefined,
+    scale: scale
+  };
+}
+
+export function buildScalesPerformanceTable(
+  performanceTable: IPerformanceTableEntry[]
+): IPataviTableEntry[] {
+  return _.map(
+    performanceTable,
+    (entry: IPerformanceTableEntry): IPataviTableEntry => {
+      return {
+        alternative: entry.alternative,
+        criterion: entry.dataSource,
+        dataSource: entry.dataSource,
+        performance: getPerformance(entry.performance)
+      };
+    }
+  );
 }

@@ -18,7 +18,6 @@ export default function PreferencesTab({
   workspaceId,
   updateAngularScenario,
   workspace,
-  scales,
   subproblems,
   currentSubproblem
 }: {
@@ -27,7 +26,6 @@ export default function PreferencesTab({
   workspaceId: string;
   updateAngularScenario: (scenario: IMcdaScenario) => void;
   workspace: IOldWorkspace;
-  scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
 }) {
@@ -40,7 +38,6 @@ export default function PreferencesTab({
           currentAngularSubproblem={currentSubproblem}
           workspaceId={workspaceId}
           subproblemChanged={() => {}}
-          scales={scales}
         >
           <SubproblemContextProviderComponent>
             <SettingsContextProviderComponent>

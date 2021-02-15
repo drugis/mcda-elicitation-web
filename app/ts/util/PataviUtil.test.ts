@@ -135,4 +135,10 @@ describe('PataviUtil', () => {
       }
     });
   });
+
+  describe('getScalesCommand', () => {
+    it('should', () => {
+      fail();
+    });
+  });
 });

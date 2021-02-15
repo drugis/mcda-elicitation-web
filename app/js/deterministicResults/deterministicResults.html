@@ -1,12 +1,11 @@
 <deterministic-tab
-  ng-if="aggregateState && workspaceForReact && reactScenarios"
+  ng-if="workspaceForReact && reactScenarios"
   scenarios="reactScenarios"
   current-scenario-id="scenario.id"
   workspace-id="workspace.id"
   update-angular-scenario="updateAngularScenario"
   workspace="workspaceForReact"
   subproblems="subProblems"
-  scales="workspace.scales.base"
   current-subproblem="subProblem"
   subproblems="subProblems"
   edit-mode="editMode"

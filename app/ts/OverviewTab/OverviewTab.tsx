@@ -11,13 +11,11 @@ import Overview from './Overview/Overview';
 
 export default function OverviewTab({
   workspace,
-  scales,
   subproblems,
   currentSubproblem,
   workspaceId
 }: {
   workspace: IOldWorkspace;
-  scales: Record<string, Record<string, IScale>>;
   subproblems: IOldSubproblem[];
   currentSubproblem: IOldSubproblem;
   workspaceId: string;
@@ -31,7 +29,6 @@ export default function OverviewTab({
           currentAngularSubproblem={currentSubproblem}
           workspaceId={workspaceId}
           subproblemChanged={() => {}}
-          scales={scales}
         >
           <SettingsContextProviderComponent>
             <ErrorHandler>

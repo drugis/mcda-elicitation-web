@@ -1,227 +1,8 @@
 'use strict';
 define(['lodash', 'angular'], function (_, angular) {
-  var dependencies = [
-    '$q',
-    'PataviResultsService',
-    'PerformanceTableService',
-    'significantDigits'
-  ];
+  var dependencies = [];
 
-  var WorkspaceService = function (
-    $q,
-    PataviResultsService,
-    PerformanceTableService,
-    significantDigits
-  ) {
-    function getObservedScales(problem) {
-      var newProblem = createProblem(problem);
-      return newProblem
-        ? PataviResultsService.postAndHandleResults(newProblem)
-        : $q.resolve(undefined);
-    }
-
-    function createProblem(problem) {
-      var newProblem = angular.copy(problem);
-      var dataSources = getDataSources(newProblem.criteria);
-      newProblem.criteria = _.keyBy(dataSources, 'id');
-
-      newProblem.performanceTable = createPerformanceTable(
-        newProblem.performanceTable
-      );
-      newProblem.method = 'scales';
-      return newProblem;
-    }
-
-    function createPerformanceTable(performanceTable) {
-      return _.map(performanceTable, createEntry);
-    }
-
-    function createEntry(entry) {
-      let newEntry = {...entry, criterion: entry.dataSource};
-      if (entry.performance.distribution) {
-        newEntry.performance = getDistributionPerformance(entry.performance);
-      } else {
-        newEntry.performance = entry.performance.effect;
-      }
-      return newEntry;
-    }
-
-    function getDistributionPerformance(performance) {
-      if (performance.distribution.type === 'empty' && performance.effect) {
-        return performance.effect;
-      } else {
-        return performance.distribution;
-      }
-    }
-
-    function getDataSources(criteria) {
-      return _.reduce(
-        criteria,
-        function (accum, criterion) {
-          return accum.concat(criterion.dataSources);
-        },
-        []
-      );
-    }
-
-    function percentifyScales(criteria, observedScales) {
-      var dataSources = _.keyBy(
-        _.reduce(
-          criteria,
-          function (accum, criterion) {
-            return accum.concat(criterion.dataSources);
-          },
-          []
-        ),
-        'id'
-      );
-
-      return _.reduce(
-        observedScales,
-        function (accum, scaleRow, datasourceId) {
-          if (dataSources[datasourceId]) {
-            accum[datasourceId] = _.reduce(
-              scaleRow,
-              function (accum, scaleCell, alternativeId) {
-                var usePercentage =
-                  dataSources[datasourceId].unitOfMeasurement.type ===
-                  'percentage';
-                accum[alternativeId] = usePercentage
-                  ? _.mapValues(scaleCell, times100)
-                  : scaleCell;
-                return accum;
-              },
-              {}
-            );
-          }
-          return accum;
-        },
-        {}
-      );
-    }
-
-    function addTheoreticalScales(criteria) {
-      return updateDataSources(criteria, addTheoreticalScale);
-    }
-
-    function percentifyCriteria(baseState) {
-      var criteriaWithUpdatedDataSources = updateDataSources(
-        baseState.problem.criteria,
-        percentifyDataSource
-      );
-      return _.merge({}, baseState, {
-        problem: {
-          criteria: criteriaWithUpdatedDataSources
-        }
-      });
-    }
-
-    function percentifyProblem(problem) {
-      var criteriaWithUpdatedDataSources = updateDataSources(
-        problem.criteria,
-        percentifyDataSource
-      );
-      return _.merge({}, problem, {
-        criteria: criteriaWithUpdatedDataSources
-      });
-    }
-
-    function updateDataSources(criteria, fn) {
-      return _.mapValues(criteria, function (criterion) {
-        return _.extend({}, criterion, {
-          dataSources: _.map(criterion.dataSources, fn)
-        });
-      });
-    }
-
-    function addTheoreticalScale(dataSource) {
-      return _.extend({}, dataSource, {
-        scale: getScales(dataSource)
-      });
-    }
-
-    function getScales(dataSource) {
-      if (dataSource.scale) {
-        var scale = angular.copy(dataSource.scale);
-        scale[0] = scale[0] !== null ? scale[0] : -Infinity;
-        scale[1] = scale[1] !== null ? scale[1] : Infinity;
-        return scale;
-      } else {
-        return [-Infinity, Infinity];
-      }
-    }
-
-    function percentifyDataSource(dataSource) {
-      var newDataSource = angular.copy(dataSource);
-      if (dataSource.unitOfMeasurement.type === 'decimal') {
-        newDataSource.scale = [0, 100];
-        newDataSource.unitOfMeasurement = {
-          label: '%',
-          type: 'percentage'
-        };
-        if (newDataSource.pvf) {
-          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
-        }
-      } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-        if (newDataSource.pvf) {
-          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
-        }
-      }
-      return newDataSource;
-    }
-
-    function percentifyPVF(pvf) {
-      var newPVF = angular.copy(pvf);
-      if (pvf.range) {
-        newPVF.range = _.map(pvf.range, times100);
-      }
-      if (pvf.cutoffs) {
-        newPVF.cutoffs = _.map(pvf.cutoffs, times100);
-      }
-      return newPVF;
-    }
-
-    function dePercentifyCriteria(baseState) {
-      var criteriaWithUpdatedDataSources = updateDataSources(
-        baseState.problem.criteria,
-        dePercentifyDataSource
-      );
-      return _.merge({}, baseState, {
-        problem: {
-          criteria: criteriaWithUpdatedDataSources
-        }
-      });
-    }
-
-    function dePercentifyProblem(problem) {
-      var criteriaWithUpdatedDataSources = updateDataSources(
-        problem.criteria,
-        dePercentifyDataSource
-      );
-      return _.merge({}, problem, {
-        criteria: criteriaWithUpdatedDataSources
-      });
-    }
-
-    function dePercentifyDataSource(dataSource) {
-      var newDataSource = angular.copy(dataSource);
-      if (dataSource.unitOfMeasurement.type === 'percentage') {
-        newDataSource.scale = [0, 1];
-        newDataSource.unitOfMeasurement = {
-          type: 'decimal',
-          label: ''
-        };
-      }
-      return newDataSource;
-    }
-
-    function times100(value) {
-      if (value === null) {
-        return;
-      } //prevent empty cells from becoming 0
-      return significantDigits(value * 100, 1);
-    }
-
+  var WorkspaceService = function () {
     function buildAggregateState(baseProblem, subProblem, scenario) {
       var newState = _.merge(
         {},
@@ -253,48 +34,33 @@ define(['lodash', 'angular'], function (_, angular) {
       );
       return newState;
     }
-
-    function setDefaultObservedScales(problem, observedScales) {
-      var newProblem = _.cloneDeep(problem);
-      _.forEach(newProblem.criteria, function (criterion) {
-        var scale = observedScales[criterion.dataSources[0].id];
-        var effects = PerformanceTableService.getEffectValues(
-          problem.performanceTable,
-          criterion.dataSources[0]
-        );
-        var rangeDistributionValues = PerformanceTableService.getRangeDistributionValues(
-          problem.performanceTable,
-          criterion.dataSources[0]
-        );
-
-        criterion.dataSources[0].pvf = _.merge(
-          {
-            range: getMinMax(scale, effects.concat(rangeDistributionValues))
-          },
-          criterion.dataSources[0].pvf
-        );
-      });
-      return newProblem;
+    function addTheoreticalScales(criteria) {
+      return updateDataSources(criteria, addTheoreticalScale);
     }
 
-    function getMinMax(scalesByAlternative, effectAndRangeDistributionValues) {
-      var allValues = [].concat(effectAndRangeDistributionValues);
-      _.forEach(scalesByAlternative, function (scale) {
-        _.forEach(scale, function (value) {
-          if (value !== null) {
-            allValues.push(value);
-          }
+    function updateDataSources(criteria, fn) {
+      return _.mapValues(criteria, function (criterion) {
+        return _.extend({}, criterion, {
+          dataSources: _.map(criterion.dataSources, fn)
         });
       });
+    }
 
-      var minimum = Math.min.apply(null, allValues);
-      var maximum = Math.max.apply(null, allValues);
+    function addTheoreticalScale(dataSource) {
+      return _.extend({}, dataSource, {
+        scale: getScales(dataSource)
+      });
+    }
 
-      if (minimum === maximum) {
-        minimum -= Math.abs(minimum) * 0.001;
-        maximum += Math.abs(maximum) * 0.001;
+    function getScales(dataSource) {
+      if (dataSource.scale) {
+        var scale = angular.copy(dataSource.scale);
+        scale[0] = scale[0] !== null ? scale[0] : -Infinity;
+        scale[1] = scale[1] !== null ? scale[1] : Infinity;
+        return scale;
+      } else {
+        return [-Infinity, Infinity];
       }
-      return [minimum, maximum];
     }
 
     function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
@@ -466,28 +232,6 @@ define(['lodash', 'angular'], function (_, angular) {
       );
     }
 
-    function filterScenariosWithResults(
-      baseProblem,
-      currentSubProblem,
-      scenarios
-    ) {
-      return _.filter(scenarios, function (scenario) {
-        var state = buildAggregateState(
-          baseProblem,
-          currentSubProblem,
-          scenario
-        );
-        return !_.some(state.problem.criteria, function (criterion) {
-          return hasPVFDirection(criterion);
-        });
-      });
-    }
-
-    function hasPVFDirection(criterion) {
-      return (
-        !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction
-      );
-    }
     /*
      * workspace should have:
      * - title
@@ -961,18 +705,8 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     return {
-      addTheoreticalScales: addTheoreticalScales,
       buildAggregateState: buildAggregateState,
       checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable,
-      dePercentifyCriteria: dePercentifyCriteria,
-      dePercentifyProblem: dePercentifyProblem,
-      filterScenariosWithResults: filterScenariosWithResults,
-      getObservedScales: getObservedScales,
-      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
-      percentifyCriteria: percentifyCriteria,
-      percentifyProblem: percentifyProblem,
-      percentifyScales: percentifyScales,
-      setDefaultObservedScales: setDefaultObservedScales,
       validateWorkspace: validateWorkspace
     };
   };

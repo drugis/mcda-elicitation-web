@@ -30,7 +30,8 @@ export default function SensitivityMeasurementsTableCell({
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  const values = sensitivityTableValues[criterion.id][alternativeId];
+  const values =
+    sensitivityTableValues[criterion.dataSources[0].id][alternativeId];
   const usePercentage =
     canBePercentage(criterion.dataSources[0].unitOfMeasurement.type) &&
     showPercentages;
@@ -72,7 +73,7 @@ export default function SensitivityMeasurementsTableCell({
         const newValue = usePercentage
           ? significantDigits(localValue / 100)
           : significantDigits(localValue);
-        setCurrentValue(criterion.id, alternativeId, newValue);
+        setCurrentValue(criterion.dataSources[0].id, alternativeId, newValue);
       }
       setAnchorEl(null);
     }
