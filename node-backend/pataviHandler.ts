@@ -1,41 +1,18 @@
 import IWeights from '@shared/interface/IWeights';
-import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IWeightsCommand} from '@shared/interface/Patavi/IWeightsCommand';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPataviCommands} from '@shared/types/PataviCommands';
 import {TPataviResults} from '@shared/types/PataviResults';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
-import {CREATED} from 'http-status-codes';
 import _ from 'lodash';
 import IDB from './interface/IDB';
 import logger from './logger';
-import createPataviTask, {postAndHandleResults} from './patavi';
+import {postAndHandleResults} from './patavi';
 import ScenarioRepository from './scenarioRepository';
 
 export default function PataviHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
-
-  function postTask(
-    request: Request<{}, {}, IPataviProblem>,
-    response: Response,
-    next: any
-  ): void {
-    createPataviTask(request.body, (error: Error, taskUri: string): void => {
-      if (error) {
-        logger.error(error);
-        return next({
-          message: error
-        });
-      } else {
-        response.location(taskUri);
-        response.status(CREATED);
-        response.json({
-          href: taskUri
-        });
-      }
-    });
-  }
 
   function getWeights(
     request: Request<{}, {}, IWeightsCommand>,
@@ -98,7 +75,6 @@ export default function PataviHandler(db: IDB) {
   }
 
   return {
-    postTask,
     getWeights,
     getPataviResults
   };
