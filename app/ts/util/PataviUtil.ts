@@ -30,7 +30,11 @@ export function getPataviProblem(
     title: problem.title,
     description: problem.description,
     preferences: problem.preferences ? problem.preferences : undefined,
-    performanceTable: buildScalesPerformanceTable(problem.performanceTable),
+    performanceTable: buildPataviPerformanceTable(
+      problem.performanceTable,
+      filteredCriteria,
+      filteredAlternatives
+    ),
     alternatives: _.keyBy(filteredAlternatives, 'id'),
     criteria: _(filteredCriteria)
       .map(_.partial(buildPataviCriterion, pvfs))
@@ -46,7 +50,7 @@ function buildPataviCriterion(
   const dataSource = criterion.dataSources[0];
   const scale = getScale(dataSource.unitOfMeasurement);
   return {
-    id: dataSource.id,
+    id: criterion.id,
     title: criterion.title,
     pvf: pvfs[criterion.id],
     scale: scale
@@ -62,11 +66,43 @@ function getScale(unit: IUnitOfMeasurement): [number, number] {
 }
 
 export function buildPataviPerformanceTable(
-  performanceTable: IPerformanceTableEntry[]
+  performanceTable: IPerformanceTableEntry[],
+  criteria: ICriterion[],
+  alternatives: IAlternative[]
 ): IPataviTableEntry[] {
-  return _.map(performanceTable, (entry: IPerformanceTableEntry) => {
-    return {...entry, performance: getPerformance(entry.performance)};
-  });
+  const filteredPerformanceTable = filterIncludedEntries(
+    performanceTable,
+    criteria,
+    alternatives
+  );
+  return _.map(
+    filteredPerformanceTable,
+    (entry: IPerformanceTableEntry): IPataviTableEntry => {
+      return {
+        ...entry,
+        performance: getPerformance(entry.performance)
+      };
+    }
+  );
+}
+
+function filterIncludedEntries(
+  performanceTable: IPerformanceTableEntry[],
+  criteria: ICriterion[],
+  alternatives: IAlternative[]
+): IPerformanceTableEntry[] {
+  return _.filter(
+    performanceTable,
+    (entry: IPerformanceTableEntry): boolean =>
+      _.some(
+        criteria,
+        (criterion) => entry.dataSource === criterion.dataSources[0].id
+      ) &&
+      _.some(
+        alternatives,
+        (alternative) => entry.alternative === alternative.id
+      )
+  );
 }
 
 function getPerformance(

@@ -48,9 +48,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
               <TableRow>
                 {_.map(filteredCriteria, (criterion: ICriterion) => (
                   <TableCell key={criterion.id}>
-                    {significantDigits(
-                      weights.mean[criterion.dataSources[0].id]
-                    )}
+                    {significantDigits(weights.mean[criterion.id])}
                   </TableCell>
                 ))}
               </TableRow>

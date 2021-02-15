@@ -3,7 +3,7 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Create subproblem': create,
+  'Create subproblem and get results': create,
   'Switching between subproblems': switchSubproblem,
   'Edit the title': edit,
   'Reset during subproblem creation': resetAndDuplicateTitle,
@@ -75,6 +75,42 @@ function create(browser) {
     .assert.not.elementPresent('#unit-cell-deselectionDataSourceId')
     .assert.not.elementPresent('#criterion-row-deselectionCriterionId')
     .waitForElementVisible('#scales-table');
+
+  util.delayedClick(
+    browser,
+    '#preferences-tab',
+    '#partial-value-functions-header'
+  );
+
+  browser
+    .waitForElementVisible('#pvf-questionmark-crit1Id')
+    .waitForElementVisible('#pvf-questionmark-crit2Id')
+    .click('#increasing-pvf-button-crit1Id')
+    .waitForElementVisible('#pvfplot-crit1Id')
+    .click('#decreasing-pvf-button-crit1Id')
+    .waitForElementVisible('#pvfplot-crit1Id')
+    .click('#decreasing-pvf-button-crit2Id')
+    .waitForElementVisible('#pvfplot-crit2Id');
+
+  util.delayedClick(
+    browser,
+    '#deterministic-tab',
+    '#deterministic-weights-table'
+  );
+  browser
+    .waitForElementVisible('#value-profile-plot-base')
+    .waitForElementVisible('#base-total-value-table')
+    .waitForElementVisible('#base-value-profiles-table')
+    .waitForElementVisible('#measurements-sensitivity-plot')
+    .waitForElementVisible('#preferences-sensitivity-plot');
+
+  util.delayedClick(browser, '#smaa-tab', '#effects-table-header');
+  browser
+    .waitForElementVisible('#effects-table')
+    .waitForElementVisible('#rank-acceptabilities-plot')
+    .waitForElementVisible('#rank-acceptabilities-table')
+    .waitForElementVisible('#central-weights-plot')
+    .waitForElementVisible('#central-weights-table');
 }
 
 function switchSubproblem(browser) {

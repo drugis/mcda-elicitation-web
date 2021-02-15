@@ -5,12 +5,12 @@ import {
   TableHead,
   TableRow
 } from '@material-ui/core';
-import React, {useContext} from 'react';
-import _ from 'lodash';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import _ from 'lodash';
+import React, {useContext} from 'react';
 
 export default function ValueProfilesTable({
   valueProfiles
