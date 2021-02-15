@@ -22,7 +22,10 @@ export default function ValueCell({
   isExcluded?: boolean;
 }) {
   const {workspace, scales} = useContext(WorkspaceContext);
-  const {displayMode, showPercentages} = useContext(SettingsContext);
+  const {
+    showPercentages,
+    settings: {displayMode}
+  } = useContext(SettingsContext);
   const {setErrorMessage} = useContext(ErrorContext);
 
   const usePercentage =

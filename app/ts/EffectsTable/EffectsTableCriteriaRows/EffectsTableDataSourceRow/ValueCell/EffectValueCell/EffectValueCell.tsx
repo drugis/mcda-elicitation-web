@@ -27,7 +27,9 @@ export default function EffectValueCell({
   alternativeId: string;
 }) {
   const {setErrorMessage} = useContext(ErrorContext);
-  const {displayMode} = useContext(SettingsContext);
+  const {
+    settings: {displayMode}
+  } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function renderEffect(): string {

@@ -1,7 +1,7 @@
 import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {getInitialDisplayMode} from 'app/ts/Settings/SettingsUtil';
+import {getDefaultSettings} from 'app/ts/Settings/SettingsUtil';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import IWorkspaceSettingsContext, {
   TSettings,
@@ -36,20 +36,6 @@ export function WorkspaceSettingsContextProviderComponent({
     false
   );
 
-  const defaultSettings: ISettings = {
-    displayMode: getInitialDisplayMode(isRelativeProblem, hasNoEffects),
-    randomSeed: 1234,
-    calculationMethod: 'median',
-    showPercentages: 'percentage'
-  };
-
-  const defaultToggledColumns: IToggledColumns = {
-    references: true,
-    strength: true,
-    units: true,
-    description: true
-  };
-
   useEffect(() => {
     if (isDialogOpen) {
       setIsSaveButtonDisabled(false);
@@ -70,6 +56,10 @@ export function WorkspaceSettingsContextProviderComponent({
   }
 
   function resetToDefaults() {
+    const {defaultSettings, defaultToggledColumns} = getDefaultSettings(
+      isRelativeProblem,
+      hasNoEffects
+    );
     setSettings(defaultSettings, defaultToggledColumns);
     setIsSaveButtonDisabled(false);
   }

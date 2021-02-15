@@ -1,6 +1,8 @@
+import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import _ from 'lodash';
+import ToggledColumns from '../WorkspaceSettings/ToggledColumns/ToggledColumns';
 
 export function calculateNumberOfToggledColumns(
   toggledColumns: IToggledColumns
@@ -34,4 +36,28 @@ export function getInitialDisplayMode(
   } else {
     return 'enteredEffects';
   }
+}
+
+export function getDefaultSettings(
+  isRelativeProblem: boolean,
+  hasNoEffects: boolean
+): {defaultSettings: ISettings; defaultToggledColumns: IToggledColumns} {
+  const defaultSettings: ISettings = {
+    displayMode: getInitialDisplayMode(isRelativeProblem, hasNoEffects),
+    randomSeed: 1234,
+    calculationMethod: 'median',
+    showPercentages: 'percentage'
+  };
+
+  const defaultToggledColumns: IToggledColumns = {
+    references: true,
+    strength: true,
+    units: true,
+    description: true
+  };
+
+  return {
+    defaultSettings: defaultSettings,
+    defaultToggledColumns: defaultToggledColumns
+  };
 }

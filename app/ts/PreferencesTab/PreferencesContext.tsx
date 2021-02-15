@@ -45,7 +45,9 @@ export function PreferencesContextProviderComponent({
   updateAngularScenario: (scenario: IMcdaScenario) => void;
 }) {
   const {setError} = useContext(ErrorContext);
-  const {randomSeed} = useContext(SettingsContext);
+  const {
+    settings: {randomSeed}
+  } = useContext(SettingsContext);
   const {currentSubproblem, oldProblem} = useContext(WorkspaceContext);
   const {filteredCriteria, filteredAlternatives, observedRanges} = useContext(
     SubproblemContext

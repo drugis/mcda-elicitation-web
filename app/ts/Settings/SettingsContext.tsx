@@ -2,8 +2,6 @@ import {OurError} from '@shared/interface/IError';
 import ISettings from '@shared/interface/Settings/ISettings';
 import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
-import {TScalesCalculationMethod} from '@shared/interface/Settings/TScalesCalculationMethod';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -12,8 +10,7 @@ import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';
 import {
   calculateNumberOfToggledColumns,
-  getDisplayMode,
-  getInitialDisplayMode
+  getDefaultSettings
 } from './SettingsUtil';
 
 export const SettingsContext = createContext<ISettingsContext>(
@@ -34,68 +31,30 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
       hasNoDistributions
   );
 
-  const [
-    scalesCalculationMethod,
-    setScalesCalculationMethod
-  ] = useState<TScalesCalculationMethod>('median');
-  const [showPercentages, setShowPercentages] = useState<boolean>(true);
-
-  const [displayMode, setDisplayMode] = useState<TDisplayMode>(
-    getInitialDisplayMode(isRelativeProblem, hasNoEffects)
-  );
-
-  const [randomSeed, setRandomSeed] = useState<number>(1234);
-  const [showDescriptions, setShowDescriptions] = useState<boolean>(true);
-  const [showUnitsOfMeasurement, setShowUnitsOfMeasurement] = useState<boolean>(
-    true
-  );
-  const [showReferences, setShowReferences] = useState<boolean>(true);
-  const [
-    showStrengthsAndUncertainties,
-    setShowStrengthsAndUncertainties
-  ] = useState<boolean>(true);
-  const [currentSettings, setCurrentSettings] = useState<ISettings>();
-  const [
-    currentToggledColumns,
-    setCurrentToggledColumns
-  ] = useState<IToggledColumns>();
   const [numberOfToggledColumns, setNumberOfToggledColumns] = useState<number>(
     5
   );
-  const settings: ISettings = {
-    calculationMethod: scalesCalculationMethod,
-    displayMode: displayMode,
-    randomSeed: randomSeed,
-    showPercentages: showPercentages ? 'percentage' : 'decimal'
-  };
-  const toggledColumns: IToggledColumns = {
-    description: showDescriptions,
-    references: showReferences,
-    strength: showStrengthsAndUncertainties,
-    units: showUnitsOfMeasurement
-  };
+  const {defaultSettings, defaultToggledColumns} = getDefaultSettings(
+    isRelativeProblem,
+    hasNoEffects
+  );
+  const [settings, setSettings] = useState<ISettings>(defaultSettings);
+  const [toggledColumns, setToggledColumns] = useState<IToggledColumns>(
+    defaultToggledColumns
+  );
 
   useEffect(() => {
     axios
       .get(`/workspaces/${workspace.properties.id}/workspaceSettings`)
       .then((response: AxiosResponse<ISettingsMessage>) => {
-        const settings: ISettings = response.data.settings;
-        const toggledColumns: IToggledColumns = response.data.toggledColumns;
-        if (!_.isEmpty(settings)) {
-          setScalesCalculationMethod(settings.calculationMethod);
-          setShowPercentages(settings.showPercentages === 'percentage');
-          setDisplayMode(
-            getDisplayMode(isRelativeProblem, settings.displayMode)
-          );
-          setRandomSeed(settings.randomSeed);
-          setShowDescriptions(toggledColumns.description);
-          setShowUnitsOfMeasurement(toggledColumns.units);
-          setShowReferences(toggledColumns.references);
-          setShowStrengthsAndUncertainties(toggledColumns.strength);
-          setCurrentSettings(settings);
-          setCurrentToggledColumns(toggledColumns);
+        const incomingSettings: ISettings = response.data.settings;
+        const incomingToggledColumns: IToggledColumns =
+          response.data.toggledColumns;
+        if (!_.isEmpty(incomingSettings)) {
+          setSettings(incomingSettings);
+          setToggledColumns(incomingToggledColumns);
           setNumberOfToggledColumns(
-            calculateNumberOfToggledColumns(toggledColumns)
+            calculateNumberOfToggledColumns(incomingToggledColumns)
           );
         }
       })
@@ -111,17 +70,11 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
     updatedToggledColumns: IToggledColumns
   ): void {
     if (
-      !_.isEqual(currentSettings, updatedSettings) ||
-      !_.isEqual(currentToggledColumns, updatedToggledColumns)
+      !_.isEqual(settings, updatedSettings) ||
+      !_.isEqual(toggledColumns, updatedToggledColumns)
     ) {
-      setScalesCalculationMethod(updatedSettings.calculationMethod);
-      setShowPercentages(updatedSettings.showPercentages === 'percentage');
-      setDisplayMode(updatedSettings.displayMode);
-      setRandomSeed(updatedSettings.randomSeed);
-      setShowDescriptions(updatedToggledColumns.description);
-      setShowUnitsOfMeasurement(updatedToggledColumns.units);
-      setShowReferences(updatedToggledColumns.references);
-      setShowStrengthsAndUncertainties(updatedToggledColumns.strength);
+      setSettings(updatedSettings);
+      setToggledColumns(updatedToggledColumns);
       setNumberOfToggledColumns(
         calculateNumberOfToggledColumns(updatedToggledColumns)
       );
@@ -146,19 +99,12 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
   return (
     <SettingsContext.Provider
       value={{
-        scalesCalculationMethod,
-        showPercentages,
-        displayMode,
         hasNoEffects,
         hasNoDistributions,
         isRelativeProblem,
-        randomSeed,
-        showDescriptions,
-        showUnitsOfMeasurement,
-        showReferences,
-        showStrengthsAndUncertainties,
         numberOfToggledColumns,
         settings,
+        showPercentages: settings.showPercentages === 'percentage',
         toggledColumns,
         updateSettings
       }}

@@ -3,9 +3,11 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 
 export default function DescriptionHeader() {
-  const {showDescriptions} = useContext(SettingsContext);
+  const {
+    toggledColumns: {description}
+  } = useContext(SettingsContext);
 
-  if (showDescriptions) {
+  if (description) {
     return (
       <TableCell id="description-header" align="center">
         Description

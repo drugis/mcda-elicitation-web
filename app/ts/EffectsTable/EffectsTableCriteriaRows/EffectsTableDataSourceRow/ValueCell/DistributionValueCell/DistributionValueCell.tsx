@@ -26,7 +26,9 @@ export default function DistributionValueCell({
   isExcluded?: boolean;
 }): JSX.Element {
   const {setErrorMessage} = useContext(ErrorContext);
-  const {displayMode, scalesCalculationMethod} = useContext(SettingsContext);
+  const {
+    settings: {displayMode, calculationMethod}
+  } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   function render(): JSX.Element | string {
@@ -43,13 +45,13 @@ export default function DistributionValueCell({
     scale: IScale,
     distribution: Distribution
   ): JSX.Element | string {
-    if (scalesCalculationMethod === 'mode' && distribution.type === 'range') {
+    if (calculationMethod === 'mode' && distribution.type === 'range') {
       return 'NA';
     } else if (scale['50%'] !== null) {
       const lowerBound = getPercentifiedValue(scale['2.5%'], usePercentage);
       const upperBound = getPercentifiedValue(scale['97.5%'], usePercentage);
       const modeOrMedian =
-        scalesCalculationMethod === 'mode'
+        calculationMethod === 'mode'
           ? getPercentifiedValue(scale.mode, usePercentage)
           : getPercentifiedValue(scale['50%'], usePercentage);
       return (

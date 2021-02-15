@@ -12,10 +12,13 @@ export default function EffectsTableUnitOfMeasurementCell({
   dataSource: IDataSource;
   isExcluded?: boolean;
 }) {
-  const {showUnitsOfMeasurement, showPercentages} = useContext(SettingsContext);
+  const {
+    showPercentages,
+    toggledColumns: {units}
+  } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
-  return showUnitsOfMeasurement ? (
+  return units ? (
     <TableCell id={`unit-cell-${dataSource.id}`} style={cellStyle}>
       {getUnitLabel(dataSource.unitOfMeasurement, showPercentages)}
     </TableCell>

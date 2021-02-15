@@ -1,6 +1,8 @@
+import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import {
   calculateNumberOfToggledColumns,
+  getDefaultSettings,
   getDisplayMode,
   getInitialDisplayMode
 } from './SettingsUtil';
@@ -62,6 +64,32 @@ describe('SettingsUtil', () => {
       const hasNoEffect = false;
       const result = getInitialDisplayMode(isRelativeProblem, hasNoEffect);
       expect(result).toEqual('enteredEffects');
+    });
+  });
+
+  describe('getDefaultSettings', () => {
+    it('should return the default settings and toggledColumns', () => {
+      const isRelativeProblem: boolean = false;
+      const hasNoEffects: boolean = false;
+      const result = getDefaultSettings(isRelativeProblem, hasNoEffects);
+      const expectedResult: {
+        defaultSettings: ISettings;
+        defaultToggledColumns: IToggledColumns;
+      } = {
+        defaultSettings: {
+          displayMode: 'enteredEffects',
+          randomSeed: 1234,
+          calculationMethod: 'median',
+          showPercentages: 'percentage'
+        },
+        defaultToggledColumns: {
+          references: true,
+          strength: true,
+          units: true,
+          description: true
+        }
+      };
+      expect(result).toEqual(expectedResult);
     });
   });
 });
