@@ -5,55 +5,55 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Adding a new problem',
     text:
       'Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with different scale ranges.',
-    link: '/manual.html#mcda-problem-definition'
+    link: '/manual.html#mcda-problem-creation'
   },
   alternative: {
     title: 'Alternative',
     text:
       'An alternative is one of the different options for treatment/intervention being explored in a benefit-risk analysis, e.g. "aspirin 40 mg/day" or "meditation therapy".',
-    link: '/manual.html#mcda-manual-entry'
+    link: '/manual.html#mcda-overview-criteria'
   },
   'analysis-type': {
     title: 'Analysis type',
     text:
       'Choose whether to display Deterministic (effects) or SMAA (distribution) values',
-    link: '/manual.html#'
+    link: '/manual.html#mcda-settings'
   },
   'central-weights': {
     title: 'Central weights',
     text:
       'The typical weights that would make an alternative the highest ranked treatment.',
-    link: '/manual.html#mcda-smaa-analysis'
+    link: '/manual.html#mcda-central-weights'
   },
   'central-weights-table': {
     title: 'Central weights table',
     text:
       'Table with the central weights and confidence factors for each alternative. For alternatives with empty rows, there was not a single combination of sampled weights and criteria measurements that made this alternative the preferered treatment. These alternatives therefore do not have a central weight vector.',
-    link: '/manual.html#mcda-smaa-analysis'
+    link: '/manual.html#mcda-central-weights'
   },
   'confidence-factor': {
     title: 'Confidence factor',
     text:
       "The probability that an alternative is the highest ranked treatment if that alternative's central weight vector is used to rank the alternatives.",
-    link: '/manual.html#mcda-smaa-analysis'
+    link: '/manual.html#mcda-central-weights'
   },
   'configured-range': {
     title: 'Configured range',
     text:
       'Which range the user has actually configured to be used. Without user intervention the default scales are the observed ranges.',
-    link: '/manual.html#mcda-preparing-dataset'
+    link: '/manual.html#mcda-problem-creation'
   },
   criterion: {
     title: 'Criterion',
     text:
       'A criterion is an outcome of interest to be used in a benefit-risk analysis, e.g. "mood improvement" or "nausea".',
-    link: '/manual.html#mcda-manual-entry'
+    link: '/manual.html#mcda-overview-criteria'
   },
   reference: {
     title: 'Reference',
     text:
       'An optional indication of where the data for this criterion comes from.',
-    link: '/manual.html#mcda-manual-entry'
+    link: '/manual.html#mcda-overview-criteria'
   },
   'criterion-source-link': {
     title: 'Reference URL',
@@ -65,7 +65,7 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Unit of measurement',
     text:
       'In which unit of measurement the criterion\'s data are reported (e.g. "proportion", "gram")',
-    link: '/manual.html#mcda-manual-entry'
+    link: '/manual.html#mcda-unit-of-measurement'
   },
   'deterministic-analysis-results': {
     title: 'Deterministic analysis results',
@@ -76,8 +76,8 @@ export const lexicon: Record<string, IHelpInfo> = {
   'effects-table': {
     title: 'Effects table',
     text:
-      'The effects table shows the size of the effects on each criterion for each alternative. In the case of a known distribution of an effect the values shown are the median value and the 95% credible interval. If the effect is an exact distribution value only that value is shown.',
-    link: '/manual.html#mcda-running-example'
+      'The effects table shows the size of the effects on each criterion for each alternative. The precise format of the shown values or distributions depends on the display settings',
+    link: '/manual.html#mcda-problem-creation'
   },
   favourability: {
     title: 'Favourability',
@@ -88,7 +88,7 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Importance',
     text:
       'The importance of the criterion. A higher percentage means the criterion is more important.',
-    link: '/manual.html#mcda-value-tradeoffs'
+    link: '/manual.html##mcda-setting-pvfs'
   },
   'imprecise-matching': {
     title: 'Imprecise Matching',
