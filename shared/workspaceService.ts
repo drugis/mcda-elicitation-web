@@ -26,6 +26,7 @@ import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
 import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
+import {IRelativePerformanceTableEntry} from './interface/Problem/IRelativePerformanceTableEntry';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
@@ -63,16 +64,19 @@ function getProblemWithoutStudentsT(problem: IProblem): IProblem {
 }
 
 function getPerformanceTableWithoutStudentsT(
-  table: IPerformanceTableEntry[]
-): IPerformanceTableEntry[] {
+  table: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[]
+): (IRelativePerformanceTableEntry | IPerformanceTableEntry)[] {
   return _(table)
-    .map((entry) => {
+    .map((entry: IRelativePerformanceTableEntry | IPerformanceTableEntry) => {
       if (
         'distribution' in entry.performance &&
         entry.performance.distribution.type === 'dt'
       ) {
         if ('effect' in entry.performance) {
-          return {...entry, performance: {effect: entry.performance.effect}};
+          return {
+            ...entry,
+            performance: {effect: entry.performance.effect}
+          } as IPerformanceTableEntry; //FIXME
         } else {
           return undefined;
         }
@@ -292,12 +296,13 @@ export function buildWorkspaceAlternatives(
 }
 
 export function buildWorkspaceEffects(
-  performanceTable: IPerformanceTableEntry[],
+  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
   idMapper: (id: string) => string,
   unitTypesByDataSource: Record<string, UnitOfMeasurementType>
 ): Effect[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
+      //FIXME
       return hasAlternativeId(entry) && 'effect' in entry.performance;
     })
     .map(_.partial(buildEffect, idMapper, unitTypesByDataSource))
@@ -392,12 +397,13 @@ export function createBoundEffect(
 }
 
 export function buildWorkspaceDistributions(
-  performanceTable: IPerformanceTableEntry[],
+  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
   idMapper: (id: string) => string,
   unitTypesByDataSource: Record<string, UnitOfMeasurementType>
 ): Distribution[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
+      //FIXME
       return hasAlternativeId(entry) && 'distribution' in entry.performance;
     })
     .map(_.partial(buildDistribution, idMapper, unitTypesByDataSource))
@@ -472,12 +478,13 @@ export function finishDistributionCreation(
 }
 
 function buildWorkspaceRelativePerformances(
-  performanceTable: IPerformanceTableEntry[],
+  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
   idMapper: (id: string) => string,
   unitTypeMap: Record<string, UnitOfMeasurementType>
 ): IRelativePerformance[] {
   return _(performanceTable)
     .filter((entry: IPerformanceTableEntry): boolean => {
+      //FIXME
       return !hasAlternativeId(entry);
     })
     .map(_.partial(buildRelative, idMapper, unitTypeMap))
