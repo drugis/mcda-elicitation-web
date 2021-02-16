@@ -1,13 +1,16 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import {IAbsolutePataviTableEntry} from '@shared/interface/Patavi/IAbsolutePataviTableEntry';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
-import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
+import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
 import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import {TRelativePerformance} from '@shared/interface/Problem/IProblemRelativePerformance';
 import IPvf from '@shared/interface/Problem/IPvf';
+import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {
   buildPataviPerformanceTable,
@@ -69,6 +72,13 @@ describe('PataviUtil', () => {
   });
 
   describe('buildPataviPerformanceTable', () => {
+    const includedCriteria: ICriterion[] = [
+      {id: 'crit1', dataSources: [{id: 'ds1'}]} as ICriterion,
+      {id: 'crit2', dataSources: [{id: 'ds2'}]} as ICriterion,
+      {id: 'crit3', dataSources: [{id: 'ds3'}]} as ICriterion
+    ];
+    const includedAlternatives: IAlternative[] = [{id: 'alt1'} as IAlternative];
+
     it('should transform and filter the performance table into a patavi ready version', () => {
       const performanceTable: IPerformanceTableEntry[] = [
         {
@@ -116,20 +126,13 @@ describe('PataviUtil', () => {
           }
         }
       ];
-      const includedCriteria: ICriterion[] = [
-        {id: 'crit1', dataSources: [{id: 'ds1'}]} as ICriterion,
-        {id: 'crit2', dataSources: [{id: 'ds2'}]} as ICriterion,
-        {id: 'crit3', dataSources: [{id: 'ds3'}]} as ICriterion
-      ];
-      const includedAlternatives: IAlternative[] = [
-        {id: 'alt1'} as IAlternative
-      ];
+
       const result = buildPataviPerformanceTable(
         performanceTable,
         includedCriteria,
         includedAlternatives
       );
-      const expectedResult: IPataviTableEntry[] = [
+      const expectedResult: IAbsolutePataviTableEntry[] = [
         {
           criterion: 'crit1',
           dataSource: 'ds1',
@@ -147,6 +150,45 @@ describe('PataviUtil', () => {
           dataSource: 'ds3',
           alternative: 'alt1',
           performance: {type: 'exact'} as EffectPerformance
+        }
+      ];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should transform and filter the performance table of relative performances into a patavi ready version', () => {
+      const performanceTable: IRelativePerformanceTableEntry[] = [
+        {
+          criterion: 'crit1',
+          dataSource: 'ds1',
+          performance: {
+            distribution: {
+              type: 'relative-logit-normal'
+            }
+          }
+        } as IRelativePerformanceTableEntry,
+        {
+          criterion: 'crit4',
+          dataSource: 'ds4',
+          performance: {
+            distribution: {
+              type: 'relative-logit-normal'
+            }
+          }
+        } as IRelativePerformanceTableEntry
+      ];
+
+      const result = buildPataviPerformanceTable(
+        performanceTable,
+        includedCriteria,
+        includedAlternatives
+      );
+      const expectedResult: IRelativePataviTableEntry[] = [
+        {
+          criterion: 'crit1',
+          dataSource: 'ds1',
+          performance: {
+            type: 'relative-logit-normal'
+          } as TRelativePerformance
         }
       ];
       expect(result).toEqual(expectedResult);

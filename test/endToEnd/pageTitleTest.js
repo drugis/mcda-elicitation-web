@@ -10,12 +10,13 @@ module.exports = {
   'A workspace preferences': preferences,
   'A workspace deterministic results': deterministicResults,
   'A workspace SMAA results': smaaResults,
-  'Partial value function': partialValueFunction,
+  // 'Partial value function': partialValueFunction,
   'Ranking weights': rankingWeights,
   'Matching weights': matchingWeights,
   'Precise swing weighting': preciseSwingWeights,
   'Imprecise swing weighting': impreciseSwingWeights,
   'Manual input': manualInput
+  //FIXME: re-enable once reactified
 };
 
 const loginService = require('./util/loginService');

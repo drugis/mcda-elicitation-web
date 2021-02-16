@@ -2,9 +2,10 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import {IAbsolutePataviTableEntry} from '@shared/interface/Patavi/IAbsolutePataviTableEntry';
 import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
-import {IPataviTableEntry} from '@shared/interface/Patavi/IPataviTableEntry';
+import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
 import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {
@@ -14,8 +15,8 @@ import {
 } from '@shared/interface/Problem/IPerformance';
 import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
-import {TRelativePerformance} from '@shared/interface/Problem/IProblemRelativePerformance';
 import IPvf from '@shared/interface/Problem/IPvf';
+import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import _ from 'lodash';
 
@@ -66,10 +67,10 @@ function getScale(unit: IUnitOfMeasurement): [number, number] {
 }
 
 export function buildPataviPerformanceTable(
-  performanceTable: IPerformanceTableEntry[],
+  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
   criteria: ICriterion[],
   alternatives: IAlternative[]
-): IPataviTableEntry[] {
+): (IRelativePataviTableEntry | IAbsolutePataviTableEntry)[] {
   const filteredPerformanceTable = filterIncludedEntries(
     performanceTable,
     criteria,
@@ -77,27 +78,53 @@ export function buildPataviPerformanceTable(
   );
   return _.map(
     filteredPerformanceTable,
-    (entry: IPerformanceTableEntry): IPataviTableEntry => {
-      return {
-        ...entry,
-        performance: getPerformance(entry.performance)
-      };
+    (
+      entry: IPerformanceTableEntry | IRelativePerformanceTableEntry
+    ): IAbsolutePataviTableEntry | IRelativePataviTableEntry => {
+      if (isAbsoluteEntry(entry)) {
+        return buildAbsolutePataviEntry(entry);
+      } else {
+        return buildRelativePataviEntry(entry);
+      }
     }
   );
 }
 
+function buildAbsolutePataviEntry(
+  entry: IPerformanceTableEntry
+): IAbsolutePataviTableEntry {
+  return {
+    ...entry,
+    performance: getPerformance(entry.performance)
+  };
+}
+
+function buildRelativePataviEntry(
+  entry: IRelativePerformanceTableEntry
+): IRelativePataviTableEntry {
+  return {
+    ...entry,
+    performance: entry.performance.distribution
+  };
+}
+
 function filterIncludedEntries(
-  performanceTable: IPerformanceTableEntry[],
+  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
   criteria: ICriterion[],
   alternatives: IAlternative[]
-): IPerformanceTableEntry[] {
-  return _.filter(
+): (IRelativePerformanceTableEntry | IPerformanceTableEntry)[] {
+  const entriesFilteredByCriteria = _.filter(
     performanceTable,
     (entry: IPerformanceTableEntry): boolean =>
       _.some(
         criteria,
         (criterion) => entry.dataSource === criterion.dataSources[0].id
-      ) &&
+      )
+  );
+  return _.filter(
+    entriesFilteredByCriteria,
+    (entry: IPerformanceTableEntry): boolean =>
+      !isAbsoluteEntry(entry) ||
       _.some(
         alternatives,
         (alternative) => entry.alternative === alternative.id
@@ -105,11 +132,17 @@ function filterIncludedEntries(
   );
 }
 
+function isAbsoluteEntry(
+  entry: IRelativePerformanceTableEntry | IPerformanceTableEntry
+): entry is IPerformanceTableEntry {
+  return entry.hasOwnProperty('alternative');
+}
+
 function getPerformance(
   performance: TPerformance
-): EffectPerformance | TDistributionPerformance | TRelativePerformance {
+): EffectPerformance | TDistributionPerformance {
   if (
-    isDistributionOrRelativePerformance(performance) &&
+    isDistributionPerformance(performance) &&
     performance.distribution.type !== 'empty'
   ) {
     return performance.distribution;
@@ -120,7 +153,7 @@ function getPerformance(
   }
 }
 
-function isDistributionOrRelativePerformance(
+function isDistributionPerformance(
   performance: TPerformance
 ): performance is IDistributionPerformance {
   return performance.hasOwnProperty('distribution');
@@ -164,17 +197,38 @@ function buildPataviScalesCriterion(dataSource: IDataSource): IPataviCriterion {
 }
 
 export function buildScalesPerformanceTable(
-  performanceTable: IPerformanceTableEntry[]
-): IPataviTableEntry[] {
+  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[]
+): (IRelativePataviTableEntry | IAbsolutePataviTableEntry)[] {
   return _.map(
     performanceTable,
-    (entry: IPerformanceTableEntry): IPataviTableEntry => {
-      return {
-        alternative: entry.alternative,
-        criterion: entry.dataSource,
-        dataSource: entry.dataSource,
-        performance: getPerformance(entry.performance)
-      };
+    (
+      entry: IPerformanceTableEntry | IRelativePerformanceTableEntry
+    ): IRelativePataviTableEntry | IAbsolutePataviTableEntry => {
+      if (isAbsoluteEntry(entry)) {
+        return buildAbsolutePataviEntryForScales(entry);
+      } else {
+        return buildRelativePataviEntryForScales(entry);
+      }
     }
   );
+}
+
+function buildAbsolutePataviEntryForScales(
+  entry: IPerformanceTableEntry
+): IAbsolutePataviTableEntry {
+  return {
+    ...entry,
+    performance: getPerformance(entry.performance),
+    criterion: entry.dataSource
+  };
+}
+
+function buildRelativePataviEntryForScales(
+  entry: IRelativePerformanceTableEntry
+): IRelativePataviTableEntry {
+  return {
+    ...entry,
+    performance: entry.performance.distribution,
+    criterion: entry.dataSource
+  };
 }

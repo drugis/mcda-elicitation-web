@@ -20,11 +20,10 @@ function beforeEach(browser) {
     .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
-    .click('#settings-button')
-    .getValue('#random-seed', function (result) {
-      browser.assert.equal(result.value, 1234);
-    })
-    .clearValue('#random-seed');
+    .click('#settings-button');
+
+  browser.expect.element('#random-seed').value.to.equal('1234');
+  browser.clearValue('#random-seed');
 }
 
 function afterEach(browser) {
@@ -34,19 +33,16 @@ function afterEach(browser) {
 
 function set(browser) {
   browser
-    .clearValue('#random-seed')
     .setValue('#random-seed', 1337)
     .click('#save-settings-button')
-    .click('#settings-button')
-    .getValue('#random-seed', function (result) {
-      browser.assert.equal(result.value, 1337);
-    });
+    .click('#settings-button');
+  browser.expect.element('#random-seed').value.to.equal('1337');
 }
 
 function setInvalid(browser) {
   browser
     .setValue('#random-seed', 1.5)
     .pause(500) // needed for GitHub Actions
-    .click('#save-settings-button')
-    .waitForElementVisible('#random-seed');
+    .waitForElementVisible('#random-seed-helper-text')
+    .waitForElementVisible('#save-settings-button:disabled');
 }

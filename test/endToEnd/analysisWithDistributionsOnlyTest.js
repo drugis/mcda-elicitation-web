@@ -42,17 +42,16 @@ function afterEach(browser) {
 function disabledSettings(browser) {
   browser
     .click('#settings-button')
-    .click('#entered-radio')
-    .click('#deterministic-radio')
-    .waitForElementVisible('#save-settings-button:disabled')
+    .click('#display-mode-selector')
+    .waitForElementNotPresent('option[value="enteredEffects"]')
     .click('#close-modal-button');
 }
 
 function showAnalysisValues(browser) {
   browser
     .click('#settings-button')
-    .click('#values-radio')
-    .click('#deterministic-radio')
+    .click('#display-mode-selector')
+    .click('option[value="deterministicValues"]')
     .click('#save-settings-button');
   browser.expect.element(betaCell).text.to.equal('0.33');
   browser.expect.element(gammaCell).text.to.equal('0.595');
@@ -70,8 +69,8 @@ function noModeForRange(browser) {
 
   browser
     .click('#settings-button')
-    .click('#values-radio')
-    .click('#smaa-radio')
+    .click('#display-mode-selector')
+    .click('option[value="smaaValues"]')
     .click('#show-mode-radio')
     .click('#save-settings-button')
     .useXpath();

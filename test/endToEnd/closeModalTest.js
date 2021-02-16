@@ -11,7 +11,7 @@ module.exports = {
   'Cancel settings': cancelSettings,
   'Cancel editing a subproblem title': cancelEditingSubroblemTitle,
   'Cancel creating a new subproblem': cancelCreatingSubproblem,
-  'Cancel setting a partial value function': cancelSettingPartialValueFunction,
+  // 'Cancel setting a partial value function': cancelSettingPartialValueFunction,
   'Cancel setting weights via ranking': cancelSettingRankingWeights,
   'Cancel setting weights via matching': cancelSettingMatchingWeights,
   'Cancel precise swing weighting': cancelSettingPreciseSwingWeights,
@@ -20,6 +20,7 @@ module.exports = {
   'Cancel creating a new scenario': cancelCreatingScenario,
   'Cancel copying a scenario': cancelCopyingScenario,
   'Cancel editing graph labels': cancelEditingGraphLabels
+  //FIXME: re-enable the test once reactified
 };
 
 const loginService = require('./util/loginService');
@@ -118,7 +119,8 @@ function cancelSettings(browser) {
   browser
     .click(actionButtonPath)
     .click('#show-decimals-radio')
-    .click('#smaa-radio')
+    .click('#display-mode-selector')
+    .click('option[value="enteredDistributions"]')
     .click(closeModalButtonPath)
     .assert.containsText(contentPath, '36.634');
 }
