@@ -7,18 +7,20 @@ import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
-import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
+import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {
   IDistributionPerformance,
   IEffectPerformance,
   TPerformance
 } from '@shared/interface/Problem/IPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IPvf from '@shared/interface/Problem/IPvf';
 import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import _ from 'lodash';
+import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
+import {TPataviPerformanceTableEntry} from '@shared/interface/Patavi/TPataviPerfomanceTableEntry';
 
 export function getPataviProblem(
   problem: IProblem,
@@ -67,10 +69,10 @@ function getScale(unit: IUnitOfMeasurement): [number, number] {
 }
 
 export function buildPataviPerformanceTable(
-  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
+  performanceTable: TPerformanceTableEntry[],
   criteria: ICriterion[],
   alternatives: IAlternative[]
-): (IRelativePataviTableEntry | IAbsolutePataviTableEntry)[] {
+): TPataviPerformanceTableEntry[] {
   const filteredPerformanceTable = filterIncludedEntries(
     performanceTable,
     criteria,
@@ -78,9 +80,7 @@ export function buildPataviPerformanceTable(
   );
   return _.map(
     filteredPerformanceTable,
-    (
-      entry: IPerformanceTableEntry | IRelativePerformanceTableEntry
-    ): IAbsolutePataviTableEntry | IRelativePataviTableEntry => {
+    (entry: TPerformanceTableEntry): TPataviPerformanceTableEntry => {
       if (isAbsoluteEntry(entry)) {
         return buildAbsolutePataviEntry(entry);
       } else {
@@ -91,7 +91,7 @@ export function buildPataviPerformanceTable(
 }
 
 function buildAbsolutePataviEntry(
-  entry: IPerformanceTableEntry
+  entry: IAbsolutePerformanceTableEntry
 ): IAbsolutePataviTableEntry {
   return {
     ...entry,
@@ -109,21 +109,38 @@ function buildRelativePataviEntry(
 }
 
 function filterIncludedEntries(
-  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
+  performanceTable: TPerformanceTableEntry[],
   criteria: ICriterion[],
   alternatives: IAlternative[]
-): (IRelativePerformanceTableEntry | IPerformanceTableEntry)[] {
-  const entriesFilteredByCriteria = _.filter(
+): TPerformanceTableEntry[] {
+  const entriesFilteredByCriteria = filterEntriesByCriteria(
+    criteria,
+    performanceTable
+  );
+  return filterEntriesByAlternatives(alternatives, entriesFilteredByCriteria);
+}
+
+function filterEntriesByCriteria(
+  criteria: ICriterion[],
+  performanceTable: TPerformanceTableEntry[]
+): TPerformanceTableEntry[] {
+  return _.filter(
     performanceTable,
-    (entry: IPerformanceTableEntry): boolean =>
+    (entry: IAbsolutePerformanceTableEntry): boolean =>
       _.some(
         criteria,
         (criterion) => entry.dataSource === criterion.dataSources[0].id
       )
   );
+}
+
+function filterEntriesByAlternatives(
+  alternatives: IAlternative[],
+  performanceTable: TPerformanceTableEntry[]
+): TPerformanceTableEntry[] {
   return _.filter(
-    entriesFilteredByCriteria,
-    (entry: IPerformanceTableEntry): boolean =>
+    performanceTable,
+    (entry: IAbsolutePerformanceTableEntry): boolean =>
       !isAbsoluteEntry(entry) ||
       _.some(
         alternatives,
@@ -133,14 +150,14 @@ function filterIncludedEntries(
 }
 
 function isAbsoluteEntry(
-  entry: IRelativePerformanceTableEntry | IPerformanceTableEntry
-): entry is IPerformanceTableEntry {
+  entry: TPerformanceTableEntry
+): entry is IAbsolutePerformanceTableEntry {
   return entry.hasOwnProperty('alternative');
 }
 
 function getPerformance(
   performance: TPerformance
-): EffectPerformance | TDistributionPerformance {
+): TEffectPerformance | TDistributionPerformance {
   if (
     isDistributionPerformance(performance) &&
     performance.distribution.type !== 'empty'
@@ -177,13 +194,19 @@ export function getScalesCommand(
     preferences: problem.preferences ? problem.preferences : undefined,
     performanceTable: buildScalesPerformanceTable(problem.performanceTable),
     alternatives: _.keyBy(alternatives, 'id'),
-    criteria: _(criteria)
-      .flatMap('dataSources')
-      .keyBy('id')
-      .mapValues(buildPataviScalesCriterion)
-      .value(),
+    criteria: buildPataviScalesCriteria(criteria),
     method: 'scales'
   };
+}
+
+function buildPataviScalesCriteria(
+  criteria: ICriterion[]
+): Record<string, IPataviCriterion> {
+  return _(criteria)
+    .flatMap('dataSources')
+    .keyBy('id')
+    .mapValues(buildPataviScalesCriterion)
+    .value();
 }
 
 function buildPataviScalesCriterion(dataSource: IDataSource): IPataviCriterion {
@@ -197,13 +220,11 @@ function buildPataviScalesCriterion(dataSource: IDataSource): IPataviCriterion {
 }
 
 export function buildScalesPerformanceTable(
-  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[]
-): (IRelativePataviTableEntry | IAbsolutePataviTableEntry)[] {
+  performanceTable: TPerformanceTableEntry[]
+): TPataviPerformanceTableEntry[] {
   return _.map(
     performanceTable,
-    (
-      entry: IPerformanceTableEntry | IRelativePerformanceTableEntry
-    ): IRelativePataviTableEntry | IAbsolutePataviTableEntry => {
+    (entry: TPerformanceTableEntry): TPataviPerformanceTableEntry => {
       if (isAbsoluteEntry(entry)) {
         return buildAbsolutePataviEntryForScales(entry);
       } else {
@@ -214,7 +235,7 @@ export function buildScalesPerformanceTable(
 }
 
 function buildAbsolutePataviEntryForScales(
-  entry: IPerformanceTableEntry
+  entry: IAbsolutePerformanceTableEntry
 ): IAbsolutePataviTableEntry {
   return {
     ...entry,

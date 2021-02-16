@@ -1,8 +1,7 @@
 import {TPreferences} from '@shared/types/Preferences';
 import IAlternative from '../IAlternative';
-import {IPerformanceTableEntry} from './IPerformanceTableEntry';
 import IProblemCriterion from './IProblemCriterion';
-import {IRelativePerformanceTableEntry} from './IRelativePerformanceTableEntry';
+import {TPerformanceTableEntry} from './TPerformanceTableEntry';
 
 export default interface IProblem {
   schemaVersion: string;
@@ -10,6 +9,6 @@ export default interface IProblem {
   description: string;
   criteria: Record<string, IProblemCriterion>;
   alternatives: Record<string, IAlternative>;
-  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[];
+  performanceTable: TPerformanceTableEntry[];
   preferences?: TPreferences;
 }

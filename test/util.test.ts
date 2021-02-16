@@ -4,11 +4,11 @@ import {
   getUser,
   handleError
 } from '../node-backend/util';
-import IProblemCriterion from '../shared/interface/Problem/IProblemCriterion';
-import IScenarioCriterion from '../shared/interface/Scenario/IScenarioCriterion';
-import IScenarioPvf from '../shared/interface/Scenario/IScenarioPvf';
-import IUploadProblem from '../shared/interface/UploadProblem/IUploadProblem';
-import IUploadProblemCriterion from '../shared/interface/UploadProblem/IUploadProblemCriterion';
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
+import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
+import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
 
 describe('The utility', () => {
   describe('getUser', () => {

@@ -122,7 +122,7 @@ function cancelSettings(browser) {
     .click('#display-mode-selector')
     .click('option[value="enteredDistributions"]')
     .click(closeModalButtonPath)
-    .assert.containsText(contentPath, '36.634');
+    .assert.containsText(contentPath, '36.6');
 }
 
 function cancelEditingSubroblemTitle(browser) {

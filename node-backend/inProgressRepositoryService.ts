@@ -16,12 +16,12 @@ import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
-import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
+import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
 import {TPerformance} from '@shared/interface/Problem/IPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
@@ -402,7 +402,7 @@ function buildDataSource(dataSource: IDataSource): IProblemDataSource {
 
 function buildPerformanceTable(
   inProgressMessage: IInProgressMessage
-): IPerformanceTableEntry[] {
+): IAbsolutePerformanceTableEntry[] {
   return _(inProgressMessage.criteria)
     .map(
       _.partial(
@@ -422,7 +422,7 @@ function buildEntriesForCriterion(
   effects: Record<string, Record<string, Effect>>,
   distributions: Record<string, Record<string, Distribution>>,
   criterion: ICriterion
-): IPerformanceTableEntry[][] {
+): IAbsolutePerformanceTableEntry[][] {
   return _.map(criterion.dataSources, (dataSource: IDataSource) => {
     return buildPerformanceEntries(
       effects,
@@ -440,7 +440,7 @@ function buildPerformanceEntries(
   criterionId: string,
   dataSource: IDataSource,
   alternatives: IAlternative[]
-): IPerformanceTableEntry[] {
+): IAbsolutePerformanceTableEntry[] {
   return _.map(alternatives, (alternative: IAlternative) => {
     const effectCell = effects[dataSource.id]
       ? effects[dataSource.id][alternative.id]
@@ -485,7 +485,7 @@ function buildPerformance(
   }
 }
 
-function buildEffectPerformance(cell: Effect): EffectPerformance {
+function buildEffectPerformance(cell: Effect): TEffectPerformance {
   switch (cell.type) {
     case 'value':
       const valuePerformance: IValuePerformance = {

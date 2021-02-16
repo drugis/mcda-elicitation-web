@@ -4,8 +4,8 @@ import {IAbsolutePataviTableEntry} from '@shared/interface/Patavi/IAbsolutePatav
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
-import {EffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
+import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {TRelativePerformance} from '@shared/interface/Problem/IProblemRelativePerformance';
@@ -80,13 +80,13 @@ describe('PataviUtil', () => {
     const includedAlternatives: IAlternative[] = [{id: 'alt1'} as IAlternative];
 
     it('should transform and filter the performance table into a patavi ready version', () => {
-      const performanceTable: IPerformanceTableEntry[] = [
+      const performanceTable: IAbsolutePerformanceTableEntry[] = [
         {
           criterion: 'crit1',
           dataSource: 'ds1',
           alternative: 'alt1',
           performance: {
-            effect: {type: 'exact'} as EffectPerformance,
+            effect: {type: 'exact'} as TEffectPerformance,
             distribution: {type: 'dnorm'} as TDistributionPerformance
           }
         },
@@ -95,7 +95,7 @@ describe('PataviUtil', () => {
           dataSource: 'ds2',
           alternative: 'alt1',
           performance: {
-            effect: {type: 'exact'} as EffectPerformance
+            effect: {type: 'exact'} as TEffectPerformance
           }
         },
         {
@@ -103,7 +103,7 @@ describe('PataviUtil', () => {
           dataSource: 'ds3',
           alternative: 'alt1',
           performance: {
-            effect: {type: 'exact'} as EffectPerformance,
+            effect: {type: 'exact'} as TEffectPerformance,
             distribution: {type: 'empty'} as TDistributionPerformance
           }
         },
@@ -112,7 +112,7 @@ describe('PataviUtil', () => {
           dataSource: 'ds4',
           alternative: 'alt1',
           performance: {
-            effect: {type: 'empty'} as EffectPerformance,
+            effect: {type: 'empty'} as TEffectPerformance,
             distribution: {type: 'empty'} as TDistributionPerformance
           }
         },
@@ -121,7 +121,7 @@ describe('PataviUtil', () => {
           dataSource: 'ds3',
           alternative: 'alt2',
           performance: {
-            effect: {type: 'empty'} as EffectPerformance,
+            effect: {type: 'empty'} as TEffectPerformance,
             distribution: {type: 'empty'} as TDistributionPerformance
           }
         }
@@ -143,13 +143,13 @@ describe('PataviUtil', () => {
           criterion: 'crit2',
           dataSource: 'ds2',
           alternative: 'alt1',
-          performance: {type: 'exact'} as EffectPerformance
+          performance: {type: 'exact'} as TEffectPerformance
         },
         {
           criterion: 'crit3',
           dataSource: 'ds3',
           alternative: 'alt1',
-          performance: {type: 'exact'} as EffectPerformance
+          performance: {type: 'exact'} as TEffectPerformance
         }
       ];
       expect(result).toEqual(expectedResult);
@@ -195,7 +195,7 @@ describe('PataviUtil', () => {
     });
 
     it('should throw an error if there is an invalid performance', () => {
-      const performanceTable: IPerformanceTableEntry[] = [
+      const performanceTable: IAbsolutePerformanceTableEntry[] = [
         {
           criterion: 'crit4',
           dataSource: 'ds4',

@@ -15,22 +15,22 @@ import IValueCIEffect from './interface/IValueCIEffect';
 import IValueEffect from './interface/IValueEffect';
 import IWorkspace from './interface/IWorkspace';
 import IWorkspaceProperties from './interface/IWorkspaceProperties';
+import {IAbsolutePerformanceTableEntry} from './interface/Problem/IAbsolutePerformanceTableEntry';
 import IEmptyPerformance from './interface/Problem/IEmptyPerformance';
 import {
   IDistributionPerformance,
   IEffectPerformance
 } from './interface/Problem/IPerformance';
-import {IPerformanceTableEntry} from './interface/Problem/IPerformanceTableEntry';
 import IProblem from './interface/Problem/IProblem';
 import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
 import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
-import {IRelativePerformanceTableEntry} from './interface/Problem/IRelativePerformanceTableEntry';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
 import {TDistributionPerformance} from './interface/Problem/TDistributionPerformance';
+import {TPerformanceTableEntry} from './interface/Problem/TPerformanceTableEntry';
 import {generateUuid} from './util';
 import {applyOrdering} from './workspaceServiceUtil';
 
@@ -64,28 +64,36 @@ function getProblemWithoutStudentsT(problem: IProblem): IProblem {
 }
 
 function getPerformanceTableWithoutStudentsT(
-  table: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[]
-): (IRelativePerformanceTableEntry | IPerformanceTableEntry)[] {
-  return _(table)
-    .map((entry: IRelativePerformanceTableEntry | IPerformanceTableEntry) => {
-      if (
-        'distribution' in entry.performance &&
-        entry.performance.distribution.type === 'dt'
-      ) {
-        if ('effect' in entry.performance) {
-          return {
-            ...entry,
-            performance: {effect: entry.performance.effect}
-          } as IPerformanceTableEntry; //FIXME
-        } else {
-          return undefined;
-        }
-      } else {
-        return entry;
-      }
-    })
-    .filter()
-    .value();
+  table: TPerformanceTableEntry[]
+): TPerformanceTableEntry[] {
+  return _(table).map(getEntryWithoutStudentsT).filter().value();
+}
+
+function getEntryWithoutStudentsT(
+  entry: TPerformanceTableEntry
+): TPerformanceTableEntry {
+  if (
+    isAbsoluteEntry(entry) &&
+    'distribution' in entry.performance &&
+    entry.performance.distribution.type === 'dt'
+  ) {
+    if ('effect' in entry.performance) {
+      return {
+        ...entry,
+        performance: {effect: entry.performance.effect}
+      };
+    } else {
+      return undefined;
+    }
+  } else {
+    return entry;
+  }
+}
+
+export function isAbsoluteEntry(
+  entry: TPerformanceTableEntry
+): entry is IAbsolutePerformanceTableEntry {
+  return entry.hasOwnProperty('alternative');
 }
 
 export function buildInProgressIdMapper(
@@ -214,13 +222,17 @@ export function buildWorkspaceProperties(
     therapeuticContext: workspace.problem.description
       ? workspace.problem.description
       : '',
-    useFavourability: _.some(
-      workspace.problem.criteria,
-      (criterion: IProblemCriterion): boolean => {
-        return criterion.hasOwnProperty('isFavorable');
-      }
-    )
+    useFavourability: hasFavourability(workspace.problem.criteria)
   };
+}
+
+function hasFavourability(
+  criteria: Record<string, IProblemCriterion>
+): boolean {
+  return _.some(
+    criteria,
+    (criterion: IProblemCriterion): boolean => 'isFavorable' in criterion
+  );
 }
 
 export function buildWorkspaceCriteria(
@@ -296,27 +308,26 @@ export function buildWorkspaceAlternatives(
 }
 
 export function buildWorkspaceEffects(
-  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
+  performanceTable: TPerformanceTableEntry[],
   idMapper: (id: string) => string,
   unitTypesByDataSource: Record<string, UnitOfMeasurementType>
 ): Effect[] {
   return _(performanceTable)
-    .filter((entry: IPerformanceTableEntry): boolean => {
-      //FIXME
-      return hasAlternativeId(entry) && 'effect' in entry.performance;
+    .filter((entry: TPerformanceTableEntry): boolean => {
+      return isAbsoluteEntry(entry) && 'effect' in entry.performance;
     })
     .map(_.partial(buildEffect, idMapper, unitTypesByDataSource))
     .value();
 }
 
-export function hasAlternativeId(entry: IPerformanceTableEntry) {
+export function hasAlternativeId(entry: IAbsolutePerformanceTableEntry) {
   return 'alternative' in entry;
 }
 
 export function buildEffect(
   idMapper: (id: string) => string,
   unitTypesByDataSource: Record<string, UnitOfMeasurementType>,
-  entry: IPerformanceTableEntry
+  entry: IAbsolutePerformanceTableEntry
 ): Effect {
   const performance = entry.performance as IEffectPerformance;
   const effectPerformance = performance.effect;
@@ -397,15 +408,15 @@ export function createBoundEffect(
 }
 
 export function buildWorkspaceDistributions(
-  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
+  performanceTable: TPerformanceTableEntry[],
   idMapper: (id: string) => string,
   unitTypesByDataSource: Record<string, UnitOfMeasurementType>
 ): Distribution[] {
   return _(performanceTable)
-    .filter((entry: IPerformanceTableEntry): boolean => {
-      //FIXME
-      return hasAlternativeId(entry) && 'distribution' in entry.performance;
-    })
+    .filter(
+      (entry: TPerformanceTableEntry): boolean =>
+        isAbsoluteEntry(entry) && 'distribution' in entry.performance
+    )
     .map(_.partial(buildDistribution, idMapper, unitTypesByDataSource))
     .value();
 }
@@ -413,7 +424,7 @@ export function buildWorkspaceDistributions(
 export function buildDistribution(
   idMapper: (id: string) => string,
   unitTypesByDataSource: Record<string, UnitOfMeasurementType>,
-  entry: IPerformanceTableEntry
+  entry: IAbsolutePerformanceTableEntry
 ): Distribution {
   const performance = entry.performance as IDistributionPerformance;
   const distributionBase = {
@@ -478,23 +489,24 @@ export function finishDistributionCreation(
 }
 
 function buildWorkspaceRelativePerformances(
-  performanceTable: (IRelativePerformanceTableEntry | IPerformanceTableEntry)[],
+  performanceTable: TPerformanceTableEntry[],
   idMapper: (id: string) => string,
   unitTypeMap: Record<string, UnitOfMeasurementType>
 ): IRelativePerformance[] {
   return _(performanceTable)
-    .filter((entry: IPerformanceTableEntry): boolean => {
-      //FIXME
-      return !hasAlternativeId(entry);
-    })
+    .filter(isRelativeEntry)
     .map(_.partial(buildRelative, idMapper, unitTypeMap))
     .value();
+}
+
+function isRelativeEntry(entry: TPerformanceTableEntry): boolean {
+  return !isAbsoluteEntry(entry);
 }
 
 function buildRelative(
   idMapper: (id: string) => string,
   unitTypeMap: Record<string, UnitOfMeasurementType>,
-  entry: IPerformanceTableEntry
+  entry: IAbsolutePerformanceTableEntry
 ): IRelativePerformance {
   const performance = entry.performance as IProblemRelativePerformance;
   const base = {

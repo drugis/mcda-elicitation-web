@@ -25,11 +25,11 @@ import IValueEffect from '@shared/interface/IValueEffect';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
-import {effectPerformanceType} from '@shared/interface/Problem/IEffectPerformance';
+import {TEffectPerformanceType} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
+import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IRangeDistributionPerformance from '@shared/interface/Problem/IRangeDistributionPerformance';
@@ -241,7 +241,7 @@ describe('buildWorkspace', () => {
   describe('buildWorkspaceEffects', () => {
     it('should filter out non effect entries', () => {
       const unitTypeMap: Record<string, UnitOfMeasurementType> = {};
-      const performanceTable: IPerformanceTableEntry[] = [
+      const performanceTable: IAbsolutePerformanceTableEntry[] = [
         {
           alternative: alternative1Id,
           dataSource: percentageDSID,
@@ -260,13 +260,15 @@ describe('buildWorkspace', () => {
 
   describe('isNotNMAEntry', () => {
     it('should return true if the entry has an alternative property', () => {
-      const entry = {alternative: alternative1Id} as IPerformanceTableEntry;
+      const entry = {
+        alternative: alternative1Id
+      } as IAbsolutePerformanceTableEntry;
       const result = hasAlternativeId(entry);
       expect(result).toBe(true);
     });
 
     it('should return false if the entry has no alternative property', () => {
-      const entry = {} as IPerformanceTableEntry;
+      const entry = {} as IAbsolutePerformanceTableEntry;
       const result = hasAlternativeId(entry);
       expect(result).toBe(false);
     });
@@ -274,7 +276,7 @@ describe('buildWorkspace', () => {
 
   describe('buildEffect', () => {
     it('should build an empty performance', () => {
-      const entry: IPerformanceTableEntry = {
+      const entry: IAbsolutePerformanceTableEntry = {
         alternative: alternative1Id,
         criterion: criterion1Id,
         dataSource: percentageDSID,
@@ -288,7 +290,7 @@ describe('buildWorkspace', () => {
     });
 
     it('should build an effect value performance, considering percentage unit', () => {
-      const entry: IPerformanceTableEntry = {
+      const entry: IAbsolutePerformanceTableEntry = {
         alternative: alternative1Id,
         criterion: criterion1Id,
         dataSource: percentageDSID,
@@ -310,7 +312,7 @@ describe('buildWorkspace', () => {
 
     it('should throw an error for unknown effect types', () => {
       try {
-        const unknown = 'unknown type' as effectPerformanceType;
+        const unknown = 'unknown type' as TEffectPerformanceType;
         const entry = {
           alternative: alternative1Id,
           criterion: criterion1Id,
@@ -318,7 +320,7 @@ describe('buildWorkspace', () => {
           performance: {
             effect: {type: unknown}
           }
-        } as IPerformanceTableEntry;
+        } as IAbsolutePerformanceTableEntry;
         buildEffect(idMapper, unitTypeMap, entry);
       } catch (error) {
         expect(error).toBe('unknown effect type');
@@ -454,7 +456,7 @@ describe('buildWorkspace', () => {
     const unitTypeMap: Record<string, UnitOfMeasurementType> = {};
 
     it('should filter out non distribution entries', () => {
-      const performanceTable: IPerformanceTableEntry[] = [
+      const performanceTable: IAbsolutePerformanceTableEntry[] = [
         {
           alternative: alternative1Id,
           dataSource: percentageDSID,
@@ -471,12 +473,12 @@ describe('buildWorkspace', () => {
     });
 
     it('should filter out relative entries', () => {
-      const performanceTable: IPerformanceTableEntry[] = [
+      const performanceTable: IAbsolutePerformanceTableEntry[] = [
         {
           dataSource: percentageDSID,
           criterion: criterion1Id,
           performance: {distribution: {}}
-        } as IPerformanceTableEntry
+        } as IAbsolutePerformanceTableEntry
       ];
       const result = buildWorkspaceDistributions(
         performanceTable,
@@ -489,7 +491,7 @@ describe('buildWorkspace', () => {
 
   describe('buildDistribution', () => {
     it('should create the modifier and distributionbase and use them to finish the distribution', () => {
-      const entry: IPerformanceTableEntry = {
+      const entry: IAbsolutePerformanceTableEntry = {
         alternative: alternative1Id,
         criterion: criterion1Id,
         dataSource: percentageDSID,
