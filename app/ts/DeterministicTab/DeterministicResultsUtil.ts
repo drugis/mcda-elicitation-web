@@ -144,7 +144,7 @@ function getValueData(
     ..._.map(
       alternatives,
       (alternative: IAlternative): number =>
-        valueProfiles[alternative.id][criterion.id]
+        valueProfiles[alternative.id][criterion.dataSources[0].id]
     )
   ];
 }

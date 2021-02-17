@@ -28,6 +28,8 @@ import {TPreferences} from '@shared/types/Preferences';
 import {isAbsoluteEntry} from '@shared/workspaceService';
 import _ from 'lodash';
 
+type EntriesRecord = Record<string, Record<string, IAbsolutePataviTableEntry>>;
+
 export function getPataviProblem(
   workspace: IWorkspace,
   preferences: TPreferences,
@@ -51,7 +53,7 @@ function buildPataviCriterion(
   const dataSource = criterion.dataSources[0];
   const scale = getScale(dataSource.unitOfMeasurement);
   return {
-    id: criterion.id,
+    id: criterion.dataSources[0].id,
     title: criterion.title,
     pvf: pvfs[criterion.id],
     scale: scale
@@ -65,8 +67,6 @@ function getScale(unit: IUnitOfMeasurement): [number, number] {
     return [unit.lowerBound, unit.upperBound];
   }
 }
-
-type foo = Record<string, Record<string, IAbsolutePataviTableEntry>>;
 
 export function buildPataviPerformanceTable(
   workspace: IWorkspace
@@ -97,11 +97,11 @@ export function buildPataviPerformanceTable(
 function buildPataviTableEntries(
   sourceEntries: (Effect | Distribution)[],
   fn: (effect: Effect | Distribution) => IAbsolutePataviTableEntry,
-  initialValues: foo
-): foo {
+  initialValues: EntriesRecord
+): EntriesRecord {
   return _.reduce(
     sourceEntries,
-    (accum: foo, entry: Effect): foo => {
+    (accum: EntriesRecord, entry: Effect): EntriesRecord => {
       return {
         ...accum,
         [entry.criterionId]: {
@@ -137,7 +137,7 @@ function getEffectPerformance(effect: Effect): IAbsolutePataviTableEntry {
       }
     };
   } else {
-    throw 'attempt to create invalid data cell for patavi';
+    throw 'Attempt to create invalid performance table entry for Patavi';
   }
 }
 
@@ -226,6 +226,8 @@ function getDistributionPerformance(
         }
       }
     };
+  } else {
+    throw 'Attempt to create invalid performance table entry for Patavi';
   }
 }
 
@@ -251,7 +253,7 @@ export function getScalesCommand(
   alternatives: IAlternative[]
 ): IScalesCommand {
   return {
-    preferences: problem.preferences ? problem.preferences : undefined,
+    preferences: undefined,
     performanceTable: buildScalesPerformanceTable(problem.performanceTable),
     alternatives: _.keyBy(alternatives, 'id'),
     criteria: buildPataviScalesCriteria(criteria),
@@ -279,7 +281,7 @@ function buildPataviScalesCriterion(dataSource: IDataSource): IPataviCriterion {
   };
 }
 
-export function buildScalesPerformanceTable(
+function buildScalesPerformanceTable(
   performanceTable: TPerformanceTableEntry[]
 ): TPataviPerformanceTableEntry[] {
   return _.map(

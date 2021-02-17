@@ -34,9 +34,12 @@ export function DeterministicResultsContextProviderComponent({
 }): JSX.Element {
   const {setError} = useContext(ErrorContext);
   const {scales, oldProblem} = useContext(WorkspaceContext);
-  const {filteredCriteria, filteredAlternatives, filteredEffects} = useContext(
-    SubproblemContext
-  );
+  const {
+    filteredCriteria,
+    filteredAlternatives,
+    filteredEffects,
+    filteredWorkspace
+  } = useContext(SubproblemContext);
   const {pvfs, currentScenario} = useContext(PreferencesContext);
 
   const [sensitivityTableValues, setSensitivityTableValues] = useState<
@@ -95,9 +98,8 @@ export function DeterministicResultsContextProviderComponent({
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
-        oldProblem,
-        filteredCriteria,
-        filteredAlternatives,
+        filteredWorkspace,
+        currentScenario.state.prefs,
         pvfs
       );
       getDeterministicResults(pataviProblem);
@@ -109,9 +111,8 @@ export function DeterministicResultsContextProviderComponent({
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
-        oldProblem,
-        filteredCriteria,
-        filteredAlternatives,
+        filteredWorkspace,
+        currentScenario.state.prefs,
         pvfs
       );
       getMeasurementsSensitivityResults(pataviProblem);
@@ -121,9 +122,8 @@ export function DeterministicResultsContextProviderComponent({
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
-        oldProblem,
-        filteredCriteria,
-        filteredAlternatives,
+        filteredWorkspace,
+        currentScenario.state.prefs,
         pvfs
       );
       getPreferencesSensitivityResults(pataviProblem);
@@ -133,7 +133,6 @@ export function DeterministicResultsContextProviderComponent({
   function getDeterministicResults(pataviProblem: IPataviProblem): void {
     const pataviCommand: IDeterministicResultsCommand = {
       ...pataviProblem,
-      preferences: currentScenario.state.prefs,
       method: 'deterministic'
     };
 
@@ -152,11 +151,10 @@ export function DeterministicResultsContextProviderComponent({
   ): void {
     const pataviCommand: IMeasurementsSensitivityCommand = {
       ...pataviProblem,
-      preferences: currentScenario.state.prefs,
       method: 'sensitivityMeasurementsPlot',
       sensitivityAnalysis: {
         alternative: measurementSensitivityAlternative.id,
-        criterion: measurementSensitivityCriterion.id
+        criterion: measurementSensitivityCriterion.dataSources[0].id
       }
     };
 
@@ -173,10 +171,9 @@ export function DeterministicResultsContextProviderComponent({
   ): void {
     const pataviCommand: IPreferencesSensitivityCommand = {
       ...pataviProblem,
-      preferences: currentScenario.state.prefs,
       method: 'sensitivityWeightPlot',
       sensitivityAnalysis: {
-        criterion: preferencesSensitivityCriterion.id
+        criterion: preferencesSensitivityCriterion.dataSources[0].id
       }
     };
 
@@ -237,15 +234,13 @@ export function DeterministicResultsContextProviderComponent({
   function recalculateValuePlots(): void {
     setAreRecalculatedPlotsLoading(true);
     const pataviProblem = getPataviProblem(
-      oldProblem,
-      filteredCriteria,
-      filteredAlternatives,
+      filteredWorkspace,
+      currentScenario.state.prefs,
       pvfs
     );
 
     const pataviCommand: IRecalculatedDeterministicResultsCommand = {
       ...pataviProblem,
-      preferences: currentScenario.state.prefs,
       method: 'sensitivityMeasurements',
       sensitivityAnalysis: {
         meas: recalculatedCells

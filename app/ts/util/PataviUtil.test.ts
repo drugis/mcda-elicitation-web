@@ -1,17 +1,12 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {IAbsolutePataviTableEntry} from '@shared/interface/Patavi/IAbsolutePataviTableEntry';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
-import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
-import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
+import {TPataviPerformanceTableEntry} from '@shared/interface/Patavi/TPataviPerfomanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
-import {TRelativePerformance} from '@shared/interface/Problem/IProblemRelativePerformance';
 import IPvf from '@shared/interface/Problem/IPvf';
-import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
-import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {TPreferences} from '@shared/types/Preferences';
 import {
   buildPataviPerformanceTable,
@@ -60,143 +55,91 @@ describe('PataviUtil', () => {
   });
 
   describe('buildPataviPerformanceTable', () => {
-    const includedCriteria: ICriterion[] = [
-      {id: 'crit1', dataSources: [{id: 'ds1'}]} as ICriterion,
-      {id: 'crit2', dataSources: [{id: 'ds2'}]} as ICriterion,
-      {id: 'crit3', dataSources: [{id: 'ds3'}]} as ICriterion
-    ];
-    const includedAlternatives: IAlternative[] = [{id: 'alt1'} as IAlternative];
-
-    it('should transform and filter the performance table into a patavi ready version', () => {
-      const performanceTable: IAbsolutePerformanceTableEntry[] = [
-        {
-          criterion: 'crit1',
-          dataSource: 'ds1',
-          alternative: 'alt1',
-          performance: {
-            effect: {type: 'exact'} as TEffectPerformance,
-            distribution: {type: 'dnorm'} as TDistributionPerformance
+    it('should transform the effects to a patavi ready version, where distributions get priority over effects', () => {
+      const workspace: IWorkspace = {
+        effects: [
+          {
+            alternativeId: 'alt1',
+            criterionId: 'crit1',
+            dataSourceId: 'ds1',
+            value: 37,
+            type: 'value'
+          },
+          {
+            alternativeId: 'alt1',
+            criterionId: 'crit2',
+            dataSourceId: 'ds2',
+            value: 37,
+            type: 'value'
           }
-        },
-        {
-          criterion: 'crit2',
-          dataSource: 'ds2',
-          alternative: 'alt1',
-          performance: {
-            effect: {type: 'exact'} as TEffectPerformance
+        ],
+        distributions: [
+          {
+            alternativeId: 'alt1',
+            criterionId: 'crit1',
+            dataSourceId: 'ds1',
+            type: 'normal',
+            mean: 3.7,
+            standardError: 0.42
           }
-        },
-        {
-          criterion: 'crit3',
-          dataSource: 'ds3',
-          alternative: 'alt1',
-          performance: {
-            effect: {type: 'exact'} as TEffectPerformance,
-            distribution: {type: 'empty'} as TDistributionPerformance
-          }
-        },
-        {
-          criterion: 'crit4',
-          dataSource: 'ds4',
-          alternative: 'alt1',
-          performance: {
-            effect: {type: 'empty'} as TEffectPerformance,
-            distribution: {type: 'empty'} as TDistributionPerformance
-          }
-        },
-        {
-          criterion: 'crit3',
-          dataSource: 'ds3',
-          alternative: 'alt2',
-          performance: {
-            effect: {type: 'empty'} as TEffectPerformance,
-            distribution: {type: 'empty'} as TDistributionPerformance
-          }
-        }
-      ];
-
-      const result = buildPataviPerformanceTable(
-        performanceTable,
-        includedCriteria,
-        includedAlternatives
-      );
-      const expectedResult: IAbsolutePataviTableEntry[] = [
-        {
-          criterion: 'crit1',
-          dataSource: 'ds1',
-          alternative: 'alt1',
-          performance: {type: 'dnorm'} as TDistributionPerformance
-        },
-        {
-          criterion: 'crit2',
-          dataSource: 'ds2',
-          alternative: 'alt1',
-          performance: {type: 'exact'} as TEffectPerformance
-        },
-        {
-          criterion: 'crit3',
-          dataSource: 'ds3',
-          alternative: 'alt1',
-          performance: {type: 'exact'} as TEffectPerformance
-        }
-      ];
-      expect(result).toEqual(expectedResult);
-    });
-
-    it('should transform and filter the performance table of relative performances into a patavi ready version', () => {
-      const performanceTable: IRelativePerformanceTableEntry[] = [
-        {
-          criterion: 'crit1',
-          dataSource: 'ds1',
-          performance: {
-            distribution: {
-              type: 'relative-logit-normal'
-            }
-          }
-        } as IRelativePerformanceTableEntry,
-        {
-          criterion: 'crit4',
-          dataSource: 'ds4',
-          performance: {
-            distribution: {
-              type: 'relative-logit-normal'
-            }
-          }
-        } as IRelativePerformanceTableEntry
-      ];
-
-      const result = buildPataviPerformanceTable(
-        performanceTable,
-        includedCriteria,
-        includedAlternatives
-      );
-      const expectedResult: IRelativePataviTableEntry[] = [
-        {
-          criterion: 'crit1',
-          dataSource: 'ds1',
-          performance: {
+        ],
+        relativePerformances: [
+          {
+            baseline: {},
+            relative: {},
+            dataSourceId: 'ds3',
+            criterionId: 'crit3',
             type: 'relative-logit-normal'
-          } as TRelativePerformance
-        }
+          }
+        ]
+      } as IWorkspace;
+
+      const result = buildPataviPerformanceTable(workspace);
+      const expectedResult: TPataviPerformanceTableEntry[] = [
+        {
+          criterion: 'ds1',
+          dataSource: 'ds1',
+          alternative: 'alt1',
+          performance: {
+            type: 'dnorm',
+            parameters: {mu: 3.7, sigma: 0.42}
+          }
+        },
+        {
+          criterion: 'ds2',
+          dataSource: 'ds2',
+          alternative: 'alt1',
+          performance: {type: 'exact', value: 37}
+        },
+        {
+          dataSource: 'ds3',
+          criterion: 'ds3',
+          performance: {
+            type: 'relative-logit-normal',
+            parameters: {baseline: {}, relative: {}}
+          }
+        } as IRelativePataviTableEntry
       ];
       expect(result).toEqual(expectedResult);
     });
 
     it('should throw an error if there is an invalid performance', () => {
-      const performanceTable: IAbsolutePerformanceTableEntry[] = [
-        {
-          criterion: 'crit4',
-          dataSource: 'ds4',
-          alternative: 'alt1',
-          performance: {
-            distribution: {type: 'empty'} as TDistributionPerformance
+      const workspace: IWorkspace = {
+        distributions: [
+          {
+            criterionId: 'crit4',
+            dataSourceId: 'ds4',
+            alternativeId: 'alt1',
+            type: 'empty'
           }
-        }
-      ];
+        ]
+      } as IWorkspace;
       try {
-        buildPataviPerformanceTable(performanceTable, [], []);
+        buildPataviPerformanceTable(workspace);
       } catch (error) {
-        expect(error).toBe('Unrecognized performance');
+        expect(error).toBe(
+          'Attempt to create invalid performance table entry for Patavi'
+        );
       }
     });
   });
@@ -228,10 +171,7 @@ describe('PataviUtil', () => {
     it('should return a scales command for patavi where criteria are keyed by datasource ids', () => {
       const result = getScalesCommand(problem, criteria, alternatives);
       const expectedResult: IScalesCommand = {
-        title: 'new problem',
         method: 'scales',
-        description: '',
-        schemaVersion: 'newest',
         preferences: undefined,
         alternatives: {alt1Id: {id: 'alt1Id', title: 'alt1'}},
         criteria: {

@@ -49,9 +49,12 @@ export function PreferencesContextProviderComponent({
     settings: {randomSeed}
   } = useContext(SettingsContext);
   const {currentSubproblem, oldProblem} = useContext(WorkspaceContext);
-  const {filteredCriteria, filteredAlternatives, observedRanges} = useContext(
-    SubproblemContext
-  );
+  const {
+    filteredCriteria,
+    filteredAlternatives,
+    observedRanges,
+    filteredWorkspace
+  } = useContext(SubproblemContext);
 
   const [contextScenarios, setScenarios] = useState<
     Record<string, IMcdaScenario>
@@ -148,14 +151,12 @@ export function PreferencesContextProviderComponent({
 
   function getWeights(scenario: IMcdaScenario) {
     const pataviProblem = getPataviProblem(
-      oldProblem,
-      filteredCriteria,
-      filteredAlternatives,
+      filteredWorkspace,
+      scenario.state.prefs,
       pvfs
     );
     const postProblem: IWeightsProblem = {
       ...pataviProblem,
-      preferences: scenario.state.prefs,
       method: 'representativeWeights',
       seed: randomSeed
     };

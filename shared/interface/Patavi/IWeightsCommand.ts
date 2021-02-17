@@ -4,7 +4,6 @@ import {IPataviProblem} from './IPataviProblem';
 
 export interface IWeightsProblem extends IPataviProblem {
   method: 'representativeWeights';
-  schemaVersion: string;
   seed: number;
   preferences: TPreferences;
 }
