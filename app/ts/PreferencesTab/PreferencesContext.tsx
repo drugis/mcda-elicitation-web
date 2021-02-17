@@ -48,13 +48,10 @@ export function PreferencesContextProviderComponent({
   const {
     settings: {randomSeed}
   } = useContext(SettingsContext);
-  const {currentSubproblem, oldProblem} = useContext(WorkspaceContext);
-  const {
-    filteredCriteria,
-    filteredAlternatives,
-    observedRanges,
-    filteredWorkspace
-  } = useContext(SubproblemContext);
+  const {currentSubproblem} = useContext(WorkspaceContext);
+  const {filteredCriteria, observedRanges, filteredWorkspace} = useContext(
+    SubproblemContext
+  );
 
   const [contextScenarios, setScenarios] = useState<
     Record<string, IMcdaScenario>

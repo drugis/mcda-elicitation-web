@@ -51,7 +51,8 @@ export default function TradeOffTable(): JSX.Element {
     criterion: ICriterion,
     usePercentage: boolean
   ): number {
-    const criterionWeight = currentScenario.state.weights.mean[criterion.id];
+    const criterionWeight =
+      currentScenario.state.weights.mean[criterion.dataSources[0].id];
     const pvf = pvfs[criterion.id];
     const interval = pvf.range[1] - pvf.range[0];
     const change =
