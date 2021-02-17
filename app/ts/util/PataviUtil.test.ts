@@ -40,8 +40,8 @@ describe('PataviUtil', () => {
       const expectedResult: IPataviProblem = {
         alternatives: {alt1Id: {id: 'alt1Id', title: 'alt1'}},
         criteria: {
-          crit1Id: {
-            id: 'crit1Id',
+          ds1Id: {
+            id: 'ds1Id',
             title: 'crit1',
             scale: [0, 1],
             pvf: {direction: 'increasing', type: 'linear', range: [0, 100]}
