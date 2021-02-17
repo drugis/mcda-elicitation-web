@@ -10,18 +10,16 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import IOrdering from '@shared/interface/IOrdering';
-import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
+import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
 import IBetaPerformance from '@shared/interface/Problem/IBetaPerformance';
-import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IEmptyPerformance from '@shared/interface/Problem/IEmptyPerformance';
 import IGammaPerformance from '@shared/interface/Problem/IGammaPerformance';
 import INormalPerformance from '@shared/interface/Problem/INormalPerformance';
 import {TPerformance} from '@shared/interface/Problem/IPerformance';
-import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
@@ -30,6 +28,7 @@ import IRangeEffectPerformance from '@shared/interface/Problem/IRangeEffectPerfo
 import ITextPerformance from '@shared/interface/Problem/ITextPerformance';
 import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
+import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {generateUuid} from '@shared/util';
 import {TableInputMode} from 'app/ts/type/TableInputMode';
 import _ from 'lodash';
@@ -453,21 +452,15 @@ function buildPerformanceEntries(
       alternative: alternative.id,
       criterion: criterionId,
       dataSource: dataSource.id,
-      performance: buildPerformance(
-        effectCell,
-        distributionCell,
-        dataSource.unitOfMeasurement.type
-      )
+      performance: buildPerformance(effectCell, distributionCell)
     };
   });
 }
 
 function buildPerformance(
   effectCell: Effect,
-  distributionCell: Distribution,
-  unitOfMeasurementType: UnitOfMeasurementType
+  distributionCell: Distribution
 ): TPerformance {
-  const isPercentage = unitOfMeasurementType === 'percentage';
   let performance;
   if (effectCell) {
     performance = {effect: buildEffectPerformance(effectCell)};
@@ -521,10 +514,10 @@ function buildEffectPerformance(cell: Effect): TEffectPerformance {
       };
       return textPerformance;
     case 'empty':
-      const emptyPermormace: IEmptyPerformance = {
+      const emptyPerformance: IEmptyPerformance = {
         type: 'empty'
       };
-      return emptyPermormace;
+      return emptyPerformance;
   }
 }
 
@@ -548,23 +541,23 @@ function buildDistributionPerformance(
       };
       return rangePerformance;
     case 'normal':
-      const normalPerformace: INormalPerformance = {
+      const normalPerformance: INormalPerformance = {
         type: 'dnorm',
         parameters: {
           mu: cell.mean,
           sigma: cell.standardError
         }
       };
-      return normalPerformace;
+      return normalPerformance;
     case 'beta':
-      const betaPerformace: IBetaPerformance = {
+      const betaPerformance: IBetaPerformance = {
         type: 'dbeta',
         parameters: {
           alpha: cell.alpha,
           beta: cell.beta
         }
       };
-      return betaPerformace;
+      return betaPerformance;
     case 'gamma':
       const gammaPerformance: IGammaPerformance = {
         type: 'dgamma',
@@ -581,10 +574,10 @@ function buildDistributionPerformance(
       };
       return textPerformance;
     case 'empty':
-      const emptyPermormace: IEmptyPerformance = {
+      const emptyPerformance: IEmptyPerformance = {
         type: 'empty'
       };
-      return emptyPermormace;
+      return emptyPerformance;
   }
 }
 

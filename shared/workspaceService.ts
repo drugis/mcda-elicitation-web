@@ -24,8 +24,8 @@ import {
 import IProblem from './interface/Problem/IProblem';
 import IProblemCriterion from './interface/Problem/IProblemCriterion';
 import IProblemDataSource from './interface/Problem/IProblemDataSource';
-import {IProblemRelativePerformance} from './interface/Problem/IProblemRelativePerformance';
 import IRangeEffectPerformance from './interface/Problem/IRangeEffectPerformance';
+import {IRelativePerformanceTableEntry} from './interface/Problem/IRelativePerformanceTableEntry';
 import ITextPerformance from './interface/Problem/ITextPerformance';
 import IValueCIPerformance from './interface/Problem/IValueCIPerformance';
 import IValuePerformance from './interface/Problem/IValuePerformance';
@@ -506,23 +506,19 @@ function isRelativeEntry(entry: TPerformanceTableEntry): boolean {
 function buildRelative(
   idMapper: (id: string) => string,
   unitTypeMap: Record<string, UnitOfMeasurementType>,
-  entry: IAbsolutePerformanceTableEntry
+  entry: IRelativePerformanceTableEntry
 ): IRelativePerformance {
-  const performance = entry.performance as IProblemRelativePerformance;
   const base = {
     dataSourceId: idMapper(entry.dataSource),
     criterionId: idMapper(entry.criterion),
     unitOfMeasurementType: unitTypeMap[idMapper(entry.dataSource)]
   };
-  const distribution = performance.distribution;
+  const distribution = entry.performance.distribution;
   const parameters = distribution.parameters;
   return {
     ...base,
     type: distribution.type,
-    baseline: {
-      ..._.omit(parameters.baseline, 'name'),
-      id: parameters.baseline.name
-    },
+    baseline: parameters.baseline,
     relative: parameters.relative
   };
 }

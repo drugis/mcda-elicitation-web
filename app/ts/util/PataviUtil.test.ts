@@ -1,17 +1,18 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IWorkspace from '@shared/interface/IWorkspace';
 import {IAbsolutePataviTableEntry} from '@shared/interface/Patavi/IAbsolutePataviTableEntry';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
-import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
+import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import IProblem from '@shared/interface/Problem/IProblem';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {TRelativePerformance} from '@shared/interface/Problem/IProblemRelativePerformance';
 import IPvf from '@shared/interface/Problem/IPvf';
 import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
+import {TPreferences} from '@shared/types/Preferences';
 import {
   buildPataviPerformanceTable,
   getPataviProblem,
@@ -21,41 +22,27 @@ import {
 describe('PataviUtil', () => {
   describe('getPataviProblem', () => {
     it('should return a problem for sending to patavi', () => {
-      const problem: IProblem = {
-        title: 'new problem',
-        description: '',
-        schemaVersion: 'newest',
-        performanceTable: [],
-        alternatives: {alt2Id: {id: 'alt2Id', title: 'alt2'}},
-        criteria: {
-          crit2Id: {id: 'crit2Id'} as IProblemCriterion
-        }
-      };
-      const filteredCriteria: ICriterion[] = [
-        {
-          id: 'crit1Id',
-          title: 'crit1',
-          dataSources: [
-            {id: 'ds1Id', unitOfMeasurement: {lowerBound: 0, upperBound: 1}}
-          ]
-        } as ICriterion
-      ];
-      const filteredAlternatives: IAlternative[] = [
-        {id: 'alt1Id', title: 'alt1'}
-      ];
+      const workspace: IWorkspace = {
+        alternatives: [{id: 'alt1Id', title: 'alt1'}],
+        criteria: [
+          {
+            id: 'crit1Id',
+            title: 'crit1',
+            dataSources: [
+              {id: 'ds1Id', unitOfMeasurement: {lowerBound: 0, upperBound: 1}}
+            ]
+          } as ICriterion
+        ],
+        effects: [],
+        distributions: [],
+        relativePerformances: []
+      } as IWorkspace;
       const pvfs: Record<string, IPvf> = {
         crit1Id: {direction: 'increasing', type: 'linear', range: [0, 100]}
       };
-      const result = getPataviProblem(
-        problem,
-        filteredCriteria,
-        filteredAlternatives,
-        pvfs
-      );
+      const preferences: TPreferences = [];
+      const result = getPataviProblem(workspace, preferences, pvfs);
       const expectedResult: IPataviProblem = {
-        title: 'new problem',
-        description: '',
-        schemaVersion: 'newest',
         alternatives: {alt1Id: {id: 'alt1Id', title: 'alt1'}},
         criteria: {
           crit1Id: {
@@ -65,7 +52,8 @@ describe('PataviUtil', () => {
             pvf: {direction: 'increasing', type: 'linear', range: [0, 100]}
           }
         },
-        performanceTable: []
+        performanceTable: [],
+        preferences: preferences
       };
       expect(result).toEqual(expectedResult);
     });

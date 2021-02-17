@@ -1,11 +1,11 @@
-import IProblem from '../Problem/IProblem';
-import {IAbsolutePataviTableEntry} from './IAbsolutePataviTableEntry';
+import {TPreferences} from '@shared/types/Preferences';
+import IAlternative from '../IAlternative';
 import {IPataviCriterion} from './IPataviCriterion';
-import {IRelativePataviTableEntry} from './IRelativePataviTableEntry';
+import {TPataviPerformanceTableEntry} from './TPataviPerfomanceTableEntry';
 
-export interface IPataviProblem
-  extends Omit<IProblem, 'criteria' | 'performanceTable'> {
+export interface IPataviProblem {
+  alternatives: Record<string, IAlternative>;
   criteria: Record<string, IPataviCriterion>;
-  schemaVersion: string;
-  performanceTable: (IRelativePataviTableEntry | IAbsolutePataviTableEntry)[];
+  preferences: TPreferences;
+  performanceTable: TPataviPerformanceTableEntry[];
 }
