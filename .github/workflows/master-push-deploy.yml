@@ -52,14 +52,17 @@ jobs:
       - name: docker push
         run: docker push addis/mcda
 
-      - name: stop container
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda'
-
       - name: pull latest from drugis on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && git pull'
 
+      - name: stop container
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda'
+
       - name: update database on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web/liquibase && ./update-live-db.sh update'
+
+      - name: remove container
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker rm mcda'
 
       - name: run docker container on remote server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && ./mcdaweb-run.sh'
