@@ -50,7 +50,7 @@ jobs:
       #   run: ./build-docker.sh GOOGLE Live
 
       - name: docker login
-        run: docker login -u drugis -p ${{ secrets.dockerRegistryPassword }}
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       # - name: docker push
       #   run: docker push addis/mcda
