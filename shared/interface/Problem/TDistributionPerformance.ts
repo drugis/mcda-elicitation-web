@@ -4,6 +4,7 @@ import IGammaPerformance from './IGammaPerformance';
 import INormalPerformance from './INormalPerformance';
 import IRangeDistributionPerformance from './IRangeDistributionPerformance';
 import IStudentsTPerformance from './IStudentsTPerformance';
+import ISurvivalPerformance from './ISurvivalPerformance';
 import ITextPerformance from './ITextPerformance';
 import IValuePerformance from './IValuePerformance';
 
@@ -13,6 +14,7 @@ export type TDistributionPerformance =
   | INormalPerformance
   | IBetaPerformance
   | IGammaPerformance
+  | ISurvivalPerformance
   | ITextPerformance
   | IEmptyPerformance
   | IStudentsTPerformance;
@@ -24,4 +26,5 @@ export type distributionPerformanceType =
   | 'dgamma'
   | 'range'
   | 'empty'
-  | 'dt';
+  | 'dt'
+  | 'dsurv';

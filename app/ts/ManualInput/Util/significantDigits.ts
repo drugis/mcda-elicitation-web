@@ -1,4 +1,7 @@
 export default function significantDigits(x: number, precision?: number) {
+  if (x === undefined || x === null || isNaN(x)) {
+    throw 'attempt to apply significant digits to non-numeric value';
+  }
   if (precision !== 0 && !precision) {
     precision = 3;
   }

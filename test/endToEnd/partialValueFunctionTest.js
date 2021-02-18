@@ -3,12 +3,13 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Set partial value functions': set,
-  'Go to previous step': navigate,
+  // 'Set partial value functions': set,
+  // 'Go to previous step': navigate,
   'Set linear partial value functions via button': setLinearPVF,
   'Display weights when all PVFs are set': displayWeights,
   'Reset set trade-offs when setting a PVF': resetTradeOffs,
   'Display deterministic results without initialized configured ranges': deterministic
+  //FIXME: re-enable once reactified
 };
 
 const loginService = require('./util/loginService');

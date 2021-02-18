@@ -490,7 +490,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         problem.criteria
       );
 
-      const performanceTable = buildPerformaceTable(
+      const performanceTable = buildPerformanceTable(
         problem.performanceTable,
         isDataSourcePercentageMap
       );
@@ -524,7 +524,10 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         .value();
     }
 
-    function buildPerformaceTable(performanceTable, isDataSourcePercentageMap) {
+    function buildPerformanceTable(
+      performanceTable,
+      isDataSourcePercentageMap
+    ) {
       return _.map(performanceTable, (entry) => {
         if (isInputPercentified(isDataSourcePercentageMap, entry)) {
           const inputBase = buildInputBase(entry);

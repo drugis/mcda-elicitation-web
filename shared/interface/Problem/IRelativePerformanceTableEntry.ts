@@ -1,7 +1,7 @@
-import IRelativePerformance from '../IRelativePerformance';
+import {IProblemRelativePerformance} from './IProblemRelativePerformance';
 
 export interface IRelativePerformanceTableEntry {
   criterion: string;
   dataSource: string;
-  performance: IRelativePerformance;
+  performance: IProblemRelativePerformance;
 }

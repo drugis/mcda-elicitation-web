@@ -5,13 +5,7 @@ define(['lodash', 'angular'], function (_, angular) {
   var scaleRanges = {
     isPresent: function (state) {
       var hasScale = function (criterion) {
-        return (
-          criterion.dataSources.length === 1 &&
-          criterion.dataSources[0].pvf &&
-          criterion.dataSources[0].pvf.range &&
-          criterion.dataSources[0].pvf.range[0] !== null &&
-          criterion.dataSources[0].pvf.range[1] !== null
-        );
+        return criterion.dataSources.length === 1;
       };
       return _.every(state.problem.criteria, hasScale);
     },

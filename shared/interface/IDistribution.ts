@@ -4,6 +4,7 @@ import IGammaDistribution from './IGammaDistribution';
 import INormalDistribution from './INormalDistribution';
 import IRangeEffect from './IRangeEffect';
 import IStudentsTDistribution from './IStudentsTDistribution';
+import ISurvivalDistribution from './ISurvivalDistribution';
 import ITextEffect from './ITextEffect';
 import {UnitOfMeasurementType} from './IUnitOfMeasurement';
 import IValueEffect from './IValueEffect';
@@ -13,6 +14,7 @@ export type Distribution =
   | IBetaDistribution
   | IGammaDistribution
   | IStudentsTDistribution
+  | ISurvivalDistribution
   | IValueEffect
   | IRangeEffect
   | IEmptyEffect
@@ -26,7 +28,8 @@ export type distributionType =
   | 'value'
   | 'range'
   | 'empty'
-  | 'text';
+  | 'text'
+  | 'survival';
 
 export default interface IDistribution {
   alternativeId: string;

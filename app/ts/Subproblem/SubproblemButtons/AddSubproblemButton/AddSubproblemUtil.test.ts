@@ -524,7 +524,7 @@ describe('addSubproblemUtil', () => {
         alt2Id: {id: 'alt2Id'} as IAlternative
       };
       const relativePerformances: IRelativePerformance[] = [
-        {baseline: {id: 'alt1Id'}} as IRelativePerformance
+        {baseline: {name: 'alt1Id'}} as IRelativePerformance
       ];
       const result = getBaselineMap(alternatives, relativePerformances);
       const expectedResult: Record<string, boolean> = {

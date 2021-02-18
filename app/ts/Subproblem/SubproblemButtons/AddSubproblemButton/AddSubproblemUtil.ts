@@ -244,7 +244,7 @@ export function getBaselineMap(
 ): Record<string, boolean> {
   return _.mapValues(alternatives, (alternative) => {
     return _.some(relativePerformances, (relativePerformance) => {
-      return alternative.id === relativePerformance.baseline.id;
+      return alternative.id === relativePerformance.baseline.name;
     });
   });
 }
