@@ -36,47 +36,47 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      # - name: run yarn
-      #   run: yarn
+      - name: run yarn
+        run: yarn
 
-      # - name: build backend
-      #   run: yarn build-backend
+      - name: build backend
+        run: yarn build-backend
 
-      # - name: unit tests
-      #   id: jest
-      #   run: yarn jest
+      - name: unit tests
+        id: jest
+        run: yarn jest
 
-      # - name: build docker image
-      #   run: ./build-docker.sh GOOGLE Live
+      - name: build docker image
+        run: ./build-docker.sh GOOGLE Live
 
       - name: docker login
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      # - name: docker push
-      #   run: docker push addis/mcda
+      - name: docker push
+        run: docker push addis/mcda
 
-      # - name: stop container
-      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda'
+      - name: stop container
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda'
 
-      # - name: update database on the server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web/liquibase && ./update-live-db.sh update'
+      - name: update database on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web/liquibase && ./update-live-db.sh update'
 
-      # - name: run docker container on remote server
-      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && ./mcdaweb-run.sh'
+      - name: run docker container on remote server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && ./mcdaweb-run.sh'
 
-      # - name: notify on slack channel on failure
-      #   if: failure()
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: 'Master push:'
-      #     SLACK_MESSAGE: 'MCDA-live deploy failed'
+      - name: notify on slack channel on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Master push:'
+          SLACK_MESSAGE: 'MCDA-live deploy failed'
 
-      # - name: notify on slack channel on success
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: 'Master push:'
-      #     SLACK_MESSAGE: 'MCDA-live deployed'
+      - name: notify on slack channel on success
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Master push:'
+          SLACK_MESSAGE: 'MCDA-live deployed'
