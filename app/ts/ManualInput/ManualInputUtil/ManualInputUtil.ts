@@ -214,7 +214,6 @@ export function normalizeInputValue(
 ): number {
   const parsedValue = Number.parseFloat(value);
   if (isNaN(parsedValue)) {
-    console.log('foo');
     throw 'Input is not numeric';
   } else {
     if (unitType != 'percentage') {
