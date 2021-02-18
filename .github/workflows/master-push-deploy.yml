@@ -52,8 +52,14 @@ jobs:
       - name: build docker image
         run: ./build-docker.sh GOOGLE Live
 
+      - name: docker login
+        run: docker login -u drugis -p ${{ secrets.dockerRegistryPassword }} addis
+
       # - name: docker push
       #   run: docker push addis/mcda
+
+      # - name: stop container
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda'
 
       # - name: update database on the server
       #   run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web/liquibase && ./update-live-db.sh update'
