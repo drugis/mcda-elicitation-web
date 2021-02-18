@@ -2,7 +2,7 @@ name: MCDA | push | deploy
 
 on:
   push:
-    branches: masterDeployWorkflow
+    branches: master
 
 jobs:
   test:
