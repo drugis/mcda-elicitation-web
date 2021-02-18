@@ -39,9 +39,6 @@ jobs:
       - name: run yarn
         run: yarn
 
-      - name: build backend
-        run: yarn build-backend
-
       - name: unit tests
         id: jest
         run: yarn jest
@@ -57,6 +54,9 @@ jobs:
 
       - name: stop container
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda'
+
+      - name: pull latest from drugis on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && git pull'
 
       - name: update database on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web/liquibase && ./update-live-db.sh update'
