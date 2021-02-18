@@ -221,8 +221,8 @@ describe('SmaaResultsUtil', () => {
     it('should format the central weights data for the plot', () => {
       const legend: Record<string, string> = undefined;
       const centralWeights: Record<string, ICentralWeight> = {
-        alt1: {cf: 13, w: {ds1Id: 1, ds2Id: 2}},
-        alt2: {cf: 37, w: {ds1Id: 3, ds2Id: 4}}
+        alt1: {cf: 13, w: {crit1: 1, crit2: 2}},
+        alt2: {cf: 37, w: {crit1: 3, crit2: 4}}
       };
       const alternatives: IAlternative[] = [
         {id: 'alt1', title: 'alternative1'},
@@ -260,8 +260,8 @@ describe('SmaaResultsUtil', () => {
         alt2: 'Smasher'
       };
       const centralWeights: Record<string, ICentralWeight> = {
-        alt1: {cf: 13, w: {ds1Id: 1, ds2Id: 2}},
-        alt2: {cf: 37, w: {ds1Id: 3, ds2Id: 4}}
+        alt1: {cf: 13, w: {crit1: 1, crit2: 2}},
+        alt2: {cf: 37, w: {crit1: 3, crit2: 4}}
       };
       const alternatives: IAlternative[] = [
         {id: 'alt1', title: 'alternative1'},

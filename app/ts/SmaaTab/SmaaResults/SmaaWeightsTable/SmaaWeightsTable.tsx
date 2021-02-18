@@ -38,14 +38,12 @@ export default function SmaaWeightsTable(): JSX.Element {
         {_.map(
           filteredCriteria,
           (criterion: ICriterion): JSX.Element => {
-            const weight = significantDigits(
-              smaaWeights.mean[criterion.dataSources[0].id]
-            );
+            const weight = significantDigits(smaaWeights.mean[criterion.id]);
             const lowerBound = significantDigits(
-              smaaWeights['2.5%'][criterion.dataSources[0].id]
+              smaaWeights['2.5%'][criterion.id]
             );
             const upperBound = significantDigits(
-              smaaWeights['97.5%'][criterion.dataSources[0].id]
+              smaaWeights['97.5%'][criterion.id]
             );
             return (
               <TableCell key={criterion.id}>

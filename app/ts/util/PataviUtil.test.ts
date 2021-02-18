@@ -40,8 +40,8 @@ describe('PataviUtil', () => {
       const expectedResult: IPataviProblem = {
         alternatives: {alt1Id: {id: 'alt1Id', title: 'alt1'}},
         criteria: {
-          ds1Id: {
-            id: 'ds1Id',
+          crit1Id: {
+            id: 'crit1Id',
             title: 'crit1',
             scale: [0, 1],
             pvf: {direction: 'increasing', type: 'linear', range: [0, 100]}
@@ -97,7 +97,7 @@ describe('PataviUtil', () => {
       const result = buildPataviPerformanceTable(workspace);
       const expectedResult: TPataviPerformanceTableEntry[] = [
         {
-          criterion: 'ds1',
+          criterion: 'crit1',
           dataSource: 'ds1',
           alternative: 'alt1',
           performance: {
@@ -106,14 +106,14 @@ describe('PataviUtil', () => {
           }
         },
         {
-          criterion: 'ds2',
+          criterion: 'crit2',
           dataSource: 'ds2',
           alternative: 'alt1',
           performance: {type: 'exact', value: 37}
         },
         {
+          criterion: 'crit3',
           dataSource: 'ds3',
-          criterion: 'ds3',
           performance: {
             type: 'relative-logit-normal',
             parameters: {baseline: {}, relative: {}}
@@ -134,13 +134,11 @@ describe('PataviUtil', () => {
           }
         ]
       } as IWorkspace;
-      try {
+      expect(() => {
         buildPataviPerformanceTable(workspace);
-      } catch (error) {
-        expect(error).toBe(
-          'Attempt to create invalid performance table entry for Patavi'
-        );
-      }
+      }).toThrow(
+        'Attempt to create invalid performance table entry for Patavi'
+      );
     });
   });
 

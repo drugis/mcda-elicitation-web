@@ -1,10 +1,6 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
-import {
-  IWeightsCommand,
-  IWeightsProblem
-} from '@shared/interface/Patavi/IWeightsCommand';
 import IPvf from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
@@ -16,7 +12,7 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 import {ErrorContext} from '../Error/ErrorContext';
 import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import {SettingsContext} from '../Settings/SettingsContext';
-import {getPataviProblem} from '../util/PataviUtil';
+import {getWeightsPataviProblem} from '../util/PataviUtil';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import IPreferencesContext from './IPreferencesContext';
@@ -147,20 +143,12 @@ export function PreferencesContextProviderComponent({
   }
 
   function getWeights(scenario: IMcdaScenario) {
-    const pataviProblem = getPataviProblem(
+    const postCommand = getWeightsPataviProblem(
       filteredWorkspace,
-      scenario.state.prefs,
-      pvfs
+      scenario,
+      pvfs,
+      randomSeed
     );
-    const postProblem: IWeightsProblem = {
-      ...pataviProblem,
-      method: 'representativeWeights',
-      seed: randomSeed
-    };
-    const postCommand: IWeightsCommand = {
-      problem: postProblem,
-      scenario: scenario
-    };
     Axios.post('/patavi/weights', postCommand).then(
       (result: AxiosResponse<IWeights>) => {
         const updatedScenario = _.merge({}, scenario, {

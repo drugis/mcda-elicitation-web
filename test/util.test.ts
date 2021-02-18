@@ -1,14 +1,14 @@
+import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
+import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
+import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
 import {
   buildScenarioCriteria,
   getRanges,
   getUser,
   handleError
 } from '../node-backend/util';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
-import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
-import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
 
 describe('The utility', () => {
   describe('getUser', () => {
@@ -35,11 +35,9 @@ describe('The utility', () => {
 
     it('should throw an error if there is no user on the request', () => {
       const request: any = {};
-      try {
+      expect(() => {
         getUser(request);
-      } catch (error) {
-        expect(error).toBe('No user id found');
-      }
+      }).toThrow('No user id found');
     });
   });
 

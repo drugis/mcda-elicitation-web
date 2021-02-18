@@ -43,7 +43,7 @@ export default function ValueProfilesTable({
               {_.map(filteredAlternatives, (alternative: IAlternative) => (
                 <TableCell key={alternative.id}>
                   {significantDigits(
-                    valueProfiles[alternative.id][criterion.dataSources[0].id]
+                    valueProfiles[alternative.id][criterion.id]
                   )}
                 </TableCell>
               ))}

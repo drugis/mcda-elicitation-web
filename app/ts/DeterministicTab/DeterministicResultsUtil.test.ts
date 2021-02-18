@@ -99,7 +99,7 @@ describe('DeterministicResultsUtil', () => {
     it('should return value profile plot data', () => {
       const legend: Record<string, string> = undefined;
       const valueProfiles: Record<string, Record<string, number>> = {
-        alt1Id: {ds1Id: 10}
+        alt1Id: {crit1Id: 10}
       };
       const criteria: ICriterion[] = [
         {
@@ -125,7 +125,7 @@ describe('DeterministicResultsUtil', () => {
     it('should return value profile plot data, with alternative title replaced by a legend', () => {
       const legend: Record<string, string> = {alt1Id: 'legend'};
       const valueProfiles: Record<string, Record<string, number>> = {
-        alt1Id: {ds1Id: 10}
+        alt1Id: {crit1Id: 10}
       };
       const criteria: ICriterion[] = [
         {

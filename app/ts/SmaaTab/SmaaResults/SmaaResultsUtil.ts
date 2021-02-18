@@ -233,7 +233,6 @@ function getCentralWeightsForAlternative(
 ): number[] {
   return _.map(
     criteria,
-    (criterion: ICriterion) =>
-      centralWeights[alternativeId].w[criterion.dataSources[0].id]
+    (criterion: ICriterion) => centralWeights[alternativeId].w[criterion.id]
   );
 }

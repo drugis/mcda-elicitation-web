@@ -11,6 +11,10 @@ import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
+import {
+  IWeightsCommand,
+  IWeightsProblem
+} from '@shared/interface/Patavi/IWeightsCommand';
 import {TPataviPerformanceTableEntry} from '@shared/interface/Patavi/TPataviPerfomanceTableEntry';
 import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolutePerformanceTableEntry';
 import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
@@ -24,11 +28,34 @@ import IPvf from '@shared/interface/Problem/IPvf';
 import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPreferences} from '@shared/types/Preferences';
 import {isAbsoluteEntry} from '@shared/workspaceService';
 import _ from 'lodash';
 
 type EntriesRecord = Record<string, Record<string, IAbsolutePataviTableEntry>>;
+
+export function getWeightsPataviProblem(
+  workspace: IWorkspace,
+  scenario: IMcdaScenario,
+  pvfs: Record<string, IPvf>,
+  randomSeed: number
+): IWeightsCommand {
+  const pataviProblem: IWeightsProblem = {
+    preferences: scenario.state.prefs,
+    alternatives: _.keyBy(workspace.alternatives, 'id'),
+    criteria: _(workspace.criteria)
+      .map(_.partial(buildPataviCriterion, pvfs))
+      .keyBy('id')
+      .value(),
+    method: 'representativeWeights',
+    seed: randomSeed
+  };
+  return {
+    problem: pataviProblem,
+    scenario: scenario
+  };
+}
 
 export function getPataviProblem(
   workspace: IWorkspace,
@@ -53,7 +80,7 @@ function buildPataviCriterion(
   const dataSource = criterion.dataSources[0];
   const scale = getScale(dataSource.unitOfMeasurement);
   return {
-    id: criterion.dataSources[0].id,
+    id: criterion.id,
     title: criterion.title,
     pvf: pvfs[criterion.id],
     scale: scale
@@ -117,7 +144,7 @@ function buildPataviTableEntries(
 function getEffectPerformance(effect: Effect): IAbsolutePataviTableEntry {
   const base = {
     alternative: effect.alternativeId,
-    criterion: effect.dataSourceId,
+    criterion: effect.criterionId,
     dataSource: effect.dataSourceId
   };
   if (effect.type === 'value' || effect.type === 'valueCI') {
@@ -146,7 +173,7 @@ function getDistributionPerformance(
 ): IAbsolutePataviTableEntry {
   const base = {
     alternative: distribution.alternativeId,
-    criterion: distribution.dataSourceId,
+    criterion: distribution.criterionId,
     dataSource: distribution.dataSourceId
   };
   if (distribution.type === 'value') {
@@ -235,7 +262,7 @@ function buildRelativePataviEntry(
   performance: IRelativePerformance
 ): IRelativePataviTableEntry {
   return {
-    criterion: performance.dataSourceId,
+    criterion: performance.criterionId,
     dataSource: performance.dataSourceId,
     performance: {
       parameters: {

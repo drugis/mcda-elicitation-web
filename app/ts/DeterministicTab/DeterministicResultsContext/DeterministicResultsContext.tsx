@@ -33,7 +33,7 @@ export function DeterministicResultsContextProviderComponent({
   children: any;
 }): JSX.Element {
   const {setError} = useContext(ErrorContext);
-  const {scales, oldProblem} = useContext(WorkspaceContext);
+  const {scales} = useContext(WorkspaceContext);
   const {
     filteredCriteria,
     filteredAlternatives,
@@ -154,7 +154,7 @@ export function DeterministicResultsContextProviderComponent({
       method: 'sensitivityMeasurementsPlot',
       sensitivityAnalysis: {
         alternative: measurementSensitivityAlternative.id,
-        criterion: measurementSensitivityCriterion.dataSources[0].id
+        criterion: measurementSensitivityCriterion.id
       }
     };
 
@@ -173,7 +173,7 @@ export function DeterministicResultsContextProviderComponent({
       ...pataviProblem,
       method: 'sensitivityWeightPlot',
       sensitivityAnalysis: {
-        criterion: preferencesSensitivityCriterion.dataSources[0].id
+        criterion: preferencesSensitivityCriterion.id
       }
     };
 

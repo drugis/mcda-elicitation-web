@@ -74,7 +74,7 @@ export default function PreferencesWeightsTable() {
               {importances[criterion.id]}
             </TableCell>
             <TableCell id={`weight-criterion-${criterion.id}`}>
-              {getWeight(criterion.dataSources[0].id)}
+              {getWeight(criterion.id)}
             </TableCell>
           </TableRow>
         );
