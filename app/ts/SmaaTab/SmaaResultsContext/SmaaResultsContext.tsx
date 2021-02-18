@@ -32,16 +32,13 @@ export function SmaaResultsContextProviderComponent({
     settings: {randomSeed}
   } = useContext(SettingsContext);
   const {
-    filteredEffects,
     filteredDistributions,
     filteredRelativePerformances,
-    filteredAlternatives,
-    filteredCriteria
+    filteredWorkspace
   } = useContext(SubproblemContext);
   const {currentScenario, updateScenario, pvfs} = useContext(
     PreferencesContext
   );
-  const {oldProblem} = useContext(WorkspaceContext);
 
   const problemHasStochasticMeasurements =
     hasStochasticMeasurements(filteredDistributions) ||
@@ -112,9 +109,8 @@ export function SmaaResultsContextProviderComponent({
 
   function calculateResults(): void {
     const pataviProblem = getPataviProblem(
-      oldProblem,
-      filteredCriteria,
-      filteredAlternatives,
+      filteredWorkspace,
+      currentScenario.state.prefs,
       pvfs
     );
 

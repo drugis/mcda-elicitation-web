@@ -39,14 +39,7 @@ export function TradeOffContextProviderComponent({
   const [referenceValueTo, setReferenceValueTo] = useState<number>();
   const referenceWeight =
     currentScenario.state.weights.mean[referenceCriterion.id];
-  const [partOfInterval, setPartOfInterval] = useState<number>(
-    getPartOfInterval(
-      referenceValueFrom,
-      referenceValueTo,
-      configuredLowerBound,
-      configuredUpperBound
-    )
-  );
+  const [partOfInterval, setPartOfInterval] = useState<number>();
 
   useEffect(reset, [referenceCriterion, pvfs]);
 

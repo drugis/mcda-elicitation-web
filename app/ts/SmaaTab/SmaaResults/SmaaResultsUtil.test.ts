@@ -229,8 +229,16 @@ describe('SmaaResultsUtil', () => {
         {id: 'alt2', title: 'alternative2'}
       ];
       const criteria: ICriterion[] = [
-        {id: 'crit1', title: 'criterion1'} as ICriterion,
-        {id: 'crit2', title: 'criterion2'} as ICriterion
+        {
+          id: 'crit1',
+          title: 'criterion1',
+          dataSources: [{id: 'ds1Id'}]
+        } as ICriterion,
+        {
+          id: 'crit2',
+          title: 'criterion2',
+          dataSources: [{id: 'ds2Id'}]
+        } as ICriterion
       ];
       const result = getCentralWeightsPlotData(
         centralWeights,
@@ -260,8 +268,16 @@ describe('SmaaResultsUtil', () => {
         {id: 'alt2', title: 'alternative2'}
       ];
       const criteria: ICriterion[] = [
-        {id: 'crit1', title: 'criterion1'} as ICriterion,
-        {id: 'crit2', title: 'criterion2'} as ICriterion
+        {
+          id: 'crit1',
+          title: 'criterion1',
+          dataSources: [{id: 'ds1Id'}]
+        } as ICriterion,
+        {
+          id: 'crit2',
+          title: 'criterion2',
+          dataSources: [{id: 'ds2Id'}]
+        } as ICriterion
       ];
       const result = getCentralWeightsPlotData(
         centralWeights,

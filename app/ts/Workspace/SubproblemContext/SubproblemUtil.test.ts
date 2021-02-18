@@ -184,7 +184,7 @@ describe('The Subproblem util', () => {
           type: 'relative-cloglog-normal',
           baseline: {
             type: 'dnorm',
-            id: 'alt1Id'
+            name: 'alt1Id'
           },
           relative: {
             cov: {
@@ -218,7 +218,7 @@ describe('The Subproblem util', () => {
           type: 'relative-cloglog-normal',
           baseline: {
             type: 'dnorm',
-            id: 'alt1Id'
+            name: 'alt1Id'
           },
           relative: {
             cov: {rownames: ['alt1Id'], colnames: ['alt1Id'], data: [[0]]},

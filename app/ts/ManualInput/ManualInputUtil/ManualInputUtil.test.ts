@@ -594,14 +594,12 @@ describe('manualInputService', () => {
       expect(result).toEqual(0.42);
     });
 
-    it('should return a parsed value if unit type is not percentage', () => {
+    it('should throw an exception for non-numeric input', () => {
       const value: string = 'a';
       const unitType: UnitOfMeasurementType = 'custom';
-      try {
-        const result = normalizeInputValue(value, unitType);
-      } catch (error) {
-        expect(error).toBe('Input is not numeric');
-      }
+      expect(() => {
+        normalizeInputValue(value, unitType);
+      }).toThrow('Input is not numeric');
     });
   });
 

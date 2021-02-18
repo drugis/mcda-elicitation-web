@@ -4,11 +4,11 @@ import ITextPerformance from './ITextPerformance';
 import IValueCIPerformance from './IValueCIPerformance';
 import IValuePerformance from './IValuePerformance';
 
-export type EffectPerformance =
+export type TEffectPerformance =
   | IValuePerformance
   | IValueCIPerformance
   | IRangeEffectPerformance
   | ITextPerformance
   | IEmptyPerformance;
 
-export type effectPerformanceType = 'exact' | 'empty';
+export type TEffectPerformanceType = 'exact' | 'empty';
