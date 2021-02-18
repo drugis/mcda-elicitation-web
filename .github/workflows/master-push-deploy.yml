@@ -36,24 +36,21 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      - name: run yarn
-        run: yarn
+      # - name: run yarn
+      #   run: yarn
 
-      - name: build backend
-        run: yarn build-backend
+      # - name: build backend
+      #   run: yarn build-backend
 
-      - name: run webpack
-        run: yarn build-prod
+      # - name: unit tests
+      #   id: jest
+      #   run: yarn jest
 
-      - name: unit tests
-        id: jest
-        run: yarn jest
-
-      - name: build docker image
-        run: ./build-docker.sh GOOGLE Live
+      # - name: build docker image
+      #   run: ./build-docker.sh GOOGLE Live
 
       - name: docker login
-        run: docker login -u drugis -p ${{ secrets.dockerRegistryPassword }} addis
+        run: docker login -u drugis -p ${{ secrets.dockerRegistryPassword }}
 
       # - name: docker push
       #   run: docker push addis/mcda
