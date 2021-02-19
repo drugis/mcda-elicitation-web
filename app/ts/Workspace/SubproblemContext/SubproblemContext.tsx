@@ -1,6 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {calculateObservedRanges} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
-import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {WorkspaceContext} from '../WorkspaceContext';
 import {hasScaleValues} from '../WorkspaceContextUtil';
@@ -50,20 +49,13 @@ export function SubproblemContextProviderComponent({
   }, [workspace, currentSubproblem]);
 
   useEffect(() => {
-    if (
-      !_.isEmpty(currentSubproblem.definition.ranges) &&
-      !_.some(currentSubproblem.definition.ranges, _.isEmpty)
-    ) {
-      setConfiguredRanges(currentSubproblem.definition.ranges);
-    } else if (!_.isEmpty(observedRanges)) {
-      setConfiguredRanges(
-        getConfiguredRanges(
-          criteria,
-          observedRanges,
-          currentSubproblem.definition.ranges
-        )
-      );
-    }
+    setConfiguredRanges(
+      getConfiguredRanges(
+        criteria,
+        observedRanges,
+        currentSubproblem.definition.ranges
+      )
+    );
   }, [observedRanges, currentSubproblem]);
 
   function getStepSizeForCriterion(criterion: ICriterion) {

@@ -186,6 +186,13 @@ export function hasNoRange(
   return _.isEmpty(ranges) || _.isEmpty(ranges[dataSourceId]);
 }
 
+function hasRange(
+  ranges: Record<string, [number, number]>,
+  dataSourceId: string
+): boolean {
+  return !hasNoRange(ranges, dataSourceId);
+}
+
 export function getConfiguredRanges(
   criteria: ICriterion[],
   observedRanges: Record<string, [number, number]>,
@@ -193,14 +200,12 @@ export function getConfiguredRanges(
 ): Record<string, [number, number]> {
   const dataSourcesWithValues: Record<string, IDataSource> = _(criteria)
     .flatMap('dataSources')
-    .filter((dataSource: IDataSource): boolean =>
-      Boolean(observedRanges[dataSource.id])
-    )
+    .filter((ds: IDataSource): boolean => hasRange(observedRanges, ds.id))
     .keyBy('id')
     .value();
   return _.mapValues(dataSourcesWithValues, (dataSource: IDataSource) => {
-    return configuredRanges && configuredRanges[dataSource.id]
-      ? configuredRanges[dataSource.id]
-      : observedRanges[dataSource.id];
+    return hasNoRange(configuredRanges, dataSource.id)
+      ? observedRanges[dataSource.id]
+      : configuredRanges[dataSource.id];
   });
 }
