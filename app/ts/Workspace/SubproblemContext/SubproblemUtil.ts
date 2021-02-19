@@ -183,7 +183,7 @@ export function hasNoRange(
   ranges: Record<string, [number, number]>,
   dataSourceId: string
 ): boolean {
-  return _.isEqual(ranges, {}) || _.isEqual(ranges[dataSourceId], {});
+  return _.isEmpty(ranges) || _.isEmpty(ranges[dataSourceId]);
 }
 
 export function getConfiguredRanges(

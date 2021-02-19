@@ -1,4 +1,4 @@
-import {Grid, Typography, useControlled} from '@material-ui/core';
+import {Grid, Typography} from '@material-ui/core';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -16,7 +16,7 @@ export default function TradeOff(): JSX.Element {
   const canShowTradeOffs =
     areAllPvfsLinear &&
     currentScenario.state.weights &&
-    !_.isEqual(observedRanges, {});
+    !_.isEmpty(observedRanges);
 
   return (
     <>
