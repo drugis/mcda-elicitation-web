@@ -50,7 +50,10 @@ export function SubproblemContextProviderComponent({
   }, [workspace, currentSubproblem]);
 
   useEffect(() => {
-    if (!_.isEmpty(currentSubproblem.definition.ranges)) {
+    if (
+      !_.isEmpty(currentSubproblem.definition.ranges) &&
+      !_.some(currentSubproblem.definition.ranges, _.isEmpty)
+    ) {
       setConfiguredRanges(currentSubproblem.definition.ranges);
     } else if (!_.isEmpty(observedRanges)) {
       setConfiguredRanges(
