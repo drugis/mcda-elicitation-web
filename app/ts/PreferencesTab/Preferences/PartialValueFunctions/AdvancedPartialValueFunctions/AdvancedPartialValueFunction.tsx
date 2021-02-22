@@ -27,9 +27,13 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
         <InlineHelp helpId="partial-value-function" /> define the mapping
         between the measurement values and the utility of that value.
       </Grid>
-      <PvfDirection />
-      <CutOffs />
-      <AdvancedPvfPlot />
+      <Grid container item xs={6}>
+        <PvfDirection />
+        <CutOffs />
+      </Grid>
+      <Grid container item xs={6}>
+        <AdvancedPvfPlot />
+      </Grid>
     </Grid>
   );
 }
