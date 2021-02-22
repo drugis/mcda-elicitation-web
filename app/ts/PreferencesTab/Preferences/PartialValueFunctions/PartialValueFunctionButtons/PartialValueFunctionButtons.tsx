@@ -4,14 +4,13 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TrendingUp from '@material-ui/icons/TrendingUp';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../../PreferencesContext';
-import {getPvfLocation} from '../PartialValueFunctionUtil';
 
 export default function PartialValueFunctionButtons({
   criterionId
 }: {
   criterionId: string;
 }) {
-  const {setLinearPvf} = useContext(PreferencesContext);
+  const {setLinearPvf, goToAdvancedPvf} = useContext(PreferencesContext);
 
   function handleIncreasingClick(): void {
     setLinearPvf(criterionId, 'increasing');
@@ -22,7 +21,7 @@ export default function PartialValueFunctionButtons({
   }
 
   function handleAdvancedClick(): void {
-    window.location.assign(getPvfLocation(criterionId));
+    goToAdvancedPvf(criterionId);
   }
 
   return (
@@ -58,7 +57,7 @@ export default function PartialValueFunctionButtons({
           Decreasing
         </Button>
       </Tooltip>
-      {/* <Tooltip title="Set linear or piece-wise PVF via guided process. Setting a PVF will reset all trade-off preferences.">
+      <Tooltip title="Set piece-wise PVF via guided process. Setting a PVF will reset all trade-off preferences.">
         <Button
           id={`advanced-pvf-button-${criterionId}`}
           variant="contained"
@@ -68,7 +67,7 @@ export default function PartialValueFunctionButtons({
           <TrendingUp />
           Advanced
         </Button>
-      </Tooltip> */}
+      </Tooltip>
     </ButtonGroup>
   );
 }

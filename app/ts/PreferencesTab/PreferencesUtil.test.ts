@@ -1,11 +1,11 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import IWeights from '@shared/interface/Scenario/IWeights';
+import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import {
   buildScenarioWithPreferences,
@@ -80,7 +80,7 @@ const criterion3: ICriterion = {
 
 describe('PreferencesUtil', () => {
   describe('initPvfs', () => {
-    const criteria: ICriterion[] = [criterion1, criterion2];
+    const criteria: ICriterion[] = [criterion1];
 
     const currentScenario: IMcdaScenario = {
       id: 'scenarioId1',
@@ -89,7 +89,7 @@ describe('PreferencesUtil', () => {
         prefs: [],
         problem: {
           criteria: {
-            crit2Id: {
+            crit1Id: {
               dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
             }
           }
@@ -100,12 +100,10 @@ describe('PreferencesUtil', () => {
     };
     it('should return a map of string id to the corresponding pvf with configured ranges', () => {
       const ranges: Record<string, [number, number]> = {
-        dsId1: [0, 1],
-        dsId2: [2, 3]
+        dsId1: [0, 1]
       };
       const observedRanges: Record<string, [number, number]> = {
-        dsId1: [10, 11],
-        dsId2: [12, 13]
+        dsId1: [10, 11]
       };
       const result = initPvfs(
         criteria,
@@ -113,9 +111,8 @@ describe('PreferencesUtil', () => {
         ranges,
         observedRanges
       );
-      const expectedResult: Record<string, IPvf> = {
-        crit1Id: {range: [0, 1]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
+      const expectedResult: Record<string, TPvf> = {
+        crit1Id: {type: 'linear', direction: 'decreasing', range: [0, 1]}
       };
       expect(result).toEqual(expectedResult);
     });
@@ -123,8 +120,7 @@ describe('PreferencesUtil', () => {
     it('should return a map of string id to the corresponding pvf with observed ranges', () => {
       const ranges: Record<string, [number, number]> = {};
       const observedRanges: Record<string, [number, number]> = {
-        dsId1: [10, 11],
-        dsId2: [12, 13]
+        dsId1: [10, 11]
       };
       const result = initPvfs(
         criteria,
@@ -132,9 +128,8 @@ describe('PreferencesUtil', () => {
         ranges,
         observedRanges
       );
-      const expectedResult: Record<string, IPvf> = {
-        crit1Id: {range: [10, 11]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [12, 13]}
+      const expectedResult: Record<string, TPvf> = {
+        crit1Id: {type: 'linear', direction: 'decreasing', range: [10, 11]}
       };
       expect(result).toEqual(expectedResult);
     });
@@ -195,12 +190,12 @@ describe('PreferencesUtil', () => {
               criteria: {
                 crit1Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 },
                 crit2Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 }
               }
@@ -214,11 +209,11 @@ describe('PreferencesUtil', () => {
               criteria: {
                 crit1Id: {
                   dataSources: [
-                    {pvf: {direction: 'increasing'} as IScenarioPvf}
+                    {pvf: {direction: 'increasing'} as TScenarioPvf}
                   ]
                 },
                 crit2Id: {
-                  dataSources: [{pvf: {} as IScenarioPvf}]
+                  dataSources: [{pvf: {} as TScenarioPvf}]
                 }
               }
             } as IScenarioProblem
@@ -249,12 +244,12 @@ describe('PreferencesUtil', () => {
               criteria: {
                 crit1Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 },
                 crit2Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 }
               }

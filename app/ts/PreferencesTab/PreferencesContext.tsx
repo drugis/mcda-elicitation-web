@@ -1,7 +1,8 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
+import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {TPreferences} from '@shared/types/Preferences';
@@ -56,13 +57,17 @@ export function PreferencesContextProviderComponent({
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
     _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
-  const [pvfs, setPvfs] = useState<Record<string, IPvf>>();
+  const [pvfs, setPvfs] = useState<Record<string, TPvf>>();
   const subproblemId = currentScenario.subproblemId;
   const disableWeightsButtons = !areAllPvfsSet(pvfs);
   const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
   const [elicitationMethod, setElicitationMethod] = useState<string>(
     determineElicitationMethod(currentScenario.state.prefs)
   );
+  const [
+    advancedPvfCriterionId,
+    setAdvancedPvfCriterionId
+  ] = useState<string>();
 
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
@@ -86,12 +91,12 @@ export function PreferencesContextProviderComponent({
     );
   }, [currentScenario, pvfs]);
 
-  function getPvf(criterionId: string): IPvf {
+  function getPvf(criterionId: string): TPvf {
     return pvfs[criterionId];
   }
 
   function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       direction: direction,
       type: 'linear',
       range: pvfs[criterionId].range
@@ -106,7 +111,7 @@ export function PreferencesContextProviderComponent({
     });
   }
 
-  function areAllPvfsSet(newPvfs: Record<string, IPvf>): boolean {
+  function areAllPvfsSet(newPvfs: Record<string, TPvf>): boolean {
     return (
       newPvfs &&
       _.every(filteredCriteria, (criterion: ICriterion): boolean => {
@@ -225,13 +230,15 @@ export function PreferencesContextProviderComponent({
     setError(error);
   }
 
-  function getCriterion(id: string): ICriterion {
-    return _.find(filteredCriteria, ['id', id]);
+  function goToAdvancedPvf(criterionId: string): void {
+    setAdvancedPvfCriterionId(criterionId);
+    setActiveView('advancedPvf');
   }
 
   return (
     <PreferencesContext.Provider
       value={{
+        advancedPvfCriterionId,
         scenarios: contextScenarios,
         scenariosWithPvfs: filterScenariosWithPvfs(
           contextScenarios,
@@ -247,8 +254,8 @@ export function PreferencesContextProviderComponent({
         deleteScenario,
         copyScenario,
         addScenario,
-        getCriterion,
         getPvf,
+        goToAdvancedPvf,
         setLinearPvf,
         resetPreferences,
         setActiveView

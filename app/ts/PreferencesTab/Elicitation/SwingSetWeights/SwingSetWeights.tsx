@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import {ElicitationContext} from 'app/ts/PreferencesTab/Elicitation/ElicitationContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext, useEffect, useState} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
 import {getSwingStatement} from '../PreciseSwingElicitation/PreciseSwingElicitationUtil';
@@ -11,7 +12,8 @@ export default function SwingSetWeights() {
   const {mostImportantCriterionId, elicitationMethod} = useContext(
     ElicitationContext
   );
-  const {getCriterion, pvfs} = useContext(PreferencesContext);
+  const {pvfs} = useContext(PreferencesContext);
+  const {getCriterion} = useContext(SubproblemContext);
 
   const [statement, setStatement] = useState<string>(
     getSwingStatement(

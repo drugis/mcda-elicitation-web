@@ -24,7 +24,7 @@ import {
   TPerformance
 } from '@shared/interface/Problem/IPerformance';
 import IProblem from '@shared/interface/Problem/IProblem';
-import IPvf from '@shared/interface/Problem/IPvf';
+import IPvf, {TPvf} from '@shared/interface/Problem/IPvf';
 import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
@@ -74,7 +74,7 @@ export function getPataviProblem(
 }
 
 function buildPataviCriterion(
-  pvfs: Record<string, IPvf>,
+  pvfs: Record<string, TPvf>,
   criterion: ICriterion
 ): IPataviCriterion {
   const dataSource = criterion.dataSources[0];

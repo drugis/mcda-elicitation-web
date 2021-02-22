@@ -1,4 +1,5 @@
-import IPvf from '@shared/interface/Problem/IPvf';
+import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
+import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {ChartConfiguration} from 'c3';
 import {
   generatePlotSettings,
@@ -11,7 +12,7 @@ import {
 describe('getPvfCoordinates', () => {
   it('should return pvf coordinates for the plot without cutoffs', () => {
     const usePercentage = false;
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       range: [10, 100],
       direction: 'increasing',
       type: 'linear'
@@ -27,7 +28,7 @@ describe('getPvfCoordinates', () => {
 
   it('should return pvf coordinates for the plot with cutoffs', () => {
     const usePercentage = false;
-    const pvf: IPvf = {
+    const pvf: IPieceWiseLinearPvf = {
       range: [10, 90],
       direction: 'increasing',
       type: 'piece-wise-linear',
@@ -45,7 +46,7 @@ describe('getPvfCoordinates', () => {
 
   it('should return pvf coordinates for the plot with cutoffs, perfentified', () => {
     const usePercentage = true;
-    const pvf: IPvf = {
+    const pvf: IPieceWiseLinearPvf = {
       range: [0.1, 0.9],
       direction: 'increasing',
       type: 'piece-wise-linear',
@@ -65,7 +66,7 @@ describe('getPvfCoordinates', () => {
 describe('getBest', () => {
   it('should return the largest value from pvf range if pvf is increasing', () => {
     const usePercentage = false;
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       range: [10, 100],
       direction: 'increasing',
       type: 'linear'
@@ -76,7 +77,7 @@ describe('getBest', () => {
 
   it('should return the smallest value from pvf range if pvf is decreasing', () => {
     const usePercentage = false;
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       range: [10, 100],
       direction: 'decreasing',
       type: 'linear'
@@ -87,7 +88,7 @@ describe('getBest', () => {
 
   it('should return percentified values if usePercentage is true', () => {
     const usePercentage = true;
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       range: [0.1, 1],
       direction: 'decreasing',
       type: 'linear'
@@ -100,7 +101,7 @@ describe('getBest', () => {
 describe('getWorst', () => {
   it('should return the smallest value from pvf range if pvf is increasing', () => {
     const usePercentage = false;
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       range: [10, 100],
       direction: 'increasing',
       type: 'linear'
@@ -111,7 +112,7 @@ describe('getWorst', () => {
 
   it('should return the largest value from pvf range if pvf is decreasing', () => {
     const usePercentage = false;
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       range: [10, 100],
       direction: 'decreasing',
       type: 'linear'
@@ -122,7 +123,7 @@ describe('getWorst', () => {
 
   it('should return percentified values if usePercentage is true', () => {
     const usePercentage = true;
-    const pvf: IPvf = {
+    const pvf: ILinearPvf = {
       range: [0.1, 1],
       direction: 'decreasing',
       type: 'linear'

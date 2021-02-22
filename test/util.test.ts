@@ -1,6 +1,5 @@
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
 import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
 import {
@@ -9,6 +8,7 @@ import {
   getUser,
   handleError
 } from '../node-backend/util';
+import {TScenarioPvf} from '../shared/interface/Scenario/TScenarioPvf';
 
 describe('The utility', () => {
   describe('getUser', () => {
@@ -46,7 +46,7 @@ describe('The utility', () => {
       const criteria = {
         crit1Id: {} as IProblemCriterion
       };
-      const pvfs: Record<string, IScenarioPvf> = {
+      const pvfs: Record<string, TScenarioPvf> = {
         crit1Id: {
           direction: 'increasing',
           type: 'linear'
@@ -67,7 +67,7 @@ describe('The utility', () => {
           dataSources: [{id: 'ds1Id'}, {id: 'ds1Id'}]
         } as IProblemCriterion
       };
-      const pvfs: Record<string, IScenarioPvf> = {
+      const pvfs: Record<string, TScenarioPvf> = {
         crit1Id: {
           direction: 'increasing',
           type: 'linear'

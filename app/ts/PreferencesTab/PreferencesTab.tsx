@@ -1,6 +1,5 @@
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import IScale from '@shared/interface/IScale';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';

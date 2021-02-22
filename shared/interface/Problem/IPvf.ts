@@ -1,9 +1,8 @@
-import {TPvfDirection, TPvfType} from '@shared/types/PvfTypes';
+import {ILinearPvf} from '../Pvfs/ILinearPvf';
+import {IPieceWiseLinearPvf} from '../Pvfs/IPieceWiseLinearPvf';
+
+export type TPvf = ILinearPvf | IPieceWiseLinearPvf;
 
 export default interface IPvf {
   range: [number, number];
-  direction?: TPvfDirection;
-  type?: TPvfType;
-  cutoffs?: number[];
-  values?: number[];
 }

@@ -1,7 +1,8 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import IPieceWiseLinearScenarioPvf from '@shared/interface/Scenario/IPieceWiseLinearScenarioPvf';
+import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
 
@@ -10,28 +11,57 @@ export function initPvfs(
   currentScenario: IMcdaScenario,
   ranges: Record<string, [number, number]>,
   observedRanges: Record<string, [number, number]>
-): Record<string, IPvf> {
+): Record<string, TPvf> {
   return _(criteria)
     .keyBy('id')
-    .mapValues((criterion) => {
-      const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
-      return _.merge(
-        {},
-        {
-          range: ranges[criterion.dataSources[0].id]
-            ? ranges[criterion.dataSources[0].id]
-            : observedRanges[criterion.dataSources[0].id]
-        },
-        scenarioPvf
-      );
-    })
+    .mapValues(_.partial(getPvf, currentScenario, ranges, observedRanges))
     .value();
+}
+
+function getPvf(
+  currentScenario: IMcdaScenario,
+  ranges: Record<string, [number, number]>,
+  observedRanges: Record<string, [number, number]>,
+  criterion: ICriterion
+): TPvf {
+  const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
+  const range = ranges[criterion.dataSources[0].id]
+    ? ranges[criterion.dataSources[0].id]
+    : observedRanges[criterion.dataSources[0].id];
+  return _.merge({}, getPvfWithRange(scenarioPvf, range));
+}
+
+function getPvfWithRange(
+  scenarioPvf: TScenarioPvf,
+  range: [number, number]
+): TPvf {
+  if (isPieceWiseLinearPvf(scenarioPvf)) {
+    return {
+      direction: scenarioPvf.direction,
+      cutoffs: scenarioPvf.cutoffs,
+      values: scenarioPvf.values,
+      type: 'piece-wise-linear',
+      range: range
+    };
+  } else {
+    return {
+      direction: scenarioPvf.direction,
+      type: 'linear',
+      range: range
+    };
+  }
+}
+
+function isPieceWiseLinearPvf(
+  pvf: TScenarioPvf
+): pvf is IPieceWiseLinearScenarioPvf {
+  return 'cutoffs' in pvf;
 }
 
 function getScenarioPvf(
   criterionId: string,
   currentScenario: IMcdaScenario
-): IScenarioPvf | undefined {
+): TScenarioPvf | undefined {
   if (
     currentScenario.state.problem &&
     currentScenario.state.problem.criteria[criterionId] &&

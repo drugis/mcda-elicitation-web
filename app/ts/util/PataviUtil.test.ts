@@ -6,7 +6,7 @@ import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePatav
 import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
 import {TPataviPerformanceTableEntry} from '@shared/interface/Patavi/TPataviPerfomanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import {
   buildPataviPerformanceTable,
@@ -32,7 +32,7 @@ describe('PataviUtil', () => {
         distributions: [],
         relativePerformances: []
       } as IWorkspace;
-      const pvfs: Record<string, IPvf> = {
+      const pvfs: Record<string, ILinearPvf> = {
         crit1Id: {direction: 'increasing', type: 'linear', range: [0, 100]}
       };
       const preferences: TPreferences = [];
