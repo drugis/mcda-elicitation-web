@@ -164,4 +164,10 @@ describe('getPvfLocation', () => {
       'https://mcda-test.drugis.org/#!/workspaces/1/problems/1/scenarios/1/partial-value-function/critId';
     expect(result).toEqual(expectedResult);
   });
+
+  describe('generateAdvancedPlotSettings', () => {
+    it('should', () => {
+      fail();
+    });
+  });
 });

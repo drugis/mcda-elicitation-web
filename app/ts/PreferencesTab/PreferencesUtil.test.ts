@@ -102,34 +102,9 @@ describe('PreferencesUtil', () => {
       const ranges: Record<string, [number, number]> = {
         dsId1: [0, 1]
       };
-      const observedRanges: Record<string, [number, number]> = {
-        dsId1: [10, 11]
-      };
-      const result = initPvfs(
-        criteria,
-        currentScenario,
-        ranges,
-        observedRanges
-      );
+      const result = initPvfs(criteria, currentScenario, ranges);
       const expectedResult: Record<string, TPvf> = {
         crit1Id: {type: 'linear', direction: 'decreasing', range: [0, 1]}
-      };
-      expect(result).toEqual(expectedResult);
-    });
-
-    it('should return a map of string id to the corresponding pvf with observed ranges', () => {
-      const ranges: Record<string, [number, number]> = {};
-      const observedRanges: Record<string, [number, number]> = {
-        dsId1: [10, 11]
-      };
-      const result = initPvfs(
-        criteria,
-        currentScenario,
-        ranges,
-        observedRanges
-      );
-      const expectedResult: Record<string, TPvf> = {
-        crit1Id: {type: 'linear', direction: 'decreasing', range: [10, 11]}
       };
       expect(result).toEqual(expectedResult);
     });

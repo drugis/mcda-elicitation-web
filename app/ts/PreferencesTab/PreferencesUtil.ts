@@ -10,27 +10,23 @@ import _ from 'lodash';
 export function initPvfs(
   criteria: ICriterion[],
   currentScenario: IMcdaScenario,
-  ranges: Record<string, [number, number]>,
-  observedRanges: Record<string, [number, number]>
+  configuredRanges: Record<string, [number, number]>
 ): Record<string, TPvf> {
   return _(criteria)
     .keyBy('id')
-    .mapValues(_.partial(getPvf, currentScenario, ranges, observedRanges))
+    .mapValues(_.partial(getPvf, currentScenario, configuredRanges))
     .pickBy()
     .value();
 }
 
 function getPvf(
   currentScenario: IMcdaScenario,
-  ranges: Record<string, [number, number]>,
-  observedRanges: Record<string, [number, number]>,
+  configuredRanges: Record<string, [number, number]>,
   criterion: ICriterion
 ): TPvf | undefined {
   const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
   if (scenarioPvf) {
-    const range = ranges[criterion.dataSources[0].id]
-      ? ranges[criterion.dataSources[0].id]
-      : observedRanges[criterion.dataSources[0].id];
+    const range = configuredRanges[criterion.dataSources[0].id];
     return _.merge({}, getPvfWithRange(scenarioPvf, range));
   } else {
     return undefined;

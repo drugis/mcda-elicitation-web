@@ -76,17 +76,10 @@ export function PreferencesContextProviderComponent({
   ] = useState<string>();
 
   useEffect(() => {
-    if (!_.isEmpty(observedRanges)) {
-      setPvfs(
-        initPvfs(
-          filteredCriteria,
-          currentScenario,
-          currentSubproblem.definition.ranges,
-          observedRanges
-        )
-      );
+    if (!_.isEmpty(configuredRanges)) {
+      setPvfs(initPvfs(filteredCriteria, currentScenario, configuredRanges));
     }
-  }, [observedRanges]);
+  }, [configuredRanges]);
 
   useEffect(() => {
     if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {
