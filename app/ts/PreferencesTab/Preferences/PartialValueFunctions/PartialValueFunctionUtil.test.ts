@@ -31,7 +31,7 @@ describe('getPvfCoordinates', () => {
     const pvf: IPieceWiseLinearPvf = {
       range: [10, 90],
       direction: 'increasing',
-      type: 'piece-wise-linear',
+      type: 'piecewise-linear',
       cutoffs: [50],
       values: [0.5]
     };
@@ -49,7 +49,7 @@ describe('getPvfCoordinates', () => {
     const pvf: IPieceWiseLinearPvf = {
       range: [0.1, 0.9],
       direction: 'increasing',
-      type: 'piece-wise-linear',
+      type: 'piecewise-linear',
       cutoffs: [0.5],
       values: [0.5]
     };

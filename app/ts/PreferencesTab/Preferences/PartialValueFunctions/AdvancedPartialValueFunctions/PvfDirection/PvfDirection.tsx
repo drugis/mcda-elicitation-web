@@ -1,36 +1,51 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
-import {TPvfDirection} from '@shared/types/PvfTypes';
+import {TPvfDirection} from '@shared/types/TPvfDirection';
+import {
+  canBePercentage,
+  getPercentifiedValue
+} from 'app/ts/DisplayUtil/DisplayUtil';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {ChangeEvent, useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function PvfDirection(): JSX.Element {
-  const {direction, setDirection} = useContext(
+  const {showPercentages} = useContext(SettingsContext);
+  const {direction, setDirection, advancedPvfCriterion} = useContext(
     AdvancedPartialValueFunctionContext
   );
+  const {configuredRanges} = useContext(SubproblemContext);
+
+  const configuredRange =
+    configuredRanges[advancedPvfCriterion.dataSources[0].id];
+  const unit = advancedPvfCriterion.dataSources[0].unitOfMeasurement.type;
+  const usePercentage = showPercentages && canBePercentage(unit);
 
   function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
     setDirection(event.target.value as TPvfDirection);
   }
 
   return (
-    <Grid container item xs={12}>
-      <Grid item xs={6}>
+    <>
+      <Grid item xs={12}>
         Choose partial value function's direction
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <RadioGroup
           name="pvf-direction-radio"
           value={direction}
           onChange={handleRadioChanged}
         >
           <label id="increasing-pvf-option">
-            <Radio value="increasing" /> Increasing
+            <Radio value="increasing" /> Increasing (
+            {getPercentifiedValue(configuredRange[1], usePercentage)} is best)
           </label>
           <label id="decreasing-pvf-option">
-            <Radio value="decreasing" /> Decreasing
+            <Radio value="decreasing" /> Decreasing (
+            {getPercentifiedValue(configuredRange[0], usePercentage)} is best)
           </label>
         </RadioGroup>
       </Grid>
-    </Grid>
+    </>
   );
 }

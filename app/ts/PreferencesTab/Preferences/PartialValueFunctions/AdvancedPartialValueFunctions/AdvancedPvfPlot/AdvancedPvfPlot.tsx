@@ -40,7 +40,7 @@ export default function AdvancedPvfPlot() {
   }, [cutOffs, showPercentages, direction]);
 
   return (
-    <Grid item xs={12}>
+    <Grid container item xs={12} justify="flex-start">
       <div
         style={{width: width, height: height}}
         id={`pvfplot-${advancedPvfCriterion.id}`}

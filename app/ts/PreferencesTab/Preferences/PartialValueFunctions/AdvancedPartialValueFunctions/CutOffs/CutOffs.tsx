@@ -3,6 +3,7 @@ import {
   canBePercentage,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
+import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
@@ -14,7 +15,7 @@ export default function CutOffs(): JSX.Element {
   const {getStepSizeForCriterion, configuredRanges} = useContext(
     SubproblemContext
   );
-  const {advancedPvfCriterion, cutOffs, direction, setCutOffs} = useContext(
+  const {advancedPvfCriterion, cutOffs, setCutOffs} = useContext(
     AdvancedPartialValueFunctionContext
   );
 
@@ -24,65 +25,43 @@ export default function CutOffs(): JSX.Element {
   const unit = advancedPvfCriterion.dataSources[0].unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
 
-  const sliderParameters =
-    direction === 'decreasing'
-      ? {
-          // displayFrom: getPercentifiedValue(upperBound, usePercentage),
-          // displayTo: getPercentifiedValue(lowerBound, usePercentage),
-          min: -configuredRange[1],
-          max: -configuredRange[0],
-          values: _.map(cutOffs, _.partial(_.multiply, -1)),
-          formatFunction: (x: number) => {
-            return getPercentifiedValue(-x, usePercentage);
-          }
-        }
-      : {
-          // displayFrom: getPercentifiedValue(lowerBound, usePercentage),
-          // displayTo: getPercentifiedValue(upperBound, usePercentage),
-          min: configuredRange[0],
-          max: configuredRange[1],
-          values: cutOffs,
-          formatFunction: (x: number) => {
-            return getPercentifiedValue(x, usePercentage);
-          }
-        };
+  const sliderParameters = {
+    min: significantDigits(configuredRange[0] + stepSize),
+    max: significantDigits(configuredRange[1] - stepSize),
+    values: cutOffs,
+    formatFunction: (x: number) => getPercentifiedValue(x, usePercentage)
+  };
 
   function handleSliderChanged(
     event: React.ChangeEvent<any>,
     newValue: [number, number, number]
   ) {
-    if (direction === 'decreasing') {
-      setCutOffs(
-        _.sortBy(_.map(newValue, _.partial(_.multiply, -1))) as [
-          number,
-          number,
-          number
-        ]
-      );
-    } else {
-      setCutOffs(_.sortBy(newValue) as [number, number, number]);
-    }
+    setCutOffs(_.sortBy(newValue) as [number, number, number]);
   }
 
   return (
-    <Grid container item xs={12}>
-      <Grid item xs={6}>
-        Choose cut off values
+    <>
+      <Grid container item xs={12} justify="flex-start">
+        <div style={{width: '420px', marginLeft: '50px', marginRight: '30px'}}>
+          <Slider
+            id="cut-offs-slider"
+            min={sliderParameters.min}
+            max={sliderParameters.max}
+            marks
+            track={false}
+            value={sliderParameters.values}
+            onChange={handleSliderChanged}
+            valueLabelDisplay="on"
+            valueLabelFormat={sliderParameters.formatFunction}
+            step={stepSize}
+          />
+        </div>
       </Grid>
-      <Grid item xs={6}>
-        <Slider
-          id="cut-offs-slider"
-          min={sliderParameters.min}
-          max={sliderParameters.max}
-          marks
-          track={false}
-          value={sliderParameters.values}
-          onChange={handleSliderChanged}
-          valueLabelDisplay="on"
-          valueLabelFormat={sliderParameters.formatFunction}
-          step={stepSize}
-        />
+      <Grid container item xs={12} justify="flex-start">
+        <div style={{width: '500px', textAlign: 'center'}}>
+          Use the slider to adjust the function shape
+        </div>
       </Grid>
-    </Grid>
+    </>
   );
 }

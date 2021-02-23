@@ -3,13 +3,11 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  // 'Set partial value functions': set,
-  // 'Go to previous step': navigate,
+  'Set piecewise linear partial value function': set,
   'Set linear partial value functions via button': setLinearPVF,
   'Display weights when all PVFs are set': displayWeights,
   'Reset set trade-offs when setting a PVF': resetTradeOffs,
   'Display deterministic results without initialized configured ranges': deterministic
-  //FIXME: re-enable once reactified
 };
 
 const loginService = require('./util/loginService');
@@ -39,23 +37,9 @@ function set(browser) {
     .click('#save-button')
     .waitForElementVisible('#partial-value-functions-block')
     .click('#advanced-pvf-button-c2')
-    .click('#increasing-pvf-option')
-    .click('#piece-wise-pvf-option')
-    .click('#next-button')
-    .click('#piece-wise-next-button')
-    .click('#piece-wise-next-button')
-    .click('#piece-wise-save-button')
+    .click('#save-button')
     .pause(200)
     .waitForElementVisible('#ranking-button:enabled');
-}
-
-function navigate(browser) {
-  browser
-    .click('#advanced-pvf-button-c1')
-    .click('#piece-wise-pvf-option')
-    .click('#next-button')
-    .click('#previous-button')
-    .waitForElementVisible('#criterion-title');
 }
 
 function setLinearPVF(browser) {

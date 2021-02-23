@@ -1,8 +1,8 @@
-import {TPvfDirection} from '@shared/types/PvfTypes';
+import {TPvfDirection} from '@shared/types/TPvfDirection';
 
 export default interface IPieceWiseLinearScenarioPvf {
   direction: TPvfDirection;
-  type: 'piece-wise-linear';
+  type: 'piecewise-linear';
   cutoffs: number[];
   values: number[];
 }

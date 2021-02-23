@@ -1,5 +1,6 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {TPvf} from '@shared/interface/Problem/IPvf';
+import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IPieceWiseLinearScenarioPvf from '@shared/interface/Scenario/IPieceWiseLinearScenarioPvf';
 import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
@@ -15,6 +16,7 @@ export function initPvfs(
   return _(criteria)
     .keyBy('id')
     .mapValues(_.partial(getPvf, currentScenario, ranges, observedRanges))
+    .pickBy()
     .value();
 }
 
@@ -23,24 +25,28 @@ function getPvf(
   ranges: Record<string, [number, number]>,
   observedRanges: Record<string, [number, number]>,
   criterion: ICriterion
-): TPvf {
+): TPvf | undefined {
   const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
-  const range = ranges[criterion.dataSources[0].id]
-    ? ranges[criterion.dataSources[0].id]
-    : observedRanges[criterion.dataSources[0].id];
-  return _.merge({}, getPvfWithRange(scenarioPvf, range));
+  if (scenarioPvf) {
+    const range = ranges[criterion.dataSources[0].id]
+      ? ranges[criterion.dataSources[0].id]
+      : observedRanges[criterion.dataSources[0].id];
+    return _.merge({}, getPvfWithRange(scenarioPvf, range));
+  } else {
+    return undefined;
+  }
 }
 
 function getPvfWithRange(
   scenarioPvf: TScenarioPvf,
   range: [number, number]
 ): TPvf {
-  if (isPieceWiseLinearPvf(scenarioPvf)) {
+  if (isPieceWiseLinearScenarioPvf(scenarioPvf)) {
     return {
       direction: scenarioPvf.direction,
       cutoffs: scenarioPvf.cutoffs,
       values: scenarioPvf.values,
-      type: 'piece-wise-linear',
+      type: 'piecewise-linear',
       range: range
     };
   } else {
@@ -52,9 +58,13 @@ function getPvfWithRange(
   }
 }
 
-function isPieceWiseLinearPvf(
+function isPieceWiseLinearScenarioPvf(
   pvf: TScenarioPvf
 ): pvf is IPieceWiseLinearScenarioPvf {
+  return 'cutoffs' in pvf;
+}
+
+function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
   return 'cutoffs' in pvf;
 }
 
@@ -116,4 +126,35 @@ export function determineElicitationMethod(preferences: TPreferences): string {
         return 'Imprecise Swing Weighting';
     }
   }
+}
+
+export function createScenarioWithPvf(
+  criterionId: string,
+  pvf: TPvf,
+  currentScenario: IMcdaScenario
+) {
+  let newScenario: IMcdaScenario = _.cloneDeep(currentScenario);
+  if (!newScenario.state.problem) {
+    newScenario.state.problem = {criteria: {}};
+  }
+  if (isPieceWiseLinearPvf(pvf)) {
+    newScenario.state.problem.criteria[criterionId] = {
+      dataSources: [
+        {
+          pvf: {
+            direction: pvf.direction,
+            cutoffs: pvf.cutoffs,
+            values: pvf.values,
+            type: 'piecewise-linear'
+          }
+        }
+      ]
+    };
+  } else {
+    newScenario.state.problem.criteria[criterionId] = {
+      dataSources: [{pvf: {direction: pvf.direction, type: 'linear'}}]
+    };
+  }
+
+  return newScenario;
 }

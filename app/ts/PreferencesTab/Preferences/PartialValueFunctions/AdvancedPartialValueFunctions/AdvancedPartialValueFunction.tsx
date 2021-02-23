@@ -2,6 +2,7 @@ import {Grid, Paper, Typography} from '@material-ui/core';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import React, {useContext, useEffect} from 'react';
 import {AdvancedPartialValueFunctionContext} from './AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
+import AdvancedPvfButtons from './AdvancedPvfButtons/AdvancedPvfButtons';
 import AdvancedPvfPlot from './AdvancedPvfPlot/AdvancedPvfPlot';
 import CutOffs from './CutOffs/CutOffs';
 import PvfDirection from './PvfDirection/PvfDirection';
@@ -27,13 +28,10 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
         <InlineHelp helpId="partial-value-function" /> define the mapping
         between the measurement values and the utility of that value.
       </Grid>
-      <Grid container item xs={6}>
-        <PvfDirection />
-        <CutOffs />
-      </Grid>
-      <Grid container item xs={6}>
-        <AdvancedPvfPlot />
-      </Grid>
+      <PvfDirection />
+      <AdvancedPvfPlot />
+      <CutOffs />
+      <AdvancedPvfButtons />
     </Grid>
   );
 }

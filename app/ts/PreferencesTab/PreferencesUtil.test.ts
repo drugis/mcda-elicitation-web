@@ -301,4 +301,10 @@ describe('PreferencesUtil', () => {
       expect(result).toEqual('Imprecise Swing Weighting');
     });
   });
+
+  describe('createScenarioWithPvf', () => {
+    it('should', () => {
+      fail();
+    });
+  });
 });
