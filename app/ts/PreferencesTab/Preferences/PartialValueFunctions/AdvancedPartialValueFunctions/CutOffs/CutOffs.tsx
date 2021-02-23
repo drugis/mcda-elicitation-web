@@ -1,8 +1,5 @@
 import {Grid, Slider} from '@material-ui/core';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
@@ -11,8 +8,8 @@ import React, {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function CutOffs(): JSX.Element {
-  const {showPercentages} = useContext(SettingsContext);
-  const {getStepSizeForCriterion, configuredRanges} = useContext(
+  const {getUsePercentage} = useContext(SettingsContext);
+  const {getStepSizeForCriterion, getConfiguredRange} = useContext(
     SubproblemContext
   );
   const {advancedPvfCriterion, cutOffs, setCutOffs} = useContext(
@@ -20,10 +17,8 @@ export default function CutOffs(): JSX.Element {
   );
 
   const stepSize = getStepSizeForCriterion(advancedPvfCriterion);
-  const configuredRange =
-    configuredRanges[advancedPvfCriterion.dataSources[0].id];
-  const unit = advancedPvfCriterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unit);
+  const configuredRange = getConfiguredRange(advancedPvfCriterion);
+  const usePercentage = getUsePercentage(advancedPvfCriterion);
 
   const sliderParameters = {
     min: significantDigits(configuredRange[0] + stepSize),

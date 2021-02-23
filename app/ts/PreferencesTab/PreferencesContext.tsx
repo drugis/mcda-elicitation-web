@@ -1,9 +1,7 @@
-import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
-import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {TPreferences} from '@shared/types/Preferences';
@@ -16,9 +14,9 @@ import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import {SettingsContext} from '../Settings/SettingsContext';
 import {getWeightsPataviProblem} from '../util/PataviUtil';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
-import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import IPreferencesContext from './IPreferencesContext';
 import {
+  areAllPvfsSet,
   createScenarioWithPvf,
   determineElicitationMethod,
   filterScenariosWithPvfs,
@@ -47,13 +45,12 @@ export function PreferencesContextProviderComponent({
   const {
     settings: {randomSeed}
   } = useContext(SettingsContext);
-  const {currentSubproblem} = useContext(WorkspaceContext);
   const {
     filteredCriteria,
-    observedRanges,
     filteredWorkspace,
     getCriterion,
-    configuredRanges
+    configuredRanges,
+    getConfiguredRange
   } = useContext(SubproblemContext);
 
   const [contextScenarios, setScenarios] = useState<
@@ -65,7 +62,7 @@ export function PreferencesContextProviderComponent({
   );
   const [pvfs, setPvfs] = useState<Record<string, TPvf>>();
   const subproblemId = currentScenario.subproblemId;
-  const disableWeightsButtons = !areAllPvfsSet(pvfs);
+  const disableWeightsButtons = !areAllPvfsSet(filteredCriteria, pvfs);
   const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
   const [elicitationMethod, setElicitationMethod] = useState<string>(
     determineElicitationMethod(currentScenario.state.prefs)
@@ -82,7 +79,10 @@ export function PreferencesContextProviderComponent({
   }, [configuredRanges]);
 
   useEffect(() => {
-    if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {
+    if (
+      areAllPvfsSet(filteredCriteria, pvfs) &&
+      !currentScenario.state.weights
+    ) {
       getWeights(currentScenario);
     }
     setElicitationMethod(
@@ -92,41 +92,6 @@ export function PreferencesContextProviderComponent({
 
   function getPvf(criterionId: string): TPvf {
     return pvfs[criterionId];
-  }
-
-  function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
-    const criterion = getCriterion(criterionId);
-    const configuredRange = configuredRanges[criterion.dataSources[0].id];
-    const pvf: ILinearPvf = {
-      direction: direction,
-      type: 'linear',
-      range: configuredRange
-    };
-    const newPvfs = {..._.cloneDeep(pvfs), [criterionId]: pvf};
-    setPvfs(newPvfs);
-    const newScenario = createScenarioWithPvf(
-      criterionId,
-      pvf,
-      currentScenario
-    );
-    updateScenario(newScenario).then(() => {
-      if (areAllPvfsSet(newPvfs)) {
-        resetPreferences(newScenario);
-      }
-    });
-  }
-
-  function areAllPvfsSet(newPvfs: Record<string, TPvf>): boolean {
-    return (
-      newPvfs &&
-      _.every(
-        filteredCriteria,
-        (criterion: ICriterion): boolean =>
-          newPvfs[criterion.id] &&
-          'direction' in newPvfs[criterion.id] &&
-          'type' in newPvfs[criterion.id]
-      )
-    );
   }
 
   function resetPreferences(scenario: IMcdaScenario) {
@@ -169,7 +134,7 @@ export function PreferencesContextProviderComponent({
   function updateScenarioCallback(scenario: IMcdaScenario) {
     setScenarios({..._.cloneDeep(contextScenarios), [scenario.id]: scenario});
     setCurrentScenario(scenario);
-    if (areAllPvfsSet(pvfs)) {
+    if (areAllPvfsSet(filteredCriteria, pvfs)) {
       updateAngularScenario(scenario);
     }
   }
@@ -228,10 +193,7 @@ export function PreferencesContextProviderComponent({
     setActiveView('advancedPvf');
   }
 
-  function setPieceWisePvf(
-    criterionId: string,
-    pvf: IPieceWiseLinearPvf
-  ): void {
+  function setPvf(criterionId: string, pvf: TPvf): void {
     const newPvfs = {..._.cloneDeep(pvfs), [criterionId]: pvf};
     setPvfs(newPvfs);
     const newScenario = createScenarioWithPvf(
@@ -240,17 +202,27 @@ export function PreferencesContextProviderComponent({
       currentScenario
     );
     updateScenario(newScenario).then(() => {
-      if (areAllPvfsSet(newPvfs)) {
+      if (areAllPvfsSet(filteredCriteria, newPvfs)) {
         resetPreferences(newScenario);
       }
     });
+  }
+
+  function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
+    const range = getConfiguredRange(getCriterion(criterionId));
+    const pvf: ILinearPvf = {
+      type: 'linear',
+      range: range,
+      direction: direction
+    };
+    setPvf(criterionId, pvf);
   }
 
   return (
     <PreferencesContext.Provider
       value={{
         advancedPvfCriterionId,
-        areAllPvfsSet: areAllPvfsSet(pvfs),
+        areAllPvfsSet: areAllPvfsSet(filteredCriteria, pvfs),
         scenarios: contextScenarios,
         scenariosWithPvfs: filterScenariosWithPvfs(
           contextScenarios,
@@ -268,7 +240,7 @@ export function PreferencesContextProviderComponent({
         addScenario,
         getPvf,
         goToAdvancedPvf,
-        setPieceWisePvf,
+        setPvf,
         setLinearPvf,
         resetPreferences,
         setActiveView

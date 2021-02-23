@@ -24,7 +24,7 @@ import {
   TPerformance
 } from '@shared/interface/Problem/IPerformance';
 import IProblem from '@shared/interface/Problem/IProblem';
-import IPvf, {TPvf} from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
 import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
@@ -38,7 +38,7 @@ type EntriesRecord = Record<string, Record<string, IAbsolutePataviTableEntry>>;
 export function getWeightsPataviProblem(
   workspace: IWorkspace,
   scenario: IMcdaScenario,
-  pvfs: Record<string, IPvf>,
+  pvfs: Record<string, TPvf>,
   randomSeed: number
 ): IWeightsCommand {
   const pataviProblem: IWeightsProblem = {
@@ -60,7 +60,7 @@ export function getWeightsPataviProblem(
 export function getPataviProblem(
   workspace: IWorkspace,
   preferences: TPreferences,
-  pvfs: Record<string, IPvf>
+  pvfs: Record<string, TPvf>
 ): IPataviProblem {
   return {
     preferences: preferences,

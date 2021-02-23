@@ -8,14 +8,12 @@ import React, {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function AdvancedPvfButtons(): JSX.Element {
-  const {setActiveView, setPieceWisePvf} = useContext(PreferencesContext);
-  const {configuredRanges} = useContext(SubproblemContext);
+  const {setActiveView, setPvf} = useContext(PreferencesContext);
+  const {getConfiguredRange} = useContext(SubproblemContext);
   const {advancedPvfCriterion, direction, cutOffs, isSaveDisabled} = useContext(
     AdvancedPartialValueFunctionContext
   );
-
-  const configuredRange =
-    configuredRanges[advancedPvfCriterion.dataSources[0].id];
+  const configuredRange = getConfiguredRange(advancedPvfCriterion);
 
   function handleCancelClick(): void {
     setActiveView('preferences');
@@ -29,7 +27,7 @@ export default function AdvancedPvfButtons(): JSX.Element {
       cutoffs: direction === 'increasing' ? cutOffs : _.reverse(cutOffs),
       range: [configuredRange[0], configuredRange[1]]
     };
-    setPieceWisePvf(advancedPvfCriterion.id, pvf);
+    setPvf(advancedPvfCriterion.id, pvf);
     setActiveView('preferences');
   }
 

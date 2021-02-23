@@ -2,6 +2,7 @@ import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {ChartConfiguration} from 'c3';
 import {
+  generateAdvancedPlotSettings,
   generatePlotSettings,
   getBest,
   getPvfCoordinates,
@@ -166,8 +167,29 @@ describe('getPvfLocation', () => {
   });
 
   describe('generateAdvancedPlotSettings', () => {
-    it('should', () => {
-      fail();
+    it('should return settings for generating a c3 plot', () => {
+      const criterionId = 'critId';
+      const cutOffs: [number, number, number] = [1, 2, 3];
+      const values: [number, number, number] = [0.25, 0.5, 0.75];
+      const configuredRange: [number, number] = [0, 10];
+      const usePercentage = false;
+      const result: ChartConfiguration = generateAdvancedPlotSettings(
+        criterionId,
+        cutOffs,
+        values,
+        configuredRange,
+        usePercentage
+      );
+
+      const expectedColumns = [
+        ['x', 0, 1, 2, 3, 10],
+        ['', 0.25, 0.5, 0.75]
+      ];
+
+      expect(result.bindto).toEqual('#pvfplot-critId');
+      expect(result.axis.x.min).toEqual(0);
+      expect(result.axis.x.max).toEqual(10);
+      expect(result.data.columns).toEqual(expectedColumns);
     });
   });
 });

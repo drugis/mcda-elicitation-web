@@ -128,7 +128,7 @@ export function createScenarioWithPvf(
   criterionId: string,
   pvf: TPvf,
   currentScenario: IMcdaScenario
-) {
+): IMcdaScenario {
   let newScenario: IMcdaScenario = _.cloneDeep(currentScenario);
   if (!newScenario.state.problem) {
     newScenario.state.problem = {criteria: {}};
@@ -153,4 +153,20 @@ export function createScenarioWithPvf(
   }
 
   return newScenario;
+}
+
+export function areAllPvfsSet(
+  criteria: ICriterion[],
+  pvfs: Record<string, TPvf>
+): boolean {
+  return (
+    pvfs &&
+    _.every(
+      criteria,
+      (criterion: ICriterion): boolean =>
+        pvfs[criterion.id] &&
+        'direction' in pvfs[criterion.id] &&
+        'type' in pvfs[criterion.id]
+    )
+  );
 }

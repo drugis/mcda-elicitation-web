@@ -20,13 +20,13 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
       <Grid item xs={12}>
         <Typography variant="h4">
-          Define Partial Value Function for: {advancedPvfCriterion.title}
+          Define Partial Value Function for: {advancedPvfCriterion.title}{' '}
+          <InlineHelp helpId="partial-value-function" />
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        The partial value functions{' '}
-        <InlineHelp helpId="partial-value-function" /> define the mapping
-        between the measurement values and the utility of that value.
+        The partial value functions define how a criterion's value changes with
+        its measurements.
       </Grid>
       <PvfDirection />
       <AdvancedPvfPlot />

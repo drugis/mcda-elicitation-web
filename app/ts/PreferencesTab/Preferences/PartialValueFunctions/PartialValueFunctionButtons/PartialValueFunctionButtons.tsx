@@ -57,7 +57,7 @@ export default function PartialValueFunctionButtons({
           Decreasing
         </Button>
       </Tooltip>
-      <Tooltip title="Set piece-wise PVF via guided process. Setting a PVF will reset all trade-off preferences.">
+      <Tooltip title="Set piecewise PVF via guided process. Setting a PVF will reset all trade-off preferences.">
         <Button
           id={`advanced-pvf-button-${criterionId}`}
           variant="contained"

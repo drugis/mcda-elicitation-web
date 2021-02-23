@@ -1,25 +1,20 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {ChangeEvent, useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function PvfDirection(): JSX.Element {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {direction, setDirection, advancedPvfCriterion} = useContext(
     AdvancedPartialValueFunctionContext
   );
-  const {configuredRanges} = useContext(SubproblemContext);
+  const {getConfiguredRange} = useContext(SubproblemContext);
 
-  const configuredRange =
-    configuredRanges[advancedPvfCriterion.dataSources[0].id];
-  const unit = advancedPvfCriterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unit);
+  const configuredRange = getConfiguredRange(advancedPvfCriterion);
+  const usePercentage = getUsePercentage(advancedPvfCriterion);
 
   function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
     setDirection(event.target.value as TPvfDirection);

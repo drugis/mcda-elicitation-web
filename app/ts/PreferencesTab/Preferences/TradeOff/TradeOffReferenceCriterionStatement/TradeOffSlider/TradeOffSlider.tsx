@@ -1,8 +1,5 @@
 import {Grid, Popover, Slider} from '@material-ui/core';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext, useEffect, useState} from 'react';
@@ -26,7 +23,7 @@ export default function TradeOffSlider({
     setReferenceValueTo,
     referenceCriterion
   } = useContext(TradeOffContext);
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {getStepSizeForCriterion} = useContext(SubproblemContext);
 
   const [stepSize, setStepSize] = useState<number>(
@@ -39,8 +36,7 @@ export default function TradeOffSlider({
 
   const marginTop = {marginTop: '50px'};
 
-  const unit = referenceCriterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unit);
+  const usePercentage = getUsePercentage(referenceCriterion);
   const isDecreasingPvf = referenceValueFrom > referenceValueTo;
 
   const sliderParameters = isDecreasingPvf

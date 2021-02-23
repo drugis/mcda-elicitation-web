@@ -151,7 +151,7 @@ export function generateAdvancedPlotSettings(
             (x: number) => getPercentifiedValue(x, usePercentage)
           )
         ],
-        ['foo', ...values]
+        ['', ...values]
       ]
     },
     axis: {

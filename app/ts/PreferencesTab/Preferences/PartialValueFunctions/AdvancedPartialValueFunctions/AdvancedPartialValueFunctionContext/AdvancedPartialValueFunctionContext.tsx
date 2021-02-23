@@ -14,11 +14,10 @@ export function AdvancedPartialValueFunctionContextProviderComponent({
 }: {
   children: any;
 }) {
-  const {getCriterion, configuredRanges} = useContext(SubproblemContext);
+  const {getCriterion, getConfiguredRange} = useContext(SubproblemContext);
   const {advancedPvfCriterionId} = useContext(PreferencesContext);
   const advancedPvfCriterion = getCriterion(advancedPvfCriterionId);
-  const configuredRange =
-    configuredRanges[advancedPvfCriterion.dataSources[0].id];
+  const configuredRange = getConfiguredRange(advancedPvfCriterion);
   const [direction, setDirection] = useState<TPvfDirection>('increasing');
   const [cutOffs, setCutOffs] = useState<[number, number, number]>([
     configuredRange[0] + (configuredRange[1] - configuredRange[0]) * 0.25,

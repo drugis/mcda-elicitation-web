@@ -1,24 +1,21 @@
 import Grid from '@material-ui/core/Grid';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
-import {generateAdvancedPlotSettings} from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import {ChartConfiguration, generate} from 'c3';
-import {selectAll} from 'd3';
-import React, {useContext, useEffect} from 'react';
-import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
+import { generateAdvancedPlotSettings } from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
+import { SettingsContext } from 'app/ts/Settings/SettingsContext';
+import { SubproblemContext } from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import { ChartConfiguration, generate } from 'c3';
+import { selectAll } from 'd3';
+import React, { useContext, useEffect } from 'react';
+import { AdvancedPartialValueFunctionContext } from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function AdvancedPvfPlot() {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {advancedPvfCriterion, cutOffs, direction} = useContext(
     AdvancedPartialValueFunctionContext
   );
-  const {configuredRanges} = useContext(SubproblemContext);
+  const {getConfiguredRange} = useContext(SubproblemContext);
 
-  const configuredRange =
-    configuredRanges[advancedPvfCriterion.dataSources[0].id];
-  const unit = advancedPvfCriterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unit);
+  const configuredRange = getConfiguredRange(advancedPvfCriterion);
+  const usePercentage = getUsePercentage(advancedPvfCriterion);
 
   const width = '500px';
   const height = '400px';
@@ -36,8 +33,10 @@ export default function AdvancedPvfPlot() {
       usePercentage
     );
     generate(settings);
-    selectAll('.c3-line').style('stroke-width', '2px');
-  }, [cutOffs, showPercentages, direction]);
+    selectAll(`#pvfplot-${advancedPvfCriterion.id}`)
+      .selectAll('.c3-line')
+      .style('stroke-width', '2px');
+  }, [cutOffs, usePercentage, direction]);
 
   return (
     <Grid container item xs={12} justify="flex-start">

@@ -78,6 +78,10 @@ export function SubproblemContextProviderComponent({
     return _.find(criteria, ['id', id]);
   }
 
+  function getConfiguredRange(criterion: ICriterion): [number, number] {
+    return configuredRanges[criterion.dataSources[0].id];
+  }
+
   return (
     <SubproblemContext.Provider
       value={{
@@ -90,6 +94,7 @@ export function SubproblemContextProviderComponent({
         filteredWorkspace,
         observedRanges,
         getCriterion,
+        getConfiguredRange,
         getStepSizeForCriterion
       }}
     >

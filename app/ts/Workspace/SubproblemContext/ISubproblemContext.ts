@@ -15,5 +15,6 @@ export default interface ISubproblemContext {
   filteredWorkspace: IWorkspace;
   observedRanges: Record<string, [number, number]>;
   getCriterion: (id: string) => ICriterion;
+  getConfiguredRange: (criterion: ICriterion) => [number, number];
   getStepSizeForCriterion: (criterion: ICriterion) => number;
 }
