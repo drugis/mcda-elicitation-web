@@ -213,7 +213,7 @@ export function normalizeInputValue(
   unitType: UnitOfMeasurementType
 ): number {
   const parsedValue = Number.parseFloat(value);
-  if (parsedValue === NaN) {
+  if (isNaN(parsedValue)) {
     throw 'Input is not numeric';
   } else {
     if (unitType != 'percentage') {

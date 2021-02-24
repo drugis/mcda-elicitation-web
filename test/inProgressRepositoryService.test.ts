@@ -24,9 +24,9 @@ import IOrdering from '@shared/interface/IOrdering';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
-import {IPerformanceTableEntry} from '@shared/interface/Problem/IPerformanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
+import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
 import {CURRENT_SCHEMA_VERSION} from 'app/ts/ManualInput/constants';
 import {
   buildEmptyInProgress,
@@ -759,7 +759,7 @@ describe('inProgressRepositoryService', () => {
         criterion: criterion1Id,
         dataSource: dataSource1Id
       };
-      const expectedPerformanceTable: IPerformanceTableEntry[] = [
+      const expectedPerformanceTable: TPerformanceTableEntry[] = [
         {
           ...criterionAndDataSource,
           alternative: alternative1Id,
@@ -901,11 +901,9 @@ describe('inProgressRepositoryService', () => {
           }
         }
       };
-      try {
+      expect(() => {
         buildProblem(inProgressMessage);
-      } catch (error) {
-        expect(error).toBe('Cell without effect and distribution found');
-      }
+      }).toThrow('Cell without effect and distribution found');
     });
   });
 

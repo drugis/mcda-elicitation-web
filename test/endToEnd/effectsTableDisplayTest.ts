@@ -61,12 +61,7 @@ function runAssertions(browser: NightwatchBrowser) {
   assertCriterionRow(browser, decimalCriterionWithEffectsPercentifiedEntered);
   assertCriterionRow(browser, customCriterionWithEffectsEntered);
 
-  switchSettings(
-    browser,
-    '#show-decimals-radio',
-    '#entered-radio',
-    '#deterministic-radio'
-  );
+  switchSettings(browser, '#show-decimals-radio', 'enteredEffects');
 
   assertCriterionRow(
     browser,
@@ -75,12 +70,7 @@ function runAssertions(browser: NightwatchBrowser) {
   assertCriterionRow(browser, decimalCriterionWithEffectsDepercentifiedEntered);
   assertCriterionRow(browser, customCriterionWithEffectsEntered);
 
-  switchSettings(
-    browser,
-    '#show-percentages-radio',
-    '#entered-radio',
-    '#smaa-radio'
-  );
+  switchSettings(browser, '#show-percentages-radio', 'enteredDistributions');
 
   assertCriterionRow(
     browser,
@@ -92,12 +82,7 @@ function runAssertions(browser: NightwatchBrowser) {
   );
   assertCriterionRow(browser, customCriterionWithDistributionsEntered);
 
-  switchSettings(
-    browser,
-    '#show-decimals-radio',
-    '#entered-radio',
-    '#smaa-radio'
-  );
+  switchSettings(browser, '#show-decimals-radio', 'enteredDistributions');
 
   assertCriterionRow(
     browser,
@@ -109,12 +94,7 @@ function runAssertions(browser: NightwatchBrowser) {
   );
   assertCriterionRow(browser, customCriterionWithDistributionsEntered);
 
-  switchSettings(
-    browser,
-    '#show-percentages-radio',
-    '#values-radio',
-    '#deterministic-radio'
-  );
+  switchSettings(browser, '#show-percentages-radio', 'deterministicValues');
 
   assertCriterionRow(
     browser,
@@ -123,12 +103,7 @@ function runAssertions(browser: NightwatchBrowser) {
   assertCriterionRow(browser, decimalCriterionWithEffectsPercentifiedAnalysis);
   assertCriterionRow(browser, customCriterionWithEffectsAnalysis);
 
-  switchSettings(
-    browser,
-    '#show-decimals-radio',
-    '#values-radio',
-    '#deterministic-radio'
-  );
+  switchSettings(browser, '#show-decimals-radio', 'deterministicValues');
 
   assertCriterionRow(
     browser,
@@ -140,12 +115,7 @@ function runAssertions(browser: NightwatchBrowser) {
   );
   assertCriterionRow(browser, customCriterionWithEffectsAnalysis);
 
-  switchSettings(
-    browser,
-    '#show-percentages-radio',
-    '#values-radio',
-    '#smaa-radio'
-  );
+  switchSettings(browser, '#show-percentages-radio', 'smaaValues');
 
   assertCriterionRowWithUncertainties(
     browser,
@@ -160,12 +130,7 @@ function runAssertions(browser: NightwatchBrowser) {
     customCriterionWithDistributionsAnalysis
   );
 
-  switchSettings(
-    browser,
-    '#show-decimals-radio',
-    '#values-radio',
-    '#smaa-radio'
-  );
+  switchSettings(browser, '#show-decimals-radio', 'smaaValues');
 
   assertCriterionRowWithUncertainties(
     browser,
@@ -274,17 +239,14 @@ function assertCriterionRowWithUncertainties(
 function switchSettings(
   browser: NightwatchBrowser,
   percentageOrDecimal: string,
-  enteredOrAnalysis: string,
-  deterministicOrSmaa: string
+  displayMode: string
 ): void {
   browser
     .click('#settings-button')
     .waitForElementVisible(percentageOrDecimal)
     .click(percentageOrDecimal)
-    .waitForElementVisible(enteredOrAnalysis)
-    .click(enteredOrAnalysis)
-    .waitForElementVisible(deterministicOrSmaa)
-    .click(deterministicOrSmaa)
+    .click('#display-mode-selector')
+    .click(`option[value="${displayMode}"]`)
     .click('#save-settings-button')
     .waitForElementNotPresent('#save-settings-button');
 }

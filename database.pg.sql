@@ -564,3 +564,49 @@ COMMIT;
 --rollback WHERE
 --rollback   workspacesettings.workspaceId = newSettings.workspaceId;
 --rollback COMMIT;
+
+--changeset reidd:28
+WITH oldSettings AS (
+  SELECT
+    workspaceId,
+    settings#>'{settings}'->>'showPercentages' AS showPercentages
+  FROM workspacesettings
+  WHERE settings#>'{settings, showPercentages}' IS NOT NULL AND
+   settings#>'{settings}'->>'showPercentages' != 'decimal' AND
+   settings#>'{settings}'->>'showPercentages' != 'percentage' 
+),
+ newSettings AS (
+  SELECT
+    workspaceId,
+    CASE
+      WHEN showPercentages = 'true' THEN '{"showPercentages": "percentage"}'::jsonb
+      WHEN showPercentages = 'false'THEN '{"showPercentages": "decimal"}'::jsonb
+    END AS showPercentages
+  FROM oldSettings
+)
+UPDATE workspacesettings
+SET settings = jsonb_set(settings, '{settings, showPercentages}', newSettings.showPercentages->'showPercentages')
+FROM newSettings
+WHERE workspacesettings.workspaceId = newSettings.workspaceId;
+--rollback WITH oldSettings AS (
+--rollback   SELECT
+--rollback     workspaceId,
+--rollback     settings#>'{settings}'->>'showPercentages' AS showPercentages
+--rollback   FROM workspacesettings
+--rollback   WHERE settings#>'{settings, showPercentages}' IS NOT NULL AND
+--rollback    settings#>'{settings}'->>'showPercentages' != 'true' AND
+--rollback    settings#>'{settings}'->>'showPercentages' != 'false' 
+--rollback ),
+--rollback  newSettings AS (
+--rollback   SELECT
+--rollback     workspaceId,
+--rollback     CASE
+--rollback       WHEN showPercentages = 'percentage' THEN '{"showPercentages": true}'::jsonb
+--rollback       WHEN showPercentages = 'decimal'THEN '{"showPercentages": false}'::jsonb
+--rollback     END AS showPercentages
+--rollback   FROM oldSettings
+--rollback )
+--rollback UPDATE workspacesettings
+--rollback SET settings = jsonb_set(settings, '{settings, showPercentages}', newSettings.showPercentages->'showPercentages')
+--rollback FROM newSettings
+--rollback WHERE workspacesettings.workspaceId = newSettings.workspaceId;

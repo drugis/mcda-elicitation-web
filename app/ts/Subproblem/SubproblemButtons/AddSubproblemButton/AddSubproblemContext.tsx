@@ -232,6 +232,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     setConfiguredRanges(initialConfiguredRanges);
     setSliderRangesByDS(initialConfiguredRanges);
     setTitle(defaultTitle);
+    setScaleRangesWarnings(['Updating']);
   }
 
   function addSubproblemWrapper(): void {

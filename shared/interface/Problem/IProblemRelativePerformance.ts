@@ -1,15 +1,17 @@
+import {TRelativePerformanceType} from '../IRelativePerformance';
+import IBaseline from './IBaseline';
 import IRelativeCovarianceMatrix from './IRelativeCovarianceMatrix';
 
 export interface IProblemRelativePerformance {
   distribution: TRelativePerformance;
 }
 
-export type TRelativePerformance = IRelativeLogitNormal; //TODO add other types
+export type TRelativePerformance = IRelativeLogitNormal;
 
 interface IRelativeLogitNormal {
-  type: 'relative-logit-normal';
+  type: TRelativePerformanceType;
   parameters: {
-    baseline: {type: 'dnorm'; name: string; mu: number; sigma: number};
+    baseline: IBaseline;
     relative: IRelative;
   };
 }

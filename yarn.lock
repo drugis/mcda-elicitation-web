@@ -4554,9 +4554,9 @@ export-directive@drugis/export-directive#1.3.2:
   version "1.3.1"
   resolved "https://codeload.github.com/drugis/export-directive/tar.gz/62d0fe257c3e32c2af4da1adab693c85c6c9354e"
   dependencies:
-    angular "~1.7.8"
+    angular "~1.7.9"
     d3 "~5.14.1"
-    jquery "~3.4.0"
+    jquery "~3.5.1"
     js-base64 "~2.5.1"
     lodash "~4.17.15"
 

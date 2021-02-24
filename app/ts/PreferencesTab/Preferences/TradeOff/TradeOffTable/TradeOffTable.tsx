@@ -79,7 +79,9 @@ export default function TradeOffTable(): JSX.Element {
 
   return (
     <Table>
-      <TableBody>{!_.isEmpty(pvfs) ? getRows() : <></>}</TableBody>
+      <TableBody>
+        {!_.isEmpty(pvfs) && partOfInterval ? getRows() : <></>}
+      </TableBody>
     </Table>
   );
 }

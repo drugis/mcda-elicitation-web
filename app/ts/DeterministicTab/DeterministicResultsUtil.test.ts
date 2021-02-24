@@ -102,7 +102,11 @@ describe('DeterministicResultsUtil', () => {
         alt1Id: {crit1Id: 10}
       };
       const criteria: ICriterion[] = [
-        {id: 'crit1Id', title: 'crit1'} as ICriterion
+        {
+          id: 'crit1Id',
+          title: 'crit1',
+          dataSources: [{id: 'ds1Id'}]
+        } as ICriterion
       ];
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
       const result = pataviResultToValueProfile(
@@ -124,7 +128,11 @@ describe('DeterministicResultsUtil', () => {
         alt1Id: {crit1Id: 10}
       };
       const criteria: ICriterion[] = [
-        {id: 'crit1Id', title: 'crit1'} as ICriterion
+        {
+          id: 'crit1Id',
+          title: 'crit1',
+          dataSources: [{id: 'ds1Id'}]
+        } as ICriterion
       ];
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
       const result = pataviResultToValueProfile(

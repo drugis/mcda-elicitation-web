@@ -1,6 +1,6 @@
 import {TPerformance} from './IPerformance';
 
-export interface IPerformanceTableEntry {
+export interface IAbsolutePerformanceTableEntry {
   alternative: string;
   criterion: string;
   dataSource: string;

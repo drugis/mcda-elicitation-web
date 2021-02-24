@@ -28,11 +28,11 @@ export function valueToString(
   showPercentage: boolean,
   unitOfMeasurementType: UnitOfMeasurementType
 ): string {
+  const usePercentage =
+    showPercentage && canBePercentage(unitOfMeasurementType);
   if (value === undefined) {
     return 'No value entered';
-  } else if (showPercentage && canBePercentage(unitOfMeasurementType)) {
-    return significantDigits(value * 100).toString();
   } else {
-    return significantDigits(value).toString();
+    return getPercentifiedValueLabel(value, usePercentage);
   }
 }
