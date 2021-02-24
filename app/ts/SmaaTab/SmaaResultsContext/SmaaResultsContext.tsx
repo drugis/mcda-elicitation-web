@@ -7,7 +7,6 @@ import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -95,6 +94,8 @@ export function SmaaResultsContextProviderComponent({
   }, [useMeasurementsUncertainty, useWeightsUncertainty]);
 
   function recalculate(): void {
+    setRanks(undefined);
+    setCentralWeights(undefined);
     updateScenario({
       ...currentScenario,
       state: {
