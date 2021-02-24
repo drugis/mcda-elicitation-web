@@ -4,25 +4,10 @@ define([
   'angular',
   'react2angular',
   '../../ts/PreferencesTab/PreferencesTab',
-  './partialValueFunctionController',
   './preferencesController',
 
-  './partialValueFunctionService',
-
-  './partialValuePlotDirective',
-
   '../workspace/workspace'
-], function (
-  angular,
-  react2angular,
-  PreferencesTab,
-  PartialValueFunctionController,
-  PreferencesController,
-
-  PartialValueFunctionService,
-
-  partialValuePlotDirective
-) {
+], function (angular, react2angular, PreferencesTab, PreferencesController) {
   return angular
     .module('elicit.preferences', ['elicit.workspace'])
     .component(
@@ -37,13 +22,5 @@ define([
         'currentSubproblem'
       ])
     )
-    .controller(
-      'PartialValueFunctionController',
-      PartialValueFunctionController
-    )
-    .controller('PreferencesController', PreferencesController)
-
-    .factory('PartialValueFunctionService', PartialValueFunctionService)
-
-    .directive('partialValuePlot', partialValuePlotDirective);
+    .controller('PreferencesController', PreferencesController);
 });
