@@ -1,10 +1,19 @@
 import {Box} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
+import {TPreferences} from '@shared/types/Preferences';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import {ElicitationContextProviderComponent} from 'preference-elicitation';
+import {
+  ElicitationContextProviderComponent,
+  ImpreciseSwingWeighting,
+  MatchingElicitation,
+  PreciseSwingWeighting,
+  RankingElicitation
+} from 'preference-elicitation';
 import React, {useContext, useState} from 'react';
 import {PreferencesContext} from '../PreferencesContext';
+import {buildScenarioWithPreferences} from '../PreferencesUtil';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import PartialValueFunctions from './PartialValueFunctions/PartialValueFunctions';
@@ -14,10 +23,25 @@ import TradeOff from './TradeOff/TradeOff';
 
 export default function Preferences() {
   const {filteredCriteria} = useContext(SubproblemContext);
-  const {currentScenario, scenarios, activeView} = useContext(
-    PreferencesContext
-  );
+  const {
+    setActiveView,
+    currentScenario,
+    scenarios,
+    activeView,
+    pvfs,
+    updateScenario
+  } = useContext(PreferencesContext);
   const [preferencesTitle] = useState(document.title);
+  const {showPercentages} = useContext(SettingsContext);
+
+  function cancelCallback(): void {
+    setActiveView('preferences');
+  }
+
+  function saveCallback(preferences: TPreferences): void {
+    updateScenario(buildScenarioWithPreferences(currentScenario, preferences));
+    setActiveView('preferences');
+  }
 
   function renderView(): JSX.Element {
     switch (activeView) {
@@ -37,51 +61,68 @@ export default function Preferences() {
         );
       case 'precise':
         document.title = 'Precise swing weighting';
-        //OLD
-        // <ElicitationContextProviderComponent elicitationMethod="precise">
-        //   <Grid container justify="center" component={Box} mt={2}>
-        //     <PreciseSwingWeighting />
-        //   </Grid>
-        // </ElicitationContextProviderComponent>
-
-        // TEST
         return (
           <ElicitationContextProviderComponent
             criteria={filteredCriteria}
             elicitationMethod={'precise'}
+            showPercentages={showPercentages}
+            pvfs={pvfs}
+            cancelCallback={cancelCallback}
+            saveCallback={saveCallback}
           >
             <Grid container justify="center" component={Box} mt={2}>
-              {/* <PreciseSwingWeighting /> */}
+              <PreciseSwingWeighting />
             </Grid>
           </ElicitationContextProviderComponent>
         );
-      // case 'imprecise':
-      //   document.title = 'Imprecise swing weighting';
-      //   return (
-      //     <ElicitationContextProviderComponent elicitationMethod="imprecise">
-      //       <Grid container justify="center" component={Box} mt={2}>
-      //         <ImpreciseSwingWeighting />
-      //       </Grid>
-      //     </ElicitationContextProviderComponent>
-      //   );
-      // case 'matching':
-      //   document.title = 'Matching';
-      //   return (
-      //     <ElicitationContextProviderComponent elicitationMethod={'matching'}>
-      //       <Grid container justify="center" component={Box} mt={2}>
-      //         <MatchingElicitation />
-      //       </Grid>
-      //     </ElicitationContextProviderComponent>
-      //   );
-      // case 'ranking':
-      //   document.title = 'Ranking';
-      //   return (
-      //     <RankingElicitationContextProviderComponent>
-      //       <Grid container justify="center" component={Box} mt={2}>
-      //         <RankingElicitation />
-      //       </Grid>
-      //     </RankingElicitationContextProviderComponent>
-      //   );
+      case 'imprecise':
+        document.title = 'Imprecise swing weighting';
+        return (
+          <ElicitationContextProviderComponent
+            criteria={filteredCriteria}
+            elicitationMethod={'imprecise'}
+            showPercentages={showPercentages}
+            pvfs={pvfs}
+            cancelCallback={cancelCallback}
+            saveCallback={saveCallback}
+          >
+            <Grid container justify="center" component={Box} mt={2}>
+              <ImpreciseSwingWeighting />
+            </Grid>
+          </ElicitationContextProviderComponent>
+        );
+      case 'matching':
+        document.title = 'Matching';
+        return (
+          <ElicitationContextProviderComponent
+            criteria={filteredCriteria}
+            elicitationMethod={'matching'}
+            showPercentages={showPercentages}
+            pvfs={pvfs}
+            cancelCallback={cancelCallback}
+            saveCallback={saveCallback}
+          >
+            <Grid container justify="center" component={Box} mt={2}>
+              <MatchingElicitation />
+            </Grid>
+          </ElicitationContextProviderComponent>
+        );
+      case 'ranking':
+        document.title = 'Ranking';
+        return (
+          <ElicitationContextProviderComponent
+            criteria={filteredCriteria}
+            elicitationMethod={'matching'}
+            showPercentages={showPercentages}
+            pvfs={pvfs}
+            cancelCallback={cancelCallback}
+            saveCallback={saveCallback}
+          >
+            <Grid container justify="center" component={Box} mt={2}>
+              <RankingElicitation />
+            </Grid>
+          </ElicitationContextProviderComponent>
+        );
       case 'advancedPvf':
         return (
           <AdvancedPartialValueFunctionContextProviderComponent>
