@@ -23,9 +23,7 @@ export default function PvfDirection(): JSX.Element {
   return (
     <>
       <Grid item xs={12}>
-        Choose partial value function's direction
-      </Grid>
-      <Grid item xs={12}>
+        Choose partial value function's direction:
         <RadioGroup
           name="pvf-direction-radio"
           value={direction}
