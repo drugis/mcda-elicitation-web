@@ -1,8 +1,5 @@
 import Button from '@material-ui/core/Button';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
@@ -13,15 +10,13 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
   const {referenceValueFrom, referenceValueTo, referenceCriterion} = useContext(
     TradeOffContext
   );
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [anchorElement, setAnchorElement] = useState<HTMLButtonElement | null>(
     null
   );
-
-  const unit = referenceCriterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unit);
+  const usePercentage = getUsePercentage(referenceCriterion);
 
   function openDialog(event: React.MouseEvent<HTMLButtonElement>): void {
     setDialogOpen(true);

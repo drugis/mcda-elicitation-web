@@ -1,5 +1,6 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {calculateObservedRanges} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
+import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {WorkspaceContext} from '../WorkspaceContext';
 import {hasScaleValues} from '../WorkspaceContextUtil';
@@ -73,6 +74,14 @@ export function SubproblemContextProviderComponent({
     }
   }
 
+  function getCriterion(id: string): ICriterion {
+    return _.find(criteria, ['id', id]);
+  }
+
+  function getConfiguredRange(criterion: ICriterion): [number, number] {
+    return configuredRanges[criterion.dataSources[0].id];
+  }
+
   return (
     <SubproblemContext.Provider
       value={{
@@ -84,6 +93,8 @@ export function SubproblemContextProviderComponent({
         filteredRelativePerformances: relativePerformances,
         filteredWorkspace,
         observedRanges,
+        getCriterion,
+        getConfiguredRange,
         getStepSizeForCriterion
       }}
     >

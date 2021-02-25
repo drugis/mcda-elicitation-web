@@ -1,4 +1,4 @@
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
 
 export function getPartOfInterval(
   from: number,
@@ -12,7 +12,7 @@ export function getPartOfInterval(
 export function getInitialReferenceValueFrom(
   lowerBound: number,
   upperBound: number,
-  pvf: IPvf
+  pvf: TPvf
 ): number {
   const multiplier = pvf.direction === 'increasing' ? 0.45 : 0.55;
   return (upperBound - lowerBound) * multiplier + lowerBound;
@@ -21,7 +21,7 @@ export function getInitialReferenceValueFrom(
 export function getInitialReferenceValueTo(
   lowerBound: number,
   upperBound: number,
-  pvf: IPvf
+  pvf: TPvf
 ): number {
   const multiplier = pvf.direction === 'increasing' ? 0.55 : 0.45;
   return (upperBound - lowerBound) * multiplier + lowerBound;

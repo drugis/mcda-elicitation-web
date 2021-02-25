@@ -7,6 +7,7 @@ import {
 } from 'app/ts/PreferencesTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext, useEffect, useState} from 'react';
 import {ElicitationContext} from '../../../ElicitationContext';
 import {
@@ -26,7 +27,8 @@ export default function MatchingSlider({
     mostImportantCriterionId,
     setPreference
   } = useContext(ElicitationContext);
-  const {getCriterion, pvfs} = useContext(PreferencesContext);
+  const {pvfs} = useContext(PreferencesContext);
+  const {getCriterion} = useContext(SubproblemContext);
 
   const mostImportantCriterion = getCriterion(mostImportantCriterionId);
   const pvf = pvfs[mostImportantCriterionId];

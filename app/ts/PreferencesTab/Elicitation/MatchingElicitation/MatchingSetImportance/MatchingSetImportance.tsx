@@ -26,8 +26,8 @@ export default function MatchingSetImportance() {
   const {mostImportantCriterionId, currentStep} = useContext(
     ElicitationContext
   );
-  const {getCriterion, pvfs} = useContext(PreferencesContext);
-  const {filteredCriteria} = useContext(SubproblemContext);
+  const {pvfs} = useContext(PreferencesContext);
+  const {filteredCriteria, getCriterion} = useContext(SubproblemContext);
 
   const mostImportantCriterion = getCriterion(mostImportantCriterionId);
   const mostImportantUnitType =

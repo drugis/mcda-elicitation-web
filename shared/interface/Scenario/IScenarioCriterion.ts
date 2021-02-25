@@ -1,5 +1,5 @@
-import IScenarioPvf from './IScenarioPvf';
+import {TScenarioPvf} from './TScenarioPvf';
 
 export default interface IScenarioCriterion {
-  dataSources: [{pvf: IScenarioPvf}];
+  dataSources: [{pvf: TScenarioPvf}];
 }

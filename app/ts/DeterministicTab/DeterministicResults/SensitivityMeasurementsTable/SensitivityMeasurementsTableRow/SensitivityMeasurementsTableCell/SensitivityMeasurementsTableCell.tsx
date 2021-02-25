@@ -20,7 +20,7 @@ export default function SensitivityMeasurementsTableCell({
   alternativeId: string;
 }): JSX.Element {
   const {showPercentages} = useContext(SettingsContext);
-  const {getStepSizeForCriterion, configuredRanges} = useContext(
+  const {getStepSizeForCriterion, getConfiguredRange} = useContext(
     SubproblemContext
   );
   const {sensitivityTableValues, setCurrentValue} = useContext(
@@ -39,15 +39,9 @@ export default function SensitivityMeasurementsTableCell({
     getPercentifiedValue(values.currentValue, usePercentage)
   );
 
-  const dataSourceId = criterion.dataSources[0].id;
-  const min = getPercentifiedValue(
-    configuredRanges[dataSourceId][0],
-    usePercentage
-  );
-  const max = getPercentifiedValue(
-    configuredRanges[dataSourceId][1],
-    usePercentage
-  );
+  const configuredRange = getConfiguredRange(criterion);
+  const min = getPercentifiedValue(configuredRange[0], usePercentage);
+  const max = getPercentifiedValue(configuredRange[1], usePercentage);
   const stepSize = getPercentifiedValue(
     getStepSizeForCriterion(criterion),
     usePercentage

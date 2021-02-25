@@ -1,37 +1,73 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
+import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import IPieceWiseLinearScenarioPvf from '@shared/interface/Scenario/IPieceWiseLinearScenarioPvf';
+import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
 
 export function initPvfs(
   criteria: ICriterion[],
   currentScenario: IMcdaScenario,
-  ranges: Record<string, [number, number]>,
-  observedRanges: Record<string, [number, number]>
-): Record<string, IPvf> {
+  configuredRanges: Record<string, [number, number]>
+): Record<string, TPvf> {
   return _(criteria)
     .keyBy('id')
-    .mapValues((criterion) => {
-      const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
-      return _.merge(
-        {},
-        {
-          range: ranges[criterion.dataSources[0].id]
-            ? ranges[criterion.dataSources[0].id]
-            : observedRanges[criterion.dataSources[0].id]
-        },
-        scenarioPvf
-      );
-    })
+    .mapValues(_.partial(getPvf, currentScenario, configuredRanges))
+    .pickBy()
     .value();
+}
+
+function getPvf(
+  currentScenario: IMcdaScenario,
+  configuredRanges: Record<string, [number, number]>,
+  criterion: ICriterion
+): TPvf | undefined {
+  const scenarioPvf = getScenarioPvf(criterion.id, currentScenario);
+  if (scenarioPvf) {
+    const range = configuredRanges[criterion.dataSources[0].id];
+    return _.merge({}, getPvfWithRange(scenarioPvf, range));
+  } else {
+    return undefined;
+  }
+}
+
+function getPvfWithRange(
+  scenarioPvf: TScenarioPvf,
+  range: [number, number]
+): TPvf {
+  if (isPieceWiseLinearScenarioPvf(scenarioPvf)) {
+    return {
+      direction: scenarioPvf.direction,
+      cutoffs: scenarioPvf.cutoffs,
+      values: scenarioPvf.values,
+      type: 'piecewise-linear',
+      range: range
+    };
+  } else {
+    return {
+      direction: scenarioPvf.direction,
+      type: 'linear',
+      range: range
+    };
+  }
+}
+
+function isPieceWiseLinearScenarioPvf(
+  pvf: TScenarioPvf
+): pvf is IPieceWiseLinearScenarioPvf {
+  return 'cutoffs' in pvf;
+}
+
+function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
+  return 'cutoffs' in pvf;
 }
 
 function getScenarioPvf(
   criterionId: string,
   currentScenario: IMcdaScenario
-): IScenarioPvf | undefined {
+): TScenarioPvf | undefined {
   if (
     currentScenario.state.problem &&
     currentScenario.state.problem.criteria[criterionId] &&
@@ -86,4 +122,51 @@ export function determineElicitationMethod(preferences: TPreferences): string {
         return 'Imprecise Swing Weighting';
     }
   }
+}
+
+export function createScenarioWithPvf(
+  criterionId: string,
+  pvf: TPvf,
+  currentScenario: IMcdaScenario
+): IMcdaScenario {
+  let newScenario: IMcdaScenario = _.cloneDeep(currentScenario);
+  if (!newScenario.state.problem) {
+    newScenario.state.problem = {criteria: {}};
+  }
+  if (isPieceWiseLinearPvf(pvf)) {
+    newScenario.state.problem.criteria[criterionId] = {
+      dataSources: [
+        {
+          pvf: {
+            direction: pvf.direction,
+            cutoffs: pvf.cutoffs,
+            values: pvf.values,
+            type: 'piecewise-linear'
+          }
+        }
+      ]
+    };
+  } else {
+    newScenario.state.problem.criteria[criterionId] = {
+      dataSources: [{pvf: {direction: pvf.direction, type: 'linear'}}]
+    };
+  }
+
+  return newScenario;
+}
+
+export function areAllPvfsSet(
+  criteria: ICriterion[],
+  pvfs: Record<string, TPvf>
+): boolean {
+  return (
+    pvfs &&
+    _.every(
+      criteria,
+      (criterion: ICriterion): boolean =>
+        pvfs[criterion.id] &&
+        'direction' in pvfs[criterion.id] &&
+        'type' in pvfs[criterion.id]
+    )
+  );
 }

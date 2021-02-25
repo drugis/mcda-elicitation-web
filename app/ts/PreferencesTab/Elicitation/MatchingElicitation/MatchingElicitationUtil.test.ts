@@ -32,7 +32,8 @@ describe('calculateImportance', () => {
   it('should calculate the importance correctly for increasing pvf', () => {
     const result = calculateImportance(0.3, {
       range: [0, 1],
-      direction: 'increasing'
+      direction: 'increasing',
+      type: 'linear'
     });
     expect(result).toEqual(30);
   });
@@ -40,7 +41,8 @@ describe('calculateImportance', () => {
   it('should calculate the importance correctly for decreasing pvf', () => {
     const result = calculateImportance(0.3, {
       range: [0, 1],
-      direction: 'decreasing'
+      direction: 'decreasing',
+      type: 'linear'
     });
     expect(result).toEqual(70);
   });

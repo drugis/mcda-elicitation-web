@@ -7,7 +7,7 @@ import PreferencesWeightsButtons from './PreferencesWeightsButtons/PreferencesWe
 import PreferencesWeightsTable from './PreferencesWeightsTable/PreferencesWeightsTable';
 
 export default function PreferencesWeights() {
-  const {elicitationMethod} = useContext(PreferencesContext);
+  const {elicitationMethod, areAllPvfsSet} = useContext(PreferencesContext);
 
   return (
     <Grid item container>
@@ -16,17 +16,25 @@ export default function PreferencesWeights() {
           Weights <InlineHelp helpId="weights" />
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <Typography id="elicitation-method">
-          Elicitation method: {elicitationMethod}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <PreferencesWeightsTable />
-      </Grid>
-      <Grid item xs={12}>
-        <PreferencesWeightsButtons />
-      </Grid>
+      {areAllPvfsSet ? (
+        <>
+          <Grid item xs={12}>
+            <Typography id="elicitation-method">
+              Elicitation method: {elicitationMethod}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <PreferencesWeightsTable />
+          </Grid>
+          <Grid item xs={12}>
+            <PreferencesWeightsButtons />
+          </Grid>
+        </>
+      ) : (
+        <Grid item xs={12}>
+          Partial value functions are not set
+        </Grid>
+      )}
     </Grid>
   );
 }

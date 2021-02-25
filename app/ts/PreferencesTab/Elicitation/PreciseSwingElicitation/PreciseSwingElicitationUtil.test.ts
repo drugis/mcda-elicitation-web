@@ -1,5 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import {
   buildInitialPrecisePreferences,
@@ -27,7 +27,11 @@ const criteria: ICriterion[] = [
 describe('getSwingStatement', () => {
   it('should return a complete matching statement', () => {
     const showPercentages = false;
-    const pvf: IPvf = {direction: 'increasing', range: [0, 1]};
+    const pvf: ILinearPvf = {
+      direction: 'increasing',
+      range: [0, 1],
+      type: 'linear'
+    };
     const result: string = getSwingStatement(criteria[0], pvf, showPercentages);
     const expectedResult =
       "You've indicated that improving title1 from 0 kg to 1 kg is the most important (i.e. it has 100% importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement using the sliders below.";
@@ -36,7 +40,11 @@ describe('getSwingStatement', () => {
 
   it('should return a complete matching statement as percentages', () => {
     const showPercentages = true;
-    const pvf: IPvf = {direction: 'increasing', range: [0, 1]};
+    const pvf: ILinearPvf = {
+      direction: 'increasing',
+      range: [0, 1],
+      type: 'linear'
+    };
     const result: string = getSwingStatement(criteria[2], pvf, showPercentages);
     const expectedResult =
       "You've indicated that improving title3 from 0 % to 100 % is the most important (i.e. it has 100% importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement using the sliders below.";
@@ -45,7 +53,11 @@ describe('getSwingStatement', () => {
 
   it('should return a complete matching statement as decimals', () => {
     const showPercentages = false;
-    const pvf: IPvf = {direction: 'increasing', range: [0, 1]};
+    const pvf: ILinearPvf = {
+      direction: 'increasing',
+      range: [0, 1],
+      type: 'linear'
+    };
     const result: string = getSwingStatement(criteria[2], pvf, showPercentages);
     const expectedResult =
       "You've indicated that improving title3 from 0  to 1  is the most important (i.e. it has 100% importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement using the sliders below.";

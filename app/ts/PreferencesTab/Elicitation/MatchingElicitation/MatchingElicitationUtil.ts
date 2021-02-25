@@ -1,5 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
 import _ from 'lodash';
 import {DEFAULT_MATCHING_TEMPLATE} from '../elicitationConstants';
 
@@ -34,7 +34,7 @@ export function determineStepSize([lowerBound, upperBound]: [
 
 export function calculateImportance(
   sliderValue: number,
-  {range: [lowerBound, upperBound], direction}: IPvf
+  {range: [lowerBound, upperBound], direction}: TPvf
 ): number {
   const rebased =
     direction === 'decreasing'

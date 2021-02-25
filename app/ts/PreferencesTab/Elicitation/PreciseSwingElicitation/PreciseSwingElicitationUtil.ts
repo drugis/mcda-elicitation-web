@@ -1,5 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
@@ -12,7 +12,7 @@ import {DEFAULT_PRECISE_TEMPLATE} from '../elicitationConstants';
 
 export function getSwingStatement(
   criterion: ICriterion,
-  pvf: IPvf,
+  pvf: TPvf,
   showPercentages: boolean
 ): string {
   const unit = criterion.dataSources[0].unitOfMeasurement;

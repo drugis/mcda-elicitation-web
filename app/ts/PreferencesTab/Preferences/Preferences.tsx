@@ -9,6 +9,8 @@ import PreciseSwingWeighting from '../Elicitation/PreciseSwingElicitation/Precis
 import RankingElicitation from '../Elicitation/RankingElicitation/RankingElicitation';
 import {RankingElicitationContextProviderComponent} from '../Elicitation/RankingElicitation/RankingElicitationContext';
 import {PreferencesContext} from '../PreferencesContext';
+import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
+import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import PartialValueFunctions from './PartialValueFunctions/PartialValueFunctions';
 import PreferencesWeights from './PreferencesWeights/PreferencesWeights';
 import ScenarioButtons from './ScenarioButtons/ScenarioButtons';
@@ -71,6 +73,14 @@ export default function Preferences() {
               <RankingElicitation />
             </Grid>
           </RankingElicitationContextProviderComponent>
+        );
+      case 'advancedPvf':
+        return (
+          <AdvancedPartialValueFunctionContextProviderComponent>
+            <Grid container justify="center" component={Box} mt={2}>
+              <AdvancedPartialValueFunction />
+            </Grid>
+          </AdvancedPartialValueFunctionContextProviderComponent>
         );
     }
   }
