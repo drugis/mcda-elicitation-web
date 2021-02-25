@@ -4,7 +4,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
@@ -79,7 +79,7 @@ export default function WorkspaceHandler(db: IDB) {
         ranges: Record<string, [number, number]>;
         title: string;
         problem: IProblem;
-        pvfs: Record<string, IScenarioPvf>;
+        pvfs: Record<string, TScenarioPvf>;
       }
     >,
     callback: (error: OurError, id: string) => void
@@ -106,7 +106,7 @@ export default function WorkspaceHandler(db: IDB) {
         ranges: Record<string, [number, number]>;
         title: string;
         problem: IProblem;
-        pvfs: Record<string, IScenarioPvf>;
+        pvfs: Record<string, TScenarioPvf>;
       }
     >,
     workspaceId: string,
@@ -169,7 +169,7 @@ export default function WorkspaceHandler(db: IDB) {
         ranges: Record<string, [number, number]>;
         title: string;
         problem: IProblem;
-        pvfs: Record<string, IScenarioPvf>;
+        pvfs: Record<string, TScenarioPvf>;
       }
     >,
     workspaceId: string,

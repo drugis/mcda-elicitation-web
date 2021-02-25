@@ -3,7 +3,7 @@ import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import IScenarioCriterion from '@shared/interface/Scenario/IScenarioCriterion';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
+import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
 import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
 import IUploadProblemDataSource from '@shared/interface/UploadProblem/IUploadProblemDataSource';
@@ -47,7 +47,7 @@ export function getRanges(
 
 export function buildScenarioCriteria(
   criteria: Record<string, IProblemCriterion>,
-  pvfs: Record<string, IScenarioPvf>
+  pvfs: Record<string, TScenarioPvf>
 ): Record<string, IScenarioCriterion> {
   if (hasTooManyDataSources(criteria)) {
     return {};
@@ -68,7 +68,7 @@ function hasTooManyDataSources(
 
 function createScenarioCriteria(
   criteria: Record<string, IProblemCriterion>,
-  pvfs: Record<string, IScenarioPvf>
+  pvfs: Record<string, TScenarioPvf>
 ): Record<string, IScenarioCriterion> {
   return _.mapValues(
     criteria,

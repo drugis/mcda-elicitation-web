@@ -1,3 +1,4 @@
+import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import ISettings from '@shared/interface/Settings/ISettings';
 import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
@@ -5,6 +6,7 @@ import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
+import {canBePercentage} from '../DisplayUtil/DisplayUtil';
 import {ErrorContext} from '../Error/ErrorContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';
@@ -96,6 +98,13 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
     }
   }
 
+  function getUsePercentage(criterion: ICriterion): boolean {
+    return (
+      settings.showPercentages === 'percentage' &&
+      canBePercentage(criterion.dataSources[0].unitOfMeasurement.type)
+    );
+  }
+
   return (
     <SettingsContext.Provider
       value={{
@@ -106,6 +115,7 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
         settings,
         showPercentages: settings.showPercentages === 'percentage',
         toggledColumns,
+        getUsePercentage,
         updateSettings
       }}
     >

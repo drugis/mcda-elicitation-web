@@ -1,4 +1,3 @@
-import {CircularProgress} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
@@ -32,7 +31,7 @@ export default function PartialValueFunctions() {
   }
 
   function getPlotOrQuestionMark(criterionId: string) {
-    if (pvfs[criterionId].direction) {
+    if (!_.isEmpty(pvfs) && pvfs[criterionId] && pvfs[criterionId].direction) {
       return <PartialValueFunctionPlot criterionId={criterionId} />;
     } else {
       return <div style={{fontSize: '144px', textAlign: 'center'}}>?</div>;
@@ -49,7 +48,7 @@ export default function PartialValueFunctions() {
           </Typography>
         </Grid>
         <Grid container item xs={12} spacing={2}>
-          {!_.isEmpty(pvfs) ? getPartialValueFunctions() : <CircularProgress />}
+          {getPartialValueFunctions()}
         </Grid>
       </Grid>
     </>

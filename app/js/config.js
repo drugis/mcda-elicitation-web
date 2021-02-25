@@ -11,15 +11,6 @@ define(function () {
         resets: []
       },
       {
-        id: 'partial-value-function',
-        url: '/partial-value-function/:criterion',
-        title: 'Define Partial Value Functions',
-        controller: 'PartialValueFunctionController',
-        templateUrl: './preferences/partialValueFunction.html',
-        requires: [],
-        resets: ['criteria-trade-offs']
-      },
-      {
         id: 'preferences',
         title: 'Preferences',
         controller: 'PreferencesController',

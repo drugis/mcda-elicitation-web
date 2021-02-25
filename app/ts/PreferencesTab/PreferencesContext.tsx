@@ -1,11 +1,11 @@
-import ICriterion from '@shared/interface/ICriterion';
 import {OurError} from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
+import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import {TPreferences} from '@shared/types/Preferences';
-import {TPvfDirection} from '@shared/types/PvfTypes';
+import {TPvfDirection} from '@shared/types/TPvfDirection';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -14,9 +14,10 @@ import getScenarioLocation from '../ScenarioSelection/getScenarioLocation';
 import {SettingsContext} from '../Settings/SettingsContext';
 import {getWeightsPataviProblem} from '../util/PataviUtil';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
-import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import IPreferencesContext from './IPreferencesContext';
 import {
+  areAllPvfsSet,
+  createScenarioWithPvf,
   determineElicitationMethod,
   filterScenariosWithPvfs,
   initPvfs
@@ -44,10 +45,13 @@ export function PreferencesContextProviderComponent({
   const {
     settings: {randomSeed}
   } = useContext(SettingsContext);
-  const {currentSubproblem} = useContext(WorkspaceContext);
-  const {filteredCriteria, observedRanges, filteredWorkspace} = useContext(
-    SubproblemContext
-  );
+  const {
+    filteredCriteria,
+    filteredWorkspace,
+    getCriterion,
+    configuredRanges,
+    getConfiguredRange
+  } = useContext(SubproblemContext);
 
   const [contextScenarios, setScenarios] = useState<
     Record<string, IMcdaScenario>
@@ -56,29 +60,29 @@ export function PreferencesContextProviderComponent({
   const [currentScenario, setCurrentScenario] = useState<IMcdaScenario>(
     _.find(contextScenarios, ['id', currentScenarioId]) // FIXME: take the one who's id is in the url instead
   );
-  const [pvfs, setPvfs] = useState<Record<string, IPvf>>();
+  const [pvfs, setPvfs] = useState<Record<string, TPvf>>();
   const subproblemId = currentScenario.subproblemId;
-  const disableWeightsButtons = !areAllPvfsSet(pvfs);
+  const disableWeightsButtons = !areAllPvfsSet(filteredCriteria, pvfs);
   const [activeView, setActiveView] = useState<TPreferencesView>('preferences');
   const [elicitationMethod, setElicitationMethod] = useState<string>(
     determineElicitationMethod(currentScenario.state.prefs)
   );
+  const [
+    advancedPvfCriterionId,
+    setAdvancedPvfCriterionId
+  ] = useState<string>();
 
   useEffect(() => {
-    if (!_.isEmpty(observedRanges)) {
-      setPvfs(
-        initPvfs(
-          filteredCriteria,
-          currentScenario,
-          currentSubproblem.definition.ranges,
-          observedRanges
-        )
-      );
+    if (!_.isEmpty(configuredRanges)) {
+      setPvfs(initPvfs(filteredCriteria, currentScenario, configuredRanges));
     }
-  }, [observedRanges]);
+  }, [configuredRanges]);
 
   useEffect(() => {
-    if (areAllPvfsSet(pvfs) && !currentScenario.state.weights) {
+    if (
+      areAllPvfsSet(filteredCriteria, pvfs) &&
+      !currentScenario.state.weights
+    ) {
       getWeights(currentScenario);
     }
     setElicitationMethod(
@@ -86,49 +90,8 @@ export function PreferencesContextProviderComponent({
     );
   }, [currentScenario, pvfs]);
 
-  function getPvf(criterionId: string): IPvf {
+  function getPvf(criterionId: string): TPvf {
     return pvfs[criterionId];
-  }
-
-  function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
-    const pvf: IPvf = {
-      direction: direction,
-      type: 'linear',
-      range: pvfs[criterionId].range
-    };
-    const newPvfs = {..._.cloneDeep(pvfs), [criterionId]: pvf};
-    setPvfs(newPvfs);
-    const newScenario = createScenarioWithPvf(criterionId, direction);
-    updateScenario(newScenario).then(() => {
-      if (areAllPvfsSet(newPvfs)) {
-        resetPreferences(newScenario);
-      }
-    });
-  }
-
-  function areAllPvfsSet(newPvfs: Record<string, IPvf>): boolean {
-    return (
-      newPvfs &&
-      _.every(filteredCriteria, (criterion: ICriterion): boolean => {
-        return (
-          !!newPvfs[criterion.id].direction && !!newPvfs[criterion.id].type
-        );
-      })
-    );
-  }
-
-  function createScenarioWithPvf(
-    criterionId: string,
-    direction: TPvfDirection
-  ) {
-    let newScenario: IMcdaScenario = _.cloneDeep(currentScenario);
-    if (!newScenario.state.problem) {
-      newScenario.state.problem = {criteria: {}};
-    }
-    newScenario.state.problem.criteria[criterionId] = {
-      dataSources: [{pvf: {direction: direction, type: 'linear'}}]
-    };
-    return newScenario;
   }
 
   function resetPreferences(scenario: IMcdaScenario) {
@@ -171,7 +134,7 @@ export function PreferencesContextProviderComponent({
   function updateScenarioCallback(scenario: IMcdaScenario) {
     setScenarios({..._.cloneDeep(contextScenarios), [scenario.id]: scenario});
     setCurrentScenario(scenario);
-    if (areAllPvfsSet(pvfs)) {
+    if (areAllPvfsSet(filteredCriteria, pvfs)) {
       updateAngularScenario(scenario);
     }
   }
@@ -225,13 +188,41 @@ export function PreferencesContextProviderComponent({
     setError(error);
   }
 
-  function getCriterion(id: string): ICriterion {
-    return _.find(filteredCriteria, ['id', id]);
+  function goToAdvancedPvf(criterionId: string): void {
+    setAdvancedPvfCriterionId(criterionId);
+    setActiveView('advancedPvf');
+  }
+
+  function setPvf(criterionId: string, pvf: TPvf): void {
+    const newPvfs = {..._.cloneDeep(pvfs), [criterionId]: pvf};
+    setPvfs(newPvfs);
+    const newScenario = createScenarioWithPvf(
+      criterionId,
+      pvf,
+      currentScenario
+    );
+    updateScenario(newScenario).then(() => {
+      if (areAllPvfsSet(filteredCriteria, newPvfs)) {
+        resetPreferences(newScenario);
+      }
+    });
+  }
+
+  function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
+    const range = getConfiguredRange(getCriterion(criterionId));
+    const pvf: ILinearPvf = {
+      type: 'linear',
+      range: range,
+      direction: direction
+    };
+    setPvf(criterionId, pvf);
   }
 
   return (
     <PreferencesContext.Provider
       value={{
+        advancedPvfCriterionId,
+        areAllPvfsSet: areAllPvfsSet(filteredCriteria, pvfs),
         scenarios: contextScenarios,
         scenariosWithPvfs: filterScenariosWithPvfs(
           contextScenarios,
@@ -247,8 +238,9 @@ export function PreferencesContextProviderComponent({
         deleteScenario,
         copyScenario,
         addScenario,
-        getCriterion,
         getPvf,
+        goToAdvancedPvf,
+        setPvf,
         setLinearPvf,
         resetPreferences,
         setActiveView

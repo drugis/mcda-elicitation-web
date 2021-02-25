@@ -1,14 +1,18 @@
 import ICriterion from '@shared/interface/ICriterion';
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
+import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
+import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
-import IScenarioPvf from '@shared/interface/Scenario/IScenarioPvf';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import IWeights from '@shared/interface/Scenario/IWeights';
+import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import {
+  areAllPvfsSet,
   buildScenarioWithPreferences,
+  createScenarioWithPvf,
   determineElicitationMethod,
   filterScenariosWithPvfs,
   initPvfs
@@ -80,61 +84,52 @@ const criterion3: ICriterion = {
 
 describe('PreferencesUtil', () => {
   describe('initPvfs', () => {
-    const criteria: ICriterion[] = [criterion1, criterion2];
+    it('should return a map of string id to the corresponding pvf with configured ranges', () => {
+      const criteria: ICriterion[] = [criterion1, criterion2, criterion3];
 
-    const currentScenario: IMcdaScenario = {
-      id: 'scenarioId1',
-      title: 'scenario 1',
-      state: {
-        prefs: [],
-        problem: {
-          criteria: {
-            crit2Id: {
-              dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
+      const currentScenario: IMcdaScenario = {
+        id: 'scenarioId1',
+        title: 'scenario 1',
+        state: {
+          prefs: [],
+          problem: {
+            criteria: {
+              crit1Id: {
+                dataSources: [{pvf: {type: 'linear', direction: 'decreasing'}}]
+              },
+              crit2Id: {
+                dataSources: [
+                  {
+                    pvf: {
+                      type: 'piecewise-linear',
+                      direction: 'increasing',
+                      values: [0.25, 0.5, 0.75],
+                      cutoffs: [1, 2, 3]
+                    }
+                  }
+                ]
+              }
             }
           }
-        }
-      },
-      subproblemId: '37',
-      workspaceId: '42'
-    };
-    it('should return a map of string id to the corresponding pvf with configured ranges', () => {
+        },
+        subproblemId: '37',
+        workspaceId: '42'
+      };
+
       const ranges: Record<string, [number, number]> = {
         dsId1: [0, 1],
-        dsId2: [2, 3]
+        dsId2: [0, 10]
       };
-      const observedRanges: Record<string, [number, number]> = {
-        dsId1: [10, 11],
-        dsId2: [12, 13]
-      };
-      const result = initPvfs(
-        criteria,
-        currentScenario,
-        ranges,
-        observedRanges
-      );
-      const expectedResult: Record<string, IPvf> = {
-        crit1Id: {range: [0, 1]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [2, 3]}
-      };
-      expect(result).toEqual(expectedResult);
-    });
-
-    it('should return a map of string id to the corresponding pvf with observed ranges', () => {
-      const ranges: Record<string, [number, number]> = {};
-      const observedRanges: Record<string, [number, number]> = {
-        dsId1: [10, 11],
-        dsId2: [12, 13]
-      };
-      const result = initPvfs(
-        criteria,
-        currentScenario,
-        ranges,
-        observedRanges
-      );
-      const expectedResult: Record<string, IPvf> = {
-        crit1Id: {range: [10, 11]},
-        crit2Id: {type: 'linear', direction: 'decreasing', range: [12, 13]}
+      const result = initPvfs(criteria, currentScenario, ranges);
+      const expectedResult: Record<string, TPvf> = {
+        crit1Id: {type: 'linear', direction: 'decreasing', range: [0, 1]},
+        crit2Id: {
+          type: 'piecewise-linear',
+          direction: 'increasing',
+          values: [0.25, 0.5, 0.75],
+          cutoffs: [1, 2, 3],
+          range: [0, 10]
+        }
       };
       expect(result).toEqual(expectedResult);
     });
@@ -195,12 +190,12 @@ describe('PreferencesUtil', () => {
               criteria: {
                 crit1Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 },
                 crit2Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 }
               }
@@ -214,11 +209,11 @@ describe('PreferencesUtil', () => {
               criteria: {
                 crit1Id: {
                   dataSources: [
-                    {pvf: {direction: 'increasing'} as IScenarioPvf}
+                    {pvf: {direction: 'increasing'} as TScenarioPvf}
                   ]
                 },
                 crit2Id: {
-                  dataSources: [{pvf: {} as IScenarioPvf}]
+                  dataSources: [{pvf: {} as TScenarioPvf}]
                 }
               }
             } as IScenarioProblem
@@ -249,12 +244,12 @@ describe('PreferencesUtil', () => {
               criteria: {
                 crit1Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 },
                 crit2Id: {
                   dataSources: [
-                    {pvf: {direction: 'decreasing'} as IScenarioPvf}
+                    {pvf: {direction: 'decreasing'} as TScenarioPvf}
                   ]
                 }
               }
@@ -304,6 +299,148 @@ describe('PreferencesUtil', () => {
       ];
       const result = determineElicitationMethod(preferences);
       expect(result).toEqual('Imprecise Swing Weighting');
+    });
+  });
+
+  describe('createScenarioWithPvf', () => {
+    const currentScenario: IMcdaScenario = {
+      id: 'scen1',
+      title: 'scenario 1',
+      workspaceId: '10',
+      subproblemId: '100',
+      state: {
+        problem: {
+          criteria: {
+            crit1Id: {
+              dataSources: [
+                {
+                  pvf: {
+                    type: 'linear',
+                    direction: 'decreasing'
+                  }
+                }
+              ]
+            }
+          }
+        },
+        prefs: []
+      }
+    };
+
+    it('should return a scenario with a newly set linear pvf', () => {
+      const pvf: ILinearPvf = {
+        type: 'linear',
+        direction: 'increasing',
+        range: [0, 1]
+      };
+      const result = createScenarioWithPvf('crit1Id', pvf, currentScenario);
+      const expectedResult: IMcdaScenario = {
+        id: 'scen1',
+        title: 'scenario 1',
+        workspaceId: '10',
+        subproblemId: '100',
+        state: {
+          problem: {
+            criteria: {
+              crit1Id: {
+                dataSources: [
+                  {
+                    pvf: {
+                      type: 'linear',
+                      direction: 'increasing'
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          prefs: []
+        }
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return a scenario with a newly set piecewise pvf', () => {
+      const pvf: IPieceWiseLinearPvf = {
+        type: 'piecewise-linear',
+        direction: 'increasing',
+        values: [0.25, 0.5, 0.75],
+        cutoffs: [0, 1, 2],
+        range: [0, 10]
+      };
+      const result = createScenarioWithPvf('crit1Id', pvf, currentScenario);
+      const expectedResult: IMcdaScenario = {
+        id: 'scen1',
+        title: 'scenario 1',
+        workspaceId: '10',
+        subproblemId: '100',
+        state: {
+          problem: {
+            criteria: {
+              crit1Id: {
+                dataSources: [
+                  {
+                    pvf: {
+                      type: 'piecewise-linear',
+                      direction: 'increasing',
+                      values: [0.25, 0.5, 0.75],
+                      cutoffs: [0, 1, 2]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          prefs: []
+        }
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('areAllPvfsSet', () => {
+    const criteria = [criterion1, criterion2, criterion3];
+
+    it('should true if all criteria have corresponding pvfs', () => {
+      const pvfs: Record<string, TPvf> = {
+        crit1Id: {
+          type: 'linear',
+          direction: 'increasing',
+          range: [0, 1]
+        },
+        crit2Id: {
+          type: 'linear',
+          direction: 'increasing',
+          range: [0, 1]
+        },
+        crit3Id: {
+          type: 'piecewise-linear',
+          direction: 'increasing',
+          values: [0.25, 0.5, 0.75],
+          cutoffs: [0.1, 0.2, 0.3],
+          range: [0, 1]
+        }
+      };
+      const result = areAllPvfsSet(criteria, pvfs);
+      expect(result).toBeTruthy();
+    });
+
+    it('should false if there are no pvfs', () => {
+      const pvfs: Record<string, TPvf> = undefined;
+      const result = areAllPvfsSet(criteria, pvfs);
+      expect(result).toBeFalsy();
+    });
+
+    it('should false if not all criteria have a pvf', () => {
+      const pvfs: Record<string, TPvf> = {
+        crit1Id: {
+          type: 'linear',
+          direction: 'increasing',
+          range: [0, 1]
+        }
+      };
+      const result = areAllPvfsSet(criteria, pvfs);
+      expect(result).toBeFalsy();
     });
   });
 });

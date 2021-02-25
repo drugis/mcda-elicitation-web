@@ -3,4 +3,5 @@ export type TPreferencesView =
   | 'ranking'
   | 'precise'
   | 'imprecise'
-  | 'matching';
+  | 'matching'
+  | 'advancedPvf';

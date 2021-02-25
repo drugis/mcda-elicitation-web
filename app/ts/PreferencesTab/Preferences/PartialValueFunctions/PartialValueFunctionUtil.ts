@@ -1,18 +1,20 @@
-import IPvf from '@shared/interface/Problem/IPvf';
+import {TPvf} from '@shared/interface/Problem/IPvf';
+import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
 
 export function getPvfCoordinates(
-  pvf: IPvf,
+  pvf: TPvf,
   criterionTitle: string,
   usePercentage: boolean
 ): [['x', ...number[]], [string, 1, ...number[]]] {
   return [getXValues(pvf, usePercentage), getYValues(pvf, criterionTitle)];
 }
 
-function getXValues(pvf: IPvf, usePercentage: boolean): ['x', ...number[]] {
+function getXValues(pvf: TPvf, usePercentage: boolean): ['x', ...number[]] {
   return [
     'x',
     getBest(pvf, usePercentage),
@@ -21,21 +23,10 @@ function getXValues(pvf: IPvf, usePercentage: boolean): ['x', ...number[]] {
   ];
 }
 
-export function getPercentifiedNumber(
-  value: number,
-  usePercentage: boolean
-): number {
-  if (usePercentage) {
-    return significantDigits(value * 100);
-  } else {
-    return significantDigits(value);
-  }
-}
-
-function intermediateX(pvf: IPvf, usePercentage: boolean): number[] {
-  if (pvf.cutoffs) {
+function intermediateX(pvf: TPvf, usePercentage: boolean): number[] {
+  if (isPieceWiseLinearPvf(pvf)) {
     return _.map(pvf.cutoffs, (value: number) => {
-      return getPercentifiedNumber(value, usePercentage);
+      return getPercentifiedValue(value, usePercentage);
     });
   } else {
     return [];
@@ -43,31 +34,35 @@ function intermediateX(pvf: IPvf, usePercentage: boolean): number[] {
 }
 
 function getYValues(
-  pvf: IPvf,
+  pvf: TPvf,
   criterionTitle: string
 ): [string, 1, ...number[]] {
   return [criterionTitle, 1, ...intermediateY(pvf), 0];
 }
 
-function intermediateY(pvf: IPvf): number[] {
-  return pvf.values ? pvf.values : [];
+function intermediateY(pvf: TPvf): number[] {
+  if (isPieceWiseLinearPvf(pvf)) {
+    return pvf.values;
+  } else {
+    return [];
+  }
 }
 
-export function getBest(pvf: IPvf, usePercentage: boolean): number {
+export function getBest(pvf: TPvf, usePercentage: boolean): number {
   const value = significantDigits(
     isIncreasing(pvf) ? pvf.range[1] : pvf.range[0]
   );
-  return getPercentifiedNumber(value, usePercentage);
+  return getPercentifiedValue(value, usePercentage);
 }
 
-export function getWorst(pvf: IPvf, usePercentage: boolean): number {
+export function getWorst(pvf: TPvf, usePercentage: boolean): number {
   const value = significantDigits(
     isIncreasing(pvf) ? pvf.range[0] : pvf.range[1]
   );
-  return getPercentifiedNumber(value, usePercentage);
+  return getPercentifiedValue(value, usePercentage);
 }
 
-function isIncreasing(pvf: IPvf): boolean {
+function isIncreasing(pvf: TPvf): boolean {
   return pvf.direction === 'increasing';
 }
 
@@ -131,4 +126,74 @@ export function getPvfLocation(criterionId: string): string {
     'partial-value-function/' +
     criterionId
   );
+}
+
+function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
+  return 'cutoffs' in pvf;
+}
+
+export function generateAdvancedPlotSettings(
+  criterionId: string,
+  cutOffs: [number, number, number],
+  values: number[],
+  configuredRange: [number, number],
+  usePercentage: boolean
+): ChartConfiguration {
+  return {
+    bindto: `#pvfplot-${criterionId}`,
+    data: {
+      x: 'x',
+      columns: [
+        [
+          'x',
+          ..._.map(
+            [configuredRange[0], ...cutOffs, configuredRange[1]],
+            (x: number) => getPercentifiedValue(x, usePercentage)
+          )
+        ],
+        ['', ...values]
+      ]
+    },
+    axis: {
+      x: {
+        min: getPercentifiedValue(configuredRange[0], usePercentage),
+        max: getPercentifiedValue(configuredRange[1], usePercentage),
+        padding: {
+          left: 0,
+          right: 0
+        },
+        tick: {
+          count: 5,
+          format: format(',.3g')
+        }
+      },
+      y: {
+        min: 0,
+        max: 1,
+        padding: {
+          top: 0,
+          bottom: 0
+        },
+        tick: {
+          count: 5,
+          format: format(',.3g')
+        }
+      }
+    },
+    point: {
+      show: false
+    },
+    legend: {
+      show: false
+    },
+    tooltip: {
+      show: false
+    },
+    padding: {
+      top: 10,
+      right: 20,
+      bottom: 10,
+      left: 45
+    }
+  };
 }

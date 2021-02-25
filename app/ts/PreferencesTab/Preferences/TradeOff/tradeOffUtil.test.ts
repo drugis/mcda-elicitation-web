@@ -1,4 +1,4 @@
-import IPvf from '@shared/interface/Problem/IPvf';
+import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {
   getInitialReferenceValueFrom,
   getInitialReferenceValueTo,
@@ -28,7 +28,7 @@ describe('tradeOffUtil', () => {
 
   describe('getInitialReferenceValueFrom', () => {
     it('should return an inital value at 45% of the interval for an increasing pvf', () => {
-      const pvf: IPvf = {
+      const pvf: ILinearPvf = {
         range: [0, 1],
         direction: 'increasing',
         type: 'linear'
@@ -38,7 +38,7 @@ describe('tradeOffUtil', () => {
     });
 
     it('should return an inital value at 55% of the interval for a decreasing pvf', () => {
-      const pvf: IPvf = {
+      const pvf: ILinearPvf = {
         range: [0, 1],
         direction: 'decreasing',
         type: 'linear'
@@ -50,7 +50,7 @@ describe('tradeOffUtil', () => {
 
   describe('getInitialReferenceValueTo', () => {
     it('should return an inital value at 55% of the interval for an increasing pvf', () => {
-      const pvf: IPvf = {
+      const pvf: ILinearPvf = {
         range: [0, 1],
         direction: 'increasing',
         type: 'linear'
@@ -60,7 +60,7 @@ describe('tradeOffUtil', () => {
     });
 
     it('should return an inital value at 45% of the interval for a decreasing pvf', () => {
-      const pvf: IPvf = {
+      const pvf: ILinearPvf = {
         range: [0, 1],
         direction: 'decreasing',
         type: 'linear'
