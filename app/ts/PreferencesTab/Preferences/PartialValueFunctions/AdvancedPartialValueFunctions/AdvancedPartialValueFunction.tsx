@@ -24,10 +24,6 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
           <InlineHelp helpId="partial-value-function" />
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        The partial value functions define how a criterion's value changes with
-        its measurements.
-      </Grid>
       <PvfDirection />
       <AdvancedPvfPlot />
       <CutOffs />

@@ -54,7 +54,9 @@ export default function CutOffs(): JSX.Element {
       </Grid>
       <Grid container item xs={12} justify="flex-start">
         <div style={{width: '500px', textAlign: 'center'}}>
-          Use the slider to adjust the function shape
+          Use the sliders to adjust the shape of the function. They indicate for
+          which criterion value (the x-axis) the partial value (the y-axis) is
+          0.25, 0.5 and 0.75, respectively.
         </div>
       </Grid>
     </>
