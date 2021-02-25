@@ -31,7 +31,8 @@ let config = {
       {
         test: /\.ts(x?)$/,
         use: 'ts-loader',
-        exclude: [/frontend-test/, /node_modules/, /node-backend/, /tscomp/]
+        // exclude: [/frontend-test/, /node_modules/, /node-backend/, /tscomp/],
+        include: [/app\/ts/, /shared/]
       },
       {
         test: /\.js$/,
@@ -85,7 +86,8 @@ let config = {
     alias: {
       'schema-basePath': basePath + '/schema/',
       mcda: basePath + '/app/js',
-      mcdaweb: basePath + '/app/js/mcda-web'
+      mcdaweb: basePath + '/app/js/mcda-web',
+      react: basePath + '/node_modules/react'
     },
     modules: [
       // Files path which will be referenced while bundling
