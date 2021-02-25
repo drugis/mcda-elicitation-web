@@ -40,7 +40,7 @@ export const lexicon: Record<string, IHelpInfo> = {
   'configured-range': {
     title: 'Configured range',
     text:
-      'Which range the user has actually configured to be used. Without user intervention the default scales are the observed ranges.',
+      'Which range of values the user has determined are valid for a criterion. Without user intervention the default scales exactly encompass the lowest and highest observed values.',
     link: '/manual.html#mcda-problem-creation'
   },
   criterion: {
@@ -88,13 +88,13 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Importance',
     text:
       'The importance of the criterion. A higher percentage means the criterion is more important.',
-    link: '/manual.html##mcda-setting-pvfs'
+    link: '/manual.html#mcda-weights-table'
   },
   'imprecise-matching': {
-    title: 'Imprecise Matching',
+    title: 'Imprecise swing weighting',
     text:
       "Elicitation of the user's weight trade-offs between the different criteria, via the interval method. This method allows specification of an interval (rather than an exact value) where changes to two criteria are equivalent. This results in weight ratios between all the criteria, e.g. increasing effectiveness by 5-10% is equally desirable to decreasing mortality by 10-20%.",
-    link: '/manual.html#mcda-value-tradeoffs'
+    link: '/manual.html#mcda-imprecise-swing-elicitation'
   },
   'incomplete-workspaces': {
     title: 'Incomplete workspaces',
@@ -106,19 +106,19 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Matching',
     text:
       'Elicitation of the criteria weights through a series of matching questions. This method sets weights by asking users to specify how much the performance with respect to one criterion needs to improve to compensate for a worsening in the performance with respect to another criterion.',
-    link: '/manual.html#mcda-value-tradeofffs'
+    link: '/manual.html#matching-elicitation'
   },
   'measurements-display-mode': {
     title: 'Measurements display mode',
     text:
-      'Choose whether to display the input values of the effects table or the values used for calculation during the analysis',
-    link: '/manual.html#'
+      'Choose whether to display the input values or distributions of the effects table, or the values used for calculation during deterministic analysis or SMAA,',
+    link: '/manual.html#mcda-settings'
   },
   'median-mode': {
     title: 'Median and mode selection',
     text:
-      'Choose whether the median or the mode should be displayed when looking to the SMAA analysis values in the effects table. Mode values are informative only and will not be used while calculation analysis results.',
-    link: '/manual.html#mcda-smaa-analysis'
+      'Choose whether the median or the mode should be displayed when looking to the SMAA analysis values in the effects table. Note: mode values are informative only and are not used in analyses.',
+    link: '/manual.html#mcda-settings'
   },
   'observed-range': {
     title: 'Observed range',
@@ -129,8 +129,8 @@ export const lexicon: Record<string, IHelpInfo> = {
   'one-way-sensitivity-analysis': {
     title: 'One-way sensitivity analysis',
     text:
-      'A section that allows exploring of the sensitivity of the results by allowing only one thing to change.',
-    link: '/manual.html#mcda-deterministic-analysis'
+      "Tools to explore the sensitivity of the value of each criterion by allowing only one thing to change (a single preference, or a single criterion's measurements).",
+    link: '/manual.html#mcda-sensitivity-analysis'
   },
   'partial-value-function': {
     title: 'Partial Value Function',
@@ -142,30 +142,30 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Percentages',
     text:
       'Choose whether to display percentages or decimals for applicable effect table values.',
-    link: 'manual.html#'
+    link: 'manual.html#mcda-settings'
   },
   problem: {
     title: 'Problem definition',
     text:
       'The problem definition is a lens through which to view the data for analysis. Criteria and alternatives can be omitted, and scale ranges can be changed.',
-    link: '/manual.html#mcda-problem-definition'
+    link: '/manual.html#mcda-problems'
   },
   'pvf-type': {
     title: 'Type of partial value function',
     text:
       'Partial value functions can be either linear (a straight line between two points) or piece-wise linear, meaning the function consists of several linear segments.',
-    link: '/manual.html#mcda-value-tradeoffs'
+    link: '/manual.html#mcda-setting-pvfs'
   },
   'random-seed': {
     title: 'Random seed',
     text: 'The random seed that is used in R calculations.',
-    link: '/manual.html#mcda-benefit-risk-analysis'
+    link: '/manual.html#mcda-settings'
   },
   'rank-acceptabilities': {
     title: 'Rank acceptabilities',
     text:
       'How likely each intervention is to overall be the best, worst, or any rank in between, based on the SMAA model results for the given preferences and data.',
-    link: '/manual.html#mcda-benefit-risk-analysis'
+    link: '/manual.html#mcda-rank-acceptability'
   },
   ranking: {
     title: 'Ranking',
@@ -177,13 +177,13 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Weights',
     text:
       'Weights representative of how important each criterion is. The total weights add up to one.',
-    link: '/manual.html#mcda-deterministic-analysis'
+    link: '/manual.html#mcda-weights-table'
   },
   'scale-ranges': {
     title: 'Scale ranges',
     text:
       'For each criterion there is a theoretical maximum range within which the effects may lie (infinite for continuous criteria, between zero and one), as well as a minimum range (determined by the effects). In most cases only a portion of this range is actually relevant to the data. Here you can adjust these scales to your liking.',
-    link: '/manual.html#mcda-value-tradeoffs'
+    link: '/manual.html#mcda-problem-creation'
   },
   scenario: {
     title: 'Scenario',
@@ -201,37 +201,31 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Preferences sensitivity analysis',
     text:
       'How the value of all alternatives changes as the weight of a specific criterion changes between 0 and 1.',
-    link: '/manual.html#mcda-deterministic-analysis'
+    link: '/manual.html#mcda-sensitivity-analysis'
   },
   'smaa-measurements-uncertainty': {
     title: 'Uncertainty in measurements',
     text:
       'Some measurements may include uncertainty, usually expressed as a confidence interval. SMAA can take this uncertainty into account when calculating the rank acceptiblities.',
-    link: '/manual.html#mcda-smaa-analysis'
-  },
-  'smaa-results': {
-    title: 'SMAA results',
-    text:
-      'The results of stochastic multicriteria acceptability analysis (SMAA) for the given preferences.',
-    link: '/manual.html#mcda-value-tradeoffs'
+    link: '/manual.html#mcda-smaa-uncertainty-settings'
   },
   'smaa-weights-uncertainty': {
     title: 'Uncertainty in weights',
     text:
       'Some preference scenarios may include uncertainty for example when alternatives are ranked, or no preference is expressed. SMAA can take this uncertainty into account when calculating the rank acceptiblities.',
-    link: '/manual.html#mcda-smaa-analysis'
+    link: '/manual.html#mcda-smaa-uncertainty-settings'
   },
   'strength-of-evidence': {
     title: 'Strength of evidence',
     text:
       'Statements regarding the strength of evidence of the treatment effect estimates displayed in a row of the effects table.',
-    link: '/manual.html#mcda-running-example'
+    link: '/manual.html#mcda-overview-criteria'
   },
   'swing-weighting': {
     title: 'Swing Weighting',
     text:
       "Elicitation of the user's weight trade-offs between the different criteria using swing weighting. This method sets weights by choosing one criterion as most important to be improved, and allows the user to scale the other criteria accordingly.",
-    link: '/manual.html#mcda-value-tradeoffs'
+    link: '/manual.html#mcda-precise-swing-elicitation'
   },
   'therapeutic-context': {
     title: 'Therapeutic context',
@@ -241,43 +235,38 @@ export const lexicon: Record<string, IHelpInfo> = {
   },
   'theoretical-range': {
     title: 'Theoretical range',
-    text: 'The theoretically maximal range in which effect sizes can lie',
-    link: '/manual.html#mcda-value-tradeoffs.'
+    text:
+      "The theoretically maximal range in which effect sizes can lie. This is entirely dependent on the data source's unit, e.g. a percentage's theoretical range is [0,100] and a decimal lies within [0,1].",
+    link: '/manual.html#mcda-problem-creation.'
   },
   'toggled-columns': {
     title: 'Toggled columns',
     text: 'Select which columns to show/hide in the effects table.',
-    link: '/manual.html#'
+    link: '/manual.html#mcda-settings'
   },
   'total-value': {
     title: 'Total value',
     text:
       'How valuable (i.e. helpful for each criterion) each alternative is overall.',
-    link: '/manual.html#deterministic-results'
-  },
-  treatment: {
-    title: 'Treatment',
-    text:
-      'A treatment is an intervention of interest to be used in a benefit-risk analysis, e.g. "Aspirin 20 mg/day" or "Meditation".',
-    link: '/manual.html#mcda-preparing-dataset'
+    link: '/manual.html#deterministic-analysis'
   },
   uncertainties: {
     title: 'Uncertainties',
     text:
       'Any uncertainties regarding the treatment effect estimates displayed in a row of the effects table.',
-    link: '/manual.html#mcda-running-example'
+    link: '/manual.html#mcda-overview-criteria'
   },
   'value-profiles': {
     title: 'Value profiles',
     text:
       'How the total value of each alternative is composed out of its value for each criterion.',
-    link: '/manual.html#deterministic-results'
+    link: '/manual.html#deterministic-analysis'
   },
   weights: {
     title: 'Weights',
     text:
-      'Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.',
-    link: '/manual.html#mcda-value-tradeoffs'
+      'Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting, or elicited indirectly through other methods of preference elicitation.',
+    link: '/manual.html#mcda-weights-table'
   },
   workspace: {
     title: 'Workspace',
