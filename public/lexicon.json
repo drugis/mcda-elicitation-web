@@ -137,7 +137,7 @@
   "problem": {
     "title": "Problem definition",
     "text": "The problem definition is a lens through which to view the data for analysis. Criteria and alternatives can be omitted, and scale ranges can be changed.",
-    "link": "/manual.html#mcda-problem-definition"
+    "link": "/manual.html#mcda-problems"
   },
   "pvf-type": {
     "title": "Type of partial value function",
@@ -232,7 +232,7 @@
   "total-value": {
     "title": "Total value",
     "text": "How valuable (i.e. helpful for each criterion) each alternative is overall.",
-    "link": "/manual.html#deterministic-results"
+    "link": "/manual.html#deterministic-analysis"
   },
   "treatment": {
     "title": "Treatment",
@@ -247,7 +247,7 @@
   "value-profiles": {
     "title": "Value profiles",
     "text": "How the total value of each alternative is composed out of its value for each criterion.",
-    "link": "/manual.html#deterministic-results"
+    "link": "/manual.html#deterministic-analysis"
   },
   "weights": {
     "title": "Weights",
