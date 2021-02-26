@@ -179,22 +179,32 @@
   button for that criterion that has the desired direction.
 </p>
 
-<p>
-  In situations where value does not change at the same rate across different
-  measurement values for a criterion, the partial value function is nonlinear.
-  To specify such a function, click the 'Advanced' button below a criterion,
-  select the 'Piece-wise linear' option on the subsequent screen and answer the
-  questions asked by the system. See
-  <a href="#mcda-theory-specifying-pvfs">The theoretical section</a> for a more
-  detailed description of the underlying theory, with reference to the ADDIS
-  MCDA interface.
-</p>
-
 <div class="figure">
-  <img src="img/setPVFs.png" />
+  <img src="img/setPvfs.png" />
   <div class="caption">
     Controls for setting the partial value functions for the criteria of a
     problem.
+  </div>
+</div>
+
+<p>
+  In situations where value does not change at the same rate across different
+  measurement values for a criterion, the partial value function is nonlinear.
+  To specify such a function, click the 'Advanced' button below a criterion. On
+  the subsequent screen, you can set the direction of the PVF (increasing or
+  decreasing) and use a set of sliders along with a preview of the PVF to
+  control its shape. Each slider control the x-coordinate (so, the measurement
+  value) of one of three inflection points, which are fixed at a specific
+  utility quartile (so, 0.25, 0.5 and 0.75). See
+  <a href="#mcda-theory-specifying-pvfs">The theoretical section</a> for a more
+  detailed description of the underlying theory.
+</p>
+
+<div class="figure">
+  <img src="img/advancedPvfs.png" />
+  <div class="caption">
+    Setting a nonlinear partial value function. The three sliders below the plot
+    control the x-coordinates of the inflection points.
   </div>
 </div>
 
