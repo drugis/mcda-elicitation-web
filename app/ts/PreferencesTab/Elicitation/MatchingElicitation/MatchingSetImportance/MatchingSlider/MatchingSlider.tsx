@@ -1,5 +1,4 @@
 import Slider from '@material-ui/core/Slider';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {
   getBest,
@@ -20,7 +19,7 @@ export default function MatchingSlider({
 }: {
   currentCriterionId: string;
 }) {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {
     currentStep,
     setIsNextDisabled,
@@ -33,8 +32,7 @@ export default function MatchingSlider({
   const mostImportantCriterion = getCriterion(mostImportantCriterionId);
   const pvf = pvfs[mostImportantCriterionId];
 
-  const unitType = mostImportantCriterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unitType);
+  const usePercentage = getUsePercentage(mostImportantCriterion);
 
   const [sliderValue, setSliderValue] = useState<number>(
     getBest(pvfs[mostImportantCriterionId], usePercentage)

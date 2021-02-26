@@ -2,7 +2,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {ElicitationContext} from 'app/ts/PreferencesTab/Elicitation/ElicitationContext';
 import ImpreciseSwingSlider from 'app/ts/PreferencesTab/Elicitation/ImpreciseSwingElicitation/ImpreciseSwingSlider/ImpreciseSwingSlider';
 import {
@@ -20,11 +19,10 @@ export default function CriterionOverview({
 }: {
   criterion: ICriterion;
 }) {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage, showPercentages} = useContext(SettingsContext);
   const {elicitationMethod} = useContext(ElicitationContext);
   const {pvfs} = useContext(PreferencesContext);
-  const unitType = criterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unitType);
+  const usePercentage = getUsePercentage(criterion);
 
   function renderSwingSlider(): JSX.Element {
     if (elicitationMethod === 'precise') {

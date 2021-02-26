@@ -6,7 +6,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
@@ -22,7 +21,7 @@ import {
 import {buildImportance} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
-  const {showPercentages} = useContext(SettingsContext);
+  const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {pvfs, currentScenario} = useContext(PreferencesContext);
   const {filteredCriteria} = useContext(SubproblemContext);
   const [importances, setImportances] = useState<Record<string, string>>(
@@ -52,7 +51,7 @@ export default function PreferencesWeightsTable() {
       filteredCriteria,
       (criterion: ICriterion): JSX.Element => {
         const unit = criterion.dataSources[0].unitOfMeasurement;
-        const usePercentage = showPercentages && canBePercentage(unit.type);
+        const usePercentage = getUsePercentage(criterion);
         return (
           <TableRow key={criterion.id}>
             <TableCell>

@@ -2,7 +2,6 @@ import {Button, TableCell} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import {DeterministicResultsContext} from 'app/ts/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import {
-  canBePercentage,
   getPercentifiedValue,
   getPercentifiedValueLabel
 } from 'app/ts/DisplayUtil/DisplayUtil';
@@ -19,7 +18,7 @@ export default function SensitivityMeasurementsTableCell({
   criterion: ICriterion;
   alternativeId: string;
 }): JSX.Element {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {getStepSizeForCriterion, getConfiguredRange} = useContext(
     SubproblemContext
   );
@@ -31,9 +30,7 @@ export default function SensitivityMeasurementsTableCell({
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const values = sensitivityTableValues[criterion.id][alternativeId];
-  const usePercentage =
-    canBePercentage(criterion.dataSources[0].unitOfMeasurement.type) &&
-    showPercentages;
+  const usePercentage = getUsePercentage(criterion);
 
   const [localValue, setLocalValue] = useState<number>(
     getPercentifiedValue(values.currentValue, usePercentage)

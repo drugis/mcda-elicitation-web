@@ -1,9 +1,6 @@
 import {Table, TableBody, TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import {
-  canBePercentage,
-  getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import _ from 'lodash';
@@ -15,7 +12,7 @@ import {
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
 
 export default function TradeOffTable(): JSX.Element {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {otherCriteria: criteria, partOfInterval, referenceWeight} = useContext(
     TradeOffContext
   );
@@ -25,8 +22,7 @@ export default function TradeOffTable(): JSX.Element {
     return _.map(
       criteria,
       (criterion: ICriterion): JSX.Element => {
-        const unit = criterion.dataSources[0].unitOfMeasurement;
-        const usePercentage = showPercentages && canBePercentage(unit.type);
+        const usePercentage = getUsePercentage(criterion);
         const improvedValue = getImprovedValue(criterion, usePercentage);
         return (
           <TableRow key={criterion.id}>

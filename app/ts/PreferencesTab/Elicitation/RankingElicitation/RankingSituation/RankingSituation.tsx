@@ -1,7 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {UNRANKED} from 'app/ts/PreferencesTab/Elicitation/elicitationConstants';
 import {
   getBest,
@@ -16,14 +15,13 @@ import CriterionSituation from '../../CriterionSituation/CriterionSituation';
 import {RankingElicitationContext} from '../RankingElicitationContext';
 
 export default function RankingSituation() {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {pvfs} = useContext(PreferencesContext);
   const {rankings} = useContext(RankingElicitationContext);
   const {filteredCriteria} = useContext(SubproblemContext);
 
   function getValueToDisplay(criterion: ICriterion) {
-    const unitType = criterion.dataSources[0].unitOfMeasurement.type;
-    const usePercentage = showPercentages && canBePercentage(unitType);
+    const usePercentage = getUsePercentage(criterion);
     return !rankings[criterion.id] || rankings[criterion.id].rank === UNRANKED
       ? getWorst(pvfs[criterion.id], usePercentage)
       : getBest(pvfs[criterion.id], usePercentage);

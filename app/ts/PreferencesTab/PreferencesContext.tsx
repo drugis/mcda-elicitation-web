@@ -194,7 +194,7 @@ export function PreferencesContextProviderComponent({
   }
 
   function setPvf(criterionId: string, pvf: TPvf): void {
-    const newPvfs = {..._.cloneDeep(pvfs), [criterionId]: pvf};
+    const newPvfs = {...pvfs, [criterionId]: pvf};
     setPvfs(newPvfs);
     const newScenario = createScenarioWithPvf(
       criterionId,

@@ -2,7 +2,6 @@ import Grid from '@material-ui/core/Grid';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
@@ -19,7 +18,7 @@ export default function MostImportantChoice() {
     setMostImportantCriterionId,
     setIsNextDisabled
   } = useContext(ElicitationContext);
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {pvfs} = useContext(PreferencesContext);
   const {filteredCriteria} = useContext(SubproblemContext);
 
@@ -32,8 +31,7 @@ export default function MostImportantChoice() {
     return _.map(
       filteredCriteria,
       (criterion: ICriterion): JSX.Element => {
-        const unitType = criterion.dataSources[0].unitOfMeasurement.type;
-        const usePercentage = showPercentages && canBePercentage(unitType);
+        const usePercentage = getUsePercentage(criterion);
         return (
           <CriterionSituation
             key={criterion.id}

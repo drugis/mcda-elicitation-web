@@ -32,14 +32,43 @@ function afterEach(browser) {
 }
 
 function set(browser) {
+  browser.click('#advanced-pvf-button-c1');
+
+  browser.expect
+    .element('#increasing-pvf-option')
+    .text.to.equal('Increasing (2 is best)');
+  browser.expect
+    .element('#decreasing-pvf-option')
+    .text.to.equal('Decreasing (1 is best)');
+
+  browser.click('span.MuiSlider-mark:nth-child(4)');
+  browser.expect
+    .element('span.MuiSlider-thumb:nth-child(12) > span:nth-child(1)')
+    .text.to.equal('1.1');
+
   browser
-    .click('#advanced-pvf-button-c1')
     .click('#save-button')
     .waitForElementVisible('#partial-value-functions-block')
-    .click('#advanced-pvf-button-c2')
+    .click('#advanced-pvf-button-c2');
+
+  browser.expect
+    .element('#increasing-pvf-option')
+    .text.to.equal('Increasing (4 is best)');
+  browser.expect
+    .element('#decreasing-pvf-option')
+    .text.to.equal('Decreasing (3 is best)');
+
+  browser
+    .click('#decreasing-pvf-option')
     .click('#save-button')
     .pause(200)
     .waitForElementVisible('#ranking-button:enabled');
+
+  browser.expect.element('#worst-c1').text.to.equal('1');
+  browser.expect.element('#best-c1').text.to.equal('2');
+
+  browser.expect.element('#worst-c2').text.to.equal('4');
+  browser.expect.element('#best-c2').text.to.equal('3');
 }
 
 function setLinearPVF(browser) {

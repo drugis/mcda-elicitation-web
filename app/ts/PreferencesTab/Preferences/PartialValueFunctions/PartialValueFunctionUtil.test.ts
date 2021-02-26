@@ -2,7 +2,7 @@ import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {ChartConfiguration} from 'c3';
 import {
-  generateAdvancedPlotSettings,
+  generateAdvancedPvfPlotSettings,
   generatePlotSettings,
   getBest,
   getPvfCoordinates,
@@ -173,7 +173,7 @@ describe('getPvfLocation', () => {
       const values: [number, number, number] = [0.25, 0.5, 0.75];
       const configuredRange: [number, number] = [0, 10];
       const usePercentage = false;
-      const result: ChartConfiguration = generateAdvancedPlotSettings(
+      const result: ChartConfiguration = generateAdvancedPvfPlotSettings(
         criterionId,
         cutOffs,
         values,

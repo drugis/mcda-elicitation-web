@@ -5,7 +5,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {
   getBest,
   getWorst
@@ -22,7 +21,7 @@ import {
 import MatchingSlider from './MatchingSlider/MatchingSlider';
 
 export default function MatchingSetImportance() {
-  const {showPercentages} = useContext(SettingsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const {mostImportantCriterionId, currentStep} = useContext(
     ElicitationContext
   );
@@ -30,26 +29,22 @@ export default function MatchingSetImportance() {
   const {filteredCriteria, getCriterion} = useContext(SubproblemContext);
 
   const mostImportantCriterion = getCriterion(mostImportantCriterionId);
-  const mostImportantUnitType =
-    mostImportantCriterion.dataSources[0].unitOfMeasurement.type;
 
   const currentCriterion = getCurrentCriterion(
     filteredCriteria,
     mostImportantCriterionId,
     currentStep
   );
-  const currentUnitType =
-    currentCriterion.dataSources[0].unitOfMeasurement.type;
+
   const statement = getMatchingStatement(
     mostImportantCriterion,
     currentCriterion
   );
 
-  const usePercentagesForMostImportantCriterion =
-    showPercentages && canBePercentage(mostImportantUnitType);
-
-  const usePercentagesForCurrentCriterion =
-    showPercentages && canBePercentage(currentUnitType);
+  const usePercentagesForMostImportantCriterion = getUsePercentage(
+    mostImportantCriterion
+  );
+  const usePercentagesForCurrentCriterion = getUsePercentage(currentCriterion);
 
   return (
     <Grid container item spacing={2}>
