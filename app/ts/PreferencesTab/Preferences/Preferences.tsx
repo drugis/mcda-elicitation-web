@@ -4,16 +4,11 @@ import {TPreferences} from '@shared/types/Preferences';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import {
-  ElicitationContextProviderComponent,
-  ImpreciseSwingWeighting,
-  MatchingElicitation,
-  PreciseSwingWeighting,
-  RankingElicitation
-} from 'preference-elicitation';
+import {PreferenceElicitation} from 'preference-elicitation';
 import React, {useContext, useState} from 'react';
 import {PreferencesContext} from '../PreferencesContext';
 import {buildScenarioWithPreferences} from '../PreferencesUtil';
+import {TPreferencesView} from '../TPreferencesView';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import PartialValueFunctions from './PartialValueFunctions/PartialValueFunctions';
@@ -43,94 +38,68 @@ export default function Preferences() {
     setActiveView('preferences');
   }
 
-  function renderView(): JSX.Element {
+  function setDocumentTitle(activeView: TPreferencesView): void {
     switch (activeView) {
       case 'preferences':
         document.title = preferencesTitle;
-        return (
-          <Grid container spacing={3}>
-            <ScenarioSelection
-              scenarios={scenarios}
-              currentScenario={currentScenario}
-            />
-            <ScenarioButtons />
-            <PartialValueFunctions />
-            <PreferencesWeights />
-            <TradeOff />
-          </Grid>
-        );
+        break;
       case 'precise':
         document.title = 'Precise swing weighting';
-        return (
-          <ElicitationContextProviderComponent
-            criteria={filteredCriteria}
-            elicitationMethod={'precise'}
-            showPercentages={showPercentages}
-            pvfs={pvfs}
-            cancelCallback={cancelCallback}
-            saveCallback={saveCallback}
-          >
-            <Grid container justify="center" component={Box} mt={2}>
-              <PreciseSwingWeighting />
-            </Grid>
-          </ElicitationContextProviderComponent>
-        );
+        break;
       case 'imprecise':
         document.title = 'Imprecise swing weighting';
-        return (
-          <ElicitationContextProviderComponent
-            criteria={filteredCriteria}
-            elicitationMethod={'imprecise'}
-            showPercentages={showPercentages}
-            pvfs={pvfs}
-            cancelCallback={cancelCallback}
-            saveCallback={saveCallback}
-          >
-            <Grid container justify="center" component={Box} mt={2}>
-              <ImpreciseSwingWeighting />
-            </Grid>
-          </ElicitationContextProviderComponent>
-        );
+        break;
       case 'matching':
         document.title = 'Matching';
-        return (
-          <ElicitationContextProviderComponent
-            criteria={filteredCriteria}
-            elicitationMethod={'matching'}
-            showPercentages={showPercentages}
-            pvfs={pvfs}
-            cancelCallback={cancelCallback}
-            saveCallback={saveCallback}
-          >
-            <Grid container justify="center" component={Box} mt={2}>
-              <MatchingElicitation />
-            </Grid>
-          </ElicitationContextProviderComponent>
-        );
+        break;
       case 'ranking':
         document.title = 'Ranking';
-        return (
-          <ElicitationContextProviderComponent
-            criteria={filteredCriteria}
-            elicitationMethod={'matching'}
-            showPercentages={showPercentages}
-            pvfs={pvfs}
-            cancelCallback={cancelCallback}
-            saveCallback={saveCallback}
-          >
-            <Grid container justify="center" component={Box} mt={2}>
-              <RankingElicitation />
-            </Grid>
-          </ElicitationContextProviderComponent>
-        );
-      case 'advancedPvf':
-        return (
-          <AdvancedPartialValueFunctionContextProviderComponent>
-            <Grid container justify="center" component={Box} mt={2}>
-              <AdvancedPartialValueFunction />
-            </Grid>
-          </AdvancedPartialValueFunctionContextProviderComponent>
-        );
+        break;
+    }
+  }
+
+  function renderView(): JSX.Element {
+    setDocumentTitle(activeView);
+
+    if (activeView === 'preferences') {
+      return (
+        <Grid container spacing={3}>
+          <ScenarioSelection
+            scenarios={scenarios}
+            currentScenario={currentScenario}
+          />
+          <ScenarioButtons />
+          <PartialValueFunctions />
+          <PreferencesWeights />
+          <TradeOff />
+        </Grid>
+      );
+    } else if (activeView === 'advancedPvf') {
+      return (
+        <AdvancedPartialValueFunctionContextProviderComponent>
+          <Grid container justify="center" component={Box} mt={2}>
+            <AdvancedPartialValueFunction />
+          </Grid>
+        </AdvancedPartialValueFunctionContextProviderComponent>
+      );
+    } else if (
+      activeView === 'precise' ||
+      activeView === 'imprecise' ||
+      activeView === 'matching' ||
+      activeView === 'ranking'
+    ) {
+      return (
+        <PreferenceElicitation
+          elicitationMethod={activeView}
+          criteria={filteredCriteria}
+          showPercentages={showPercentages}
+          pvfs={pvfs}
+          cancelCallback={cancelCallback}
+          saveCallback={saveCallback}
+        />
+      );
+    } else {
+      throw 'Illegal view requested';
     }
   }
 
