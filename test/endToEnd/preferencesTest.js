@@ -6,7 +6,7 @@ module.exports = {
   'Setting the weights through ranking': ranking,
   'Ranking previous button': rankingGoBack,
   'Setting the weights through matching': matching,
-  'Setting the weights through matching with piecewise-linear pvf': matchingPiecewiseLinear,
+  'Setting the weights through matching with a piecewise-linear pvf': matchingPiecewiseLinear,
   'Matching previous button': matchingGoBack,
   'Setting the weights through precise swing weighting': preciseSwing,
   'Precise swing previous button': preciseSwingGoBack,
@@ -91,9 +91,7 @@ function rankingGoBack(browser) {
     .assert.containsText('#step-counter', 'Step 1 of 2');
 }
 
-function matchingPiecewiseLinear(browser) {}
-
-function matching(browser) {
+function matching(browser, expectedOsImportance) {
   const sliderValue = '//*[@id="matching-slider"]/span[3]';
 
   browser
@@ -113,8 +111,27 @@ function matching(browser) {
     .click('#next-button')
     .click('#save-button');
 
-  matchImportanceColumnContents(browser, 'Matching', '96%', '100%', '100%');
+  matchImportanceColumnContents(
+    browser,
+    'Matching',
+    expectedOsImportance ? expectedOsImportance : '96%',
+    '100%',
+    '100%'
+  );
   resetWeights(browser);
+}
+
+function matchingPiecewiseLinear(browser) {
+  browser
+    .click('#advanced-pvf-button-severe')
+    .click('#decreasing-pvf-option')
+    .click('span.MuiSlider-mark:nth-child(14)') // 11 on slider
+    .click('span.MuiSlider-mark:nth-child(37)') // 34 on slider
+    .click('span.MuiSlider-mark:nth-child(79)') // 76 on slider
+    .pause(1000)
+    .click('#save-button')
+    .waitForElementVisible('#partial-value-functions-block');
+  matching(browser, '99%');
 }
 
 function matchingGoBack(browser) {
