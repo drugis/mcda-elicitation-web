@@ -6,6 +6,7 @@ module.exports = {
   'Setting the weights through ranking': ranking,
   'Ranking previous button': rankingGoBack,
   'Setting the weights through matching': matching,
+  'Setting the weights through matching with piecewise-linear pvf': matchingPiecewiseLinear,
   'Matching previous button': matchingGoBack,
   'Setting the weights through precise swing weighting': preciseSwing,
   'Precise swing previous button': preciseSwingGoBack,
@@ -89,6 +90,8 @@ function rankingGoBack(browser) {
     .click('#previous-button')
     .assert.containsText('#step-counter', 'Step 1 of 2');
 }
+
+function matchingPiecewiseLinear(browser) {}
 
 function matching(browser) {
   const sliderValue = '//*[@id="matching-slider"]/span[3]';
