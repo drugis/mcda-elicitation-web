@@ -47,7 +47,7 @@ export function calculateImportance(sliderValue: number, pvf: TPvf): number {
 function calculateLinearImportance(
   sliderValue: number,
   {range: [lowerBound, upperBound], direction}: ILinearPvf
-) {
+): number {
   const rebased =
     direction === 'decreasing'
       ? upperBound - sliderValue

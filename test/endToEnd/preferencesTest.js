@@ -131,7 +131,7 @@ function matchingPiecewiseLinear(browser) {
     .pause(1000)
     .click('#save-button')
     .waitForElementVisible('#partial-value-functions-block');
-  matching(browser, '99%');
+  matching(browser, '93%');
 }
 
 function matchingGoBack(browser) {

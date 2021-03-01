@@ -3,7 +3,6 @@ import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
@@ -23,9 +22,10 @@ export default function AdvancedPvfButtons(): JSX.Element {
     const pvf: IPieceWiseLinearPvf = {
       type: 'piecewise-linear',
       direction: direction,
-      values: [0.25, 0.5, 0.75],
-      cutoffs: direction === 'increasing' ? cutOffs : _.reverse(cutOffs),
-      range: [configuredRange[0], configuredRange[1]]
+      values:
+        direction === 'increasing' ? [0.25, 0.5, 0.75] : [0.75, 0.5, 0.25],
+      cutoffs: cutOffs,
+      range: configuredRange
     };
     setPvf(advancedPvfCriterion.id, pvf);
     setActiveView('preferences');
