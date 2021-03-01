@@ -3,8 +3,8 @@
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Set piecewise linear partial value function': set,
-  'Set linear partial value functions via button': setLinearPVF,
+  'Set piecewise linear partial value function': setPieceWisePvf,
+  'Set linear partial value functions via button': setLinearPvf,
   'Display weights when all PVFs are set': displayWeights,
   'Reset set trade-offs when setting a PVF': resetTradeOffs,
   'Display deterministic results without initialized configured ranges': deterministic
@@ -31,7 +31,7 @@ function afterEach(browser) {
   workspaceService.deleteFromList(browser, 0).end();
 }
 
-function set(browser) {
+function setPieceWisePvf(browser) {
   browser.click('#advanced-pvf-button-c1');
 
   browser.expect
@@ -71,7 +71,7 @@ function set(browser) {
   browser.expect.element('#best-c2').text.to.equal('3');
 }
 
-function setLinearPVF(browser) {
+function setLinearPvf(browser) {
   browser
     .waitForElementVisible('#pvf-questionmark-c1')
     .waitForElementVisible('#pvf-questionmark-c2')
@@ -111,7 +111,7 @@ function resetTradeOffs(browser) {
 }
 
 function deterministic(browser) {
-  setLinearPVF(browser);
+  setLinearPvf(browser);
   util.delayedClick(
     browser,
     '#deterministic-tab',

@@ -1,4 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
+import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {
   calculateImportance,
   determineStepSize,
@@ -45,6 +46,38 @@ describe('calculateImportance', () => {
       type: 'linear'
     });
     expect(result).toEqual(70);
+  });
+
+  it('should calculate increasing piecewise linear utility correctly', () => {
+    const pvf: IPieceWiseLinearPvf = {
+      direction: 'increasing',
+      type: 'piecewise-linear',
+      values: [0.25, 0.5, 0.75],
+      cutoffs: [30, 40, 45],
+      range: [20, 50]
+    };
+    expect(calculateImportance(20, pvf)).toEqual(0);
+    expect(calculateImportance(30, pvf)).toEqual(25);
+    expect(calculateImportance(35, pvf)).toEqual(37.5);
+    expect(calculateImportance(40, pvf)).toEqual(50);
+    expect(calculateImportance(45, pvf)).toEqual(75);
+    expect(calculateImportance(50, pvf)).toEqual(100);
+  });
+
+  it('should calculate decreasing piecewise linear utility correctly', () => {
+    const pvf: IPieceWiseLinearPvf = {
+      direction: 'decreasing',
+      type: 'piecewise-linear',
+      values: [0.75, 0.5, 0.25],
+      cutoffs: [30, 40, 45],
+      range: [20, 50]
+    };
+    expect(calculateImportance(20, pvf)).toEqual(100);
+    expect(calculateImportance(30, pvf)).toEqual(75);
+    expect(calculateImportance(35, pvf)).toEqual(62.5);
+    expect(calculateImportance(40, pvf)).toEqual(50);
+    expect(calculateImportance(45, pvf)).toEqual(25);
+    expect(calculateImportance(50, pvf)).toEqual(0);
   });
 });
 
