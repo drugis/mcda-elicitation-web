@@ -63,6 +63,7 @@ describe('calculateImportance', () => {
     expect(calculateImportance(45, pvf)).toEqual(75);
     expect(calculateImportance(50, pvf)).toEqual(100);
   });
+
   it('should calculate decreasing piecewise linear utility correctly', () => {
     const pvf: IPieceWiseLinearPvf = {
       direction: 'decreasing',
