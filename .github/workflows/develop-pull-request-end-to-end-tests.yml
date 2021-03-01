@@ -121,7 +121,8 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: yarn tsc -p ts-end-to-end-config.json && yarn nightwatch -c nightwatch.github.conf.js
+        # run: yarn tsc -p ts-end-to-end-config.json && yarn nightwatch -c nightwatch.github.conf.js
+        run: yarn tsc -p ts-end-to-end-config.json && yarn nightwatch -c nightwatch.github.conf --test test/endToEnd/partialValueFunctionTest.js --testcase 'Set piecewise linear partial value function'
 
       - name: notify on slack channel on nightwatch failure
         if: failure()
