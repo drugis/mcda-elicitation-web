@@ -57,6 +57,11 @@
         text-transform: uppercase;
         font-weight: bold;
       }
+      :target::before {
+        content: '';
+        display: block;
+        height: 60px; /* fixed header height*/
+      }
     </style>
     <%= htmlWebpackPlugin.options.matomo %>
   </head>
