@@ -1,20 +1,19 @@
 import {Box} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import {TPreferences} from '@shared/types/Preferences';
-import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {PreferenceElicitation} from 'preference-elicitation';
 import React, {useContext, useState} from 'react';
 import {PreferencesContext} from '../PreferencesContext';
-import {buildScenarioWithPreferences} from '../PreferencesUtil';
+import {
+  buildScenarioWithPreferences,
+  isElicitationView
+} from '../PreferencesUtil';
 import {TPreferencesView} from '../TPreferencesView';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
-import PartialValueFunctions from './PartialValueFunctions/PartialValueFunctions';
-import PreferencesWeights from './PreferencesWeights/PreferencesWeights';
-import ScenarioButtons from './ScenarioButtons/ScenarioButtons';
-import TradeOff from './TradeOff/TradeOff';
+import PreferencesView from './PreferencesView/PreferencesView';
 
 export default function Preferences() {
   const {filteredCriteria} = useContext(SubproblemContext);
@@ -62,18 +61,7 @@ export default function Preferences() {
     setDocumentTitle(activeView);
 
     if (activeView === 'preferences') {
-      return (
-        <Grid container spacing={3}>
-          <ScenarioSelection
-            scenarios={scenarios}
-            currentScenario={currentScenario}
-          />
-          <ScenarioButtons />
-          <PartialValueFunctions />
-          <PreferencesWeights />
-          <TradeOff />
-        </Grid>
-      );
+      return <PreferencesView />;
     } else if (activeView === 'advancedPvf') {
       return (
         <AdvancedPartialValueFunctionContextProviderComponent>
@@ -82,12 +70,7 @@ export default function Preferences() {
           </Grid>
         </AdvancedPartialValueFunctionContextProviderComponent>
       );
-    } else if (
-      activeView === 'precise' ||
-      activeView === 'imprecise' ||
-      activeView === 'matching' ||
-      activeView === 'ranking'
-    ) {
+    } else if (isElicitationView(activeView)) {
       return (
         <PreferenceElicitation
           elicitationMethod={activeView}

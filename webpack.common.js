@@ -31,7 +31,6 @@ let config = {
       {
         test: /\.ts(x?)$/,
         use: 'ts-loader',
-        // exclude: [/frontend-test/, /node_modules/, /node-backend/, /tscomp/],
         include: [/app\/ts/, /shared/]
       },
       {

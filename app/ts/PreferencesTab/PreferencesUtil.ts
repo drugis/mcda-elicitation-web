@@ -6,6 +6,7 @@ import IPieceWiseLinearScenarioPvf from '@shared/interface/Scenario/IPieceWiseLi
 import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
+import {TPreferencesView} from './TPreferencesView';
 
 export function initPvfs(
   criteria: ICriterion[],
@@ -168,5 +169,14 @@ export function areAllPvfsSet(
         'direction' in pvfs[criterion.id] &&
         'type' in pvfs[criterion.id]
     )
+  );
+}
+
+export function isElicitationView(activeView: TPreferencesView): boolean {
+  return (
+    activeView === 'precise' ||
+    activeView === 'imprecise' ||
+    activeView === 'matching' ||
+    activeView === 'ranking'
   );
 }
