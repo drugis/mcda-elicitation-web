@@ -171,7 +171,7 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Ranking',
     text:
       'The ranking of the criteria according to their relative importance. The lower the number, the more important the criterion.',
-    link: '/manual.html#mcda-value-tradeoffs'
+    link: '/manual.html#mcda-ranking-elicitation'
   },
   'representative-weights': {
     title: 'Weights',
@@ -195,13 +195,13 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Measurements sensitivity analysis',
     text:
       "How the value of a specific alternative changes as the weight of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
-    link: '/manual.html#mcda-deterministic-analysis'
+    link: '/manual.html#mcda-one-way-sensitivity'
   },
   'sensitivity-preferences': {
     title: 'Preferences sensitivity analysis',
     text:
       'How the value of all alternatives changes as the weight of a specific criterion changes between 0 and 1.',
-    link: '/manual.html#mcda-sensitivity-analysis'
+    link: '/manual.html#mcda-one-way-sensitivity'
   },
   'smaa-measurements-uncertainty': {
     title: 'Uncertainty in measurements',
