@@ -1,10 +1,11 @@
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import {HelpContextProviderComponent} from 'help-popup';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
-import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
+import {lexicon} from '../InlineHelp/lexicon';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {SubproblemContextProviderComponent} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContextProviderComponent} from '../Workspace/WorkspaceContext';
@@ -30,7 +31,7 @@ export default function PreferencesTab({
 }) {
   return scenarios && workspace ? (
     <ErrorContextProviderComponent>
-      <HelpContextProviderComponent>
+      <HelpContextProviderComponent lexicon={lexicon}>
         <WorkspaceContextProviderComponent
           oldWorkspace={workspace}
           oldSubproblems={subproblems}

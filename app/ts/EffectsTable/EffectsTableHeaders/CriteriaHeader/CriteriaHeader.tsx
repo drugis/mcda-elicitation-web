@@ -1,11 +1,11 @@
 import TableCell from '@material-ui/core/TableCell';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {InlineHelp} from 'help-popup';
 import React from 'react';
 
 export default function CriteriaHeader({colSpan}: {colSpan: number}) {
   return (
     <TableCell id="criteria-header" align="center" colSpan={colSpan}>
-      Criterion <InlineHelp helpId="criterion" />
+      <InlineHelp helpId="criterion">Criterion</InlineHelp>
     </TableCell>
   );
 }

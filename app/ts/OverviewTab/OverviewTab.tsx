@@ -1,10 +1,10 @@
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import IScale from '@shared/interface/IScale';
+import {lexicon} from 'app/ts/InlineHelp/lexicon';
+import {HelpContextProviderComponent} from 'help-popup';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
-import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {WorkspaceContextProviderComponent} from '../Workspace/WorkspaceContext';
 import Overview from './Overview/Overview';
@@ -22,7 +22,7 @@ export default function OverviewTab({
 }) {
   return (
     <ErrorContextProviderComponent>
-      <HelpContextProviderComponent>
+      <HelpContextProviderComponent lexicon={lexicon}>
         <WorkspaceContextProviderComponent
           oldWorkspace={workspace}
           oldSubproblems={subproblems}

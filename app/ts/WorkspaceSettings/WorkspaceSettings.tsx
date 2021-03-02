@@ -1,8 +1,9 @@
 import {Button, Tooltip} from '@material-ui/core';
 import Settings from '@material-ui/icons/Settings';
 import IEditMode from '@shared/interface/IEditMode';
+import {HelpContextProviderComponent} from 'help-popup';
 import React, {useState} from 'react';
-import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
+import {lexicon} from '../InlineHelp/lexicon';
 import {WorkspaceSettingsContextProviderComponent} from './WorkspaceSettingsContext/WorkspaceSettingsContext';
 import WorkspaceSettingsDialog from './WorkspaceSettingsDialog/WorkspaceSettingsDialog';
 
@@ -22,7 +23,7 @@ export default function WorkspaceSettings({
   }
 
   return editMode.canEdit ? (
-    <HelpContextProviderComponent>
+    <HelpContextProviderComponent lexicon={lexicon}>
       <Tooltip title="Change workspace settings">
         <Button
           id="settings-button"

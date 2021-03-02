@@ -3,7 +3,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
@@ -34,7 +33,8 @@ export default function ManualInputTable() {
       <TableHead>
         <TableRow>
           <TableCell align="center" colSpan={3}>
-            Criterion <InlineHelp helpId="criterion" />
+            Criterion
+            {/* <InlineHelp helpId="criterion" /> */}
           </TableCell>
           <TableCell align="center">Description</TableCell>
           <TableCell align="center"></TableCell>
@@ -43,16 +43,17 @@ export default function ManualInputTable() {
           {createAlternativeHeaders()}
           <TableCell align="center">
             <AddAlternativeButton />
-            <InlineHelp helpId="alternative" />
+            {/* <InlineHelp helpId="alternative" /> */}
           </TableCell>
           <TableCell align="center">
             Strength of evidence
-            <InlineHelp helpId="strength-of-evidence" />
+            {/* <InlineHelp helpId="strength-of-evidence" /> */}
             and Uncertainties
-            <InlineHelp helpId="uncertainties" />
+            {/* <InlineHelp helpId="uncertainties" /> */}
           </TableCell>
           <TableCell align="center">
-            Reference <InlineHelp helpId="reference" />
+            Reference
+            {/* <InlineHelp helpId="reference" /> */}
           </TableCell>
         </TableRow>
       </TableHead>

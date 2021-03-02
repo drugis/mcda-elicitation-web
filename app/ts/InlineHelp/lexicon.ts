@@ -1,4 +1,4 @@
-import IHelpInfo from './IHelpInfo';
+import {IHelpInfo} from 'help-popup';
 
 export const lexicon: Record<string, IHelpInfo> = {
   'add-subproblem': {

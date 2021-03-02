@@ -3,7 +3,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -47,7 +46,7 @@ export default function DataSourceRow({
   const dataSourceCells = dataSource.id.startsWith(DUMMY_ID) ? (
     <TableCell colSpan={numberOfColumns} align="center">
       <AddDataSourceButton criterion={criterion} />
-      <InlineHelp helpId="reference" />
+      {/* <InlineHelp helpId="reference" /> */}
     </TableCell>
   ) : (
     createDataSourceCells()
