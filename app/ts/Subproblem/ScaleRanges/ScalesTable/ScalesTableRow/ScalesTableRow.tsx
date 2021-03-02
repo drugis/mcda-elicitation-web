@@ -1,7 +1,6 @@
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
@@ -14,13 +13,12 @@ import {
 } from '../ScalesTableUtil';
 
 export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
-  const {showPercentages} = useContext(SettingsContext);
+  const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const dataSourceId = criterion.dataSources[0].id;
   const {currentSubproblem} = useContext(WorkspaceContext);
   const {observedRanges} = useContext(SubproblemContext);
 
-  const unitType = criterion.dataSources[0].unitOfMeasurement.type;
-  const usePercentage = showPercentages && canBePercentage(unitType);
+  const usePercentage = getUsePercentage(criterion);
 
   const theoreticalRangeLabel = getTheoreticalRangeLabel(
     usePercentage,

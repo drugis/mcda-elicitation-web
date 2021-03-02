@@ -132,7 +132,7 @@ function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
   return 'cutoffs' in pvf;
 }
 
-export function generateAdvancedPlotSettings(
+export function generateAdvancedPvfPlotSettings(
   criterionId: string,
   cutOffs: [number, number, number],
   values: number[],

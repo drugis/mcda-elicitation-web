@@ -60,7 +60,7 @@ function isPieceWiseLinearScenarioPvf(
   return 'cutoffs' in pvf;
 }
 
-function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
+export function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
   return 'cutoffs' in pvf;
 }
 

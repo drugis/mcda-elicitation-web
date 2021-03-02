@@ -32,7 +32,7 @@
 <p>
   Criteria are what is used to compare the various alternatives in a
   benefit-risk analysis. They are presented in a list on the overview,
-  optionally grouped into favorable and unfavorable categories. For each
+  optionally grouped into favourable and unfavourable categories. For each
   criterion, there can be one or more sources of data. These data sources supply
   measurements about any number of alternatives, as well as a reference
   describing where the measurements originate, and an optional textual
@@ -179,19 +179,8 @@
   button for that criterion that has the desired direction.
 </p>
 
-<p>
-  In situations where value does not change at the same rate across different
-  measurement values for a criterion, the partial value function is nonlinear.
-  To specify such a function, click the 'Advanced' button below a criterion,
-  select the 'Piece-wise linear' option on the subsequent screen and answer the
-  questions asked by the system. See
-  <a href="#mcda-theory-specifying-pvfs">The theoretical section</a> for a more
-  detailed description of the underlying theory, with reference to the ADDIS
-  MCDA interface.
-</p>
-
 <div class="figure">
-  <img src="img/setPVFs.png" />
+  <img src="img/setPvfs.png" />
   <div class="caption">
     Controls for setting the partial value functions for the criteria of a
     problem.
@@ -199,6 +188,27 @@
 </div>
 
 <p>
+  In situations where value does not change at the same rate across different
+  measurement values for a criterion, the partial value function is nonlinear.
+  To specify such a function, click the 'Advanced' button below a criterion. On
+  the subsequent screen, you can set the direction of the PVF (increasing or
+  decreasing) and use a set of sliders along with a preview of the PVF to
+  control its shape. Each slider control the x-coordinate (so, the measurement
+  value) of one of three inflection points, which are fixed at a specific
+  utility quartile (so, 0.25, 0.5 and 0.75). See
+  <a href="#mcda-theory-specifying-pvfs">The theoretical section</a> for a more
+  detailed description of the underlying theory.
+</p>
+
+<div class="figure">
+  <img src="img/advancedPvf.png" />
+  <div class="caption">
+    Setting a nonlinear partial value function. The three sliders below the plot
+    control the x-coordinates of the inflection points.
+  </div>
+</div>
+
+<p id="mcda-weights-table">
   Once the partial value functions are set, it is possible to determine how
   important each criterion is through preference elicitation. By default, each
   criterion is seen as equally important. The weights and importances are shown
@@ -356,8 +366,6 @@
   table is shown with the values for each criterion that it comprises.
 </p>
 
-<!-- FIXME: insert value plot fig -->
-
 <h4 id="mcda-sensitivity-analysis">Sensitivity analysis</h4>
 
 <p>
@@ -384,14 +392,11 @@
   would change if the data were different.
 </p>
 
-<!-- FIXME: update figure  -->
 <div class="figure">
   <img src="img/deterministic1.png" />
   <div class="caption">
     Adjusting effect sizes to determine their influence on the value of
-    criteria. The effectiveness of Regorafenib is increased, and the total value
-    plot shows that this changes the total value to now be higher than placebo
-    for the given preferences.
+    criteria.
   </div>
 </div>
 
@@ -462,7 +467,7 @@
   SMAA values.
 </p>
 
-<h4 id="mcda-rank-acceptability"></h4>
+<h4 id="mcda-rank-acceptability">Rank Acceptability</h4>
 
 <p>
   The rank acceptability index indicates for each alternative which proportion
@@ -490,7 +495,7 @@
   <div class="caption">SMAA, ranking acceptabilities.</div>
 </div>
 
-<h4 id="mcda-central-weights"></h4>
+<h4 id="mcda-central-weights">Central weights</h4>
 
 <p>
   The central weights plot and table show for each alternative the 'typical'

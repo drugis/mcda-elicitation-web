@@ -1,5 +1,4 @@
 import Grid from '@material-ui/core/Grid';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
@@ -16,7 +15,7 @@ export default function PartialValueFunctionPlot({
 }: {
   criterionId: string;
 }) {
-  const {showPercentages} = useContext(SettingsContext);
+  const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {getPvf} = useContext(PreferencesContext);
   const {getCriterion} = useContext(SubproblemContext);
 
@@ -26,8 +25,7 @@ export default function PartialValueFunctionPlot({
   const height = '216px';
 
   useEffect(() => {
-    const unitType = criterion.dataSources[0].unitOfMeasurement.type;
-    const usePercentage = showPercentages && canBePercentage(unitType);
+    const usePercentage = getUsePercentage(criterion);
     const values = getPvfCoordinates(pvf, criterion.title, usePercentage);
     const settings: ChartConfiguration = generatePlotSettings(
       criterionId,
