@@ -28,7 +28,11 @@ export default function ManualInputWrapper() {
     <ErrorContextProviderComponent>
       <ErrorHandler>
         {isLoaded ? (
-          <HelpContextProviderComponent lexicon={lexicon}>
+          <HelpContextProviderComponent
+            lexicon={lexicon}
+            host={'@MCDA_HOST'}
+            path="/manual.html"
+          >
             <ManualInputContextProviderComponent
               inProgressId={inProgressId}
               message={message}

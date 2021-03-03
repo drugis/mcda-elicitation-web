@@ -36,7 +36,11 @@ export default function DeterministicTab({
 }) {
   return (
     <ErrorContextProviderComponent>
-      <HelpContextProviderComponent lexicon={lexicon}>
+      <HelpContextProviderComponent
+        lexicon={lexicon}
+        host={'@MCDA_HOST'}
+        path="/manual.html"
+      >
         <WorkspaceContextProviderComponent
           oldWorkspace={workspace}
           oldSubproblems={subproblems}

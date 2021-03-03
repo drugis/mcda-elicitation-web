@@ -31,7 +31,11 @@ export default function PreferencesTab({
 }) {
   return scenarios && workspace ? (
     <ErrorContextProviderComponent>
-      <HelpContextProviderComponent lexicon={lexicon}>
+      <HelpContextProviderComponent
+        lexicon={lexicon}
+        host={'@MCDA_HOST'}
+        path="/manual.html"
+      >
         <WorkspaceContextProviderComponent
           oldWorkspace={workspace}
           oldSubproblems={subproblems}

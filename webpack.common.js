@@ -30,10 +30,10 @@ let config = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.tsx/, //FIXME limit to one file once reactification is complete
         loader: 'string-replace-loader',
         options: {
-          search: 'mcdaHost',
+          search: '@MCDA_HOST',
           replace: MCDA_HOST,
           flags: 'g'
         }

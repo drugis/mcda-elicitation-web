@@ -10,7 +10,11 @@ export default function Workspaces(): JSX.Element {
   return (
     <ErrorContextProviderComponent>
       <ErrorHandler>
-        <HelpContextProviderComponent lexicon={lexicon}>
+        <HelpContextProviderComponent
+          lexicon={lexicon}
+          host={'@MCDA_HOST'}
+          path="/manual.html"
+        >
           <Grid container>
             <WorkspacesTable />
           </Grid>

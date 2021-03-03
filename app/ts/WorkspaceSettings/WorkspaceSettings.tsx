@@ -23,7 +23,11 @@ export default function WorkspaceSettings({
   }
 
   return editMode.canEdit ? (
-    <HelpContextProviderComponent lexicon={lexicon}>
+    <HelpContextProviderComponent
+      lexicon={lexicon}
+      host={'@MCDA_HOST'}
+      path="/manual.html"
+    >
       <Tooltip title="Change workspace settings">
         <Button
           id="settings-button"
