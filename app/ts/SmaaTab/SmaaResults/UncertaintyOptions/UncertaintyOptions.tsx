@@ -2,8 +2,9 @@ import {FormControlLabel} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import Help from '@material-ui/icons/Help';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
+import {InlineHelp} from 'help-popup';
 import React, {useContext, useState} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 
@@ -42,7 +43,7 @@ export default function UncertaintyOptions() {
         Take into account uncertainty in:
       </Grid>
       <Grid container item xs={9}>
-        <Grid item xs={12}>
+        <Grid container item xs={12} alignItems="center">
           <FormControlLabel
             value="measurements-uncertainty"
             control={
@@ -57,9 +58,11 @@ export default function UncertaintyOptions() {
             label="measurements"
             labelPlacement="end"
           />
-          <InlineHelp helpId="smaa-measurements-uncertainty" />
+          <InlineHelp helpId="smaa-measurements-uncertainty">
+            <Help fontSize="small" style={{marginTop: '5px'}} />
+          </InlineHelp>
         </Grid>
-        <Grid item xs={12}>
+        <Grid container item xs={12} alignItems="center">
           <FormControlLabel
             value="weights-uncertainty"
             control={
@@ -74,7 +77,9 @@ export default function UncertaintyOptions() {
             label="weights"
             labelPlacement="end"
           />
-          <InlineHelp helpId="smaa-weights-uncertainty" />
+          <InlineHelp helpId="smaa-weights-uncertainty">
+            <Help fontSize="small" style={{marginTop: '5px'}} />
+          </InlineHelp>
         </Grid>
       </Grid>
       <Grid item xs={12}>

@@ -10,9 +10,9 @@ import {
 } from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import Axios, {AxiosResponse} from 'axios';
 import dateFormat from 'dateformat';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import CopyWorkspaceButton from './CopyWorkspaceButton/CopyWorkspaceButton';
@@ -147,7 +147,7 @@ export default function WorkspacesTable(): JSX.Element {
       <Grid item xs={12}>
         <Grid item xs={8}>
           <Typography id="workspaces-header" variant="h4">
-            Workspaces <InlineHelp helpId="workspace" />
+            <InlineHelp helpId="workspace">Workspaces</InlineHelp>
           </Typography>
         </Grid>
       </Grid>

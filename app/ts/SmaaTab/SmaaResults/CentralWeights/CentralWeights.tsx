@@ -1,6 +1,6 @@
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 import CentralWeightsPlot from './CentralWeightsPlot/CentralWeightsPlot';
@@ -13,7 +13,7 @@ export default function CentralWeights(): JSX.Element {
     <Grid container item xs={12}>
       <Grid item xs={12}>
         <Typography variant="h5">
-          Central Weights <InlineHelp helpId="central-weights" />
+          <InlineHelp helpId="central-weights">Central Weights</InlineHelp>
         </Typography>
       </Grid>
       {centralWeights ? (

@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
 import PreferencesWeightsButtons from './PreferencesWeightsButtons/PreferencesWeightsButtons';
@@ -13,7 +13,7 @@ export default function PreferencesWeights() {
     <Grid item container>
       <Grid item xs={12}>
         <Typography variant="h5">
-          Weights <InlineHelp helpId="weights" />
+          <InlineHelp helpId="weights">Weights</InlineHelp>
         </Typography>
       </Grid>
       {areAllPvfsSet ? (

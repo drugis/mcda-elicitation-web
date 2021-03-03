@@ -1,6 +1,7 @@
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import Help from '@material-ui/icons/Help';
+import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
@@ -29,7 +30,9 @@ export default function Favourability() {
         label="Use favourability"
         labelPlacement="start"
       />
-      <InlineHelp helpId="favourability" />
+      <InlineHelp helpId="favourability">
+        <Help fontSize="small" style={{marginTop: '5px'}} />
+      </InlineHelp>
     </>
   );
 }

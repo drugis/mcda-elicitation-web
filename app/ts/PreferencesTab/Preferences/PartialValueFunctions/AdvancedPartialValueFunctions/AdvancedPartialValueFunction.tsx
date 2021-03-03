@@ -1,5 +1,5 @@
 import {Grid, Paper, Typography} from '@material-ui/core';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {InlineHelp} from 'help-popup';
 import React, {useContext, useEffect} from 'react';
 import {AdvancedPartialValueFunctionContext} from './AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import AdvancedPvfButtons from './AdvancedPvfButtons/AdvancedPvfButtons';
@@ -20,8 +20,11 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
       <Grid item xs={12}>
         <Typography variant="h4">
-          Define Partial Value Function for: {advancedPvfCriterion.title}{' '}
-          <InlineHelp helpId="partial-value-function" />
+          Define{' '}
+          <InlineHelp helpId="partial-value-function">
+            Partial Value Function
+          </InlineHelp>{' '}
+          for: {advancedPvfCriterion.title}{' '}
         </Typography>
       </Grid>
       <PvfDirection />

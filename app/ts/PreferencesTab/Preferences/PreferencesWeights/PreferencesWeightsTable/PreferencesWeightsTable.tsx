@@ -6,12 +6,12 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {
@@ -86,18 +86,18 @@ export default function PreferencesWeightsTable() {
       <TableHead>
         <TableRow>
           <TableCell>
-            Criterion <InlineHelp helpId="criterion" />
+            <InlineHelp helpId="criterion">Criterion</InlineHelp>
           </TableCell>
           <TableCell>
-            Unit <InlineHelp helpId="unit-of-measurement" />
+            <InlineHelp helpId="unit-of-measurement">Unit</InlineHelp>
           </TableCell>
           <TableCell>Worst</TableCell>
           <TableCell>Best</TableCell>
           <TableCell>
-            Importance <InlineHelp helpId="importance" />
+            <InlineHelp helpId="importance">Importance</InlineHelp>
           </TableCell>
           <TableCell>
-            Weight <InlineHelp helpId="representative-weights" />
+            <InlineHelp helpId="representative-weights">Weight</InlineHelp>
           </TableCell>
         </TableRow>
       </TableHead>

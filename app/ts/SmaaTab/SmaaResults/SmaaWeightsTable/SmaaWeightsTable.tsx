@@ -11,9 +11,9 @@ import {
 import ICriterion from '@shared/interface/ICriterion';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
@@ -66,7 +66,7 @@ export default function SmaaWeightsTable(): JSX.Element {
     <Grid container item xs={12}>
       <Grid item xs={9}>
         <Typography variant="h5">
-          Weights <InlineHelp helpId="representative-weights" />
+          <InlineHelp helpId="representative-weights">Weights</InlineHelp>
         </Typography>
       </Grid>
       {smaaWeights ? (

@@ -5,7 +5,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DUMMY_ID} from '../../constants';
@@ -86,7 +85,6 @@ export default function CriteriaRows() {
             align="center"
           >
             <AddCriterionButton isFavourable={true} />
-            <InlineHelp helpId="criterion" />
           </TableCell>
         </TableRow>
         <TableRow>
@@ -106,7 +104,6 @@ export default function CriteriaRows() {
             align="center"
           >
             <AddCriterionButton isFavourable={false} />
-            <InlineHelp helpId="criterion" />
           </TableCell>
         </TableRow>
       </TableBody>
@@ -122,7 +119,6 @@ export default function CriteriaRows() {
             align="center"
           >
             <AddCriterionButton isFavourable={false} />
-            <InlineHelp helpId="criterion" />
           </TableCell>
         </TableRow>
       </TableBody>

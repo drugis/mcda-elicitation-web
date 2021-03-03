@@ -5,9 +5,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
+import {InlineHelp} from 'help-popup';
 import React, {useContext, useState} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTable from '../AddSubproblemEffectsTable/AddSubproblemEffectsTable';
@@ -42,7 +42,7 @@ export default function AddSubproblemDialog({
   return (
     <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth={'lg'}>
       <DialogTitleWithCross id="add-subproblem-header" onClose={closeDialog}>
-        Add new problem <InlineHelp helpId="add-subproblem" />
+        <InlineHelp helpId="add-subproblem">Add new problem</InlineHelp>
       </DialogTitleWithCross>
       <DialogContent>
         <Grid container spacing={2}>

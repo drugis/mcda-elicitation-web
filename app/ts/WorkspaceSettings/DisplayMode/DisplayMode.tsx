@@ -1,7 +1,6 @@
 import {Grid, Select} from '@material-ui/core';
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
@@ -57,8 +56,9 @@ export default function DisplayMode(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        Measurements display mode{' '}
-        <InlineHelp helpId="measurements-display-mode" />
+        <InlineHelp helpId="measurements-display-mode">
+          Measurements display mode
+        </InlineHelp>
       </Grid>
       <Grid item xs={6}>
         <Select

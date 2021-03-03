@@ -1,10 +1,11 @@
-import Grid from '@material-ui/core/Grid';
+import {Grid} from '@material-ui/core';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import Help from '@material-ui/icons/Help';
 import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DUMMY_ID} from '../../../../constants';
@@ -45,9 +46,13 @@ export default function DataSourceRow({
   const numberOfDataSourceRows = criterion.dataSources.length;
 
   const dataSourceCells = dataSource.id.startsWith(DUMMY_ID) ? (
-    <TableCell colSpan={numberOfColumns} align="center">
-      <AddDataSourceButton criterion={criterion} />
-      <InlineHelp helpId="reference" />
+    <TableCell colSpan={numberOfColumns}>
+      <Grid container item alignItems="center" xs={12} justify="center">
+        <AddDataSourceButton criterion={criterion} />
+        <InlineHelp helpId="reference">
+          <Help fontSize="small" style={{marginTop: '5px'}} />
+        </InlineHelp>
+      </Grid>
     </TableCell>
   ) : (
     createDataSourceCells()

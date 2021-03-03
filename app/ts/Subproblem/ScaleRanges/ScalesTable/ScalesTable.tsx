@@ -1,13 +1,13 @@
-import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ScalesTableRow from './ScalesTableRow/ScalesTableRow';
@@ -28,19 +28,23 @@ export default function ScalesTable({}: {}) {
           <TableHead>
             <TableRow>
               <TableCell id="scales-table-criterion" align="center">
-                Criterion <InlineHelp helpId="criterion" />
+                <InlineHelp helpId="criterion">Criterion</InlineHelp>
               </TableCell>
               <TableCell id="theoretical-range" align="center">
-                Theoretical Range <InlineHelp helpId="theoretical-range" />
+                <InlineHelp helpId="theoretical-range">
+                  Theoretical Range
+                </InlineHelp>
               </TableCell>
               <TableCell id="observed-range" align="center">
-                Observed Range <InlineHelp helpId="observed-range" />
+                <InlineHelp helpId="observed-range">Observed Range</InlineHelp>
               </TableCell>
               <TableCell id="configured-range" align="center">
-                Configured Range <InlineHelp helpId="configured-range" />
+                <InlineHelp helpId="configured-range">
+                  Configured Range
+                </InlineHelp>
               </TableCell>
               <TableCell id="scales-table-unit-of-measurement" align="center">
-                Units <InlineHelp helpId="unit-of-measurement" />
+                <InlineHelp helpId="unit-of-measurement">Units</InlineHelp>
               </TableCell>
             </TableRow>
           </TableHead>
