@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import {TPreferences} from '@shared/types/Preferences';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {InlineHelp} from 'help-popup';
 import {PreferenceElicitation} from 'preference-elicitation';
 import React, {useContext, useState} from 'react';
 import {PreferencesContext} from '../PreferencesContext';
@@ -79,6 +80,7 @@ export default function Preferences() {
           pvfs={pvfs}
           cancelCallback={cancelCallback}
           saveCallback={saveCallback}
+          InlineHelp={InlineHelp}
         />
       );
     } else {

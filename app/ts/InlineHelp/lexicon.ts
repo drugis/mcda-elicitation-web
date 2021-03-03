@@ -90,7 +90,7 @@ export const lexicon: Record<string, IHelpInfo> = {
       'The importance of the criterion. A higher percentage means the criterion is more important.',
     link: '#mcda-weights-table'
   },
-  'imprecise-matching': {
+  'imprecise-swing-weighting': {
     title: 'Imprecise swing weighting',
     text:
       "Elicitation of the user's weight trade-offs between the different criteria, via the interval method. This method allows specification of an interval (rather than an exact value) where changes to two criteria are equivalent. This results in weight ratios between all the criteria, e.g. increasing effectiveness by 5-10% is equally desirable to decreasing mortality by 10-20%.",
@@ -106,7 +106,7 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Matching',
     text:
       'Elicitation of the criteria weights through a series of matching questions. This method sets weights by asking users to specify how much the performance with respect to one criterion needs to improve to compensate for a worsening in the performance with respect to another criterion.',
-    link: '#matching-elicitation'
+    link: '#mcda-matching-elicitation'
   },
   'measurements-display-mode': {
     title: 'Measurements display mode',
