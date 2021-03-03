@@ -85,7 +85,6 @@ export default function CriteriaRows() {
             align="center"
           >
             <AddCriterionButton isFavourable={true} />
-            {/* <InlineHelp helpId="criterion" /> */}
           </TableCell>
         </TableRow>
         <TableRow>
@@ -105,7 +104,6 @@ export default function CriteriaRows() {
             align="center"
           >
             <AddCriterionButton isFavourable={false} />
-            {/* <InlineHelp helpId="criterion" /> */}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -121,7 +119,6 @@ export default function CriteriaRows() {
             align="center"
           >
             <AddCriterionButton isFavourable={false} />
-            {/* <InlineHelp helpId="criterion" /> */}
           </TableCell>
         </TableRow>
       </TableBody>

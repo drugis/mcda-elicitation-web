@@ -1,5 +1,5 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
@@ -16,7 +16,8 @@ export default function ShowPercentages(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        Show percentages or decimals <InlineHelp helpId="percentages" />
+        Show{' '}
+        <InlineHelp helpId="percentages">percentages or decimals</InlineHelp>
       </Grid>
       <Grid item xs={6}>
         <RadioGroup

@@ -1,9 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {ChangeEvent} from 'react';
-import InlineHelp from '../InlineHelp/InlineHelp';
 import getScenarioLocation from './getScenarioLocation';
 
 export default function ScenarioSelection({
@@ -32,7 +32,7 @@ export default function ScenarioSelection({
   return (
     <Grid item container>
       <Grid item xs={3}>
-        Scenario:
+        <InlineHelp helpId="scenario">Scenario</InlineHelp>:
       </Grid>
       <Grid item xs={9}>
         <Select
@@ -44,7 +44,6 @@ export default function ScenarioSelection({
         >
           {getScenarioOptions()}
         </Select>
-        <InlineHelp helpId="scenario" />
       </Grid>
     </Grid>
   );

@@ -1,8 +1,11 @@
+import {Grid} from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Help from '@material-ui/icons/Help';
 import IAlternative from '@shared/interface/IAlternative';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
@@ -33,27 +36,33 @@ export default function ManualInputTable() {
       <TableHead>
         <TableRow>
           <TableCell align="center" colSpan={3}>
-            Criterion
-            {/* <InlineHelp helpId="criterion" /> */}
+            <InlineHelp helpId="criterion">Criterion</InlineHelp>
           </TableCell>
           <TableCell align="center">Description</TableCell>
           <TableCell align="center"></TableCell>
           <TableCell align="center"></TableCell>
-          <TableCell align="center">Unit of measurement</TableCell>
+          <TableCell align="center">
+            <InlineHelp helpId="unit-of-measurement">
+              Unit of measurement
+            </InlineHelp>
+          </TableCell>
           {createAlternativeHeaders()}
           <TableCell align="center">
-            <AddAlternativeButton />
-            {/* <InlineHelp helpId="alternative" /> */}
+            <Grid container item alignItems="center" xs={12}>
+              <AddAlternativeButton />
+              <InlineHelp helpId="alternative">
+                <Help fontSize="small" style={{marginTop: '5px'}} />
+              </InlineHelp>
+            </Grid>
           </TableCell>
           <TableCell align="center">
-            Strength of evidence
-            {/* <InlineHelp helpId="strength-of-evidence" /> */}
-            and Uncertainties
-            {/* <InlineHelp helpId="uncertainties" /> */}
+            <InlineHelp helpId="strength-of-evidence">
+              Strength of evidence
+            </InlineHelp>{' '}
+            and <InlineHelp helpId="uncertainties">Uncertainties</InlineHelp>
           </TableCell>
           <TableCell align="center">
-            Reference
-            {/* <InlineHelp helpId="reference" /> */}
+            <InlineHelp helpId="reference">Reference</InlineHelp>
           </TableCell>
         </TableRow>
       </TableHead>

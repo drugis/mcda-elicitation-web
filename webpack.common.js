@@ -9,6 +9,7 @@ let fs = require('fs');
 const MATOMO_VERSION = process.env.MATOMO_VERSION
   ? process.env.MATOMO_VERSION
   : 'Test';
+const MCDA_HOST = process.env.MCDA_HOST;
 
 let config = {
   entry: {
@@ -28,6 +29,15 @@ let config = {
 
   module: {
     rules: [
+      {
+        test: /\.ts$/,
+        loader: 'string-replace-loader',
+        options: {
+          search: 'mcdaHost',
+          replace: MCDA_HOST,
+          flags: 'g'
+        }
+      },
       {
         test: /\.ts(x?)$/,
         use: 'ts-loader',

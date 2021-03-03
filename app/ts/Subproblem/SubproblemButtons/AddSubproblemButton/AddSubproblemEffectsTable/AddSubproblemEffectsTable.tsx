@@ -9,9 +9,9 @@ import DescriptionHeader from 'app/ts/EffectsTable/EffectsTableHeaders/Descripti
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
@@ -53,7 +53,7 @@ export default function AddSubproblemEffectsTable() {
     <Grid container>
       <Grid item xs={12} id="effects-table-header">
         <Typography variant={'h5'}>
-          Effects Table <InlineHelp helpId="effects-table" />
+          <InlineHelp helpId="effects-table">Effects Table</InlineHelp>
         </Typography>
       </Grid>
       <Grid item xs={12}>
