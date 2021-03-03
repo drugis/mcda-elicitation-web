@@ -28,6 +28,8 @@ RUN yarn
 RUN yarn build-backend
 ARG WEBPACK_COMMAND
 ARG MATOMO_VERSION
+ARG MCDA_HOST
+RUN export MCDA_HOST=$MCDA_HOST
 RUN if [ "$MATOMO_VERSION" != "" ] ; then export MATOMO_VERSION=$MATOMO_VERSION ; else export MATOMO_VERSION='Test' ; fi
 RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm run build-prod ; fi
 
