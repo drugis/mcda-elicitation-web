@@ -42,7 +42,7 @@ jobs:
       # StrictHostKeyChecking=no ensures no prompt for 'add to known hosts'
 
       - name: build docker container in test server on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && docker build --no-cache --tag mcda .'
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && docker build --build-arg MCDA_HOST=https://mcda-test.drugis.org --no-cache --tag mcda .'
 
       - name: stop MCDA docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
