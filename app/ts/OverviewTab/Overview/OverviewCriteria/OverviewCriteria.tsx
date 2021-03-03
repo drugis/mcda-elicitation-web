@@ -2,10 +2,10 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 import {OverviewCriterionContextProviderComponent} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import OverviewCriterion from './OverviewCriterion/OverviewCriterion';
@@ -98,7 +98,7 @@ export default function OverviewCriteria() {
     <Grid container item xs={12}>
       <Grid item xs={12}>
         <Typography variant="h5">
-          Criteria <InlineHelp helpId="criterion" />
+          <InlineHelp helpId="criterion">Criteria</InlineHelp>
         </Typography>
       </Grid>
       <CriteriaContainer />

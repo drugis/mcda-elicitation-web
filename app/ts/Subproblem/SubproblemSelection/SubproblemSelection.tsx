@@ -2,8 +2,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 
@@ -31,7 +31,7 @@ export default function SubproblemSelection({
   return currentSubproblem ? (
     <Grid item container>
       <Grid item xs={3}>
-        Problem:
+        <InlineHelp helpId="problem">Problem</InlineHelp>:
       </Grid>
       <Grid item xs={9}>
         <Select
@@ -43,7 +43,6 @@ export default function SubproblemSelection({
         >
           {getSubproblemOptions()}
         </Select>
-        <InlineHelp helpId="problem" />
       </Grid>
     </Grid>
   ) : (

@@ -1,5 +1,5 @@
 import {Button, Checkbox, Grid} from '@material-ui/core';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
@@ -52,7 +52,9 @@ export default function ToggledColumns(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        Effects table columns to show <InlineHelp helpId="toggled-columns" />
+        <InlineHelp helpId="toggled-columns">
+          Effects table columns to show
+        </InlineHelp>
       </Grid>
       <Grid container item xs={6}>
         <Grid item xs={12}>

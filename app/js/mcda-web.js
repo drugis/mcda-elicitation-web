@@ -14,7 +14,6 @@ define([
   'core-js',
   'error-reporting',
   'export-directive',
-  'help-popup',
   'jquery',
   'lodash',
   'page-title-service',
@@ -53,7 +52,6 @@ define([
     'elicit.workspaceResource',
     'errorReporting',
     'export-directive',
-    'help-directive',
     'mm.foundation',
     'ngCookies',
     'ngResource',
@@ -65,10 +63,8 @@ define([
   var app = angular.module('elicit', dependencies);
   app.run([
     '$http',
-    'HelpPopupService',
     'PageTitleService',
-    function ($http, HelpPopupService, PageTitleService) {
-      HelpPopupService.loadLexicon($http.get('lexicon.json'));
+    function ($http, PageTitleService) {
       PageTitleService.loadLexicon($http.get('mcda-page-titles.json'));
     }
   ]);

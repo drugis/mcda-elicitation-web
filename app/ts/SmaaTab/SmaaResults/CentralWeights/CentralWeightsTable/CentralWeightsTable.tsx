@@ -7,10 +7,10 @@ import {
 } from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {SmaaResultsContext} from 'app/ts/SmaaTab/SmaaResultsContext/SmaaResultsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 
@@ -80,7 +80,7 @@ export default function CentralWeightsTable() {
         <TableRow>
           <TableCell>Alternative</TableCell>
           <TableCell>
-            Confidence <InlineHelp helpId="confidence-factor" />
+            <InlineHelp helpId="confidence-factor">Confidence</InlineHelp>
           </TableCell>
           <CriterionHeaders />
         </TableRow>

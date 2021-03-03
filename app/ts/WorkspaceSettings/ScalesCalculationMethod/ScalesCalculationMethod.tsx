@@ -1,5 +1,5 @@
 import {Grid, Radio, RadioGroup} from '@material-ui/core';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
+import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
@@ -16,7 +16,7 @@ export default function ScalesCalculationMethod(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        Show median or mode <InlineHelp helpId="median-mode" />
+        Show <InlineHelp helpId="median-mode">median or mode</InlineHelp>
       </Grid>
       <Grid item xs={6}>
         <RadioGroup

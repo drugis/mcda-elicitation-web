@@ -1,9 +1,10 @@
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import Axios, {AxiosResponse} from 'axios';
+import {HelpContextProviderComponent} from 'help-popup';
 import React, {useEffect, useState} from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
-import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
+import {lexicon} from '../InlineHelp/lexicon';
 import ManualInput from './ManualInput';
 import {ManualInputContextProviderComponent} from './ManualInputContext';
 
@@ -27,7 +28,11 @@ export default function ManualInputWrapper() {
     <ErrorContextProviderComponent>
       <ErrorHandler>
         {isLoaded ? (
-          <HelpContextProviderComponent>
+          <HelpContextProviderComponent
+            lexicon={lexicon}
+            host={'@MCDA_HOST'}
+            path="/manual.html"
+          >
             <ManualInputContextProviderComponent
               inProgressId={inProgressId}
               message={message}

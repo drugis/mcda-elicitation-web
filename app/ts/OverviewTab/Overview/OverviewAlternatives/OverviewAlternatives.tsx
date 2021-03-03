@@ -7,13 +7,13 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {useContext} from 'react';
-import _ from 'lodash';
-import OverviewAlternativeRow from './OverviewAlternativeRow/OverviewAlternativeRow';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import IAlternative from '@shared/interface/IAlternative';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {InlineHelp} from 'help-popup';
+import _ from 'lodash';
+import React, {useContext} from 'react';
+import OverviewAlternativeRow from './OverviewAlternativeRow/OverviewAlternativeRow';
 
 export default function OverviewAlternatives(): JSX.Element {
   const {workspace} = useContext(WorkspaceContext);
@@ -43,7 +43,7 @@ export default function OverviewAlternatives(): JSX.Element {
     <Grid item container xs={12}>
       <Grid item xs={12}>
         <Typography variant="h5">
-          Alternatives <InlineHelp helpId="alternative" />
+          <InlineHelp helpId="alternative">Alternatives </InlineHelp>
         </Typography>
       </Grid>
       <Grid item xs={6}>

@@ -2,10 +2,11 @@ import IEditMode from '@shared/interface/IEditMode';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import {HelpContextProviderComponent} from 'help-popup';
 import React from 'react';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
-import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
+import {lexicon} from '../InlineHelp/lexicon';
 import {LegendContextProviderComponent} from '../Legend/LegendContext';
 import {PreferencesContextProviderComponent} from '../PreferencesTab/PreferencesContext';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
@@ -35,7 +36,11 @@ export default function SmaaTab({
 }) {
   return (
     <ErrorContextProviderComponent>
-      <HelpContextProviderComponent>
+      <HelpContextProviderComponent
+        lexicon={lexicon}
+        host={'@MCDA_HOST'}
+        path="/manual.html"
+      >
         <WorkspaceContextProviderComponent
           oldWorkspace={workspace}
           oldSubproblems={subproblems}

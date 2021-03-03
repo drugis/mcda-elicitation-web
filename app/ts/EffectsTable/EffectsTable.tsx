@@ -4,9 +4,9 @@ import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
-import InlineHelp from '../InlineHelp/InlineHelp';
 import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import EffectsTableAlternativeHeaders from './EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
@@ -40,7 +40,7 @@ export default function EffectsTable() {
     <Grid container>
       <Grid item xs={9} id="effects-table-header">
         <Typography variant="h5">
-          Effects Table <InlineHelp helpId="effects-table" />
+          <InlineHelp helpId="effects-table">Effects Table</InlineHelp>
         </Typography>
       </Grid>
       <Grid container item xs={3} justify="flex-end">

@@ -1,6 +1,6 @@
 import TableCell from '@material-ui/core/TableCell';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 
 export default function UnitsHeader() {
@@ -11,7 +11,7 @@ export default function UnitsHeader() {
   if (units) {
     return (
       <TableCell id="units-header" align="center">
-        Units <InlineHelp helpId="unit-of-measurement" />
+        <InlineHelp helpId="unit-of-measurement">Units</InlineHelp>
       </TableCell>
     );
   } else {

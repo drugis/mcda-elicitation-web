@@ -15,8 +15,8 @@ import DescriptionHeader from 'app/ts/EffectsTable/EffectsTableHeaders/Descripti
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import SensitivityMeasurementsTableRow from './SensitivityMeasurementsTableRow/SensitivityMeasurementsTableRow';
@@ -40,7 +40,7 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
     <Grid container item xs={12} spacing={1}>
       <Grid item xs={12} id="sensitivity-measurements-header">
         <Typography variant="h5">
-          Measurements <InlineHelp helpId="effects-table" />
+          <InlineHelp helpId="effects-table">Measurements</InlineHelp>
         </Typography>
       </Grid>
       {!_.isEmpty(configuredRanges) ? (

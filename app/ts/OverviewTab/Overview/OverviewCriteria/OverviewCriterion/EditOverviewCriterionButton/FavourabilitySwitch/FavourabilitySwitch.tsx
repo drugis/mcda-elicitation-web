@@ -6,8 +6,8 @@ import {
   RadioGroup
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import InlineHelp from 'app/ts/InlineHelp/InlineHelp';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext, useState} from 'react';
 
 export default function FavourabilitySwitch({
@@ -35,7 +35,7 @@ export default function FavourabilitySwitch({
     return (
       <FormControl component="fieldset">
         <FormLabel component="legend">
-          Favourability <InlineHelp helpId="favourability" />
+          <InlineHelp helpId="favourability">Favourability </InlineHelp>
         </FormLabel>
         <RadioGroup
           row

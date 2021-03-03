@@ -1,11 +1,11 @@
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import IScale from '@shared/interface/IScale';
+import {HelpContextProviderComponent} from 'help-popup';
 import React from 'react';
 import EffectsTable from '../EffectsTable/EffectsTable';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
-import {HelpContextProviderComponent} from '../InlineHelp/HelpContext';
+import {lexicon} from '../InlineHelp/lexicon';
 import {SettingsContextProviderComponent} from '../Settings/SettingsContext';
 import {SubproblemContextProviderComponent} from '../Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContextProviderComponent} from '../Workspace/WorkspaceContext';
@@ -28,7 +28,11 @@ export default function Subproblem({
 }) {
   return (
     <ErrorContextProviderComponent>
-      <HelpContextProviderComponent>
+      <HelpContextProviderComponent
+        lexicon={lexicon}
+        host={'@MCDA_HOST'}
+        path="/manual.html"
+      >
         <WorkspaceContextProviderComponent
           oldWorkspace={workspace}
           oldSubproblems={subproblems}
