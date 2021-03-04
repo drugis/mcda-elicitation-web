@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
 import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import EditOverviewCriterionButton from './EditOverviewCriterionButton/EditOverviewCriterionButton';
 import OverviewDataSourceTable from './OverviewDataSourceTable/OverviewDataSourceTable';
@@ -36,7 +37,9 @@ export default function OverviewCriterion() {
           {criterion.description}
         </Grid>
         <Grid item xs={12}>
-          <b>Data sources:</b>
+          <b>
+            <InlineHelp helpId="data-source"> Data sources:</InlineHelp>
+          </b>
         </Grid>
         <Grid item xs={12}>
           <OverviewDataSourceTable />
