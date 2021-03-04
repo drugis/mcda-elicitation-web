@@ -40,7 +40,9 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
     <Grid container item xs={12} spacing={1}>
       <Grid item xs={12} id="sensitivity-measurements-header">
         <Typography variant="h5">
-          <InlineHelp helpId="effects-table">Measurements</InlineHelp>
+          <InlineHelp helpId="deterministic-effects-table">
+            Measurements
+          </InlineHelp>
         </Typography>
       </Grid>
       {!_.isEmpty(configuredRanges) ? (

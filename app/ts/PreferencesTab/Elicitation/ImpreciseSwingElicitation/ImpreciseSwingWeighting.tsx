@@ -15,7 +15,7 @@ export default function ImpreciseSwingWeighting() {
     <Grid container item spacing={4} sm={12} md={9} component={Paper}>
       <Grid item xs={12}>
         <Typography id="swing-weighting-title-header" variant="h4">
-          <InlineHelp helpId="swing-weighting">
+          <InlineHelp helpId="imprecise-swing-weighting">
             Imprecise swing weighting
           </InlineHelp>
         </Typography>

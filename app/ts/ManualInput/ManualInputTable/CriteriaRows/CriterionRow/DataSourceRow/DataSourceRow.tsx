@@ -49,7 +49,7 @@ export default function DataSourceRow({
     <TableCell colSpan={numberOfColumns}>
       <Grid container item alignItems="center" xs={12} justify="center">
         <AddDataSourceButton criterion={criterion} />
-        <InlineHelp helpId="reference">
+        <InlineHelp helpId="data-source">
           <Help fontSize="small" style={{marginTop: '5px'}} />
         </InlineHelp>
       </Grid>
