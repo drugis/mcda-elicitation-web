@@ -96,7 +96,8 @@ let config = {
       'schema-basePath': basePath + '/schema/',
       mcda: basePath + '/app/js',
       mcdaweb: basePath + '/app/js/mcda-web',
-      react: basePath + '/node_modules/react'
+      react: basePath + '/node_modules/react',
+      'help-popup': basePath + '/node_modules/help-popup'
     },
     modules: [
       // Files path which will be referenced while bundling
