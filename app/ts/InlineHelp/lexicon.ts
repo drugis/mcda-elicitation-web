@@ -130,7 +130,7 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'One-way sensitivity analysis',
     text:
       "Tools to explore the sensitivity of the value of each criterion by allowing only one thing to change (a single preference, or a single criterion's measurements).",
-    link: '#mcda-one-way-sensitivity-analysis'
+    link: '#mcda-one-way-sensitivity'
   },
   'partial-value-function': {
     title: 'Partial Value Function',

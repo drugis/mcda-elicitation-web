@@ -17,7 +17,7 @@ export default function ScaleRanges({}: {}) {
     <Grid container>
       <Grid item xs={9} id="effects-table-header">
         <Typography variant={'h5'}>
-          <InlineHelp helpId="scale-ranges">Scale ranges </InlineHelp>
+          <InlineHelp helpId="scale-ranges">Scale ranges</InlineHelp>
         </Typography>
       </Grid>
       {warnings.length ? (
