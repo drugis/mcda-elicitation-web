@@ -9,7 +9,7 @@ import React, {useContext} from 'react';
 import {getScaleRangeWarnings} from './ScaleRangesUtil';
 import ScalesTable from './ScalesTable/ScalesTable';
 
-export default function ScaleRanges({}: {}) {
+export default function ScaleRanges() {
   const {filteredWorkspace, observedRanges} = useContext(SubproblemContext);
   const warnings: string[] = getScaleRangeWarnings(
     filteredWorkspace,
