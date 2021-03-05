@@ -3,7 +3,7 @@ import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import _, {uniqBy} from 'lodash';
+import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
   createSubproblemDefinition,
@@ -76,15 +76,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       currentSubproblem.definition.excludedDataSources
     )
   );
-  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>(
-    getScaleBlockingWarnings(
-      criterionInclusions,
-      dataSourceInclusions,
-      alternativeInclusions,
-      workspace,
-      observedRanges
-    )
-  );
+  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>([]);
   const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
     getMissingValueWarnings(
       dataSourceInclusions,
@@ -113,15 +105,17 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   }, [title]);
 
   useEffect(() => {
-    setScaleRangesWarnings(
-      getScaleBlockingWarnings(
-        criterionInclusions,
-        dataSourceInclusions,
-        alternativeInclusions,
-        workspace,
-        observedRanges
-      )
-    );
+    if (!_.isEmpty(observedRanges)) {
+      setScaleRangesWarnings(
+        getScaleBlockingWarnings(
+          criterionInclusions,
+          dataSourceInclusions,
+          alternativeInclusions,
+          workspace,
+          observedRanges
+        )
+      );
+    }
     setMissingValueWarnings(
       getMissingValueWarnings(
         dataSourceInclusions,
@@ -133,7 +127,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     dataSourceInclusions,
     criterionInclusions,
     alternativeInclusions,
-    workspace
+    workspace,
+    observedRanges
   ]);
 
   useEffect(() => {
