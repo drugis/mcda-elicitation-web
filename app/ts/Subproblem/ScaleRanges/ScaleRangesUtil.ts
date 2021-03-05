@@ -23,7 +23,7 @@ export function getScaleRangeWarnings(
   }
   if (hasRowWithOnlySameValue(observedRanges)) {
     warnings.push(
-      'Criterion with the same value set for all alternatives selected, therefore no scales can be set.'
+      'Criterion selected where all values are identical, therefore no scales can be set.'
     );
   }
   return warnings;

@@ -142,13 +142,19 @@ describe('ScaleRangesUtil', () => {
 
   describe('hasRowWithOnlySameValue', () => {
     it('should return true if there is a row with equal lower and upper bounds', () => {
-      const observedRanges: Record<string, [number, number]> = {dsId: [0, 0]};
+      const observedRanges: Record<string, [number, number]> = {
+        dsId: [0, 0],
+        ds2Id: [0, 1]
+      };
       const result = hasRowWithOnlySameValue(observedRanges);
       expect(result).toBeTruthy();
     });
 
     it("should return false if there isn't a row with equal lower and upper bounds", () => {
-      const observedRanges: Record<string, [number, number]> = {dsId: [0, 1]};
+      const observedRanges: Record<string, [number, number]> = {
+        dsId: [0, 1],
+        ds2Id: [0, 1]
+      };
       const result = hasRowWithOnlySameValue(observedRanges);
       expect(result).toBeFalsy();
     });
