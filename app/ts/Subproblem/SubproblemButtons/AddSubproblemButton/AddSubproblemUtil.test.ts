@@ -281,6 +281,16 @@ describe('addSubproblemUtil', () => {
     const missingValuesWarning = 'Effects table contains missing values';
     const multipleDataSourcesWarning =
       'Effects table contains multiple data sources per criterion';
+    const sameValueRowWarning =
+      'Effects table contains criterion where all values are indentical';
+    const observedRanges: Record<string, [number, number]> = {
+      ds1Id: [1, 2],
+      ds2Id: [2, 3]
+    };
+    const faultyRanges: Record<string, [number, number]> = {
+      ds2Id: [1, 2],
+      ds1Id: [2, 2]
+    };
 
     it('should return no warnings, if all selected criteria have precisely one data source, and a value and a distribution for each cell', () => {
       const criterionInclusions = {crit1Id: true};
@@ -313,7 +323,8 @@ describe('addSubproblemUtil', () => {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        workspace
+        workspace,
+        observedRanges
       );
       const expectedResult: string[] = [];
       expect(result).toEqual(expectedResult);
@@ -343,7 +354,8 @@ describe('addSubproblemUtil', () => {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        workspace
+        workspace,
+        observedRanges
       );
       const expectedResult: string[] = [];
       expect(result).toEqual(expectedResult);
@@ -366,7 +378,8 @@ describe('addSubproblemUtil', () => {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        workspace
+        workspace,
+        observedRanges
       );
       const expectedResult: string[] = [missingValuesWarning];
       expect(result).toEqual(expectedResult);
@@ -417,13 +430,52 @@ describe('addSubproblemUtil', () => {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        workspace
+        workspace,
+        observedRanges
       );
       const expectedResult: string[] = [multipleDataSourcesWarning];
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return both warnings, if both apply', () => {
+    it('should return a warning if there is a data source selected with the same value for every cell', () => {
+      const criterionInclusions = {crit1Id: true};
+      const dataSourceInclusions = {ds1Id: true};
+      const alternativeInclusions = {alt1Id: true};
+
+      const workspace = {
+        criteria: [{id: 'crit1Id', dataSources: [{id: 'ds1Id'}]}],
+        alternatives: [{id: 'alt1Id'}],
+        effects: [
+          {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'value'
+          }
+        ],
+        distributions: [
+          {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'value'
+          }
+        ],
+        relativePerformances: []
+      } as IWorkspace;
+
+      const result = getScaleBlockingWarnings(
+        criterionInclusions,
+        dataSourceInclusions,
+        alternativeInclusions,
+        workspace,
+        faultyRanges
+      );
+      const expectedResult: string[] = [sameValueRowWarning];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return all warnings, if all apply', () => {
       const criterionInclusions = {crit1Id: true};
       const dataSourceInclusions = {ds1Id: true, ds2Id: true};
       const alternativeInclusions = {alt1Id: true};
@@ -468,11 +520,13 @@ describe('addSubproblemUtil', () => {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        workspace
+        workspace,
+        faultyRanges
       );
       const expectedResult: string[] = [
         missingValuesWarning,
-        multipleDataSourcesWarning
+        multipleDataSourcesWarning,
+        sameValueRowWarning
       ];
       expect(result).toEqual(expectedResult);
     });

@@ -6,7 +6,10 @@ import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import IProblemDataSource from '@shared/interface/Problem/IProblemDataSource';
 import _ from 'lodash';
 
-export function getScaleRangeWarnings(workspace: IWorkspace): string[] {
+export function getScaleRangeWarnings(
+  workspace: IWorkspace,
+  observedRanges: Record<string, [number, number]>
+): string[] {
   let warnings: string[] = [];
   if (areTooManyDataSourcesIncluded(workspace.criteria)) {
     warnings.push(
@@ -16,6 +19,11 @@ export function getScaleRangeWarnings(workspace: IWorkspace): string[] {
   if (findRowWithoutValues(workspace)) {
     warnings.push(
       'Criterion with only missing or text values selected, therefore no scales can be set.'
+    );
+  }
+  if (hasRowWithOnlySameValue(observedRanges)) {
+    warnings.push(
+      'Criterion selected where all values are identical, therefore no scales can be set.'
     );
   }
   return warnings;
@@ -56,4 +64,13 @@ function hasNonEmptyPerformance(effects: Effect[] | Distribution[]): boolean {
   return _.some(effects, (effect: Effect | Distribution) => {
     return effect.type !== 'text' && effect.type !== 'empty';
   });
+}
+
+export function hasRowWithOnlySameValue(
+  observedRanges: Record<string, [number, number]>
+): boolean {
+  return _.some(
+    observedRanges,
+    ([lowerBound, upperBound]): boolean => lowerBound === upperBound
+  );
 }

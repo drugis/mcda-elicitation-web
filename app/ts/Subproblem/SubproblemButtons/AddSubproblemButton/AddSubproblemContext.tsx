@@ -76,14 +76,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       currentSubproblem.definition.excludedDataSources
     )
   );
-  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>(
-    getScaleBlockingWarnings(
-      criterionInclusions,
-      dataSourceInclusions,
-      alternativeInclusions,
-      workspace
-    )
-  );
+  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>([]);
   const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
     getMissingValueWarnings(
       dataSourceInclusions,
@@ -112,14 +105,17 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   }, [title]);
 
   useEffect(() => {
-    setScaleRangesWarnings(
-      getScaleBlockingWarnings(
-        criterionInclusions,
-        dataSourceInclusions,
-        alternativeInclusions,
-        workspace
-      )
-    );
+    if (!_.isEmpty(observedRanges)) {
+      setScaleRangesWarnings(
+        getScaleBlockingWarnings(
+          criterionInclusions,
+          dataSourceInclusions,
+          alternativeInclusions,
+          workspace,
+          observedRanges
+        )
+      );
+    }
     setMissingValueWarnings(
       getMissingValueWarnings(
         dataSourceInclusions,
@@ -131,7 +127,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     dataSourceInclusions,
     criterionInclusions,
     alternativeInclusions,
-    workspace
+    workspace,
+    observedRanges
   ]);
 
   useEffect(() => {
