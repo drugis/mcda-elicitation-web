@@ -3,7 +3,7 @@ import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import _ from 'lodash';
+import _, {uniqBy} from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {
   createSubproblemDefinition,
@@ -81,7 +81,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       criterionInclusions,
       dataSourceInclusions,
       alternativeInclusions,
-      workspace
+      workspace,
+      observedRanges
     )
   );
   const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
@@ -117,7 +118,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         criterionInclusions,
         dataSourceInclusions,
         alternativeInclusions,
-        workspace
+        workspace,
+        observedRanges
       )
     );
     setMissingValueWarnings(

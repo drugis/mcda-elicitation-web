@@ -138,4 +138,10 @@ describe('ScaleRangesUtil', () => {
       expect(result).toBeFalsy();
     });
   });
+
+  describe('hasRowWithOnlySameValue', () => {
+    it('should', () => {
+      fail();
+    });
+  });
 });
