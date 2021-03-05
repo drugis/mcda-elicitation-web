@@ -282,7 +282,7 @@ describe('addSubproblemUtil', () => {
     const multipleDataSourcesWarning =
       'Effects table contains multiple data sources per criterion';
     const sameValueRowWarning =
-      'Effects table contains criterion with the same value set for all selected alternatives';
+      'Effects table contains criterion where all values are indentical';
     const observedRanges: Record<string, [number, number]> = {
       ds1Id: [1, 2],
       ds2Id: [2, 3]
