@@ -23,7 +23,7 @@ export default function MeasurementSensitivityPlot(): JSX.Element {
     filteredAlternatives,
     legendByAlternativeId,
     measurementSensitivityCriterion.title,
-    false,
+    true,
     '#measurements-sensitivity-plot',
     usePercentage
   );
