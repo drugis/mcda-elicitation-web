@@ -29,9 +29,8 @@ getTotalValueForSensitivityMeasurementsPlot <- function(params, alternative, cri
 
 getXCoordinates <- function(pvf) {
   if (pvf$type == 'linear') {
-    xCoordinates <- pvf$range
+    return(seq(pvf$range[1], pvf$range[2], length.out = 101))
   } else {
-    xCoordinates <- c(pvf$range[1], pvf$cutoffs, pvf$range[2])
+    return(c(pvf$range[1], pvf$cutoffs, pvf$range[2]))
   }
-  return(xCoordinates)
 }

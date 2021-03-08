@@ -9,15 +9,18 @@ import React, {useContext} from 'react';
 import {getScaleRangeWarnings} from './ScaleRangesUtil';
 import ScalesTable from './ScalesTable/ScalesTable';
 
-export default function ScaleRanges({}: {}) {
-  const {filteredWorkspace} = useContext(SubproblemContext);
-  const warnings: string[] = getScaleRangeWarnings(filteredWorkspace);
+export default function ScaleRanges() {
+  const {filteredWorkspace, observedRanges} = useContext(SubproblemContext);
+  const warnings: string[] = getScaleRangeWarnings(
+    filteredWorkspace,
+    observedRanges
+  );
 
   return filteredWorkspace ? (
     <Grid container>
       <Grid item xs={9} id="effects-table-header">
         <Typography variant={'h5'}>
-          <InlineHelp helpId="scale-ranges">Scale ranges </InlineHelp>
+          <InlineHelp helpId="scale-ranges">Scale ranges</InlineHelp>
         </Typography>
       </Grid>
       {warnings.length ? (

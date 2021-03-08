@@ -104,17 +104,18 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     sliderRange,
     [lowestObservedValue, highestObservedValue]
   );
+  const sliderMarkStartIndex = sliderRange[0] === lowestObservedValue ? 0 : 1;
 
   const useStyles = makeStyles({
     root: {
-      '& .MuiSlider-markActive[data-index="1"]': {
+      [`& .MuiSlider-markActive[data-index="${sliderMarkStartIndex}"]`]: {
         width: restrictedAreaRatio,
         backgroundColor: 'red',
         height: '7px',
         transform: 'translateY(-3px)',
         opacity: 1
       },
-      '& .MuiSlider-markActive[data-index="2"]': {
+      [`& .MuiSlider-markActive[data-index="${sliderMarkStartIndex + 1}"]`]: {
         width: '0px'
       }
     }

@@ -13,6 +13,7 @@ export default function ClipboardButton({targetId}: {targetId: string}) {
         color="primary"
         variant="contained"
         data-clipboard-target={targetId}
+        style={{marginBottom: '5px'}}
       >
         <FileCopy /> Copy to clipboard
       </Button>

@@ -150,7 +150,7 @@ describe('DeterministicResultsUtil', () => {
   });
 
   describe('pataviResultToLineValues', () => {
-    it('should return line chart data', () => {
+    it('should return non-percentified line chart data', () => {
       const legend: Record<string, string> = undefined;
       const measurementsSensitivityResults: Record<
         string,
@@ -159,13 +159,38 @@ describe('DeterministicResultsUtil', () => {
         alt1Id: {1: 10}
       };
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
+      const usePercentage = false;
       const result = pataviResultToLineValues(
         measurementsSensitivityResults,
         alternatives,
-        legend
+        legend,
+        usePercentage
       );
       const expectedResult: [string, ...(string | number)[]][] = [
         ['x', '1'],
+        ['alt1', 10]
+      ];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return percentified line chart data', () => {
+      const legend: Record<string, string> = undefined;
+      const measurementsSensitivityResults: Record<
+        string,
+        Record<number, number>
+      > = {
+        alt1Id: {1: 10}
+      };
+      const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
+      const usePercentage = true;
+      const result = pataviResultToLineValues(
+        measurementsSensitivityResults,
+        alternatives,
+        legend,
+        usePercentage
+      );
+      const expectedResult: [string, ...(string | number)[]][] = [
+        ['x', '100'],
         ['alt1', 10]
       ];
       expect(result).toEqual(expectedResult);
@@ -180,10 +205,12 @@ describe('DeterministicResultsUtil', () => {
         alt1Id: {1: 10}
       };
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
+      const usePercentage = false;
       const result = pataviResultToLineValues(
         measurementsSensitivityResults,
         alternatives,
-        legend
+        legend,
+        usePercentage
       );
       const expectedResult: [string, ...(string | number)[]][] = [
         ['x', '1'],

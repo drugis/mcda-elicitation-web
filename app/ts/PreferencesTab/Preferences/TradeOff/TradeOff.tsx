@@ -1,5 +1,6 @@
 import {Grid, Typography} from '@material-ui/core';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {PreferencesContext} from '../../PreferencesContext';
@@ -21,9 +22,11 @@ export default function TradeOff(): JSX.Element {
   return (
     <>
       <Grid item xs={12}>
-        <Typography id="trade-off-header" variant="h5">
-          Trade off
-        </Typography>
+        <InlineHelp helpId="trade-off-table">
+          <Typography id="trade-off-header" variant="h5">
+            Trade off
+          </Typography>
+        </InlineHelp>
       </Grid>
       {canShowTradeOffs ? (
         <Grid item xs={12}>

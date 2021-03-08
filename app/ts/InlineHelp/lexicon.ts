@@ -49,29 +49,29 @@ export const lexicon: Record<string, IHelpInfo> = {
       'A criterion is an outcome of interest to be used in a benefit-risk analysis, e.g. "mood improvement" or "nausea".',
     link: '#mcda-overview-criteria'
   },
-  reference: {
-    title: 'Reference',
-    text:
-      'An optional indication of where the data for this criterion comes from.',
-    link: '#mcda-overview-criteria'
-  },
   'criterion-source-link': {
     title: 'Reference URL',
     text:
       "An optional hyperlink that leads to the source of this criterion's data. This link should start with http:// or https://",
     link: '#mcda-manual-entry'
   },
-  'unit-of-measurement': {
-    title: 'Unit of measurement',
+  'data-source': {
+    title: 'Data source',
     text:
-      'In which unit of measurement the criterion\'s data are reported (e.g. "proportion", "gram")',
-    link: '#mcda-unit-of-measurement'
+      'The origin of all the measurements in a row in an effects table, e.g. a clinical trial, or pooled data from a network meta-analysis.',
+    link: '#mcda-overview-criteria'
   },
   'deterministic-analysis-results': {
     title: 'Deterministic analysis results',
     text:
       'This section shows the results of deterministic analysis (representative weights, total value), allows for sensitivity analysis, and allows modification of the effects table to explore the problem space.',
     link: '#mcda-deterministic-analysis'
+  },
+  'deterministic-effects-table': {
+    title: 'Effects table (deterministic analysis',
+    text:
+      'The effects table on the deterministic analysis tab lets users adjust individual effects within their scale ranges to test their effects on the benefit-risk balance.',
+    link: '#mcda-adjusting-measurements'
   },
   'effects-table': {
     title: 'Effects table',
@@ -130,13 +130,13 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'One-way sensitivity analysis',
     text:
       "Tools to explore the sensitivity of the value of each criterion by allowing only one thing to change (a single preference, or a single criterion's measurements).",
-    link: '#mcda-sensitivity-analysis'
+    link: '#mcda-one-way-sensitivity'
   },
   'partial-value-function': {
     title: 'Partial Value Function',
     text:
       "A partial value function indicates how the desirability of a criterion's outcome varies with its value.",
-    link: '#mcda-mavt'
+    link: '#mcda-setting-pvfs'
   },
   percentages: {
     title: 'Percentages',
@@ -173,6 +173,12 @@ export const lexicon: Record<string, IHelpInfo> = {
       'The ranking of the criteria according to their relative importance. The lower the number, the more important the criterion.',
     link: '#mcda-ranking-elicitation'
   },
+  reference: {
+    title: 'Reference',
+    text:
+      'An optional indication of where the data for this criterion comes from.',
+    link: '#mcda-overview-criteria'
+  },
   'representative-weights': {
     title: 'Weights',
     text:
@@ -194,7 +200,7 @@ export const lexicon: Record<string, IHelpInfo> = {
   'sensitivity-measurements': {
     title: 'Measurements sensitivity analysis',
     text:
-      "How the value of a specific alternative changes as the weight of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
+      "How the value of a specific alternative changes as the value of a specific criterion changes between its worst and best possible value. All other alternatives' values are kept constant at the current default for comparison.",
     link: '#mcda-one-way-sensitivity'
   },
   'sensitivity-preferences': {
@@ -248,7 +254,13 @@ export const lexicon: Record<string, IHelpInfo> = {
     title: 'Total value',
     text:
       'How valuable (i.e. helpful for each criterion) each alternative is overall.',
-    link: '#deterministic-analysis'
+    link: '#mcda-deterministic-analysis'
+  },
+  'trade-off-table': {
+    title: 'Trade off table',
+    text:
+      'The trade off table lets user see the concrete results of their preferences by expressing them as statements about how a certain change in one criterion is approximately equivalent to a different change in another criterion.',
+    link: '#mcda-trade-off-table'
   },
   uncertainties: {
     title: 'Uncertainties',
@@ -256,11 +268,17 @@ export const lexicon: Record<string, IHelpInfo> = {
       'Any uncertainties regarding the treatment effect estimates displayed in a row of the effects table.',
     link: '#mcda-overview-criteria'
   },
+  'unit-of-measurement': {
+    title: 'Unit of measurement',
+    text:
+      'In which unit of measurement the criterion\'s data are reported (e.g. "proportion", "gram")',
+    link: '#mcda-unit-of-measurement'
+  },
   'value-profiles': {
     title: 'Value profiles',
     text:
       'How the total value of each alternative is composed out of its value for each criterion.',
-    link: '#deterministic-analysis'
+    link: '#mcda-deterministic-analysis'
   },
   weights: {
     title: 'Weights',

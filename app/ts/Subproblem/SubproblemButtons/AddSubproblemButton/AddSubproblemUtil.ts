@@ -150,7 +150,8 @@ export function getScaleBlockingWarnings(
   criterionInclusions: Record<string, boolean>,
   dataSourceInclusions: Record<string, boolean>,
   alternativeInclusions: Record<string, boolean>,
-  workspace: IWorkspace
+  workspace: IWorkspace,
+  observedRanges: Record<string, [number, number]>
 ): string[] {
   let warnings: string[] = [];
   if (
@@ -171,7 +172,25 @@ export function getScaleBlockingWarnings(
   ) {
     warnings.push('Effects table contains multiple data sources per criterion');
   }
+  if (hasRowWithOnlySameValue(dataSourceInclusions, observedRanges)) {
+    warnings.push(
+      'Effects table contains criterion where all values are indentical'
+    );
+  }
   return warnings;
+}
+
+function hasRowWithOnlySameValue(
+  dataSourceInclusions: Record<string, boolean>,
+  observedRanges: Record<string, [number, number]>
+): boolean {
+  return _(dataSourceInclusions)
+    .pickBy()
+    .keys()
+    .some(
+      (dataSourceId: string): boolean =>
+        observedRanges[dataSourceId][0] === observedRanges[dataSourceId][1]
+    );
 }
 
 function areValuesMissingInEffectsTable(

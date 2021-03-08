@@ -37,14 +37,19 @@ function setupSubProblem(browser) {
       '#scale-ranges-warning-1',
       'Effects table contains multiple data sources per criterion'
     )
+    .assert.containsText(
+      '#scale-ranges-warning-2',
+      'Effects table contains criterion where all values are indentical'
+    )
     .clearValue('#subproblem-title-input')
     .setValue('#subproblem-title-input', subproblem1.title)
     .waitForElementVisible('#add-subproblem-confirm-button:enabled')
     .click(alternative2checkbox)
     .click('#inclusion-deselectionDataSourceId-checkbox')
-    .assert.not.elementPresent('#scale-ranges-warning-1')
+    .assert.not.elementPresent('#scale-ranges-warning-2')
     .click('#inclusion-deselectionCriterionId-checkbox')
-    .assert.not.elementPresent('#scale-ranges-warning-0');
+    .assert.not.elementPresent('#scale-ranges-warning-0')
+    .assert.not.elementPresent('#scale-ranges-warning-1');
   return browser;
 }
 

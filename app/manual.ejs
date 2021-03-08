@@ -57,11 +57,6 @@
         text-transform: uppercase;
         font-weight: bold;
       }
-      :target::before {
-        content: '';
-        display: block;
-        height: 60px; /* fixed header height*/
-      }
     </style>
     <%= htmlWebpackPlugin.options.matomo %>
   </head>
@@ -104,15 +99,13 @@
         document.getElementById('browserUnknown').style.display = 'block';
       }
     </script>
-    <div class="fixed">
-      <div class="top-bar">
-        <div class="top-bar-left bar-padding">
-          <ul class="menu">
-            <li>
-              <a id="logo" href="/">mcda.drugis.org</a>
-            </li>
-          </ul>
-        </div>
+    <div class="top-bar">
+      <div class="top-bar-left bar-padding">
+        <ul class="menu">
+          <li>
+            <a id="logo" href="/">mcda.drugis.org</a>
+          </li>
+        </ul>
       </div>
     </div>
     <section id="hero">

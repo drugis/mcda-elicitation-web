@@ -56,7 +56,9 @@ export default function AddSubproblemDialog({
             <AddSubproblemEffectsTable />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant={'h5'}>Scale ranges</Typography>
+            <Typography variant={'h5'}>
+              <InlineHelp helpId="scale-ranges">Scale ranges</InlineHelp>
+            </Typography>
             <AddSubproblemScaleRanges />
           </Grid>
         </Grid>
