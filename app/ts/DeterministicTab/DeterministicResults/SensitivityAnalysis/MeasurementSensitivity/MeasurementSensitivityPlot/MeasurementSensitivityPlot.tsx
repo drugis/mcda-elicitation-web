@@ -1,6 +1,7 @@
 import {DeterministicResultsContext} from 'app/ts/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import {getSensitivityLineChartSettings} from 'app/ts/DeterministicTab/DeterministicResultsUtil';
 import {LegendContext} from 'app/ts/Legend/LegendContext';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext} from 'react';
@@ -12,6 +13,8 @@ export default function MeasurementSensitivityPlot(): JSX.Element {
     measurementSensitivityCriterion,
     measurementsSensitivityResults
   } = useContext(DeterministicResultsContext);
+  const {getUsePercentage} = useContext(SettingsContext);
+  const usePercentage = getUsePercentage(measurementSensitivityCriterion);
   const width = '400px';
   const height = '400px';
 
@@ -21,7 +24,8 @@ export default function MeasurementSensitivityPlot(): JSX.Element {
     legendByAlternativeId,
     measurementSensitivityCriterion.title,
     false,
-    '#measurements-sensitivity-plot'
+    '#measurements-sensitivity-plot',
+    usePercentage
   );
   generate(settings);
 

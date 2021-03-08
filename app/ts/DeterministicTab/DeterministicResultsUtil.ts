@@ -5,6 +5,7 @@ import IScale from '@shared/interface/IScale';
 import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
+import {getPercentifiedValueLabel} from '../DisplayUtil/DisplayUtil';
 import {findScale, findValue} from '../EffectsTable/EffectsTableUtil';
 import ISensitivityValue from '../interface/ISensitivityValue';
 import significantDigits from '../ManualInput/Util/significantDigits';
@@ -155,12 +156,14 @@ export function getSensitivityLineChartSettings(
   legend: Record<string, string>,
   Xlabel: string,
   useTooltip: boolean,
-  plotId: string
+  plotId: string,
+  usePercentage: boolean
 ): ChartConfiguration {
   const plotValues = pataviResultToLineValues(
     measurementsSensitivityResults,
     alternatives,
-    legend
+    legend,
+    usePercentage
   );
   const numericalPlotValues = _.map(plotValues[0].slice(1), parseFloat);
   return {
@@ -213,19 +216,29 @@ export function getSensitivityLineChartSettings(
 export function pataviResultToLineValues(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
   alternatives: IAlternative[],
-  legend: Record<string, string>
+  legend: Record<string, string>,
+  usePercentage: boolean
 ): [string, ...(string | number)[]][] {
   return [
-    getLineXValues(measurementsSensitivityResults, alternatives),
+    getLineXValues(measurementsSensitivityResults, alternatives, usePercentage),
     ...getLineYValues(measurementsSensitivityResults, alternatives, legend)
   ];
 }
 
 function getLineXValues(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
-  alternatives: IAlternative[]
+  alternatives: IAlternative[],
+  usePercentage: boolean
 ): ['x', ...string[]] {
-  return ['x', ..._.keys(measurementsSensitivityResults[alternatives[0].id])];
+  return [
+    'x',
+    ..._(measurementsSensitivityResults[alternatives[0].id])
+      .keys()
+      .map((value: string): string =>
+        getPercentifiedValueLabel(parseFloat(value), usePercentage)
+      )
+      .value()
+  ];
 }
 
 function getLineYValues(
