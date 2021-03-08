@@ -1,11 +1,10 @@
 import {Grid} from '@material-ui/core';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Help from '@material-ui/icons/Help';
 import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
-import {InlineHelp} from 'help-popup';
+import {InlineQuestionMark} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DUMMY_ID} from '../../../../constants';
@@ -49,9 +48,7 @@ export default function DataSourceRow({
     <TableCell colSpan={numberOfColumns}>
       <Grid container item alignItems="center" xs={12} justify="center">
         <AddDataSourceButton criterion={criterion} />
-        <InlineHelp helpId="data-source">
-          <Help fontSize="small" style={{marginTop: '5px'}} />
-        </InlineHelp>
+        <InlineQuestionMark helpId="data-source" />
       </Grid>
     </TableCell>
   ) : (

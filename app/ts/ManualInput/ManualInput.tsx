@@ -1,8 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Help from '@material-ui/icons/Help';
-import {InlineHelp} from 'help-popup';
+import {InlineQuestionMark} from 'help-popup';
 import React, {useEffect} from 'react';
 import DoneButton from './DoneButton/DoneButton';
 import EffectOrDistribution from './EffectOrDistribution/EffectOrDistribution';
@@ -35,9 +34,7 @@ export default function ManualInput() {
           <ManualInputTherapeuticContext />
         </Grid>
         <Grid item xs={1}>
-          <InlineHelp helpId="therapeutic-context">
-            <Help fontSize="small" style={{marginTop: '5px'}} />
-          </InlineHelp>
+          <InlineQuestionMark helpId="therapeutic-context" />
         </Grid>
         <Grid container item xs={12} alignItems="center">
           <Favourability />

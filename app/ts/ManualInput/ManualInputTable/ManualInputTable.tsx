@@ -3,9 +3,8 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Help from '@material-ui/icons/Help';
 import IAlternative from '@shared/interface/IAlternative';
-import {InlineHelp} from 'help-popup';
+import {InlineHelp, InlineQuestionMark} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
@@ -50,9 +49,7 @@ export default function ManualInputTable() {
           <TableCell align="center">
             <Grid container item alignItems="center" xs={12}>
               <AddAlternativeButton />
-              <InlineHelp helpId="alternative">
-                <Help fontSize="small" style={{marginTop: '5px'}} />
-              </InlineHelp>
+              <InlineQuestionMark helpId="alternative" />
             </Grid>
           </TableCell>
           <TableCell align="center">

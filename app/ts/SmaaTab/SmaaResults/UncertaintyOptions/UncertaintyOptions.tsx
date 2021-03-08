@@ -2,9 +2,8 @@ import {FormControlLabel} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
-import Help from '@material-ui/icons/Help';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
-import {InlineHelp} from 'help-popup';
+import {InlineQuestionMark} from 'help-popup';
 import React, {useContext, useState} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 
@@ -58,9 +57,7 @@ export default function UncertaintyOptions() {
             label="measurements"
             labelPlacement="end"
           />
-          <InlineHelp helpId="smaa-measurements-uncertainty">
-            <Help fontSize="small" style={{marginTop: '5px'}} />
-          </InlineHelp>
+          <InlineQuestionMark helpId="smaa-measurements-uncertainty" />
         </Grid>
         <Grid container item xs={12} alignItems="center">
           <FormControlLabel
@@ -77,9 +74,7 @@ export default function UncertaintyOptions() {
             label="weights"
             labelPlacement="end"
           />
-          <InlineHelp helpId="smaa-weights-uncertainty">
-            <Help fontSize="small" style={{marginTop: '5px'}} />
-          </InlineHelp>
+          <InlineQuestionMark helpId="smaa-weights-uncertainty" />
         </Grid>
       </Grid>
       <Grid item xs={12}>
