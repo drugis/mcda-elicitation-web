@@ -1,87 +1,91 @@
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
+import {TPreferences} from '@shared/types/Preferences';
+import {lexicon} from 'app/ts/InlineHelp/lexicon';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {PreferenceElicitation} from 'preference-elicitation';
 import React, {useContext, useState} from 'react';
-import {ElicitationContextProviderComponent} from '../Elicitation/ElicitationContext';
-import ImpreciseSwingWeighting from '../Elicitation/ImpreciseSwingElicitation/ImpreciseSwingWeighting';
-import MatchingElicitation from '../Elicitation/MatchingElicitation/MatchingElicitation';
-import PreciseSwingWeighting from '../Elicitation/PreciseSwingElicitation/PreciseSwingWeighting';
-import RankingElicitation from '../Elicitation/RankingElicitation/RankingElicitation';
-import {RankingElicitationContextProviderComponent} from '../Elicitation/RankingElicitation/RankingElicitationContext';
 import {PreferencesContext} from '../PreferencesContext';
+import {
+  buildScenarioWithPreferences,
+  isElicitationView
+} from '../PreferencesUtil';
+import {TPreferencesView} from '../TPreferencesView';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
-import PartialValueFunctions from './PartialValueFunctions/PartialValueFunctions';
-import PreferencesWeights from './PreferencesWeights/PreferencesWeights';
-import ScenarioButtons from './ScenarioButtons/ScenarioButtons';
-import TradeOff from './TradeOff/TradeOff';
+import PreferencesView from './PreferencesView/PreferencesView';
 
 export default function Preferences() {
-  const {currentScenario, scenarios, activeView} = useContext(
-    PreferencesContext
-  );
+  const {filteredCriteria} = useContext(SubproblemContext);
+  const {
+    setActiveView,
+    currentScenario,
+    activeView,
+    pvfs,
+    updateScenario
+  } = useContext(PreferencesContext);
   const [preferencesTitle] = useState(document.title);
+  const {showPercentages} = useContext(SettingsContext);
 
-  function renderView(): JSX.Element {
+  function cancelCallback(): void {
+    setActiveView('preferences');
+  }
+
+  function saveCallback(preferences: TPreferences): void {
+    updateScenario(buildScenarioWithPreferences(currentScenario, preferences));
+    setActiveView('preferences');
+  }
+
+  function setDocumentTitle(activeView: TPreferencesView): void {
     switch (activeView) {
       case 'preferences':
         document.title = preferencesTitle;
-        return (
-          <Grid container spacing={3}>
-            <ScenarioSelection
-              scenarios={scenarios}
-              currentScenario={currentScenario}
-            />
-            <ScenarioButtons />
-            <PartialValueFunctions />
-            <PreferencesWeights />
-            <TradeOff />
-          </Grid>
-        );
+        break;
       case 'precise':
         document.title = 'Precise swing weighting';
-        return (
-          <ElicitationContextProviderComponent elicitationMethod="precise">
-            <Grid container justify="center" component={Box} mt={2}>
-              <PreciseSwingWeighting />
-            </Grid>
-          </ElicitationContextProviderComponent>
-        );
+        break;
       case 'imprecise':
         document.title = 'Imprecise swing weighting';
-        return (
-          <ElicitationContextProviderComponent elicitationMethod="imprecise">
-            <Grid container justify="center" component={Box} mt={2}>
-              <ImpreciseSwingWeighting />
-            </Grid>
-          </ElicitationContextProviderComponent>
-        );
+        break;
       case 'matching':
         document.title = 'Matching';
-        return (
-          <ElicitationContextProviderComponent elicitationMethod={'matching'}>
-            <Grid container justify="center" component={Box} mt={2}>
-              <MatchingElicitation />
-            </Grid>
-          </ElicitationContextProviderComponent>
-        );
+        break;
       case 'ranking':
         document.title = 'Ranking';
-        return (
-          <RankingElicitationContextProviderComponent>
-            <Grid container justify="center" component={Box} mt={2}>
-              <RankingElicitation />
-            </Grid>
-          </RankingElicitationContextProviderComponent>
-        );
-      case 'advancedPvf':
-        return (
-          <AdvancedPartialValueFunctionContextProviderComponent>
-            <Grid container justify="center" component={Box} mt={2}>
-              <AdvancedPartialValueFunction />
-            </Grid>
-          </AdvancedPartialValueFunctionContextProviderComponent>
-        );
+        break;
+    }
+  }
+
+  function renderView(): JSX.Element {
+    setDocumentTitle(activeView);
+
+    if (activeView === 'preferences') {
+      return <PreferencesView />;
+    } else if (activeView === 'advancedPvf') {
+      return (
+        <AdvancedPartialValueFunctionContextProviderComponent>
+          <Grid container justify="center" component={Box} mt={2}>
+            <AdvancedPartialValueFunction />
+          </Grid>
+        </AdvancedPartialValueFunctionContextProviderComponent>
+      );
+    } else if (isElicitationView(activeView)) {
+      return (
+        <PreferenceElicitation
+          elicitationMethod={activeView}
+          criteria={filteredCriteria}
+          showPercentages={showPercentages}
+          pvfs={pvfs}
+          cancelCallback={cancelCallback}
+          saveCallback={saveCallback}
+          manualLexicon={lexicon}
+          manualHost={'@MCDA_HOST'}
+          manualPath="/manual.html"
+        />
+      );
+    } else {
+      throw 'Illegal view requested';
     }
   }
 
