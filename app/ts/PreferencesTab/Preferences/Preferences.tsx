@@ -1,4 +1,4 @@
-import {Box} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import {TPreferences} from '@shared/types/Preferences';
 import {lexicon} from 'app/ts/InlineHelp/lexicon';
