@@ -35,12 +35,18 @@ export function InputCellContextProviderComponent({
   const [isValidStandardError, setIsValidStandardError] = useState(false);
   const [isValidAlpha, setIsValidAlpha] = useState(false);
   const [isValidBeta, setIsValidBeta] = useState(false);
+  const [isValidEvents, setIsValidEvents] = useState(false);
+  const [isValidSampleSize, setIsValidSampleSize] = useState(false);
   const [isNotEstimableLowerBound, setIsNotEstimableLowerBound] = useState(
     false
   );
   const [isNotEstimableUpperBound, setIsNotEstimableUpperBound] = useState(
     false
   );
+  const [events, setEvents] = useState<string>('0');
+  const [sampleSize, setSampleSize] = useState<string>('1');
+
+  const [useDirectBetaInput, setUseDirectBetaInput] = useState<boolean>(false);
 
   const {dataSource} = useContext(DataSourceRowContext);
 
@@ -110,6 +116,7 @@ export function InputCellContextProviderComponent({
       case 'beta':
         setAlpha(`${effectOrDistribution.alpha}`);
         setBeta(`${effectOrDistribution.beta}`);
+        setUseDirectBetaInput(true);
         break;
       case 'gamma':
         setAlpha(`${effectOrDistribution.alpha}`);
@@ -118,46 +125,69 @@ export function InputCellContextProviderComponent({
     }
   }, []);
 
+  function setEventsWrapper(newEvents: string): void {
+    const eventsInteger = Number.parseInt(newEvents);
+    setEvents(newEvents);
+    setAlpha(`${eventsInteger + 1}`);
+    setBeta(`${Number.parseInt(sampleSize) - eventsInteger + 1}`);
+  }
+
+  function setSampleSizeWrapper(newSampleSize: string): void {
+    const sampleSizeInteger = Number.parseInt(newSampleSize);
+    setSampleSize(newSampleSize);
+    setBeta(`${sampleSizeInteger - Number.parseInt(events) + 1}`);
+  }
+
   return (
     <InputCellContext.Provider
       value={{
-        alternativeId: alternativeId,
-        inputType: inputType,
-        value: value,
-        isValidValue: isValidValue,
-        lowerBound: lowerBound,
-        isValidLowerBound: isValidLowerBound,
-        upperBound: upperBound,
-        isValidUpperBound: isValidUpperBound,
-        text: text,
-        mean: mean,
-        isValidMean: isValidMean,
-        standardError: standardError,
-        isValidStandardError: isValidStandardError,
-        alpha: alpha,
-        isValidAlpha: isValidAlpha,
-        beta: beta,
-        isValidBeta: isValidBeta,
-        isNotEstimableLowerBound: isNotEstimableLowerBound,
-        isNotEstimableUpperBound: isNotEstimableUpperBound,
-        setInputType: setInputType,
-        setValue: setValue,
-        setIsValidValue: setIsValidValue,
-        setLowerBound: setLowerBound,
-        setIsValidLowerBound: setIsValidLowerBound,
-        setUpperBound: setUpperBound,
-        setIsValidUpperBound: setIsValidUpperBound,
-        setText: setText,
-        setMean: setMean,
-        setIsValidMean: setIsValidMean,
-        setStandardError: setStandardError,
-        setIsValidStandardError: setIsValidStandardError,
-        setAlpha: setAlpha,
-        setIsValidAlpha: setIsValidAlpha,
-        setBeta: setBeta,
-        setIsValidBeta: setIsValidBeta,
-        setIsNotEstimableLowerBound: setIsNotEstimableLowerBound,
-        setIsNotEstimableUpperBound: setIsNotEstimableUpperBound
+        alternativeId,
+        inputType,
+        value,
+        isValidValue,
+        lowerBound,
+        isValidLowerBound,
+        upperBound,
+        isValidUpperBound,
+        text,
+        mean,
+        isValidMean,
+        standardError,
+        isValidStandardError,
+        alpha,
+        isValidAlpha,
+        beta,
+        isValidBeta,
+        isValidEvents,
+        isValidSampleSize,
+        isNotEstimableLowerBound,
+        isNotEstimableUpperBound,
+        events,
+        sampleSize,
+        useDirectBetaInput,
+        setInputType,
+        setValue,
+        setIsValidValue,
+        setLowerBound,
+        setIsValidLowerBound,
+        setUpperBound,
+        setIsValidUpperBound,
+        setText,
+        setMean,
+        setIsValidMean,
+        setStandardError,
+        setIsValidStandardError,
+        setAlpha,
+        setIsValidAlpha,
+        setBeta,
+        setIsValidBeta,
+        setIsNotEstimableLowerBound,
+        setIsNotEstimableUpperBound,
+        setEvents: setEventsWrapper,
+        setSampleSize: setSampleSizeWrapper,
+        setUseDirectBetaInput,
+        setIsValidEvents,
+        setIsValidSampleSize
       }}
     >
       {children}

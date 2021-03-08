@@ -12,15 +12,39 @@ const NUMERIC_INPUT_ERROR = 'Please provide a numeric input';
 export function getBetaAlphaError(alpha: number): string {
   if (isNaN(alpha)) {
     return NUMERIC_INPUT_ERROR;
-  } else if (isBetaValueInvalid(alpha)) {
+  } else if (IsNotPostiveInteger(alpha)) {
     return 'Alpha must be an integer above 0';
   } else {
     return '';
   }
 }
 
-function isBetaValueInvalid(value: number): boolean {
+function IsNotPostiveInteger(value: number): boolean {
   return value < 1 || value % 1 !== 0;
+}
+
+export function getEventsError(events: number, sampleSize: number): string {
+  if (isNaN(events)) {
+    return NUMERIC_INPUT_ERROR;
+  } else if (events < 0 || events % 1 !== 0) {
+    return 'Events must be an integer of at least 0';
+  } else if (events > sampleSize) {
+    return 'Events must be smaller than sample size';
+  } else {
+    return '';
+  }
+}
+
+export function getSampleSizeError(sampleSize: number, events: number): string {
+  if (isNaN(sampleSize)) {
+    return NUMERIC_INPUT_ERROR;
+  } else if (IsNotPostiveInteger(sampleSize)) {
+    return 'Sample size must be an integer above 0';
+  } else if (events > sampleSize) {
+    return 'Events must be smaller than sample size';
+  } else {
+    return '';
+  }
 }
 
 export function getGammaAlphaError(alpha: number): string {
@@ -40,7 +64,7 @@ function isGammaValueValid(value: number): boolean {
 export function getBetaBetaError(alpha: number): string {
   if (isNaN(alpha)) {
     return NUMERIC_INPUT_ERROR;
-  } else if (isBetaValueInvalid(alpha)) {
+  } else if (IsNotPostiveInteger(alpha)) {
     return 'Beta must be an integer above 0';
   } else {
     return '';

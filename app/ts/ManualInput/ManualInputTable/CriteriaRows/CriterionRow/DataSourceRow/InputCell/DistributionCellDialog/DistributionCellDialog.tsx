@@ -46,7 +46,10 @@ export default function DistributionCellDialog({
     isValidMean,
     isValidStandardError,
     isValidAlpha,
-    isValidBeta
+    isValidBeta,
+    isValidEvents,
+    isValidSampleSize,
+    useDirectBetaInput
   } = useContext(InputCellContext);
   const {criterion, dataSource} = useContext(DataSourceRowContext);
   const unitType = dataSource.unitOfMeasurement.type;
@@ -64,7 +67,9 @@ export default function DistributionCellDialog({
       case 'normal':
         return !isValidMean || !isValidStandardError;
       case 'beta':
-        return !isValidAlpha || !isValidBeta;
+        return useDirectBetaInput
+          ? !isValidAlpha || !isValidBeta
+          : !isValidEvents || !isValidSampleSize;
       case 'gamma':
         return !isValidAlpha || !isValidBeta;
       case 'range':
