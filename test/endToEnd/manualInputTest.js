@@ -723,7 +723,6 @@ function enterDistributions(browser) {
     .pause(seleniumDelay)
     .click(typeSelector)
     .click(beta)
-    //FIXME
     .clearValue(eventsInput)
     .setValue(eventsInput, 2)
     .clearValue(sampleSizeInput)
