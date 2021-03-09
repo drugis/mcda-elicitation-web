@@ -10,13 +10,13 @@ import IValueEffect from '@shared/interface/IValueEffect';
 import {
   areBoundsSymmetric,
   boundsToStandardError,
-  checkIfLinkIsValid,
   createDistributions,
   createNormalDistribution,
   createValueDistribution,
   createWarnings,
   generateDistribution,
   generateValueCIDistribution,
+  isLinkValid,
   normalizeCells,
   normalizeInputValue,
   replaceUndefinedBounds,
@@ -557,25 +557,25 @@ describe('manualInputService', () => {
     });
   });
 
-  describe('checkIfLinkIsInvalid', () => {
+  describe('isLinkValid', () => {
     it('should return false for a valid link with protocol', () => {
       const link = 'http://www.link.com';
-      expect(checkIfLinkIsValid(link)).toBeTruthy();
+      expect(isLinkValid(link)).toBeTruthy();
     });
 
     it('should return false for a valid link without a protocol', () => {
       const link = 'www.link.com';
-      expect(checkIfLinkIsValid(link)).toBeTruthy();
+      expect(isLinkValid(link)).toBeTruthy();
     });
 
     it('should return true for an invalid link', () => {
       const link = 'not_a_link';
-      expect(checkIfLinkIsValid(link)).toBeFalsy();
+      expect(isLinkValid(link)).toBeFalsy();
     });
 
     it('should return false for an empty link', () => {
       const link = '';
-      expect(checkIfLinkIsValid(link)).toBeFalsy();
+      expect(isLinkValid(link)).toBeFalsy();
     });
   });
 

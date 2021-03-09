@@ -137,12 +137,12 @@ export function createWarnings(
 function hasInvalidReferenceLink(criteria: ICriterion[]) {
   return _.some(criteria, (criterion: ICriterion) => {
     return _.some(criterion.dataSources, (dataSource: IDataSource) => {
-      return !checkIfLinkIsValid(dataSource.referenceLink);
+      return !isLinkValid(dataSource.referenceLink);
     });
   });
 }
 
-export function checkIfLinkIsValid(link: string): boolean {
+export function isLinkValid(link: string): boolean {
   const regex = new RegExp(
     /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
   );
