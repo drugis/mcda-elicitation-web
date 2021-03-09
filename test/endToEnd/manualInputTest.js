@@ -23,7 +23,6 @@ module.exports = {
   'Editing strength of evidence': editSterengthOfEvidence,
   'Editing uncertainties': editUncertainties,
   'Editing reference': editReference,
-  'Editing reference link': editReferenceLink,
   'Adding an alternative': addAlternative,
   'Deleting an alternative': deleteAlternative,
   'Moving an alternative': moveAlternative,
@@ -285,17 +284,10 @@ function addDataSource(browser) {
       const criterionId = result.value.split('-').slice(2).join('-');
       const addDataSourceButton = '//*[@id="add-ds-for-' + criterionId + '"]';
       const reference =
-        '//*[@id="criterion-row-' +
-        criterionId +
-        '"]/td[8]/div/div[1]/span/span';
-      const referenceLink =
-        '//*[@id="criterion-row-' +
-        criterionId +
-        '"]/td[8]/div/div[2]/span/span';
+        '//*[@id="criterion-row-' + criterionId + '"]/td[8]/span/span';
       browser
         .click(addDataSourceButton)
-        .assert.containsText(reference, NEW_REFERENCE)
-        .assert.containsText(referenceLink, 'click to edit');
+        .assert.containsText(reference, NEW_REFERENCE);
     });
   });
 }
@@ -445,37 +437,32 @@ function editReference(browser) {
     browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
       const dataSourceId = result.value.split('-').slice(2).join('-');
       const basePath = '//*[@id="ds-reference-' + dataSourceId + '"]';
-      const reference = basePath + '/div/div[1]/span/span';
-      const referenceInput = basePath + '/div/div[1]/div/div/input';
-      browser.assert
-        .containsText(reference, 'click to edit')
-        .click(reference)
-        .setValue(referenceInput, NEW_REFERENCE)
-        .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(reference, NEW_REFERENCE);
-    });
-  });
-}
+      const reference = basePath + '/span/span';
+      const referenceInput = '//*[@id="reference"]/div/div/input';
+      const referenceLink = basePath + '/span/div[2]';
+      const referenceLinkInput = '//*[@id="reference-link"]/div/div/input';
+      const editButton = '//*[@id="edit-reference-button"]';
 
-function editReferenceLink(browser) {
-  browser.perform(() => {
-    browser.useXpath().getAttribute(DATA_SOURCE_PATH, 'id', (result) => {
-      const dataSourceId = result.value.split('-').slice(2).join('-');
-      const basePath = '//*[@id="ds-reference-' + dataSourceId + '"]';
-      const referenceLink = basePath + '/div/div[2]/span/span';
-      const referenceLinkInput = basePath + '/div/div[2]/div/div/input';
-      browser.assert
-        .containsText(referenceLink, 'click to edit')
-        .click(referenceLink)
-        .setValue(referenceLinkInput, 'not_a_link')
-        .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(referenceLink, INVDALID_REFERENCE_LINK_WARNING)
-        .click(referenceLink)
+      browser.expect
+        .element(basePath + '/span/span')
+        .text.to.equal('click to edit');
+      browser
+        .click(basePath)
+        .setValue(referenceInput, NEW_REFERENCE)
+        .click(editButton);
+      browser.expect.element(reference).text.to.equal(NEW_REFERENCE);
+
+      browser.click(basePath).setValue(referenceLinkInput, 'not_a_link');
+      browser.expect
+        .element('//*[@id="reference-error-0"]')
+        .text.to.equal(INVDALID_REFERENCE_LINK_WARNING);
+      browser
         .clearValue(referenceLinkInput)
-        .click(referenceLink)
         .setValue(referenceLinkInput, NEW_REFERENCE_LINK)
-        .click('//*[@id="favourable-criteria-label"]')
-        .assert.containsText(referenceLink, NEW_REFERENCE_LINK);
+        .click(editButton);
+      browser.expect
+        .element(referenceLink)
+        .text.to.equal('(' + NEW_REFERENCE_LINK + ')');
     });
   });
 }

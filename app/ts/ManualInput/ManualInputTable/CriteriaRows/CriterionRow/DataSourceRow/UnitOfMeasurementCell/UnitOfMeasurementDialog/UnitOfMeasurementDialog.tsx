@@ -12,6 +12,7 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import {getOutOfBoundsError} from 'app/ts/ManualInput/CellValidityService/CellValidityService';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
+import keycode from 'keycode';
 import _ from 'lodash';
 import React, {
   ChangeEvent,
@@ -103,7 +104,7 @@ export default function UnitOfMeasurementDialog({
   }
 
   function handleKey(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === keycode('enter')) {
       handleEditButtonClick();
       event.preventDefault();
       event.stopPropagation();
