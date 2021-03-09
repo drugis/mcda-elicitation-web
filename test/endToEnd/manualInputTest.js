@@ -307,10 +307,8 @@ function deleteDataSource(browser) {
 
 function moveDataSource(browser) {
   const addDataSourceButton = '//table/tbody/tr[3]/td/div/button';
-  const firstDataSourceReference =
-    '//table/tbody/tr[2]/td[12]/div/div[1]/span/span';
-  const secondDataSourceReference =
-    '//table/tbody/tr[3]/td[8]/div/div[1]/span/span';
+  const firstDataSourceReference = '//table/tbody/tr[2]/td[12]/span/span';
+  const secondDataSourceReference = '//table/tbody/tr[3]/td[8]/span/span';
   browser
     .useXpath()
     .click(addDataSourceButton)
