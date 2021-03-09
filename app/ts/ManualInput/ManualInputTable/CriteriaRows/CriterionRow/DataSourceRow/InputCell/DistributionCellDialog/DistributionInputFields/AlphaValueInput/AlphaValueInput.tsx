@@ -4,14 +4,20 @@ import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function AlphaValueInput({
-  getAlphaError
+  getAlphaError,
+  isDisabled
 }: {
   getAlphaError: (alpha: number) => string;
+  isDisabled?: boolean;
 }) {
   const {alpha, setAlpha, setIsValidAlpha} = useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
 
-  useEffect(validateInput, [alpha]);
+  useEffect(() => {
+    if (!isDisabled) {
+      validateInput();
+    }
+  }, [alpha, isDisabled]);
 
   function alphaChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,6 +49,7 @@ export default function AlphaValueInput({
           error={!!inputError}
           helperText={inputError ? inputError : ''}
           autoFocus
+          disabled={isDisabled}
         />
       </Grid>
     </>

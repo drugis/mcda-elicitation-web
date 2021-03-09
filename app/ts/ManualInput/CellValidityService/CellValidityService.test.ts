@@ -6,11 +6,13 @@ import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {
   getBetaAlphaError,
   getBetaBetaError,
+  getEventsError,
   getGammaAlphaError,
   getGammaBetaError,
   getLowerBoundError,
   getNormalError,
   getOutOfBoundsError,
+  getSampleSizeError,
   getUpperBoundError,
   getValueError,
   hasInvalidCell
@@ -545,6 +547,60 @@ describe('CellValidityService', () => {
       );
       const expectedResult = '';
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getEventsError', () => {
+    it('should return an error if input is not numeric', () => {
+      const result = getEventsError('a' as any, 0);
+      expect(result).toEqual(NUMERIC_INPUT_ERROR);
+    });
+
+    it('should return an error if input is not positive', () => {
+      const result = getEventsError(-1, 0);
+      expect(result).toEqual('Events must be a non-negative integer');
+    });
+
+    it('should return an error if input is not an integer', () => {
+      const result = getEventsError(1.1, 0);
+      expect(result).toEqual('Events must be a non-negative integer');
+    });
+
+    it('should return an error if number of events is larger than sample size', () => {
+      const result = getEventsError(2, 1);
+      expect(result).toEqual('Events must be smaller than sample size');
+    });
+
+    it('should return no error otherwise', () => {
+      const result = getEventsError(1, 2);
+      expect(result).toEqual('');
+    });
+  });
+
+  describe('getSampleSizeError', () => {
+    it('should return an error if input is not numeric', () => {
+      const result = getSampleSizeError('a' as any, 0);
+      expect(result).toEqual(NUMERIC_INPUT_ERROR);
+    });
+
+    it('should return an error if input is not positive', () => {
+      const result = getSampleSizeError(-1, 0);
+      expect(result).toEqual('Sample size must be a positive integer');
+    });
+
+    it('should return an error if input is not an integer', () => {
+      const result = getSampleSizeError(1.1, 0);
+      expect(result).toEqual('Sample size must be a positive integer');
+    });
+
+    it('should return an error if number of events is larger than sample size', () => {
+      const result = getSampleSizeError(1, 2);
+      expect(result).toEqual('Events must be smaller than sample size');
+    });
+
+    it('should return no error otherwise', () => {
+      const result = getSampleSizeError(2, 1);
+      expect(result).toEqual('');
     });
   });
 });

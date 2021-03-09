@@ -696,8 +696,11 @@ function enterDistributions(browser) {
   const text = '//*[@id="input-parameters-selector"]/option[7]';
   const meanInput = '//*[@id="mean-input"]';
   const standardErrorInput = '//*[@id="standard-error-input"]';
+  const eventsInput = '//*[@id="events-input"]';
+  const sampleSizeInput = '//*[@id="sample-size-input"]';
   const alphaInput = '//*[@id="alpha-input"]';
   const betaInput = '//*[@id="beta-input"]';
+  const directBetaInput = '//*[@id="use-direct-distribution-input-checkbox"]';
   const valueInput = '//*[@id="value-input"]';
   const lowerBoundInput = '//*[@id="lower-bound-input"]';
   const upperBoundInput = '//*[@id="upper-bound-input"]';
@@ -720,14 +723,29 @@ function enterDistributions(browser) {
     .pause(seleniumDelay)
     .click(typeSelector)
     .click(beta)
+    .clearValue(eventsInput)
+    .setValue(eventsInput, 2)
+    .clearValue(sampleSizeInput)
+    .setValue(sampleSizeInput, 3)
+    .pause(100)
+    .click(editDistributionCell)
+    .pause(seleniumDelay);
+  browser.expect.element(FIRST_CELL).text.to.equal('Beta(3, 2)');
+
+  browser
+    .click(FIRST_CELL)
+    .pause(seleniumDelay)
+    .click(directBetaInput)
     .clearValue(alphaInput)
     .setValue(alphaInput, 2)
     .clearValue(betaInput)
     .setValue(betaInput, 3)
     .pause(100)
     .click(editDistributionCell)
-    .pause(seleniumDelay)
-    .assert.containsText(FIRST_CELL, 'Beta(2, 3)')
+    .pause(seleniumDelay);
+  browser.expect.element(FIRST_CELL).text.to.equal('Beta(2, 3)');
+
+  browser
     .click(FIRST_CELL)
     .pause(seleniumDelay)
     .click(typeSelector)

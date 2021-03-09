@@ -4,14 +4,20 @@ import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function BetaValueInput({
-  getBetaError
+  getBetaError,
+  isDisabled
 }: {
   getBetaError: (beta: number) => string;
+  isDisabled?: boolean;
 }) {
   const {beta, setBeta, setIsValidBeta} = useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
 
-  useEffect(validateInput, [beta]);
+  useEffect(() => {
+    if (!isDisabled) {
+      validateInput();
+    }
+  }, [beta, isDisabled]);
 
   function betaChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,6 +49,7 @@ export default function BetaValueInput({
           error={!!inputError}
           helperText={inputError ? inputError : ''}
           autoFocus
+          disabled={isDisabled}
         />
       </Grid>
     </>
