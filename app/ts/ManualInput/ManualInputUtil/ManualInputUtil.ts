@@ -137,16 +137,16 @@ export function createWarnings(
 function hasInvalidReferenceLink(criteria: ICriterion[]) {
   return _.some(criteria, (criterion: ICriterion) => {
     return _.some(criterion.dataSources, (dataSource: IDataSource) => {
-      return checkIfLinkIsInvalid(dataSource.referenceLink);
+      return !checkIfLinkIsValid(dataSource.referenceLink);
     });
   });
 }
 
-export function checkIfLinkIsInvalid(link: string): boolean {
+export function checkIfLinkIsValid(link: string): boolean {
   const regex = new RegExp(
     /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
   );
-  return !!link && !regex.test(link);
+  return link && regex.test(link);
 }
 
 function hasEmptyTitle<T>(items: T[]): boolean {

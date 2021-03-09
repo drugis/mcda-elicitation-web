@@ -10,7 +10,7 @@ import IValueEffect from '@shared/interface/IValueEffect';
 import {
   areBoundsSymmetric,
   boundsToStandardError,
-  checkIfLinkIsInvalid,
+  checkIfLinkIsValid,
   createDistributions,
   createNormalDistribution,
   createValueDistribution,
@@ -560,22 +560,22 @@ describe('manualInputService', () => {
   describe('checkIfLinkIsInvalid', () => {
     it('should return false for a valid link with protocol', () => {
       const link = 'http://www.link.com';
-      expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+      expect(checkIfLinkIsValid(link)).toBeTruthy();
     });
 
     it('should return false for a valid link without a protocol', () => {
       const link = 'www.link.com';
-      expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+      expect(checkIfLinkIsValid(link)).toBeTruthy();
     });
 
     it('should return true for an invalid link', () => {
       const link = 'not_a_link';
-      expect(checkIfLinkIsInvalid(link)).toBeTruthy();
+      expect(checkIfLinkIsValid(link)).toBeFalsy();
     });
 
     it('should return false for an empty link', () => {
       const link = '';
-      expect(checkIfLinkIsInvalid(link)).toBeFalsy();
+      expect(checkIfLinkIsValid(link)).toBeFalsy();
     });
   });
 

@@ -3,7 +3,7 @@ import TableCell from '@material-ui/core/TableCell';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {ManualInputContext} from 'app/ts//ManualInput/ManualInputContext';
-import {checkIfLinkIsInvalid} from 'app/ts/ManualInput/ManualInputUtil/ManualInputUtil';
+import {checkIfLinkIsValid} from 'app/ts/ManualInput/ManualInputUtil/ManualInputUtil';
 import React, {useContext, useState} from 'react';
 import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import ReferenceDialog from './ReferenceDialog/ReferenceDialog';
@@ -33,7 +33,7 @@ export default function ReferenceCell({
     if (
       dataSource.reference &&
       dataSource.referenceLink &&
-      !checkIfLinkIsInvalid(dataSource.referenceLink)
+      checkIfLinkIsValid(dataSource.referenceLink)
     ) {
       return (
         <Tooltip title={tooltipText}>

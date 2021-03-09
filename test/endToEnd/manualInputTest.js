@@ -70,7 +70,7 @@ const DUPLICATE_ALTERNATIVES_TITLE_WARNING =
   'Alternatives must have unique titles';
 const UNFILLED_VALUES_WARNING =
   'Either effects or distributions must be fully filled out';
-const INVDALID_REFERENCE_LINK_WARNING = 'Provided link is not valid';
+const INVALID_REFERENCE_LINK_WARNING = 'Provided link is not valid';
 
 function getCriterionTitlePaths(criterionId) {
   const basePath = '//*[@id="criterion-title-' + criterionId + '"]';
@@ -453,7 +453,7 @@ function editReference(browser) {
       browser.click(basePath).setValue(referenceLinkInput, 'not_a_link');
       browser.expect
         .element('//*[@id="reference-error-0"]')
-        .text.to.equal(INVDALID_REFERENCE_LINK_WARNING);
+        .text.to.equal(INVALID_REFERENCE_LINK_WARNING);
       browser
         .clearValue(referenceLinkInput)
         .setValue(referenceLinkInput, NEW_REFERENCE_LINK)

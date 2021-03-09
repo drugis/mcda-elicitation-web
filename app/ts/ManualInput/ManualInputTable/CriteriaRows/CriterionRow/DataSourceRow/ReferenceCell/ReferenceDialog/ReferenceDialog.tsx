@@ -5,7 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {checkIfLinkIsInvalid} from 'app/ts/ManualInput/ManualInputUtil/ManualInputUtil';
+import {checkIfLinkIsValid} from 'app/ts/ManualInput/ManualInputUtil/ManualInputUtil';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import keycode from 'keycode';
 import React, {ChangeEvent, KeyboardEvent, useContext, useState} from 'react';
@@ -46,7 +46,7 @@ export default function ReferenceDialog({
     event: ChangeEvent<HTMLInputElement>
   ): void {
     setReferenceLink(event.target.value);
-    if (checkIfLinkIsInvalid(event.target.value)) {
+    if (checkIfLinkIsValid(event.target.value)) {
       setError('Provided link is not valid');
     } else {
       setError('');
