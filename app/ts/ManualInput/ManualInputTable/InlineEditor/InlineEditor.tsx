@@ -1,5 +1,6 @@
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
+import keycode from 'keycode';
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import InlineTooltip from '../CriteriaRows/CriterionRow/DataSourceRow/InlineTooltip/InlineTooltip';
 
@@ -27,10 +28,10 @@ export default function InlineEditor({
   }
 
   function handleKey(event: KeyboardEvent<HTMLDivElement>): void {
-    if (event.keyCode === 13) {
+    if (event.keyCode === keycode('enter')) {
       callback(newValue);
       toggleEdit();
-    } else if (event.keyCode === 27) {
+    } else if (event.keyCode === keycode('escape')) {
       toggleEdit();
     }
   }

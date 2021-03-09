@@ -1,3 +1,4 @@
+import keycode from 'keycode';
 import {KeyboardEvent} from 'react';
 
 export default function createEnterHandler(
@@ -5,7 +6,7 @@ export default function createEnterHandler(
   isBlocked: () => boolean
 ): (event: KeyboardEvent<HTMLDivElement>) => void {
   return (event: KeyboardEvent<HTMLDivElement>): void => {
-    if (event.keyCode === 13 && !isBlocked()) {
+    if (event.keyCode === keycode('enter') && !isBlocked()) {
       callback();
       event.preventDefault();
       event.stopPropagation();
