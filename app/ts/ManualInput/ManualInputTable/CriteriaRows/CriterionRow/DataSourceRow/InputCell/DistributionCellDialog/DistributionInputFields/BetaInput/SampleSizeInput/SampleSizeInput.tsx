@@ -28,7 +28,7 @@ export default function SampleSizeInput(): JSX.Element {
   return (
     <>
       <Grid item xs={6}>
-        SampleSize
+        Sample size
       </Grid>
       <Grid item xs={6}>
         <TextField
