@@ -9,10 +9,10 @@ This tutorial guides you through the process of manually entering data, so that 
 
 \subsection*{Subjects covered}
 \begin{itemize}
-\item Manual data entry interface
-\item Defining criteria and alternatives
-\item Specifying data sources
-\item Filling in the data entry table
+    \item Manual data entry interface
+    \item Defining criteria and alternatives
+    \item Specifying data sources
+    \item Filling in the data entry table
 \end{itemize}
 
 \subsection*{Example effects table}
@@ -20,9 +20,9 @@ The data that you are going to enter in this tutorial is taken from the effects 
 
 \begin{figure}[!h]
     \centering
-	\includegraphics[width=\textwidth]{fig/lixiEffectTable.png}
+    \includegraphics[width=\textwidth]{fig/lixiEffectTable.png}
     \caption{Simplified effects table for lixisenatide, a treatment for type 2 diabetes mellitus}
-	\label{fig:lixisenatide_effect_table}
+    \label{fig:lixisenatide_effect_table}
 \end{figure}
 
 \subsection*{Sign in to MCDA.drugis.org}
@@ -38,49 +38,38 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \faLightbulbO \, We here cover the manual workspace creation process; besides this you can also create workspaces based on example data uploaded by the ADDIS team, and upload JSON files exported by you or another user.
 
 \subsection*{Enter general information}
-\noindent \leftpointright \, Enter a descriptive title in the ‘Workspace title’ field at the top of the page. For example, “lixisenatide data entry tutorial”. 
+\noindent \leftpointright \, Enter a descriptive title in the ‘Workspace title’ field at the top of the page. For example, “lixisenatide data entry tutorial”.
 \newline
 
 \noindent \leftpointright \, Enter the indication and other relevant context for your assessment in the ‘Therapeutic context’ field. For example, “Assessment of lixisenatide for the treatment of adults with type 2 diabetes mellitus to achieve glycaemic control in patients not adequately controlled on oral antidiabetics.”
 \newline
 
-\noindent \faLightbulbO \, At any stage during the data entry process you can press the ‘Save’ button at the bottom of the page to store the current state. This lets you continue later. You can navigate back to your home page by pressing the mcda.drugis.org link on the menu bar at the top-left of the screen.
+\noindent \faLightbulbO \, Any changes you make are automatically saved. You can select this in-progress workspace from your personal homepage later, and continue where you left off. You can navigate back to your home page by pressing the mcda.drugis.org link on the menu bar at the top-left of the screen.
 
 \subsection*{Criteria and favorability}
-\noindent \leftpointright \, The effects table for lixisenatide divides the criteria into favourable and unfavourable effects. To enable this classification, check the ‘Use favorability’ box below the ‘Criteria’ heading.
-\newline
 
 \noindent \faGraduationCap \, Criteria are the clinical efficacy and safety outcomes in terms of which the treatments under consideration are evaluated. A criterion has a name (a short identifier, such as  “HbA1c” or “Nausea”), and a description. The description specifies how the effect of a treatment on the selected outcome variable is measured statistically. For example, for “HbA1c” this could be “mean change of HbA1c from baseline” or “proportion of patients with a normal HbA1c value at week 24”.
 \newline
 
 \noindent \faGraduationCap \, For regulatory purposes, criteria can additionally be classified as favourable or unfavourable, with favourable criteria being ones where the new treatment under consideration outperforms the status quo.
 
-\subsection*{Add the HbA1c criterion}
-\noindent \leftpointright \, Click the ‘Add Criterion’ button and fill in the dialog as specified in Figure \ref{fig:crit1}.
-
-\begin{figure}[!h]
-    \centering
-	\includegraphics[width=\textwidth]{fig/addhba1c.png}
-    \caption{Add criterion dialogue for HbA1c.}
-	\label{fig:crit1}
-\end{figure}
-
-\subsection*{Add two data sources for HbA1c}
-\noindent \faGraduationCap \, A data source is a study from which summary statistics or treatment effect estimates are taken. This can be a single pivotal study but could also be a pooled analysis, such as a combined safety pool or a (network-) meta-analysis. A data source’s origin are specified via its name (the ‘Reference’ field) and optionally its URL.
+\noindent \leftpointright \, The effects table for lixisenatide divides the criteria into favourable and unfavourable effects. To enable this classification, ensure that the ‘Use favorability’ box below the ‘Criteria’ heading is checked.
 \newline
 
-\noindent \leftpointright \, On the HbA1c criterion, click the ‘Add data source’ button. In the dialog, specify the reference “Pooled data from EFC6014 and EFC10743” and leave the ‘Reference URL’ field empty. Click the ‘Add’ button. You now should have one data source for the HbA1c criterion. Click the ‘Add data source’ button and add the second data source woth the reference “EFC6015” while leaving the ‘Reference URL’ field empty again. Then click ‘Add.’ Now there should be a second row in the data sources list for the criterion.
+\noindent \faGraduationCap \, A fresh workspace is pre-initialised to include two criteria and two alternatives by default, with generic names.
+
+\subsection*{Add the HbA1c criterion}
+\noindent \leftpointright \, Change 'criterion 1' to 'HbA1c' by clicking its title and changing the value in the text box. Similarly, change the description to be 'Mean change of HbaA1c from baseline'.
+
+\subsection*{Add two references for HbA1c}
+\noindent \faGraduationCap \, For each criterion, there can be one or more references from which summary statistics or treatment effect estimates are taken. A reference can be a single pivotal study but could also be a pooled analysis, such as a combined safety pool or a (network-) meta-analysis. Its origins are specified via its name (the ‘Reference’ field) and optionally its URL.
+\newline
+
+\noindent \leftpointright \, For the HbA1c criterion, edit the existing reference, by clicking on the last cell in the row, and fill in the dialog to be  “Pooled data from EFC6014 and EFC10743”, leaving the ‘Reference URL’ field empty. After closing the dialog, the reference should now display your changes. Click  the ‘Add data source’ button (the '\+' symbol ) just below this row. A second reference row will appear. Edit this one so the reference is “EFC6015”, again leaving the ‘Reference URL’ field empty.
 
 \subsection*{Add nausea as an unfavourable effect}
-\noindent \leftpointright \, Click the ‘Add criterion’ button, fill in the dialog as specified in Figure \ref{fig:crit2}, and click ‘Add’ (note that favorability is now ‘Not favorable’).
+\noindent \leftpointright \, Edit 'criterion 2' to be called 'Nausea' and set its description to 'Incidence of nausea'. Then, change it from a favorable to an unfavorable effect by clicking the icon on the left of the row, with the thumb pointing down.
 \newline
-
-\begin{figure}[!h]
-    \centering
-	\includegraphics[width=\textwidth]{fig/addNausea.png}
-    \caption{Add criterion dialog for Nausea.}
-	\label{fig:crit2}
-\end{figure}
 
 \noindent \leftpointright \, Click the ‘Add data source button and enter “Pooled data from all phase 2/3 controlled studies” as the the reference for this data source.  There are no further data sources for this criterion.
 
@@ -119,9 +108,9 @@ The data that you are going to enter in this tutorial is taken from the effects 
 
 \begin{figure}[!h]
     \centering
-	\includegraphics[width=.5\textwidth]{fig/effectsInput.png}
+    \includegraphics[width=.5\textwidth]{fig/effectsInput.png}
     \caption{Data entry dialog for HbA1c.}
-	\label{fig:data1}
+    \label{fig:data1}
 \end{figure}
 
 \noindent \leftpointright \, Proceed to fill out the remaining three cells for HbA1c with the point estimates and 95\% confidence intervals from Figure \ref{fig:lixisenatide_effect_table}.
@@ -131,9 +120,9 @@ The data that you are going to enter in this tutorial is taken from the effects 
 
 \begin{figure}[!h]
     \centering
-	\includegraphics[width=\textwidth]{fig/effectsInputDone.png}
+    \includegraphics[width=\textwidth]{fig/effectsInputDone.png}
     \caption{Final data entry table for lixisenatide.}
-	\label{fig:dataFinished}
+    \label{fig:dataFinished}
 \end{figure}
 
 \noindent \faLightbulbO \, If required, cells can be left empty by choosing the ‘Empty cell’ as the input parameter.
@@ -174,32 +163,32 @@ Distributions can be specified directly by choosing a type of distribution and e
 
 \noindent The following types of distribution are supported:
 \begin{itemize}
-\item Beta
-\item Normal
-\item Gamma
-\item Value (i.e., degenerate distribution that always results in the same value)
-\item Range
+    \item Beta
+    \item Normal
+    \item Gamma
+    \item Value (i.e., degenerate distribution that always results in the same value)
+    \item Range
 \end{itemize}
 
 \noindent Distributions of the type 'Value' and 'Range' can be input either as percentages, decimals, or neither, see Section \ref{sec:uom}.
-    
+
 \subsection*{Types of effects (Frequentist)}
 The following data entry options are currently available for effects:
 \begin{itemize}
-\item Value
-\item Value, 95\% confidence interval
-\item Range
+    \item Value
+    \item Value, 95\% confidence interval
+    \item Range
 \end{itemize}
 
 \noindent These effects can be input either as percentages, decimals, or neither, see Section \ref{sec:uom}.
- 
+
 \subsection*{Unit of measurement}
 \label{sec:uom}
 The following units of measurement are supported:
 \begin{itemize}
-\item Custom: you can input a custom label and any lower and upper bounds.
-\item Proportion (decimal): label will be set to 'Proportion', and lower and upper bounds to 0 and 1, respectively.
-\item Proportion (percentage): label will be set to '\%', and lower and upper bounds to 0 and 100, respectively.
+    \item Custom: you can input a custom label and any lower and upper bounds.
+    \item Proportion (decimal): label will be set to 'Proportion', and lower and upper bounds to 0 and 1, respectively.
+    \item Proportion (percentage): label will be set to '\%', and lower and upper bounds to 0 and 100, respectively.
 \end{itemize}
 
 \noindent You can switch between 'Percentages' and 'Decimals' views by changing the workspace settings (accessed by clicking the 'settings' button at the top right of the screen for any finished workspace). This will automatically scale the values were possible, i.e. datasources with either 'Proportion (decimal)' or 'Proportion (percentage)' unit of measurement.
