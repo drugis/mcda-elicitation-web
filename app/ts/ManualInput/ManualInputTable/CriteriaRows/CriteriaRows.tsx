@@ -1,3 +1,4 @@
+import {Grid} from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -85,8 +86,10 @@ export default function CriteriaRows() {
             colSpan={10 + alternatives.length}
             align="center"
           >
-            <AddCriterionButton isFavourable={true} />
-            <InlineQuestionMark helpId="criterion" />
+            <Grid container item alignItems="center" xs={12} justify="center">
+              <AddCriterionButton isFavourable={true} />
+              <InlineQuestionMark helpId="criterion" />
+            </Grid>
           </TableCell>
         </TableRow>
         <TableRow>
@@ -105,8 +108,10 @@ export default function CriteriaRows() {
             colSpan={10 + alternatives.length}
             align="center"
           >
-            <AddCriterionButton isFavourable={false} />
-            <InlineQuestionMark helpId="criterion" />
+            <Grid container item alignItems="center" xs={12} justify="center">
+              <AddCriterionButton isFavourable={false} />
+              <InlineQuestionMark helpId="criterion" />
+            </Grid>
           </TableCell>
         </TableRow>
       </TableBody>
@@ -121,8 +126,10 @@ export default function CriteriaRows() {
             colSpan={10 + alternatives.length}
             align="center"
           >
-            <AddCriterionButton isFavourable={false} />
-            <InlineQuestionMark helpId="criterion" />
+            <Grid container item alignItems="center" xs={12} justify="center">
+              <AddCriterionButton isFavourable={false} />
+              <InlineQuestionMark helpId="criterion" />
+            </Grid>
           </TableCell>
         </TableRow>
       </TableBody>
