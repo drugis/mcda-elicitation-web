@@ -46,7 +46,7 @@ export default function ReferenceDialog({
     event: ChangeEvent<HTMLInputElement>
   ): void {
     setReferenceLink(event.target.value);
-    if (isLinkValid(event.target.value)) {
+    if (event.target.value && !isLinkValid(event.target.value)) {
       setError('Provided link is not valid');
     } else {
       setError('');

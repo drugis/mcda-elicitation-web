@@ -137,7 +137,7 @@ export function createWarnings(
 function hasInvalidReferenceLink(criteria: ICriterion[]) {
   return _.some(criteria, (criterion: ICriterion) => {
     return _.some(criterion.dataSources, (dataSource: IDataSource) => {
-      return !isLinkValid(dataSource.referenceLink);
+      return dataSource.referenceLink && !isLinkValid(dataSource.referenceLink);
     });
   });
 }
