@@ -56,7 +56,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \leftpointright \, The effects table for lixisenatide divides the criteria into favourable and unfavourable effects. To enable this classification, ensure that the ‘Use favorability’ box below the ‘Criteria’ heading is checked.
 \newline
 
-\noindent \faGraduationCap \, A fresh workspace is pre-initialised to include two criteria and two alternatives by default, with generic names.
+\noindent \faGraduationCap \, A fresh workspace is pre-initialised to include two criteria and two alternatives by default, with generic names. You can add further alternatives, criteria and references using the '+' buttons, and delete them with the garbage bin icons.
 
 \subsection*{Add the HbA1c criterion}
 \noindent \leftpointright \, Change 'criterion 1' to 'HbA1c' by clicking its title and changing the value in the text box. Similarly, change the description to be 'Mean change of HbaA1c from baseline'.
@@ -65,48 +65,45 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \faGraduationCap \, For each criterion, there can be one or more references from which summary statistics or treatment effect estimates are taken. A reference can be a single pivotal study but could also be a pooled analysis, such as a combined safety pool or a (network-) meta-analysis. Its origins are specified via its name (the ‘Reference’ field) and optionally its URL.
 \newline
 
-\noindent \leftpointright \, For the HbA1c criterion, edit the existing reference, by clicking on the last cell in the row, and fill in the dialog to be  “Pooled data from EFC6014 and EFC10743”, leaving the ‘Reference URL’ field empty. After closing the dialog, the reference should now display your changes. Click  the ‘Add data source’ button (the '\+' symbol ) just below this row. A second reference row will appear. Edit this one so the reference is “EFC6015”, again leaving the ‘Reference URL’ field empty.
+\noindent \leftpointright \, For the HbA1c criterion, edit the existing reference, by clicking on the last cell in the row, and fill in the dialog to be  “Pooled data from EFC6014 and EFC10743”, leaving the ‘Reference URL’ field empty. After closing the dialog, the reference should now display your changes. Click  the ‘Add reference’ button (the '+' symbol) just below this row. A second reference row will appear. Edit this one so the reference is “EFC6015”, again leaving the ‘Reference URL’ field empty.
 
 \subsection*{Add nausea as an unfavourable effect}
 \noindent \leftpointright \, Edit 'criterion 2' to be called 'Nausea' and set its description to 'Incidence of nausea'. Then, change it from a favorable to an unfavorable effect by clicking the icon on the left of the row, with the thumb pointing down.
 \newline
 
-\noindent \leftpointright \, Click the ‘Add data source button and enter “Pooled data from all phase 2/3 controlled studies” as the the reference for this data source.  There are no further data sources for this criterion.
+\noindent \leftpointright \, Change the reference to “Pooled data from all phase 2/3 controlled studies”.  There are no further references for this criterion.
 
 \subsection*{Add lixisenatide and placebo as alternatives}
-\noindent \leftpointright \, Under the ‘Alternatives’ header, click the ‘Add Alternative’ button and fill in “lixisenatide” in the ‘Title’ text box. Click the ‘Add’ button. Repeat the process and add a “placebo” alternative.
+\noindent \leftpointright \, Rename 'alternative 1' to by clicking on it and entering 'lixisenatide' in the 'Title' text box. Rename 'alternative 1' to 'placebo'.
 
-\subsection*{Proceed to data entry}
-\noindent \leftpointright \, Click the ‘Enter data’ button. Take a moment to inspect the data entry table that the system has generated based on your work in the previous steps. If you spot any errors or inconsistencies, you can always click the ‘Back’ button to correct them.
-
-\subsection*{Deterministic and SMAA tabs}
-\noindent \faLightbulbO \, Data entry is split into two tabs – Deterministic and SMAA – and you can switch freely between them by clicking on the corresponding tab above the effects table. In this tutorial, we will be mainly using the ‘Deterministic’ tab.
+\subsection*{Set the units of measurement}
+\noindent \leftpointright \, We can set the unit of measurement for each reference. To do so, click on the ‘Unit of measurement’ cell.
 \newline
 
-\noindent \faGraduationCap \, Data about effects can be entered either as effects or distributions. When working with effects, the ‘Deterministic’ tab is used. Alternatively, the ‘SMAA’ tab allows the user to enter distributions to describe the effects. An overview of the various data entry possibilities is provided in the \hyperref[appendix1]{Appendix to Tutorial 1}.
-
-\subsection*{Add a unit of measurement}
-\noindent \leftpointright \, We can now add a unit of measurement for each data source. To do so, click on the edit icon in the ‘Unit of measurement’ cell.
-\newline
-
-\noindent \leftpointright \, For ‘HbA1c/Pooled data’, leave the type on ‘Custom’ and add the Label ‘\%’. Add the same unit of measurement to ‘HbA1c/EFC6015’ too.
+\noindent \leftpointright \, For ‘HbA1c/Pooled data’, leave the type on ‘Custom’ and add the Label ‘Percentage point’. Do the same for ‘HbA1c/EFC6015’.
 \newline
 
 \noindent \leftpointright \, For the Nausea data source, select ‘Proportion (percentage)’ as the unit of measurement.
 \newline
 
-\noindent \faGraduationCap \, An overview of the various units of measurement is provided in the \hyperref[appendix1]{Appendix to Tutorial 1}.
+\subsection*{Proceed to data entry}
+
+\subsection*{Effect and Distribution modes}
+\noindent \faLightbulbO \, Data entry is split into two modes – Effect and Distribution – and you can switch freely between them using the dropdown above the effects table. In this tutorial, we will be mainly using the Effect mode.
+\newline
+
+\noindent \faGraduationCap \, Data about effects can be entered either as effects or distributions. An overview of the various data entry possibilities is provided in the \hyperref[appendix1]{Appendix to Tutorial 1}.
 
 \subsection*{Add Strength of evidence/Uncertainties}
 \noindent \faGraduationCap \, The ‘Uncertainties’ and ‘Strength of evidence’ fields describe any strengths and weaknesses of the study design, quality of the data collection and analysis, generalizability of the study findings, etc.
 \newline
 
-\noindent \leftpointright \, We will add the following Uncertainty to the ‘HbA1c/Pooled data’ data source: “The effect of lixisenatide was more pronounced in Asian patients compared to Caucasian patients. The lower effect in Caucasians is partly explained by a large placebo effect especially in some geographical regions.” To do so, click the edit button in the ‘Strength of evidence/Uncertainties’ cell and fill the Uncertainties text box.
+\noindent \leftpointright \, We will add the following Uncertainty to the ‘HbA1c/Pooled data’ data source: “The effect of lixisenatide was more pronounced in Asian patients compared to Caucasian patients. The lower effect in Caucasians is partly explained by a large placebo effect especially in some geographical regions.” To do so, click the 'Unc' text in and fill the text box.
 
 \subsection*{Enter data}
-\noindent \leftpointright \, Click on the ‘Missing or invalid input’ link in the HbA1c, pooled data from EFC6014 and EFC10743 row of the lixisenatide column. Fill out the dialog as shown in Figure \ref{fig:data1}, and click anywhere on the page outside of the dialog to close it.
+\noindent \leftpointright \, Click on the ‘No value entered’ text in the cell for HbA1c's 'pooled data from EFC6014 and EFC10743' row and lixisenatide column. Fill out the dialog as shown in Figure \ref{fig:data1}, and click anywhere on the page outside of the dialog to close it.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=.5\textwidth]{fig/effectsInput.png}
     \caption{Data entry dialog for HbA1c.}
@@ -116,9 +113,9 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \leftpointright \, Proceed to fill out the remaining three cells for HbA1c with the point estimates and 95\% confidence intervals from Figure \ref{fig:lixisenatide_effect_table}.
 \newline
 
-\noindent \leftpointright \, Similarly, fill out the cells for Nausea with the values from Figure \ref{fig:lixisenatide_effect_table}, selecting ‘Value’ as the input parameter. Your final data entry table should look like Figure \ref{fig:dataFinished} (‘Strength of evidence/Uncertainities’ column is omitted here to provide a better overview).
+\noindent \leftpointright \, Similarly, fill out the cells for Nausea with the values from Figure \ref{fig:lixisenatide_effect_table}, selecting ‘Value’ as the input parameter. Your final data entry table should look like Figure \ref{fig:dataFinished}.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\textwidth]{fig/effectsInputDone.png}
     \caption{Final data entry table for lixisenatide.}
@@ -128,7 +125,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \faLightbulbO \, If required, cells can be left empty by choosing the ‘Empty cell’ as the input parameter.
 
 \subsection*{Generate distributions}
-\noindent \leftpointright \, If a user wishes to work with distributions and perform SMAA analyses but the data is provided as effects only, it is possible to automatically generate the distributions. To do so, click the ‘Generate distributions’ button. Doing this will take you to the ‘SMAA’ tab where the automatically generated data is presented. Please see the \hyperref[appendix1]{Appendix to Tutorial 1} to see which effect input types are converted into which distribution types.
+\noindent \leftpointright \, If a user wishes to work with distributions and perform SMAA analyses but the data is provided as effects only, it is possible to automatically generate the distributions. To do so, click the ‘Generate distributions’ button. Doing this will take you to the Distributions view, where the automatically generated distributions are shown. Please see the \hyperref[appendix1]{Appendix to Tutorial 1} to see which effect input types are converted into which distribution types.
 
 \subsection*{Finalize entry}
 You have now finished preparing your effects table for analysis.
@@ -143,7 +140,7 @@ You have now finished preparing your effects table for analysis.
 \noindent \leftpointright \, On your newly-created workspace, click ‘Download workspace’ in the top-left to save a .json file which contains all the data you just entered. When creating a new workspace, you can upload this file (using the ‘local file’ option) and the new workspace will contain a copy of your data.
 \newline
 
-\noindent \faLightbulbO \, Sending this file via e.g. email to someone else is the recommended way to share workspace data with other users.
+\noindent \faLightbulbO \, Sending this file via e.g. email to someone else is the recommended way to share workspace data with other users. In the \href{http://drugis.org/services/index}{Enterprise version} of our software, you can also grant access to others directly within the application.
 \clearpage
 
 
