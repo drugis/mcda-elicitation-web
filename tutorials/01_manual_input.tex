@@ -11,7 +11,7 @@ This tutorial guides you through the process of manually entering data, so that 
 \begin{itemize}
     \item Manual data entry interface
     \item Defining criteria and alternatives
-    \item Specifying data sources
+    \item Specifying references
     \item Filling in the data entry table
 \end{itemize}
 
@@ -46,14 +46,16 @@ The data that you are going to enter in this tutorial is taken from the effects 
 
 \noindent \faLightbulbO \, Any changes you make are automatically saved. You can select this in-progress workspace from your personal homepage later, and continue where you left off. You can navigate back to your home page by pressing the mcda.drugis.org link on the menu bar at the top-left of the screen.
 
-\subsection*{Criteria and favorability}
+\subsection*{Criteria and favourability}
 
 \noindent \faGraduationCap \, Criteria are the clinical efficacy and safety outcomes in terms of which the treatments under consideration are evaluated. A criterion has a name (a short identifier, such as  “HbA1c” or “Nausea”), and a description. The description specifies how the effect of a treatment on the selected outcome variable is measured statistically. For example, for “HbA1c” this could be “mean change of HbA1c from baseline” or “proportion of patients with a normal HbA1c value at week 24”.
 \newline
 
 \noindent \faGraduationCap \, For regulatory purposes, criteria can additionally be classified as favourable or unfavourable, with favourable criteria being ones where the new treatment under consideration outperforms the status quo.
+\newline
 
-\noindent \leftpointright \, The effects table for lixisenatide divides the criteria into favourable and unfavourable effects. To enable this classification, ensure that the ‘Use favorability’ box below the ‘Criteria’ heading is checked.
+
+\noindent \leftpointright \, The effects table for lixisenatide divides the criteria into favourable and unfavourable effects. To enable this classification, ensure that the ‘Use favourability’ box below the ‘Criteria’ heading is checked.
 \newline
 
 \noindent \faGraduationCap \, A fresh workspace is pre-initialised to include two criteria and two alternatives by default, with generic names. You can add further alternatives, criteria and references using the '+' buttons, and delete them with the garbage bin icons.
@@ -68,13 +70,13 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \leftpointright \, For the HbA1c criterion, edit the existing reference, by clicking on the last cell in the row, and fill in the dialog to be  “Pooled data from EFC6014 and EFC10743”, leaving the ‘Reference URL’ field empty. After closing the dialog, the reference should now display your changes. Click  the ‘Add reference’ button (the '+' symbol) just below this row. A second reference row will appear. Edit this one so the reference is “EFC6015”, again leaving the ‘Reference URL’ field empty.
 
 \subsection*{Add nausea as an unfavourable effect}
-\noindent \leftpointright \, Edit 'criterion 2' to be called 'Nausea' and set its description to 'Incidence of nausea'. Then, change it from a favorable to an unfavorable effect by clicking the icon on the left of the row, with the thumb pointing down.
+\noindent \leftpointright \, Edit 'criterion 2' to be called 'Nausea' and set its description to 'Incidence of nausea'. Then, change it from a favourable to an unfavourable effect by clicking the icon on the left of the row, with the thumb pointing down.
 \newline
 
 \noindent \leftpointright \, Change the reference to “Pooled data from all phase 2/3 controlled studies”.  There are no further references for this criterion.
 
 \subsection*{Add lixisenatide and placebo as alternatives}
-\noindent \leftpointright \, Rename 'alternative 1' to by clicking on it and entering 'lixisenatide' in the 'Title' text box. Rename 'alternative 1' to 'placebo'.
+\noindent \leftpointright \, Rename 'alternative 1' by clicking on it and entering 'lixisenatide' in the text box. Rename 'alternative 1' to 'placebo'.
 
 \subsection*{Set the units of measurement}
 \noindent \leftpointright \, We can set the unit of measurement for each reference. To do so, click on the ‘Unit of measurement’ cell.
@@ -83,7 +85,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \leftpointright \, For ‘HbA1c/Pooled data’, leave the type on ‘Custom’ and add the Label ‘Percentage point’. Do the same for ‘HbA1c/EFC6015’.
 \newline
 
-\noindent \leftpointright \, For the Nausea data source, select ‘Proportion (percentage)’ as the unit of measurement.
+\noindent \leftpointright \, For the Nausea reference, select ‘Proportion (percentage)’ as the unit of measurement.
 \newline
 
 \subsection*{Proceed to data entry}
@@ -98,7 +100,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \faGraduationCap \, The ‘Uncertainties’ and ‘Strength of evidence’ fields describe any strengths and weaknesses of the study design, quality of the data collection and analysis, generalizability of the study findings, etc.
 \newline
 
-\noindent \leftpointright \, We will add the following Uncertainty to the ‘HbA1c/Pooled data’ data source: “The effect of lixisenatide was more pronounced in Asian patients compared to Caucasian patients. The lower effect in Caucasians is partly explained by a large placebo effect especially in some geographical regions.” To do so, click the 'Unc' text in and fill the text box.
+\noindent \leftpointright \, We will add the following Uncertainty to the ‘HbA1c/Pooled data’ reference: “The effect of lixisenatide was more pronounced in Asian patients compared to Caucasian patients. The lower effect in Caucasians is partly explained by a large placebo effect especially in some geographical regions.” To do so, click the 'Unc' text and fill in the text box.
 
 \subsection*{Enter data}
 \noindent \leftpointright \, Click on the ‘No value entered’ text in the cell for HbA1c's 'pooled data from EFC6014 and EFC10743' row and lixisenatide column. Fill out the dialog as shown in Figure \ref{fig:data1}, and click anywhere on the page outside of the dialog to close it.
@@ -148,11 +150,11 @@ You have now finished preparing your effects table for analysis.
 %=========== APPENDIX =====================
 
 
-\section*{Appendix to Tutorial 1: data source characteristics and data entry options}
+\section*{Appendix to Tutorial 1: reference characteristics and data entry options}
 \label{appendix1}
 \addcontentsline{toc}{section}{\protect\numberline{}Appendix to Tutorial 1}
 
-A treatment effect is a statistical parameter that describes how a given treatment affects the distribution of a criterion in the target population (i.e., all patients for which the evaluated treatment is indicated). The representation of that parameter’s uncertainty in the effects table depends on the specified characteristics of the row’s data source. Indicating that the input type is ‘Distribution’ corresponds to a Bayesian perspective, where the uncertainty is quantified by means of probability distributions. The option ‘Effect’ corresponds to a frequentist perspective where parameters are treated as fixed but unknown constants for which point and interval estimates (e.g., 95\% confidence intervals) are provided.
+A treatment effect is a statistical parameter that describes how a given treatment affects the distribution of a criterion in the target population (i.e., all patients for which the evaluated treatment is indicated). The representation of that parameter’s uncertainty in the effects table depends on the specified characteristics of the row’s reference. Indicating that the input type is ‘Distribution’ corresponds to a Bayesian perspective, where the uncertainty is quantified by means of probability distributions. The option ‘Effect’ corresponds to a frequentist perspective where parameters are treated as fixed but unknown constants for which point and interval estimates (e.g., 95\% confidence intervals) are provided.
 
 \subsection*{Types of distributions (Bayesian)}
 Distributions can be specified directly by choosing a type of distribution and entering its parameters, or derived indirectly from summary statistics from a clinical study (option ‘Generate distributions’). When this latter option is selected, a Bayesian posterior distribution (i.e., a beta distribution for the event probability of a dichotomous outcome variable and a normal distribution for the mean of a continuous outcome variable) is estimated from the summary statistics supplied by the user and a reference prior set by the system.
@@ -191,6 +193,6 @@ The following units of measurement are supported:
 \noindent You can switch between 'Percentages' and 'Decimals' views by changing the workspace settings (accessed by clicking the 'settings' button at the top right of the screen for any finished workspace). This will automatically scale the values were possible, i.e. datasources with either 'Proportion (decimal)' or 'Proportion (percentage)' unit of measurement.
 \newline
 
-\noindent The user can enter '\%' as a label for a custom unit of measurement  for a data source. However, switching between 'Percentages' and 'Decimals' views will not scale the values in this case.
+\noindent The user can enter '\%' as a label for a custom unit of measurement for a reference. However, switching between 'Percentages' and 'Decimals' views will not scale the values in this case.
 
 \end{document}
