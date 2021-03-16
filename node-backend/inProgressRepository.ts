@@ -17,6 +17,7 @@ import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
 import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import {parallel, waterfall} from 'async';
 import _ from 'lodash';
 import {PoolClient, QueryResult} from 'pg';
@@ -656,13 +657,19 @@ export default function InProgressWorkspaceRepository(db: IDB) {
 
   function query(
     ownerId: number,
-    callback: (error: OurError, result: IWorkspaceProperties[]) => void
+    callback: (
+      error: OurError,
+      result: IInProgressWorkspaceProperties[]
+    ) => void
   ): void {
     const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
     db.query(
       query,
       [ownerId],
-      (error: OurError, result: QueryResult<IWorkspaceProperties>): void => {
+      (
+        error: OurError,
+        result: QueryResult<IInProgressWorkspaceProperties>
+      ): void => {
         callback(error, error ? null : result.rows);
       }
     );

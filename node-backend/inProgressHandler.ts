@@ -8,6 +8,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import {buildInProgressCopy} from '@shared/workspaceService';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
@@ -361,7 +362,7 @@ export default function InProgressHandler(db: IDB) {
   function query(request: Request, response: Response, next: () => {}): void {
     inProgressWorkspaceRepository.query(
       getUser(request).id,
-      (error: OurError, results: any[]): void => {
+      (error: OurError, results: IInProgressWorkspaceProperties[]): void => {
         if (error) {
           handleError(error, next);
         } else {

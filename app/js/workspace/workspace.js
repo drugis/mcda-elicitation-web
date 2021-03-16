@@ -12,7 +12,6 @@ define([
   './tutorialResource',
 
   './fileReaderDirective',
-  './inProgressWorkspacesDirective',
 
   '../../ts/WorkspaceSettings/WorkspaceSettingsWrapper',
   '../../ts/Workspaces/Workspaces',
@@ -32,7 +31,6 @@ define([
   TutorialResource,
 
   fileReaderDirective,
-  InProgressWorkspaces,
 
   WorkspaceSettingsWrapper,
   Workspaces,
@@ -53,7 +51,6 @@ define([
     .service('TutorialResource', TutorialResource)
 
     .directive('fileReader', fileReaderDirective)
-    .directive('inProgressWorkspaces', InProgressWorkspaces)
 
     .component(
       'workspaceSettings',
