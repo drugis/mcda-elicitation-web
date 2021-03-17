@@ -1,5 +1,6 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import {getLink} from 'app/ts/Workspaces/WorkspacesUtil/WorkspacesUtil';
 import dateFormat from 'dateformat';
 import React from 'react';
 import CopyWorkspaceButton from '../CopyWorkspaceButton/CopyWorkspaceButton';
@@ -16,18 +17,6 @@ export default function WorkspacesTableRow({
 }): JSX.Element {
   const date = new Date(workspace.creationDate);
   const datestring = dateFormat(date, 'yyyy-mm-dd');
-
-  function getLink(workspace: IOldWorkspace): string {
-    return (
-      '/#!/workspaces/' +
-      workspace.id +
-      '/problems/' +
-      workspace.defaultSubProblemId +
-      '/scenarios/' +
-      workspace.defaultScenarioId +
-      '/evidence'
-    );
-  }
 
   return (
     <TableRow>
