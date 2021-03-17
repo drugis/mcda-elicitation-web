@@ -169,7 +169,8 @@ function changeCriterionFavourability(browser) {
 }
 
 function addCriterion(browser) {
-  const addCriterionButton = '//*[@id="add-favourable-criterion-cell"]/button';
+  const addCriterionButton =
+    '//*[@id="add-favourable-criterion-cell"]/div/button';
   const newCriterionTitle = '//tbody/tr[6]/td[3]/span/span';
   browser
     .useXpath()

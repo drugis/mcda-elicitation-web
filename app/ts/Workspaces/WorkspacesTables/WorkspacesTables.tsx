@@ -1,4 +1,4 @@
-import {Grid, Typography} from '@material-ui/core';
+import {CircularProgress, Grid, Typography} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
@@ -10,10 +10,10 @@ import WorkspacesTable from './WorkspacesTable/WorkspacesTable';
 
 export default function WorkspacesTables(): JSX.Element {
   const {setError} = useContext(ErrorContext);
-  const [workspaces, setWorkspaces] = useState<IOldWorkspace[]>([]);
+  const [workspaces, setWorkspaces] = useState<IOldWorkspace[]>();
   const [inProgressworkspaces, setInProgressWorkspaces] = useState<
     IInProgressWorkspaceProperties[]
-  >([]);
+  >();
 
   useEffect(() => {
     axios
@@ -40,7 +40,11 @@ export default function WorkspacesTables(): JSX.Element {
           </Typography>
         </Grid>
       </Grid>
-      <WorkspacesTable workspaces={workspaces} type="finished" />
+      {workspaces === undefined ? (
+        <CircularProgress />
+      ) : (
+        <WorkspacesTable workspaces={workspaces} type="finished" />
+      )}
 
       <Grid item xs={12}>
         <Grid item xs={8}>
@@ -51,7 +55,11 @@ export default function WorkspacesTables(): JSX.Element {
           </Typography>
         </Grid>
       </Grid>
-      <WorkspacesTable workspaces={inProgressworkspaces} type="inProgress" />
+      {inProgressworkspaces === undefined ? (
+        <CircularProgress />
+      ) : (
+        <WorkspacesTable workspaces={inProgressworkspaces} type="inProgress" />
+      )}
     </Grid>
   );
 }

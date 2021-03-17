@@ -85,7 +85,7 @@ export default function WorkspacesTable({
     return (
       <TableBody>
         <TableRow>
-          <TableCell>
+          <TableCell colSpan={type === 'finished' ? 4 : 2}>
             <em id="empty-workspace-message">No workspaces defined</em>
           </TableCell>
         </TableRow>
