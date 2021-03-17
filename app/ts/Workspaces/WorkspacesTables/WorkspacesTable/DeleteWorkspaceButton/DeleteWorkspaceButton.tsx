@@ -9,16 +9,20 @@ import {
 } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import {TWorkspaceType} from 'app/ts/Workspaces/TWorkspaceType';
 import Axios from 'axios';
 import React, {useContext, useState} from 'react';
 
 export default function DeleteWorkspaceButton({
+  type,
   workspace,
   deleteLocalWorkspace
 }: {
-  workspace: IOldWorkspace;
+  type: TWorkspaceType;
+  workspace: IOldWorkspace | IInProgressWorkspaceProperties;
   deleteLocalWorkspace: (workspaceId: string) => void;
 }): JSX.Element {
   const {setError} = useContext(ErrorContext);
@@ -33,7 +37,8 @@ export default function DeleteWorkspaceButton({
   }
 
   function handleDeleteButtonClick() {
-    Axios.delete(`/workspaces/${workspace.id}`).catch(setError);
+    const path = type === 'finished' ? 'workspaces' : 'api/v2/inProgress';
+    Axios.delete(`/${path}/${workspace.id}`).catch(setError);
     deleteLocalWorkspace(workspace.id);
     closeDialog();
   }

@@ -1,18 +1,11 @@
 'use strict';
 define(['lodash'], function (_) {
-  var dependencies = [
-    '$scope',
-    '$state',
-    '$modal',
-    'InProgressResource',
-    'PageTitleService'
-  ];
+  var dependencies = ['$scope', '$state', '$modal', 'PageTitleService'];
 
   var ChooseProblemController = function (
     $scope,
     $state,
     $modal,
-    InProgressResource,
     PageTitleService
   ) {
     // functions
@@ -21,7 +14,6 @@ define(['lodash'], function (_) {
     // init
     $scope.model = {};
     $scope.local = {};
-    $scope.inProgressWorkspaces = InProgressResource.query();
 
     $scope.$watch('local.contents', function (newVal) {
       if (!_.isEmpty(newVal)) {
