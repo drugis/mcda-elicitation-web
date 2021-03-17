@@ -38,37 +38,32 @@ export default function WorkspacesTable({
   type TSortProperty = 'title' | 'creationDate';
 
   function WorkspacesTableBody(): JSX.Element {
-    return (
-      <TableBody>
-        {_.map(
-          sortedWorkspaces,
-          (
-            workspace: IOldWorkspace | IInProgressWorkspaceProperties,
-            index: number
-          ): JSX.Element => {
-            if (isFinishedWorkspace(workspace)) {
-              return (
-                <WorkspacesTableRow
-                  key={workspace.id}
-                  workspace={workspace}
-                  index={index}
-                  deleteLocalWorkspace={deleteLocalWorkspace}
-                />
-              );
-            } else {
-              return (
-                <InProgressWorkspacesTableRow
-                  key={workspace.id}
-                  workspace={workspace}
-                  index={index}
-                  deleteLocalWorkspace={deleteLocalWorkspace}
-                />
-              );
-            }
-          }
-        )}
-      </TableBody>
-    );
+    return <TableBody>{_.map(sortedWorkspaces, renderTableRow)}</TableBody>;
+  }
+
+  function renderTableRow(
+    workspace: IOldWorkspace | IInProgressWorkspaceProperties,
+    index: number
+  ): JSX.Element {
+    if (isFinishedWorkspace(workspace)) {
+      return (
+        <WorkspacesTableRow
+          key={workspace.id}
+          workspace={workspace}
+          index={index}
+          deleteLocalWorkspace={deleteLocalWorkspace}
+        />
+      );
+    } else {
+      return (
+        <InProgressWorkspacesTableRow
+          key={workspace.id}
+          workspace={workspace}
+          index={index}
+          deleteLocalWorkspace={deleteLocalWorkspace}
+        />
+      );
+    }
   }
 
   function isFinishedWorkspace(
