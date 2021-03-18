@@ -1,5 +1,5 @@
 export type TWorkspaceCreateMethod =
   | 'example'
   | 'tutorial'
-  | 'local'
+  | 'upload'
   | 'manual';

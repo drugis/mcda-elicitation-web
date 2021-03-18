@@ -1,14 +1,22 @@
+import IWorkspaceCommand from '@shared/interface/Commands/IWorkspaceCommand';
+import {OurError} from '@shared/interface/IError';
+import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
 import {ErrorObject} from 'ajv';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {updateProblemToCurrentSchema} from 'app/ts/SchemaUtil/SchemaUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
+import {
+  extractPvfs,
+  extractRanges
+} from './CreateWorkspaceUtil/CreateWorkspaceUtil';
 import ICreateWorkspaceContext from './ICreateWorkspaceContext';
 import IWorkspaceExample from './IWorkspaceExample';
 import {TWorkspaceCreateMethod} from './TWorkspaceCreateMethod';
-import {validateProblem} from './ValidationUtil/ValidationUtil';
+import {validateProblemJSON} from './ValidationUtil/ValidationUtil';
 
 export const CreateWorkspaceContext = createContext<ICreateWorkspaceContext>(
   {} as ICreateWorkspaceContext
@@ -25,16 +33,15 @@ export function CreateWorkspaceContextProviderComponent({
   const [examples, setExamples] = useState<IWorkspaceExample[]>();
   const [tutorials, setTutorials] = useState<IWorkspaceExample[]>();
 
-  const [selectedExample, setSelectedExample] = useState<IWorkspaceExample>();
-  const [selectedTutorial, setSelectedTutorial] = useState<IWorkspaceExample>();
-  const [uploadedFile, setUploadedFile] = useState<File>();
+  const [selectedProblem, setSelectedProblem] = useState<IWorkspaceExample>();
   const [validationErrors, setValidationErrors] = useState<ErrorObject[]>();
+  const [workspaceCommand, setWorkspaceCommand] = useState<IWorkspaceCommand>();
 
   useEffect(() => {
     axios
       .get('/examples')
       .then((response: AxiosResponse<IWorkspaceExample[]>) => {
-        setSelectedExample(response.data[0]);
+        setSelectedProblem(response.data[0]);
         setExamples(response.data);
       })
       .catch(setError);
@@ -42,42 +49,55 @@ export function CreateWorkspaceContextProviderComponent({
     axios
       .get('/tutorials')
       .then((response: AxiosResponse<IWorkspaceExample[]>) => {
-        setSelectedTutorial(response.data[0]);
         setTutorials(response.data);
       })
       .catch(setError);
   }, [setError]);
 
   useEffect(() => {
-    if (selectedExample) {
+    if ((method === 'example' || method === 'tutorial') && selectedProblem) {
       axios
-        .get(`/examples/${selectedExample.href}`)
-        .then((response: AxiosResponse<IProblem>) => {
+        .get(`/${method}s/${selectedProblem.href}`)
+        .then((response: AxiosResponse<IUploadProblem>) => {
           // validateWorkspace
           const updatedProblem = updateProblemToCurrentSchema(response.data);
-          const validationErrors = validateProblem(updatedProblem);
+          const validationErrors = validateProblemJSON(updatedProblem);
+          setValidationErrors(validationErrors);
           if (_.isEmpty(validationErrors)) {
-            setValidationErrors(undefined);
-          } else {
-            console.log(validationErrors);
-            setValidationErrors(validationErrors);
+            setWorkspaceCommand({
+              title: updatedProblem.title,
+              pvfs: extractPvfs(response.data.criteria),
+              ranges: extractRanges(response.data.criteria),
+              problem: updatedProblem
+            });
           }
         })
         .catch(setError);
-
-      //getValidationResult
-      //setValidateStatus
     }
-  }, [selectedExample, setError]);
+  }, [method, selectedProblem, setError]);
 
-  function parseUploadedFile(): void {
-    // const uploadedFile: File = event.target.files[0];
-    // const fileReader = new FileReader();
-    // fileReader.onloadend = () => {
-    //   //FIXME try/catch
-    //   console.log(JSON.parse(fileReader.result as string));
-    // };
-    // fileReader.readAsText(uploadedFile);
+  function setUploadedFile(file: File) {
+    const fileReader = new FileReader();
+    fileReader.onloadend = () => {
+      try {
+        const jsonParse = JSON.parse(fileReader.result as string);
+        // validateWorkspace
+        const updatedProblem = updateProblemToCurrentSchema(jsonParse);
+        const validationErrors = validateProblemJSON(updatedProblem);
+        setValidationErrors(validationErrors);
+        if (_.isEmpty(validationErrors)) {
+          setWorkspaceCommand({
+            title: updatedProblem.title,
+            pvfs: extractPvfs(jsonParse.criteria),
+            ranges: extractRanges(jsonParse.criteria),
+            problem: updatedProblem
+          });
+        }
+      } catch (error) {
+        setError(error);
+      }
+    };
+    fileReader.readAsText(file);
   }
 
   function addWorkspaceCallback(): void {
@@ -85,8 +105,15 @@ export function CreateWorkspaceContextProviderComponent({
       case 'manual':
         createAndGoToInprogressWorkspace();
         break;
-      default:
-        console.log('foo');
+      case 'example':
+        createAndGoToWorkspace();
+        break;
+      case 'tutorial':
+        createAndGoToWorkspace();
+        break;
+      case 'upload':
+        createAndGoToWorkspace();
+        break;
     }
   }
 
@@ -100,21 +127,28 @@ export function CreateWorkspaceContextProviderComponent({
       .catch(setError);
   }
 
+  function createAndGoToWorkspace(): void {
+    axios
+      .post('/workspaces/', workspaceCommand)
+      .then((response: AxiosResponse<IWorkspaceInfo>) => {
+        const {id, defaultScenarioId, defaultSubProblemId} = response.data;
+        const url = `/#!/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/evidence`;
+        window.location.assign(url);
+      })
+      .catch(setError);
+  }
   return (
     <CreateWorkspaceContext.Provider
       value={{
         examples,
         tutorials,
         method,
-        setMethod,
-        selectedExample,
-        setSelectedExample,
-        selectedTutorial,
-        setSelectedTutorial,
-        uploadedFile,
-        setUploadedFile,
+        selectedProblem,
+        validationErrors,
         addWorkspaceCallback,
-        validationErrors
+        setMethod,
+        setSelectedProblem,
+        setUploadedFile
       }}
     >
       {examples && tutorials ? children : <></>}

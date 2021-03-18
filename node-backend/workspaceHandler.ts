@@ -1,4 +1,5 @@
 'use strict';
+import IWorkspaceCommand from '@shared/interface/Commands/IWorkspaceCommand';
 import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
@@ -35,7 +36,11 @@ export default function WorkspaceHandler(db: IDB) {
     );
   }
 
-  function create(request: Request, response: Response, next: any): void {
+  function create(
+    request: Request<{}, {}, IWorkspaceCommand>,
+    response: Response,
+    next: any
+  ): void {
     db.runInTransaction(
       _.partial(createWorkspaceTransaction, request),
       (error: OurError, workspaceInfo: IWorkspaceInfo): void => {
@@ -72,16 +77,7 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createNewWorkspace(
     client: PoolClient,
-    request: Request<
-      {},
-      {},
-      {
-        ranges: Record<string, [number, number]>;
-        title: string;
-        problem: IProblem;
-        pvfs: Record<string, TScenarioPvf>;
-      }
-    >,
+    request: Request<{}, {}, IWorkspaceCommand>,
     callback: (error: OurError, id: string) => void
   ): void {
     logger.debug('creating new workspace');
@@ -99,16 +95,7 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createSubProblem(
     client: PoolClient,
-    request: Request<
-      {},
-      {},
-      {
-        ranges: Record<string, [number, number]>;
-        title: string;
-        problem: IProblem;
-        pvfs: Record<string, TScenarioPvf>;
-      }
-    >,
+    request: Request<{}, {}, IWorkspaceCommand>,
     workspaceId: string,
     callback: (
       error: OurError,
@@ -162,16 +149,7 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createScenario(
     client: PoolClient,
-    request: Request<
-      {},
-      {},
-      {
-        ranges: Record<string, [number, number]>;
-        title: string;
-        problem: IProblem;
-        pvfs: Record<string, TScenarioPvf>;
-      }
-    >,
+    request: Request<{}, {}, IWorkspaceCommand>,
     workspaceId: string,
     subproblemId: string,
     callback: (

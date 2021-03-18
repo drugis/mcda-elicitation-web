@@ -1,6 +1,6 @@
 import IProblemDataSource from '../Problem/IProblemDataSource';
-import IPvf from '../Problem/IPvf';
+import {TPvf} from '../Problem/IPvf';
 
 export default interface IUploadProblemDataSource extends IProblemDataSource {
-  pvf: IPvf;
+  pvf: TPvf;
 }

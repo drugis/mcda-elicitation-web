@@ -15,9 +15,9 @@ export default function DoneButton() {
     if (!isButtonPressed) {
       setIsButtonPressed(true);
       Axios.post(`api/v2/inProgress/${id}/doCreateWorkspace`)
-        .then((response: AxiosResponse) => {
-          const workspaceInfo: IWorkspaceInfo = response.data;
-          const url = `/#!/workspaces/${workspaceInfo.id}/problems/${workspaceInfo.defaultSubProblemId}/scenarios/${workspaceInfo.defaultScenarioId}/evidence`;
+        .then((response: AxiosResponse<IWorkspaceInfo>) => {
+          const {id, defaultScenarioId, defaultSubProblemId} = response.data;
+          const url = `/#!/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/evidence`;
           window.location.assign(url);
         })
         .catch((error: OurError) => {

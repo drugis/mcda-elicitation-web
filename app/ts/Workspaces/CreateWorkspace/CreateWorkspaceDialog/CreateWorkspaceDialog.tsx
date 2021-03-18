@@ -29,17 +29,22 @@ export default function CreateWorkspaceDialog({
     tutorials,
     method,
     setMethod,
-    selectedExample,
-    selectedTutorial,
-    setSelectedExample,
-    setSelectedTutorial,
+    selectedProblem,
+    setSelectedProblem,
     setUploadedFile,
     addWorkspaceCallback,
     validationErrors
   } = useContext(CreateWorkspaceContext);
 
   function handleMethodChanged(event: ChangeEvent<HTMLInputElement>): void {
-    setMethod(event.target.value as TWorkspaceCreateMethod); //FIXME ?
+    const method: TWorkspaceCreateMethod = event.target
+      .value as TWorkspaceCreateMethod; //FIXME ?
+    setMethod(method);
+    if (method === 'example') {
+      setSelectedProblem(examples[0]);
+    } else if (method === 'tutorial') {
+      setSelectedProblem(tutorials[0]);
+    }
   }
 
   function renderWorkspaceInput(): JSX.Element {
@@ -48,7 +53,7 @@ export default function CreateWorkspaceDialog({
         <Select
           native
           id="example-workspace-selector"
-          value={selectedExample.title}
+          value={selectedProblem.title}
           onChange={handleExampleChanged}
           style={{minWidth: 220}}
         >
@@ -60,30 +65,18 @@ export default function CreateWorkspaceDialog({
         <Select
           native
           id="tutorial-workspace-selector"
-          value={selectedTutorial.title}
+          value={selectedProblem.title}
           onChange={handleTutorialChanged}
           style={{minWidth: 220}}
         >
           <SelectOptions workspaceExamples={tutorials} />
         </Select>
       );
-    } else if (method === 'local') {
-      return <input type="file" onChange={handleLocalFile} />;
+    } else if (method === 'upload') {
+      return <input type="file" onChange={handleFileUpload} />;
     } else {
       return <></>;
     }
-  }
-
-  function handleExampleChanged(event: ChangeEvent<{value: string}>): void {
-    setSelectedExample(_.find(examples, ['title', event.target.value]));
-  }
-
-  function handleTutorialChanged(event: ChangeEvent<{value: string}>): void {
-    setSelectedTutorial(_.find(tutorials, ['title', event.target.value]));
-  }
-
-  function handleLocalFile(event: ChangeEvent<HTMLInputElement>): void {
-    setUploadedFile(event.target.files[0]);
   }
 
   function SelectOptions({
@@ -103,6 +96,18 @@ export default function CreateWorkspaceDialog({
         )}
       </>
     );
+  }
+
+  function handleExampleChanged(event: ChangeEvent<{value: string}>): void {
+    setSelectedProblem(_.find(examples, ['title', event.target.value]));
+  }
+
+  function handleTutorialChanged(event: ChangeEvent<{value: string}>): void {
+    setSelectedProblem(_.find(tutorials, ['title', event.target.value]));
+  }
+
+  function handleFileUpload(event: ChangeEvent<HTMLInputElement>): void {
+    setUploadedFile(event.target.files[0]);
   }
 
   function handleAddButtonClick(): void {
@@ -133,7 +138,7 @@ export default function CreateWorkspaceDialog({
                 <Radio value="tutorial" /> Select tutorial workspace
               </label>
               <label id="upload-workspace-radio">
-                <Radio value="local" /> Upload file
+                <Radio value="upload" /> Upload file
               </label>
               <label id="manual-workspace-radio">
                 <Radio value="manual" /> Create new workspace

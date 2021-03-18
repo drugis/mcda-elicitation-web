@@ -4,6 +4,29 @@ import IProblem from '@shared/interface/Problem/IProblem';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../ManualInput/constants';
 
+/***** Changes
+ * 1.0.0 Introduction of data sources
+ * 1.1.0 Removal of the value tree
+ * 1.2.0 Allow effect cells to contain distribution and effect
+ *       Remove properties from data sources
+ *       Fix legacy problem: remove scales from criteria and put them on data source(s)
+ * 1.2.1 Adding text option for effects table cells
+ * 1.2.2 Splitting the performance table entry performances, and making them a bit more strict
+ * 1.3.0 Move unit of measurement to data source
+ * 1.3.1 Remove favorability property if it is not boolean
+ * 1.3.2 Remove null/undefined properties from data sources
+ * 1.3.3 Remove alternative property from alternatives
+ * 1.3.4 Add 'decimal' as scale option to input
+ * 1.4.0 Add type to unit of measurement; Scales with null ranges updated to minus/plus infinity and are mandatory
+ * 1.4.1 Add ranges
+ * 1.4.2 Add possibility to make constrained normal distributions
+ * 1.4.3 Allow numbers on text cells
+ * 1.4.4 Set proportion, decimal unit of measurement to empty label
+ * 1.4.5 Put id on alternatives and criteria
+ * 1.4.6 Store effect input as decimals
+ * 1.4.7 Move pvfs off problem onto default scenario
+ * *****/
+
 export function updateProblemToCurrentSchema(problem: IProblem) {
   let newProblem = _.cloneDeep(problem);
   if (!problem.schemaVersion) {

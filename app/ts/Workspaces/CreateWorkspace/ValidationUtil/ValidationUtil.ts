@@ -1,7 +1,7 @@
 import IProblem from '@shared/interface/Problem/IProblem';
 import Ajv, {ErrorObject} from 'ajv';
 
-export function validateProblem(problem: IProblem): ErrorObject[] {
+export function validateProblemJSON(problem: IProblem): ErrorObject[] {
   const ajv = loadSchemas();
   if (!ajv.validate('problem.json', problem)) {
     return ajv.errors;

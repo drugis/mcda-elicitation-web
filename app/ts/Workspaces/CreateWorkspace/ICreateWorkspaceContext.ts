@@ -7,11 +7,8 @@ export default interface ICreateWorkspaceContext {
   tutorials: IWorkspaceExample[];
   method: TWorkspaceCreateMethod;
   setMethod: (method: TWorkspaceCreateMethod) => void;
-  selectedExample: IWorkspaceExample;
-  setSelectedExample: (example: IWorkspaceExample) => void;
-  selectedTutorial: IWorkspaceExample;
-  setSelectedTutorial: (example: IWorkspaceExample) => void;
-  uploadedFile: File;
+  selectedProblem: IWorkspaceExample;
+  setSelectedProblem: (problem: IWorkspaceExample) => void;
   setUploadedFile: (file: File) => void;
   addWorkspaceCallback: () => void;
   validationErrors: ErrorObject[];
