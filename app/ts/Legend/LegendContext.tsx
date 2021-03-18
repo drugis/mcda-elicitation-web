@@ -29,7 +29,7 @@ export function LegendContextProviderComponent({
         _.mapValues(currentScenario.state.legend, 'newTitle')
       );
     }
-  }, []);
+  }, [currentScenario.state.legend]);
 
   function saveLegend(newLegend: Record<string, string>): void {
     setLegendByAlternativeId(newLegend);

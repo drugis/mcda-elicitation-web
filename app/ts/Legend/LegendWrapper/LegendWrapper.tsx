@@ -36,7 +36,7 @@ export default function LegendWrapper({
       setIsButtonPressed(false);
     }
     setNewTitles(initLegend(legendByAlternativeId, filteredAlternatives));
-  }, [isDialogOpen]);
+  }, [filteredAlternatives, isDialogOpen, legendByAlternativeId]);
 
   const handleKey = createEnterHandler(handleLegendSave, isDisabled);
 
