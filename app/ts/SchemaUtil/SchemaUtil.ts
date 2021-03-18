@@ -85,12 +85,11 @@ export function updateProblemToCurrentSchema(problem: IProblem) {
 }
 
 function updateToVersion100(problem) {
-  return {
-    ...problem,
-    criteria: _.mapValues(problem.criteria, createNewCriterion),
-    performanceTable: createNewPerformanceTable(newProblem),
-    schemaVersion: '1.0.0'
-  };
+  let newProblem = _.cloneDeep(problem);
+  newProblem.criteria = _.mapValues(problem.criteria, createNewCriterion);
+  newProblem.performanceTable = createNewPerformanceTable(newProblem);
+  newProblem.schemaVersion = '1.0.0';
+  return newProblem;
 }
 
 function updateToVersion110(problem) {
@@ -114,7 +113,7 @@ function updateToVersion120(problem) {
 
 function movePerfomancesToDistribution(problem) {
   return _.map(problem.performanceTable, function (entry) {
-    var newEntry = angular.copy(entry);
+    let newEntry = _.cloneDeep(entry);
     newEntry.performance = {
       distribution: newEntry.performance
     };
@@ -151,7 +150,7 @@ function removeObsoletePropertiesFromDataSource(problem) {
 
 function putFavorabilityOnCriteria(problem) {
   return _.mapValues(problem.criteria, function (criterion, criterionId) {
-    var newCriterion = angular.copy(criterion);
+    let newCriterion = _.cloneDeep(criterion);
     if (problem.valueTree.children[0].criteria) {
       newCriterion.isFavorable = _.includes(
         problem.valueTree.children[0].criteria,
@@ -168,7 +167,7 @@ function putFavorabilityOnCriteria(problem) {
 
 function createNewPerformanceTable(problem) {
   return _.map(problem.performanceTable, function (tableEntry) {
-    var newEntry = angular.copy(tableEntry);
+    let newEntry = _.cloneDeep(tableEntry);
     if (tableEntry.criterionUri) {
       newEntry.criterion = tableEntry.criterionUri;
       delete newEntry.criterionUri;
@@ -180,18 +179,18 @@ function createNewPerformanceTable(problem) {
 }
 
 function createNewCriterion(criterion) {
-  var newCriterion = _.pick(criterion, [
+  let newCriterion = _.pick(criterion, [
     'title',
     'description',
     'unitOfMeasurement'
   ]);
-  var dataSource = createDataSource(criterion);
+  let dataSource = createDataSource(criterion);
   newCriterion.dataSources = [dataSource];
   return newCriterion;
 }
 
 function createDataSource(criterion) {
-  var dataSource = _.pick(criterion, [
+  let dataSource = _.pick(criterion, [
     'pvf',
     'source',
     'sourceLink',
@@ -204,13 +203,13 @@ function createDataSource(criterion) {
 }
 
 function updateToVersion130(problem) {
-  var newProblem = angular.copy(problem);
+  let newProblem = _.cloneDeep(problem);
   newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
-    var newCriterion = angular.copy(criterion);
+    let newCriterion = _.cloneDeep(criterion);
     newCriterion.dataSources = _.map(
       criterion.dataSources,
       function (dataSource) {
-        var newDataSource = angular.copy(dataSource);
+        let newDataSource = _.cloneDeep(dataSource);
         if (criterion.unitOfMeasurement !== undefined) {
           newDataSource.unitOfMeasurement = criterion.unitOfMeasurement;
         }
@@ -225,9 +224,9 @@ function updateToVersion130(problem) {
 }
 
 function updateToVersion131(problem) {
-  var newProblem = angular.copy(problem);
+  let newProblem = _.cloneDeep(problem);
   newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
-    var newCriterion = angular.copy(criterion);
+    let newCriterion = _.cloneDeep(criterion);
     if (criterion.isFavorable === undefined || criterion.isFavorable === null) {
       delete newCriterion.isFavorable;
     }
@@ -238,14 +237,14 @@ function updateToVersion131(problem) {
 }
 
 function updateToVersion132(problem) {
-  var newProblem = angular.copy(problem);
+  let newProblem = _.cloneDeep(problem);
   newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
-    var newCriterion = angular.copy(criterion);
+    let newCriterion = _.cloneDeep(criterion);
     newCriterion.dataSources = _.map(
       criterion.dataSources,
       function (dataSource) {
-        var properties = _.keys(dataSource);
-        var newDataSource = _.reduce(
+        let properties = _.keys(dataSource);
+        let newDataSource = _.reduce(
           properties,
           function (accum, property) {
             if (dataSource[property]) {
@@ -265,7 +264,7 @@ function updateToVersion132(problem) {
 }
 
 function updateToVersion133(problem) {
-  var newProblem = angular.copy(problem);
+  let newProblem = _.cloneDeep(problem);
   newProblem.alternatives = _.mapValues(
     problem.alternatives,
     function (alternative) {
@@ -277,23 +276,18 @@ function updateToVersion133(problem) {
 }
 
 function updateToVersion140(problem) {
-  var newProblem = angular.copy(problem);
-  newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
-    var newCriterion = angular.copy(criterion);
-    newCriterion.dataSources = _.map(
-      criterion.dataSources,
-      function (dataSource) {
-        var newDataSource = angular.copy(dataSource);
-        newDataSource.unitOfMeasurement = {
-          type: getUnitType(dataSource),
-          label: dataSource.unitOfMeasurement
-            ? dataSource.unitOfMeasurement
-            : ''
-        };
-        newDataSource.scale = getScale(dataSource.scale);
-        return newDataSource;
-      }
-    );
+  let newProblem = _.cloneDeep(problem);
+  newProblem.criteria = _.mapValues(problem.criteria, (criterion) => {
+    let newCriterion = _.cloneDeep(criterion);
+    newCriterion.dataSources = _.map(criterion.dataSources, (dataSource) => {
+      let newDataSource = _.cloneDeep(dataSource);
+      newDataSource.unitOfMeasurement = {
+        type: getUnitType(dataSource),
+        label: dataSource.unitOfMeasurement ? dataSource.unitOfMeasurement : ''
+      };
+      newDataSource.scale = getScale(dataSource.scale);
+      return newDataSource;
+    });
     return newCriterion;
   });
 
@@ -303,7 +297,7 @@ function updateToVersion140(problem) {
 }
 
 function updatePerformanceTable140(problem) {
-  var dataSources = getDataSourcesById(problem.criteria);
+  let dataSources = getDataSourcesById(problem.criteria);
   return _.map(
     problem.performanceTable,
     _.partial(getUpToDateEntry, dataSources)
@@ -357,14 +351,14 @@ function getScale(scale) {
 }
 
 function updateToVersion144(problem) {
-  var newProblem = angular.copy(problem);
+  let newProblem = _.cloneDeep(problem);
   newProblem.criteria = _.mapValues(newProblem.criteria, function (criterion) {
-    var newCriterion = angular.copy(criterion);
+    let newCriterion = _.cloneDeep(criterion);
     newCriterion.dataSources = _.map(
       newCriterion.dataSources,
       function (dataSource) {
         if (dataSource.unitOfMeasurement.type === 'decimal') {
-          var newDataSource = angular.copy(dataSource);
+          let newDataSource = _.cloneDeep(dataSource);
           newDataSource.unitOfMeasurement.label = '';
           return newDataSource;
         } else {
@@ -505,52 +499,6 @@ function buildPerformanceWithInput(entry, input) {
   };
 }
 
-function extractPvfs(criteria) {
-  return _(criteria)
-    .mapValues((criterion) => _.omit(criterion.dataSources[0].pvf, 'range'))
-    .pickBy(isUsablePvf)
-    .value();
-}
-
-function isUsablePvf(pvf) {
-  return pvf.direction;
-}
-
-function extractRanges(criteria) {
-  return _(criteria)
-    .flatMap('dataSources')
-    .filter('pvf')
-    .keyBy('id')
-    .mapValues((dataSource) => dataSource.pvf.range)
-    .value();
-}
-
-function mergePvfs(scenario, pvfs) {
-  const updatedCriteria = updateCriteriaWithPvfs(
-    scenario.state.problem.criteria,
-    pvfs
-  );
-  return _.merge({}, scenario, {
-    state: {problem: {criteria: updatedCriteria}}
-  });
-}
-
-function updateCriteriaWithPvfs(scenarioCriteria, pvfs) {
-  return _.mapValues(scenarioCriteria, (scenarioCriterion, criterionId) => {
-    return scenarioCriterion.dataSources &&
-      scenarioCriterion.dataSources[0] &&
-      scenarioCriterion.dataSources[0].pvf
-      ? scenarioCriterion
-      : {
-          dataSources: [
-            {
-              pvf: pvfs[criterionId]
-            }
-          ]
-        };
-  });
-}
-
 function omitPvfs(uploadProblem) {
   return {
     ...uploadProblem,
@@ -573,25 +521,11 @@ function omitPvfsFromDataSources(uploadDataSources) {
   );
 }
 
-function earlierThan147(version) {
-  const n1 = Number(version[0]);
-  const n2 = Number(version[1]);
-  const n3 = Number(version[2]);
-  if (n1 > 1) {
-    return false;
-  } else if (n1 < 1) {
-    return true;
-  } else {
-    if (n2 > 4) {
-      return false;
-    } else if (n2 < 4) {
-      return true;
-    } else {
-      if (n3 >= 7) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
+function getDataSourcesById(criteria) {
+  return _(criteria)
+    .flatMap(function (criterion) {
+      return criterion.dataSources;
+    })
+    .keyBy('id')
+    .value();
 }

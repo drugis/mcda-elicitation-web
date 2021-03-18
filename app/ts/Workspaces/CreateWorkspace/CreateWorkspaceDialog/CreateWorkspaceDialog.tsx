@@ -8,7 +8,9 @@ import {
   RadioGroup,
   Select
 } from '@material-ui/core';
+import {ErrorObject} from 'ajv';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import DisplayErrors from 'app/ts/util/DisplayErrors';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 import {CreateWorkspaceContext} from '../CreateWorkspaceContext';
@@ -32,7 +34,8 @@ export default function CreateWorkspaceDialog({
     setSelectedExample,
     setSelectedTutorial,
     setUploadedFile,
-    addWorkspaceCallback
+    addWorkspaceCallback,
+    validationErrors
   } = useContext(CreateWorkspaceContext);
 
   function handleMethodChanged(event: ChangeEvent<HTMLInputElement>): void {
@@ -140,6 +143,19 @@ export default function CreateWorkspaceDialog({
           <Grid item xs={12}>
             {renderWorkspaceInput()}
           </Grid>
+          <Grid item xs={3}>
+            {!_.isEmpty(validationErrors) ? 'Invalid upload: ' : ''}
+          </Grid>
+          <Grid item xs={9}>
+            <DisplayErrors
+              identifier="invalid-schema"
+              errors={_.map(
+                validationErrors,
+                (error: ErrorObject): string =>
+                  error.dataPath + ' ' + error.message
+              )}
+            />
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
@@ -148,7 +164,7 @@ export default function CreateWorkspaceDialog({
           color="primary"
           onClick={handleAddButtonClick}
           variant="contained"
-          disabled={false} //FIXME
+          disabled={!_.isEmpty(validationErrors)}
         >
           Add
         </Button>

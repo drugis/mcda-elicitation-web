@@ -72,6 +72,7 @@
     "@babel/preset-react": "^7.12.10",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@types/ajv": "^1.0.0",
     "@types/c3": "^0.7.4",
     "@types/chai": "^4.2.11",
     "@types/d3": "^5.7.2",

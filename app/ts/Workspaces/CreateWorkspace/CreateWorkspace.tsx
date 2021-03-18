@@ -25,12 +25,16 @@ export default function CreateWorkspace(): JSX.Element {
         >
           <Add /> Add workspace
         </Button>
-        <CreateWorkspaceContextProviderComponent>
-          <CreateWorkspaceDialog
-            isDialogOpen={isDialogOpen}
-            closeDialog={closeDialog}
-          />
-        </CreateWorkspaceContextProviderComponent>
+        {isDialogOpen ? (
+          <CreateWorkspaceContextProviderComponent>
+            <CreateWorkspaceDialog
+              isDialogOpen={isDialogOpen}
+              closeDialog={closeDialog}
+            />
+          </CreateWorkspaceContextProviderComponent>
+        ) : (
+          <></>
+        )}
       </Grid>
     </>
   );
