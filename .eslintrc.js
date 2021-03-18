@@ -1,10 +1,11 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    jest: true,
+    node: true
   },
-  parser: 'babel-eslint',
-  extends: ['airbnb', 'prettier', 'prettier/react'],
+  parser: '@typescript-eslint/parser',
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
@@ -17,16 +18,12 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  plugins: ['react', 'prettier'],
+  plugins: ['react', '@typescript-eslint', 'react-hooks'],
   rules: {
-    'prettier/prettier': 'error',
     'react/jsx-filename-extension': [1, {extensions: ['.js', '.jsx', 'tsx']}],
     'react/forbid-prop-types': [0, {forbid: ['any']}],
-    'react/prop-types': 0
-  },
-  env: {
-    jest: true,
-    browser: true,
-    node: true
+    'react/prop-types': 0,
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn'
   }
 };
