@@ -1,3 +1,4 @@
+import IProblem from '@shared/interface/Problem/IProblem';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import axios, {AxiosResponse} from 'axios';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -44,19 +45,19 @@ export function CreateWorkspaceContextProviderComponent({
   }, []);
 
   useEffect(() => {
-    //get json from example url
-    axios
-      .get(`/examples/${selectedExample.href}`)
-      .then((response: AxiosResponse<any>) => {
-        //FIXME any
-        console.log(response.data);
-      })
-      .catch(setError);
+    if (selectedExample) {
+      axios
+        .get(`/examples/${selectedExample.href}`)
+        .then((response: AxiosResponse<IProblem>) => {
+          const updatedProblem = updateProblemToCurrentSchema(response.data);
+        })
+        .catch(setError);
 
-    //update to current schema
-    //getValidationResult
-    //setValidateStatus
-  }, [selectedExample]);
+      //update to current schema
+      //getValidationResult
+      //setValidateStatus
+    }
+  }, [selectedExample, setError]);
 
   function parseUploadedFile(): void {
     // const uploadedFile: File = event.target.files[0];
