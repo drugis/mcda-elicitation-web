@@ -12,4 +12,5 @@ export default interface ICreateWorkspaceContext {
   setSelectedTutorial: (example: IWorkspaceExample) => void;
   uploadedFile: File;
   setUploadedFile: (file: File) => void;
+  addWorkspaceCallback: () => void;
 }

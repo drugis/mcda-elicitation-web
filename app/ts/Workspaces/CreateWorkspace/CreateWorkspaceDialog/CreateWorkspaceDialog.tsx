@@ -31,7 +31,8 @@ export default function CreateWorkspaceDialog({
     selectedTutorial,
     setSelectedExample,
     setSelectedTutorial,
-    setUploadedFile
+    setUploadedFile,
+    addWorkspaceCallback
   } = useContext(CreateWorkspaceContext);
 
   function handleMethodChanged(event: ChangeEvent<HTMLInputElement>): void {
@@ -101,6 +102,11 @@ export default function CreateWorkspaceDialog({
     );
   }
 
+  function handleAddButtonClick(): void {
+    closeDialog();
+    addWorkspaceCallback();
+  }
+
   return (
     <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth={'sm'}>
       <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
@@ -140,8 +146,9 @@ export default function CreateWorkspaceDialog({
         <Button
           id="add-workspace-button"
           color="primary"
-          onClick={() => {}}
+          onClick={handleAddButtonClick}
           variant="contained"
+          disabled={false} //FIXME
         >
           Add
         </Button>

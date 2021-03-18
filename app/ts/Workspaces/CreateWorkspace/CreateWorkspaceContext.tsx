@@ -1,4 +1,3 @@
-import {OurError} from '@shared/interface/IError';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import axios, {AxiosResponse} from 'axios';
 import React, {createContext, useContext, useEffect, useState} from 'react';
@@ -24,6 +23,7 @@ export function CreateWorkspaceContextProviderComponent({
   const [selectedExample, setSelectedExample] = useState<IWorkspaceExample>();
   const [selectedTutorial, setSelectedTutorial] = useState<IWorkspaceExample>();
   const [uploadedFile, setUploadedFile] = useState<File>();
+  const [isJsonValid, setIsJsonValid] = useState(true);
 
   useEffect(() => {
     axios
@@ -32,7 +32,7 @@ export function CreateWorkspaceContextProviderComponent({
         setSelectedExample(response.data[0]);
         setExamples(response.data);
       })
-      .catch(errorCallback);
+      .catch(setError);
 
     axios
       .get('/tutorials')
@@ -40,12 +40,23 @@ export function CreateWorkspaceContextProviderComponent({
         setSelectedTutorial(response.data[0]);
         setTutorials(response.data);
       })
-      .catch(errorCallback);
+      .catch(setError);
   }, []);
 
-  function errorCallback(error: OurError) {
-    setError(error);
-  }
+  useEffect(() => {
+    //get json from example url
+    axios
+      .get(`/examples/${selectedExample.href}`)
+      .then((response: AxiosResponse<any>) => {
+        //FIXME any
+        console.log(response.data);
+      })
+      .catch(setError);
+
+    //update to current schema
+    //getValidationResult
+    //setValidateStatus
+  }, [selectedExample]);
 
   function parseUploadedFile(): void {
     // const uploadedFile: File = event.target.files[0];
@@ -55,6 +66,26 @@ export function CreateWorkspaceContextProviderComponent({
     //   console.log(JSON.parse(fileReader.result as string));
     // };
     // fileReader.readAsText(uploadedFile);
+  }
+
+  function addWorkspaceCallback(): void {
+    switch (method) {
+      case 'manual':
+        createAndGoToInprogressWorkspace();
+        break;
+      default:
+        console.log('foo');
+    }
+  }
+
+  function createAndGoToInprogressWorkspace(): void {
+    axios
+      .post('/api/v2/inProgress')
+      .then((response: AxiosResponse<{id: string}>) => {
+        const url = `/#!/manual-input/${response.data.id}`;
+        window.location.assign(url);
+      })
+      .catch(setError);
   }
 
   return (
@@ -69,7 +100,8 @@ export function CreateWorkspaceContextProviderComponent({
         selectedTutorial,
         setSelectedTutorial,
         uploadedFile,
-        setUploadedFile
+        setUploadedFile,
+        addWorkspaceCallback
       }}
     >
       {examples && tutorials ? children : <></>}
