@@ -57,29 +57,29 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     getSubproblemTitleError(title, subproblems)
   );
 
-  const [alternativeInclusions, setAlternativeInclusions] = useState<
-    Record<string, boolean>
-  >(
-    initInclusions(
-      alternatives,
-      currentSubproblem.definition.excludedAlternatives
-    )
-  );
+  // const [alternativeInclusions, setAlternativeInclusions] = useState<
+  //   Record<string, boolean>
+  // >(
+  //   initInclusions(
+  //     alternatives,
+  //     currentSubproblem.definition.excludedAlternatives
+  //   )
+  // );
 
-  const [criterionInclusions, setCriterionInclusions] = useState<
-    Record<string, boolean>
-  >(initInclusions(criteria, currentSubproblem.definition.excludedCriteria));
+  // const [criterionInclusions, setCriterionInclusions] = useState<
+  //   Record<string, boolean>
+  // >(initInclusions(criteria, currentSubproblem.definition.excludedCriteria));
 
-  const [dataSourceInclusions, setDataSourceInclusions] = useState<
-    Record<string, boolean>
-  >(
-    initInclusions(
-      dataSourcesById,
-      currentSubproblem.definition.excludedDataSources
-    )
-  );
+  // const [dataSourceInclusions, setDataSourceInclusions] = useState<
+  //   Record<string, boolean>
+  // >(
+  //   initInclusions(
+  //     dataSourcesById,
+  //     currentSubproblem.definition.excludedDataSources
+  //   )
+  // );
 
-  const [testInclusion, setTestInclusions] = useState({
+  const [testInclusions, setTestInclusions] = useState({
     alternatives: initInclusions(
       alternatives,
       currentSubproblem.definition.excludedAlternatives
@@ -124,9 +124,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     if (!_.isEmpty(observedRanges)) {
       setScaleRangesWarnings(
         getScaleBlockingWarnings(
-          criterionInclusions,
-          dataSourceInclusions,
-          alternativeInclusions,
+          testInclusions.criteria,
+          testInclusions.dataSources,
+          testInclusions.alternatives,
           workspace,
           observedRanges
         )
@@ -134,18 +134,12 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     }
     setMissingValueWarnings(
       getMissingValueWarnings(
-        dataSourceInclusions,
-        alternativeInclusions,
+        testInclusions.dataSources,
+        testInclusions.alternatives,
         workspace
       )
     );
-  }, [
-    dataSourceInclusions,
-    criterionInclusions,
-    alternativeInclusions,
-    workspace,
-    observedRanges
-  ]);
+  }, [testInclusions, workspace, observedRanges]);
 
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
@@ -172,52 +166,59 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   // *** end useEffects
 
   function updateAlternativeInclusion(id: string, newValue: boolean) {
-    let newInclusions = {...alternativeInclusions};
-    newInclusions[id] = newValue;
-    setAlternativeInclusions(newInclusions);
+    const newInclusions = {
+      ...testInclusions,
+      alternatives: {...testInclusions.alternatives, [id]: newValue}
+    };
+    setTestInclusions(newInclusions);
   }
 
   function updateCriterionInclusion(id: string, newValue: boolean) {
-    let newCriterionInclusions = {...criterionInclusions};
-    newCriterionInclusions[id] = newValue;
-    setCriterionInclusions(newCriterionInclusions);
-    let newDataSourceInclusions = {...dataSourceInclusions};
-    _.forEach(criteria[id].dataSources, (dataSource: IDataSource) => {
-      newDataSourceInclusions[dataSource.id] = newValue;
-    });
-    setDataSourceInclusions(newDataSourceInclusions);
+    const newDataSourceInclusions = _(criteria[id].dataSources)
+      .keyBy('id')
+      .mapValues(() => newValue)
+      .value();
+    const newInclusions = {
+      ...testInclusions,
+      criteria: {...testInclusions.criteria, [id]: newValue},
+      dataSources: {...testInclusions.dataSources, ...newDataSourceInclusions}
+    };
+
+    setTestInclusions(newInclusions);
   }
 
   function updateDataSourceInclusion(id: string, newValue: boolean): void {
-    let newInclusions = {...dataSourceInclusions};
-    newInclusions[id] = newValue;
-    setDataSourceInclusions(newInclusions);
+    const newInclusions = {
+      ...testInclusions,
+      dataSources: {...testInclusions.dataSources, [id]: newValue}
+    };
+    setTestInclusions(newInclusions);
   }
 
   function isCriterionExcluded(criterionId: string): boolean {
-    return !criterionInclusions[criterionId];
+    return !testInclusions.criteria[criterionId];
   }
 
   function isDataSourceExcluded(dataSourceId: string): boolean {
-    return !dataSourceInclusions[dataSourceId];
+    return !testInclusions.dataSources[dataSourceId];
   }
 
   function isAlternativeExcluded(alternativeId: string): boolean {
-    return !alternativeInclusions[alternativeId];
+    return !testInclusions.alternatives[alternativeId];
   }
 
   function getIncludedDataSourceForCriterion(
     criterion: ICriterion
   ): IDataSource {
     return _.find(criterion.dataSources, (dataSource: IDataSource) => {
-      return dataSourceInclusions[dataSource.id];
+      return testInclusions.dataSources[dataSource.id];
     });
   }
 
   function isAlternativeDeselectionDisabledWrapper(id: string) {
     return isAlternativeDeselectionDisabled(
       id,
-      alternativeInclusions,
+      testInclusions.alternatives,
       baselineMap
     );
   }
@@ -228,8 +229,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   ) {
     return isDataSourceDeselectionDisabled(
       criteria[criterionId],
-      dataSourceInclusions,
-      criterionInclusions,
+      testInclusions.dataSources,
+      testInclusions.criteria,
       dataSourceId
     );
   }
@@ -239,9 +240,11 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       dataSourcesWithValues,
       observedRanges
     );
-    setCriterionInclusions(_.mapValues(criteria, () => true));
-    setDataSourceInclusions(_.mapValues(dataSourcesById, () => true));
-    setAlternativeInclusions(_.mapValues(alternatives, () => true));
+    setTestInclusions({
+      alternatives: _.mapValues(alternatives, () => true),
+      criteria: _.mapValues(criteria, () => true),
+      dataSources: _.mapValues(dataSourcesById, () => true)
+    });
     setConfiguredRanges(initialConfiguredRanges);
     setSliderRangesByDS(initialConfiguredRanges);
     setTitle(defaultTitle);
@@ -252,9 +255,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     const subproblemCommand: ISubproblemCommand = {
       title: title,
       definition: createSubproblemDefinition(
-        criterionInclusions,
-        dataSourceInclusions,
-        alternativeInclusions,
+        testInclusions.criteria,
+        testInclusions.dataSources,
+        testInclusions.alternatives,
         configuredRangesByDS,
         stepSizesByDS
       )
@@ -312,7 +315,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         errors,
         configuredRanges: configuredRangesByDS,
         isCriterionDeselectionDisabled:
-          _.filter(criterionInclusions).length < 3,
+          _.filter(testInclusions.criteria).length < 3,
         missingValueWarnings,
         scaleRangesWarnings,
         title,
