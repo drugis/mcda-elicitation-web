@@ -244,11 +244,7 @@ define(['lodash', 'angular'], function (_, angular) {
      */
     function validateWorkspace(workspace) {
       var constraints = [
-        missingProperties,
-        tooFewCriteria,
-        tooFewAlternatives,
-        criterionLackingTitle,
-        alternativeLackingTitle,
+        missingTitle,
         performanceTableWithInvalidAlternative,
         performanceTableWithInvalidCriterion,
         performanceTableWithMissingData,
@@ -256,7 +252,6 @@ define(['lodash', 'angular'], function (_, angular) {
         mixedPreferenceTypes,
         inconsistentOrdinalPreferences,
         inconsistentExactPreferences,
-        relativePerformanceLackingBaseline,
         relativePerformanceWithBadMu,
         relativePerformanceWithBadCov
       ];
@@ -281,35 +276,8 @@ define(['lodash', 'angular'], function (_, angular) {
       };
     }
 
-    function missingProperties(workspace) {
-      var requiredProperties = [
-        'title',
-        'criteria',
-        'alternatives',
-        'performanceTable'
-      ];
-
-      var missingProperties = _.reject(requiredProperties, function (property) {
-        return workspace[property];
-      });
-
-      if (missingProperties.length === 1) {
-        return 'Missing workspace property: ' + missingProperties[0];
-      } else if (missingProperties.length > 1) {
-        return 'Missing workspace properties: ' + missingProperties.join(', ');
-      }
-    }
-
-    function tooFewCriteria(workspace) {
-      if (_.size(workspace.criteria) < 2) {
-        return 'Two or more criteria required';
-      }
-    }
-
-    function tooFewAlternatives(workspace) {
-      if (_.size(workspace.alternatives) < 2) {
-        return 'Two or more alternatives required';
-      }
+    function missingTitle(workspace) {
+      return 'title' in workspace ? undefined : 'Missing title';
     }
 
     function performanceTableWithInvalidAlternative(workspace) {
@@ -559,47 +527,6 @@ define(['lodash', 'angular'], function (_, angular) {
         (tableEntry.performance.distribution &&
           tableEntry.performance.distribution.type.indexOf('relative') < 0)
       );
-    }
-
-    function criterionLackingTitle(workspace) {
-      var key;
-      var crit = _.find(workspace.criteria, function (criterion, critKey) {
-        key = critKey;
-        return !criterion.title;
-      });
-      if (crit) {
-        return 'Missing title for criterion: "' + key + '"';
-      }
-    }
-
-    function alternativeLackingTitle(workspace) {
-      var key;
-      var alt = _.find(workspace.alternatives, function (alternative, critKey) {
-        key = critKey;
-        return !alternative.title;
-      });
-      if (alt) {
-        return 'Missing title for alternative: "' + key + '"';
-      }
-    }
-
-    function relativePerformanceLackingBaseline(workspace) {
-      var entryLackingBaseline = _.find(
-        workspace.performanceTable,
-        function (tableEntry) {
-          return (
-            !isAbsolutePerformance(tableEntry) &&
-            !tableEntry.performance.distribution.parameters.baseline
-          );
-        }
-      );
-      if (entryLackingBaseline) {
-        return (
-          'Missing baseline for criterion: "' +
-          entryLackingBaseline.criterion +
-          '"'
-        );
-      }
     }
 
     function relativePerformanceWithBadMu(workspace) {

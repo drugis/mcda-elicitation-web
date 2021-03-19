@@ -6,3 +6,5 @@ export type TPreferences =
   | IRanking[]
   | IExactSwingRatio[]
   | IRatioBoundConstraint[];
+
+export type TPreference = IRanking | IExactSwingRatio | IRatioBoundConstraint;
