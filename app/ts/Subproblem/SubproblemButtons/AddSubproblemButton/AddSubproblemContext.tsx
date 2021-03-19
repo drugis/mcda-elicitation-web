@@ -4,7 +4,14 @@ import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
+import {adjustConfiguredRangeForStepSize} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
 import {
   createSubproblemDefinition,
   getBaselineMap,
@@ -57,42 +64,27 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     getSubproblemTitleError(title, subproblems)
   );
 
-  // const [alternativeInclusions, setAlternativeInclusions] = useState<
-  //   Record<string, boolean>
-  // >(
-  //   initInclusions(
-  //     alternatives,
-  //     currentSubproblem.definition.excludedAlternatives
-  //   )
-  // );
-
-  // const [criterionInclusions, setCriterionInclusions] = useState<
-  //   Record<string, boolean>
-  // >(initInclusions(criteria, currentSubproblem.definition.excludedCriteria));
-
-  // const [dataSourceInclusions, setDataSourceInclusions] = useState<
-  //   Record<string, boolean>
-  // >(
-  //   initInclusions(
-  //     dataSourcesById,
-  //     currentSubproblem.definition.excludedDataSources
-  //   )
-  // );
-
-  const [testInclusions, setTestInclusions] = useState({
-    alternatives: initInclusions(
+  const [alternativeInclusions, setAlternativeInclusions] = useState<
+    Record<string, boolean>
+  >(
+    initInclusions(
       alternatives,
       currentSubproblem.definition.excludedAlternatives
-    ),
-    criteria: initInclusions(
-      criteria,
-      currentSubproblem.definition.excludedCriteria
-    ),
-    dataSources: initInclusions(
+    )
+  );
+
+  const [criterionInclusions, setCriterionInclusions] = useState<
+    Record<string, boolean>
+  >(initInclusions(criteria, currentSubproblem.definition.excludedCriteria));
+
+  const [dataSourceInclusions, setDataSourceInclusions] = useState<
+    Record<string, boolean>
+  >(
+    initInclusions(
       dataSourcesById,
       currentSubproblem.definition.excludedDataSources
     )
-  });
+  );
 
   const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>([
     'Loading'
@@ -124,9 +116,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     if (!_.isEmpty(observedRanges)) {
       setScaleRangesWarnings(
         getScaleBlockingWarnings(
-          testInclusions.criteria,
-          testInclusions.dataSources,
-          testInclusions.alternatives,
+          criterionInclusions,
+          dataSourceInclusions,
+          alternativeInclusions,
           workspace,
           observedRanges
         )
@@ -134,12 +126,18 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     }
     setMissingValueWarnings(
       getMissingValueWarnings(
-        testInclusions.dataSources,
-        testInclusions.alternatives,
+        dataSourceInclusions,
+        alternativeInclusions,
         workspace
       )
     );
-  }, [testInclusions, workspace, observedRanges]);
+  }, [
+    workspace,
+    observedRanges,
+    dataSourceInclusions,
+    alternativeInclusions,
+    criterionInclusions
+  ]);
 
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
@@ -156,158 +154,209 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         stepSizeOptions,
         currentSubproblem.definition.stepSizes
       );
-      setConfiguredRanges(initialConfiguredRanges);
+
       setSliderRangesByDS(initialConfiguredRanges);
       setStepSizesByDS(currentSubproblem.definition.stepSizes);
       setStepSizeOptionsByDS(stepSizeOptions);
       setStepSizesByDS(stepSizes);
+
+      setConfiguredRanges(
+        _.mapValues(
+          dataSourcesWithValues,
+          (dataSource: IDataSource): [number, number] =>
+            adjustConfiguredRangeForStepSize(
+              stepSizes[dataSource.id],
+              initialConfiguredRanges[dataSource.id],
+              initialConfiguredRanges[dataSource.id]
+            ) //FIXME check if configured range is valid
+        )
+      );
     }
   }, [observedRanges, currentSubproblem, dataSourcesWithValues]);
   // *** end useEffects
 
-  function updateAlternativeInclusion(id: string, newValue: boolean) {
-    const newInclusions = {
-      ...testInclusions,
-      alternatives: {...testInclusions.alternatives, [id]: newValue}
-    };
-    setTestInclusions(newInclusions);
-  }
+  const updateAlternativeInclusion = useCallback(
+    (id: string, newValue: boolean): void => {
+      setAlternativeInclusions({...alternativeInclusions, [id]: newValue});
+    },
+    [alternativeInclusions]
+  );
 
-  function updateCriterionInclusion(id: string, newValue: boolean) {
-    const newDataSourceInclusions = _(criteria[id].dataSources)
-      .keyBy('id')
-      .mapValues(() => newValue)
-      .value();
-    const newInclusions = {
-      ...testInclusions,
-      criteria: {...testInclusions.criteria, [id]: newValue},
-      dataSources: {...testInclusions.dataSources, ...newDataSourceInclusions}
-    };
+  const updateCriterionInclusion = useCallback(
+    (id: string, newValue: boolean): void => {
+      const newDataSourceInclusions = _(criteria[id].dataSources)
+        .keyBy('id')
+        .mapValues(() => newValue)
+        .value();
 
-    setTestInclusions(newInclusions);
-  }
+      setCriterionInclusions({...criterionInclusions, [id]: newValue});
+      setDataSourceInclusions({
+        ...dataSourceInclusions,
+        ...newDataSourceInclusions
+      });
+    },
+    [criteria, criterionInclusions, dataSourceInclusions]
+  );
 
-  function updateDataSourceInclusion(id: string, newValue: boolean): void {
-    const newInclusions = {
-      ...testInclusions,
-      dataSources: {...testInclusions.dataSources, [id]: newValue}
-    };
-    setTestInclusions(newInclusions);
-  }
+  const updateDataSourceInclusion = useCallback(
+    (id: string, newValue: boolean): void => {
+      setDataSourceInclusions({
+        ...dataSourceInclusions,
+        [id]: newValue
+      });
+    },
+    [dataSourceInclusions]
+  );
 
-  function isCriterionExcluded(criterionId: string): boolean {
-    return !testInclusions.criteria[criterionId];
-  }
+  const isCriterionExcluded = useCallback(
+    (criterionId: string): boolean => {
+      return !criterionInclusions[criterionId];
+    },
+    [criterionInclusions]
+  );
 
-  function isDataSourceExcluded(dataSourceId: string): boolean {
-    return !testInclusions.dataSources[dataSourceId];
-  }
+  const isDataSourceExcluded = useCallback(
+    (dataSourceId: string): boolean => {
+      return !dataSourceInclusions[dataSourceId];
+    },
+    [dataSourceInclusions]
+  );
 
-  function isAlternativeExcluded(alternativeId: string): boolean {
-    return !testInclusions.alternatives[alternativeId];
-  }
+  const isAlternativeExcluded = useCallback(
+    (alternativeId: string): boolean => {
+      return !alternativeInclusions[alternativeId];
+    },
+    [alternativeInclusions]
+  );
 
-  function getIncludedDataSourceForCriterion(
-    criterion: ICriterion
-  ): IDataSource {
-    return _.find(criterion.dataSources, (dataSource: IDataSource) => {
-      return testInclusions.dataSources[dataSource.id];
-    });
-  }
+  const getIncludedDataSourceForCriterion = useCallback(
+    (criterion: ICriterion): IDataSource => {
+      return _.find(
+        criterion.dataSources,
+        (dataSource: IDataSource) => dataSourceInclusions[dataSource.id]
+      );
+    },
+    [dataSourceInclusions]
+  );
 
-  function isAlternativeDeselectionDisabledWrapper(id: string) {
-    return isAlternativeDeselectionDisabled(
-      id,
-      testInclusions.alternatives,
-      baselineMap
-    );
-  }
+  const isAlternativeDeselectionDisabledWrapper = useCallback(
+    (id: string): boolean => {
+      return isAlternativeDeselectionDisabled(
+        id,
+        alternativeInclusions,
+        baselineMap
+      );
+    },
+    [alternativeInclusions, baselineMap]
+  );
 
-  function isDataSourceDeselectionDisabledWrapper(
-    criterionId: string,
-    dataSourceId: string
-  ) {
-    return isDataSourceDeselectionDisabled(
-      criteria[criterionId],
-      testInclusions.dataSources,
-      testInclusions.criteria,
-      dataSourceId
-    );
-  }
+  const isDataSourceDeselectionDisabledWrapper = useCallback(
+    (criterionId: string, dataSourceId: string): boolean => {
+      return isDataSourceDeselectionDisabled(
+        criteria[criterionId],
+        dataSourceInclusions,
+        criterionInclusions,
+        dataSourceId
+      );
+    },
+    [criteria, criterionInclusions, dataSourceInclusions]
+  );
 
-  function resetToDefault(): void {
+  const resetToDefault = useCallback((): void => {
     const initialConfiguredRanges = initConfiguredRanges(
       dataSourcesWithValues,
       observedRanges
     );
-    setTestInclusions({
-      alternatives: _.mapValues(alternatives, () => true),
-      criteria: _.mapValues(criteria, () => true),
-      dataSources: _.mapValues(dataSourcesById, () => true)
-    });
+    setAlternativeInclusions(_.mapValues(alternatives, () => true));
+    setCriterionInclusions(_.mapValues(criteria, () => true));
+    setDataSourceInclusions(_.mapValues(dataSourcesById, () => true));
     setConfiguredRanges(initialConfiguredRanges);
     setSliderRangesByDS(initialConfiguredRanges);
     setTitle(defaultTitle);
     setScaleRangesWarnings(['Updating']);
-  }
+  }, [
+    alternatives,
+    criteria,
+    dataSourcesById,
+    dataSourcesWithValues,
+    observedRanges
+  ]);
 
-  function addSubproblemWrapper(): void {
+  const addSubproblemWrapper = useCallback((): void => {
     const subproblemCommand: ISubproblemCommand = {
       title: title,
       definition: createSubproblemDefinition(
-        testInclusions.criteria,
-        testInclusions.dataSources,
-        testInclusions.alternatives,
+        criterionInclusions,
+        dataSourceInclusions,
+        alternativeInclusions,
         configuredRangesByDS,
         stepSizesByDS
       )
     };
     addSubproblem(subproblemCommand);
-  }
+  }, [
+    addSubproblem,
+    alternativeInclusions,
+    configuredRangesByDS,
+    criterionInclusions,
+    dataSourceInclusions,
+    stepSizesByDS,
+    title
+  ]);
 
-  function setConfiguredRange(
-    dataSourceId: string,
-    lowestConfiguredValue: number,
-    highestConfiguredValue: number
-  ): void {
-    let newRanges = _.cloneDeep(configuredRangesByDS);
-    newRanges[dataSourceId] = [lowestConfiguredValue, highestConfiguredValue];
-    setConfiguredRanges(newRanges);
-  }
+  const setConfiguredRange = useCallback(
+    (
+      dataSourceId: string,
+      lowestConfiguredValue: number,
+      highestConfiguredValue: number
+    ): void => {
+      let newRanges = _.cloneDeep(configuredRangesByDS);
+      newRanges[dataSourceId] = [lowestConfiguredValue, highestConfiguredValue];
+      setConfiguredRanges(newRanges);
+    },
+    [configuredRangesByDS]
+  );
 
-  function updateSliderRangeforDS(
-    dataSourceId: string,
-    newRange: [number, number]
-  ): void {
-    let newEntry: Record<string, [number, number]> = {};
-    newEntry[dataSourceId] = newRange;
-    const newSliderRanges = {...sliderRangesByDS, ...newEntry};
-    setSliderRangesByDS(newSliderRanges);
-  }
+  const updateSliderRangeforDS = useCallback(
+    (dataSourceId: string, newRange: [number, number]): void => {
+      let newEntry: Record<string, [number, number]> = {};
+      newEntry[dataSourceId] = newRange;
+      const newSliderRanges = {...sliderRangesByDS, ...newEntry};
+      setSliderRangesByDS(newSliderRanges);
+    },
+    [sliderRangesByDS]
+  );
 
-  function getSliderRangeForDS(dataSourceId: string) {
-    return sliderRangesByDS[dataSourceId];
-  }
+  const getSliderRangeForDS = useCallback(
+    (dataSourceId: string) => {
+      return sliderRangesByDS[dataSourceId];
+    },
+    [sliderRangesByDS]
+  );
 
-  function updateStepSizeForDS(
-    dataSourceId: string,
-    newStepSize: number
-  ): void {
-    let newEntry: Record<string, number> = {};
-    newEntry[dataSourceId] = newStepSize;
-    const newStepSizes = {...stepSizesByDS, ...newEntry};
-    setStepSizesByDS(newStepSizes);
-  }
+  const updateStepSizeForDS = useCallback(
+    (dataSourceId: string, newStepSize: number): void => {
+      let newEntry: Record<string, number> = {};
+      newEntry[dataSourceId] = newStepSize;
+      const newStepSizes = {...stepSizesByDS, ...newEntry};
+      setStepSizesByDS(newStepSizes);
+    },
+    [stepSizesByDS]
+  );
 
-  function getStepSizeForDS(dataSourceId: string): number {
-    return stepSizesByDS[dataSourceId];
-  }
+  const getStepSizeForDS = useCallback(
+    (dataSourceId: string): number => {
+      return stepSizesByDS[dataSourceId];
+    },
+    [stepSizesByDS]
+  );
 
-  function getStepSizeOptionsForDS(
-    dataSourceId: string
-  ): [number, number, number] {
-    return stepSizeOptionsByDS[dataSourceId];
-  }
+  const getStepSizeOptionsForDS = useCallback(
+    (dataSourceId: string): [number, number, number] => {
+      return stepSizeOptionsByDS[dataSourceId];
+    },
+    [stepSizeOptionsByDS]
+  );
 
   return (
     <AddSubproblemContext.Provider
@@ -315,7 +364,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         errors,
         configuredRanges: configuredRangesByDS,
         isCriterionDeselectionDisabled:
-          _.filter(testInclusions.criteria).length < 3,
+          _.filter(criterionInclusions).length < 3,
         missingValueWarnings,
         scaleRangesWarnings,
         title,

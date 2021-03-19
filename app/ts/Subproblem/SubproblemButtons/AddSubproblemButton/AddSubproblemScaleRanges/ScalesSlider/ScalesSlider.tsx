@@ -14,10 +14,9 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
-  adjustConfiguredRangeForStepSize,
   createMarks,
   decreaseSliderLowerBound,
   increaseSliderUpperBound
@@ -55,26 +54,26 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     getUpperBound(usePercentage, includedDataSource.unitOfMeasurement)
   ];
 
-  useEffect(() => {
-    const newConfiguredRange = adjustConfiguredRangeForStepSize(
-      stepSize,
-      configuredRange,
-      sliderRange
-    );
-    setConfiguredRange(
-      includedDataSource.id,
-      newConfiguredRange[0],
-      newConfiguredRange[1]
-    );
-    updateStepSizeForDS(includedDataSource.id, stepSize);
-  }, [
-    stepSize,
-    sliderRange,
-    configuredRange,
-    setConfiguredRange,
-    includedDataSource.id,
-    updateStepSizeForDS
-  ]);
+  // useEffect(() => {
+  //   const newConfiguredRange = adjustConfiguredRangeForStepSize(
+  //     stepSize,
+  //     configuredRange,
+  //     sliderRange
+  //   );
+  //   setConfiguredRange(
+  //     includedDataSource.id,
+  //     newConfiguredRange[0],
+  //     newConfiguredRange[1]
+  //   );
+  //   updateStepSizeForDS(includedDataSource.id, stepSize);
+  // }, [
+  //   stepSize,
+  //   sliderRange,
+  //   configuredRange,
+  //   setConfiguredRange,
+  //   includedDataSource.id,
+  //   updateStepSizeForDS
+  // ]); //FIXME context updates based on step size and slider range change
 
   function handleChange(event: any, newValue: [number, number]) {
     if (
