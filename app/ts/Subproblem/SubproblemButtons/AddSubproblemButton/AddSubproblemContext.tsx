@@ -35,19 +35,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   } = useContext(WorkspaceContext);
   const {observedRanges} = useContext(SubproblemContext);
 
-  const dataSourcesById: Record<string, IDataSource> = _(criteria)
-    .flatMap('dataSources')
-    .keyBy('id')
-    .value();
-  const dataSourcesWithValues: Record<string, IDataSource> = _(dataSourcesById)
-    .filter((dataSource: IDataSource): boolean => {
-      return Boolean(observedRanges[dataSource.id]);
-    })
-    .keyBy('id')
-    .value();
-  const baselineMap: Record<string, boolean> = getBaselineMap(
-    alternatives,
-    workspace.relativePerformances
+  const [dataSourcesById] = useState<Record<string, IDataSource>>(
+    _(criteria).flatMap('dataSources').keyBy('id').value()
+  );
+  const [dataSourcesWithValues] = useState<Record<string, IDataSource>>(
+    _(dataSourcesById)
+      .filter((dataSource: IDataSource): boolean => {
+        return Boolean(observedRanges[dataSource.id]);
+      })
+      .keyBy('id')
+      .value()
+  );
+  const [baselineMap] = useState<Record<string, boolean>>(
+    getBaselineMap(alternatives, workspace.relativePerformances)
   );
   const defaultTitle = 'new problem';
 
@@ -65,9 +65,11 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       currentSubproblem.definition.excludedAlternatives
     )
   );
+
   const [criterionInclusions, setCriterionInclusions] = useState<
     Record<string, boolean>
   >(initInclusions(criteria, currentSubproblem.definition.excludedCriteria));
+
   const [dataSourceInclusions, setDataSourceInclusions] = useState<
     Record<string, boolean>
   >(
@@ -76,13 +78,27 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       currentSubproblem.definition.excludedDataSources
     )
   );
-  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>([]);
-  const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
-    getMissingValueWarnings(
-      dataSourceInclusions,
-      alternativeInclusions,
-      workspace
+
+  const [testInclusion, setTestInclusions] = useState({
+    alternatives: initInclusions(
+      alternatives,
+      currentSubproblem.definition.excludedAlternatives
+    ),
+    criteria: initInclusions(
+      criteria,
+      currentSubproblem.definition.excludedCriteria
+    ),
+    dataSources: initInclusions(
+      dataSourcesById,
+      currentSubproblem.definition.excludedDataSources
     )
+  });
+
+  const [scaleRangesWarnings, setScaleRangesWarnings] = useState<string[]>([
+    'Loading'
+  ]);
+  const [missingValueWarnings, setMissingValueWarnings] = useState<string[]>(
+    []
   );
   const [configuredRangesByDS, setConfiguredRanges] = useState<
     Record<string, [number, number]>
@@ -102,7 +118,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   // *** useEffects
   useEffect(() => {
     setErrors(getSubproblemTitleError(title, subproblems));
-  }, [title]);
+  }, [title, subproblems]);
 
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
@@ -152,7 +168,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       setStepSizeOptionsByDS(stepSizeOptions);
       setStepSizesByDS(stepSizes);
     }
-  }, [observedRanges, currentSubproblem]);
+  }, [observedRanges, currentSubproblem, dataSourcesWithValues]);
   // *** end useEffects
 
   function updateAlternativeInclusion(id: string, newValue: boolean) {

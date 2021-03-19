@@ -67,7 +67,14 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
       newConfiguredRange[1]
     );
     updateStepSizeForDS(includedDataSource.id, stepSize);
-  }, [stepSize, sliderRange]);
+  }, [
+    stepSize,
+    sliderRange,
+    configuredRange,
+    setConfiguredRange,
+    includedDataSource.id,
+    updateStepSizeForDS
+  ]);
 
   function handleChange(event: any, newValue: [number, number]) {
     if (
