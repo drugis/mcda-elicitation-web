@@ -3,7 +3,6 @@ import IError from '@shared/interface/IError';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
-import {ErrorObject} from 'ajv';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {updateProblemToCurrentSchema} from 'app/ts/SchemaUtil/SchemaUtil';
 import axios, {AxiosResponse} from 'axios';
@@ -22,7 +21,10 @@ import {
 import ICreateWorkspaceContext from './ICreateWorkspaceContext';
 import IWorkspaceExample from './IWorkspaceExample';
 import {TWorkspaceCreateMethod} from './TWorkspaceCreateMethod';
-import {validateJsonSchema} from './ValidationUtil/ValidationUtil';
+import {
+  validateJsonSchema,
+  validateWorkspaceConstraints
+} from './ValidationUtil/ValidationUtil';
 
 export const CreateWorkspaceContext = createContext<ICreateWorkspaceContext>(
   {} as ICreateWorkspaceContext
@@ -40,7 +42,7 @@ export function CreateWorkspaceContextProviderComponent({
   const [tutorials, setTutorials] = useState<IWorkspaceExample[]>();
 
   const [selectedProblem, setSelectedProblem] = useState<IWorkspaceExample>();
-  const [validationErrors, setValidationErrors] = useState<ErrorObject[]>();
+  const [validationErrors, setValidationErrors] = useState<string[]>();
   const [workspaceCommand, setWorkspaceCommand] = useState<IWorkspaceCommand>();
 
   useEffect(() => {
@@ -62,9 +64,12 @@ export function CreateWorkspaceContextProviderComponent({
 
   const validateProblemAndSetCommand = useCallback(
     (problem: IUploadProblem) => {
-      // validateWorkspace FIXME
       const updatedProblem: IProblem = updateProblemToCurrentSchema(problem);
-      const validationErrors = validateJsonSchema(updatedProblem);
+      const validationErrors = [
+        ...validateJsonSchema(updatedProblem),
+        ...validateWorkspaceConstraints(updatedProblem)
+      ];
+
       setValidationErrors(validationErrors);
       if (_.isEmpty(validationErrors)) {
         setWorkspaceCommand({

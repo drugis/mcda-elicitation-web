@@ -8,11 +8,10 @@ import {
   RadioGroup,
   Select
 } from '@material-ui/core';
-import {ErrorObject} from 'ajv';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import _ from 'lodash';
-import React, {ChangeEvent, useContext} from 'react';
+import React, {ChangeEvent, useCallback, useContext} from 'react';
 import {CreateWorkspaceContext} from '../CreateWorkspaceContext';
 import IWorkspaceExample from '../IWorkspaceExample';
 import {TWorkspaceCreateMethod} from '../TWorkspaceCreateMethod';
@@ -36,18 +35,72 @@ export default function CreateWorkspaceDialog({
     validationErrors
   } = useContext(CreateWorkspaceContext);
 
-  function handleMethodChanged(event: ChangeEvent<HTMLInputElement>): void {
-    const method: TWorkspaceCreateMethod = event.target
-      .value as TWorkspaceCreateMethod; //FIXME ?
-    setMethod(method);
-    if (method === 'example') {
-      setSelectedProblem(examples[0]);
-    } else if (method === 'tutorial') {
-      setSelectedProblem(tutorials[0]);
-    }
-  }
+  const handleMethodChanged = useCallback(
+    (event: ChangeEvent<HTMLInputElement>): void => {
+      const method: TWorkspaceCreateMethod = event.target
+        .value as TWorkspaceCreateMethod; //FIXME ?
+      setMethod(method);
+      if (method === 'example') {
+        setSelectedProblem(examples[0]);
+      } else if (method === 'tutorial') {
+        setSelectedProblem(tutorials[0]);
+      }
+    },
+    [setMethod, setSelectedProblem, examples, tutorials]
+  );
 
-  function renderWorkspaceInput(): JSX.Element {
+  const SelectOptions = useCallback(
+    ({
+      workspaceExamples
+    }: {
+      workspaceExamples: IWorkspaceExample[];
+    }): JSX.Element => {
+      return (
+        <>
+          {_.map(
+            workspaceExamples,
+            (workspaceExample: IWorkspaceExample): JSX.Element => (
+              <option
+                value={workspaceExample.title}
+                key={workspaceExample.title}
+              >
+                {workspaceExample.title}
+              </option>
+            )
+          )}
+        </>
+      );
+    },
+    []
+  );
+
+  const handleExampleChanged = useCallback(
+    (event: ChangeEvent<{value: string}>): void => {
+      setSelectedProblem(_.find(examples, ['title', event.target.value]));
+    },
+    [setSelectedProblem, examples]
+  );
+
+  const handleTutorialChanged = useCallback(
+    (event: ChangeEvent<{value: string}>): void => {
+      setSelectedProblem(_.find(tutorials, ['title', event.target.value]));
+    },
+    [setSelectedProblem, tutorials]
+  );
+
+  const handleFileUpload = useCallback(
+    (event: ChangeEvent<HTMLInputElement>): void => {
+      setUploadedFile(event.target.files[0]);
+    },
+    [setUploadedFile]
+  );
+
+  const handleAddButtonClick = useCallback((): void => {
+    closeDialog();
+    addWorkspaceCallback();
+  }, [closeDialog, addWorkspaceCallback]);
+
+  const renderWorkspaceInput = useCallback((): JSX.Element => {
     if (method === 'example') {
       return (
         <Select
@@ -77,43 +130,16 @@ export default function CreateWorkspaceDialog({
     } else {
       return <></>;
     }
-  }
-
-  function SelectOptions({
-    workspaceExamples
-  }: {
-    workspaceExamples: IWorkspaceExample[];
-  }): JSX.Element {
-    return (
-      <>
-        {_.map(
-          workspaceExamples,
-          (workspaceExample: IWorkspaceExample): JSX.Element => (
-            <option value={workspaceExample.title} key={workspaceExample.title}>
-              {workspaceExample.title}
-            </option>
-          )
-        )}
-      </>
-    );
-  }
-
-  function handleExampleChanged(event: ChangeEvent<{value: string}>): void {
-    setSelectedProblem(_.find(examples, ['title', event.target.value]));
-  }
-
-  function handleTutorialChanged(event: ChangeEvent<{value: string}>): void {
-    setSelectedProblem(_.find(tutorials, ['title', event.target.value]));
-  }
-
-  function handleFileUpload(event: ChangeEvent<HTMLInputElement>): void {
-    setUploadedFile(event.target.files[0]);
-  }
-
-  function handleAddButtonClick(): void {
-    closeDialog();
-    addWorkspaceCallback();
-  }
+  }, [
+    examples,
+    method,
+    selectedProblem,
+    tutorials,
+    handleExampleChanged,
+    handleFileUpload,
+    handleTutorialChanged,
+    SelectOptions
+  ]);
 
   return (
     <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth={'sm'}>
@@ -154,11 +180,7 @@ export default function CreateWorkspaceDialog({
           <Grid item xs={9}>
             <DisplayErrors
               identifier="invalid-schema"
-              errors={_.map(
-                validationErrors,
-                (error: ErrorObject): string =>
-                  error.dataPath + ' ' + error.message
-              )}
+              errors={validationErrors}
             />
           </Grid>
         </Grid>

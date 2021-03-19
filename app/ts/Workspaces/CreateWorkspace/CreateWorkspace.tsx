@@ -1,19 +1,20 @@
 import {Button, Grid} from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {CreateWorkspaceContextProviderComponent} from './CreateWorkspaceContext';
 import CreateWorkspaceDialog from './CreateWorkspaceDialog/CreateWorkspaceDialog';
 
 export default function CreateWorkspace(): JSX.Element {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  function openDialog(): void {
+  const openDialog = useCallback((): void => {
     setIsDialogOpen(true);
-  }
+  }, [setIsDialogOpen]);
 
-  function closeDialog(): void {
+  const closeDialog = useCallback((): void => {
     setIsDialogOpen(false);
-  }
+  }, [setIsDialogOpen]);
+
   return (
     <>
       <Grid item xs={12}>

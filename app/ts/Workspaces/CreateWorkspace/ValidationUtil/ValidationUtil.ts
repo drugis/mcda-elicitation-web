@@ -1,19 +1,16 @@
 import IAlternative from '@shared/interface/IAlternative';
-import ICriterion from '@shared/interface/ICriterion';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
 import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativePerformanceTableEntry';
 import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
-import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
-import {TPreference} from '@shared/types/Preferences';
 import {isAbsoluteEntry} from '@shared/workspaceService';
-import Ajv, {ErrorObject} from 'ajv';
+import Ajv from 'ajv';
 import _ from 'lodash';
 
-export function validateJsonSchema(problem: IProblem): ErrorObject[] {
+export function validateJsonSchema(problem: IProblem): string[] {
   const ajv = loadSchemas();
   if (!ajv.validate('problem.json', problem)) {
-    return ajv.errors;
+    return _.map(ajv.errors, (error) => `${error.dataPath} ${error.message}`);
   } else {
     return [];
   }
@@ -48,7 +45,7 @@ function loadSchema(ajv: Ajv, schemaName: string): void {
   ajv.addSchema(schema, schemaName);
 }
 
-function validateWorkspaceConstraints(problem: IProblem): string[] {
+export function validateWorkspaceConstraints(problem: IProblem): string[] {
   const constraints = [
     missingTitle,
     performanceTableWithInvalidAlternative,
@@ -57,12 +54,12 @@ function validateWorkspaceConstraints(problem: IProblem): string[] {
     relativePerformanceWithBadMu,
     relativePerformanceWithBadCov
   ];
-  return _.map(
-    constraints,
-    (constraint: (problem: IProblem) => string): string => {
+  return _(constraints)
+    .map((constraint: (problem: IProblem) => string): string => {
       return constraint(problem);
-    }
-  );
+    })
+    .filter()
+    .value();
 }
 
 function missingTitle(problem: IProblem): string {
@@ -82,11 +79,7 @@ function performanceTableWithInvalidAlternative({
     }
   );
   if (entry && isAbsoluteEntry(entry)) {
-    return (
-      'Performance table contains data for nonexistent alternative: "' +
-      entry.alternative +
-      '"'
-    );
+    return `Performance table contains data for nonexistent alternative: "${entry.alternative}"`;
   }
 }
 
@@ -101,16 +94,12 @@ function performanceTableWithInvalidCriterion({
     }
   );
   if (entry) {
-    return (
-      'Performance table contains data for nonexistent criterion: "' +
-      entry.criterion +
-      '"'
-    );
+    return `Performance table contains data for nonexistent criterion: "${entry.criterion}"`;
   }
 }
 
 function performanceTableWithMissingData(problem: IProblem): string {
-  if (hasEnoughEntries(problem)) {
+  if (!hasEnoughEntries(problem)) {
     return 'Performance table is missing data';
   }
 }
@@ -141,13 +130,9 @@ function hasEntryForCoordinate(
 }
 
 function relativePerformanceWithBadMu(problem: IProblem): string {
-  const entryWithBadMu = findEntryWithBadMu(problem.performanceTable);
+  const entryWithBadMu = findEntryWithBadMu(problem);
   if (entryWithBadMu) {
-    return (
-      'The mu of the performance of criterion: "' +
-      entryWithBadMu.criterion +
-      '" refers to nonexistent alternative'
-    );
+    return `The mu of the criterion: "${entryWithBadMu.criterion}" refers to nonexistent alternative`;
   }
 }
 
