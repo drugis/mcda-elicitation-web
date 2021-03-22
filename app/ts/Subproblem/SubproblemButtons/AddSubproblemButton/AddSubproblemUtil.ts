@@ -177,7 +177,16 @@ export function getScaleBlockingWarnings(
       'Effects table contains criterion where all values are indentical'
     );
   }
+  if (hasTooManyCriteria(criterionInclusions)) {
+    warnings.push('Effects table contains more than 12 criteria');
+  }
   return warnings;
+}
+
+export function hasTooManyCriteria(
+  criterionInclusions: Record<string, boolean>
+) {
+  return _(criterionInclusions).map().filter().value().length > 12;
 }
 
 function hasRowWithOnlySameValue(
@@ -355,7 +364,7 @@ export function getSubproblemTitleError(
   }
 }
 
-export function initializeStepSizeOptions(
+export function getInitialStepSizeOptions(
   dataSourcesById: Record<string, IDataSource>,
   observedRanges: Record<string, [number, number]>
 ): Record<string, [number, number, number]> {
@@ -377,7 +386,7 @@ function determineStepSizes([lowestObservedValue, highestObservedValue]: [
   ];
 }
 
-export function intializeStepSizes(
+export function getIntialStepSizes(
   stepSizeOptions: Record<string, [number, number, number]>,
   stepSizesByDS: Record<string, number>
 ): Record<string, number> {
@@ -389,4 +398,18 @@ export function intializeStepSizes(
         : options[1];
     }
   );
+}
+
+export function getDataSourcesWithValidValues(
+  dataSourcesById: Record<string, IDataSource>,
+  observedRanges: Record<string, [number, number]>
+) {
+  return _(dataSourcesById)
+    .filter(
+      (dataSource: IDataSource): boolean =>
+        Boolean(observedRanges[dataSource.id]) &&
+        observedRanges[dataSource.id][0] !== observedRanges[dataSource.id][1]
+    )
+    .keyBy('id')
+    .value();
 }
