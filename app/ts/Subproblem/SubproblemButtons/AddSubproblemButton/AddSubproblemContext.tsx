@@ -1,17 +1,18 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import { SubproblemContext } from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import { WorkspaceContext } from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState
 } from 'react';
-import {adjustConfiguredRangeForStepSize} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
+import { adjustConfiguredRangeForStepSize } from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
 import {
   createSubproblemDefinition,
   getBaselineMap,
@@ -42,18 +43,18 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   } = useContext(WorkspaceContext);
   const {observedRanges} = useContext(SubproblemContext);
 
-  const [dataSourcesById] = useState<Record<string, IDataSource>>(
+  const {current: dataSourcesById} = useRef<Record<string, IDataSource>>(
     _(criteria).flatMap('dataSources').keyBy('id').value()
   );
-  const [dataSourcesWithValues] = useState<Record<string, IDataSource>>(
+  const {current: dataSourcesWithValues} = useRef<Record<string, IDataSource>>(
     _(dataSourcesById)
-      .filter((dataSource: IDataSource): boolean => {
-        return Boolean(observedRanges[dataSource.id]);
-      })
+      .filter((dataSource: IDataSource): boolean =>
+        Boolean(observedRanges[dataSource.id])
+      )
       .keyBy('id')
       .value()
   );
-  const [baselineMap] = useState<Record<string, boolean>>(
+  const {current: baselineMap} = useRef<Record<string, boolean>>(
     getBaselineMap(alternatives, workspace.relativePerformances)
   );
   const defaultTitle = 'new problem';
@@ -81,7 +82,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     Record<string, boolean>
   >(
     initInclusions(
-      dataSourcesById,
+      dataSourcesById.current,
       currentSubproblem.definition.excludedDataSources
     )
   );
@@ -104,7 +105,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [stepSizesByDS, setStepSizesByDS] = useState<Record<string, number>>(
     {}
   );
-
+  
   // *** end states
 
   // *** useEffects
@@ -141,28 +142,21 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   useEffect(() => {
     if (!_.isEmpty(observedRanges)) {
+      const filteredRanges = _.omitBy(observedRanges, (range):boolean => {
+        if(rangewidth0 || excludedDS || excludedCrit || lessthan2numbers)
+      })
       const initialConfiguredRanges = initConfiguredRanges(
-        dataSourcesWithValues,
+        dataSourcesWithValues.current,
         observedRanges,
         currentSubproblem.definition.ranges
-      );
-      const stepSizeOptions = initializeStepSizeOptions(
-        dataSourcesWithValues,
-        observedRanges
-      );
-      const stepSizes = intializeStepSizes(
-        stepSizeOptions,
-        currentSubproblem.definition.stepSizes
       );
 
       setSliderRangesByDS(initialConfiguredRanges);
       setStepSizesByDS(currentSubproblem.definition.stepSizes);
-      setStepSizeOptionsByDS(stepSizeOptions);
-      setStepSizesByDS(stepSizes);
 
       setConfiguredRanges(
         _.mapValues(
-          dataSourcesWithValues,
+          dataSourcesWithValues.current,
           (dataSource: IDataSource): [number, number] =>
             adjustConfiguredRangeForStepSize(
               stepSizes[dataSource.id],
@@ -173,6 +167,23 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       );
     }
   }, [observedRanges, currentSubproblem, dataSourcesWithValues]);
+
+  useEffect(() => {
+    const stepSizeOptions = initializeStepSizeOptions(
+      dataSourcesWithValues,
+      observedRanges
+    );
+    const stepSizes = intializeStepSizes(
+      stepSizeOptions,
+      currentSubproblem.definition.stepSizes
+    );
+    setStepSizeOptionsByDS(stepSizeOptions);
+    setStepSizesByDS(stepSizes);
+  }, [
+    currentSubproblem.definition.stepSizes,
+    dataSourcesWithValues,
+    observedRanges
+  ]);
   // *** end useEffects
 
   const updateAlternativeInclusion = useCallback(
@@ -310,21 +321,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       lowestConfiguredValue: number,
       highestConfiguredValue: number
     ): void => {
-      let newRanges = _.cloneDeep(configuredRangesByDS);
-      newRanges[dataSourceId] = [lowestConfiguredValue, highestConfiguredValue];
-      setConfiguredRanges(newRanges);
+      setConfiguredRanges({
+        ...configuredRangesByDS,
+        [dataSourceId]: [lowestConfiguredValue, highestConfiguredValue]
+      });
     },
-    [configuredRangesByDS]
+    [setConfiguredRanges, configuredRangesByDS]
   );
 
   const updateSliderRangeforDS = useCallback(
     (dataSourceId: string, newRange: [number, number]): void => {
-      let newEntry: Record<string, [number, number]> = {};
-      newEntry[dataSourceId] = newRange;
-      const newSliderRanges = {...sliderRangesByDS, ...newEntry};
-      setSliderRangesByDS(newSliderRanges);
+      setSliderRangesByDS({...sliderRangesByDS, [dataSourceId]: newRange});
     },
-    [sliderRangesByDS]
+    [setSliderRangesByDS, sliderRangesByDS]
   );
 
   const getSliderRangeForDS = useCallback(
@@ -336,12 +345,19 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   const updateStepSizeForDS = useCallback(
     (dataSourceId: string, newStepSize: number): void => {
-      let newEntry: Record<string, number> = {};
-      newEntry[dataSourceId] = newStepSize;
-      const newStepSizes = {...stepSizesByDS, ...newEntry};
+      const newStepSizes = {...stepSizesByDS, [dataSourceId]: newStepSize};
       setStepSizesByDS(newStepSizes);
+      const configuredRange = configuredRangesByDS[dataSourceId];
+      const [newMin, newMax] = adjustConfiguredRangeForStepSize(
+        newStepSize,
+        configuredRangesByDS[dataSourceId],
+        sliderRangesByDS[dataSourceId]
+      );
+      if (!_.isEqual(configuredRange, [newMin, newMax])) {
+        setConfiguredRange(dataSourceId, newMin, newMax);
+      }
     },
-    [stepSizesByDS]
+    [configuredRangesByDS, setConfiguredRange, sliderRangesByDS, stepSizesByDS]
   );
 
   const getStepSizeForDS = useCallback(

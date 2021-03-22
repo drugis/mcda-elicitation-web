@@ -12,9 +12,9 @@ import {
 } from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
-import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import {getUnitLabelNullsafe} from 'app/ts/util/getUnitLabel';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import React, {useContext} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {
   createMarks,
@@ -33,8 +33,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     getSliderRangeForDS,
     setConfiguredRange,
     updateSliderRangeforDS,
-    getStepSizeForDS,
-    updateStepSizeForDS
+    getStepSizeForDS
   } = useContext(AddSubproblemContext);
   const includedDataSource = getIncludedDataSourceForCriterion(criterion);
   const sliderRange = getSliderRangeForDS(includedDataSource.id);
@@ -54,57 +53,35 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     getUpperBound(usePercentage, includedDataSource.unitOfMeasurement)
   ];
 
-  // useEffect(() => {
-  //   const newConfiguredRange = adjustConfiguredRangeForStepSize(
-  //     stepSize,
-  //     configuredRange,
-  //     sliderRange
-  //   );
-  //   setConfiguredRange(
-  //     includedDataSource.id,
-  //     newConfiguredRange[0],
-  //     newConfiguredRange[1]
-  //   );
-  //   updateStepSizeForDS(includedDataSource.id, stepSize);
-  // }, [
-  //   stepSize,
-  //   sliderRange,
-  //   configuredRange,
-  //   setConfiguredRange,
-  //   includedDataSource.id,
-  //   updateStepSizeForDS
-  // ]); //FIXME context updates based on step size and slider range change
-
-  function handleChange(event: any, newValue: [number, number]) {
-    if (
-      newValue[0] <= lowestObservedValue &&
-      newValue[1] >= highestObservedValue
-    ) {
-      setConfiguredRange(includedDataSource.id, newValue[0], newValue[1]);
+  function handleChange(event: any, [lowValue, highValue]: [number, number]) {
+    if (lowValue <= lowestObservedValue && highValue >= highestObservedValue) {
+      setConfiguredRange(includedDataSource.id, lowValue, highValue);
     }
   }
 
-  function renderUnitLabel(): string {
-    const unitLabel = getUnitLabel(
-      includedDataSource.unitOfMeasurement,
-      showPercentages
-    );
-    return unitLabel ? `(${unitLabel})` : '';
-  }
-
-  function decreaseLowerBound(): void {
+  const decreaseLowerBound = useCallback((): void => {
     updateSliderRangeforDS(
       includedDataSource.id,
       decreaseSliderLowerBound(sliderRange, lowerTheoretical)
     );
-  }
+  }, [
+    includedDataSource.id,
+    lowerTheoretical,
+    sliderRange,
+    updateSliderRangeforDS
+  ]);
 
-  function increaseUpperBound(): void {
+  const increaseUpperBound = useCallback((): void => {
     updateSliderRangeforDS(
       includedDataSource.id,
       increaseSliderUpperBound(sliderRange, upperTheoretical)
     );
-  }
+  }, [
+    updateSliderRangeforDS,
+    includedDataSource.id,
+    sliderRange,
+    upperTheoretical
+  ]);
 
   const restrictedAreaRatio: string = calculateRestrictedAreaWidthPercentage(
     sliderRange,
@@ -131,7 +108,10 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
   return (
     <Grid container item xs={12} spacing={4} justify="center">
       <Grid item xs={12}>
-        {`${criterion.title} ${renderUnitLabel()}`}
+        {`${criterion.title} ${getUnitLabelNullsafe(
+          includedDataSource.unitOfMeasurement,
+          showPercentages
+        )}`}
       </Grid>
       <Grid item xs={1}>
         <Tooltip title="Extend the range">
