@@ -34,7 +34,6 @@ export const AddSubproblemContext = createContext<IAddSubproblemContext>(
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
-  console.log('render context');
   const {
     subproblems,
     alternatives,

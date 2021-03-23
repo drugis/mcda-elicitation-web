@@ -7,6 +7,7 @@ import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
+import {MAX_PROBLEM_CRITERIA} from 'app/ts/ManualInput/constants';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import _ from 'lodash';
@@ -186,7 +187,9 @@ export function getScaleBlockingWarnings(
 export function hasTooManyCriteria(
   criterionInclusions: Record<string, boolean>
 ) {
-  return _(criterionInclusions).map().filter().value().length > 12;
+  return (
+    _(criterionInclusions).map().filter().value().length > MAX_PROBLEM_CRITERIA
+  );
 }
 
 function hasRowWithOnlySameValue(
