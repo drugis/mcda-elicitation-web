@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import ICriterion from '@shared/interface/ICriterion';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useCallback, useContext} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
@@ -11,7 +12,7 @@ import {
 import ScalesSlider from './ScalesSlider/ScalesSlider';
 
 export default function AddSubproblemScaleRanges() {
-  const {criteria} = useContext(AddSubproblemContext);
+  const {criteria} = useContext(WorkspaceContext);
   const {scaleRangesWarnings, isCriterionExcluded} = useContext(
     AddSubproblemContext
   );
