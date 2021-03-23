@@ -229,13 +229,13 @@ export function renderInputEffect(effect: Effect, usePercentage: boolean) {
 }
 
 export function normalizeCells<T extends Effect | Distribution>(
-  datasourceId: string,
+  dataSourceId: string,
   items: Record<string, Record<string, T>>
 ): Record<string, Record<string, T>> {
   return _.mapValues(
     items,
     (itemForDS: Record<string, T>, key: string): Record<string, T> => {
-      if (key !== datasourceId) {
+      if (key !== dataSourceId) {
         return itemForDS;
       } else {
         return normalizeItems(itemForDS);

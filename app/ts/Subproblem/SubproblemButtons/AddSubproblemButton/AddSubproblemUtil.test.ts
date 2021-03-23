@@ -7,11 +7,13 @@ import IWorkspace from '@shared/interface/IWorkspace';
 import {
   createSubproblemDefinition,
   getBaselineMap,
+  getDataSourcesWithValidValues,
+  getInitialStepSizeOptions,
+  getIntialStepSizes,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
-  initializeStepSizeOptions,
+  hasTooManyCriteria,
   initInclusions,
-  intializeStepSizes,
   isAlternativeDeselectionDisabled,
   isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
@@ -283,6 +285,7 @@ describe('addSubproblemUtil', () => {
       'Effects table contains multiple data sources per criterion';
     const sameValueRowWarning =
       'Effects table contains criterion where all values are indentical';
+
     const observedRanges: Record<string, [number, number]> = {
       ds1Id: [1, 2],
       ds2Id: [2, 3]
@@ -530,6 +533,44 @@ describe('addSubproblemUtil', () => {
       ];
       expect(result).toEqual(expectedResult);
     });
+    describe('hasTooManyCriteria', () => {
+      it('should return true if there are more than 12 criteria included', () => {
+        const includedCriteria: Record<string, boolean> = {
+          crit1Id: true,
+          crit2Id: true,
+          crit3Id: true,
+          crit4Id: true,
+          crit5Id: true,
+          crit6Id: true,
+          crit7Id: true,
+          crit8Id: true,
+          crit9Id: true,
+          crit10Id: true,
+          crit11Id: true,
+          crit12Id: true,
+          crit13Id: true
+        };
+        expect(hasTooManyCriteria(includedCriteria)).toBeTruthy();
+      });
+
+      it('should return false if 12 or less criteria are included', () => {
+        const includedCriteria: Record<string, boolean> = {
+          crit1Id: true,
+          crit2Id: true,
+          crit3Id: true,
+          crit4Id: true,
+          crit5Id: true,
+          crit6Id: true,
+          crit7Id: true,
+          crit8Id: true,
+          crit9Id: true,
+          crit10Id: true,
+          crit11Id: true,
+          crit12Id: true
+        };
+        expect(hasTooManyCriteria(includedCriteria)).toBeFalsy();
+      });
+    });
   });
 
   describe('isAlternativeDeselectionDisabled', () => {
@@ -724,7 +765,7 @@ describe('addSubproblemUtil', () => {
     });
   });
 
-  describe('initializeStepSizeOptions', () => {
+  describe('getInitialStepSizeOptions', () => {
     it('should return step size options for each data source', () => {
       const dataSourcesById: Record<string, IDataSource> = {
         ds1Id: {id: 'ds1Id'} as IDataSource
@@ -732,7 +773,7 @@ describe('addSubproblemUtil', () => {
       const observedRanges: Record<string, [number, number]> = {
         ds1Id: [0, 0.9]
       };
-      const result = initializeStepSizeOptions(dataSourcesById, observedRanges);
+      const result = getInitialStepSizeOptions(dataSourcesById, observedRanges);
       const expectedResult: Record<string, [number, number, number]> = {
         ds1Id: [0.1, 0.01, 0.001]
       };
@@ -740,13 +781,13 @@ describe('addSubproblemUtil', () => {
     });
   });
 
-  describe('intializeStepSizes', () => {
+  describe('getInitialStepSizes', () => {
     it('should return existing step sizes', () => {
       const stepSizeOptions: Record<string, [number, number, number]> = {
         ds1Id: [0.1, 0.01, 0.001]
       };
       const stepSizesByDS: Record<string, number> = {ds1Id: 0.0001};
-      const result = intializeStepSizes(stepSizeOptions, stepSizesByDS);
+      const result = getIntialStepSizes(stepSizeOptions, stepSizesByDS);
       const expectedResult: Record<string, number> = {ds1Id: 0.0001};
       expect(result).toEqual(expectedResult);
     });
@@ -756,9 +797,34 @@ describe('addSubproblemUtil', () => {
         ds1Id: [0.1, 0.01, 0.001]
       };
       const stepSizesByDS: Record<string, number> = {};
-      const result = intializeStepSizes(stepSizeOptions, stepSizesByDS);
+      const result = getIntialStepSizes(stepSizeOptions, stepSizesByDS);
       const expectedResult: Record<string, number> = {ds1Id: 0.01};
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getDataSourcesWithValidValues', () => {
+    it('should return only data sources with valid values', () => {
+      const dataSourcesById = {
+        ds1: {
+          id: 'ds1'
+        } as IDataSource,
+        ds2: {
+          id: 'ds2'
+        } as IDataSource,
+        ds3: {
+          id: 'ds3'
+        } as IDataSource
+      };
+      const observedRanges: Record<string, [number, number]> = {
+        ds1: [1, 2],
+        ds3: [1, 1]
+      };
+      const result = getDataSourcesWithValidValues(
+        dataSourcesById,
+        observedRanges
+      );
+      expect(result).toEqual({ds1: {id: 'ds1'}});
     });
   });
 });

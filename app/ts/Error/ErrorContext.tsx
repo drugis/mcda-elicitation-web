@@ -1,15 +1,18 @@
 import {OurError} from '@shared/interface/IError';
 import IErrorContext from '@shared/interface/IErrorContext';
-import React, {createContext, useState} from 'react';
+import React, {createContext, useCallback, useState} from 'react';
 
 export const ErrorContext = createContext<IErrorContext>({} as IErrorContext);
 
 export function ErrorContextProviderComponent(props: {children: any}) {
   const [error, setError] = useState<string>();
 
-  function setErrorWrapper(ourError: OurError): void {
-    setError(ourError.message);
-  }
+  const setErrorWrapper = useCallback(
+    (ourError: OurError): void => {
+      setError(ourError.message);
+    },
+    [setError]
+  );
 
   return (
     <ErrorContext.Provider
