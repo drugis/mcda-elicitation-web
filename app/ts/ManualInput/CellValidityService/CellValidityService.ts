@@ -180,7 +180,7 @@ function isValidCell(cell: Effect | Distribution, unit: IUnitOfMeasurement) {
 }
 
 export function getOutOfBoundsError(
-  datasourceId: string,
+  dataSourceId: string,
   effects: Record<string, Record<string, Effect>>,
   distributions: Record<string, Record<string, Distribution>>,
   inputUpperBound: number
@@ -188,9 +188,9 @@ export function getOutOfBoundsError(
   const upperBound = inputUpperBound;
   const lowerBound = 0;
   if (
-    hasOutOfBoundsEffect(effects[datasourceId], lowerBound, upperBound) ||
+    hasOutOfBoundsEffect(effects[dataSourceId], lowerBound, upperBound) ||
     hasOutOfBoundsDistribution(
-      distributions[datasourceId],
+      distributions[dataSourceId],
       lowerBound,
       upperBound
     )

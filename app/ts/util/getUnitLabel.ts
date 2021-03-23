@@ -13,3 +13,11 @@ export function getUnitLabel(
     return unit.label;
   }
 }
+
+export function getUnitLabelNullsafe(
+  unitOfMeasurement: IUnitOfMeasurement | IProblemUnitOfMeasurement,
+  showPercentages: boolean
+): string {
+  const unitLabel = getUnitLabel(unitOfMeasurement, showPercentages);
+  return unitLabel ? `(${unitLabel})` : '';
+}

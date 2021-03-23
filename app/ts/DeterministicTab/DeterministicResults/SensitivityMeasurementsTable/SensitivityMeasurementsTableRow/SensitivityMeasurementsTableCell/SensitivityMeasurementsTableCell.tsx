@@ -48,7 +48,12 @@ export default function SensitivityMeasurementsTableCell({
     if (isDirty && values.currentValue === values.originalValue) {
       setIsDirty(false);
     }
-  }, [sensitivityTableValues]);
+  }, [
+    isDirty,
+    sensitivityTableValues,
+    values.currentValue,
+    values.originalValue
+  ]);
 
   function openPopover(event: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);

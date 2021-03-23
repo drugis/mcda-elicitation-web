@@ -1,17 +1,12 @@
 import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
-import IBetaDistribution from '@shared/interface/IBetaDistribution';
 import {Distribution} from '@shared/interface/IDistribution';
-import IGammaDistribution from '@shared/interface/IGammaDistribution';
-import INormalDistribution from '@shared/interface/INormalDistribution';
-import IRangeEffect from '@shared/interface/IRangeEffect';
-import IValueEffect from '@shared/interface/IValueEffect';
 import {ManualInputContext} from 'app/ts/ManualInput/ManualInputContext';
-import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import React, {useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import DistributionCellDialog from '../DistributionCellDialog/DistributionCellDialog';
 import {InputCellContextProviderComponent} from '../InputCellContext/InputCellContext';
+import {createDistributionLabel} from '../InputCellUtil';
 
 export default function DistributionCell({
   alternativeId
@@ -26,9 +21,6 @@ export default function DistributionCell({
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [label, setLabel] = useState('');
 
-  const NO_DISTRIBUTION_ENTERED = 'No distribution entered';
-  const INVALID_VALUE = 'Invalid value';
-
   const distribution = getDistribution(
     criterion.id,
     dataSource.id,
@@ -36,85 +28,8 @@ export default function DistributionCell({
   );
 
   useEffect(() => {
-    setLabel(createLabel(distribution));
-  }, [distributions, dataSource.unitOfMeasurement]);
-
-  function createLabel(distribution: Distribution) {
-    switch (distribution.type) {
-      case 'value':
-        return createValueLabel(distribution);
-      case 'normal':
-        return createNormalLabel(distribution);
-      case 'range':
-        return createRangeLabel(distribution);
-      case 'beta':
-        return createBetaLabel(distribution);
-      case 'gamma':
-        return createGammaLabel(distribution);
-      case 'text':
-        return distribution.text ? distribution.text : 'Empty';
-      case 'empty':
-        return 'Empty';
-    }
-  }
-
-  function createValueLabel(distribution: IValueEffect): string {
-    if (distribution.value === undefined) {
-      return NO_DISTRIBUTION_ENTERED;
-    } else if (valueIsOutofBounds(distribution.value)) {
-      return INVALID_VALUE;
-    } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `${significantDigits(distribution.value * 100)}%`;
-    } else {
-      return `${distribution.value}`;
-    }
-  }
-
-  function createNormalLabel(distribution: INormalDistribution) {
-    if (distribution.mean === undefined) {
-      return NO_DISTRIBUTION_ENTERED;
-    } else if (
-      valueIsOutofBounds(distribution.mean) ||
-      valueIsOutofBounds(distribution.standardError)
-    ) {
-      return INVALID_VALUE;
-    } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `Normal(${significantDigits(
-        distribution.mean * 100
-      )}%, ${significantDigits(distribution.standardError * 100)}%)`;
-    } else {
-      return `Normal(${distribution.mean}, ${distribution.standardError})`;
-    }
-  }
-
-  function createRangeLabel(distribution: IRangeEffect): string {
-    if (
-      valueIsOutofBounds(distribution.lowerBound) ||
-      valueIsOutofBounds(distribution.upperBound)
-    ) {
-      return INVALID_VALUE;
-    } else if (dataSource.unitOfMeasurement.type === 'percentage') {
-      return `[${significantDigits(
-        distribution.lowerBound * 100
-      )}%, ${significantDigits(distribution.upperBound * 100)}%]`;
-    } else {
-      return `[${distribution.lowerBound}, ${distribution.upperBound}]`;
-    }
-  }
-
-  function valueIsOutofBounds(value: number): boolean {
-    return (
-      value < dataSource.unitOfMeasurement.lowerBound ||
-      value > dataSource.unitOfMeasurement.upperBound
-    );
-  }
-  function createBetaLabel(distribution: IBetaDistribution): string {
-    return `Beta(${distribution.alpha}, ${distribution.beta})`;
-  }
-
-  function createGammaLabel(distribution: IGammaDistribution): string {
-    return `Gamma(${distribution.alpha}, ${distribution.beta})`;
-  }
+    setLabel(createDistributionLabel(distribution, dataSource));
+  }, [distribution, dataSource]);
 
   function openDialog(): void {
     setIsDialogOpen(true);

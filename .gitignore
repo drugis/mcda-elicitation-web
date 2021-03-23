@@ -58,3 +58,10 @@ test/endToEnd/util/ITestCriterionRowWithUncertainty.js
 test/endToEnd/workspaceSortingTest.js
 test/endToEnd/onlyEmptyAndTextTest.js
 test/endToEnd/stepSizeTest.js
+
+#latex nonsense
+*.fls
+*.out
+*.fdb_latexmk
+*.toc
+*.gz
