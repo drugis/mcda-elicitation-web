@@ -7,14 +7,15 @@ import IWorkspace from '@shared/interface/IWorkspace';
 import {
   createSubproblemDefinition,
   getBaselineMap,
+  getDataSourcesWithValidValues,
+  getInitialStepSizeOptions,
+  getIntialStepSizes,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
-  getInitialStepSizeOptions,
+  hasTooManyCriteria,
   initInclusions,
-  getIntialStepSizes,
   isAlternativeDeselectionDisabled,
-  isDataSourceDeselectionDisabled,
-  hasTooManyCriteria
+  isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
 
 describe('addSubproblemUtil', () => {
@@ -803,8 +804,27 @@ describe('addSubproblemUtil', () => {
   });
 
   describe('getDataSourcesWithValidValues', () => {
-    it('should', () => {
-      fail();
+    it('should return only data sources with valid values', () => {
+      const dataSourcesById = {
+        ds1: {
+          id: 'ds1'
+        } as IDataSource,
+        ds2: {
+          id: 'ds2'
+        } as IDataSource,
+        ds3: {
+          id: 'ds3'
+        } as IDataSource
+      };
+      const observedRanges: Record<string, [number, number]> = {
+        ds1: [1, 2],
+        ds3: [1, 1]
+      };
+      const result = getDataSourcesWithValidValues(
+        dataSourcesById,
+        observedRanges
+      );
+      expect(result).toEqual({ds1: {id: 'ds1'}});
     });
   });
 });

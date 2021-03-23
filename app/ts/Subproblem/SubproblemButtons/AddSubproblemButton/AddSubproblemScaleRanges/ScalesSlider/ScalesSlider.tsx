@@ -6,6 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import {
   canBePercentage,
   getPercentifiedValue
@@ -14,74 +15,74 @@ import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabelNullsafe} from 'app/ts/util/getUnitLabel';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import React, {useCallback, useContext} from 'react';
-import {AddSubproblemContext} from '../../AddSubproblemContext';
-import {
-  createMarks,
-  decreaseSliderLowerBound,
-  increaseSliderUpperBound
-} from '../AddSubproblemScaleRangesUtil';
+import _ from 'lodash';
+import React, {memo, useContext} from 'react';
+import {createMarks} from '../AddSubproblemScaleRangesUtil';
 import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
 import StepSizeSelector from './StepSizeSelector/StepSizeSelector';
 
-export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
+interface IProps {
+  criterion: ICriterion;
+  dataSource: IDataSource;
+  sliderRange: [number, number];
+  stepSize: number;
+  configuredRange: [number, number];
+  changeCallback: (
+    dataSourceId: string,
+    lowValue: number,
+    highValue: number
+  ) => void;
+  changeLowerBoundCallback: (
+    dataSourceId: string,
+    lowerTheoretical: number,
+    sliderRange: [number, number]
+  ) => void;
+  changeUpperBoundCallback: (
+    dataSourceId: string,
+    upperTheoretical: number,
+    sliderRange: [number, number]
+  ) => void;
+}
+
+function ScalesSlider({
+  criterion,
+  dataSource,
+  sliderRange,
+  stepSize,
+  configuredRange,
+  changeCallback,
+  changeLowerBoundCallback,
+  changeUpperBoundCallback
+}: IProps) {
   const {showPercentages} = useContext(SettingsContext);
   const {observedRanges} = useContext(SubproblemContext);
-  const {
-    configuredRanges,
-    getIncludedDataSourceForCriterion,
-    getSliderRangeForDS,
-    setConfiguredRange,
-    updateSliderRangeforDS,
-    getStepSizeForDS
-  } = useContext(AddSubproblemContext);
-  const includedDataSource = getIncludedDataSourceForCriterion(criterion);
-  const sliderRange = getSliderRangeForDS(includedDataSource.id);
-  const stepSize = getStepSizeForDS(includedDataSource.id);
 
   // units
-  const unit = includedDataSource.unitOfMeasurement.type;
+  const unit = dataSource.unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
 
   // ranges
-  const configuredRange = configuredRanges[includedDataSource.id];
   const [lowestObservedValue, highestObservedValue] = observedRanges[
-    includedDataSource.id
+    dataSource.id
   ];
   const [lowerTheoretical, upperTheoretical]: [number, number] = [
-    includedDataSource.unitOfMeasurement.lowerBound,
-    getUpperBound(usePercentage, includedDataSource.unitOfMeasurement)
+    dataSource.unitOfMeasurement.lowerBound,
+    getUpperBound(usePercentage, dataSource.unitOfMeasurement)
   ];
 
   function handleChange(event: any, [lowValue, highValue]: [number, number]) {
     if (lowValue <= lowestObservedValue && highValue >= highestObservedValue) {
-      setConfiguredRange(includedDataSource.id, lowValue, highValue);
+      changeCallback(dataSource.id, lowValue, highValue);
     }
   }
 
-  const decreaseLowerBound = useCallback((): void => {
-    updateSliderRangeforDS(
-      includedDataSource.id,
-      decreaseSliderLowerBound(sliderRange, lowerTheoretical)
-    );
-  }, [
-    includedDataSource.id,
-    lowerTheoretical,
-    sliderRange,
-    updateSliderRangeforDS
-  ]);
+  function decreaseLowerBound(): void {
+    changeLowerBoundCallback(dataSource.id, lowerTheoretical, sliderRange);
+  }
 
-  const increaseUpperBound = useCallback((): void => {
-    updateSliderRangeforDS(
-      includedDataSource.id,
-      increaseSliderUpperBound(sliderRange, upperTheoretical)
-    );
-  }, [
-    updateSliderRangeforDS,
-    includedDataSource.id,
-    sliderRange,
-    upperTheoretical
-  ]);
+  function increaseUpperBound(): void {
+    changeUpperBoundCallback(dataSource.id, upperTheoretical, sliderRange);
+  }
 
   const restrictedAreaRatio: string = calculateRestrictedAreaWidthPercentage(
     sliderRange,
@@ -109,7 +110,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     <Grid container item xs={12} spacing={4} justify="center">
       <Grid item xs={12}>
         {`${criterion.title} ${getUnitLabelNullsafe(
-          includedDataSource.unitOfMeasurement,
+          dataSource.unitOfMeasurement,
           showPercentages
         )}`}
       </Grid>
@@ -137,7 +138,7 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
           step={stepSize}
           marks={createMarks(
             sliderRange,
-            observedRanges[includedDataSource.id],
+            observedRanges[dataSource.id],
             usePercentage
           )}
           className={classes.root}
@@ -159,3 +160,16 @@ export default function ScalesSlider({criterion}: {criterion: ICriterion}) {
     </Grid>
   );
 }
+
+function areEqual(prevProps: IProps, nextProps: IProps): boolean {
+  const toCompare = [
+    'criterion',
+    'dataSource',
+    'sliderRange',
+    'stepSize',
+    'configuredRange'
+  ];
+  return _.isEqual(_.pick(prevProps, toCompare), _.pick(nextProps, toCompare));
+}
+
+export default memo(ScalesSlider, areEqual);

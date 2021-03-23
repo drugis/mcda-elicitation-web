@@ -16,16 +16,16 @@ import {adjustConfiguredRangeForStepSize} from './AddSubproblemScaleRanges/AddSu
 import {
   createSubproblemDefinition,
   getBaselineMap,
+  getDataSourcesWithValidValues,
+  getInitialStepSizeOptions,
+  getIntialStepSizes,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
   getSubproblemTitleError,
   initConfiguredRanges,
-  getInitialStepSizeOptions,
   initInclusions,
-  getIntialStepSizes,
   isAlternativeDeselectionDisabled,
-  isDataSourceDeselectionDisabled,
-  getDataSourcesWithValidValues
+  isDataSourceDeselectionDisabled
 } from './AddSubproblemUtil';
 import IAddSubproblemContext from './IAddSubproblemContext';
 

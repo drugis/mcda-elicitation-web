@@ -4,6 +4,7 @@ import Add from '@material-ui/icons/Add';
 import React, {useState} from 'react';
 import {AddSubproblemContextProviderComponent} from './AddSubproblemContext';
 import AddSubproblemDialog from './AddSubproblemDialog/AddSubproblemDialog';
+import {AddSubproblemSliderContextProviderComponent} from './AddSubproblemSliderContext';
 
 export default function AddSubproblemButton() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -29,10 +30,12 @@ export default function AddSubproblemButton() {
       </Tooltip>
       {isDialogOpen ? (
         <AddSubproblemContextProviderComponent>
-          <AddSubproblemDialog
-            isDialogOpen={isDialogOpen}
-            closeDialog={closeDialog}
-          />
+          <AddSubproblemSliderContextProviderComponent>
+            <AddSubproblemDialog
+              isDialogOpen={isDialogOpen}
+              closeDialog={closeDialog}
+            />
+          </AddSubproblemSliderContextProviderComponent>
         </AddSubproblemContextProviderComponent>
       ) : (
         <></>
