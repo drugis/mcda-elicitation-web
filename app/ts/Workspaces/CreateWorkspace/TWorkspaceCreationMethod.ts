@@ -1,4 +1,4 @@
-export type TWorkspaceCreateMethod =
+export type TWorkspaceCreationMethod =
   | 'example'
   | 'tutorial'
   | 'upload'

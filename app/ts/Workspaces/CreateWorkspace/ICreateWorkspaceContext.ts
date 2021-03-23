@@ -1,11 +1,11 @@
 import IWorkspaceExample from './IWorkspaceExample';
-import {TWorkspaceCreateMethod} from './TWorkspaceCreateMethod';
+import {TWorkspaceCreationMethod} from './TWorkspaceCreationMethod';
 
 export default interface ICreateWorkspaceContext {
   examples: IWorkspaceExample[];
   tutorials: IWorkspaceExample[];
-  method: TWorkspaceCreateMethod;
-  setMethod: (method: TWorkspaceCreateMethod) => void;
+  method: TWorkspaceCreationMethod;
+  setMethod: (method: TWorkspaceCreationMethod) => void;
   selectedProblem: IWorkspaceExample;
   setSelectedProblem: (problem: IWorkspaceExample) => void;
   setUploadedFile: (file: File) => void;

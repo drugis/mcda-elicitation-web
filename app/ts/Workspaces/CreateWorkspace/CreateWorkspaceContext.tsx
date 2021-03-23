@@ -20,7 +20,7 @@ import {
 } from './CreateWorkspaceUtil/CreateWorkspaceUtil';
 import ICreateWorkspaceContext from './ICreateWorkspaceContext';
 import IWorkspaceExample from './IWorkspaceExample';
-import {TWorkspaceCreateMethod} from './TWorkspaceCreateMethod';
+import {TWorkspaceCreationMethod} from './TWorkspaceCreationMethod';
 import {
   validateJsonSchema,
   validateWorkspaceConstraints
@@ -37,7 +37,7 @@ export function CreateWorkspaceContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
 
-  const [method, setMethod] = useState<TWorkspaceCreateMethod>('example');
+  const [method, setMethod] = useState<TWorkspaceCreationMethod>('example');
   const [examples, setExamples] = useState<IWorkspaceExample[]>();
   const [tutorials, setTutorials] = useState<IWorkspaceExample[]>();
 

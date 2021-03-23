@@ -14,7 +14,7 @@ export function extractPvfs(
 
 function isUsablePvf(pvf: TScenarioPvf): pvf is ILinearPvf {
   //make ts not care about type of PVF FIXME
-  return !!pvf.direction;
+  return Boolean(pvf.direction);
 }
 
 export function extractRanges(

@@ -14,7 +14,7 @@ import _ from 'lodash';
 import React, {ChangeEvent, useCallback, useContext} from 'react';
 import {CreateWorkspaceContext} from '../CreateWorkspaceContext';
 import IWorkspaceExample from '../IWorkspaceExample';
-import {TWorkspaceCreateMethod} from '../TWorkspaceCreateMethod';
+import {TWorkspaceCreationMethod} from '../TWorkspaceCreationMethod';
 
 export default function CreateWorkspaceDialog({
   isDialogOpen,
@@ -37,8 +37,8 @@ export default function CreateWorkspaceDialog({
 
   const handleMethodChanged = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
-      const method: TWorkspaceCreateMethod = event.target
-        .value as TWorkspaceCreateMethod; //FIXME ?
+      const method: TWorkspaceCreationMethod = event.target
+        .value as TWorkspaceCreationMethod; //FIXME ?
       setMethod(method);
       if (method === 'example') {
         setSelectedProblem(examples[0]);

@@ -3,6 +3,7 @@
 import IProblem from '@shared/interface/Problem/IProblem';
 import _ from 'lodash';
 import {CURRENT_SCHEMA_VERSION} from '../ManualInput/constants';
+import {getDataSourcesById} from '../util/getDataSourcesById';
 
 /***** Changes
  * 1.0.0 Introduction of data sources
@@ -542,13 +543,4 @@ function omitPvfsFromDataSources(uploadDataSources) {
   return _.map(uploadDataSources, (uploadDataSource) =>
     _.omit(uploadDataSource, 'pvf')
   );
-}
-
-function getDataSourcesById(criteria) {
-  return _(criteria)
-    .flatMap(function (criterion) {
-      return criterion.dataSources;
-    })
-    .keyBy('id')
-    .value();
 }
