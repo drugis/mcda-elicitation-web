@@ -42,7 +42,7 @@ export function CreateWorkspaceContextProviderComponent({
   const [tutorials, setTutorials] = useState<IWorkspaceExample[]>();
 
   const [selectedProblem, setSelectedProblem] = useState<IWorkspaceExample>();
-  const [validationErrors, setValidationErrors] = useState<string[]>();
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [workspaceCommand, setWorkspaceCommand] = useState<IWorkspaceCommand>();
 
   useEffect(() => {
@@ -84,6 +84,7 @@ export function CreateWorkspaceContextProviderComponent({
   );
 
   useEffect(() => {
+    // FIXME: async call should check whether incoming info is still relevant due to having switched creation type
     if ((method === 'example' || method === 'tutorial') && selectedProblem) {
       axios
         .get(`/${method}s/${selectedProblem.href}`)
@@ -102,12 +103,12 @@ export function CreateWorkspaceContextProviderComponent({
           const jsonParse = JSON.parse(fileReader.result as string);
           validateProblemAndSetCommand(jsonParse);
         } catch (error) {
-          setError(error);
+          setValidationErrors([error.message]);
         }
       };
       fileReader.readAsText(file);
     },
-    [setError, validateProblemAndSetCommand]
+    [validateProblemAndSetCommand]
   );
 
   const addWorkspaceCallback = useCallback((): void => {
@@ -138,7 +139,8 @@ export function CreateWorkspaceContextProviderComponent({
         addWorkspaceCallback,
         setMethod,
         setSelectedProblem,
-        setUploadedFile
+        setUploadedFile,
+        setValidationErrors
       }}
     >
       {examples && tutorials ? children : <></>}

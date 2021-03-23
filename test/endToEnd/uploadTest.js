@@ -17,3 +17,5 @@ module.exports = {
     workspaceService.deleteFromList(browser, 0).end();
   }
 };
+
+// FIXME: add emptyproblem.json test

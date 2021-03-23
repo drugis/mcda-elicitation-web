@@ -17,10 +17,8 @@ import IWorkspaceExample from '../IWorkspaceExample';
 import {TWorkspaceCreationMethod} from '../TWorkspaceCreationMethod';
 
 export default function CreateWorkspaceDialog({
-  isDialogOpen,
   closeDialog
 }: {
-  isDialogOpen: boolean;
   closeDialog: () => void;
 }): JSX.Element {
   const {
@@ -32,46 +30,24 @@ export default function CreateWorkspaceDialog({
     setSelectedProblem,
     setUploadedFile,
     addWorkspaceCallback,
-    validationErrors
+    validationErrors,
+    setValidationErrors
   } = useContext(CreateWorkspaceContext);
 
   const handleMethodChanged = useCallback(
     (event: ChangeEvent<HTMLInputElement>): void => {
       const method: TWorkspaceCreationMethod = event.target
-        .value as TWorkspaceCreationMethod; //FIXME ?
+        .value as TWorkspaceCreationMethod;
       setMethod(method);
       if (method === 'example') {
         setSelectedProblem(examples[0]);
       } else if (method === 'tutorial') {
         setSelectedProblem(tutorials[0]);
+      } else if (method === 'upload') {
+        setValidationErrors(['No file selected']);
       }
     },
-    [setMethod, setSelectedProblem, examples, tutorials]
-  );
-
-  const SelectOptions = useCallback(
-    ({
-      workspaceExamples
-    }: {
-      workspaceExamples: IWorkspaceExample[];
-    }): JSX.Element => {
-      return (
-        <>
-          {_.map(
-            workspaceExamples,
-            (workspaceExample: IWorkspaceExample): JSX.Element => (
-              <option
-                value={workspaceExample.title}
-                key={workspaceExample.title}
-              >
-                {workspaceExample.title}
-              </option>
-            )
-          )}
-        </>
-      );
-    },
-    []
+    [setMethod, setSelectedProblem, examples, tutorials, setValidationErrors]
   );
 
   const handleExampleChanged = useCallback(
@@ -101,48 +77,42 @@ export default function CreateWorkspaceDialog({
   }, [closeDialog, addWorkspaceCallback]);
 
   const renderWorkspaceInput = useCallback((): JSX.Element => {
-    if (method === 'example') {
-      return (
-        <Select
-          native
-          id="example-workspace-selector"
-          value={selectedProblem.title}
-          onChange={handleExampleChanged}
-          style={{minWidth: 220}}
-        >
-          <SelectOptions workspaceExamples={examples} />
-        </Select>
-      );
-    } else if (method === 'tutorial') {
-      return (
-        <Select
-          native
-          id="tutorial-workspace-selector"
-          value={selectedProblem.title}
-          onChange={handleTutorialChanged}
-          style={{minWidth: 220}}
-        >
-          <SelectOptions workspaceExamples={tutorials} />
-        </Select>
-      );
-    } else if (method === 'upload') {
-      return <input type="file" onChange={handleFileUpload} />;
-    } else {
-      return <></>;
+    switch (method) {
+      case 'example':
+        return (
+          <SelectProblemFromList
+            id={'example-workspace-selector'}
+            selectedProblemTitle={selectedProblem.title}
+            changeHandler={handleExampleChanged}
+            problemList={examples}
+          />
+        );
+      case 'tutorial':
+        return (
+          <SelectProblemFromList
+            id={'tutorial-workspace-selector'}
+            selectedProblemTitle={selectedProblem.title}
+            changeHandler={handleTutorialChanged}
+            problemList={tutorials}
+          />
+        );
+      case 'upload':
+        return <input type="file" onChange={handleFileUpload} />;
+      case 'manual':
+        return <></>;
     }
   }, [
-    examples,
     method,
-    selectedProblem,
-    tutorials,
+    selectedProblem.title,
     handleExampleChanged,
-    handleFileUpload,
+    examples,
     handleTutorialChanged,
-    SelectOptions
+    tutorials,
+    handleFileUpload
   ]);
 
   return (
-    <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth={'sm'}>
+    <Dialog open={true} onClose={closeDialog} fullWidth maxWidth={'sm'}>
       <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
         Add workspace
       </DialogTitleWithCross>
@@ -191,11 +161,54 @@ export default function CreateWorkspaceDialog({
           color="primary"
           onClick={handleAddButtonClick}
           variant="contained"
-          disabled={!_.isEmpty(validationErrors)}
+          disabled={!_.isEmpty(validationErrors)} // FIXME: disable when uploading and not choosing file
         >
           Add
         </Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+const SelectOptions = ({
+  examples
+}: {
+  examples: IWorkspaceExample[];
+}): JSX.Element => {
+  return (
+    <>
+      {_.map(
+        examples,
+        (example: IWorkspaceExample): JSX.Element => (
+          <option value={example.title} key={example.title}>
+            {example.title}
+          </option>
+        )
+      )}
+    </>
+  );
+};
+
+function SelectProblemFromList({
+  id,
+  selectedProblemTitle,
+  changeHandler,
+  problemList
+}: {
+  id: string;
+  selectedProblemTitle: string;
+  changeHandler: (event: ChangeEvent<{value: string}>) => void;
+  problemList: IWorkspaceExample[];
+}): JSX.Element {
+  return (
+    <Select
+      native
+      id={id}
+      value={selectedProblemTitle}
+      onChange={changeHandler}
+      style={{minWidth: 220}}
+    >
+      <SelectOptions examples={problemList} />
+    </Select>
   );
 }

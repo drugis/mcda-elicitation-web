@@ -11,4 +11,5 @@ export default interface ICreateWorkspaceContext {
   setUploadedFile: (file: File) => void;
   addWorkspaceCallback: () => void;
   validationErrors: string[];
+  setValidationErrors: (errors: string[]) => void;
 }
