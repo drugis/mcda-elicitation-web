@@ -97,7 +97,13 @@ export default function CreateWorkspaceDialog({
           />
         );
       case 'upload':
-        return <input type="file" onChange={handleFileUpload} />;
+        return (
+          <input
+            type="file"
+            id="workspace-upload-input"
+            onChange={handleFileUpload}
+          />
+        );
       case 'manual':
         return <></>;
     }

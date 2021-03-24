@@ -12,6 +12,7 @@
   "scripts": {
     "build-backend": "rm -rf tscomp/*  && tsc -p ts-backend-config.json",
     "build-dev": "webpack --config webpack.google.dev.js",
+    "build-end-to-end": "tsc -p ts-end-to-end-config.json",
     "build-local-login": "webpack --config webpack.local.js",
     "build-local-login-dev": "webpack --config webpack.local.dev.js",
     "build-prod": "webpack --config webpack.google.js",

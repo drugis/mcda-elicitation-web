@@ -11,7 +11,6 @@ module.exports = {
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const util = require('./util/util');
 const {TEST_URL} = require('./util/constants');
 
 var deterministicWarning =

@@ -18,7 +18,7 @@ function addExample(browser, title) {
     .click('#create-workspace-button')
     .click('#example-workspace-radio')
     .click('#example-workspace-selector')
-    .click('option[label="' + title + '"]')
+    .click('option[value="' + title + '"]')
     .click('#add-workspace-button')
     .pause(500);
   return goHomeAfterLoading(browser, title);
@@ -30,7 +30,7 @@ function addTutorial(browser, title) {
     .click('#create-workspace-button')
     .click('#tutorial-workspace-radio')
     .click('#tutorial-workspace-selector')
-    .click('option[label="' + title + '"]')
+    .click('option[value="' + title + '"]')
     .click('#add-workspace-button')
     .pause(500);
   return goHomeAfterLoading(browser, title);
@@ -64,6 +64,7 @@ function uploadTestWorkspace(browser, path) {
       '#workspace-upload-input',
       require('path').resolve(__dirname + path)
     )
+    .assert.not.elementPresent('#invalid-schema-error-0')
     .click('#add-workspace-button')
     .pause(500);
   return errorService.isErrorBarHidden(browser);
