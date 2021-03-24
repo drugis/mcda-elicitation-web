@@ -64,6 +64,7 @@ function uploadTestWorkspace(browser, path) {
       '#workspace-upload-input',
       require('path').resolve(__dirname + path)
     )
+    .pause(300)
     .assert.not.elementPresent('#invalid-schema-error-0')
     .click('#add-workspace-button')
     .pause(500);

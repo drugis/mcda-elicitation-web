@@ -36,7 +36,7 @@ export function CreateWorkspaceContextProviderComponent({
   children: any;
 }) {
   const {setError} = useContext(ErrorContext);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [method, setMethod] = useState<TWorkspaceCreationMethod>('example');
   const [examples, setExamples] = useState<IWorkspaceExample[]>();
   const [tutorials, setTutorials] = useState<IWorkspaceExample[]>();
@@ -86,10 +86,12 @@ export function CreateWorkspaceContextProviderComponent({
   useEffect(() => {
     // FIXME: async call should check whether incoming info is still relevant due to having switched creation type
     if ((method === 'example' || method === 'tutorial') && selectedProblem) {
+      setIsLoading(true);
       axios
         .get(`/${method}s/${selectedProblem.href}`)
         .then((response: AxiosResponse<IUploadProblem>) => {
           validateProblemAndSetCommand(response.data);
+          setIsLoading(false);
         })
         .catch(setError);
     }
@@ -136,6 +138,7 @@ export function CreateWorkspaceContextProviderComponent({
         method,
         selectedProblem,
         validationErrors,
+        isLoading,
         addWorkspaceCallback,
         setMethod,
         setSelectedProblem,

@@ -3,9 +3,7 @@ import IWorkspaceCommand from '@shared/interface/Commands/IWorkspaceCommand';
 import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
-import IProblem from '@shared/interface/Problem/IProblem';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
-import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import httpStatus from 'http-status-codes';
@@ -37,6 +35,24 @@ export default function WorkspaceHandler(db: IDB) {
   }
 
   function create(
+    request: Request<{}, {}, IWorkspaceCommand>,
+    response: Response,
+    next: any
+  ): void {
+    db.runInTransaction(
+      _.partial(createWorkspaceTransaction, request),
+      (error: OurError, workspaceInfo: IWorkspaceInfo): void => {
+        if (error) {
+          handleError(error, next);
+        } else {
+          response.status(httpStatus.CREATED);
+          response.json(workspaceInfo);
+        }
+      }
+    );
+  }
+
+  function createPremade(
     request: Request<{}, {}, IWorkspaceCommand>,
     response: Response,
     next: any
@@ -248,6 +264,7 @@ export default function WorkspaceHandler(db: IDB) {
   return {
     query,
     create,
+    createPremade,
     createWorkspaceTransaction,
     get,
     update,
