@@ -1,9 +1,9 @@
 //@ts-nocheck
 
+import {CURRENT_SCHEMA_VERSION} from '@shared/constants';
 import IProblem from '@shared/interface/Problem/IProblem';
+import {getDataSourcesById} from '@shared/util';
 import _ from 'lodash';
-import {CURRENT_SCHEMA_VERSION} from '../ManualInput/constants';
-import {getDataSourcesById} from '../util/getDataSourcesById';
 
 /***** Changes
  * 1.0.0 Introduction of data sources

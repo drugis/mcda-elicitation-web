@@ -1,15 +1,23 @@
 'use strict';
+import {
+  extractPvfs,
+  extractRanges
+} from '@shared/CreateWorkspaceUtil/CreateWorkspaceUtil';
 import IWorkspaceCommand from '@shared/interface/Commands/IWorkspaceCommand';
 import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
+import IWorkspaceExample from '@shared/interface/Workspace/IWorkspaceExample';
+import {updateProblemToCurrentSchema} from '@shared/SchemaUtil/SchemaUtil';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
+import {readFileSync} from 'fs';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
 import {PoolClient} from 'pg';
 import IDB from './interface/IDB';
+import IWorkspaceCreationInfo from './interface/IWorkspaceCreationInfo';
 import logger from './logger';
 import ScenarioRepository from './scenarioRepository';
 import SubproblemRepository from './subproblemRepository';
@@ -39,8 +47,12 @@ export default function WorkspaceHandler(db: IDB) {
     response: Response,
     next: any
   ): void {
+    const creationInfo = {
+      workspace: request.body,
+      ownerId: getUser(request).id
+    };
     db.runInTransaction(
-      _.partial(createWorkspaceTransaction, request),
+      _.partial(createWorkspaceTransaction, creationInfo),
       (error: OurError, workspaceInfo: IWorkspaceInfo): void => {
         if (error) {
           handleError(error, next);
@@ -53,12 +65,14 @@ export default function WorkspaceHandler(db: IDB) {
   }
 
   function createPremade(
-    request: Request<{}, {}, IWorkspaceCommand>,
+    request: Request<{}, {}, IWorkspaceExample>,
     response: Response,
     next: any
   ): void {
+    const creationInfo = buildPremadeCreationInfo(request);
+
     db.runInTransaction(
-      _.partial(createWorkspaceTransaction, request),
+      _.partial(createWorkspaceTransaction, creationInfo),
       (error: OurError, workspaceInfo: IWorkspaceInfo): void => {
         if (error) {
           handleError(error, next);
@@ -70,8 +84,32 @@ export default function WorkspaceHandler(db: IDB) {
     );
   }
 
+  function buildPremadeCreationInfo(
+    request: Request<{}, {}, IWorkspaceExample>
+  ) {
+    const exampleFolder =
+      request.body.type === 'example'
+        ? 'regular-examples'
+        : 'tutorial-examples';
+    const workspaceFile = readFileSync(
+      `${__dirname}/examples/${exampleFolder}/${request.body.key}.json`
+    ).toString();
+    const problem = JSON.parse(workspaceFile);
+    const updatedProblem = updateProblemToCurrentSchema(problem);
+    const workspace = {
+      title: problem.title,
+      pvfs: extractPvfs(problem.criteria),
+      ranges: extractRanges(problem.criteria),
+      problem: updatedProblem
+    };
+    return {
+      workspace: workspace,
+      ownerId: getUser(request).id
+    };
+  }
+
   function createWorkspaceTransaction(
-    request: Request,
+    workspaceInfo: IWorkspaceCreationInfo,
     client: PoolClient,
     transactionCallback: (
       error: OurError,
@@ -80,10 +118,10 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     waterfall(
       [
-        _.partial(createNewWorkspace, client, request),
-        _.partial(createSubProblem, client, request),
+        _.partial(createNewWorkspace, client, workspaceInfo),
+        _.partial(createSubProblem, client, workspaceInfo),
         _.partial(setDefaultSubProblem, client),
-        _.partial(createScenario, client, request),
+        _.partial(createScenario, client, workspaceInfo),
         _.partial(setDefaultScenario, client),
         _.partial(workspaceRepository.getWorkspaceInfo, client)
       ],
@@ -93,25 +131,24 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createNewWorkspace(
     client: PoolClient,
-    request: Request<{}, {}, IWorkspaceCommand>,
+    workspaceInfo: IWorkspaceCreationInfo,
     callback: (error: OurError, id: string) => void
   ): void {
     logger.debug('creating new workspace');
 
-    const owner = getUser(request).id;
-    const title = request.body.title;
+    const title = workspaceInfo.workspace.title;
     workspaceRepository.create(
       client,
-      owner,
+      workspaceInfo.ownerId,
       title,
-      request.body.problem,
+      workspaceInfo.workspace.problem,
       callback
     );
   }
 
   function createSubProblem(
     client: PoolClient,
-    request: Request<{}, {}, IWorkspaceCommand>,
+    workspaceInfo: IWorkspaceCreationInfo,
     workspaceId: string,
     callback: (
       error: OurError,
@@ -121,7 +158,7 @@ export default function WorkspaceHandler(db: IDB) {
   ): void {
     logger.debug('creating subproblem');
     const definition = {
-      ranges: request.body.ranges
+      ranges: workspaceInfo.workspace.ranges
     };
     subproblemRepository.create(
       client,
@@ -165,7 +202,7 @@ export default function WorkspaceHandler(db: IDB) {
 
   function createScenario(
     client: PoolClient,
-    request: Request<{}, {}, IWorkspaceCommand>,
+    workspaceInfo: IWorkspaceCreationInfo,
     workspaceId: string,
     subproblemId: string,
     callback: (
@@ -182,8 +219,8 @@ export default function WorkspaceHandler(db: IDB) {
       state: {
         problem: {
           criteria: buildScenarioCriteria(
-            request.body.problem.criteria,
-            request.body.pvfs
+            workspaceInfo.workspace.problem.criteria,
+            workspaceInfo.workspace.pvfs
           )
         },
         prefs: []

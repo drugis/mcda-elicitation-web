@@ -1,10 +1,11 @@
 import IWorkspaceCommand from '@shared/interface/Commands/IWorkspaceCommand';
 import IError from '@shared/interface/IError';
+import IPremadeWorkspaces from '@shared/interface/IPremadeWorkspaces';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IUploadProblem from '@shared/interface/UploadProblem/IUploadProblem';
+import {updateProblemToCurrentSchema} from '@shared/SchemaUtil/SchemaUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {updateProblemToCurrentSchema} from 'app/ts/SchemaUtil/SchemaUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {
@@ -17,9 +18,9 @@ import React, {
 import {
   extractPvfs,
   extractRanges
-} from './CreateWorkspaceUtil/CreateWorkspaceUtil';
+} from '../../../../shared/CreateWorkspaceUtil/CreateWorkspaceUtil';
+import IWorkspaceExample from '../../../../shared/interface/Workspace/IWorkspaceExample';
 import ICreateWorkspaceContext from './ICreateWorkspaceContext';
-import IWorkspaceExample from './IWorkspaceExample';
 import {TWorkspaceCreationMethod} from './TWorkspaceCreationMethod';
 import {
   validateJsonSchema,
@@ -47,17 +48,11 @@ export function CreateWorkspaceContextProviderComponent({
 
   useEffect(() => {
     axios
-      .get('/examples')
-      .then((response: AxiosResponse<IWorkspaceExample[]>) => {
-        setSelectedProblem(response.data[0]);
-        setExamples(response.data);
-      })
-      .catch(setError);
-
-    axios
-      .get('/tutorials')
-      .then((response: AxiosResponse<IWorkspaceExample[]>) => {
-        setTutorials(response.data);
+      .get('/premades')
+      .then((response: AxiosResponse<IPremadeWorkspaces>) => {
+        setExamples(response.data.examples);
+        setTutorials(response.data.tutorials);
+        setSelectedProblem(response.data.examples[0]);
       })
       .catch(setError);
   }, [setError, setTutorials, setExamples]);
@@ -83,20 +78,6 @@ export function CreateWorkspaceContextProviderComponent({
     [setValidationErrors, setWorkspaceCommand]
   );
 
-  useEffect(() => {
-    // FIXME: async call should check whether incoming info is still relevant due to having switched creation type
-    if ((method === 'example' || method === 'tutorial') && selectedProblem) {
-      setIsLoading(true);
-      axios
-        .get(`/${method}s/${selectedProblem.href}`)
-        .then((response: AxiosResponse<IUploadProblem>) => {
-          validateProblemAndSetCommand(response.data);
-          setIsLoading(false);
-        })
-        .catch(setError);
-    }
-  }, [method, selectedProblem, setError, validateProblemAndSetCommand]);
-
   const setUploadedFile = useCallback(
     (file: File): void => {
       const fileReader = new FileReader();
@@ -119,16 +100,16 @@ export function CreateWorkspaceContextProviderComponent({
         createAndGoToInprogressWorkspace(setError);
         break;
       case 'example':
-        createAndGoToWorkspace(workspaceCommand, setError);
+        createAndGoToPremadeWorkspace(selectedProblem, setError);
         break;
       case 'tutorial':
-        createAndGoToWorkspace(workspaceCommand, setError);
+        createAndGoToPremadeWorkspace(selectedProblem, setError);
         break;
       case 'upload':
         createAndGoToWorkspace(workspaceCommand, setError);
         break;
     }
-  }, [method, workspaceCommand, setError]);
+  }, [method, setError, selectedProblem, workspaceCommand]);
 
   return (
     <CreateWorkspaceContext.Provider
@@ -169,10 +150,19 @@ function createAndGoToWorkspace(
 ): void {
   axios
     .post('/workspaces/', workspaceCommand)
-    .then((response: AxiosResponse<IWorkspaceInfo>) => {
-      const {id, defaultScenarioId, defaultSubProblemId} = response.data;
-      const url = `/#!/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/evidence`;
-      window.location.assign(url);
-    })
+    .then(goToWorkspace)
     .catch(setError);
+}
+
+function createAndGoToPremadeWorkspace(
+  selectedProblem: IWorkspaceExample,
+  setError: (error: IError) => void
+): void {
+  axios.post('/premades/', selectedProblem).then(goToWorkspace).catch(setError);
+}
+
+function goToWorkspace(response: AxiosResponse<IWorkspaceInfo>): void {
+  const {id, defaultScenarioId, defaultSubProblemId} = response.data;
+  const url = `/#!/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/evidence`;
+  window.location.assign(url);
 }

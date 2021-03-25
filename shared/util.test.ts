@@ -1,5 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
-import {getDataSourcesById} from './getDataSourcesById';
+import {getDataSourcesById} from './util';
 
 describe('getDataSourcesById', () => {
   it('should return the data sources of all criteria keyed by id', () => {

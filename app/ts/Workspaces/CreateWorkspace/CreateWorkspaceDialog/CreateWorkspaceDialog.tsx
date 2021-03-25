@@ -12,8 +12,8 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import _ from 'lodash';
 import React, {ChangeEvent, useCallback, useContext} from 'react';
+import IWorkspaceExample from '../../../../../shared/interface/Workspace/IWorkspaceExample';
 import {CreateWorkspaceContext} from '../CreateWorkspaceContext';
-import IWorkspaceExample from '../IWorkspaceExample';
 import {TWorkspaceCreationMethod} from '../TWorkspaceCreationMethod';
 
 export default function CreateWorkspaceDialog({
@@ -110,7 +110,7 @@ export default function CreateWorkspaceDialog({
     }
   }, [
     method,
-    selectedProblem.title,
+    selectedProblem?.title,
     handleExampleChanged,
     examples,
     handleTutorialChanged,
@@ -149,7 +149,7 @@ export default function CreateWorkspaceDialog({
             </RadioGroup>
           </Grid>
           <Grid item xs={12}>
-            {renderWorkspaceInput()}
+            {selectedProblem ? renderWorkspaceInput() : <></>}
           </Grid>
           <Grid item xs={3}>
             {!_.isEmpty(validationErrors) ? 'Invalid upload: ' : ''}

@@ -22,6 +22,7 @@ import {
   createOrdering
 } from './inProgressRepositoryService';
 import IDB from './interface/IDB';
+import IWorkspaceCreationInfo from './interface/IWorkspaceCreationInfo';
 import logger from './logger';
 import OrderingRepository from './orderingRepository';
 import {getUser, handleError} from './util';
@@ -257,7 +258,7 @@ export default function InProgressHandler(db: IDB) {
       [
         _.partial(inProgressWorkspaceRepository.get, inProgressId),
         buildProblemFromInProgress,
-        _.partial(createInTransaction, request.user, inProgressId)
+        _.partial(createInTransaction, getUser(request).id, inProgressId)
       ],
       (error: OurError, createdWorkspaceInfo: IWorkspaceInfo): void => {
         if (error) {
@@ -279,7 +280,7 @@ export default function InProgressHandler(db: IDB) {
   }
 
   function createInTransaction(
-    user: any,
+    userId: number,
     inProgressId: string,
     problem: IProblem,
     overallCallback: (
@@ -287,11 +288,13 @@ export default function InProgressHandler(db: IDB) {
       createdWorkspaceInfo?: IWorkspaceInfo
     ) => void
   ): void {
-    const fakeRequest = {
-      user: user,
-      body: {
+    const creationInfo: IWorkspaceCreationInfo = {
+      ownerId: userId,
+      workspace: {
         problem: problem,
-        title: problem.title
+        title: problem.title,
+        ranges: {},
+        pvfs: {}
       }
     };
     db.runInTransaction(
@@ -306,7 +309,7 @@ export default function InProgressHandler(db: IDB) {
           [
             _.partial(
               workspaceHandler.createWorkspaceTransaction,
-              fakeRequest as Request,
+              creationInfo,
               client
             ),
             _.partial(deleteInprogress, client, inProgressId),

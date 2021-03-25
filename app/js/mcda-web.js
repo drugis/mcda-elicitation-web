@@ -1,6 +1,6 @@
 'use strict';
 
-const {CURRENT_SCHEMA_VERSION} = require('app/ts/ManualInput/constants');
+const {CURRENT_SCHEMA_VERSION} = require('@shared/constants');
 
 define([
   'angular',

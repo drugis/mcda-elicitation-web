@@ -1,4 +1,5 @@
 export default interface IWorkspaceExample {
   title: string;
-  href: string;
+  key: string;
+  type: 'example' | 'tutorial';
 }

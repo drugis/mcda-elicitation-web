@@ -1,4 +1,4 @@
-import IWorkspaceExample from './IWorkspaceExample';
+import IWorkspaceExample from '../../../../shared/interface/Workspace/IWorkspaceExample';
 import {TWorkspaceCreationMethod} from './TWorkspaceCreationMethod';
 
 export default interface ICreateWorkspaceContext {
