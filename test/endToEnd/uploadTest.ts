@@ -4,8 +4,13 @@ import util from './util/util';
 import workspaceService from './util/workspaceService.js';
 
 module.exports = {
-  beforeEach: function beforeEach(browser: NightwatchBrowser) {
+  beforeEach: (browser: NightwatchBrowser) => {
     browser.resizeWindow(1366, 728);
+    loginService.login(browser);
+    workspaceService.cleanList(browser);
+  },
+  afterEach: (browser: NightwatchBrowser) => {
+    browser.end();
   },
   'Upload a workspace': uploadSuccess,
   'Upload an unparsable workspace': uploadUnparseable,
@@ -14,10 +19,7 @@ module.exports = {
 
 function uploadSuccess(browser: NightwatchBrowser) {
   const title = 'GetReal course LU 4, activity 4.4';
-  const workspacePath = '../../../../examples/getreal.json';
-
-  loginService.login(browser);
-  workspaceService.cleanList(browser);
+  const workspacePath = '../../../../examples/regular-examples/getreal.json';
   workspaceService.uploadTestWorkspace(browser, workspacePath);
   browser.assert.containsText('#workspace-title', title);
   util.delayedClick(browser, '#logo', '#workspaces-header');
@@ -28,28 +30,22 @@ function uploadUnparseable(browser: NightwatchBrowser) {
   const workspacePath = '/util/emptyProblem.json';
   const error =
     'JSON.parse: unexpected end of data at line 1 column 1 of the JSON data';
-
-  loginService.login(browser);
-  workspaceService.cleanList(browser);
-  uploadSomething(browser, workspacePath)
-    .pause(300)
-    .assert.containsText('#invalid-schema-error-0', error);
+  uploadSomething(browser, workspacePath, error).assert.containsText(
+    '#invalid-schema-error-0',
+    error
+  );
 }
 
 function uploadSchemaError(browser: NightwatchBrowser) {
   const workspacePath = '/util/schemaFails.json';
   const error = '/criteria should NOT have fewer than 2 items';
-
-  loginService.login(browser);
-  workspaceService.cleanList(browser);
-  uploadSomething(browser, workspacePath)
-    .pause(300)
-    .assert.containsText('#invalid-schema-error-0', error);
+  uploadSomething(browser, workspacePath, error);
 }
 
 function uploadSomething(
   browser: NightwatchBrowser,
-  path: string
+  path: string,
+  error: string
 ): NightwatchBrowser {
   return browser
     .waitForElementVisible('#create-workspace-button')
@@ -58,5 +54,7 @@ function uploadSomething(
     .setValue(
       '#workspace-upload-input',
       require('path').resolve(__dirname + path)
-    );
+    )
+    .pause(300)
+    .assert.containsText('#invalid-schema-error-0', error);
 }
