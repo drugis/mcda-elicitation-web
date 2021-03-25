@@ -139,9 +139,6 @@ function initApp(): void {
   });
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
-  app.use('/premades', (request: Request, response: Response) => {
-    response.json(premades);
-  });
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
   app.use((request: Request, response: Response, next: any): void => {
     if (!request.user) {
@@ -158,7 +155,9 @@ function initApp(): void {
   app.use('/workspaces', subproblemRouter);
   app.use('/workspaces', scenarioRouter);
   app.use('/workspaces', workspaceSettingsRouter);
-
+  app.use('/premades', (request: Request, response: Response) => {
+    response.json(premades);
+  });
   app.use('/patavi', pataviRouter);
   app.use(errorHandler);
 

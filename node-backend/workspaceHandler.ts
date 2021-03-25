@@ -15,6 +15,7 @@ import {Request, Response} from 'express';
 import {readFileSync} from 'fs';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
+import {resolve} from 'path';
 import {PoolClient} from 'pg';
 import IDB from './interface/IDB';
 import IWorkspaceCreationInfo from './interface/IWorkspaceCreationInfo';
@@ -91,8 +92,12 @@ export default function WorkspaceHandler(db: IDB) {
       request.body.type === 'example'
         ? 'regular-examples'
         : 'tutorial-examples';
+
     const workspaceFile = readFileSync(
-      `${__dirname}/examples/${exampleFolder}/${request.body.key}.json`
+      resolve(
+        __dirname,
+        `../../examples/${exampleFolder}/${request.body.key}.json`
+      )
     ).toString();
     const problem = JSON.parse(workspaceFile);
     const updatedProblem = updateProblemToCurrentSchema(problem);

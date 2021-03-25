@@ -158,7 +158,10 @@ function createAndGoToPremadeWorkspace(
   selectedProblem: IWorkspaceExample,
   setError: (error: IError) => void
 ): void {
-  axios.post('/premades/', selectedProblem).then(goToWorkspace).catch(setError);
+  axios
+    .post('/workspaces/createPremade/', selectedProblem)
+    .then(goToWorkspace)
+    .catch(setError);
 }
 
 function goToWorkspace(response: AxiosResponse<IWorkspaceInfo>): void {

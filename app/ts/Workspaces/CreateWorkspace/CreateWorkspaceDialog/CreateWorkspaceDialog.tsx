@@ -42,8 +42,10 @@ export default function CreateWorkspaceDialog({
       setMethod(method);
       if (method === 'example') {
         setSelectedProblem(examples[0]);
+        setValidationErrors([]);
       } else if (method === 'tutorial') {
         setSelectedProblem(tutorials[0]);
+        setValidationErrors([]);
       } else if (method === 'upload') {
         setValidationErrors(['No file selected']);
       }
