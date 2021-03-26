@@ -31,8 +31,7 @@ export default function CreateWorkspaceDialog({
     setUploadedFile,
     addWorkspaceCallback,
     validationErrors,
-    setValidationErrors,
-    isLoading
+    setValidationErrors
   } = useContext(CreateWorkspaceContext);
 
   const handleMethodChanged = useCallback(

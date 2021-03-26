@@ -37,7 +37,6 @@ export function CreateWorkspaceContextProviderComponent({
   children: any;
 }) {
   const {setError} = useContext(ErrorContext);
-  const [isLoading, setIsLoading] = useState(false);
   const [method, setMethod] = useState<TWorkspaceCreationMethod>('example');
   const [examples, setExamples] = useState<IWorkspaceExample[]>();
   const [tutorials, setTutorials] = useState<IWorkspaceExample[]>();
@@ -119,7 +118,6 @@ export function CreateWorkspaceContextProviderComponent({
         method,
         selectedProblem,
         validationErrors,
-        isLoading,
         addWorkspaceCallback,
         setMethod,
         setSelectedProblem,
@@ -159,7 +157,7 @@ function createAndGoToPremadeWorkspace(
   setError: (error: IError) => void
 ): void {
   axios
-    .post('/workspaces/createPremade/', selectedProblem)
+    .post('/workspaces/createPremade', selectedProblem)
     .then(goToWorkspace)
     .catch(setError);
 }

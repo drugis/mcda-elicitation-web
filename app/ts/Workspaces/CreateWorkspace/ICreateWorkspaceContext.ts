@@ -12,5 +12,4 @@ export default interface ICreateWorkspaceContext {
   addWorkspaceCallback: () => void;
   validationErrors: string[];
   setValidationErrors: (errors: string[]) => void;
-  isLoading: boolean;
 }

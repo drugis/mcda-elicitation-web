@@ -9,7 +9,7 @@ import IDataSource from '@shared/interface/IDataSource';
 import {InlineQuestionMark} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {DUMMY_ID} from '../../constants';
+import {DUMMY_ID} from '../../manualInputConstants';
 import {ManualInputContext} from '../../ManualInputContext';
 import AddCriterionButton from './AddCriterionButton/AddCriterionButton';
 import DataSourceRow from './CriterionRow/DataSourceRow/DataSourceRow';
