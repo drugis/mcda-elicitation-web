@@ -13,12 +13,6 @@ import {
 } from './ValidationUtil';
 
 describe('ValidationUtil', () => {
-  describe('validateJsonSchema', () => {
-    it('should', () => {
-      // fail();
-    });
-  });
-
   describe('validateWorkspaceConstraints', () => {
     const baseProblem: IProblem = {
       performanceTable: [],
