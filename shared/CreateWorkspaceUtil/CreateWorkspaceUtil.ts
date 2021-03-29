@@ -1,13 +1,13 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
+import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import IUploadProblemCriterion from '@shared/interface/UploadProblem/IUploadProblemCriterion';
-import {isPieceWiseLinearPvf} from 'app/ts/PreferencesTab/PreferencesUtil';
 import _ from 'lodash';
 
 export function extractPvfs(
   criteria: Record<string, IUploadProblemCriterion>
 ): Record<string, TScenarioPvf> {
-  return _(criteria).mapValues(omitRange).pickBy(isPvfSet).value();
+  return _(criteria).pickBy(isPvfSet).mapValues(omitRange).value();
 }
 
 function omitRange(criterion: IUploadProblemCriterion): TScenarioPvf {
@@ -18,8 +18,12 @@ function omitRange(criterion: IUploadProblemCriterion): TScenarioPvf {
   }
 }
 
-function isPvfSet(pvf: TPvf): Boolean {
-  return 'type' in pvf;
+function isPvfSet(criterion: IUploadProblemCriterion): Boolean {
+  return criterion.dataSources[0].pvf && 'type' in criterion.dataSources[0].pvf;
+}
+
+function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
+  return pvf.type === 'piecewise-linear';
 }
 
 export function extractRanges(
