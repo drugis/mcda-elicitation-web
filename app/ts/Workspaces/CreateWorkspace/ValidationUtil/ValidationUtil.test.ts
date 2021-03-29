@@ -7,7 +7,9 @@ import {
   missingTitle,
   performanceTableWithInvalidAlternative,
   performanceTableWithInvalidCriterion,
-  performanceTableWithMissingData
+  performanceTableWithMissingData,
+  relativePerformanceWithBadCov,
+  relativePerformanceWithBadMu
 } from './ValidationUtil';
 
 describe('ValidationUtil', () => {
@@ -29,7 +31,7 @@ describe('ValidationUtil', () => {
     describe('missingTitle', () => {
       it('should return undefined if problem is not missing a title', () => {
         const result = missingTitle(baseProblem);
-        expect(result).toEqual(undefined);
+        expect(result).toBeUndefined();
       });
 
       it('should return  an error message if problem has an empty title', () => {
@@ -51,6 +53,7 @@ describe('ValidationUtil', () => {
           {alternative: 'alt1Id'} as IAbsolutePerformanceTableEntry
         ]
       };
+
       it('should return undefined if performance table entries have valid alternatives', () => {
         const problem = {
           ...problemWithPerformanceTable,
@@ -59,7 +62,7 @@ describe('ValidationUtil', () => {
           }
         };
         const result = performanceTableWithInvalidAlternative(problem);
-        expect(result).toEqual(undefined);
+        expect(result).toBeUndefined();
       });
 
       it('should return an error message if performance table entries contain nonexistent alternatives', () => {
@@ -87,7 +90,7 @@ describe('ValidationUtil', () => {
           }
         };
         const result = performanceTableWithInvalidCriterion(problem);
-        expect(result).toEqual(undefined);
+        expect(result).toBeUndefined();
       });
 
       it('should return an error message if performance table entries contain nonexistent criteria', () => {
@@ -103,41 +106,146 @@ describe('ValidationUtil', () => {
     describe('performanceTableWithMissingData', () => {
       const problemWithCriteriaAndAlternatives = {
         ...baseProblem,
-        criteria: {crit1Id: {id: 'crit1Id'} as IProblemCriterion},
+        criteria: {
+          crit1Id: {id: 'crit1Id'} as IProblemCriterion,
+          crit2Id: {id: 'crit2Id'} as IProblemCriterion
+        },
         alternatives: {alt1Id: {id: 'alt1Id'} as IAlternative}
       };
-      it('should return undefined if all criteria and alternatives have absolute data', () => {
+
+      it('should return undefined if all criteria and alternatives have entries', () => {
         const problem = {
           ...problemWithCriteriaAndAlternatives,
           performanceTable: [
             {
               criterion: 'crit1Id',
               alternative: 'alt1Id'
-            } as IAbsolutePerformanceTableEntry
-          ]
-        };
-        const result = performanceTableWithMissingData(problem);
-        expect(result).toEqual(undefined);
-      });
-
-      it('should return undefined if all criteria have relative data', () => {
-        const problem = {
-          ...problemWithCriteriaAndAlternatives,
-          performanceTable: [
+            } as IAbsolutePerformanceTableEntry,
             {
-              criterion: 'crit1Id'
+              criterion: 'crit2Id'
             } as IRelativePerformanceTableEntry
           ]
         };
         const result = performanceTableWithMissingData(problem);
-        expect(result).toEqual(undefined);
+        expect(result).toBeUndefined();
       });
 
-      it('should return an error message if criteria and alternatives have missing data', () => {
+      it('should return an error message if there is an entry missing for a criterion/alternative coordinate', () => {
         const result = performanceTableWithMissingData(
           problemWithCriteriaAndAlternatives
         );
         expect(result).toEqual('Performance table is missing data');
+      });
+    });
+
+    describe('relativePerformanceWithBadMu', () => {
+      it('should return undefined if all relative performances have a correct mu', () => {
+        const problem: IProblem = {
+          ...baseProblem,
+          criteria: {crit1Id: {id: 'crit1Id'} as IProblemCriterion},
+          alternatives: {alt1Id: {id: 'alt1Id'} as IAlternative},
+          performanceTable: [
+            {
+              criterion: 'crit1Id',
+              performance: {
+                distribution: {
+                  parameters: {
+                    relative: {mu: {alt1Id: 37} as Record<string, number>}
+                  }
+                }
+              }
+            } as IRelativePerformanceTableEntry
+          ]
+        };
+        const result = relativePerformanceWithBadMu(problem);
+        expect(result).toBeUndefined();
+      });
+
+      it('should return an error if there is a performance with an incorrect mu', () => {
+        const problem: IProblem = {
+          ...baseProblem,
+          criteria: {crit1Id: {id: 'crit1Id'} as IProblemCriterion},
+          alternatives: {alt1Id: {id: 'alt1Id'} as IAlternative},
+          performanceTable: [
+            {
+              criterion: 'crit1Id',
+              performance: {
+                distribution: {
+                  parameters: {
+                    relative: {
+                      mu: {alt1Id: 37, invalidAltId: 42} as Record<
+                        string,
+                        number
+                      >
+                    }
+                  }
+                }
+              }
+            } as IRelativePerformanceTableEntry
+          ]
+        };
+        const result = relativePerformanceWithBadMu(problem);
+        expect(result).toEqual(
+          'The mu of the criterion: "crit1Id" refers to nonexistent alternative'
+        );
+      });
+    });
+
+    describe('relativePerformanceWithBadCov', () => {
+      it('should return undefined if all relative performances have a correct cov', () => {
+        const problem: IProblem = {
+          ...baseProblem,
+          criteria: {crit1Id: {id: 'crit1Id'} as IProblemCriterion},
+          alternatives: {alt1Id: {id: 'alt1Id'} as IAlternative},
+          performanceTable: [
+            {
+              criterion: 'crit1Id',
+              performance: {
+                distribution: {
+                  parameters: {
+                    relative: {
+                      cov: {
+                        colnames: ['alt1Id'],
+                        rownames: ['alt1Id']
+                      }
+                    }
+                  }
+                }
+              }
+            } as IRelativePerformanceTableEntry
+          ]
+        };
+        const result = relativePerformanceWithBadCov(problem);
+        expect(result).toBeUndefined();
+      });
+
+      it('should return an error if there is a performance with an incorrect cov', () => {
+        const problem: IProblem = {
+          ...baseProblem,
+          criteria: {crit1Id: {id: 'crit1Id'} as IProblemCriterion},
+          alternatives: {alt1Id: {id: 'alt1Id'} as IAlternative},
+          performanceTable: [
+            {
+              criterion: 'crit1Id',
+              performance: {
+                distribution: {
+                  parameters: {
+                    relative: {
+                      cov: {
+                        colnames: ['alt1Id', 'invalidAltId'],
+                        rownames: ['alt1Id', 'invalidAltId']
+                      }
+                    }
+                  }
+                }
+              }
+            } as IRelativePerformanceTableEntry
+          ]
+        };
+        const result = relativePerformanceWithBadCov(problem);
+        expect(result).toEqual(
+          'The covariance matrix of criterion: "crit1Id" refers to nonexistent alternative'
+        );
       });
     });
   });
