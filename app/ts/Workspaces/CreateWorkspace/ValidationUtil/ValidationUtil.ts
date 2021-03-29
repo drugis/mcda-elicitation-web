@@ -62,28 +62,25 @@ export function validateWorkspaceConstraints(problem: IProblem): string[] {
     .value();
 }
 
-function missingTitle(problem: IProblem): string {
-  return 'title' in problem ? undefined : 'Missing title';
+export function missingTitle(problem: IProblem): string {
+  return _.isEmpty(problem.title) ? 'Missing title' : undefined;
 }
 
-function performanceTableWithInvalidAlternative({
+export function performanceTableWithInvalidAlternative({
   performanceTable,
   alternatives
 }: IProblem): string {
   const entry = _.find(
     performanceTable,
-    (tableEntry: TPerformanceTableEntry): boolean => {
-      return (
-        isAbsoluteEntry(tableEntry) && !alternatives[tableEntry.alternative]
-      );
-    }
+    (tableEntry: TPerformanceTableEntry): boolean =>
+      isAbsoluteEntry(tableEntry) && !alternatives[tableEntry.alternative]
   );
   if (entry && isAbsoluteEntry(entry)) {
     return `Performance table contains data for nonexistent alternative: "${entry.alternative}"`;
   }
 }
 
-function performanceTableWithInvalidCriterion({
+export function performanceTableWithInvalidCriterion({
   performanceTable,
   criteria
 }: IProblem): string {
@@ -98,7 +95,7 @@ function performanceTableWithInvalidCriterion({
   }
 }
 
-function performanceTableWithMissingData(problem: IProblem): string {
+export function performanceTableWithMissingData(problem: IProblem): string {
   if (!hasEnoughEntries(problem)) {
     return 'Performance table is missing data';
   }
@@ -129,7 +126,7 @@ function hasEntryForCoordinate(
   );
 }
 
-function relativePerformanceWithBadMu(problem: IProblem): string {
+export function relativePerformanceWithBadMu(problem: IProblem): string {
   const entryWithBadMu = findEntryWithBadMu(problem);
   if (entryWithBadMu) {
     return `The mu of the criterion: "${entryWithBadMu.criterion}" refers to nonexistent alternative`;
@@ -158,7 +155,7 @@ function checkForInvalidAlternativeInMu(
   );
 }
 
-function relativePerformanceWithBadCov(problem: IProblem): string {
+export function relativePerformanceWithBadCov(problem: IProblem): string {
   const entryWithBadCov = findEntryWithBadCov(problem);
   if (entryWithBadCov) {
     return `The covariance matrix of criterion: "${entryWithBadCov.criterion}" refers to nonexistent alternative`;

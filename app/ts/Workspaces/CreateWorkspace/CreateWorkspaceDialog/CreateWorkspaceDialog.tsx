@@ -169,7 +169,7 @@ export default function CreateWorkspaceDialog({
           color="primary"
           onClick={handleAddButtonClick}
           variant="contained"
-          disabled={!_.isEmpty(validationErrors)} // FIXME: disable when uploading and not choosing file
+          disabled={!_.isEmpty(validationErrors)}
         >
           Add
         </Button>
