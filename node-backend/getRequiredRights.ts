@@ -28,6 +28,9 @@ export default function getRequiredRights(
     makeRights('/workspaces', 'GET', 'none'),
     makeRights('/workspaces', 'POST', 'none'),
 
+    makeRights('/premades', 'GET', 'none'),
+    makeRights('/workspaces/createPremade', 'POST', 'none'),
+
     makeRights(
       '/workspaces/:workspaceId',
       'GET',

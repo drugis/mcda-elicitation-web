@@ -93,7 +93,7 @@ function getEntryWithoutStudentsT(
 export function isAbsoluteEntry(
   entry: TPerformanceTableEntry
 ): entry is IAbsolutePerformanceTableEntry {
-  return entry.hasOwnProperty('alternative');
+  return 'alternative' in entry;
 }
 
 export function buildInProgressIdMapper(

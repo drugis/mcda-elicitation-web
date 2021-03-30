@@ -9,25 +9,25 @@ jest.mock('../shared/util', () => {
   };
 });
 
-import IAlternative from '@shared/interface/IAlternative';
-import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
-import ICellCommand from '@shared/interface/ICellCommand';
-import ICriterion from '@shared/interface/ICriterion';
-import ICriterionQueryResult from '@shared/interface/ICriterionQueryResult';
-import IDatabaseInputCell from '@shared/interface/IDatabaseInputCell';
-import IDataSource from '@shared/interface/IDataSource';
-import IDataSourceQueryResult from '@shared/interface/IDataSourceQueryResult';
-import {Distribution} from '@shared/interface/IDistribution';
-import {Effect} from '@shared/interface/IEffect';
-import IInProgressMessage from '@shared/interface/IInProgressMessage';
-import IOrdering from '@shared/interface/IOrdering';
-import IWorkspace from '@shared/interface/IWorkspace';
-import IWorkspaceProperties from '@shared/interface/IWorkspaceProperties';
-import IWorkspaceQueryResult from '@shared/interface/IWorkspaceQueryResult';
-import IProblem from '@shared/interface/Problem/IProblem';
-import IProblemCriterion from '@shared/interface/Problem/IProblemCriterion';
-import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
-import {CURRENT_SCHEMA_VERSION} from 'app/ts/ManualInput/constants';
+import IAlternative from '../shared/interface/IAlternative';
+import IAlternativeQueryResult from '../shared/interface/IAlternativeQueryResult';
+import ICellCommand from '../shared/interface/ICellCommand';
+import ICriterion from '../shared/interface/ICriterion';
+import ICriterionQueryResult from '../shared/interface/ICriterionQueryResult';
+import IDatabaseInputCell from '../shared/interface/IDatabaseInputCell';
+import IDataSource from '../shared/interface/IDataSource';
+import IDataSourceQueryResult from '../shared/interface/IDataSourceQueryResult';
+import {Distribution} from '../shared/interface/IDistribution';
+import {Effect} from '../shared/interface/IEffect';
+import IInProgressMessage from '../shared/interface/IInProgressMessage';
+import IOrdering from '../shared/interface/IOrdering';
+import IWorkspace from '../shared/interface/IWorkspace';
+import IWorkspaceProperties from '../shared/interface/IWorkspaceProperties';
+import IWorkspaceQueryResult from '../shared/interface/IWorkspaceQueryResult';
+import IProblem from '../shared/interface/Problem/IProblem';
+import IProblemCriterion from '../shared/interface/Problem/IProblemCriterion';
+import {TPerformanceTableEntry} from '../shared/interface/Problem/TPerformanceTableEntry';
+import {CURRENT_SCHEMA_VERSION} from '../shared/constants';
 import {
   buildEmptyInProgress,
   buildProblem,

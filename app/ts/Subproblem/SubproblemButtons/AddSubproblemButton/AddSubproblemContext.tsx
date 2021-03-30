@@ -1,6 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
+import {getDataSourcesById} from '@shared/util';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
@@ -46,7 +47,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   // *** refs/consts
   const {current: dataSourcesById} = useRef<Record<string, IDataSource>>(
-    _(criteria).flatMap('dataSources').keyBy('id').value()
+    getDataSourcesById(criteria)
   );
   const {current: dataSourcesWithValidValues} = useRef<
     Record<string, IDataSource>

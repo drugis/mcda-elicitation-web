@@ -1,3 +1,4 @@
+import {CURRENT_SCHEMA_VERSION} from '@shared/constants';
 import IAlternative from '@shared/interface/IAlternative';
 import IAlternativeQueryResult from '@shared/interface/IAlternativeQueryResult';
 import ICellCommand from '@shared/interface/ICellCommand';
@@ -32,7 +33,6 @@ import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionP
 import {generateUuid} from '@shared/util';
 import {TableInputMode} from 'app/ts/type/TableInputMode';
 import _ from 'lodash';
-import {CURRENT_SCHEMA_VERSION} from '../app/ts/ManualInput/constants';
 import significantDigits from '../app/ts/ManualInput/Util/significantDigits';
 
 export function mapWorkspace(

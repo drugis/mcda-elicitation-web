@@ -1,3 +1,4 @@
+import {MAX_PROBLEM_CRITERIA} from '@shared/constants';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
@@ -7,7 +8,6 @@ import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {MAX_PROBLEM_CRITERIA} from 'app/ts/ManualInput/constants';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import _ from 'lodash';

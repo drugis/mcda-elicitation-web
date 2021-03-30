@@ -2,7 +2,6 @@
 
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
-const errorService = require('./util/errorService');
 
 function testTutorial(browser, title) {
   loginService.login(browser);

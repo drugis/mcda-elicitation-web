@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {OurError} from '@shared/interface/IError';
 import bodyParser from 'body-parser';
 import csurf from 'csurf';
@@ -27,6 +28,7 @@ import InProgressRouter from './node-backend/inProgressRouter';
 import logger from './node-backend/logger';
 import OrderingRouter from './node-backend/orderingRouter';
 import PataviRouter from './node-backend/pataviRouter';
+import {premades} from './node-backend/premades';
 import ScenarioRouter from './node-backend/scenarioRouter';
 import SubproblemRouter from './node-backend/subproblemRouter';
 import WorkspaceRepository from './node-backend/workspaceRepository';
@@ -137,11 +139,6 @@ function initApp(): void {
   });
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
-  app.use('/examples', express.static('examples', {index: 'index.json'}));
-  app.use(
-    '/tutorials',
-    express.static('examples/tutorial-examples', {index: 'index.json'})
-  );
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
   app.use((request: Request, response: Response, next: any): void => {
     if (!request.user) {
@@ -158,7 +155,9 @@ function initApp(): void {
   app.use('/workspaces', subproblemRouter);
   app.use('/workspaces', scenarioRouter);
   app.use('/workspaces', workspaceSettingsRouter);
-
+  app.use('/premades', (request: Request, response: Response) => {
+    response.json(premades);
+  });
   app.use('/patavi', pataviRouter);
   app.use(errorHandler);
 

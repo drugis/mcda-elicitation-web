@@ -87,17 +87,6 @@
           }
         ]
       }
-    },
-    "preferences": {
-      "description": "The weight preferences on the criteria",
-      "oneOf": [
-        {
-          "type": "array"
-        },
-        {
-          "type": "object"
-        }
-      ]
     }
   }
 }

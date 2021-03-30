@@ -7,7 +7,7 @@ import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
 import {InlineQuestionMark} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {DUMMY_ID} from '../../../../constants';
+import {DUMMY_ID} from '../../../../manualInputConstants';
 import {ManualInputContext} from '../../../../ManualInputContext';
 import AddDataSourceButton from '../AddDataSourceButton/AddDataSourceButton';
 import {DataSourceRowContext} from '../DataSourceRowContext/DataSourceRowContext';

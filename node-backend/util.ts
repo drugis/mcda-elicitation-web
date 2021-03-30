@@ -14,11 +14,7 @@ import logger from './logger';
 export function getUser(request: any) {
   if (request.user) {
     return request.user;
-  } else if (
-    request.session &&
-    request.session.user &&
-    request.session.user.id
-  ) {
+  } else if (request.session?.user?.id) {
     return request.session.user;
   } else {
     throw 'No user id found';

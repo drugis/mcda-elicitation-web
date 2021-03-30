@@ -32,7 +32,7 @@ export default function WorkspacesTables(): JSX.Element {
   }, []);
 
   return (
-    <Grid container>
+    <>
       <Grid item xs={12}>
         <Grid item xs={8}>
           <Typography id="workspaces-header" variant="h4">
@@ -60,6 +60,6 @@ export default function WorkspacesTables(): JSX.Element {
       ) : (
         <WorkspacesTable workspaces={inProgressworkspaces} type="inProgress" />
       )}
-    </Grid>
+    </>
   );
 }
