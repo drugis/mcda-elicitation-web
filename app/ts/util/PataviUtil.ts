@@ -60,11 +60,15 @@ export function getWeightsPataviProblem(
 export function getPataviProblem(
   workspace: IWorkspace,
   preferences: TPreferences,
-  pvfs: Record<string, TPvf>
+  pvfs: Record<string, TPvf>,
+  effectsHavePriority: boolean
 ): IPataviProblem {
   return {
     preferences: preferences,
-    performanceTable: buildPataviPerformanceTable(workspace),
+    performanceTable: buildPataviPerformanceTable(
+      workspace,
+      effectsHavePriority
+    ),
     alternatives: _.keyBy(workspace.alternatives, 'id'),
     criteria: _(workspace.criteria)
       .map(_.partial(buildPataviCriterion, pvfs))
@@ -96,18 +100,20 @@ function getScale(unit: IUnitOfMeasurement): [number, number] {
 }
 
 export function buildPataviPerformanceTable(
-  workspace: IWorkspace
+  workspace: IWorkspace,
+  effectsHavePriority: boolean
 ): TPataviPerformanceTableEntry[] {
-  const effectEntries = buildPataviTableEntries(
-    workspace.effects,
-    getEffectPerformance,
+  const lowPriorityEntries = buildPataviTableEntries(
+    effectsHavePriority ? workspace.distributions : workspace.effects,
+    effectsHavePriority ? getDistributionPerformance : getEffectPerformance,
     {}
   );
   const combinedEntries = buildPataviTableEntries(
-    workspace.distributions,
-    getDistributionPerformance,
-    effectEntries
+    effectsHavePriority ? workspace.effects : workspace.distributions,
+    effectsHavePriority ? getEffectPerformance : getDistributionPerformance,
+    lowPriorityEntries
   );
+
   const combinedEntriesFlattened: TPataviPerformanceTableEntry[] = _(
     combinedEntries
   )
@@ -164,7 +170,7 @@ function getEffectPerformance(effect: Effect): IAbsolutePataviTableEntry {
       }
     };
   } else {
-    throw 'Attempt to create invalid performance table entry for Patavi';
+    throw `Attempt to create invalid performance table entry for Patavi of type ${effect.type}`;
   }
 }
 
@@ -176,85 +182,86 @@ function getDistributionPerformance(
     criterion: distribution.criterionId,
     dataSource: distribution.dataSourceId
   };
-  if (distribution.type === 'value') {
-    return {
-      ...base,
-      performance: {
-        type: 'exact',
-        value: distribution.value
-      }
-    };
-  } else if (distribution.type === 'range') {
-    return {
-      ...base,
-      performance: {
-        type: 'range',
-        parameters: {
-          lowerBound: distribution.lowerBound,
-          upperBound: distribution.upperBound
+  switch (distribution.type) {
+    case 'value':
+      return {
+        ...base,
+        performance: {
+          type: 'exact',
+          value: distribution.value
         }
-      }
-    };
-  } else if (distribution.type === 'normal') {
-    return {
-      ...base,
-      performance: {
-        type: 'dnorm',
-        parameters: {
-          mu: distribution.mean,
-          sigma: distribution.standardError
+      };
+    case 'range':
+      return {
+        ...base,
+        performance: {
+          type: 'range',
+          parameters: {
+            lowerBound: distribution.lowerBound,
+            upperBound: distribution.upperBound
+          }
         }
-      }
-    };
-  } else if (distribution.type === 'beta') {
-    return {
-      ...base,
-      performance: {
-        type: 'dbeta',
-        parameters: {
-          alpha: distribution.alpha,
-          beta: distribution.beta
+      };
+    case 'normal':
+      return {
+        ...base,
+        performance: {
+          type: 'dnorm',
+          parameters: {
+            mu: distribution.mean,
+            sigma: distribution.standardError
+          }
         }
-      }
-    };
-  } else if (distribution.type === 'gamma') {
-    return {
-      ...base,
-      performance: {
-        type: 'dgamma',
-        parameters: {
-          alpha: distribution.alpha,
-          beta: distribution.beta
+      };
+    case 'beta':
+      return {
+        ...base,
+        performance: {
+          type: 'dbeta',
+          parameters: {
+            alpha: distribution.alpha,
+            beta: distribution.beta
+          }
         }
-      }
-    };
-  } else if (distribution.type === 'dt') {
-    return {
-      ...base,
-      performance: {
-        type: 'dt',
-        parameters: {
-          mu: distribution.mean,
-          dof: distribution.dof,
-          stdErr: distribution.standardError
+      };
+    case 'gamma':
+      return {
+        ...base,
+        performance: {
+          type: 'dgamma',
+          parameters: {
+            alpha: distribution.alpha,
+            beta: distribution.beta
+          }
         }
-      }
-    };
-  } else if (distribution.type === 'survival') {
-    return {
-      ...base,
-      performance: {
-        type: 'dsurv',
-        parameters: {
-          alpha: distribution.alpha,
-          beta: distribution.beta,
-          summaryMeasure: distribution.summaryMeasure,
-          time: distribution.time
+      };
+    case 'dt':
+      return {
+        ...base,
+        performance: {
+          type: 'dt',
+          parameters: {
+            mu: distribution.mean,
+            dof: distribution.dof,
+            stdErr: distribution.standardError
+          }
         }
-      }
-    };
-  } else {
-    throw 'Attempt to create invalid performance table entry for Patavi';
+      };
+    case 'survival':
+      return {
+        ...base,
+        performance: {
+          type: 'dsurv',
+          parameters: {
+            alpha: distribution.alpha,
+            beta: distribution.beta,
+            summaryMeasure: distribution.summaryMeasure,
+            time: distribution.time
+          }
+        }
+      };
+    default:
+      throw `Attempt to create invalid performance table entry for Patavi of type ${distribution.type}`;
   }
 }
 
