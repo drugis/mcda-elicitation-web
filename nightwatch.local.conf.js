@@ -20,7 +20,7 @@ module.exports = {
       globals: {
         waitForConditionTimeout: 10000
       },
-      exclude: ['*/*.js'],
+      exclude: ['*/*.js', '*.ts'],
       desiredCapabilities: {
         browserName: 'firefox',
         'moz:firefoxOptions': {

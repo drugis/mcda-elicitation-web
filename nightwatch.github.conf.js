@@ -1,35 +1,11 @@
 'use strict';
 
-const seleniumServer = require('selenium-server');
-const geckodriver = require('geckodriver');
+const baseConfig = require('./nightwatch.local.conf');
 
 module.exports = {
-  src_folders: ['test/endToEnd'],
+  ...baseConfig,
   selenium: {
-    check_process_delay: 20000,
-    start_process: true,
-    server_path: seleniumServer.path,
-    host: 'localhost',
-    port: 4444,
-    cli_args: {
-      'webdriver.gecko.driver': geckodriver.path
-    }
-  },
-  test_settings: {
-    default: {
-      globals: {
-        waitForConditionTimeout: 5000
-      },
-      exclude: ['*/*.js'],
-      desiredCapabilities: {
-        browserName: 'firefox',
-        'moz:firefoxOptions': {
-          args: ['-headless']
-        },
-        javascriptEnabled: true,
-        acceptSslCerts: true,
-        acceptInsecureCerts: true
-      }
-    }
+    ...baseConfig.selenium,
+    check_process_delay: 20000
   }
 };
