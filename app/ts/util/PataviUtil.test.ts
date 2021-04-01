@@ -36,7 +36,7 @@ describe('PataviUtil', () => {
         crit1Id: {direction: 'increasing', type: 'linear', range: [0, 100]}
       };
       const preferences: TPreferences = [];
-      const result = getPataviProblem(workspace, preferences, pvfs);
+      const result = getPataviProblem(workspace, preferences, pvfs, false);
       const expectedResult: IPataviProblem = {
         alternatives: {alt1Id: {id: 'alt1Id', title: 'alt1'}},
         criteria: {
@@ -55,46 +55,46 @@ describe('PataviUtil', () => {
   });
 
   describe('buildPataviPerformanceTable', () => {
-    it('should transform the effects to a patavi ready version, where distributions get priority over effects', () => {
-      const workspace: IWorkspace = {
-        effects: [
-          {
-            alternativeId: 'alt1',
-            criterionId: 'crit1',
-            dataSourceId: 'ds1',
-            value: 37,
-            type: 'value'
-          },
-          {
-            alternativeId: 'alt1',
-            criterionId: 'crit2',
-            dataSourceId: 'ds2',
-            value: 37,
-            type: 'value'
-          }
-        ],
-        distributions: [
-          {
-            alternativeId: 'alt1',
-            criterionId: 'crit1',
-            dataSourceId: 'ds1',
-            type: 'normal',
-            mean: 3.7,
-            standardError: 0.42
-          }
-        ],
-        relativePerformances: [
-          {
-            baseline: {},
-            relative: {},
-            dataSourceId: 'ds3',
-            criterionId: 'crit3',
-            type: 'relative-logit-normal'
-          }
-        ]
-      } as IWorkspace;
+    const workspace: IWorkspace = {
+      effects: [
+        {
+          alternativeId: 'alt1',
+          criterionId: 'crit1',
+          dataSourceId: 'ds1',
+          value: 37,
+          type: 'value'
+        },
+        {
+          alternativeId: 'alt1',
+          criterionId: 'crit2',
+          dataSourceId: 'ds2',
+          value: 38,
+          type: 'value'
+        }
+      ],
+      distributions: [
+        {
+          alternativeId: 'alt1',
+          criterionId: 'crit1',
+          dataSourceId: 'ds1',
+          type: 'normal',
+          mean: 3.7,
+          standardError: 0.42
+        }
+      ],
+      relativePerformances: [
+        {
+          baseline: {},
+          relative: {},
+          dataSourceId: 'ds3',
+          criterionId: 'crit3',
+          type: 'relative-logit-normal'
+        }
+      ]
+    } as IWorkspace;
 
-      const result = buildPataviPerformanceTable(workspace);
+    it('should transform the effects to a patavi ready version when distributions get priority over effects', () => {
+      const result = buildPataviPerformanceTable(workspace, false);
       const expectedResult: TPataviPerformanceTableEntry[] = [
         {
           criterion: 'crit1',
@@ -109,7 +109,7 @@ describe('PataviUtil', () => {
           criterion: 'crit2',
           dataSource: 'ds2',
           alternative: 'alt1',
-          performance: {type: 'exact', value: 37}
+          performance: {type: 'exact', value: 38}
         },
         {
           criterion: 'crit3',
@@ -122,7 +122,32 @@ describe('PataviUtil', () => {
       ];
       expect(result).toEqual(expectedResult);
     });
-
+    it('should transform the effects to a patavi ready version when effects get priority over distributions', () => {
+      const result = buildPataviPerformanceTable(workspace, true);
+      const expectedResult: TPataviPerformanceTableEntry[] = [
+        {
+          criterion: 'crit1',
+          dataSource: 'ds1',
+          alternative: 'alt1',
+          performance: {type: 'exact', value: 37}
+        },
+        {
+          criterion: 'crit2',
+          dataSource: 'ds2',
+          alternative: 'alt1',
+          performance: {type: 'exact', value: 38}
+        },
+        {
+          criterion: 'crit3',
+          dataSource: 'ds3',
+          performance: {
+            type: 'relative-logit-normal',
+            parameters: {baseline: {}, relative: {}}
+          }
+        } as IRelativePataviTableEntry
+      ];
+      expect(result).toEqual(expectedResult);
+    });
     it('should throw an error if there is an invalid performance', () => {
       const workspace: IWorkspace = {
         distributions: [
@@ -135,13 +160,12 @@ describe('PataviUtil', () => {
         ]
       } as IWorkspace;
       expect(() => {
-        buildPataviPerformanceTable(workspace);
+        buildPataviPerformanceTable(workspace, false);
       }).toThrow(
         'Attempt to create invalid performance table entry for Patavi'
       );
     });
   });
-
   describe('getScalesCommand', () => {
     const problem: IProblem = {
       title: 'new problem',

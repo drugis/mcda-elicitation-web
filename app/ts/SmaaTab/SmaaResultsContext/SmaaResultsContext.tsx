@@ -112,7 +112,8 @@ export function SmaaResultsContextProviderComponent({
     const pataviProblem = getPataviProblem(
       filteredWorkspace,
       currentScenario.state.prefs,
-      pvfs
+      pvfs,
+      false
     );
 
     const smaaResultsCommand: ISmaaResultsCommand = {

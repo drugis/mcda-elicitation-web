@@ -19,7 +19,13 @@ import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemCo
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import {getInitialSensitivityValues} from '../DeterministicResultsUtil';
 import IDeterministicResultsContext from './IDeterministicResultsContext';
 
@@ -95,95 +101,123 @@ export function DeterministicResultsContextProviderComponent({
     setAreRecalculatedPlotsLoading
   ] = useState<boolean>(false);
 
+  const getDeterministicResults = useCallback(
+    (pataviProblem: IPataviProblem): void => {
+      const pataviCommand: IDeterministicResultsCommand = {
+        ...pataviProblem,
+        method: 'deterministic'
+      };
+
+      axios
+        .post('/patavi/deterministicResults', pataviCommand)
+        .then((result: AxiosResponse<IDeterministicResults>) => {
+          setWeights(result.data.weights);
+          setBaseTotalValues(result.data.total);
+          setBaseValueProfiles(result.data.value);
+        })
+        .catch(setError);
+    },
+    [setError]
+  );
+  const getMeasurementsSensitivityResults = useCallback(
+    (pataviProblem: IPataviProblem): void => {
+      const pataviCommand: IMeasurementsSensitivityCommand = {
+        ...pataviProblem,
+        method: 'sensitivityMeasurementsPlot',
+        sensitivityAnalysis: {
+          alternative: measurementSensitivityAlternative.id,
+          criterion: measurementSensitivityCriterion.id
+        }
+      };
+
+      axios
+        .post('/patavi/measurementsSensitivity', pataviCommand)
+        .then((result: AxiosResponse<IMeasurementsSensitivityResults>) => {
+          setMeasurementsSensitivityResults(result.data.total);
+        })
+        .catch(setError);
+    },
+    [
+      measurementSensitivityAlternative.id,
+      measurementSensitivityCriterion.id,
+      setError
+    ]
+  );
+
+  const getPreferencesSensitivityResults = useCallback(
+    (pataviProblem: IPataviProblem): void => {
+      const pataviCommand: IPreferencesSensitivityCommand = {
+        ...pataviProblem,
+        method: 'sensitivityWeightPlot',
+        sensitivityAnalysis: {
+          criterion: preferencesSensitivityCriterion.id
+        }
+      };
+
+      axios
+        .post('/patavi/preferencesSensitivity', pataviCommand)
+        .then((result: AxiosResponse<IPreferencesSensitivityResults>) => {
+          setPreferencesSensitivityResults(result.data.total);
+        })
+        .catch(setError);
+    },
+    [preferencesSensitivityCriterion.id, setError]
+  );
+
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
         filteredWorkspace,
         currentScenario.state.prefs,
-        pvfs
+        pvfs,
+        true
       );
       getDeterministicResults(pataviProblem);
       getMeasurementsSensitivityResults(pataviProblem);
       getPreferencesSensitivityResults(pataviProblem);
     }
-  }, [pvfs]);
+  }, [
+    currentScenario.state.prefs,
+    filteredWorkspace,
+    getDeterministicResults,
+    getMeasurementsSensitivityResults,
+    getPreferencesSensitivityResults,
+    pvfs
+  ]);
 
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
         filteredWorkspace,
         currentScenario.state.prefs,
-        pvfs
+        pvfs,
+        true
       );
       getMeasurementsSensitivityResults(pataviProblem);
     }
-  }, [measurementSensitivityCriterion, measurementSensitivityAlternative]);
+  }, [
+    currentScenario.state.prefs,
+    filteredWorkspace,
+    getMeasurementsSensitivityResults,
+    pvfs
+  ]);
 
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
         filteredWorkspace,
         currentScenario.state.prefs,
-        pvfs
+        pvfs,
+        true
       );
       getPreferencesSensitivityResults(pataviProblem);
     }
-  }, [preferencesSensitivityCriterion]);
-
-  function getDeterministicResults(pataviProblem: IPataviProblem): void {
-    const pataviCommand: IDeterministicResultsCommand = {
-      ...pataviProblem,
-      method: 'deterministic'
-    };
-
-    axios
-      .post('/patavi/deterministicResults', pataviCommand)
-      .then((result: AxiosResponse<IDeterministicResults>) => {
-        setWeights(result.data.weights);
-        setBaseTotalValues(result.data.total);
-        setBaseValueProfiles(result.data.value);
-      })
-      .catch(setError);
-  }
-
-  function getMeasurementsSensitivityResults(
-    pataviProblem: IPataviProblem
-  ): void {
-    const pataviCommand: IMeasurementsSensitivityCommand = {
-      ...pataviProblem,
-      method: 'sensitivityMeasurementsPlot',
-      sensitivityAnalysis: {
-        alternative: measurementSensitivityAlternative.id,
-        criterion: measurementSensitivityCriterion.id
-      }
-    };
-
-    axios
-      .post('/patavi/measurementsSensitivity', pataviCommand)
-      .then((result: AxiosResponse<IMeasurementsSensitivityResults>) => {
-        setMeasurementsSensitivityResults(result.data.total);
-      })
-      .catch(setError);
-  }
-
-  function getPreferencesSensitivityResults(
-    pataviProblem: IPataviProblem
-  ): void {
-    const pataviCommand: IPreferencesSensitivityCommand = {
-      ...pataviProblem,
-      method: 'sensitivityWeightPlot',
-      sensitivityAnalysis: {
-        criterion: preferencesSensitivityCriterion.id
-      }
-    };
-
-    axios
-      .post('/patavi/preferencesSensitivity', pataviCommand)
-      .then((result: AxiosResponse<IPreferencesSensitivityResults>) => {
-        setPreferencesSensitivityResults(result.data.total);
-      })
-      .catch(setError);
-  }
+  }, [
+    currentScenario.state.prefs,
+    filteredWorkspace,
+    getPreferencesSensitivityResults,
+    pvfs
+  ]);
 
   function setCurrentValue(
     criterionId: string,
@@ -236,7 +270,8 @@ export function DeterministicResultsContextProviderComponent({
     const pataviProblem = getPataviProblem(
       filteredWorkspace,
       currentScenario.state.prefs,
-      pvfs
+      pvfs,
+      true
     );
 
     const pataviCommand: IRecalculatedDeterministicResultsCommand = {
