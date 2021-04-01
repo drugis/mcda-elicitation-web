@@ -9,6 +9,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
+import IWeights from '@shared/interface/Scenario/IWeights';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
@@ -16,11 +17,13 @@ import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemCo
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 
-export default function SmaaWeightsTable(): JSX.Element {
+export default function SmaaWeightsTable({
+  smaaWeights
+}: {
+  smaaWeights: IWeights;
+}): JSX.Element {
   const {filteredCriteria} = useContext(SubproblemContext);
-  const {smaaWeights} = useContext(SmaaResultsContext);
 
   function CriterionHeaders(): JSX.Element {
     return (

@@ -1,14 +1,16 @@
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
-import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
+import React from 'react';
 import CentralWeightsPlot from './CentralWeightsPlot/CentralWeightsPlot';
 import CentralWeightsTable from './CentralWeightsTable/CentralWeightsTable';
 
-export default function CentralWeights(): JSX.Element {
-  const {centralWeights} = useContext(SmaaResultsContext);
-
+export default function CentralWeights({
+  centralWeights
+}: {
+  centralWeights: Record<string, ICentralWeight>;
+}): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={12}>
@@ -19,14 +21,14 @@ export default function CentralWeights(): JSX.Element {
       {centralWeights ? (
         <>
           <Grid item xs={12}>
-            <CentralWeightsPlot />
+            <CentralWeightsPlot centralWeights={centralWeights} />
           </Grid>
           <Grid container item xs={12} spacing={2}>
             <Grid container item xs={12} justify="flex-end">
               <ClipboardButton targetId="#central-weights-table" />
             </Grid>
             <Grid item xs={12}>
-              <CentralWeightsTable />
+              <CentralWeightsTable centralWeights={centralWeights} />
             </Grid>
           </Grid>
         </>

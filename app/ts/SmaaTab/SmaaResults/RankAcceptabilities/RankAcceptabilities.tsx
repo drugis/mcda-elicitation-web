@@ -2,13 +2,15 @@ import {CircularProgress, Grid, Typography} from '@material-ui/core';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import LegendWrapper from 'app/ts/Legend/LegendWrapper/LegendWrapper';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
-import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
+import React from 'react';
 import RankAcceptabilitiesPlot from './RankAcceptabilitiesPlot/RankAcceptabilitiesPlot';
 import RankAcceptabilitiesTable from './RankAcceptabilitiesTable/RankAcceptabilitiesTable';
 
-export default function RankAcceptabilities(): JSX.Element {
-  const {ranks} = useContext(SmaaResultsContext);
+export default function RankAcceptabilities({
+  ranks
+}: {
+  ranks: Record<string, number[]>;
+}): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={12}>
@@ -22,7 +24,7 @@ export default function RankAcceptabilities(): JSX.Element {
         <>
           <Grid container item xs={12} md={6}>
             <LegendWrapper buttonId={'rank-acceptabilities-plot-legend'}>
-              <RankAcceptabilitiesPlot />
+              <RankAcceptabilitiesPlot ranks={ranks} />
             </LegendWrapper>
           </Grid>
           <Grid container item xs={12} md={6}>
@@ -30,7 +32,7 @@ export default function RankAcceptabilities(): JSX.Element {
               <ClipboardButton targetId="#rank-acceptabilities-table" />
             </Grid>
             <Grid item xs={12}>
-              <RankAcceptabilitiesTable />
+              <RankAcceptabilitiesTable ranks={ranks} />
             </Grid>
           </Grid>
         </>

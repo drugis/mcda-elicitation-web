@@ -7,14 +7,16 @@ import {
 } from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import {SmaaResultsContext} from 'app/ts/SmaaTab/SmaaResultsContext/SmaaResultsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 
-export default function RankAcceptabilitiesTable() {
+export default function RankAcceptabilitiesTable({
+  ranks
+}: {
+  ranks: Record<string, number[]>;
+}) {
   const {filteredAlternatives} = useContext(SubproblemContext);
-  const {ranks} = useContext(SmaaResultsContext);
 
   return (
     <Table id="rank-acceptabilities-table">
