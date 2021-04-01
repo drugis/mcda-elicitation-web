@@ -7,18 +7,21 @@ import {
 } from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import {SmaaResultsContext} from 'app/ts/SmaaTab/SmaaResultsContext/SmaaResultsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 
-export default function CentralWeightsTable() {
+export default function CentralWeightsTable({
+  centralWeights
+}: {
+  centralWeights: Record<string, ICentralWeight>;
+}) {
   const {filteredAlternatives, filteredCriteria} = useContext(
     SubproblemContext
   );
-  const {centralWeights} = useContext(SmaaResultsContext);
 
   function CriterionHeaders(): JSX.Element {
     return (

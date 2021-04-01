@@ -1,17 +1,20 @@
 import {Grid} from '@material-ui/core';
+import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {LegendContext} from 'app/ts/Legend/LegendContext';
-import {SmaaResultsContext} from 'app/ts/SmaaTab/SmaaResultsContext/SmaaResultsContext';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext} from 'react';
 import {generateCentralWeightsPlotSettings} from '../../SmaaResultsUtil';
 
-export default function CentralWeightsPlot() {
+export default function CentralWeightsPlot({
+  centralWeights
+}: {
+  centralWeights: Record<string, ICentralWeight>;
+}) {
   const {filteredAlternatives, filteredCriteria} = useContext(
     SubproblemContext
   );
   const {legendByAlternativeId} = useContext(LegendContext);
-  const {centralWeights} = useContext(SmaaResultsContext);
   const width = '620px';
   const height = '350px';
 
