@@ -1,6 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import {Distribution} from '@shared/interface/IDistribution';
 import IScale from '@shared/interface/IScale';
+import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
@@ -16,6 +17,7 @@ export default function DistributionValueCell({
   usePercentage,
   dataSourceId,
   alternativeId,
+  displayMode,
   isExcluded
 }: {
   distribution: Distribution;
@@ -23,11 +25,12 @@ export default function DistributionValueCell({
   usePercentage: boolean;
   dataSourceId: string;
   alternativeId: string;
+  displayMode: TDisplayMode;
   isExcluded?: boolean;
 }): JSX.Element {
   const {setErrorMessage} = useContext(ErrorContext);
   const {
-    settings: {displayMode, calculationMethod}
+    settings: {calculationMethod}
   } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 

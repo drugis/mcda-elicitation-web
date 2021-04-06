@@ -21,7 +21,7 @@ export default function SmaaResults() {
       />
       <UncertaintyOptions />
       <Grid item xs={12}>
-        <EffectsTable />
+        <EffectsTable displayMode="smaaValues" />
       </Grid>
       <SmaaWeightsTable smaaWeights={smaaWeights} />
       <RankAcceptabilities ranks={ranks} />

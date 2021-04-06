@@ -15,17 +15,16 @@ import NMACell from './NMACell/NMACell';
 export default function ValueCell({
   alternativeId,
   dataSourceId,
+  displayMode,
   isExcluded
 }: {
   alternativeId: string;
   dataSourceId: string;
+  displayMode: TDisplayMode;
   isExcluded?: boolean;
 }) {
   const {workspace, scales} = useContext(WorkspaceContext);
-  const {
-    showPercentages,
-    settings: {displayMode}
-  } = useContext(SettingsContext);
+  const {showPercentages} = useContext(SettingsContext);
   const {setErrorMessage} = useContext(ErrorContext);
 
   const usePercentage =
@@ -76,6 +75,7 @@ export default function ValueCell({
           usePercentage={usePercentage}
           dataSourceId={dataSourceId}
           alternativeId={alternativeId}
+          displayMode={displayMode}
           isExcluded={isExcluded}
         />
       );
