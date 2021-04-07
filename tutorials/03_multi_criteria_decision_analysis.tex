@@ -60,14 +60,7 @@
 \noindent \faGraduationCap \, At the top are the partial value functions, which indicate how utility changes as a function of the criteria scale values. Below this is the weights section which is the main focus of this tutorial. Before setting weights, the partial value functions need to be defined.
 \newline
 
-\noindent \leftpointright \, Click on the ‘Define partial value function’ button for ARR. Lower relapse rate is better, and we are going to assume that utility changes linearly with the relapse rate, so the type of function is ‘Linear’. Click on ‘Save’ (see Figure \ref{fig:pvf}).
-
-\begin{figure}[!h]
-    \centering
-	\includegraphics[width=\textwidth]{fig/setPvf.png}
-    \caption{Setting the ARR partial value function}
-	\label{fig:pvf}
-\end{figure}
+\noindent \leftpointright \, Click on the ‘Decreasing’ button for ARR. Lower relapse rate is better, and we are going to assume that utility changes linearly with the relapse rate.
 
 \noindent The range over which the partial value functions are defined depends on the data included in the effects table. These ranges can be modified in the ‘Problem definition’ tab, but this goes beyond the scope of this tutorial.
 \newline
@@ -75,17 +68,17 @@
 \noindent \leftpointright \, Also define linear partial value functions for the adverse event criteria, with low values being best. The result should look like Figure \ref{fig:preferences}.
 \newline
 
-\noindent \leftpointright \, (optional) Explore the process for defining non-linear partial value functions by clicking the ‘Define partial value function’ button under any of the functions, choosing the ‘Piecewise-linear’ option, and adjusting the sliders in the following steps. You can leave the definition process at any time by clicking on the ‘Preferences’ tab again.
-\newline
-
-\noindent \faGraduationCap \, Non-linear partial value functions are needed when equivalent changes on a criterion’s measurement scale do not result in equivalent changes in utility.  For example, one can imagine that going from severe depression to mild depression is more valuable than improving from mild to no depression (diminishing marginal utility).
-
 \begin{figure}[!h]
     \centering
 	\includegraphics[width=\textwidth]{fig/preferences.png}
     \caption{The preferences tab after setting the partial value functions}
 	\label{fig:preferences}
 \end{figure}
+
+\noindent \leftpointright \, (optional) Explore the process for defining non-linear partial value functions by clicking the ‘Advanced’ button under any of the functions, and adjusting the sliders. You can leave the definition process at any time by clicking on the ‘Cancel’ button.
+\newline
+
+\noindent \faGraduationCap \, Non-linear partial value functions are needed when equivalent changes on a criterion’s measurement scale do not result in equivalent changes in utility.  For example, one can imagine that going from severe depression to mild depression is more valuable than improving from mild to no depression (diminishing marginal utility).
 
 \subsection*{Preferences: ranking elicitation}
 First let’s see how the treatments compare if we only give an ordinal ranking, with efficacy as the most important.
