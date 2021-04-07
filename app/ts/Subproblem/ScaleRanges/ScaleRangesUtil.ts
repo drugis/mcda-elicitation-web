@@ -21,7 +21,7 @@ export function getScaleRangeWarnings(
       'Criterion with only missing or text values selected, therefore no scales can be set.'
     );
   }
-  if (hasRowWithOnlySameValue(observedRanges)) {
+  if (hasRowWithOnlySameValue(workspace.criteria, observedRanges)) {
     warnings.push(
       'Criterion selected where all values are identical, therefore no scales can be set.'
     );
@@ -67,10 +67,14 @@ function hasNonEmptyPerformance(effects: Effect[] | Distribution[]): boolean {
 }
 
 export function hasRowWithOnlySameValue(
+  criteria: ICriterion[],
   observedRanges: Record<string, [number, number]>
 ): boolean {
   return _.some(
-    observedRanges,
-    ([lowerBound, upperBound]): boolean => lowerBound === upperBound
+    criteria,
+    (criterion: ICriterion): boolean =>
+      observedRanges[criterion.dataSources[0].id] &&
+      observedRanges[criterion.dataSources[0].id][0] ===
+        observedRanges[criterion.dataSources[0].id][1]
   );
 }

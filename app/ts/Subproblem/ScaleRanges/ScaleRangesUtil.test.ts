@@ -141,27 +141,38 @@ describe('ScaleRangesUtil', () => {
   });
 
   describe('hasRowWithOnlySameValue', () => {
+    const criteria: ICriterion[] = [
+      {
+        dataSources: [{id: 'dsId'}]
+      } as ICriterion,
+      {
+        dataSources: [{id: 'ds2Id'}]
+      } as ICriterion
+    ];
+
     it('should return true if there is a row with equal lower and upper bounds', () => {
       const observedRanges: Record<string, [number, number]> = {
         dsId: [0, 0],
-        ds2Id: [0, 1]
+        ds2Id: [0, 1],
+        ds3Id: [1, 1]
       };
-      const result = hasRowWithOnlySameValue(observedRanges);
+      const result = hasRowWithOnlySameValue(criteria, observedRanges);
       expect(result).toBeTruthy();
     });
 
     it("should return false if there isn't a row with equal lower and upper bounds", () => {
       const observedRanges: Record<string, [number, number]> = {
         dsId: [0, 1],
-        ds2Id: [0, 1]
+        ds2Id: [0, 1],
+        ds3Id: [1, 1]
       };
-      const result = hasRowWithOnlySameValue(observedRanges);
+      const result = hasRowWithOnlySameValue(criteria, observedRanges);
       expect(result).toBeFalsy();
     });
 
     it('should return false if the oberved ranges are empty', () => {
       const observedRanges: Record<string, [number, number]> = {};
-      const result = hasRowWithOnlySameValue(observedRanges);
+      const result = hasRowWithOnlySameValue(criteria, observedRanges);
       expect(result).toBeFalsy();
     });
   });
