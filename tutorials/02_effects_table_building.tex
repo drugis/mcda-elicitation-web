@@ -15,7 +15,7 @@ This tutorial guides you through the process of making analysable effects tables
 \end{itemize}
 
 \subsection*{Example effects table}
-The data that you are going to enter in this tutorial is taken from the effects table for lixisenatide as included in the \href{https://www.ema.europa.eu/documents/template-form/day-80-assessment-report-overview-d120-loq-template-guidance-rev-0718_en.doc}{EMA Guidance document for critical assessment reports} (see page 72). We use a similar table to the previous tutorial, with one more criterion and alternative.
+The data that you are going to enter in this tutorial is taken from the effects table for lixisenatide as included in the \href{https://www.ema.europa.eu/documents/template-form/day-80-assessment-report-overview-d120-loq-template-guidance-rev-1019_en.docx}{EMA Guidance document for critical assessment reports} (see page 72). We use a similar table to the previous tutorial, with one more criterion and alternative.
 
 \subsection*{Sign in to MCDA.drugis.org}
 \leftpointright \, Open your browser and navigate to \href{https://mcda.drugis.org}{https://mcda.drugis.org}. Use your Google account to sign in. You will be redirected to your personal homepage, containing your previously created workspaces, both finished and unfinished (if any).
@@ -36,7 +36,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 	
 \noindent An exception is the ‘Default’ problem, which may contain multiple data sources as well as empty cells. Should this be the case, the ‘Default’ problem is considered to be not analysable, resulting in an inactive ‘Preferences’ tab. Hovering your mouse over the ‘Preferences’ tab will then show a tooltip explaining why this tab is inactive.
 
-\noindent \leftpointright \, Click the ‘+’ icon  next to the ‘Problem’ dropdown (Figure \ref{fig:create_problem}). This opens the problem creation dialog.
+\noindent \leftpointright \, Click the ‘+’ icon under the ‘Problem’ dropdown (Figure \ref{fig:create_problem}). This opens the problem creation dialog.
 
 \begin{figure}[!h]
     \centering
@@ -45,7 +45,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 	\label{fig:create_problem}
 \end{figure}
 
-\noindent \leftpointright \, Take a look at the warnings in red near the bottom of the dialog. These explain why the current selection of criteria, alternatives, and data sources is not analysable. To make the effects table analysable, first, deselect the Exenatide criterion and then deselect the data source rows for EFC6019. This should cause the warning about missing values to disappear. Next, deselect the data source rows for EFC6015, so that we end up with a lixisenatide/placebo comparison based on pooled data EFC6014 and EFC10743 for HbA1c and Hypoglycaemia. Now the warning about multiple data sources should have disappeared (Figure \ref{fig:create_lixi_placebo}). The controls for setting the scale ranges (the breadth of possible values to asses on the ‘Preferences’ tab, see next tutorial) are now also accessible; these are not part of this tutorial. Give the problem an informative name such as ‘Lixi-PBO pooled’ and click ‘Create’ at the bottom of the dialog.
+\noindent \leftpointright \, Scroll down and take a look at the warnings the bottom of the dialog. These explain why the current selection of criteria, alternatives, and data sources is not analysable. To make the effects table analysable, first, deselect the Exenatide criterion and then deselect the data source rows for EFC6019. This should cause the warning about missing values to disappear. Next, deselect the data source rows for EFC6015, so that we end up with a lixisenatide/placebo comparison based on pooled data EFC6014 and EFC10743 for HbA1c and Hypoglycaemia. Now the warning about multiple data sources should have disappeared (Figure \ref{fig:create_lixi_placebo}). The controls for setting the scale ranges (the breadth of possible values to asses on the ‘Preferences’ tab, see next tutorial) are now also accessible; these are not part of this tutorial. Give the problem an informative name such as ‘Lixi-PBO pooled’ and click 'Add' at the bottom of the dialog.
 
 \begin{figure}[!h]
     \centering
@@ -77,10 +77,10 @@ The data that you are going to enter in this tutorial is taken from the effects 
 
 \begin{itemize}
 \item Changing to Median/Mode does nothing (this only applies when the values shown in the effects table are sampled from probability distributions).
-\item Changing the ‘Effects display mode’ from ‘Deterministic – entered effects’ to ‘Deterministic – analysis values’ shows the values as they will be used for calculating the deterministic results. 
-Changing to ‘SMAA – distribution parameters’ shows the distributions and their parameters used for calculating the SMAA results. For this example the cells in the table will be empty, as no distributions where entered.
-\item Changing to ‘SMAA – analysis values’ shows the 95\% confidence interval calculated from the distributions, however since we’ve only entered effects for this example, it will show the point estimate of those effects.
-\item Changing between percentages and decimals changes the shown values and units for Nausea and Hypoclycaemia but not HbA1c (this setting only affects dichotomous criteria). It will also only change the values on the two ‘analysis values’ views, as the other two show exactly what the input was.
+\item Changing the ‘Measurements display mode’ from ‘Entered effects’ to ‘Values used in deterministic analysis’ shows the values as they will be used for calculating the deterministic results. 
+Changing to ‘Entered distributions’ shows the distributions and their parameters used for calculating the SMAA results. For this example no distributions where entered and this option is not availbable.
+\item Changing to ‘Values used in SMAA’ shows the 95\% confidence interval calculated from the distributions, however since we’ve only entered effects for this example, it will show the point estimate of those effects.
+\item Changing between percentages and decimals changes the shown values and units for Nausea and Hypoclycaemia but not HbA1c (this setting only affects dichotomous criteria).
 \end{itemize}
 
 \noindent \leftpointright \, Uncheck e.g. the ‘Description’ and ‘Uncertainties / Strength of evidence’ checkboxes in the bottom section of the settings dialog to make the effects table more compact. Click ‘Save’ and study the result.
