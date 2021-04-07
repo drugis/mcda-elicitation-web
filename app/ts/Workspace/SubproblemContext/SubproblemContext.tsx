@@ -40,10 +40,10 @@ export function SubproblemContextProviderComponent({
   >({});
 
   useEffect(() => {
-    if (hasScaleValues(scales) && filteredWorkspace) {
-      setObservedRanges(calculateObservedRanges(scales, filteredWorkspace));
+    if (hasScaleValues(scales) && workspace) {
+      setObservedRanges(calculateObservedRanges(scales, workspace));
     }
-  }, [scales, filteredWorkspace]);
+  }, [scales, workspace]);
 
   useEffect(() => {
     setFilteredWorkspace(applySubproblem(workspace, currentSubproblem));
@@ -57,7 +57,7 @@ export function SubproblemContextProviderComponent({
         currentSubproblem.definition.ranges
       )
     );
-  }, [observedRanges, currentSubproblem]);
+  }, [observedRanges, currentSubproblem, criteria]);
 
   function getStepSizeForCriterion(criterion: ICriterion) {
     const dataSourceId = criterion.dataSources[0].id;
