@@ -12,6 +12,7 @@ export default function OverviewDataSourceRow() {
   const {dataSource, previousDataSourceId, nextDataSourceId} = useContext(
     OverviewDataSourceContext
   );
+
   return (
     <TableRow>
       <EffectTableDataSourceCells

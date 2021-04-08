@@ -1,16 +1,16 @@
 'use strict';
 define([
   './subProblemController',
-  '../../ts/Subproblem/Subproblem',
+  '../../ts/Subproblem/SubproblemTab',
   'angular',
   'react2angular'
-], function (SubProblemController, Subproblem, angular, react2angular) {
+], function (SubProblemController, SubproblemTab, angular, react2angular) {
   return angular
     .module('elicit.subProblem', [])
     .controller('SubProblemController', SubProblemController)
     .component(
-      'subproblem',
-      react2angular.react2angular(Subproblem.default, [
+      'subproblemTab',
+      react2angular.react2angular(SubproblemTab.default, [
         'workspace',
         'subproblems',
         'currentSubproblem',

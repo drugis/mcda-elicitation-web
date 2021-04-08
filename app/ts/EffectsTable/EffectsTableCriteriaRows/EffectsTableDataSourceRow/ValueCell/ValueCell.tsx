@@ -1,4 +1,4 @@
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
+import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext';
 import {
   canDSBePercentage,
   findScale,
@@ -22,11 +22,9 @@ export default function ValueCell({
   isExcluded?: boolean;
 }) {
   const {workspace, scales} = useContext(WorkspaceContext);
-  const {
-    showPercentages,
-    settings: {displayMode}
-  } = useContext(SettingsContext);
+  const {showPercentages} = useContext(SettingsContext);
   const {setErrorMessage} = useContext(ErrorContext);
+  const {displayMode} = useContext(EffectsTableContext);
 
   const usePercentage =
     canDSBePercentage(workspace.criteria, dataSourceId) && showPercentages;
@@ -39,7 +37,7 @@ export default function ValueCell({
   const scale = findScale(scales, dataSourceId, alternativeId);
   const hasScaleValues = scale['50%'] !== null && scale['50%'] !== undefined;
 
-  function buildValueLabel(displayMode: TDisplayMode): JSX.Element {
+  function buildValueLabel(): JSX.Element {
     if (
       displayMode === 'enteredEffects' ||
       displayMode === 'deterministicValues'
@@ -94,5 +92,5 @@ export default function ValueCell({
     }
   }
 
-  return buildValueLabel(displayMode);
+  return buildValueLabel();
 }
