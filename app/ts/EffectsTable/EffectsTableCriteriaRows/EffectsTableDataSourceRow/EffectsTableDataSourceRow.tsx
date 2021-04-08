@@ -1,7 +1,6 @@
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import React, {useContext} from 'react';
 import EffectsTableCriterionDescriptionCell from './EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
@@ -11,13 +10,11 @@ import EffectTableDataSourceCells from './EffectTableDataSourceCells/EffectTable
 export default function EffectsTableDataSourceRow({
   criterion,
   dataSource,
-  rowIndex,
-  displayMode
+  rowIndex
 }: {
   criterion: ICriterion;
   dataSource: IDataSource;
   rowIndex: number;
-  displayMode: TDisplayMode;
 }) {
   const {filteredAlternatives} = useContext(SubproblemContext);
 
@@ -40,7 +37,6 @@ export default function EffectsTableDataSourceRow({
       <EffectTableDataSourceCells
         dataSource={dataSource}
         alternatives={filteredAlternatives}
-        displayMode={displayMode}
       />
     </TableRow>
   );

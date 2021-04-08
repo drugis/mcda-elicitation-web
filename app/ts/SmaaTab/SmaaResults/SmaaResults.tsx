@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import EffectsTable from 'app/ts/EffectsTable/EffectsTable';
+import {EffectsTableContextProviderComponent} from 'app/ts/EffectsTable/EffectsTableContext';
 import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
 import React, {useContext} from 'react';
@@ -21,7 +22,9 @@ export default function SmaaResults() {
       />
       <UncertaintyOptions />
       <Grid item xs={12}>
-        <EffectsTable displayMode="smaaValues" />
+        <EffectsTableContextProviderComponent displayMode="smaaValues">
+          <EffectsTable />
+        </EffectsTableContextProviderComponent>
       </Grid>
       <SmaaWeightsTable smaaWeights={smaaWeights} />
       <RankAcceptabilities ranks={ranks} />

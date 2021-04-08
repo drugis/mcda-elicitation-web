@@ -7,7 +7,6 @@ import EffectsTableReferenceCell from 'app/ts/EffectsTable/EffectsTableCriteriaR
 import EffectsTableStrengthsAndUncertainties from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableStrengthsAndUncertainties/EffectsTableStrengthsAndUncertainties';
 import EffectsTableUnitOfMeasurementCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableUnitOfMeasurementCell/EffectsTableUnitOfMeasurementCell';
 import ValueCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/ValueCell';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
@@ -29,9 +28,6 @@ export default function AddSubproblemDataSourceCells({
     isDataSourceExcluded,
     isAlternativeExcluded
   } = useContext(AddSubproblemContext);
-  const {
-    settings: {displayMode}
-  } = useContext(SettingsContext);
 
   const areCriterionCellsExcluded = isCriterionExcluded(criterion.id);
   const areDataSourceCellsExcluded = isDataSourceExcluded(dataSource.id);
@@ -53,7 +49,6 @@ export default function AddSubproblemDataSourceCells({
           key={alternative.id}
           alternativeId={alternative.id}
           dataSourceId={dataSource.id}
-          displayMode={displayMode}
           isExcluded={
             areCriterionCellsExcluded ||
             areDataSourceCellsExcluded ||

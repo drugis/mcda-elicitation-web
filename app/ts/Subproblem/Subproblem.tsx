@@ -1,6 +1,7 @@
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import React, {useContext} from 'react';
 import EffectsTable from '../EffectsTable/EffectsTable';
+import {EffectsTableContextProviderComponent} from '../EffectsTable/EffectsTableContext';
 import {SettingsContext} from '../Settings/SettingsContext';
 import ScaleRanges from './ScaleRanges/ScaleRanges';
 import SubproblemButtons from './SubproblemButtons/SubproblemButtons';
@@ -19,7 +20,9 @@ export default function Subproblem({
     <>
       <SubproblemSelection subproblemChanged={subproblemChanged} />
       <SubproblemButtons />
-      <EffectsTable displayMode={displayMode} />
+      <EffectsTableContextProviderComponent displayMode={displayMode}>
+        <EffectsTable />
+      </EffectsTableContextProviderComponent>
       <ScaleRanges />
     </>
   );

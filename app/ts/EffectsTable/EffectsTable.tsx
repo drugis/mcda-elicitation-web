@@ -4,7 +4,6 @@ import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
@@ -18,11 +17,7 @@ import ReferencesHeader from './EffectsTableHeaders/ReferencesHeader/ReferencesH
 import SoEUncHeader from './EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from './EffectsTableHeaders/UnitsHeader/UnitsHeader';
 
-export default function EffectsTable({
-  displayMode
-}: {
-  displayMode: TDisplayMode;
-}) {
+export default function EffectsTable() {
   const {scales} = useContext(WorkspaceContext);
   const {filteredAlternatives} = useContext(SubproblemContext);
 
@@ -54,7 +49,7 @@ export default function EffectsTable({
       <Grid item xs={12}>
         <Table size="small" id="effects-table">
           {renderTableHeaders()}
-          <EffectsTableCriteriaRows displayMode={displayMode} />
+          <EffectsTableCriteriaRows />
         </Table>
       </Grid>
     </Grid>

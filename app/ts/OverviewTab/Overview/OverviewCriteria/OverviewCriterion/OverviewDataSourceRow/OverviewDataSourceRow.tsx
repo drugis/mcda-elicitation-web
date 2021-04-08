@@ -1,7 +1,6 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import EffectTableDataSourceCells from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectTableDataSourceCells/EffectTableDataSourceCells';
 import MoveUpDownButtons from 'app/ts/MoveUpDownButtons/MoveUpDownButtons';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -13,15 +12,12 @@ export default function OverviewDataSourceRow() {
   const {dataSource, previousDataSourceId, nextDataSourceId} = useContext(
     OverviewDataSourceContext
   );
-  const {
-    settings: {displayMode}
-  } = useContext(SettingsContext);
+
   return (
     <TableRow>
       <EffectTableDataSourceCells
         dataSource={dataSource}
         alternatives={_.values(alternatives)}
-        displayMode={displayMode}
       />
       <TableCell align={'center'}>
         <EditOverviewDataSourceButton />
