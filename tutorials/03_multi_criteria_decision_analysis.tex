@@ -60,14 +60,7 @@
 \noindent \faGraduationCap \, At the top are the partial value functions, which indicate how utility changes as a function of the criteria scale values. Below this is the weights section which is the main focus of this tutorial. Before setting weights, the partial value functions need to be defined.
 \newline
 
-\noindent \leftpointright \, Click on the ‘Define partial value function’ button for ARR. Lower relapse rate is better, and we are going to assume that utility changes linearly with the relapse rate, so the type of function is ‘Linear’. Click on ‘Save’ (see Figure \ref{fig:pvf}).
-
-\begin{figure}[!h]
-    \centering
-	\includegraphics[width=\textwidth]{fig/setPvf.png}
-    \caption{Setting the ARR partial value function}
-	\label{fig:pvf}
-\end{figure}
+\noindent \leftpointright \, Click on the ‘Decreasing’ button for ARR. Lower relapse rate is better, and we are going to assume that utility changes linearly with the relapse rate.
 
 \noindent The range over which the partial value functions are defined depends on the data included in the effects table. These ranges can be modified in the ‘Problem definition’ tab, but this goes beyond the scope of this tutorial.
 \newline
@@ -75,17 +68,17 @@
 \noindent \leftpointright \, Also define linear partial value functions for the adverse event criteria, with low values being best. The result should look like Figure \ref{fig:preferences}.
 \newline
 
-\noindent \leftpointright \, (optional) Explore the process for defining non-linear partial value functions by clicking the ‘Define partial value function’ button under any of the functions, choosing the ‘Piecewise-linear’ option, and adjusting the sliders in the following steps. You can leave the definition process at any time by clicking on the ‘Preferences’ tab again.
-\newline
-
-\noindent \faGraduationCap \, Non-linear partial value functions are needed when equivalent changes on a criterion’s measurement scale do not result in equivalent changes in utility.  For example, one can imagine that going from severe depression to mild depression is more valuable than improving from mild to no depression (diminishing marginal utility).
-
 \begin{figure}[!h]
     \centering
 	\includegraphics[width=\textwidth]{fig/preferences.png}
     \caption{The preferences tab after setting the partial value functions}
 	\label{fig:preferences}
 \end{figure}
+
+\noindent \leftpointright \, (optional) Explore the process for defining non-linear partial value functions by clicking the ‘Advanced’ button under any of the functions, and adjusting the sliders. You can leave the definition process at any time by clicking on the ‘Cancel’ button.
+\newline
+
+\noindent \faGraduationCap \, Non-linear partial value functions are needed when equivalent changes on a criterion’s measurement scale do not result in equivalent changes in utility.  For example, one can imagine that going from severe depression to mild depression is more valuable than improving from mild to no depression (diminishing marginal utility).
 
 \subsection*{Preferences: ranking elicitation}
 First let’s see how the treatments compare if we only give an ordinal ranking, with efficacy as the most important.
@@ -135,7 +128,7 @@ Let’s see how the picture changes if we weight all criteria equally.
 You can also determine your preferences by comparing alternative outcome scenarios, in the Matching elicitation process.
 \newline
 
-\noindent \leftpointright \, Click the ‘Matching’ button under the weights table on the preferences tab. Select ‘ARR’ as the most important criterion in Step 1. In step 2, click the blue question mark in the row for ‘Hep. AE.’ In the dialog that appears (Figure \ref{fig:matching1}), you are presented with a graph and two alternative scenarios. The graph is the indifference curve. You can change the value for ARR in Alternative B by clicking on it and moving the slider. This will update the graph. Change the value until you feel that the two alternatives are approximately equal, ie. decreasing ARR by a certain amount is ‘worth’ about that much increase in Hep. AE. Then click ‘Save’. The table will now have updated with the corresponding weight (Figure \ref{fig:matching2}).
+\noindent \leftpointright \, Click the ‘Matching’ button under the weights table on the preferences tab. Select ‘ARR’ as the most important criterion in Step 1. In step 2, you can change the value for ARR in Alternative B by moving the slider. Change the value until you feel that the two alternatives are approximately equal, ie. decreasing ARR by a certain amount is ‘worth’ about that much increase in Hep. AE. Click 'Next' and complete the elicitation for each remaining criterion.
 \newline
 
 \begin{figure}[!h]
@@ -145,17 +138,7 @@ You can also determine your preferences by comparing alternative outcome scenari
 	\label{fig:matching1}
 \end{figure}
 
-\begin{figure}[!h]
-    \centering
-	\includegraphics[width=\textwidth]{fig/matching2.png}
-    \caption{Matching elicitation: overview}
-	\label{fig:matching2}
-\end{figure}
-
-\noindent \faGraduationCap \, The indifference curve shows a line on which, according to your preferences, each point is equivalent, i.e. you should be indifferent between all the scenarios which the points on the line represent. The shape of the indifference curve depends on your weights and your partial value functions (pfvs). If both pvfs are linear, the indifference curve is always a straight line, but in the case of nonlinear pvfs the curve may become non-linear. Feel free to experiment with this.
-\newline
-
-\noindent \leftpointright \, Finish filling out your preferences in the Matching elicitation and go to the Deterministic results tab to see how the values of the treatments have changed. Are these results in line with your intuitive assessment at the beginning of the tutorial?
+\noindent \leftpointright \, After finishing filling out your preferences in the Matching elicitation, go to the Deterministic results tab to see how the values of the treatments have changed. Are these results in line with your intuitive assessment at the beginning of the tutorial?
 
 \subsection*{Final words}
 This tutorial has demonstrated how assigning different importance to criteria can drastically change the relative value of the evaluated treatments. We’ve also shown how quantifying these importances makes it easy to see where these differences originate. Finally, we’ve shown that in the MCDA interface it is easy to input different preference scenarios and switch between them.
