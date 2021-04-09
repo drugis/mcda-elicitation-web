@@ -47,6 +47,8 @@ export default function CreateWorkspaceDialog({
         setValidationErrors([]);
       } else if (method === 'upload') {
         setValidationErrors(['No file selected']);
+      } else {
+        setValidationErrors([]);
       }
     },
     [setMethod, setSelectedProblem, examples, tutorials, setValidationErrors]
