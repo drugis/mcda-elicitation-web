@@ -13,6 +13,7 @@ import React, {
   useRef,
   useState
 } from 'react';
+import {calculateObservedRanges} from '../../ScaleRanges/ScalesTable/ScalesTableUtil';
 import {adjustConfiguredRangeForStepSize} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
 import {
   createSubproblemDefinition,
@@ -41,6 +42,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     workspace,
     criteria,
     currentSubproblem,
+    scales,
     addSubproblem
   } = useContext(WorkspaceContext);
   const {observedRanges} = useContext(SubproblemContext);
@@ -262,9 +264,10 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   );
 
   const resetToDefault = useCallback((): void => {
+    const allObservedRanges = calculateObservedRanges(scales, workspace);
     const initialConfiguredRanges = initConfiguredRanges(
       dataSourcesWithValidValues,
-      observedRanges
+      allObservedRanges
     );
     setAlternativeInclusions(_.mapValues(alternatives, () => true));
     setCriterionInclusions(_.mapValues(criteria, () => true));
@@ -278,7 +281,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
     criteria,
     dataSourcesById,
     dataSourcesWithValidValues,
-    observedRanges
+    scales,
+    workspace
   ]);
 
   const addSubproblemWrapper = useCallback((): void => {

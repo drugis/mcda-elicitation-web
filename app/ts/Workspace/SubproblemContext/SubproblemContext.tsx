@@ -40,10 +40,10 @@ export function SubproblemContextProviderComponent({
   >({});
 
   useEffect(() => {
-    if (hasScaleValues(scales) && workspace) {
-      setObservedRanges(calculateObservedRanges(scales, workspace));
+    if (hasScaleValues(scales) && filteredWorkspace) {
+      setObservedRanges(calculateObservedRanges(scales, filteredWorkspace));
     }
-  }, [scales, workspace]);
+  }, [scales, filteredWorkspace]);
 
   useEffect(() => {
     setFilteredWorkspace(applySubproblem(workspace, currentSubproblem));

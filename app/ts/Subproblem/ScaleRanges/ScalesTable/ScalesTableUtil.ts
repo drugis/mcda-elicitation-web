@@ -1,3 +1,4 @@
+import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
 import IEffect, {Effect} from '@shared/interface/IEffect';
@@ -15,14 +16,28 @@ export function calculateObservedRanges(
   scales: Record<string, Record<string, IScale>>,
   workspace: IWorkspace
 ): Record<string, [number, number]> {
+  const filteredScales = filterScales(scales, workspace.alternatives);
   return _(workspace.criteria)
     .flatMap('dataSources')
     .filter((dataSource: IDataSource) => {
       return hasScale(scales[dataSource.id]);
     })
     .keyBy('id')
-    .mapValues(_.partial(calculateObservedRange, scales, workspace))
+    .mapValues(_.partial(calculateObservedRange, filteredScales, workspace))
     .value();
+}
+
+function filterScales(
+  scales: Record<string, Record<string, IScale>>,
+  alternatives: IAlternative[]
+): Record<string, Record<string, IScale>> {
+  return _.mapValues(
+    scales,
+    (scaleRanges: Record<string, IScale>): Record<string, IScale> =>
+      _.pickBy(scaleRanges, (range: any, alternativeId: string) =>
+        _.some(alternatives, ['id', alternativeId])
+      )
+  );
 }
 
 function calculateObservedRange(

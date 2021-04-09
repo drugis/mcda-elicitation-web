@@ -1,3 +1,4 @@
+import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Distribution} from '@shared/interface/IDistribution';
@@ -14,7 +15,7 @@ import {
 
 describe('ScalesTableUtil', () => {
   describe('calculateObservedRanges', () => {
-    it('should return observed ranges keyed by data source ids', () => {
+    it('should return observed ranges for included data sources and alternatives keyed by data source ids', () => {
       const scales: Record<string, Record<string, IScale>> = {
         dataSourceNoDistributionId: {
           alt1Id: {
@@ -28,6 +29,12 @@ describe('ScalesTableUtil', () => {
             '50%': 0.9,
             '97.5%': 0.9,
             mode: 0.9
+          },
+          alt3Id: {
+            '2.5%': 10,
+            '50%': 10,
+            '97.5%': 10,
+            mode: 10
           }
         },
         dataSourceRangeAndExactId: {
@@ -42,6 +49,12 @@ describe('ScalesTableUtil', () => {
             '50%': 0.75,
             '97.5%': 0.9,
             mode: 0.75
+          },
+          alt3Id: {
+            '2.5%': 10,
+            '50%': 10,
+            '97.5%': 10,
+            mode: 10
           }
         },
         dataSourceOverlappingRanges: {
@@ -56,6 +69,12 @@ describe('ScalesTableUtil', () => {
             '50%': 0.95,
             '97.5%': 0.99,
             mode: 0.95
+          },
+          alt3Id: {
+            '2.5%': 10,
+            '50%': 10,
+            '97.5%': 10,
+            mode: 10
           }
         },
         percentAndExactDistribution: {
@@ -70,6 +89,12 @@ describe('ScalesTableUtil', () => {
             '50%': 0.55,
             '97.5%': 0.6,
             mode: 0.55
+          },
+          alt3Id: {
+            '2.5%': 10,
+            '50%': 10,
+            '97.5%': 10,
+            mode: 10
           }
         }
       };
@@ -163,10 +188,16 @@ describe('ScalesTableUtil', () => {
         } as Distribution
       ];
 
+      const alternatives: IAlternative[] = [
+        {id: 'alt1Id'} as IAlternative,
+        {id: 'alt2Id'} as IAlternative
+      ];
+
       const workspace: IWorkspace = {
         criteria: criteria,
         effects: effects,
-        distributions: distributions
+        distributions: distributions,
+        alternatives: alternatives
       } as IWorkspace;
 
       const result: Record<string, [number, number]> = calculateObservedRanges(
