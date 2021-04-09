@@ -5,10 +5,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {InlineHelp} from 'help-popup';
 import React, {useContext, useState} from 'react';
+import {EffectsTableContextProviderComponent} from '../../../../EffectsTable/EffectsTableContext';
 import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTable from '../AddSubproblemEffectsTable/AddSubproblemEffectsTable';
 import AddSubproblemScaleRanges from '../AddSubproblemScaleRanges/AddSubproblemScaleRanges';
@@ -25,6 +27,9 @@ export default function AddSubproblemDialog({
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
   const {errors, addSubproblem} = useContext(AddSubproblemContext);
+  const {
+    settings: {displayMode}
+  } = useContext(SettingsContext);
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
 
   function isDisabled(): boolean {
@@ -53,7 +58,9 @@ export default function AddSubproblemDialog({
             <ResetButton />
           </Grid>
           <Grid item xs={12}>
-            <AddSubproblemEffectsTable />
+            <EffectsTableContextProviderComponent displayMode={displayMode}>
+              <AddSubproblemEffectsTable />
+            </EffectsTableContextProviderComponent>
           </Grid>
           <Grid item xs={12}>
             <Typography variant={'h5'}>
