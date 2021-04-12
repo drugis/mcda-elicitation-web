@@ -54,8 +54,8 @@ function results(browser) {
   browser.useXpath();
   browser.expect.element(measurementValuePath).text.to.equal('36.6');
   browser.expect.element(weightValuePath).text.to.equal('0.25');
-  browser.expect.element(baseTotalValuePath).text.to.equal('0.698');
-  browser.expect.element(baseValueProfilePath).text.to.equal('0.063');
+  browser.expect.element(baseTotalValuePath).text.to.equal('0.714');
+  browser.expect.element(baseValueProfilePath).text.to.equal('0.0617');
   browser.useCss();
 }
 
@@ -83,7 +83,7 @@ function recalculatedResults(browser) {
   const recalculatedValueProfilePath =
     '//*[@id="recalculated-value-profiles-table"]/table/tbody/tr[1]/td[2]';
 
-  browser.expect.element(recalculatedTotalValuePath).text.to.equal('0.885');
+  browser.expect.element(recalculatedTotalValuePath).text.to.equal('0.903');
   browser.expect.element(recalculatedValueProfilePath).text.to.equal('0.25');
 
   browser.click('//*[@id="reset-button"]');
