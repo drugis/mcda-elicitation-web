@@ -69,16 +69,8 @@ function getScenarioPvf(
   criterionId: string,
   currentScenario: IMcdaScenario
 ): TScenarioPvf | undefined {
-  if (
-    currentScenario.state.problem &&
-    currentScenario.state.problem.criteria[criterionId] &&
-    currentScenario.state.problem.criteria[criterionId].dataSources
-  ) {
-    return currentScenario.state.problem.criteria[criterionId].dataSources[0]
-      .pvf;
-  } else {
-    return undefined;
-  }
+  return currentScenario.state.problem.criteria[criterionId].dataSources?.[0]
+    ?.pvf;
 }
 
 export function buildScenarioWithPreferences(
