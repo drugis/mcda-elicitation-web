@@ -69,7 +69,7 @@ function getScenarioPvf(
   criterionId: string,
   currentScenario: IMcdaScenario
 ): TScenarioPvf | undefined {
-  return currentScenario.state.problem.criteria[criterionId].dataSources?.[0]
+  return currentScenario.state.problem.criteria[criterionId]?.dataSources?.[0]
     ?.pvf;
 }
 
