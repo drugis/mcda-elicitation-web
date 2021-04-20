@@ -11,7 +11,7 @@
         {
           "id": "arrDsId",
           "source": "Study 205MS301",
-          "unitOfMeasurement": "Annual rate",
+          "unitOfMeasurement": "Cases per patient per year",
           "strengthOfEvidence": "A similar effect was found for the number of new/newly enlarging MRI T2 lesions (2.16 for DAC HYP vs 3.84 for IFN beta)",
           "scale": [null, null]
         }

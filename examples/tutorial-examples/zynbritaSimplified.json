@@ -11,6 +11,7 @@
         {
           "id": "57951383-f578-481b-864c-314960bd4b71",
           "source": "Study 205MS301",
+          "unitOfMeasurement": "Cases per patient per year",
           "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
           "scale": [null, null]
         }
