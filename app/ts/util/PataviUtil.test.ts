@@ -176,7 +176,7 @@ describe('PataviUtil', () => {
           alternative: 'alt1Id',
           dataSource: 'ds1Id',
           criterion: 'crit1Id',
-          performance: {effect: {type: 'empty'}}
+          performance: {distribution: {type: 'empty'}}
         }
       ],
       alternatives: {},

@@ -20,6 +20,7 @@ import {IAbsolutePerformanceTableEntry} from '@shared/interface/Problem/IAbsolut
 import {TEffectPerformance} from '@shared/interface/Problem/IEffectPerformance';
 import {
   IDistributionPerformance,
+  IDualPerformance,
   IEffectPerformance,
   TPerformance
 } from '@shared/interface/Problem/IPerformance';
@@ -343,10 +344,12 @@ function buildAbsolutePataviEntryForScales(
 function getPerformance(
   performance: TPerformance
 ): TEffectPerformance | TDistributionPerformance {
-  if (
-    isDistributionPerformance(performance) &&
-    performance.distribution.type !== 'empty'
-  ) {
+  // Prefers distributions for scales calculation
+  if (isDualPerformance(performance)) {
+    return performance.distribution.type === 'empty'
+      ? performance.effect
+      : performance.distribution;
+  } else if (isDistributionPerformance(performance)) {
     return performance.distribution;
   } else if (isEffectPerformance(performance)) {
     return performance.effect;
@@ -355,16 +358,22 @@ function getPerformance(
   }
 }
 
+function isDualPerformance(
+  performance: TPerformance
+): performance is IDualPerformance {
+  return 'distribution' in performance && 'effect' in performance;
+}
+
 function isDistributionPerformance(
   performance: TPerformance
 ): performance is IDistributionPerformance {
-  return performance.hasOwnProperty('distribution');
+  return 'distribution' in performance && !('effect' in performance);
 }
 
 function isEffectPerformance(
   performance: TPerformance
 ): performance is IEffectPerformance {
-  return performance.hasOwnProperty('effect');
+  return 'effect' in performance && !('distribution' in performance);
 }
 
 function buildRelativePataviEntryForScales(
