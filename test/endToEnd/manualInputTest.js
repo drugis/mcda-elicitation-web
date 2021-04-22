@@ -112,12 +112,15 @@ function afterEach(browser) {
 function editTitle(browser) {
   browser
     .clearValue('#workspace-title')
-    .assert.containsText('#warnings > div:nth-child(1)', NO_TITLE_WARNING)
+    .expect.element('#warnings > div:nth-child(1)')
+    .text.to.equal(NO_TITLE_WARNING);
+  browser
     .setValue('#workspace-title', 'another title')
     .pause(500) // wait for debounce?
     .click('#logo')
     .waitForElementVisible('#in-progress-workspace-0')
-    .assert.containsText('#in-progress-workspace-0', 'another title');
+    .expect.element('#in-progress-workspace-0')
+    .text.to.equal('another title');
 }
 
 function editContext(browser) {
@@ -128,7 +131,8 @@ function editContext(browser) {
     .waitForElementVisible('#in-progress-workspace-0')
     .click('#in-progress-workspace-0')
     .waitForElementVisible('#workspace-title')
-    .assert.containsText('#therapeutic-context', NEW_THERAPEUTIC_CONTEXT);
+    .expect.element('#therapeutic-context')
+    .text.to.equal(NEW_THERAPEUTIC_CONTEXT);
 }
 
 function toggleFavourability(browser) {
@@ -586,7 +590,7 @@ function finishCreatingWorkspace(browser) {
     .click(editEffectCell)
     .pause(seleniumDelay)
     .click('//*[@id="finish-creating-workspace"]')
-    .pause(seleniumDelay)
+    .waitForElementVisible('//*[@id="workspace-title"]')
     .getTitle((result) => {
       browser.assert.equal(result, `new workspace's overview`);
     });

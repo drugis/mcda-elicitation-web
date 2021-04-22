@@ -23,7 +23,7 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.waitForElementVisible('#empty-workspace-message');
-  errorService.isErrorBarHidden(browser).end();
+  errorService.isErrorBarNotPresent(browser).end();
 }
 
 function cancelAdding(browser) {

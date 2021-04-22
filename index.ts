@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {OurError} from '@shared/interface/IError';
-import bodyParser from 'body-parser';
 import csurf from 'csurf';
 import express, {Request, Response} from 'express';
 import session, {SessionOptions} from 'express-session';
@@ -35,7 +34,6 @@ import WorkspaceRepository from './node-backend/workspaceRepository';
 import WorkspaceRouter from './node-backend/workspaceRouter';
 import WorkspaceSettingsRouter from './node-backend/workspaceSettingsRouter';
 
-const USER_SESSION_EXPIRED = 'SESSION_EXPIRED';
 const db = DB(buildDBConfig());
 
 logger.info(buildDBUrl());
@@ -65,7 +63,7 @@ const app = express();
 app.use(helmet());
 app.set('trust proxy', 1);
 app.use(
-  bodyParser.json({
+  express.json({
     limit: '5mb'
   })
 );
@@ -94,7 +92,8 @@ function initApp(): void {
     saveUninitialized: true,
     cookie: {
       maxAge: 60 * 60 * 1000, // 1 hour
-      secure: authenticationMethod === 'SSL'
+      secure: authenticationMethod === 'SSL',
+      sameSite: true
     }
   };
 
@@ -140,30 +139,34 @@ function initApp(): void {
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
-  app.use((request: Request, response: Response, next: any): void => {
-    if (!request.user) {
-      response.status(403).send(USER_SESSION_EXPIRED);
-    } else {
-      next();
-    }
-  });
-  app.use(rightsManagement.expressMiddleware);
+  // app.use((request: Request, response: Response, next: any): void => {
+  //   if (!request.user) {
+  //     response.status(403).send(USER_SESSION_EXPIRED);
+  //   } else {
+  //     next();
+  //   }
+  // });
+  app.use('/api', rightsManagement.expressMiddleware);
 
   app.use('/api/v2/inProgress', inProgressRouter);
-  app.use('/workspaces', workspaceRouter);
-  app.use('/workspaces', orderingRouter);
-  app.use('/workspaces', subproblemRouter);
-  app.use('/workspaces', scenarioRouter);
-  app.use('/workspaces', workspaceSettingsRouter);
-  app.use('/premades', (request: Request, response: Response) => {
+  app.use('/api/v2/workspaces', workspaceRouter);
+  app.use('/api/v2/workspaces', orderingRouter);
+  app.use('/api/v2/workspaces', subproblemRouter);
+  app.use('/api/v2/workspaces', scenarioRouter);
+  app.use('/api/v2/workspaces', workspaceSettingsRouter);
+  app.use('/api/v2/premades', (request: Request, response: Response) => {
     response.json(premades);
   });
-  app.use('/patavi', pataviRouter);
+  app.use('/api/v2/patavi', pataviRouter);
   app.use(errorHandler);
 
-  //The 404 Route (ALWAYS Keep this as the last route)
-  app.get('*', (request: Request, response: Response): void => {
-    response.status(NOT_FOUND).sendFile(__dirname + '/dist/error.html');
+  // Default route (ALWAYS Keep this as the last route)
+  app.get('*', (request: any, response: Response): void => {
+    if (request.user || request.session.user) {
+      response.sendFile(__dirname + '/dist/index.html');
+    } else {
+      response.sendFile(__dirname + '/dist/signin.html');
+    }
   });
 
   startListening((port: string): void => {

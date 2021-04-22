@@ -1,7 +1,7 @@
 import TableBody from '@material-ui/core/TableBody';
 import ICriterion from '@shared/interface/ICriterion';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableDataSourceRow';
@@ -12,7 +12,7 @@ export default function EffectsTableCriteriaRows() {
     filteredWorkspace,
     filteredCriteria,
     filteredAlternatives
-  } = useContext(SubproblemContext);
+  } = useContext(CurrentSubproblemContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
   const useFavourability = filteredWorkspace.properties.useFavourability;
   const numberOfColumns = numberOfToggledColumns + _.size(filteredAlternatives);

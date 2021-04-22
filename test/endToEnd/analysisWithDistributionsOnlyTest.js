@@ -34,7 +34,7 @@ function beforeEach(browser) {
 }
 
 function afterEach(browser) {
-  errorService.isErrorBarHidden(browser);
+  errorService.isErrorBarNotPresent(browser);
   util.delayedClick(browser, '#logo', '#workspaces-header');
   workspaceService.deleteFromList(browser, 0).end();
 }

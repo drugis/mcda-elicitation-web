@@ -1,22 +1,17 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IScale from '@shared/interface/IScale';
-import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IProblem from '@shared/interface/Problem/IProblem';
 
 export default interface IWorkspaceContext {
   alternatives: Record<string, IAlternative>;
   criteria: Record<string, ICriterion>;
-  currentSubproblem: IOldSubproblem;
   oldProblem: IProblem;
   scales: Record<string, Record<string, IScale>>;
-  subproblems: Record<string, IOldSubproblem>;
   therapeuticContext: string;
   workspace: IWorkspace;
-  addSubproblem: (command: ISubproblemCommand) => void;
-  deleteSubproblem: (subproblemId: string) => void;
+  workspaceId: string;
   editAlternative: (alternative: IAlternative, newTitle: string) => void;
   editCriterion: (criterion: ICriterion) => void;
   editTitle: (title: string) => void;

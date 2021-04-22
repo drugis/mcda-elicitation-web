@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
-import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from '../Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {WorkspaceContext} from '../Workspace/WorkspaceContext';
 import EffectsTableAlternativeHeaders from './EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
 import EffectsTableCriteriaRows from './EffectsTableCriteriaRows/EffectsTableCriteriaRows';
@@ -19,7 +19,7 @@ import UnitsHeader from './EffectsTableHeaders/UnitsHeader/UnitsHeader';
 
 export default function EffectsTable() {
   const {scales} = useContext(WorkspaceContext);
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   function renderTableHeaders(): JSX.Element {
     return (
@@ -37,7 +37,7 @@ export default function EffectsTable() {
   }
 
   return scales ? (
-    <Grid container>
+    <Grid container item xs={12}>
       <Grid item xs={9} id="effects-table-header">
         <Typography variant="h5">
           <InlineHelp helpId="effects-table">Effects Table</InlineHelp>
@@ -54,6 +54,8 @@ export default function EffectsTable() {
       </Grid>
     </Grid>
   ) : (
-    <CircularProgress />
+    <Grid item xs={12}>
+      <CircularProgress />
+    </Grid>
   );
 }

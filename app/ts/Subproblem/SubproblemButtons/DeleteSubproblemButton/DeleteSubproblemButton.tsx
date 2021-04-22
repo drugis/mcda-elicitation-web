@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,14 +8,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Delete from '@material-ui/icons/Delete';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SubproblemsContext} from 'app/ts/Workspace/SubproblemsContext/SubproblemsContext';
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 
 export default function DeleteSubproblemButton() {
-  const {subproblems, currentSubproblem, deleteSubproblem} = useContext(
-    WorkspaceContext
-  );
+  const {subproblems, deleteSubproblem} = useContext(SubproblemsContext);
+  const {currentSubproblem} = useContext(CurrentSubproblemContext);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const isDeleteDisabled = _.values(subproblems).length < 2;
 
@@ -39,6 +41,7 @@ export default function DeleteSubproblemButton() {
             id="delete-subproblem-button"
             onClick={openDialog}
             disabled={isDeleteDisabled}
+            size="small"
           >
             <Delete color={isDeleteDisabled ? 'disabled' : 'secondary'} />
           </IconButton>
@@ -59,8 +62,10 @@ export default function DeleteSubproblemButton() {
         <DialogContent>
           <Grid container>
             <Grid item xs={12}>
-              Are you certain you want to permanently delete{' '}
-              <i>{currentSubproblem.title}</i>?
+              <Typography>
+                Are you certain you want to permanently delete{' '}
+                <i>{currentSubproblem.title}</i>?
+              </Typography>
             </Grid>
           </Grid>
         </DialogContent>
@@ -70,6 +75,7 @@ export default function DeleteSubproblemButton() {
             variant="contained"
             color="secondary"
             onClick={handleDeleteButtonClick}
+            size="small"
           >
             Delete
           </Button>

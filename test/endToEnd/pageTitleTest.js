@@ -10,13 +10,12 @@ module.exports = {
   'A workspace preferences': preferences,
   'A workspace deterministic results': deterministicResults,
   'A workspace SMAA results': smaaResults,
-  // 'Partial value function': partialValueFunction,
+  'Partial value function': partialValueFunction,
   'Ranking weights': rankingWeights,
   'Matching weights': matchingWeights,
   'Precise swing weighting': preciseSwingWeights,
   'Imprecise swing weighting': impreciseSwingWeights,
   'Manual input': manualInput
-  //FIXME: re-enable once reactified
 };
 
 const loginService = require('./util/loginService');
@@ -54,7 +53,7 @@ function loginPage(browser) {
   browser
     .url(TEST_URL)
     .waitForElementVisible('#signinButton')
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, 'mcda.drugis.org');
     });
   errorService.isErrorBarNotPresent(browser);
@@ -64,10 +63,10 @@ function workspaces(browser) {
   loginService
     .login(browser)
     .pause(5000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, 'Workspaces');
     });
-  errorService.isErrorBarHidden(browser);
+  errorService.isErrorBarNotPresent(browser);
 }
 
 function overview(browser) {
@@ -76,7 +75,7 @@ function overview(browser) {
     .click('#create-workspace-button')
     .click('#add-workspace-button')
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, title + "'s overview");
     });
   cleanUpWorkspace(browser);
@@ -90,7 +89,7 @@ function problemDefition(browser) {
 
   util
     .delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, title + "'s problem definition");
     });
   cleanUpWorkspace(browser);
@@ -100,7 +99,7 @@ function preferences(browser) {
   loginService.login(browser);
   goToPreferences(browser)
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, title + "'s preferences");
     });
   cleanUpWorkspace(browser);
@@ -115,10 +114,10 @@ function deterministicResults(browser) {
   util
     .delayedClick(
       browser,
-      '#deterministic-tab',
+      '#deterministic-results-tab',
       '#sensitivity-measurements-header'
     )
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, title + "'s deterministic results");
     });
   cleanUpWorkspace(browser);
@@ -131,8 +130,8 @@ function smaaResults(browser) {
     .click('#add-workspace-button');
 
   util
-    .delayedClick(browser, '#smaa-tab', '#effects-table-header')
-    .getTitle(function (result) {
+    .delayedClick(browser, '#smaa-results-tab', '#effects-table-header')
+    .getTitle((result) => {
       browser.assert.equal(result, title + "'s SMAA results");
     });
   cleanUpWorkspace(browser);
@@ -143,7 +142,7 @@ function partialValueFunction(browser) {
   goToPreferences(browser)
     .click('#advanced-pvf-button-treatmentRespondersId')
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(
         result,
         "Treatment responders's partial value function"
@@ -157,7 +156,7 @@ function rankingWeights(browser) {
   goToPreferences(browser)
     .click('#ranking-button')
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, 'Ranking');
     });
   cleanUpWorkspace(browser);
@@ -168,7 +167,7 @@ function matchingWeights(browser) {
   goToPreferences(browser)
     .click('#matching-button')
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, 'Matching');
     });
   cleanUpWorkspace(browser);
@@ -179,7 +178,7 @@ function preciseSwingWeights(browser) {
   goToPreferences(browser)
     .click('#precise-swing-button')
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, 'Precise swing weighting');
     });
   cleanUpWorkspace(browser);
@@ -190,7 +189,7 @@ function impreciseSwingWeights(browser) {
   goToPreferences(browser)
     .click('#imprecise-swing-button')
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, 'Imprecise swing weighting');
     });
   cleanUpWorkspace(browser);
@@ -203,7 +202,7 @@ function manualInput(browser) {
     .click('#manual-workspace-radio')
     .click('#add-workspace-button')
     .pause(2000)
-    .getTitle(function (result) {
+    .getTitle((result) => {
       browser.assert.equal(result, 'Manual input');
     })
     .assert.not.elementPresent('#error')

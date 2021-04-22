@@ -12,6 +12,7 @@ export default function ClipboardButton({targetId}: {targetId: string}) {
         className="clipboard"
         color="primary"
         variant="contained"
+        size="small"
         data-clipboard-target={targetId}
         style={{marginBottom: '5px'}}
       >

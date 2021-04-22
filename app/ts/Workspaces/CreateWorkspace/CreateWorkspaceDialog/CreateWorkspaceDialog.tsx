@@ -3,10 +3,12 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  FormControlLabel,
   Grid,
   Radio,
   RadioGroup,
-  Select
+  Select,
+  Typography
 } from '@material-ui/core';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
@@ -127,9 +129,9 @@ export default function CreateWorkspaceDialog({
         Add workspace
       </DialogTitleWithCross>
       <DialogContent>
-        <Grid container>
+        <Grid container spacing={1}>
           <Grid item xs={12}>
-            Choose creation method
+            <Typography>Choose creation method</Typography>
           </Grid>
           <Grid item xs={12}>
             <RadioGroup
@@ -137,25 +139,41 @@ export default function CreateWorkspaceDialog({
               value={method}
               onChange={handleMethodChanged}
             >
-              <label id="example-workspace-radio">
-                <Radio value="example" /> Select example workspace
-              </label>
-              <label id="tutorial-workspace-radio">
-                <Radio value="tutorial" /> Select tutorial workspace
-              </label>
-              <label id="upload-workspace-radio">
-                <Radio value="upload" /> Upload file
-              </label>
-              <label id="manual-workspace-radio">
-                <Radio value="manual" /> Create new workspace
-              </label>
+              <FormControlLabel
+                id="example-workspace-radio"
+                value="example"
+                control={<Radio />}
+                label="Select example workspace"
+              />
+              <FormControlLabel
+                id="tutorial-workspace-radio"
+                value="tutorial"
+                control={<Radio />}
+                label="Select tutorial workspace"
+              />
+              <FormControlLabel
+                id="upload-workspace-radio"
+                value="upload"
+                control={<Radio />}
+                label=" Upload file"
+              />
+              <FormControlLabel
+                id="manual-workspace-radio"
+                value="manual"
+                control={<Radio />}
+                label="Create new workspace"
+              />
             </RadioGroup>
           </Grid>
           <Grid item xs={12}>
             {selectedProblem ? renderWorkspaceInput() : <></>}
           </Grid>
           <Grid item xs={3}>
-            {!_.isEmpty(validationErrors) ? 'Invalid upload: ' : ''}
+            {!_.isEmpty(validationErrors) ? (
+              <Typography>Invalid upload:</Typography>
+            ) : (
+              ''
+            )}
           </Grid>
           <Grid item xs={9}>
             <DisplayErrors
@@ -172,6 +190,7 @@ export default function CreateWorkspaceDialog({
           onClick={handleAddButtonClick}
           variant="contained"
           disabled={!_.isEmpty(validationErrors)}
+          size="small"
         >
           Add
         </Button>

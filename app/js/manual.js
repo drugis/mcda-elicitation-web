@@ -6,7 +6,6 @@ define([
   'katex/dist/contrib/auto-render.min.js',
   'vanilla-back-to-top',
   '../../public/css/mcda-drugis.css',
-  'font-awesome/css/font-awesome.min.css',
   'katex/dist/katex.min.css'
 ], function ($, bowser, katex, renderMathInElement, scrollToTop) {
   window.bowser = bowser;

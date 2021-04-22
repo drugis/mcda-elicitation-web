@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import IAlternative from '@shared/interface/IAlternative';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 
@@ -24,7 +24,7 @@ export default function LegendTable({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
 }): JSX.Element {
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   function renderLegendRows(): JSX.Element[] {
     return _.map(

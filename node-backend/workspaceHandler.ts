@@ -213,7 +213,7 @@ export default function WorkspaceHandler(db: IDB) {
     callback: (
       error: OurError,
       workspaceId?: string,
-      scenarioId?: number
+      scenarioId?: string
     ) => void
   ): void {
     logger.debug('creating scenario');
@@ -234,7 +234,7 @@ export default function WorkspaceHandler(db: IDB) {
     scenarioRepository.createInTransaction(
       client,
       scenario,
-      (error: OurError, scenarioId: number): void => {
+      (error: OurError, scenarioId: string): void => {
         if (error) {
           callback(error);
         } else {

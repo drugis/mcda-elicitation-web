@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import React, {ChangeEvent, useContext} from 'react';
@@ -15,7 +16,7 @@ export default function TextInput() {
   return (
     <>
       <Grid item xs={6}>
-        Text
+        <Typography>Text</Typography>
       </Grid>
       <Grid item xs={6}>
         <TextField

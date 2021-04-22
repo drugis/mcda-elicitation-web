@@ -19,6 +19,7 @@ export default function EditOverviewDataSourceButton() {
           id={`edit-data-source-button-${dataSource.id}`}
           color="primary"
           onClick={openDialog}
+          size="small"
         >
           <Edit />
         </IconButton>

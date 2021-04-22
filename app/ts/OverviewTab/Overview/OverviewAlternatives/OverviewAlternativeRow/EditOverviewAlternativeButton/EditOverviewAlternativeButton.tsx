@@ -30,7 +30,7 @@ export default function EditOverviewAlternativeButton({
 
   useEffect(() => {
     setError(getTitleError(title, alternatives, alternative.id));
-  }, [title]);
+  }, [alternative.id, alternatives, title]);
 
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
 
@@ -69,6 +69,7 @@ export default function EditOverviewAlternativeButton({
           id={`edit-alternative-button-${alternative.id}`}
           color="primary"
           onClick={openDialog}
+          size="small"
         >
           <Edit />
         </IconButton>
@@ -106,6 +107,7 @@ export default function EditOverviewAlternativeButton({
             color="primary"
             onClick={handleButtonClick}
             disabled={isDisabled()}
+            size="small"
           >
             Edit
           </Button>

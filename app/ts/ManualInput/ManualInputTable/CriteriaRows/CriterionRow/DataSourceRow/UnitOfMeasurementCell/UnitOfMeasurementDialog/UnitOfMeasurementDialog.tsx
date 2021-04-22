@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -66,7 +67,7 @@ export default function UnitOfMeasurementDialog({
         setError(getOutOfBoundsError(dataSource.id, effects, distributions, 1));
         break;
     }
-  }, [isDialogOpen, unitOfMeasurement]);
+  }, [dataSource.id, distributions, effects, isDialogOpen, unitOfMeasurement]);
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -141,7 +142,7 @@ export default function UnitOfMeasurementDialog({
       <DialogContent>
         <Grid container>
           <Grid item xs={6}>
-            Type of unit
+            <Typography>Type of unit</Typography>
           </Grid>
           <Grid item xs={6}>
             <Select
@@ -157,7 +158,7 @@ export default function UnitOfMeasurementDialog({
             </Select>
           </Grid>
           <Grid item xs={6}>
-            Label
+            <Typography>Label</Typography>
           </Grid>
           <Grid id="unit-label" item xs={6}>
             <TextField
@@ -168,7 +169,7 @@ export default function UnitOfMeasurementDialog({
             />
           </Grid>
           <Grid item xs={6}>
-            Lower bound
+            <Typography>Lower bound</Typography>
           </Grid>
           <Grid item xs={6}>
             <Select
@@ -189,7 +190,7 @@ export default function UnitOfMeasurementDialog({
             </Select>
           </Grid>
           <Grid item xs={6}>
-            Upper bound
+            <Typography>Upper bound</Typography>
           </Grid>
           <Grid item xs={6}>
             <Select
@@ -219,6 +220,7 @@ export default function UnitOfMeasurementDialog({
           onClick={handleEditButtonClick}
           variant="contained"
           disabled={!!error}
+          size="small"
         >
           Edit
         </Button>

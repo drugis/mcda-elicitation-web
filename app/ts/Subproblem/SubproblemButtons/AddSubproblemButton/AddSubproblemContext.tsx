@@ -1,8 +1,10 @@
+import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import {getDataSourcesById} from '@shared/util';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SubproblemsContext} from 'app/ts/Workspace/SubproblemsContext/SubproblemsContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {
@@ -10,21 +12,25 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from 'react';
 import {calculateObservedRanges} from '../../ScaleRanges/ScalesTable/ScalesTableUtil';
-import {adjustConfiguredRangeForStepSize} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
+import {
+  adjustConfiguredRangeForStepSize,
+  getStepSizeAdjustedConfiguredRanges
+} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';
 import {
   createSubproblemDefinition,
   getBaselineMap,
   getDataSourcesWithValidValues,
-  getInitialStepSizeOptions,
-  getIntialStepSizes,
+  getInitialStepSizeOptions as getStepSizeOptions,
+  getIntialStepSizes as getStepSizes,
   getMissingValueWarnings,
   getScaleBlockingWarnings,
   getSubproblemTitleError,
-  initConfiguredRanges,
+  initConfiguredRanges as getConfiguredRanges,
   initInclusions,
   isAlternativeDeselectionDisabled,
   isDataSourceDeselectionDisabled
@@ -36,27 +42,29 @@ export const AddSubproblemContext = createContext<IAddSubproblemContext>(
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
-  const {
-    subproblems,
-    alternatives,
-    workspace,
-    criteria,
-    currentSubproblem,
-    scales,
-    addSubproblem
-  } = useContext(WorkspaceContext);
-  const {observedRanges} = useContext(SubproblemContext);
+  const {alternatives, workspace, criteria, scales} = useContext(
+    WorkspaceContext
+  );
+  const {observedRanges: initialObservedRanges, currentSubproblem} = useContext(
+    CurrentSubproblemContext
+  );
+  const {subproblems, addSubproblem} = useContext(SubproblemsContext);
 
   // *** refs/consts
   const {current: dataSourcesById} = useRef<Record<string, IDataSource>>(
     getDataSourcesById(criteria)
   );
-  const {current: dataSourcesWithValidValues} = useRef<
+  const dataSourcesWithValidValues = useMemo<
     Record<string, IDataSource>
-  >(getDataSourcesWithValidValues(dataSourcesById, observedRanges));
-  const {current: baselineMap} = useRef<Record<string, boolean>>(
-    getBaselineMap(alternatives, workspace.relativePerformances)
-  );
+  >(() => {
+    return getDataSourcesWithValidValues(
+      dataSourcesById,
+      calculateObservedRanges(scales, workspace)
+    );
+  }, [dataSourcesById, scales, workspace]);
+  const baselineMap = useMemo<Record<string, boolean>>(() => {
+    return getBaselineMap(alternatives, workspace.relativePerformances);
+  }, [alternatives, workspace.relativePerformances]);
   const defaultTitle = 'new problem';
 
   // *** states
@@ -101,7 +109,9 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   const [stepSizesByDS, setStepSizesByDS] = useState<Record<string, number>>(
     {}
   );
-
+  const [observedRanges, setObservedRanges] = useState<
+    Record<string, [number, number]>
+  >(initialObservedRanges);
   // *** end states
 
   // *** useEffects
@@ -110,17 +120,29 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
   }, [title, subproblems]);
 
   useEffect(() => {
-    if (!_.isEmpty(observedRanges)) {
-      setScaleRangesWarnings(
-        getScaleBlockingWarnings(
-          criterionInclusions,
-          dataSourceInclusions,
-          alternativeInclusions,
-          workspace,
-          observedRanges
-        )
-      );
-    }
+    const includedCriteria = _.filter(
+      workspace.criteria,
+      (criterion: ICriterion) => criterionInclusions[criterion.id]
+    );
+    const includedAlternatives = _.filter(
+      workspace.alternatives,
+      (alternative: IAlternative) => alternativeInclusions[alternative.id]
+    );
+    const updatedObservedRanges = calculateObservedRanges(scales, {
+      //included datasources?
+      ...workspace,
+      criteria: includedCriteria,
+      alternatives: includedAlternatives
+    });
+    setObservedRanges(updatedObservedRanges);
+    const newScaleWarnings = getScaleBlockingWarnings(
+      criterionInclusions,
+      dataSourceInclusions,
+      alternativeInclusions,
+      workspace,
+      updatedObservedRanges
+    );
+    setScaleRangesWarnings(newScaleWarnings);
     setMissingValueWarnings(
       getMissingValueWarnings(
         dataSourceInclusions,
@@ -128,51 +150,49 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         workspace
       )
     );
-  }, [
-    workspace,
-    observedRanges,
-    dataSourceInclusions,
-    alternativeInclusions,
-    criterionInclusions
-  ]);
-
-  useEffect(() => {
-    if (!_.isEmpty(observedRanges)) {
-      const initialConfiguredRanges = initConfiguredRanges(
+    if (newScaleWarnings.length === 0) {
+      const includedDataSourcesWithValidValues = _.pickBy(
         dataSourcesWithValidValues,
-        observedRanges,
+        (_, id: string) => Boolean(updatedObservedRanges[id])
+      );
+      const newConfiguredRanges = getConfiguredRanges(
+        includedDataSourcesWithValidValues,
+        updatedObservedRanges,
         currentSubproblem.definition.ranges
       );
 
-      const stepSizeOptions = getInitialStepSizeOptions(
-        dataSourcesWithValidValues,
-        observedRanges
+      const stepSizeOptions = getStepSizeOptions(
+        includedDataSourcesWithValidValues,
+        updatedObservedRanges
       );
-      const stepSizes = getIntialStepSizes(
+      const stepSizes = getStepSizes(
         stepSizeOptions,
         currentSubproblem.definition.stepSizes
       );
       setStepSizeOptionsByDS(stepSizeOptions);
       setStepSizesByDS(stepSizes);
 
-      setSliderRangesByDS(initialConfiguredRanges);
+      setSliderRangesByDS(newConfiguredRanges);
       setStepSizesByDS(stepSizes);
 
       setConfiguredRanges(
-        _.mapValues(dataSourcesWithValidValues, (dataSource: IDataSource): [
-          number,
-          number
-        ] =>
-          adjustConfiguredRangeForStepSize(
-            stepSizes[dataSource.id],
-            initialConfiguredRanges[dataSource.id],
-            initialConfiguredRanges[dataSource.id]
-          )
+        getStepSizeAdjustedConfiguredRanges(
+          includedDataSourcesWithValidValues,
+          stepSizes,
+          newConfiguredRanges
         )
       );
     }
-  }, [observedRanges, currentSubproblem, dataSourcesWithValidValues]);
-  // *** end useEffects
+  }, [
+    alternativeInclusions,
+    criterionInclusions,
+    currentSubproblem.definition.ranges,
+    currentSubproblem.definition.stepSizes,
+    dataSourceInclusions,
+    dataSourcesWithValidValues,
+    scales,
+    workspace
+  ]);
 
   const updateAlternativeInclusion = useCallback(
     (id: string, newValue: boolean): void => {
@@ -265,7 +285,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
 
   const resetToDefault = useCallback((): void => {
     const allObservedRanges = calculateObservedRanges(scales, workspace);
-    const initialConfiguredRanges = initConfiguredRanges(
+    const initialConfiguredRanges = getConfiguredRanges(
       dataSourcesWithValidValues,
       allObservedRanges
     );
@@ -374,6 +394,7 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         isCriterionDeselectionDisabled:
           _.filter(criterionInclusions).length < 3,
         missingValueWarnings,
+        newObservedRanges: observedRanges,
         scaleRangesWarnings,
         title,
         addSubproblem: addSubproblemWrapper,

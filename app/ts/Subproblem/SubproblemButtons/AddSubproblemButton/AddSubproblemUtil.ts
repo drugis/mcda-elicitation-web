@@ -304,10 +304,9 @@ export function initConfiguredRanges(
   definitionRanges?: Record<string, [number, number]>
 ): Record<string, [number, number]> {
   return _.mapValues(dataSourcesById, (dataSource: IDataSource) => {
-    const configuredRange: [number, number] =
-      definitionRanges && definitionRanges[dataSource.id]
-        ? definitionRanges[dataSource.id]
-        : observedRanges[dataSource.id];
+    const configuredRange: [number, number] = definitionRanges?.[dataSource.id]
+      ? definitionRanges[dataSource.id]
+      : observedRanges[dataSource.id];
     return getSliderLimits(observedRanges[dataSource.id], configuredRange);
   });
 }

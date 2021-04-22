@@ -98,21 +98,22 @@ export default function SubproblemRepository(db: IDB) {
   ): void {
     logger.debug('Getting subproblem ids for workspace: ' + workspaceId);
     const query = 'SELECT id FROM subproblem WHERE workspaceid = $1';
-    db.query(query, [workspaceId], function (
-      error: OurError,
-      result: QueryResult<{id: number}>
-    ): void {
-      if (error) {
-        callback(error);
-      } else {
-        callback(
-          null,
-          _.map(result.rows, (row) => {
-            return row.id.toString();
-          })
-        );
+    db.query(
+      query,
+      [workspaceId],
+      function (error: OurError, result: QueryResult<{id: number}>): void {
+        if (error) {
+          callback(error);
+        } else {
+          callback(
+            null,
+            _.map(result.rows, (row) => {
+              return row.id.toString();
+            })
+          );
+        }
       }
-    });
+    );
   }
 
   return {

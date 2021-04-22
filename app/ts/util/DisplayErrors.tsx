@@ -1,6 +1,8 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import _ from 'lodash';
 import React from 'react';
+import {useStyles} from '../McdaApp/McdaApp';
 
 export default function DisplayErrors({
   errors,
@@ -9,6 +11,7 @@ export default function DisplayErrors({
   errors: string[];
   identifier: string;
 }) {
+  const classes = useStyles();
   return (
     <>
       {_.map(errors, (error, index) => {
@@ -18,10 +21,10 @@ export default function DisplayErrors({
             xs={12}
             id={`${identifier}-error-${index}`}
             key={`${identifier}-error-${index}`}
-            className="alert"
+            className={classes.alert}
             style={{textAlign: 'end'}}
           >
-            {error}
+            <Typography>{error}</Typography>
           </Grid>
         );
       })}

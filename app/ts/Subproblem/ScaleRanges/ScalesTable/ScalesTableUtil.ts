@@ -134,24 +134,21 @@ export function getTheoreticalRangeLabel(
   return `${lowerLabel}, ${upperLabel}`;
 }
 
-export function getUpperBound(
-  usePercentage: boolean,
-  unit: IUnitOfMeasurement
-): number {
-  if (usePercentage && unit.type === 'decimal') {
-    return 100;
-  } else if (!usePercentage && unit.type === 'percentage') {
-    return 1;
-  } else {
+export function getUpperBound(unit: IUnitOfMeasurement): number {
+  if (unit.type === 'custom') {
     return unit.upperBound;
+  } else {
+    return 1;
   }
 }
 
-export function getUpperBoundLabel(
+function getUpperBoundLabel(
   usePercentage: boolean,
   unit: IUnitOfMeasurement
 ): string {
   if (unit.upperBound === null) {
     return '∞';
-  } else return getUpperBound(usePercentage, unit).toString();
+  } else {
+    return usePercentage ? '100' : '1';
+  }
 }

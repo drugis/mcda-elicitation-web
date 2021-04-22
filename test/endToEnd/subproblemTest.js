@@ -68,7 +68,7 @@ function beforeEach(browser) {
 }
 
 function afterEach(browser) {
-  errorService.isErrorBarHidden(browser);
+  errorService.isErrorBarNotPresent(browser);
   util.delayedClick(browser, '#logo', '#workspaces-header');
   workspaceService.deleteFromList(browser, 0).end();
 }
@@ -99,7 +99,7 @@ function create(browser) {
 
   util.delayedClick(
     browser,
-    '#deterministic-tab',
+    '#deterministic-results-tab',
     '#deterministic-weights-table'
   );
   browser
@@ -109,7 +109,7 @@ function create(browser) {
     .waitForElementVisible('#measurements-sensitivity-plot')
     .waitForElementVisible('#preferences-sensitivity-plot');
 
-  util.delayedClick(browser, '#smaa-tab', '#effects-table-header');
+  util.delayedClick(browser, '#smaa-results-tab', '#effects-table-header');
   browser
     .waitForElementVisible('#effects-table')
     .waitForElementVisible('#rank-acceptabilities-plot')

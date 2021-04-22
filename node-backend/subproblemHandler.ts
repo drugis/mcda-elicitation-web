@@ -1,3 +1,5 @@
+import IDefaultIdsMessage from '@shared/interface/Commands/IDefaultIdsMessage';
+import ISubproblemMessage from '@shared/interface/Commands/ISubproblemMessage';
 import {OurError} from '@shared/interface/IError';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
@@ -5,7 +7,7 @@ import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
-import {CREATED, OK} from 'http-status-codes';
+import {CREATED} from 'http-status-codes';
 import _ from 'lodash';
 import {PoolClient} from 'pg';
 import IDB from './interface/IDB';
@@ -50,7 +52,11 @@ export default function SubproblemHandler(db: IDB) {
     );
   }
 
-  function create(request: Request, response: Response, next: any): void {
+  function create(
+    request: Request<{workspaceId: string}, {}, ISubproblemCommand>,
+    response: Response,
+    next: any
+  ): void {
     logger.debug('POST /workspaces/:workspaceId/problems');
     const {workspaceId} = request.params;
     db.runInTransaction(
@@ -61,7 +67,7 @@ export default function SubproblemHandler(db: IDB) {
 
   function createTransactionCallback(
     error: OurError,
-    subproblemId: string,
+    ids: IDefaultIdsMessage,
     response: Response,
     next: any,
     workspaceId: string
@@ -71,8 +77,13 @@ export default function SubproblemHandler(db: IDB) {
     } else {
       retrieveSubProblem(
         workspaceId,
-        subproblemId,
-        _.partialRight(retrieveSubProblemCallback, response, next)
+        ids.subproblemId,
+        _.partialRight(
+          retrieveSubProblemCallback,
+          ids.scenarioId,
+          response,
+          next
+        )
       );
     }
   }
@@ -80,6 +91,7 @@ export default function SubproblemHandler(db: IDB) {
   function retrieveSubProblemCallback(
     error: OurError,
     subproblem: IOldSubproblem,
+    scenarioId: string,
     response: Response,
     next: any
   ): void {
@@ -87,23 +99,30 @@ export default function SubproblemHandler(db: IDB) {
       handleError(error, next);
     } else {
       logger.debug('done creating subproblem : ' + JSON.stringify(subproblem));
+      const message: ISubproblemMessage = {
+        subproblem: subproblem,
+        defaultScenarioId: scenarioId
+      };
       response.status(CREATED);
-      response.json(subproblem);
+      response.json(message);
     }
   }
 
   function subproblemTransaction(
-    request: Request,
+    request: Request<{workspaceId: string}, {}, ISubproblemCommand>,
     client: PoolClient,
-    transactionCallback: (error: OurError, newSubproblemId?: string) => void
+    transactionCallback: (error: OurError, ids?: IDefaultIdsMessage) => void
   ): void {
     waterfall(
       [
         _.partial(createSubProblem, client, request),
         _.partial(createScenario, client)
       ],
-      (error: OurError, newSubproblemId?: string) => {
-        transactionCallback(error, newSubproblemId);
+      (error: OurError, newSubproblemId?: string, newScenarioId?: string) => {
+        transactionCallback(error, {
+          subproblemId: newSubproblemId,
+          scenarioId: newScenarioId
+        });
       }
     );
   }
@@ -140,7 +159,11 @@ export default function SubproblemHandler(db: IDB) {
     client: PoolClient,
     workspaceId: string,
     subproblemId: string,
-    callback: (error: OurError, subproblemId?: string) => void
+    callback: (
+      error: OurError,
+      subproblemId?: string,
+      scenarioId?: string
+    ) => void
   ): void {
     logger.debug(
       'creating scenario; workspaceid: ' +
@@ -158,13 +181,17 @@ export default function SubproblemHandler(db: IDB) {
       workspaceId: workspaceId,
       subproblemId: subproblemId
     };
-    scenarioRepository.createInTransaction(client, scenario, (error) => {
-      if (error) {
-        callback(error);
-      } else {
-        callback(null, subproblemId);
+    scenarioRepository.createInTransaction(
+      client,
+      scenario,
+      (error, scenarioId?: string) => {
+        if (error) {
+          callback(error);
+        } else {
+          callback(null, subproblemId, scenarioId);
+        }
       }
-    });
+    );
   }
 
   function retrieveSubProblem(
@@ -186,7 +213,15 @@ export default function SubproblemHandler(db: IDB) {
     );
   }
 
-  function update(request: Request, response: Response, next: any): void {
+  function update(
+    request: Request<
+      {workspaceId: string; subproblemId: string},
+      {},
+      IOldSubproblem
+    >,
+    response: Response,
+    next: any
+  ): void {
     const {workspaceId, subproblemId} = request.params;
     const {definition, title} = request.body;
     logger.debug(
@@ -211,12 +246,12 @@ export default function SubproblemHandler(db: IDB) {
     );
     db.runInTransaction(
       _.partial(deleteTransaction, workspaceId, subproblemId),
-      (error: OurError) => {
+      (error: OurError, defaultIds?: IDefaultIdsMessage) => {
         if (error) {
           handleError(error, next);
         } else {
           logger.debug('Done deleting subproblem: ' + subproblemId);
-          response.sendStatus(OK);
+          response.json(defaultIds);
         }
       }
     );
@@ -226,14 +261,18 @@ export default function SubproblemHandler(db: IDB) {
     workspaceId: string,
     subproblemId: string,
     client: PoolClient,
-    transactionCallback: (error: OurError) => void
+    transactionCallback: (
+      error: OurError,
+      defaultIds?: IDefaultIdsMessage
+    ) => void
   ): void {
     waterfall(
       [
         _.partial(getSubproblemIds, workspaceId),
         getDefaultSubproblem,
         _.partial(setDefaultSubproblem, client, subproblemId),
-        _.partial(deleteSubproblemAction, client, subproblemId)
+        _.partial(deleteSubproblemAction, client, subproblemId),
+        _.partial(getDefaultIds, client, workspaceId)
       ],
       transactionCallback
     );
@@ -311,7 +350,7 @@ export default function SubproblemHandler(db: IDB) {
     subproblemId: string,
     workspaceId: string,
     subproblemIds: string[],
-    callback: (error: OurError) => void
+    callback: (error: OurError, defaultId?: string) => void
   ): void {
     const newDefault = getNewDefaultSubproblemId(subproblemId, subproblemIds);
     workspaceRepository.setDefaultSubProblem(
@@ -346,19 +385,19 @@ export default function SubproblemHandler(db: IDB) {
     client: PoolClient,
     subproblemId: string,
     workspaceId: string,
-    callback: (error: OurError) => void
+    callback: (error: OurError, defaultId?: string) => void
   ): void {
-    scenarioRepository.getScenarioIdsForSubproblem(subproblemId, function (
-      error,
-      result
-    ) {
-      if (error) {
-        callback(error);
-      } else {
-        const newDefaultScenario = result[0];
-        setDefaultScenario(client, workspaceId, newDefaultScenario, callback);
+    scenarioRepository.getScenarioIdsForSubproblem(
+      subproblemId,
+      function (error, result) {
+        if (error) {
+          callback(error);
+        } else {
+          const newDefaultScenario = result[0];
+          setDefaultScenario(client, workspaceId, newDefaultScenario, callback);
+        }
       }
-    });
+    );
   }
 
   function setDefaultScenario(
@@ -387,11 +426,19 @@ export default function SubproblemHandler(db: IDB) {
     });
   }
 
+  function getDefaultIds(
+    client: PoolClient,
+    workspaceId: string,
+    callback: (error: OurError, defaultIds?: IDefaultIdsMessage) => void
+  ) {
+    workspaceRepository.getDefaultIds(client, workspaceId, callback);
+  }
+
   return {
-    query: query,
-    get: get,
-    create: create,
-    update: update,
+    query,
+    get,
+    create,
+    update,
     delete: deleteSubproblem
   };
 }

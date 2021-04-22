@@ -1,4 +1,10 @@
-import {Grid, Radio, RadioGroup} from '@material-ui/core';
+import {
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Typography
+} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
@@ -16,7 +22,9 @@ export default function ScalesCalculationMethod(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        Show <InlineHelp helpId="median-mode">median or mode</InlineHelp>
+        <Typography>
+          Show <InlineHelp helpId="median-mode">median or mode</InlineHelp>
+        </Typography>
       </Grid>
       <Grid item xs={6}>
         <RadioGroup
@@ -24,12 +32,18 @@ export default function ScalesCalculationMethod(): JSX.Element {
           value={calculationMethod}
           onChange={handleRadioChanged}
         >
-          <label id="show-median-radio">
-            <Radio value="median" /> Median
-          </label>
-          <label id="show-mode-radio">
-            <Radio value="mode" /> Mode
-          </label>
+          <FormControlLabel
+            id="show-median-radio"
+            value="median"
+            control={<Radio color="primary" />}
+            label="Median"
+          />
+          <FormControlLabel
+            id="show-mode-radio"
+            value="mode"
+            control={<Radio color="primary" />}
+            label="Mode"
+          />
         </RadioGroup>
       </Grid>
     </Grid>

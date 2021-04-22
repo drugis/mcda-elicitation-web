@@ -66,8 +66,9 @@ function afterEach(browser) {
 function cancelEditingWorkspaceTitle(browser) {
   browser
     .click('#edit-workspace-title-button')
-    .click('#cancel-workspace-title-button')
-    .waitForElementVisible('#workspace-title');
+    .click('#close-modal-button')
+    .expect.element('#workspace-title')
+    .text.to.equal(title);
 }
 
 function cancelEditingTherapeuticContext(browser) {
@@ -230,7 +231,7 @@ function cancelCopyingScenario(browser) {
 function cancelEditingGraphLabels(browser) {
   var paths = {
     valueToClear: '#label-input-0',
-    tab: '#deterministic-tab',
+    tab: '#deterministic-results-tab',
     actionButton: '//*[@id="base-profile-plot-legend"]',
     cancelButton: closeModalButtonPath,
     content:

@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -117,7 +118,7 @@ export default function EffectCellDialog({
       <DialogContent>
         <Grid container>
           <Grid item xs={6}>
-            Input parameters
+            <Typography>Input parameters</Typography>
           </Grid>
           <Grid item xs={6}>
             <Select

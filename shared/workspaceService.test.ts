@@ -108,7 +108,7 @@ describe('buildWorkspace', () => {
 
   it('should be able to copy a workspace', () => {
     const result = buildInProgressCopy(oldWorkspace);
-    const expectedWorkspace = {
+    const expectedProperties: IWorkspaceProperties = {
       title: 'Copy of my workspace',
       therapeuticContext: '',
       useFavourability: false
@@ -119,7 +119,7 @@ describe('buildWorkspace', () => {
       distributions: [],
       effects: [],
       relativePerformances: [],
-      properties: expectedWorkspace
+      properties: expectedProperties
     };
     expect(result).toEqual(expectedResult);
   });

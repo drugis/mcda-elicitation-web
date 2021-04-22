@@ -16,7 +16,7 @@ export default function CopyWorkspaceButton({
       sourceWorkspaceId: workspaceId
     })
       .then((response: AxiosResponse<{id: string}>) => {
-        window.location.assign(`/#!/manual-input/${response.data.id}`);
+        window.location.assign(`/manual-input/${response.data.id}`);
       })
       .catch(setError);
   }

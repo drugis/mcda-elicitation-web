@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
@@ -16,9 +17,10 @@ export default function NormalInput() {
     setIsValidStandardError
   } = useContext(InputCellContext);
   const [meanInputError, setMeanInputError] = useState<string>('');
-  const [standardErrorInputError, setStandardErrorInputError] = useState<
-    string
-  >('');
+  const [
+    standardErrorInputError,
+    setStandardErrorInputError
+  ] = useState<string>('');
 
   useEffect(() => {
     validateInput(mean, setIsValidMean, setMeanInputError);
@@ -67,7 +69,7 @@ export default function NormalInput() {
   return (
     <>
       <Grid item xs={6}>
-        Mean
+        <Typography>Mean</Typography>
       </Grid>
       <Grid item xs={6}>
         <TextField
@@ -81,7 +83,7 @@ export default function NormalInput() {
         />
       </Grid>
       <Grid item xs={6}>
-        Standard error
+        <Typography>Standard error</Typography>
       </Grid>
       <Grid item xs={6}>
         <TextField

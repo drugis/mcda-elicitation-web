@@ -11,14 +11,14 @@ export default function ScenarioRepository(db: IDB) {
   function createInTransaction(
     client: PoolClient,
     scenario: IScenarioCommand,
-    callback: (error: OurError, id?: number) => void
+    callback: (error: OurError, id?: string) => void
   ): void {
     create(client, scenario, callback);
   }
 
   function createDirectly(
     scenario: IScenarioCommand,
-    callback: (error: OurError, id?: number) => void
+    callback: (error: OurError, id?: string) => void
   ): void {
     create(db, scenario, callback);
   }
@@ -26,7 +26,7 @@ export default function ScenarioRepository(db: IDB) {
   function create(
     clientOrDB: ClientOrDB,
     scenario: IScenarioCommand,
-    callback: (error: OurError, id?: number) => void
+    callback: (error: OurError, id?: string) => void
   ): void {
     logger.debug('Creating scenario');
     const query =
@@ -39,7 +39,7 @@ export default function ScenarioRepository(db: IDB) {
         scenario.title,
         scenario.state
       ],
-      (error: OurError, result: QueryResult<{id: number}>) => {
+      (error: OurError, result: QueryResult<{id: string}>) => {
         if (error) {
           callback(error);
         } else {

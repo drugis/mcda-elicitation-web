@@ -8,7 +8,7 @@ export default function SensitivityTableButtons(): JSX.Element {
   );
 
   return (
-    <>
+    <ButtonGroup size="small">
       <Button
         id="recalculate-button"
         variant="contained"
@@ -20,11 +20,11 @@ export default function SensitivityTableButtons(): JSX.Element {
       <Button
         id="reset-button"
         variant="contained"
-        color="primary"
+        color="secondary"
         onClick={resetSensitivityTable}
       >
         Reset
       </Button>
-    </>
+    </ButtonGroup>
   );
 }

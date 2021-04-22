@@ -20,6 +20,7 @@ export default function EditOverviewCriterionButton() {
           id={`edit-criterion-button-${criterion.id}`}
           color="primary"
           onClick={openDialog}
+          size="small"
         >
           <Edit />
         </IconButton>

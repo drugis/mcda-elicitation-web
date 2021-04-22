@@ -20,6 +20,7 @@ export default function SubproblemTitle({
       value={title}
       onChange={titleChanged}
       onKeyDown={handleKeyCallback}
+      variant="outlined"
       autoFocus
       fullWidth
     />

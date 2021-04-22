@@ -1,4 +1,4 @@
-import {Grid, TextField} from '@material-ui/core';
+import {Grid, TextField, Typography} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext, useState} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
@@ -32,7 +32,9 @@ export default function RandomSeed(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        Set <InlineHelp helpId="random-seed">random seed</InlineHelp>
+        <Typography>
+          Set <InlineHelp helpId="random-seed">random seed</InlineHelp>
+        </Typography>
       </Grid>
       <Grid item xs={6}>
         <TextField

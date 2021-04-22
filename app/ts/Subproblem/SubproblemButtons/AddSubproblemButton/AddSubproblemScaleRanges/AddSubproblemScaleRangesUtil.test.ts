@@ -1,4 +1,5 @@
 import {Mark} from '@material-ui/core';
+import IDataSource from '@shared/interface/IDataSource';
 import {
   adjustConfiguredRangeForStepSize,
   createMarks,
@@ -6,10 +7,28 @@ import {
   getCeil,
   getFloor,
   getSliderLimits,
+  getStepSizeAdjustedConfiguredRanges,
   increaseSliderUpperBound
 } from './AddSubproblemScaleRangesUtil';
 
 describe('addSubproblemScaleRangesUtil', () => {
+  describe('getStepSizeAdjustedConfiguredRanges', () => {
+    it('should return configured ranges adjusted for step size', () => {
+      const dataSources: Record<string, IDataSource> = {
+        ds1Id: {id: 'ds1Id'} as IDataSource
+      };
+      const stepSizes = {ds1Id: 10};
+      const configuredRanges = {ds1Id: [-1, 55] as [number, number]};
+      const result = getStepSizeAdjustedConfiguredRanges(
+        dataSources,
+        stepSizes,
+        configuredRanges
+      );
+      const expectedResult = {ds1Id: [0, 55]};
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
   describe('adjustConfiguredRangeForStepSize', () => {
     it('should return rounded configured ranges', () => {
       const stepSize = 0.1;

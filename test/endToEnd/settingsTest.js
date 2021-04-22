@@ -6,7 +6,6 @@ module.exports = {
   'Verifying all components are visible': verifyComponents,
   'Default button resetting options': reset,
   '(De)select all button deselects and selects all column options': deselectAll,
-  // 'Verify that save can not be pressed if there are no values for entered smaa': checkEnteredSmaaDisabled,
   'Switching settings in problem definition tab': switchSettingsInProblemDefinition,
   'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
   'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
@@ -19,10 +18,10 @@ module.exports = {
   'Switching between median and mode in deterministic tab': switchMedianInDeterministic,
   'Switching settings in the overview tab': switchSettingsInOverview,
   'Switching settings in the preferences tab': switchSettingsInPreferences,
-  // 'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF,
-  // 'Switching settings mid-elicitation': switchSettingsMidRanking,
+  'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF,
+  'Switching settings mid-elicitation': switchSettingsMidRanking,
   'Switching settings on the deterministic tab': switchSettingsOnDeterministicTab
-}; // FIXME re-enable test after angular is gone
+};
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
@@ -46,7 +45,7 @@ function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
   return util
     .delayedClick(
       browser,
-      '#deterministic-tab',
+      '#deterministic-results-tab',
       '#sensitivity-measurements-header'
     )
     .click('#settings-button')
@@ -287,7 +286,7 @@ function unselectReferenceInDeterministic(browser) {
 
 function switchMedianInDeterministic(browser) {
   util
-    .delayedClick(browser, '#deterministic-tab', '#settings-button')
+    .delayedClick(browser, '#deterministic-results-tab', '#settings-button')
     .click('#settings-button')
     .click('#show-mode-radio')
     .click('#save-settings-button')
@@ -433,7 +432,7 @@ function switchSettingsOnDeterministicTab(browser) {
 
   util.delayedClick(
     browser,
-    '#deterministic-tab',
+    '#deterministic-results-tab',
     '#sensitivity-measurements-header'
   );
   browser.expect.element(OSUnitCell).text.to.equal('%');

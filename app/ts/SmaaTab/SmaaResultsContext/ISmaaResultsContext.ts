@@ -9,8 +9,6 @@ export interface ISmaaResultsContext {
   smaaWeights: IWeights;
   useMeasurementsUncertainty: boolean;
   useWeightsUncertainty: boolean;
-  warnings: string[];
-  recalculate: () => void;
   setUseMeasurementsUncertainty: (useMeasurementsUncertainty: boolean) => void;
   setUseWeightsUncertainty: (useWeightsUncertainty: boolean) => void;
 }

@@ -1,4 +1,5 @@
 import {Mark} from '@material-ui/core/Slider';
+import IDataSource from '@shared/interface/IDataSource';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
 import _ from 'lodash';
@@ -161,6 +162,20 @@ export function createMarks(
   });
 
   return marks;
+}
+
+export function getStepSizeAdjustedConfiguredRanges(
+  dataSources: Record<string, IDataSource>,
+  stepSizes: Record<string, number>,
+  configuredRanges: Record<string, [number, number]>
+): Record<string, [number, number]> {
+  return _.mapValues(dataSources, (dataSource: IDataSource): [number, number] =>
+    adjustConfiguredRangeForStepSize(
+      stepSizes[dataSource.id],
+      configuredRanges[dataSource.id],
+      configuredRanges[dataSource.id]
+    )
+  );
 }
 
 export function adjustConfiguredRangeForStepSize(

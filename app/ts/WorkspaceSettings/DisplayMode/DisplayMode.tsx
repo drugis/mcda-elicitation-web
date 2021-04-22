@@ -1,4 +1,4 @@
-import {Grid, Select} from '@material-ui/core';
+import {Grid, Select, Typography} from '@material-ui/core';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
@@ -56,9 +56,11 @@ export default function DisplayMode(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        <InlineHelp helpId="measurements-display-mode">
-          Measurements display mode
-        </InlineHelp>
+        <Typography>
+          <InlineHelp helpId="measurements-display-mode">
+            Measurements display mode
+          </InlineHelp>
+        </Typography>
       </Grid>
       <Grid item xs={6}>
         <Select

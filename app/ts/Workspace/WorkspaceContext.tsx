@@ -1,17 +1,21 @@
 import {CircularProgress} from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import {OurError} from '@shared/interface/IError';
-import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IOrdering from '@shared/interface/IOrdering';
 import IScale from '@shared/interface/IScale';
-import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {buildWorkspace} from '@shared/workspaceService';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
+import {useHistory} from 'react-router';
 import {ErrorContext} from '../Error/ErrorContext';
 import {swapItems} from '../ManualInput/ManualInputUtil/ManualInputUtil';
 import {getScalesCommand} from '../util/PataviUtil';
@@ -29,142 +33,103 @@ export const WorkspaceContext = createContext<IWorkspaceContext>(
 
 export function WorkspaceContextProviderComponent({
   children,
-  oldWorkspace,
-  oldSubproblems,
-  currentAngularSubproblem,
-  workspaceId,
-  subproblemChanged
+  originalWorkspace
 }: {
   children: any;
-  oldWorkspace: IOldWorkspace;
-  oldSubproblems: IOldSubproblem[];
-  currentAngularSubproblem: IOldSubproblem;
-  workspaceId: string;
-  subproblemChanged: (subproblem: IOldSubproblem) => void;
+  originalWorkspace: IOldWorkspace;
 }) {
+  const workspaceId = originalWorkspace.id;
+  const history = useHistory();
   const {setError} = useContext(ErrorContext);
-  const [subproblems, setSubproblems] = useState<
-    Record<string, IOldSubproblem>
-  >(_.keyBy(oldSubproblems, 'id'));
-  const [currentSubproblem, setCurrentSubproblem] = useState<IOldSubproblem>(
-    currentAngularSubproblem
+
+  const [oldWorkspace, setOldWorkspace] = useState<IOldWorkspace>(
+    originalWorkspace
   );
   const [workspace, setWorkspace] = useState<IWorkspace>(
-    buildWorkspace(oldWorkspace, workspaceId)
+    buildWorkspace(oldWorkspace)
   );
   const [ordering, setOrdering] = useState<IOrdering>();
   const [scales, setScales] = useState<
     Record<string, Record<string, IScale>>
   >();
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const pataviCommand = getScalesCommand(
+  const getScales = useCallback(() => {
+    const newWorkspace = buildWorkspace(oldWorkspace);
+    const scalesCommand = getScalesCommand(
       oldWorkspace.problem,
-      workspace.criteria,
-      workspace.alternatives
+      newWorkspace.criteria,
+      newWorkspace.alternatives
     );
-
-    Axios.post(`/patavi/scales`, pataviCommand)
+    return Axios.post(`/api/v2/patavi/scales`, scalesCommand)
       .then((result: AxiosResponse<Record<string, Record<string, IScale>>>) => {
         setScales(result.data);
       })
-      .catch(errorCallback);
+      .catch(setError);
+  }, [oldWorkspace, setError]);
 
-    Axios.get(`/workspaces/${workspaceId}/ordering`)
+  const getOrdering = useCallback(() => {
+    return Axios.get(`/api/v2/workspaces/${workspaceId}/ordering`)
       .then((response: AxiosResponse<{ordering: IOrdering | {}}>) => {
         const newOrdering: IOrdering | {} = response.data.ordering;
         if (isOrdering(newOrdering)) {
           setOrdering(newOrdering);
-          setWorkspace(buildWorkspace(oldWorkspace, workspaceId, newOrdering));
+          setWorkspace(buildWorkspace(oldWorkspace, newOrdering));
         }
       })
-      .catch(errorCallback);
-  }, []);
+      .catch(setError);
+  }, [oldWorkspace, setError, workspaceId]);
 
-  function editTitle(newTitle: string): void {
-    const newSubproblem = {...currentSubproblem, title: newTitle};
-    Axios.post(
-      `/workspaces/${workspaceId}/problems/${currentSubproblem.id}`,
-      newSubproblem
-    )
-      .then(() => {
-        setCurrentSubproblem(newSubproblem);
-        let newSubproblems = _.cloneDeep(subproblems);
-        newSubproblems[currentSubproblem.id] = newSubproblem;
-        setSubproblems(newSubproblems);
-      })
-      .catch(errorCallback);
-  }
+  useEffect(() => {
+    Promise.all([getScales(), getOrdering()]).then(() => {
+      setIsLoading(false);
+    });
+  }, [getOrdering, getScales]);
 
-  function deleteSubproblem(subproblemId: string): void {
-    Axios.delete(`/workspaces/${workspaceId}/problems/${currentSubproblem.id}`)
-      .then(() => {
-        const newCurrentSubproblem: IOldSubproblem = _.reject(subproblems, [
-          'id',
-          subproblemId
-        ])[0];
-        subproblemChanged(newCurrentSubproblem);
-      })
-      .catch(errorCallback);
-  }
-
-  function addSubproblem(command: ISubproblemCommand): void {
-    Axios.post(`/workspaces/${workspaceId}/problems/`, command)
-      .then((result: AxiosResponse<IOldSubproblem>) => {
-        subproblemChanged(result.data);
-      })
-      .catch(errorCallback);
+  function editTitle(newTitle: string) {
+    const oldWorkspaceToSend: IOldWorkspace = _.merge({}, oldWorkspace, {
+      title: newTitle,
+      problem: {title: newTitle}
+    });
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, ordering));
+    sendOldWorkspace(oldWorkspaceToSend);
   }
 
   function editTherapeuticContext(therapeuticContext: string): void {
-    const oldWorkspaceToSend: IOldWorkspace = _.merge(
-      {},
-      _.cloneDeep(oldWorkspace),
-      {
-        problem: {description: therapeuticContext}
-      }
-    );
-    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId, ordering));
+    const oldWorkspaceToSend: IOldWorkspace = _.merge({}, oldWorkspace, {
+      problem: {description: therapeuticContext}
+    });
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, ordering));
     sendOldWorkspace(oldWorkspaceToSend);
   }
 
   function editAlternative(alternative: IAlternative, newTitle: string): void {
     const newAlternative: IAlternative = {id: alternative.id, title: newTitle};
-    const oldWorkspaceToSend: IOldWorkspace = _.merge(
-      {},
-      _.cloneDeep(oldWorkspace),
-      {problem: {alternatives: {[alternative.id]: newAlternative}}}
-    );
-    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId, ordering));
+    const oldWorkspaceToSend: IOldWorkspace = _.merge({}, oldWorkspace, {
+      problem: {alternatives: {[alternative.id]: newAlternative}}
+    });
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, ordering));
     sendOldWorkspace(oldWorkspaceToSend);
   }
 
   function editCriterion(newCriterion: ICriterion): void {
-    const oldWorkspaceToSend: IOldWorkspace = _.merge(
-      {},
-      _.cloneDeep(oldWorkspace),
-      {
-        problem: {
-          criteria: {
-            [newCriterion.id]: transformCriterionToOldCriterion(newCriterion)
-          }
+    const oldWorkspaceToSend: IOldWorkspace = _.merge({}, oldWorkspace, {
+      problem: {
+        criteria: {
+          [newCriterion.id]: transformCriterionToOldCriterion(newCriterion)
         }
       }
-    );
-    setWorkspace(buildWorkspace(oldWorkspaceToSend, workspaceId, ordering));
+    });
+    setWorkspace(buildWorkspace(oldWorkspaceToSend, ordering));
     sendOldWorkspace(oldWorkspaceToSend);
   }
 
   function sendOldWorkspace(oldWorkspaceToSend: IOldWorkspace) {
-    Axios.post(`/workspaces/${workspaceId}`, oldWorkspaceToSend)
-      .catch(errorCallback)
+    Axios.post(`/api/v2/workspaces/${workspaceId}`, oldWorkspaceToSend)
       .then(() => {
-        window.location.reload();
-      });
-  }
-
-  function errorCallback(error: OurError) {
-    setError(error);
+        setOldWorkspace(oldWorkspaceToSend);
+      })
+      .catch(setError);
   }
 
   function swapAlternatives(
@@ -176,16 +141,14 @@ export function WorkspaceContextProviderComponent({
       alternative2Id,
       workspace.alternatives
     );
-    setWorkspace(
-      _.merge({}, _.cloneDeep(workspace), {alternatives: newAlternatives})
-    );
+    setWorkspace(_.merge({}, workspace, {alternatives: newAlternatives}));
 
     const newOrdering: IOrdering = createNewOrdering(
       newAlternatives,
       workspace.criteria
     );
-    Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
-      errorCallback
+    Axios.put(`/api/v2/workspaces/${workspaceId}/ordering`, newOrdering).catch(
+      setError
     );
   }
 
@@ -195,14 +158,14 @@ export function WorkspaceContextProviderComponent({
       criterion2Id,
       workspace.criteria
     );
-    setWorkspace(_.merge({}, _.cloneDeep(workspace), {criteria: newCriteria}));
+    setWorkspace(_.merge({}, workspace, {criteria: newCriteria}));
 
     const newOrdering: IOrdering = createNewOrdering(
       workspace.alternatives,
       newCriteria
     );
-    Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
-      errorCallback
+    Axios.put(`/api/v2/workspaces/${workspaceId}/ordering`, newOrdering).catch(
+      setError
     );
   }
 
@@ -217,14 +180,14 @@ export function WorkspaceContextProviderComponent({
       dataSource1Id,
       dataSource2Id
     );
-    setWorkspace(_.merge({}, _.cloneDeep(workspace), {criteria: newCriteria}));
+    setWorkspace(_.merge({}, workspace, {criteria: newCriteria}));
 
     const newOrdering: IOrdering = createNewOrdering(
       workspace.alternatives,
       newCriteria
     );
-    Axios.put(`/workspaces/${workspaceId}/ordering`, newOrdering).catch(
-      errorCallback
+    Axios.put(`/api/v2/workspaces/${workspaceId}/ordering`, newOrdering).catch(
+      setError
     );
   }
 
@@ -233,14 +196,11 @@ export function WorkspaceContextProviderComponent({
       value={{
         alternatives: _.keyBy(workspace.alternatives, 'id'),
         criteria: _.keyBy(workspace.criteria, 'id'),
-        currentSubproblem,
         oldProblem: oldWorkspace.problem,
         scales,
-        subproblems,
         therapeuticContext: workspace.properties.therapeuticContext,
         workspace,
-        addSubproblem,
-        deleteSubproblem,
+        workspaceId: workspace.properties.id.toString(),
         editAlternative,
         editCriterion,
         editTherapeuticContext,
@@ -250,7 +210,7 @@ export function WorkspaceContextProviderComponent({
         swapDataSources
       }}
     >
-      {scales ? children : <CircularProgress />}
+      {!isLoading ? children : <CircularProgress />}
     </WorkspaceContext.Provider>
   );
 }

@@ -26,7 +26,7 @@ function beforeEach(browser: NightwatchBrowser) {
 }
 
 function afterEach(browser: NightwatchBrowser) {
-  errorService.isErrorBarHidden(browser);
+  errorService.isErrorBarNotPresent(browser);
   util.delayedClick(browser, '#logo', '#workspaces-header');
   workspaceService.deleteFromList(browser, 0).end();
 }
@@ -80,7 +80,7 @@ function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
     .waitForElementVisible('//*[@id="trade-off-header"]')
     .click('//*[@id="reference-slider-from"]')
     .click('//*[@id="trade-off-slider"]/span[4]')
-    .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .waitForElementNotPresent('//*[@id="trade-off-slider"]');
 
   browser.expect
@@ -92,7 +92,7 @@ function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
     .click('//*[@id="reference-criterion-selector"]/option[@value="crit2Id"]')
     .click('//*[@id="reference-slider-from"]')
     .click('//*[@id="trade-off-slider"]/span[4]')
-    .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .waitForElementNotPresent('//*[@id="trade-off-slider"]');
 
   browser.expect

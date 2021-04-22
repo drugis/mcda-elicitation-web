@@ -10,8 +10,7 @@ describe('WorkspacesUtil', () => {
         defaultScenarioId: '100'
       } as IOldWorkspace;
       const result = getLink(workspace);
-      const expectedResult =
-        '/#!/workspaces/1/problems/10/scenarios/100/evidence';
+      const expectedResult = '/workspaces/1/problems/10/scenarios/100/overview';
       expect(result).toEqual(expectedResult);
     });
   });

@@ -45,8 +45,8 @@ function tradeOffTest(browser: NightwatchBrowser) {
   browser
     .click('#reference-slider-from')
     .useXpath()
-    .click('/html/body/div[3]/div[3]/div/div[2]/span/span[3]')
-    .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
+    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementVisible('#trade-off-header');
   checkEqualValues(browser, 45);
@@ -55,8 +55,8 @@ function tradeOffTest(browser: NightwatchBrowser) {
     .pause(250)
     .click('#reference-slider-to')
     .useXpath()
-    .click('/html/body/div[3]/div[3]/div/div[2]/span/span[13]')
-    .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
+    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementVisible('#trade-off-header');
   checkEqualValues(browser, 0);
@@ -95,8 +95,8 @@ function unrealisticValues(browser: NightwatchBrowser) {
     .waitForElementVisible('#precise-swing-button')
     .click('#reference-slider-from')
     .useXpath()
-    .click('/html/body/div[3]/div[3]/div/div[2]/span/span[3]')
-    .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
+    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementVisible('#trade-off-header');
 
@@ -104,8 +104,8 @@ function unrealisticValues(browser: NightwatchBrowser) {
     .pause(250)
     .click('#reference-slider-to')
     .useXpath()
-    .click('/html/body/div[3]/div[3]/div/div[2]/span/span[13]')
-    .sendKeys('/html/body/div[3]/div[3]', browser.Keys.ESCAPE)
+    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementVisible('#trade-off-header');
   browser.expect

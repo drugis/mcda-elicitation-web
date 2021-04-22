@@ -64,7 +64,7 @@ function changeAlternativeLabels(browser) {
     '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-C > text';
 
   browser
-    .click('#deterministic-tab')
+    .click('#deterministic-results-tab')
     .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
@@ -95,7 +95,7 @@ function reset(browser) {
     '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-C > text';
 
   browser
-    .click('#deterministic-tab')
+    .click('#deterministic-results-tab')
     .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)
@@ -110,7 +110,7 @@ function reset(browser) {
     .assert.containsText(secondAlternative, 'B')
     .assert.containsText(thirdAlternative, 'C')
 
-    .click('#deterministic-tab')
+    .click('#deterministic-results-tab')
     .waitForElementVisible('#sensitivity-measurements-table')
     .useXpath()
     .click(legendButton)

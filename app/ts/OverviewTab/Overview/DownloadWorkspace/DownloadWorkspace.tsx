@@ -1,8 +1,8 @@
 import {Button, Grid} from '@material-ui/core';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
-import React, {useContext} from 'react';
-import _ from 'lodash';
 import IProblem from '@shared/interface/Problem/IProblem';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import _ from 'lodash';
+import React, {useContext} from 'react';
 
 export default function DownloadWorkspace() {
   const {workspace, oldProblem} = useContext(WorkspaceContext);
@@ -33,6 +33,7 @@ export default function DownloadWorkspace() {
         onClick={downloadWorkspace}
         variant={'contained'}
         color={'primary'}
+        size="small"
       >
         Download workspace
       </Button>

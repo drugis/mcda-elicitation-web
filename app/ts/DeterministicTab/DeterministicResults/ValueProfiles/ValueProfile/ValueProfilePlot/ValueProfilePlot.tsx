@@ -1,6 +1,6 @@
 import {generateValuePlotSettings} from 'app/ts/DeterministicTab/DeterministicResultsUtil';
 import {LegendContext} from 'app/ts/Legend/LegendContext';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext, useEffect} from 'react';
 
@@ -12,7 +12,7 @@ export default function ValueProfilePlot({
   valueProfiles: Record<string, Record<string, number>>;
 }): JSX.Element {
   const {filteredAlternatives, filteredCriteria} = useContext(
-    SubproblemContext
+    CurrentSubproblemContext
   );
   const {legendByAlternativeId} = useContext(LegendContext);
   const width = '400px';

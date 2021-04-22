@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
@@ -51,22 +52,24 @@ export default function UpperBoundInput() {
   return (
     <>
       <Grid item xs={6}>
-        Upper bound (
-        <FormControlLabel
-          style={{marginLeft: '0px'}}
-          value="isNotEstimable"
-          control={
-            <Checkbox
-              id="not-estimable-checkbox"
-              checked={isNotEstimableUpperBound}
-              onChange={handleIsNotEstimableChanged}
-              color="primary"
-            />
-          }
-          label="not estimable"
-          labelPlacement="start"
-        />
-        )
+        <Typography>
+          Upper bound (
+          <FormControlLabel
+            style={{marginLeft: '0px'}}
+            value="isNotEstimable"
+            control={
+              <Checkbox
+                id="not-estimable-checkbox"
+                checked={isNotEstimableUpperBound}
+                onChange={handleIsNotEstimableChanged}
+                color="primary"
+              />
+            }
+            label="not estimable"
+            labelPlacement="start"
+          />
+          )
+        </Typography>
       </Grid>
       <Grid item xs={6}>
         <TextField

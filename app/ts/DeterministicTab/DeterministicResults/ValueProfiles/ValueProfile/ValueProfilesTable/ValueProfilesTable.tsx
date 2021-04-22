@@ -8,7 +8,7 @@ import {
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 
@@ -18,7 +18,7 @@ export default function ValueProfilesTable({
   valueProfiles: Record<string, Record<string, number>>;
 }): JSX.Element {
   const {filteredAlternatives, filteredCriteria} = useContext(
-    SubproblemContext
+    CurrentSubproblemContext
   );
 
   return (

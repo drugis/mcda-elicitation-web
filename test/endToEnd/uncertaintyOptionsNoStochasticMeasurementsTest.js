@@ -13,7 +13,7 @@ module.exports = {
       .addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
-      .click('#smaa-tab')
+      .click('#smaa-results-tab')
       .assert.containsText(
         '#smaa-results-warning-0',
         'Measurements are not stochastic'

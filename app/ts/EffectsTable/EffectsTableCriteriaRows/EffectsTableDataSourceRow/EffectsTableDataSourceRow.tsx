@@ -1,7 +1,7 @@
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import React, {useContext} from 'react';
 import EffectsTableCriterionDescriptionCell from './EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
 import EffectsTableCriterionTitleCell from './EffectsTableCriterionTitleCell/EffectsTableCriterionTitleCell';
@@ -16,7 +16,7 @@ export default function EffectsTableDataSourceRow({
   dataSource: IDataSource;
   rowIndex: number;
 }) {
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   function renderCriterionCells(): JSX.Element {
     if (rowIndex === 0) {

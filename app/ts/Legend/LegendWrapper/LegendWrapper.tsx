@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
 import LegendButtons from './LegendButtons/LegendButtons';
@@ -22,7 +22,7 @@ export default function LegendWrapper({
   const {canEdit, legendByAlternativeId, saveLegend} = useContext(
     LegendContext
   );
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
@@ -80,15 +80,18 @@ export default function LegendWrapper({
       </Grid>
       <Grid container item md={12} lg={4} alignContent="flex-start">
         <Tooltip title={<LegendTooltip />}>
-          <Button
-            id={buttonId}
-            color="primary"
-            variant="contained"
-            onClick={openDialog}
-            disabled={!canEdit}
-          >
-            Labels
-          </Button>
+          <span>
+            <Button
+              id={buttonId}
+              color="primary"
+              variant="contained"
+              onClick={openDialog}
+              disabled={!canEdit}
+              size="small"
+            >
+              Labels
+            </Button>
+          </span>
         </Tooltip>
         <Dialog
           open={isDialogOpen}
@@ -121,6 +124,7 @@ export default function LegendWrapper({
               onClick={handleLegendSave}
               variant="contained"
               disabled={isDisabled()}
+              size="small"
             >
               Save
             </Button>

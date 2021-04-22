@@ -5,7 +5,7 @@ const util = require('./util.js');
 
 function goHomeAfterLoading(browser, title) {
   errorService
-    .isErrorBarHidden(browser)
+    .isErrorBarNotPresent(browser)
     .assert.containsText('#workspace-title', title);
   return util
     .delayedClick(browser, '#logo', '#workspaces-header')
@@ -68,14 +68,14 @@ function uploadTestWorkspace(browser, path) {
     .assert.not.elementPresent('#invalid-schema-error-0')
     .click('#add-workspace-button')
     .pause(500);
-  return errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarNotPresent(browser);
 }
 
 function deleteUnfinishedFromList(browser, index) {
   browser
     .click('#delete-in-progress-workspace-' + index)
     .click('#delete-workspace-confirm-button');
-  return errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarNotPresent(browser);
 }
 
 function cleanList(browser) {

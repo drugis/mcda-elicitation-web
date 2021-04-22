@@ -1,34 +1,43 @@
 import Grid from '@material-ui/core/Grid';
 import EffectsTable from 'app/ts/EffectsTable/EffectsTable';
 import {EffectsTableContextProviderComponent} from 'app/ts/EffectsTable/EffectsTableContext';
-import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {CurrentScenarioContext} from 'app/ts/Scenarios/CurrentScenarioContext/CurrentScenarioContext';
+import {ScenariosContext} from 'app/ts/Scenarios/ScenariosContext';
 import ScenarioSelection from 'app/ts/ScenarioSelection/ScenarioSelection';
+import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import React, {useContext} from 'react';
-import {SmaaResultsContext} from '../SmaaResultsContext/SmaaResultsContext';
-import CentralWeights from './CentralWeights/CentralWeights';
-import RankAcceptabilities from './RankAcceptabilities/RankAcceptabilities';
-import SmaaWeightsTable from './SmaaWeightsTable/SmaaWeightsTable';
+import {SmaaResultsContextProviderComponent} from '../SmaaResultsContext/SmaaResultsContext';
+import SmaaResultsDisplay from './SmaaResultsDisplay/SmaaResultsDisplay';
 import UncertaintyOptions from './UncertaintyOptions/UncertaintyOptions';
 
 export default function SmaaResults() {
-  const {currentScenario, scenariosWithPvfs} = useContext(PreferencesContext);
-  const {smaaWeights, ranks, centralWeights} = useContext(SmaaResultsContext);
+  const {scenariosWithPvfs} = useContext(ScenariosContext);
+  const {currentScenario} = useContext(CurrentScenarioContext);
+  const {
+    workspace: {
+      properties: {title}
+    }
+  } = useContext(WorkspaceContext);
+
+  document.title = `${title}'s SMAA results`;
 
   return (
-    <Grid container spacing={2}>
-      <ScenarioSelection
-        scenarios={scenariosWithPvfs}
-        currentScenario={currentScenario}
-      />
-      <UncertaintyOptions />
-      <Grid item xs={12}>
-        <EffectsTableContextProviderComponent displayMode="smaaValues">
-          <EffectsTable />
-        </EffectsTableContextProviderComponent>
+    <SmaaResultsContextProviderComponent>
+      <Grid container spacing={2}>
+        <Grid container item xs={12}>
+          <ScenarioSelection
+            scenarios={scenariosWithPvfs}
+            currentScenario={currentScenario}
+          />
+        </Grid>
+        <UncertaintyOptions />
+        <Grid item xs={12}>
+          <EffectsTableContextProviderComponent displayMode="smaaValues">
+            <EffectsTable />
+          </EffectsTableContextProviderComponent>
+        </Grid>
+        <SmaaResultsDisplay />
       </Grid>
-      <SmaaWeightsTable smaaWeights={smaaWeights} />
-      <RankAcceptabilities ranks={ranks} />
-      <CentralWeights centralWeights={centralWeights} />
-    </Grid>
+    </SmaaResultsContextProviderComponent>
   );
 }

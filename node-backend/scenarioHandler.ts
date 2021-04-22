@@ -64,7 +64,7 @@ export default function ScenarioHandler(db: IDB) {
     };
     scenarioRepository.createDirectly(
       scenario,
-      (error: OurError, id?: number): void => {
+      (error: OurError, id?: string): void => {
         if (error) {
           next(error);
         } else {

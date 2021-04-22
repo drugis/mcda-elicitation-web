@@ -2,32 +2,40 @@ import {DeterministicResultsContext} from 'app/ts/DeterministicTab/Deterministic
 import {getSensitivityLineChartSettings} from 'app/ts/DeterministicTab/DeterministicResultsUtil';
 import {LegendContext} from 'app/ts/Legend/LegendContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 
 export default function MeasurementSensitivityPlot(): JSX.Element {
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
   const {legendByAlternativeId} = useContext(LegendContext);
   const {
     measurementSensitivityCriterion,
     measurementsSensitivityResults
   } = useContext(DeterministicResultsContext);
   const {getUsePercentage} = useContext(SettingsContext);
-  const usePercentage = getUsePercentage(measurementSensitivityCriterion);
   const width = '400px';
   const height = '400px';
 
-  const settings: ChartConfiguration = getSensitivityLineChartSettings(
-    measurementsSensitivityResults,
+  useEffect(() => {
+    const usePercentage = getUsePercentage(measurementSensitivityCriterion);
+    const settings: ChartConfiguration = getSensitivityLineChartSettings(
+      measurementsSensitivityResults,
+      filteredAlternatives,
+      legendByAlternativeId,
+      measurementSensitivityCriterion.title,
+      true,
+      '#measurements-sensitivity-plot',
+      usePercentage
+    );
+    generate(settings);
+  }, [
     filteredAlternatives,
+    getUsePercentage,
     legendByAlternativeId,
-    measurementSensitivityCriterion.title,
-    true,
-    '#measurements-sensitivity-plot',
-    usePercentage
-  );
-  generate(settings);
+    measurementSensitivityCriterion,
+    measurementsSensitivityResults
+  ]);
 
   return (
     <div

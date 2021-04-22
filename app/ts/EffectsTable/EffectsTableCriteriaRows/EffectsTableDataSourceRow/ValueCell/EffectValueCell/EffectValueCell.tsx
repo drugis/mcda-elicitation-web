@@ -2,6 +2,7 @@ import TableCell from '@material-ui/core/TableCell';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {deselectedCellStyle} from 'app/ts/Subproblem/SubproblemButtons/AddSubproblemButton/AddSubproblemEffectsTable/deselectedCellStyle';
 import React, {useContext} from 'react';
@@ -26,6 +27,8 @@ export default function EffectValueCell({
   dataSourceId: string;
   alternativeId: string;
 }) {
+  const classes = useStyles();
+
   const {setErrorMessage} = useContext(ErrorContext);
   const {
     settings: {displayMode}
@@ -49,7 +52,7 @@ export default function EffectValueCell({
       style={cellStyle}
     >
       <div
-        className="text-centered"
+        className={classes.textCenter}
         style={{whiteSpace: 'pre-wrap', minWidth: '6rem'}}
       >
         {renderedEffect}

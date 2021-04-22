@@ -1,10 +1,10 @@
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
+import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import React, {useContext} from 'react';
 import {
   getConfiguredRangeLabel,
@@ -13,10 +13,13 @@ import {
 } from '../ScalesTableUtil';
 
 export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
+  const classes = useStyles();
+
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const dataSourceId = criterion.dataSources[0].id;
-  const {currentSubproblem} = useContext(WorkspaceContext);
-  const {observedRanges} = useContext(SubproblemContext);
+  const {currentSubproblem, observedRanges} = useContext(
+    CurrentSubproblemContext
+  );
 
   const usePercentage = getUsePercentage(criterion);
 
@@ -40,13 +43,13 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
         {criterion.title}
       </TableCell>
       <TableCell id={`theoretical-range-${criterion.id}`}>
-        <div className="text-centered">{theoreticalRangeLabel}</div>
+        <div className={classes.textCenter}>{theoreticalRangeLabel}</div>
       </TableCell>
       <TableCell id={`observed-range-${criterion.id}`}>
-        <div className="text-centered">{observedRangeLabel}</div>
+        <div className={classes.textCenter}>{observedRangeLabel}</div>
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
-        <div className="text-centered">{configuredRangeLabel}</div>
+        <div className={classes.textCenter}>{configuredRangeLabel}</div>
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>
         {getUnitLabel(

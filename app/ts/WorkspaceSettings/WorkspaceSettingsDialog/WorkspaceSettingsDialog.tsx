@@ -3,8 +3,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  Grid,
-  Paper
+  Grid
 } from '@material-ui/core';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import React, {useContext} from 'react';
@@ -44,6 +43,7 @@ export default function WorkspaceSettingsDialog({
               variant="contained"
               color="primary"
               onClick={resetToDefaults}
+              size="small"
             >
               Reset to default
             </Button>
@@ -62,6 +62,7 @@ export default function WorkspaceSettingsDialog({
           onClick={handleSaveButtonClicked}
           variant="contained"
           disabled={isSaveButtonDisabled}
+          size="small"
         >
           Save
         </Button>

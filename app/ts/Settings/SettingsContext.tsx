@@ -1,5 +1,4 @@
 import ICriterion from '@shared/interface/ICriterion';
-import {OurError} from '@shared/interface/IError';
 import ISettings from '@shared/interface/Settings/ISettings';
 import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
@@ -47,7 +46,7 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
 
   useEffect(() => {
     axios
-      .get(`/workspaces/${workspace.properties.id}/workspaceSettings`)
+      .get(`/api/v2/workspaces/${workspace.properties.id}/workspaceSettings`)
       .then((response: AxiosResponse<ISettingsMessage>) => {
         const incomingSettings: ISettings = response.data.settings;
         const incomingToggledColumns: IToggledColumns =
@@ -60,12 +59,8 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
           );
         }
       })
-      .catch(errorCallback);
-  }, []);
-
-  function errorCallback(error: OurError) {
-    setError(error);
-  }
+      .catch(setError);
+  }, [setError, workspace.properties.id]);
 
   function updateSettings(
     updatedSettings: ISettings,
@@ -88,13 +83,10 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
       };
       axios
         .put(
-          `/workspaces/${workspace.properties.id}/workspaceSettings`,
+          `/api/v2/workspaces/${workspace.properties.id}/workspaceSettings`,
           settingsCommand
         )
-        .then(() => {
-          window.location.reload();
-        })
-        .catch(errorCallback);
+        .catch(setError);
     }
   }
 

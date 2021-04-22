@@ -93,7 +93,7 @@ function clickElement(browser, rowNumber, columnNumber, element) {
     .useXpath()
     .setValue('//tr[' + rowNumber + ']/td[' + columnNumber + ']//input', value)
     .useCss()
-    .click('#deterministic-tab');
+    .click('#deterministic-results-tab');
 }
 
 module.exports = {

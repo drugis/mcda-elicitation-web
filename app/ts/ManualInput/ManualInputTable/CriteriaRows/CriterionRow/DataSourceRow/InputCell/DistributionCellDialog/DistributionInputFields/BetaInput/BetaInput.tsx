@@ -1,12 +1,12 @@
+import {Checkbox, FormControlLabel, Grid} from '@material-ui/core';
 import React, {useContext} from 'react';
-import AlphaValueInput from '../AlphaValueInput/AlphaValueInput';
-import BetaValueInput from '../BetaValueInput/BetaValueInput';
 import {
   getBetaAlphaError,
   getBetaBetaError
 } from '../../../../../../../../CellValidityService/CellValidityService';
-import {Checkbox, Grid} from '@material-ui/core';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
+import AlphaValueInput from '../AlphaValueInput/AlphaValueInput';
+import BetaValueInput from '../BetaValueInput/BetaValueInput';
 import EventsInput from './EventsInput/EventsInput';
 import SampleSizeInput from './SampleSizeInput/SampleSizeInput';
 
@@ -22,15 +22,17 @@ export default function BetaInput() {
   return (
     <>
       <Grid item xs={12}>
-        <label>
-          <Checkbox
-            id="use-direct-distribution-input-checkbox"
-            checked={useDirectBetaInput}
-            onChange={handleUseDirectBetaInputChanged}
-            color="primary"
-          />{' '}
-          Direct distribution input
-        </label>
+        <FormControlLabel
+          control={
+            <Checkbox
+              id="use-direct-distribution-input-checkbox"
+              checked={useDirectBetaInput}
+              onChange={handleUseDirectBetaInputChanged}
+              color="primary"
+            />
+          }
+          label="Direct distribution input"
+        />
       </Grid>
       {useDirectBetaInput ? (
         <></>

@@ -15,7 +15,7 @@ import DescriptionHeader from 'app/ts/EffectsTable/EffectsTableHeaders/Descripti
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -24,7 +24,7 @@ import SensitivityTableButtons from './SensitivityTableButtons/SensitivityTableB
 
 export default function SensitivityMeasurementsTable(): JSX.Element {
   const {filteredAlternatives, filteredCriteria, configuredRanges} = useContext(
-    SubproblemContext
+    CurrentSubproblemContext
   );
 
   function renderRows(): JSX.Element[] {
@@ -48,7 +48,9 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
       {!_.isEmpty(configuredRanges) ? (
         <>
           <Grid item xs={9}>
-            <em>Values can be changed by clicking them.</em>
+            <Typography>
+              <em>Values can be changed by clicking them.</em>
+            </Typography>
           </Grid>
           <Grid container item xs={3} justify="flex-end">
             <ClipboardButton targetId="#sensitivity-measurements-table" />

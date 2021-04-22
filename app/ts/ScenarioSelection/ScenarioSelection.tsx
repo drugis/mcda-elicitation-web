@@ -1,10 +1,11 @@
-import Grid from '@material-ui/core/Grid';
+import {Typography} from '@material-ui/core';
 import Select from '@material-ui/core/Select';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {ChangeEvent} from 'react';
-import getScenarioLocation from './getScenarioLocation';
+import {useHistory, useParams} from 'react-router';
+import {TTab} from '../Workspace/TabBar/TTab';
 
 export default function ScenarioSelection({
   scenarios,
@@ -13,9 +14,17 @@ export default function ScenarioSelection({
   scenarios: Record<string, IMcdaScenario>;
   currentScenario: IMcdaScenario;
 }) {
+  const {workspaceId, subproblemId, selectedTab} = useParams<{
+    workspaceId: string;
+    subproblemId: string;
+    selectedTab: TTab;
+  }>();
+  const history = useHistory();
+
   function handleScenarioChanged(event: ChangeEvent<{value: string}>): void {
-    const newScenarioId = scenarios[event.target.value].id;
-    window.location.assign(getScenarioLocation(newScenarioId));
+    history.push(
+      `/workspaces/${workspaceId}/problems/${subproblemId}/scenarios/${event.target.value}/${selectedTab}`
+    );
   }
 
   function getScenarioOptions(): JSX.Element[] {
@@ -30,21 +39,19 @@ export default function ScenarioSelection({
   }
 
   return (
-    <Grid item container>
-      <Grid item xs={3}>
-        <InlineHelp helpId="scenario">Scenario</InlineHelp>:
-      </Grid>
-      <Grid item xs={9}>
-        <Select
-          native
-          id="scenario-selector"
-          value={currentScenario.id}
-          onChange={handleScenarioChanged}
-          style={{minWidth: 220}}
-        >
-          {getScenarioOptions()}
-        </Select>
-      </Grid>
-    </Grid>
+    <>
+      <Typography display="inline">
+        <InlineHelp helpId="scenario">Scenario</InlineHelp>:{' '}
+      </Typography>
+      <Select
+        native
+        id="scenario-selector"
+        value={currentScenario.id}
+        onChange={handleScenarioChanged}
+        style={{minWidth: 220, maxWidth: 220}}
+      >
+        {getScenarioOptions()}
+      </Select>
+    </>
   );
 }

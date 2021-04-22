@@ -114,7 +114,7 @@ function deterministic(browser) {
   setLinearPvf(browser);
   util.delayedClick(
     browser,
-    '#deterministic-tab',
+    '#deterministic-results-tab',
     '#deterministic-weights-table'
   );
   browser

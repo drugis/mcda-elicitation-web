@@ -58,6 +58,7 @@ export default function EditTherapeuticContextButton() {
           id={'edit-therapeutic-context-button'}
           color="primary"
           onClick={openDialog}
+          size="small"
         >
           <Edit />
         </IconButton>
@@ -99,6 +100,7 @@ export default function EditTherapeuticContextButton() {
             color="primary"
             onClick={handleButtonClick}
             disabled={isButtonPressed}
+            size="small"
           >
             Edit
           </Button>

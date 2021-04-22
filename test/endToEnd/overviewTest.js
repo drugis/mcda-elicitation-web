@@ -32,7 +32,7 @@ function loadTestWorkspace(browser, title) {
     .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
-  return errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarNotPresent(browser);
 }
 
 function beforeEach(browser) {
@@ -159,14 +159,17 @@ function editTitle(browser) {
 
   loadTestWorkspace(browser, thrombolyticsTitle)
     .click('#edit-workspace-title-button')
-    .clearValue('#workspace-title-input')
-    .setValue('#workspace-title-input', newTitle)
-    .click('#save-workspace-title-button');
+    .clearValue('#new-workspace-title')
+    .setValue('#new-workspace-title', newTitle)
+    .click('#edit-workspace-title-confirm-button')
+    .waitForElementNotPresent('#edit-workspace-title-confirm-button')
+    .expect.element('#workspace-title')
+    .text.to.equal(newTitle);
 }
 
 function reorderCriteria(browser) {
   const firstCriterionTitlePath =
-    '//overview/span/div/div[4]/div[2]/div/div[1]/div/div/div[1]';
+    '//*[@id="criterion-card-0"]/div/div/div[1]/h6';
   const proximalDown = '//*[@id="move-down-proximalId"]';
   const proximalUp = '//*[@id="move-up-proximalId"]';
   loadTestWorkspace(browser, thrombolyticsTitle)
@@ -180,7 +183,7 @@ function reorderCriteria(browser) {
 
 function reorderAlternatives(browser) {
   const firstAlternativeTitlePath =
-    '//overview/span/div/div[3]/div[2]/table/tbody/tr[1]/td[1]';
+    '//*[@id="alternatives-container"]/div[2]/table/tbody/tr[1]/td[1]';
   const moveHeparinDown = '//*[@id="move-down-heparinId"]';
   const moveHeparinUp = '//*[@id="move-up-heparinId"]';
   loadTestWorkspace(browser, thrombolyticsTitle)
@@ -201,7 +204,7 @@ function reorderDataSources(browser) {
   );
 
   const firstDataSourceReferencePath =
-    '//overview/span/div/div[4]/div[2]/div/div[1]/div/div/div[5]/table/tbody/tr[1]/td[6]';
+    '//*[@id="criterion-card-0"]/div/div/div[5]/table/tbody/tr[1]/td[6]';
   const ref1Down = '//*[@id="move-down-ds1Id"]';
   const ref1Up = '//*[@id="move-up-ds1Id"]';
 

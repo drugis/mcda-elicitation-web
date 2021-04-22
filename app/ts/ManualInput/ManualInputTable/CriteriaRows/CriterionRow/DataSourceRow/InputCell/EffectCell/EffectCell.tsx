@@ -24,7 +24,7 @@ export default function EffectCell({alternativeId}: {alternativeId: string}) {
         dataSource.unitOfMeasurement.type === 'percentage'
       )
     );
-  }, [effects, dataSource.unitOfMeasurement]);
+  }, [effects, dataSource.unitOfMeasurement, effect]);
 
   function saveEffect(effect: Effect) {
     setEffect(effect);

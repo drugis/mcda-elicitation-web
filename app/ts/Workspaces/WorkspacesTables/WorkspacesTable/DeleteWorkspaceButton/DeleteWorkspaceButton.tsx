@@ -5,13 +5,15 @@ import {
   DialogContent,
   Grid,
   IconButton,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import {TWorkspaceType} from 'app/ts/Workspaces/TWorkspaceType';
 import Axios from 'axios';
 import React, {useContext, useState} from 'react';
@@ -25,6 +27,8 @@ export default function DeleteWorkspaceButton({
   workspace: IOldWorkspace | IInProgressWorkspaceProperties;
   deleteLocalWorkspace: (workspaceId: string) => void;
 }): JSX.Element {
+  const classes = useStyles();
+
   const {setError} = useContext(ErrorContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -37,8 +41,8 @@ export default function DeleteWorkspaceButton({
   }
 
   function handleDeleteButtonClick() {
-    const path = type === 'finished' ? 'workspaces' : 'api/v2/inProgress';
-    Axios.delete(`/${path}/${workspace.id}`).catch(setError);
+    const path = type === 'finished' ? 'workspaces' : 'inProgress';
+    Axios.delete(`/api/v2/${path}/${workspace.id}`).catch(setError);
     deleteLocalWorkspace(workspace.id);
     closeDialog();
   }
@@ -62,16 +66,19 @@ export default function DeleteWorkspaceButton({
           Delete workspace
         </DialogTitleWithCross>
         <DialogContent>
-          <Grid container>
+          <Grid container spacing={1}>
             <Grid item xs={12}>
-              Are you certain you want to permanently delete:{' '}
+              <Typography>
+                Are you certain you want to permanently delete:
+              </Typography>
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={11}>
-              <i>{workspace.title}</i>
+            <Grid item xs={12}>
+              <Typography>
+                <i>{workspace.title}</i>
+              </Typography>
             </Grid>
-            <Grid item xs={12} className="alert">
-              This cannot be undone!
+            <Grid item xs={12} className={classes.alert}>
+              <Typography>This cannot be undone!</Typography>
             </Grid>
           </Grid>
         </DialogContent>
@@ -81,6 +88,7 @@ export default function DeleteWorkspaceButton({
             variant="contained"
             color="secondary"
             onClick={handleDeleteButtonClick}
+            size="small"
           >
             Delete
           </Button>

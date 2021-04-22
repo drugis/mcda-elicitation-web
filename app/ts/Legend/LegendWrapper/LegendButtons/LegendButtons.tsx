@@ -1,5 +1,5 @@
 import {Button, ButtonGroup} from '@material-ui/core';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {generateSingleLetterLegend} from '../LegendUtil';
@@ -9,7 +9,7 @@ export default function LegendButtons({
 }: {
   setNewTitles: (newTitles: Record<string, string>) => void;
 }): JSX.Element {
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   function handleSingleLettersClick(): void {
     setNewTitles(generateSingleLetterLegend(filteredAlternatives));
@@ -22,7 +22,7 @@ export default function LegendButtons({
   }
 
   return (
-    <ButtonGroup>
+    <ButtonGroup size="small">
       <Button
         id="single-letter-button"
         color="primary"

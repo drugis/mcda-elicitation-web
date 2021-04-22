@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Warning from '@material-ui/icons/Warning';
 import _ from 'lodash';
@@ -19,8 +20,10 @@ export default function DisplayWarnings({
           key={`${identifier}-warning-${index}`}
           id={`${identifier}-warning-${index}`}
         >
-          <Warning />
-          {warning}
+          <Typography>
+            <Warning />
+            {warning}
+          </Typography>
         </Grid>
       ))}
     </>

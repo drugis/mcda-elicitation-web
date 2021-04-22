@@ -33,13 +33,17 @@ export default function OverviewCriterion() {
           />
         </Grid>
         <Grid id={`criterion-description-${criterion.id}`} item xs={12}>
-          <b>Description: </b>
-          {criterion.description}
+          <Typography>
+            <b>Description: </b>
+            {criterion.description}
+          </Typography>
         </Grid>
         <Grid item xs={12}>
-          <b>
-            <InlineHelp helpId="data-source"> Data sources:</InlineHelp>
-          </b>
+          <Typography>
+            <b>
+              <InlineHelp helpId="data-source"> Data sources:</InlineHelp>
+            </b>
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <OverviewDataSourceTable />

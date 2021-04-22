@@ -7,6 +7,7 @@ export default interface IAddSubproblemContext {
   isCriterionDeselectionDisabled: boolean;
   scaleRangesWarnings: string[];
   missingValueWarnings: string[];
+  newObservedRanges: Record<string, [number, number]>;
   configuredRanges: Record<string, [number, number]>;
   getIncludedDataSourceForCriterion: (criterion: ICriterion) => IDataSource;
   getSliderRangeForDS: (dataSourceId: string) => [number, number];

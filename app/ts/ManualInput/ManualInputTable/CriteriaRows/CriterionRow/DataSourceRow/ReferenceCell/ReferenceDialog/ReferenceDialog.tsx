@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -61,7 +62,7 @@ export default function ReferenceDialog({
       <DialogContent>
         <Grid container>
           <Grid item xs={6}>
-            Reference
+            <Typography>Reference</Typography>
           </Grid>
           <Grid id="reference" item xs={6}>
             <TextField
@@ -71,7 +72,7 @@ export default function ReferenceDialog({
             />
           </Grid>
           <Grid item xs={6}>
-            Reference link
+            <Typography>Reference link</Typography>
           </Grid>
           <Grid id="reference-link" item xs={6}>
             <TextField
@@ -90,6 +91,7 @@ export default function ReferenceDialog({
           onClick={handleEditButtonClick}
           variant="contained"
           disabled={!!error}
+          size="small"
         >
           Edit
         </Button>

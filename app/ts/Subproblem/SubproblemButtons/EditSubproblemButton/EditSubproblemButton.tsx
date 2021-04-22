@@ -11,13 +11,16 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SubproblemsContext} from 'app/ts/Workspace/SubproblemsContext/SubproblemsContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 
 export default function EditSubproblemButton() {
-  const {currentSubproblem, subproblems, editTitle} = useContext(
-    WorkspaceContext
+  const {subproblems} = useContext(SubproblemsContext);
+  const {currentSubproblem, editSubproblem} = useContext(
+    CurrentSubproblemContext
   );
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [title, setTitle] = useState<string>('');
   const [error, setError] = useState<string>(
@@ -27,7 +30,7 @@ export default function EditSubproblemButton() {
 
   useEffect(() => {
     setError(getTitleError(title, subproblems, currentSubproblem.id));
-  }, [title]);
+  }, [currentSubproblem.id, subproblems, title]);
 
   useEffect(() => {
     if (isDialogOpen) {
@@ -58,6 +61,10 @@ export default function EditSubproblemButton() {
     }
   }
 
+  function editTitle(title: string): void {
+    editSubproblem({...currentSubproblem, title: title});
+  }
+
   function isDisabled(): boolean {
     return !!error || isButtonPressed;
   }
@@ -69,6 +76,7 @@ export default function EditSubproblemButton() {
           id={'edit-subproblem-button'}
           color="primary"
           onClick={openDialog}
+          size="small"
         >
           <Edit />
         </IconButton>
@@ -91,6 +99,7 @@ export default function EditSubproblemButton() {
                 value={title}
                 onChange={titleChanged}
                 onKeyDown={handleKey}
+                variant="outlined"
                 autoFocus
                 fullWidth
               />
@@ -105,6 +114,7 @@ export default function EditSubproblemButton() {
             color="primary"
             onClick={handleButtonClick}
             disabled={isDisabled()}
+            size="small"
           >
             Edit
           </Button>

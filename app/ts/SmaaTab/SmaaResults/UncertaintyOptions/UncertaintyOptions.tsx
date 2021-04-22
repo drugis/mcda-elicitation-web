@@ -1,11 +1,13 @@
-import {FormControlLabel} from '@material-ui/core';
+import {FormControlLabel, Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
+import {CurrentScenarioContext} from 'app/ts/Scenarios/CurrentScenarioContext/CurrentScenarioContext';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {InlineQuestionMark} from 'help-popup';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
+import {getSmaaWarnings} from '../SmaaResultsUtil';
 
 export default function UncertaintyOptions() {
   const {
@@ -13,33 +15,76 @@ export default function UncertaintyOptions() {
     problemHasStochasticWeights,
     useMeasurementsUncertainty,
     useWeightsUncertainty,
-    warnings,
-    recalculate,
     setUseMeasurementsUncertainty,
     setUseWeightsUncertainty
   } = useContext(SmaaResultsContext);
+  const {currentScenario, updateScenario} = useContext(CurrentScenarioContext);
 
   const [isDirty, setIsDirty] = useState<boolean>(false);
+  const [
+    localUseMeasurementsUncertainty,
+    setLocalUseMeasurementsUncertainty
+  ] = useState(useMeasurementsUncertainty);
+
+  const [localUseWeightsUncertainty, setLocalUseWeightsUncertainty] = useState(
+    useWeightsUncertainty
+  );
+
+  const [warnings, setWarnings] = useState<string[]>(
+    getSmaaWarnings(
+      localUseMeasurementsUncertainty,
+      localUseWeightsUncertainty,
+      problemHasStochasticMeasurements,
+      problemHasStochasticWeights
+    )
+  );
+
+  useEffect(() => {
+    setWarnings(
+      getSmaaWarnings(
+        localUseMeasurementsUncertainty,
+        localUseWeightsUncertainty,
+        problemHasStochasticMeasurements,
+        problemHasStochasticWeights
+      )
+    );
+  }, [
+    problemHasStochasticMeasurements,
+    problemHasStochasticWeights,
+    localUseMeasurementsUncertainty,
+    localUseWeightsUncertainty
+  ]);
 
   function handleMeasurementsUncertaintyChanged(): void {
     setIsDirty(true);
-    setUseMeasurementsUncertainty(!useMeasurementsUncertainty);
+    setLocalUseMeasurementsUncertainty(!localUseMeasurementsUncertainty);
   }
 
   function handleWeightsUncertaintyChanged(): void {
     setIsDirty(true);
-    setUseWeightsUncertainty(!useWeightsUncertainty);
+    setLocalUseWeightsUncertainty(!localUseWeightsUncertainty);
   }
 
   function handleRecalculateClick(): void {
     setIsDirty(false);
-    recalculate();
+    setUseMeasurementsUncertainty(localUseMeasurementsUncertainty);
+    setUseWeightsUncertainty(localUseWeightsUncertainty);
+    updateScenario({
+      ...currentScenario,
+      state: {
+        ...currentScenario.state,
+        uncertaintyOptions: {
+          measurements: localUseMeasurementsUncertainty,
+          weights: localUseWeightsUncertainty
+        }
+      }
+    });
   }
 
   return (
     <Grid item container>
       <Grid item xs={3}>
-        Take into account uncertainty in:
+        <Typography>Take into account uncertainty in:</Typography>
       </Grid>
       <Grid container item xs={9}>
         <Grid container item xs={12} alignItems="center">
@@ -48,7 +93,7 @@ export default function UncertaintyOptions() {
             control={
               <Checkbox
                 id="measurements-uncertainty-checkbox"
-                checked={useMeasurementsUncertainty}
+                checked={localUseMeasurementsUncertainty}
                 onChange={handleMeasurementsUncertaintyChanged}
                 disabled={!problemHasStochasticMeasurements}
                 color="primary"
@@ -65,7 +110,7 @@ export default function UncertaintyOptions() {
             control={
               <Checkbox
                 id="weights-uncertainty-checkbox"
-                checked={useWeightsUncertainty}
+                checked={localUseWeightsUncertainty}
                 onChange={handleWeightsUncertaintyChanged}
                 disabled={!problemHasStochasticWeights}
                 color="primary"
@@ -84,6 +129,7 @@ export default function UncertaintyOptions() {
           variant="contained"
           onClick={handleRecalculateClick}
           disabled={!isDirty}
+          size="small"
         >
           Recalculate
         </Button>

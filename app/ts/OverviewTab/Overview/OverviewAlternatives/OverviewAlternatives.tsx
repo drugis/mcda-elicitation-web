@@ -40,7 +40,7 @@ export default function OverviewAlternatives(): JSX.Element {
   }
 
   return (
-    <Grid item container xs={12}>
+    <Grid item container xs={12} id="alternatives-container">
       <Grid item xs={12}>
         <Typography variant="h5">
           <InlineHelp helpId="alternative">Alternatives </InlineHelp>

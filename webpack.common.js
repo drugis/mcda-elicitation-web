@@ -13,7 +13,7 @@ const MCDA_HOST = process.env.MCDA_HOST;
 
 let config = {
   entry: {
-    main: basePath + '/app/js/main.js',
+    main: basePath + '/app/ts/main.tsx',
     signin: basePath + 'app/js/signin.js',
     manual: basePath + '/app/js/manual.js',
     error: basePath + '/app/js/error.js'
@@ -24,7 +24,7 @@ let config = {
     path: basePath + '/tscomp/dist/',
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
-    publicPath: ''
+    publicPath: '/'
   },
 
   module: {
@@ -45,7 +45,7 @@ let config = {
       },
       {
         test: /\.js$/,
-        use: ['babel-loader', 'angular1-templateurl-loader'],
+        use: ['babel-loader'],
         exclude: [
           /.*\/app\/ts.*/,
           /.*angular-foundation-6.*/, // uses $templatecache so dont replace

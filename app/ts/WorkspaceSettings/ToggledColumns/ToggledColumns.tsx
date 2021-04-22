@@ -1,4 +1,10 @@
-import {Button, Checkbox, Grid} from '@material-ui/core';
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Typography
+} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
@@ -52,9 +58,11 @@ export default function ToggledColumns(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        <InlineHelp helpId="toggled-columns">
-          Effects table columns to show
-        </InlineHelp>
+        <Typography>
+          <InlineHelp helpId="toggled-columns">
+            Effects table columns to show
+          </InlineHelp>
+        </Typography>
       </Grid>
       <Grid container item xs={6}>
         <Grid item xs={12}>
@@ -63,52 +71,62 @@ export default function ToggledColumns(): JSX.Element {
             variant="contained"
             color="primary"
             onClick={toggleSelection}
+            size="small"
           >
             (De)select all
           </Button>
         </Grid>
         <Grid item xs={12}>
-          {' '}
-          <label id="description-column-checkbox">
-            <Checkbox
-              checked={description}
-              onChange={handleShowDescriptionsChanged}
-              color="primary"
-            />{' '}
-            Description
-          </label>
+          <FormControlLabel
+            id="description-column-checkbox"
+            control={
+              <Checkbox
+                checked={description}
+                onChange={handleShowDescriptionsChanged}
+                color="primary"
+              />
+            }
+            label="Description"
+          />
         </Grid>
         <Grid item xs={12}>
-          {' '}
-          <label id="units-column-checkbox">
-            <Checkbox
-              checked={units}
-              onChange={handleShowUnitsChanged}
-              color="primary"
-            />{' '}
-            Units
-          </label>
+          <FormControlLabel
+            id="units-column-checkbox"
+            control={
+              <Checkbox
+                checked={units}
+                onChange={handleShowUnitsChanged}
+                color="primary"
+              />
+            }
+            label="Units"
+          />
         </Grid>
         <Grid item xs={12}>
-          {' '}
-          <label id="reference-column-checkbox">
-            <Checkbox
-              checked={references}
-              onChange={handleShowReferencesChanged}
-              color="primary"
-            />{' '}
-            Reference
-          </label>
+          <FormControlLabel
+            id="reference-column-checkbox"
+            control={
+              <Checkbox
+                checked={references}
+                onChange={handleShowReferencesChanged}
+                color="primary"
+              />
+            }
+            label="Reference"
+          />
         </Grid>
         <Grid item xs={12}>
-          <label id="uncertainties-column-checkbox">
-            <Checkbox
-              checked={strength}
-              onChange={handleShowStrengthChanged}
-              color="primary"
-            />{' '}
-            Strength of evidence / Uncertainties
-          </label>
+          <FormControlLabel
+            id="uncertainties-column-checkbox"
+            control={
+              <Checkbox
+                checked={strength}
+                onChange={handleShowStrengthChanged}
+                color="primary"
+              />
+            }
+            label="Strength of evidence / Uncertainties"
+          />
         </Grid>
       </Grid>
     </Grid>

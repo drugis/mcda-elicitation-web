@@ -1,12 +1,12 @@
-import {Grid, Select} from '@material-ui/core';
+import {Grid, Select, Typography} from '@material-ui/core';
 import {DeterministicResultsContext} from 'app/ts/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import SelectOptions from 'app/ts/SelectOptions/SelectOptions';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 
 export default function PreferencesSensitivitySelector(): JSX.Element {
-  const {filteredCriteria} = useContext(SubproblemContext);
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
   const {
     preferencesSensitivityCriterion,
     setPreferencesSensitivityCriterion
@@ -20,7 +20,7 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={3}>
-        Weight given to:
+        <Typography>Weight given to:</Typography>
       </Grid>
       <Grid item xs={9}>
         <Select

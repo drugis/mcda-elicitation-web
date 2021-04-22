@@ -47,7 +47,7 @@ export function CreateWorkspaceContextProviderComponent({
 
   useEffect(() => {
     axios
-      .get('/premades')
+      .get('/api/v2/premades')
       .then((response: AxiosResponse<IPremadeWorkspaces>) => {
         setExamples(response.data.examples);
         setTutorials(response.data.tutorials);
@@ -136,7 +136,7 @@ function createAndGoToInprogressWorkspace(
   axios
     .post('/api/v2/inProgress')
     .then((response: AxiosResponse<{id: string}>) => {
-      const url = `/#!/manual-input/${response.data.id}`;
+      const url = `/manual-input/${response.data.id}`;
       window.location.assign(url);
     })
     .catch(setError);
@@ -147,7 +147,7 @@ function createAndGoToWorkspace(
   setError: (error: IError) => void
 ): void {
   axios
-    .post('/workspaces/', workspaceCommand)
+    .post('/api/v2/workspaces/', workspaceCommand)
     .then(goToWorkspace)
     .catch(setError);
 }
@@ -157,13 +157,13 @@ function createAndGoToPremadeWorkspace(
   setError: (error: IError) => void
 ): void {
   axios
-    .post('/workspaces/createPremade', selectedProblem)
+    .post('/api/v2/workspaces/createPremade', selectedProblem)
     .then(goToWorkspace)
     .catch(setError);
 }
 
 function goToWorkspace(response: AxiosResponse<IWorkspaceInfo>): void {
   const {id, defaultScenarioId, defaultSubProblemId} = response.data;
-  const url = `/#!/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/evidence`;
+  const url = `/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/overview`;
   window.location.assign(url);
 }

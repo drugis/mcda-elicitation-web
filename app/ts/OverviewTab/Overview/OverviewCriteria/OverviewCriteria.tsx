@@ -79,7 +79,12 @@ export default function OverviewCriteria() {
           const previousCriterionId = getPreviousId(index, criteria);
           const nextCriterionId = getNextId(index, criteria);
           return (
-            <Grid item xs={12} key={criterion.id}>
+            <Grid
+              item
+              xs={12}
+              key={criterion.id}
+              id={`criterion-card-${index}`}
+            >
               <OverviewCriterionContextProviderComponent
                 criterion={criterion}
                 nextCriterionId={nextCriterionId}
@@ -95,7 +100,7 @@ export default function OverviewCriteria() {
   }
 
   return (
-    <Grid container item xs={12}>
+    <Grid container item xs={12} id="criteria-container">
       <Grid item xs={12}>
         <Typography variant="h5">
           <InlineHelp helpId="criterion">Criteria</InlineHelp>

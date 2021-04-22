@@ -10,7 +10,7 @@ const errorService = require('./util/errorService.js');
 
 function login(browser) {
   loginService.login(browser);
-  errorService.isErrorBarHidden(browser);
+  errorService.isErrorBarNotPresent(browser);
   browser.waitForElementVisible('#workspaces-header').end();
 }
 

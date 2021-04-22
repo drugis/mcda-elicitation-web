@@ -23,6 +23,7 @@ export default function CreateWorkspace(): JSX.Element {
           color="primary"
           variant="contained"
           onClick={openDialog}
+          size="small"
         >
           <Add /> Add workspace
         </Button>

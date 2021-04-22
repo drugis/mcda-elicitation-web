@@ -80,6 +80,7 @@ export default function AddSubproblemDialog({
               color="primary"
               onClick={handleButtonClick}
               disabled={isDisabled()}
+              size="small"
             >
               Add
             </Button>

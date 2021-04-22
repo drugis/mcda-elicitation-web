@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
@@ -10,7 +11,7 @@ export default function Warnings() {
       {warnings.map((warning: string, index: number) => {
         return (
           <Grid key={index} item xs={12} className="alert">
-            {warning}
+            <Typography>{warning}</Typography>
           </Grid>
         );
       })}

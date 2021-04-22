@@ -37,6 +37,7 @@ export default function GenerateDistributionsButton() {
           color="primary"
           variant="contained"
           onClick={openDialog}
+          size="small"
         >
           Generate distributions
         </Button>

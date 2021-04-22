@@ -1,10 +1,6 @@
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import Axios, {AxiosResponse} from 'axios';
-import {HelpContextProviderComponent} from 'help-popup';
 import React, {useEffect, useState} from 'react';
-import {ErrorContextProviderComponent} from '../Error/ErrorContext';
-import ErrorHandler from '../Error/ErrorHandler';
-import {lexicon} from '../InlineHelp/lexicon';
 import ManualInput from './ManualInput';
 import {ManualInputContextProviderComponent} from './ManualInputContext';
 
@@ -18,32 +14,20 @@ export default function ManualInputWrapper() {
   function getInProgressWorkspace() {
     const id = window.location.toString().split('manual-input/')[1];
     setInProgressId(id);
-    Axios.get(`api/v2/inProgress/${id}`).then((response: AxiosResponse) => {
+    Axios.get(`/api/v2/inProgress/${id}`).then((response: AxiosResponse) => {
       setMessage(response.data);
       setIsLoaded(true);
     });
   }
 
-  return (
-    <ErrorContextProviderComponent>
-      <ErrorHandler>
-        {isLoaded ? (
-          <HelpContextProviderComponent
-            lexicon={lexicon}
-            host={'@MCDA_HOST'}
-            path="/manual.html"
-          >
-            <ManualInputContextProviderComponent
-              inProgressId={inProgressId}
-              message={message}
-            >
-              <ManualInput />
-            </ManualInputContextProviderComponent>
-          </HelpContextProviderComponent>
-        ) : (
-          <span>...loading</span>
-        )}
-      </ErrorHandler>
-    </ErrorContextProviderComponent>
+  return isLoaded ? (
+    <ManualInputContextProviderComponent
+      inProgressId={inProgressId}
+      message={message}
+    >
+      <ManualInput />
+    </ManualInputContextProviderComponent>
+  ) : (
+    <span>...loading</span>
   );
 }

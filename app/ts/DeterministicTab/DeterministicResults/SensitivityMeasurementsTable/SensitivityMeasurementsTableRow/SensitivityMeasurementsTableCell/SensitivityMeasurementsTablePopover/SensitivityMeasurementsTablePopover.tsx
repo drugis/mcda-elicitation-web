@@ -1,6 +1,5 @@
-import {Grid, Popover, Slider, TextField} from '@material-ui/core';
-import {CSSProperties} from '@material-ui/core/styles/withStyles';
-import React, {ChangeEvent, useState} from 'react';
+import {Grid, Popover, Slider, TextField, Typography} from '@material-ui/core';
+import React, {ChangeEvent, CSSProperties, useState} from 'react';
 
 export default function SensitivityMeasurementsTablePopover({
   anchorEl,
@@ -61,7 +60,7 @@ export default function SensitivityMeasurementsTablePopover({
     >
       <Grid container style={{minWidth: '300px', minHeight: '100px'}}>
         <Grid item xs={2} style={marginTop}>
-          {min}
+          <Typography>{min}</Typography>
         </Grid>
         <Grid item xs={8} style={marginTop}>
           <Slider
@@ -77,7 +76,7 @@ export default function SensitivityMeasurementsTablePopover({
           />
         </Grid>
         <Grid item xs={2} style={marginTop}>
-          {max}
+          <Typography>{max}</Typography>
         </Grid>
         <Grid item xs={12} style={{textAlign: 'center', marginBottom: '20px'}}>
           <TextField

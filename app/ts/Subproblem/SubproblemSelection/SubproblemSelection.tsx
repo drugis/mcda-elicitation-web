@@ -1,21 +1,21 @@
+import {Typography} from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SubproblemsContext} from 'app/ts/Workspace/SubproblemsContext/SubproblemsContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
 
-export default function SubproblemSelection({
-  subproblemChanged
-}: {
-  subproblemChanged: (subproblem: IOldSubproblem) => void;
-}) {
-  const {subproblems, currentSubproblem} = useContext(WorkspaceContext);
+export default function SubproblemSelection() {
+  const {subproblems} = useContext(SubproblemsContext);
+  const {currentSubproblem, setCurrentSubproblem} = useContext(
+    CurrentSubproblemContext
+  );
 
   function handleSubproblemChanged(event: ChangeEvent<{value: string}>): void {
-    subproblemChanged(subproblems[event.target.value]);
+    setCurrentSubproblem(subproblems[event.target.value]);
   }
 
   function getSubproblemOptions(): JSX.Element[] {
@@ -29,22 +29,21 @@ export default function SubproblemSelection({
   }
 
   return currentSubproblem ? (
-    <Grid item container>
-      <Grid item xs={3}>
-        <InlineHelp helpId="problem">Problem</InlineHelp>:
-      </Grid>
-      <Grid item xs={9}>
-        <Select
-          native
-          id="subproblem-selector"
-          value={currentSubproblem.id}
-          onChange={handleSubproblemChanged}
-          style={{minWidth: 220}}
-        >
-          {getSubproblemOptions()}
-        </Select>
-      </Grid>
-    </Grid>
+    <>
+      <Typography display="inline">
+        <InlineHelp helpId="problem">Problem</InlineHelp>
+      </Typography>
+      :{' '}
+      <Select
+        native
+        id="subproblem-selector"
+        value={currentSubproblem.id}
+        onChange={handleSubproblemChanged}
+        style={{minWidth: 220, maxWidth: 220}}
+      >
+        {getSubproblemOptions()}
+      </Select>
+    </>
   ) : (
     <CircularProgress />
   );

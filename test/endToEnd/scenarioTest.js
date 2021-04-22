@@ -32,7 +32,7 @@ function beforeEach(browser) {
     .waitForElementVisible('#workspace-title');
 
   errorService
-    .isErrorBarHidden(browser)
+    .isErrorBarNotPresent(browser)
     .click('#preferences-tab')
     .pause(100)
     .waitForElementVisible('#partial-value-functions-block');
@@ -109,7 +109,7 @@ function switchInDeterministic(browser) {
     .click('#copy-scenario-confirm-button')
     .pause(100)
     .assert.containsText('#scenario-selector', scenarioTitle)
-    .click('#deterministic-tab')
+    .click('#deterministic-results-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
     .click('#scenario-selector')
     .waitForElementVisible('#scenario-selector > option:nth-child(1)')
@@ -126,7 +126,7 @@ function switchInSmaa(browser) {
     .click('#copy-scenario-confirm-button')
     .waitForElementNotPresent('#copy-scenario-confirm-button')
     .assert.containsText('#scenario-selector', scenarioTitle)
-    .click('#smaa-tab')
+    .click('#smaa-results-tab')
     .waitForElementVisible('#effects-table-header')
     .waitForElementVisible('#scenario-selector')
     .click('#scenario-selector')

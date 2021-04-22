@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
@@ -35,7 +36,7 @@ export default function AlphaValueInput({
   return (
     <>
       <Grid item xs={6}>
-        Alpha
+        <Typography>Alpha</Typography>
       </Grid>
       <Grid item xs={6}>
         <TextField

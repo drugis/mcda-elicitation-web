@@ -14,7 +14,13 @@ import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {OverviewCriterionContext} from 'app/ts/Workspace/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import {OverviewDataSourceContext} from '../../../OverviewDataSourceTable/OverviewDataSourceContext/OverviewDataSourceContext';
 
 export default function EditOverviewDataSourceDialog({
@@ -34,19 +40,29 @@ export default function EditOverviewDataSourceDialog({
     _.cloneDeep(dataSource)
   );
 
+  const hasMissingReference = useCallback((): boolean => {
+    return criterion.dataSources.length > 1 && localDataSource.reference === '';
+  }, [criterion.dataSources.length, localDataSource.reference]);
+
+  const getError = useCallback((): string => {
+    if (hasMissingReference()) {
+      return 'Missing reference';
+    } else if (hasDuplicateReference(localDataSource, criterion.dataSources)) {
+      return 'Duplicate reference';
+    } else {
+      return '';
+    }
+  }, [criterion.dataSources, hasMissingReference, localDataSource]);
+
   useEffect(() => {
     setError(getError());
-  }, [localDataSource]);
+  }, [getError, localDataSource]);
 
   useEffect(() => {
     setIsButtonPressed(false);
     setLocalDataSource(_.cloneDeep(dataSource));
-  }, [isDialogOpen]);
+  }, [dataSource, isDialogOpen]);
   const handleKey = createEnterHandler(handleButtonClick, isDisabled);
-
-  function hasMissingReference(): boolean {
-    return criterion.dataSources.length > 1 && localDataSource.reference === '';
-  }
 
   function hasDuplicateReference(
     dataSource: IDataSource,
@@ -62,16 +78,6 @@ export default function EditOverviewDataSourceDialog({
 
   function closeDialog(): void {
     setIsDialogOpen(false);
-  }
-
-  function getError(): string {
-    if (hasMissingReference()) {
-      return 'Missing reference';
-    } else if (hasDuplicateReference(localDataSource, criterion.dataSources)) {
-      return 'Duplicate reference';
-    } else {
-      return '';
-    }
   }
 
   function unitChanged(event: ChangeEvent<HTMLTextAreaElement>): void {
@@ -188,6 +194,7 @@ export default function EditOverviewDataSourceDialog({
           color="primary"
           onClick={handleButtonClick}
           disabled={isDisabled()}
+          size="small"
         >
           Edit
         </Button>

@@ -2,12 +2,12 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 
 export function getLink(workspace: IOldWorkspace): string {
   return (
-    '/#!/workspaces/' +
+    '/workspaces/' +
     workspace.id +
     '/problems/' +
     workspace.defaultSubProblemId +
     '/scenarios/' +
     workspace.defaultScenarioId +
-    '/evidence'
+    '/overview'
   );
 }

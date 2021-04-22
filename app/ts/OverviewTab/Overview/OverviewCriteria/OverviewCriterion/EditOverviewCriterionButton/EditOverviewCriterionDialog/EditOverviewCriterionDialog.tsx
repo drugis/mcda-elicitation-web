@@ -39,12 +39,12 @@ export default function EditOverviewCriterionDialog({
 
   useEffect(() => {
     setError(getTitleError(localCriterion.title, criteria, criterion.id));
-  }, [localCriterion]);
+  }, [criteria, criterion.id, localCriterion]);
 
   useEffect(() => {
     setIsButtonPressed(false);
     setLocalCriterion(_.cloneDeep(criterion));
-  }, [isDialogOpen]);
+  }, [criterion, isDialogOpen]);
 
   function closeDialog(): void {
     setIsDialogOpen(false);
@@ -122,6 +122,7 @@ export default function EditOverviewCriterionDialog({
           color="primary"
           onClick={handleButtonClick}
           disabled={isDisabled()}
+          size="small"
         >
           Edit
         </Button>

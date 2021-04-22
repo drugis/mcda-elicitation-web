@@ -6,8 +6,9 @@ import {
   getPercentifiedValueLabel
 } from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
+import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import React, {MouseEvent, useContext, useEffect, useState} from 'react';
 import SensitivityMeasurementsTablePopover from './SensitivityMeasurementsTablePopover/SensitivityMeasurementsTablePopover';
 
@@ -18,9 +19,11 @@ export default function SensitivityMeasurementsTableCell({
   criterion: ICriterion;
   alternativeId: string;
 }): JSX.Element {
+  const classes = useStyles();
+
   const {getUsePercentage} = useContext(SettingsContext);
   const {getStepSizeForCriterion, getConfiguredRange} = useContext(
-    SubproblemContext
+    CurrentSubproblemContext
   );
   const {sensitivityTableValues, setCurrentValue} = useContext(
     DeterministicResultsContext
@@ -87,7 +90,11 @@ export default function SensitivityMeasurementsTableCell({
 
   return (
     <TableCell id={`sensitivity-cell-${criterion.id}-${alternativeId}`}>
-      <Button className="text-centered" onClick={openPopover} variant="text">
+      <Button
+        className={classes.textCenter}
+        onClick={openPopover}
+        variant="text"
+      >
         <a> {getLabel()}</a>
       </Button>
       <SensitivityMeasurementsTablePopover

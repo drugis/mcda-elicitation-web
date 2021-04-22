@@ -13,9 +13,9 @@ import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import ISensitivityValue from 'app/ts/interface/ISensitivityValue';
-import {PreferencesContext} from 'app/ts/PreferencesTab/PreferencesContext';
+import {CurrentScenarioContext} from 'app/ts/Scenarios/CurrentScenarioContext/CurrentScenarioContext';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
@@ -45,8 +45,8 @@ export function DeterministicResultsContextProviderComponent({
     filteredAlternatives,
     filteredEffects,
     filteredWorkspace
-  } = useContext(SubproblemContext);
-  const {pvfs, currentScenario} = useContext(PreferencesContext);
+  } = useContext(CurrentSubproblemContext);
+  const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
 
   const [sensitivityTableValues, setSensitivityTableValues] = useState<
     Record<string, Record<string, ISensitivityValue>>
@@ -107,9 +107,11 @@ export function DeterministicResultsContextProviderComponent({
         ...pataviProblem,
         method: 'deterministic'
       };
-
+      setWeights(undefined);
+      setBaseTotalValues(undefined);
+      setBaseValueProfiles(undefined);
       axios
-        .post('/patavi/deterministicResults', pataviCommand)
+        .post('/api/v2/patavi/deterministicResults', pataviCommand)
         .then((result: AxiosResponse<IDeterministicResults>) => {
           setWeights(result.data.weights);
           setBaseTotalValues(result.data.total);
@@ -129,9 +131,9 @@ export function DeterministicResultsContextProviderComponent({
           criterion: measurementSensitivityCriterion.id
         }
       };
-
+      setMeasurementsSensitivityResults(undefined);
       axios
-        .post('/patavi/measurementsSensitivity', pataviCommand)
+        .post('/api/v2/patavi/measurementsSensitivity', pataviCommand)
         .then((result: AxiosResponse<IMeasurementsSensitivityResults>) => {
           setMeasurementsSensitivityResults(result.data.total);
         })
@@ -153,9 +155,9 @@ export function DeterministicResultsContextProviderComponent({
           criterion: preferencesSensitivityCriterion.id
         }
       };
-
+      setPreferencesSensitivityResults(undefined);
       axios
-        .post('/patavi/preferencesSensitivity', pataviCommand)
+        .post('/api/v2/patavi/preferencesSensitivity', pataviCommand)
         .then((result: AxiosResponse<IPreferencesSensitivityResults>) => {
           setPreferencesSensitivityResults(result.data.total);
         })
@@ -173,15 +175,11 @@ export function DeterministicResultsContextProviderComponent({
         true
       );
       getDeterministicResults(pataviProblem);
-      getMeasurementsSensitivityResults(pataviProblem);
-      getPreferencesSensitivityResults(pataviProblem);
     }
   }, [
     currentScenario.state.prefs,
     filteredWorkspace,
     getDeterministicResults,
-    getMeasurementsSensitivityResults,
-    getPreferencesSensitivityResults,
     pvfs
   ]);
 
@@ -282,8 +280,12 @@ export function DeterministicResultsContextProviderComponent({
       }
     };
 
+    setRecalculatedTotalValues(undefined);
+    setRecalculatedValueProfiles(undefined);
+    setAreRecalculatedPlotsLoading(true);
+
     axios
-      .post('/patavi/recalculateDeterministicResults', pataviCommand)
+      .post('/api/v2/patavi/recalculateDeterministicResults', pataviCommand)
       .then((result: AxiosResponse<IDeterministicResults>) => {
         setRecalculatedTotalValues(result.data.total);
         setRecalculatedValueProfiles(result.data.value);

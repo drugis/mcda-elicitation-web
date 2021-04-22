@@ -6,7 +6,7 @@ const constants = require('./util/constants');
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Logout via user name': logoutViaName,
+  'Logout via the button': logoutButton,
   'Logout via URL': logoutViaURL,
   'Logout and login with the same user': sameUserLogoutLogin,
   'Logout and login with different users': logoutLoginOtherUser
@@ -20,11 +20,8 @@ function afterEach(browser) {
   browser.waitForElementVisible('#signinButton').end();
 }
 
-function logoutViaName(browser) {
-  browser
-    .moveToElement('#user-image-link', 0, 0)
-    .moveToElement('#logout-link', 0, 0)
-    .click('#logout-link');
+function logoutButton(browser) {
+  browser.click('#logout-button');
 }
 
 function logoutViaURL(browser) {

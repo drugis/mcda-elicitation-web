@@ -11,6 +11,7 @@ export default function ResetButton() {
       variant="contained"
       color="primary"
       onClick={resetToDefault}
+      size="small"
     >
       Reset to default
     </Button>

@@ -1,4 +1,10 @@
-import {Grid, Radio, RadioGroup} from '@material-ui/core';
+import {
+  FormControlLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Typography
+} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
 import React, {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
@@ -16,8 +22,10 @@ export default function ShowPercentages(): JSX.Element {
   return (
     <Grid container item xs={12}>
       <Grid item xs={6}>
-        Show{' '}
-        <InlineHelp helpId="percentages">percentages or decimals</InlineHelp>
+        <Typography>
+          Show{' '}
+          <InlineHelp helpId="percentages">percentages or decimals</InlineHelp>
+        </Typography>
       </Grid>
       <Grid item xs={6}>
         <RadioGroup
@@ -25,12 +33,18 @@ export default function ShowPercentages(): JSX.Element {
           value={showPercentages}
           onChange={handleRadioChanged}
         >
-          <label id="show-percentages-radio">
-            <Radio value="percentage" /> Percentages
-          </label>
-          <label id="show-decimals-radio">
-            <Radio value="decimal" /> Decimals
-          </label>
+          <FormControlLabel
+            id="show-percentages-radio"
+            value="percentage"
+            control={<Radio color="primary" />}
+            label="Percentages"
+          />
+          <FormControlLabel
+            id="show-decimals-radio"
+            value="decimal"
+            control={<Radio color="primary" />}
+            label="Decimals"
+          />
         </RadioGroup>
       </Grid>
     </Grid>

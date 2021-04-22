@@ -23,7 +23,7 @@ function beforeEach(browser) {
     .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
-    .click('#deterministic-tab')
+    .click('#deterministic-results-tab')
     .waitForElementVisible('#sensitivity-measurements-header')
     .waitForElementVisible('#sensitivity-measurements-table');
 }

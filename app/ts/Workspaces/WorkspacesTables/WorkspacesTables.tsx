@@ -17,7 +17,7 @@ export default function WorkspacesTables(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/workspaces/')
+      .get('/api/v2/workspaces/')
       .then((result: AxiosResponse<IOldWorkspace[]>) => {
         setWorkspaces(_.sortBy(result.data, ['title']));
       })
@@ -29,7 +29,7 @@ export default function WorkspacesTables(): JSX.Element {
         setInProgressWorkspaces(_.sortBy(result.data, ['title']));
       })
       .catch(setError);
-  }, []);
+  }, [setError]);
 
   return (
     <>

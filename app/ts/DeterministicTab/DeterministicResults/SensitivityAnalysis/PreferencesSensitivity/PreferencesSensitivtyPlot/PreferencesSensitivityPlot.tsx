@@ -2,12 +2,12 @@ import {DeterministicResultsContext} from 'app/ts/DeterministicTab/Deterministic
 import {getSensitivityLineChartSettings} from 'app/ts/DeterministicTab/DeterministicResultsUtil';
 import {LegendContext} from 'app/ts/Legend/LegendContext';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext} from 'react';
 
 export default function PreferencesSensitivityPlot(): JSX.Element {
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
   const {legendByAlternativeId} = useContext(LegendContext);
   const {
     preferencesSensitivityCriterion,

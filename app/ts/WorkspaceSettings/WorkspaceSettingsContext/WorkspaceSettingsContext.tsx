@@ -41,7 +41,7 @@ export function WorkspaceSettingsContextProviderComponent({
       setIsSaveButtonDisabled(false);
       setSettings(settings, toggledColumns);
     }
-  }, [isDialogOpen]);
+  }, [isDialogOpen, settings, toggledColumns]);
 
   function setSettings(
     newSettings: ISettings,

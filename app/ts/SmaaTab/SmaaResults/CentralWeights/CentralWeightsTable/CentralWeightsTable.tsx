@@ -9,7 +9,7 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -20,7 +20,7 @@ export default function CentralWeightsTable({
   centralWeights: Record<string, ICentralWeight>;
 }) {
   const {filteredAlternatives, filteredCriteria} = useContext(
-    SubproblemContext
+    CurrentSubproblemContext
   );
 
   function CriterionHeaders(): JSX.Element {

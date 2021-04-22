@@ -17,7 +17,7 @@ function checkRelativeSmaaResults(browser) {
     .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
-    .click('#smaa-tab')
+    .click('#smaa-results-tab')
     .waitForElementVisible('#effects-table-header')
     .waitForElementVisible('#effects-table')
     .waitForElementVisible('#rank-acceptabilities-plot')

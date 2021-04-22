@@ -14,10 +14,10 @@ export default function DoneButton() {
   function handleDoneClick() {
     if (!isButtonPressed) {
       setIsButtonPressed(true);
-      Axios.post(`api/v2/inProgress/${id}/doCreateWorkspace`)
+      Axios.post(`/api/v2/inProgress/${id}/doCreateWorkspace`)
         .then((response: AxiosResponse<IWorkspaceInfo>) => {
           const {id, defaultScenarioId, defaultSubProblemId} = response.data;
-          const url = `/#!/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/evidence`;
+          const url = `/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/overview`;
           window.location.assign(url);
         })
         .catch((error: OurError) => {

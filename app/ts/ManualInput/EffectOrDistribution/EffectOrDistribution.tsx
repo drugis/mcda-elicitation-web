@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import React, {ChangeEvent, useContext} from 'react';
@@ -18,7 +19,9 @@ export default function EffectOrDistribution() {
 
   return (
     <>
-      <Grid item>Table input mode</Grid>
+      <Grid item>
+        <Typography>Table input mode</Typography>
+      </Grid>
       <Grid item>
         <Select
           native

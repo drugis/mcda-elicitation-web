@@ -48,16 +48,15 @@ function goToHomeFromLoginName(browser) {
     .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
-  util.delayedClick(browser, '#user-image-link', '#create-workspace-button');
+  util.delayedClick(browser, '#user-name', '#create-workspace-button');
   workspaceService.deleteFromList(browser, 0);
 }
 
 function invalidUrl(browser) {
   loginService
     .login(browser)
-    .url(
-      'http://localhost:3002/#!/workspaces/0/problems/1/scenarios/1/evidence'
-    )
-    .useXpath()
-    .waitForElementVisible('/html/body/error-reporting');
+    .waitForElementVisible('#workspaces-header')
+    .url('http://localhost:3002/workspaces/0/problems/1/scenarios/1/overview')
+    .expect.element('#error')
+    .text.to.equal('Request failed with status code 404');
 }

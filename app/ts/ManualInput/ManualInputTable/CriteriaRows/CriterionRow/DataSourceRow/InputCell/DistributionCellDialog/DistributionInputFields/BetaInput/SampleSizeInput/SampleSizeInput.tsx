@@ -1,4 +1,4 @@
-import {Grid, TextField} from '@material-ui/core';
+import {Grid, TextField, Typography} from '@material-ui/core';
 import {getSampleSizeError} from 'app/ts/ManualInput/CellValidityService/CellValidityService';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {InputCellContext} from '../../../../InputCellContext/InputCellContext';
@@ -28,7 +28,7 @@ export default function SampleSizeInput(): JSX.Element {
   return (
     <>
       <Grid item xs={6}>
-        Sample size
+        <Typography>Sample size</Typography>
       </Grid>
       <Grid item xs={6}>
         <TextField

@@ -1,6 +1,7 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import React from 'react';
+import {Link} from 'react-router-dom';
 import DeleteWorkspaceButton from '../DeleteWorkspaceButton/DeleteWorkspaceButton';
 
 export default function InProgressWorkspacesTableRow({
@@ -15,12 +16,12 @@ export default function InProgressWorkspacesTableRow({
   return (
     <TableRow>
       <TableCell width="100%">
-        <a
+        <Link
           id={`in-progress-workspace-${index}`}
-          href={'/#!/manual-input/' + workspace.id}
+          to={`/manual-input/${workspace.id}`}
         >
           {workspace.title}
-        </a>
+        </Link>
       </TableCell>
       <TableCell id={`delete-in-progress-workspace-${index}`} align="center">
         <DeleteWorkspaceButton

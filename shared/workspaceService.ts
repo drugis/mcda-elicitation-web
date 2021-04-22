@@ -36,12 +36,11 @@ import {applyOrdering} from './workspaceServiceUtil';
 
 export function buildWorkspace(
   workspace: IOldWorkspace,
-  workspaceId: string,
   ordering?: IOrdering
 ): IWorkspace {
   const idMapper = _.identity;
   const title = workspace.problem.title;
-  return buildNewStyleCopy(workspace, idMapper, title, workspaceId, ordering);
+  return buildNewStyleCopy(workspace, idMapper, title, ordering, workspace.id);
 }
 
 export function buildInProgressCopy(workspace: IOldWorkspace): IWorkspace {
@@ -117,8 +116,8 @@ export function buildNewStyleCopy(
   workspace: IOldWorkspace,
   idMapper: (id: string) => string,
   title: string,
-  workspaceId?: string,
-  ordering?: IOrdering
+  ordering?: IOrdering,
+  workspaceId?: string
 ): IWorkspace {
   const unitTypesByDataSource = buildUnitTypeMap(workspace.problem.criteria);
 

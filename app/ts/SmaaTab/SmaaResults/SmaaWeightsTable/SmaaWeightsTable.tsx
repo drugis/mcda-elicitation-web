@@ -13,7 +13,8 @@ import IWeights from '@shared/interface/Scenario/IWeights';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
 import significantDigits from 'app/ts/ManualInput/Util/significantDigits';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {useStyles} from 'app/ts/McdaApp/McdaApp';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -23,7 +24,9 @@ export default function SmaaWeightsTable({
 }: {
   smaaWeights: IWeights;
 }): JSX.Element {
-  const {filteredCriteria} = useContext(SubproblemContext);
+  const classes = useStyles();
+
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
 
   function CriterionHeaders(): JSX.Element {
     return (
@@ -50,7 +53,7 @@ export default function SmaaWeightsTable({
             );
             return (
               <TableCell key={criterion.id}>
-                <div className="text-centered">
+                <div className={classes.textCenter}>
                   <UncertainValue
                     value={weight}
                     lowerBound={lowerBound}

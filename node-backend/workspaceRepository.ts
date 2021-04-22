@@ -1,3 +1,4 @@
+import IDefaultIdsMessage from '@shared/interface/Commands/IDefaultIdsMessage';
 import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
@@ -13,7 +14,7 @@ export default function WorkspaceRepository(db: IDB) {
   ) {
     logger.debug('GET /workspaces/:id');
     const query =
-      'SELECT id, owner, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
+      'SELECT id, owner, title, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     db.query(
       query,
       [workspaceId],
@@ -182,6 +183,36 @@ export default function WorkspaceRepository(db: IDB) {
     );
   }
 
+  function getDefaultIds(
+    client: PoolClient,
+    workspaceId: string,
+    callback: (error: OurError, defaultIds?: IDefaultIdsMessage) => void
+  ) {
+    const query =
+      'SELECT defaultSubproblemId, defaultScenarioId FROM workspace WHERE id = $1';
+    client.query(
+      query,
+      [workspaceId],
+      (
+        error: OurError,
+        result: QueryResult<{
+          defaultsubproblemid: number;
+          defaultscenarioid: number;
+        }>
+      ) => {
+        if (error) {
+          callback(error);
+        } else {
+          const {defaultsubproblemid, defaultscenarioid} = result.rows[0];
+          callback(null, {
+            subproblemId: defaultsubproblemid.toString(),
+            scenarioId: defaultscenarioid.toString()
+          });
+        }
+      }
+    );
+  }
+
   return {
     get: get,
     create: create,
@@ -189,6 +220,7 @@ export default function WorkspaceRepository(db: IDB) {
     getDefaultSubproblem: getDefaultSubproblem,
     setDefaultScenario: setDefaultScenario,
     getDefaultScenarioId: getDefaultScenarioId,
+    getDefaultIds: getDefaultIds,
     getWorkspaceInfo: getWorkspaceInfo,
     update: update,
     delete: del,

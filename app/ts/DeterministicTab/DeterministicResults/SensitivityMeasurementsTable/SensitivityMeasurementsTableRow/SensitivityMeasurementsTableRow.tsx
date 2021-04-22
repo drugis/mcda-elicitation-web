@@ -5,7 +5,7 @@ import EffectsTableCriterionTitleCell from 'app/ts/EffectsTable/EffectsTableCrit
 import EffectsTableReferenceCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableReferenceCell/EffectsTableReferenceCell';
 import EffectsTableStrengthsAndUncertainties from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableStrengthsAndUncertainties/EffectsTableStrengthsAndUncertainties';
 import EffectsTableUnitOfMeasurementCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableUnitOfMeasurementCell/EffectsTableUnitOfMeasurementCell';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import SensitivityMeasurementsTableCell from './SensitivityMeasurementsTableCell/SensitivityMeasurementsTableCell';
@@ -15,7 +15,7 @@ export default function SensitivityMeasurementsTableRow({
 }: {
   criterion: ICriterion;
 }): JSX.Element {
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   function renderCells(): JSX.Element[] {
     return _.map(filteredAlternatives, (alternative) => (

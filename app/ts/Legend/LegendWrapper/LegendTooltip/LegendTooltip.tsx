@@ -1,11 +1,11 @@
 import IAlternative from '@shared/interface/IAlternative';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {LegendContext} from '../../LegendContext';
 
 export default function LegendTooltip(): JSX.Element {
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
   const {canEdit, legendByAlternativeId} = useContext(LegendContext);
 
   function generateLegendTooltip(

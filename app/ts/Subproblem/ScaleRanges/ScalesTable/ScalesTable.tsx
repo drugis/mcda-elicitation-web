@@ -6,14 +6,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ScalesTableRow from './ScalesTableRow/ScalesTableRow';
 
 export default function ScalesTable({}: {}) {
-  const {filteredCriteria, observedRanges} = useContext(SubproblemContext);
+  const {filteredCriteria, observedRanges} = useContext(
+    CurrentSubproblemContext
+  );
 
   function createScaleTableRows() {
     return _.map(filteredCriteria, (criterion: ICriterion) => {

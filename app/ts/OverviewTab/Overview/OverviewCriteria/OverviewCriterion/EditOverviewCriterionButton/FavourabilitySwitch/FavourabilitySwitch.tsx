@@ -1,9 +1,9 @@
 import {
-  FormControl,
   FormControlLabel,
-  FormLabel,
+  Grid,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
@@ -19,11 +19,11 @@ export default function FavourabilitySwitch({
 }): JSX.Element {
   const {workspace} = useContext(WorkspaceContext);
 
-  if (workspace.properties.useFavourability) {
-    const [favourability, setFavourability] = useState<string>(
-      String(criterion.isFavourable)
-    );
+  const [favourability, setFavourability] = useState<string>(
+    String(criterion.isFavourable)
+  );
 
+  if (workspace.properties.useFavourability) {
     function handleFavourabilityChanged(
       event: ChangeEvent<HTMLInputElement>
     ): void {
@@ -33,28 +33,32 @@ export default function FavourabilitySwitch({
     }
 
     return (
-      <FormControl component="fieldset">
-        <FormLabel component="legend">
-          <InlineHelp helpId="favourability">Favourability </InlineHelp>
-        </FormLabel>
-        <RadioGroup
-          row
-          name="favourability-radio"
-          value={favourability}
-          onChange={handleFavourabilityChanged}
-        >
-          <FormControlLabel
-            value="true"
-            control={<Radio />}
-            label="Favourable"
-          />
-          <FormControlLabel
-            value="false"
-            control={<Radio />}
-            label="Not favourable"
-          />
-        </RadioGroup>
-      </FormControl>
+      <>
+        <Grid item xs={12}>
+          <Typography>
+            <InlineHelp helpId="favourability">Favourability </InlineHelp>
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <RadioGroup
+            row
+            name="favourability-radio"
+            value={favourability}
+            onChange={handleFavourabilityChanged}
+          >
+            <FormControlLabel
+              value="true"
+              control={<Radio />}
+              label="Favourable"
+            />
+            <FormControlLabel
+              value="false"
+              control={<Radio />}
+              label="Not favourable"
+            />
+          </RadioGroup>
+        </Grid>
+      </>
     );
   } else {
     return <></>;

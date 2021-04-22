@@ -1,3 +1,4 @@
+import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Slider from '@material-ui/core/Slider';
@@ -14,9 +15,9 @@ import {
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabelNullsafe} from 'app/ts/util/getUnitLabel';
-import {SubproblemContext} from 'app/ts/Workspace/SubproblemContext/SubproblemContext';
 import _ from 'lodash';
-import React, {memo, useContext} from 'react';
+import React, {useContext} from 'react';
+import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {createMarks} from '../AddSubproblemScaleRangesUtil';
 import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';
 import StepSizeSelector from './StepSizeSelector/StepSizeSelector';
@@ -44,7 +45,7 @@ interface IProps {
   ) => void;
 }
 
-function ScalesSlider({
+export default function ScalesSlider({
   criterion,
   dataSource,
   sliderRange,
@@ -55,19 +56,19 @@ function ScalesSlider({
   changeUpperBoundCallback
 }: IProps) {
   const {showPercentages} = useContext(SettingsContext);
-  const {observedRanges} = useContext(SubproblemContext);
+  const {newObservedRanges} = useContext(AddSubproblemContext);
 
   // units
   const unit = dataSource.unitOfMeasurement.type;
   const usePercentage = showPercentages && canBePercentage(unit);
 
   // ranges
-  const [lowestObservedValue, highestObservedValue] = observedRanges[
+  const [lowestObservedValue, highestObservedValue] = newObservedRanges[
     dataSource.id
   ];
   const [lowerTheoretical, upperTheoretical]: [number, number] = [
     dataSource.unitOfMeasurement.lowerBound,
-    getUpperBound(usePercentage, dataSource.unitOfMeasurement)
+    getUpperBound(dataSource.unitOfMeasurement)
   ];
 
   function handleChange(event: any, [lowValue, highValue]: [number, number]) {
@@ -109,10 +110,12 @@ function ScalesSlider({
   return (
     <Grid container item xs={12} spacing={4} justify="center">
       <Grid item xs={12}>
-        {`${criterion.title} ${getUnitLabelNullsafe(
-          dataSource.unitOfMeasurement,
-          showPercentages
-        )}`}
+        <Typography>
+          {`${criterion.title} ${getUnitLabelNullsafe(
+            dataSource.unitOfMeasurement,
+            showPercentages
+          )}`}
+        </Typography>
       </Grid>
       <Grid item xs={1}>
         <Tooltip title="Extend the range">
@@ -138,7 +141,7 @@ function ScalesSlider({
           step={stepSize}
           marks={createMarks(
             sliderRange,
-            observedRanges[dataSource.id],
+            newObservedRanges[dataSource.id],
             usePercentage
           )}
           className={classes.root}
@@ -155,7 +158,9 @@ function ScalesSlider({
         </Tooltip>
       </Grid>
       <Grid item xs={2}>
-        Step size: <StepSizeSelector criterion={criterion} />
+        <Typography>
+          Step size: <StepSizeSelector criterion={criterion} />
+        </Typography>
       </Grid>
     </Grid>
   );
@@ -172,4 +177,4 @@ function areEqual(prevProps: IProps, nextProps: IProps): boolean {
   return _.isEqual(_.pick(prevProps, toCompare), _.pick(nextProps, toCompare));
 }
 
-export default memo(ScalesSlider, areEqual);
+//FIXME export default memo(ScalesSlider, areEqual);

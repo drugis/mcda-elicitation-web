@@ -1,8 +1,8 @@
 import IAlternative from '@shared/interface/IAlternative';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {PreferencesContext} from '../PreferencesTab/PreferencesContext';
-import {SubproblemContext} from '../Workspace/SubproblemContext/SubproblemContext';
+import {CurrentScenarioContext} from '../Scenarios/CurrentScenarioContext/CurrentScenarioContext';
+import {CurrentSubproblemContext} from '../Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ILegendContext} from './ILegendContext';
 
 export const LegendContext = createContext<ILegendContext>(
@@ -16,8 +16,8 @@ export function LegendContextProviderComponent({
   canEdit: boolean;
   children: any;
 }) {
-  const {currentScenario, updateScenario} = useContext(PreferencesContext);
-  const {filteredAlternatives} = useContext(SubproblemContext);
+  const {currentScenario, updateScenario} = useContext(CurrentScenarioContext);
+  const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   const [legendByAlternativeId, setLegendByAlternativeId] = useState<
     Record<string, string>
