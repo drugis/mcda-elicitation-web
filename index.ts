@@ -92,8 +92,8 @@ function initApp(): void {
     saveUninitialized: true,
     cookie: {
       maxAge: 60 * 60 * 1000, // 1 hour
-      secure: authenticationMethod === 'SSL',
-      sameSite: true
+      secure: authenticationMethod === 'SSL'
+      // sameSite: true
     }
   };
 
