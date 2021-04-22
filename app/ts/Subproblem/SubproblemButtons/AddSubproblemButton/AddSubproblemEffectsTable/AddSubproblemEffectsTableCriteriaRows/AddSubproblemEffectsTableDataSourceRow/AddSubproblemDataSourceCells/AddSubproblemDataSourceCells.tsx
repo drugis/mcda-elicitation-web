@@ -10,8 +10,8 @@ import ValueCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTable
 import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import {deselectedCellStyle} from '../../../../../../../McdaApp/deselectedCellStyle';
 import {AddSubproblemContext} from '../../../../AddSubproblemContext';
-import {deselectedCellStyle} from '../../../deselectedCellStyle';
 
 export default function AddSubproblemDataSourceCells({
   criterion,

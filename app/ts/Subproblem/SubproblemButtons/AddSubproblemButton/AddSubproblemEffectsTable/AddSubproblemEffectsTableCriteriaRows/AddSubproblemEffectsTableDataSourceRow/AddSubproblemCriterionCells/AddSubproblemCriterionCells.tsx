@@ -3,8 +3,8 @@ import ICriterion from '@shared/interface/ICriterion';
 import EffectsTableCriterionDescriptionCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
 import EffectsTableCriterionTitleCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableCriterionTitleCell/EffectsTableCriterionTitleCell';
 import React, {useContext} from 'react';
+import {deselectedCellStyle} from '../../../../../../../McdaApp/deselectedCellStyle';
 import {AddSubproblemContext} from '../../../../AddSubproblemContext';
-import {deselectedCellStyle} from '../../../deselectedCellStyle';
 import InclusionCell from '../../../InclusionCell/InclusionCell';
 
 export default function AddSubproblemCriterionCells({

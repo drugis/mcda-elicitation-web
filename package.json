@@ -17,7 +17,7 @@
     "build-local-login-dev": "webpack --config webpack.local.dev.js",
     "build-prod": "webpack --config webpack.google.js",
     "dev": "webpack --config webpack.dev.js --watch",
-    "dev-local": "webpack --config webpack.local.js --watch",
+    "dev-local": "webpack --config webpack.local.dev.js --watch",
     "start": "node tscomp/index",
     "test": "jest && yarn test-R",
     "test-R": "Rscript R/unit-tests/run-tests.R root",
