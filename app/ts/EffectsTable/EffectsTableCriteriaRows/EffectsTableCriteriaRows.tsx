@@ -1,6 +1,6 @@
 import TableBody from '@material-ui/core/TableBody';
 import ICriterion from '@shared/interface/ICriterion';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';

@@ -6,7 +6,7 @@ import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import {useStyles} from 'app/ts/McdaApp/McdaApp';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import React, {useContext} from 'react';
 import EmptyCell from '../EmptyCell/EmptyCell';
 import UncertainValue from '../UncertainValue/UncertainValue';

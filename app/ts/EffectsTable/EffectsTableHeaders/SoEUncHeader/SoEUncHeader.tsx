@@ -1,5 +1,5 @@
 import TableCell from '@material-ui/core/TableCell';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 
