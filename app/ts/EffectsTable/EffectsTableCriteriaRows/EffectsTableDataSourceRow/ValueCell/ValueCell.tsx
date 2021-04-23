@@ -5,8 +5,8 @@ import {
   findValue
 } from 'app/ts/EffectsTable/EffectsTableUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {SettingsContext} from 'app/ts/Settings/SettingsContext';
-import {WorkspaceContext} from 'app/ts/Workspace/WorkspaceContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import React, {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
 import EffectValueCell from './EffectValueCell/EffectValueCell';

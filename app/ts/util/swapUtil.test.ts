@@ -1,4 +1,4 @@
-import {getNextId, getPreviousId} from './swapUtil';
+import {getNextId, getPreviousId, swapItems} from './swapUtil';
 
 describe('swapUtil', () => {
   const items = [{id: '1'}, {id: '2'}, {id: '3'}];
@@ -28,6 +28,15 @@ describe('swapUtil', () => {
       const index = 0;
       const result = getPreviousId(index, items);
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe('swapItems', () => {
+    it('should swap two items in a list', () => {
+      const items = [{id: '1'}, {id: '2'}];
+      const result = swapItems('1', '2', items);
+      const expectedResult = [{id: '2'}, {id: '1'}];
+      expect(result).toEqual(expectedResult);
     });
   });
 });

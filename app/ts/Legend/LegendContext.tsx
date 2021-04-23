@@ -1,8 +1,8 @@
 import IAlternative from '@shared/interface/IAlternative';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {CurrentScenarioContext} from '../Scenarios/CurrentScenarioContext/CurrentScenarioContext';
-import {CurrentSubproblemContext} from '../Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
+import {CurrentScenarioContext} from '../McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
+import {CurrentSubproblemContext} from '../McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ILegendContext} from './ILegendContext';
 
 export const LegendContext = createContext<ILegendContext>(

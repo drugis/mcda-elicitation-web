@@ -117,7 +117,7 @@ function editDataSource(browser) {
 
   loadTestWorkspace(browser, zinbryta)
     .assert.containsText('#reference-arrDsId', originalReference)
-    .assert.containsText('#unit-cell-arrDsId', 'Annual rate')
+    .assert.containsText('#unit-cell-arrDsId', 'Cases per patient per year')
     .click('#edit-data-source-button-arrDsId')
     .waitForElementVisible('#unit-of-measurement-input')
     .clearValue('#unit-of-measurement-input')

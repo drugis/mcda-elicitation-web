@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
-import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
 import LegendButtons from './LegendButtons/LegendButtons';

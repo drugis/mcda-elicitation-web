@@ -6,10 +6,10 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
 import {lexicon} from '../InlineHelp/lexicon';
-import ManualInputWrapper from '../ManualInput/ManualInputWrapper';
-import NavigationBar from '../NavigationBar/NavigationBar';
-import Workspace from '../Workspace/Workspace';
-import Workspaces from '../Workspaces/Workspaces';
+import ManualInputWrapper from './ManualInput/ManualInputWrapper';
+import NavigationBar from './NavigationBar/NavigationBar';
+import Workspace from './Workspace/Workspace';
+import Workspaces from './Workspaces/Workspaces';
 
 export const useStyles = makeStyles({
   alert: {

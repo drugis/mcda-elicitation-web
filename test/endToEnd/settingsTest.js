@@ -36,7 +36,9 @@ function checkValue(browser, expectedValue, result) {
 
 function showDecimals(browser) {
   return browser
+    .getLocationInView('#settings-button')
     .click('#settings-button')
+    .waitForElementVisible('#show-decimals-radio')
     .click('#show-decimals-radio')
     .click('#save-settings-button');
 }
