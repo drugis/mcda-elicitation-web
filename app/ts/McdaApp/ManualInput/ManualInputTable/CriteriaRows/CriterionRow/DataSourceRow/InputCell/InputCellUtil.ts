@@ -5,7 +5,7 @@ import IGammaDistribution from '@shared/interface/IGammaDistribution';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
-import significantDigits from 'app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from 'app/ts/util/significantDigits';
 
 const NO_DISTRIBUTION_ENTERED = 'No distribution entered';
 const INVALID_VALUE = 'Invalid value';

@@ -5,7 +5,7 @@ import {
   getPercentifiedValue,
   getPercentifiedValueLabel
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from 'app/ts/util/significantDigits';
 import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';

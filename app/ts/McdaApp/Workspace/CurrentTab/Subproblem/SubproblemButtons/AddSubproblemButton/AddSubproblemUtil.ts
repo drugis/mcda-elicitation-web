@@ -8,7 +8,7 @@ import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import ISubproblemDefinition from '@shared/interface/ISubproblemDefinition';
 import IWorkspace from '@shared/interface/IWorkspace';
-import significantDigits from 'app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from 'app/ts/util/significantDigits';
 import {getTitleError} from 'app/ts/util/getTitleError';
 import _ from 'lodash';
 import {getSliderLimits} from './AddSubproblemScaleRanges/AddSubproblemScaleRangesUtil';

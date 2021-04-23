@@ -10,7 +10,7 @@ import IValueEffect from '@shared/interface/IValueEffect';
 import {renderEnteredValues} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellUtil';
 import _ from 'lodash';
 import {hasInvalidCell} from '../CellValidityService/CellValidityService';
-import significantDigits from '../Util/significantDigits';
+import significantDigits from '../../../util/significantDigits';
 
 export function createDistributions(
   distributions: Record<string, Record<string, Distribution>>,

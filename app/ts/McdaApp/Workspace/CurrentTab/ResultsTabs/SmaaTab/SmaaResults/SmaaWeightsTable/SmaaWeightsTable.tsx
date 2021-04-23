@@ -12,7 +12,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IWeights from '@shared/interface/Scenario/IWeights';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
-import significantDigits from 'app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from 'app/ts/util/significantDigits';
 import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {InlineHelp} from 'help-popup';

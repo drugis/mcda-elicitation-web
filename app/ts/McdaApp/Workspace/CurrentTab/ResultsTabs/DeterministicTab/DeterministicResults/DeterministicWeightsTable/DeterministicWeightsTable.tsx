@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import significantDigits from 'app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from 'app/ts/util/significantDigits';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';

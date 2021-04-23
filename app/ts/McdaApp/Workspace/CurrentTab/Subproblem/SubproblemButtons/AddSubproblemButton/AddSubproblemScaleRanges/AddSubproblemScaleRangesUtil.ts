@@ -1,7 +1,7 @@
 import {Mark} from '@material-ui/core/Slider';
 import IDataSource from '@shared/interface/IDataSource';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 
 export function getSliderLimits(

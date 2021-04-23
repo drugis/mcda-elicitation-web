@@ -8,7 +8,7 @@ import IScale from '@shared/interface/IScale';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from 'app/ts/util/significantDigits';
 import {hasScale} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContextUtil';
 import _ from 'lodash';
 

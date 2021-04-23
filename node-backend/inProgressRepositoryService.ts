@@ -33,7 +33,7 @@ import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionP
 import {generateUuid} from '@shared/util';
 import {TableInputMode} from 'app/ts/type/TableInputMode';
 import _ from 'lodash';
-import significantDigits from '../app/ts/McdaApp/ManualInput/Util/significantDigits';
+import significantDigits from '../app/ts/util/significantDigits';
 
 export function mapWorkspace(
   queryResult: IWorkspaceQueryResult

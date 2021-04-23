@@ -11,7 +11,7 @@ import {
   findValue
 } from '../../../../../EffectsTable/EffectsTableUtil';
 import ISensitivityValue from '../../../../../interface/ISensitivityValue';
-import significantDigits from '../../../../ManualInput/Util/significantDigits';
+import significantDigits from '../../../../../util/significantDigits';
 
 export function getInitialSensitivityValues(
   criteria: ICriterion[],
