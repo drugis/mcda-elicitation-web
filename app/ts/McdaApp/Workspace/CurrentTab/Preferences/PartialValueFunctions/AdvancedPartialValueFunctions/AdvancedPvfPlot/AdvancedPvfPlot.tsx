@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid';
-import {generateAdvancedPvfPlotSettings} from 'app/ts/McdaApp/Workspace/ScenariosContext/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
+import {generateAdvancedPvfPlotSettings} from 'app/ts/McdaApp/Workspace/CurrentTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ChartConfiguration, generate} from 'c3';

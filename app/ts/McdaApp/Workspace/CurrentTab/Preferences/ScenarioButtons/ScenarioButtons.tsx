@@ -4,7 +4,7 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
-import {ScenariosContext} from '../../ScenariosContext';
+import {ScenariosContext} from '../../../ScenariosContext/ScenariosContext';
 import DeleteScenarioButton from './DeleteScenarioButton/DeleteScenarioButton';
 import ScenarioActionButton from './ScenarioActionButton/ScenarioActionButton';
 

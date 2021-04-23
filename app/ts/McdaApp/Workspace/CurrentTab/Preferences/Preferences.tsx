@@ -11,8 +11,8 @@ import {CurrentScenarioContext} from '../../CurrentScenarioContext/CurrentScenar
 import {
   buildScenarioWithPreferences,
   isElicitationView
-} from '../PreferencesUtil';
-import {TPreferencesView} from '../TPreferencesView';
+} from '../../ScenariosContext/PreferencesUtil';
+import {TPreferencesView} from '../../ScenariosContext/TPreferencesView';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import PreferencesView from './PreferencesView/PreferencesView';

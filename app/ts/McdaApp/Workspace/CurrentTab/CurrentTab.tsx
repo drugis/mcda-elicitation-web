@@ -1,4 +1,4 @@
-import Preferences from 'app/ts/McdaApp/Workspace/ScenariosContext/Preferences/Preferences';
+import Preferences from 'app/ts/McdaApp/Workspace/CurrentTab/Preferences/Preferences';
 import Subproblem from 'app/ts/McdaApp/Workspace/CurrentTab/Subproblem/Subproblem';
 import React from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router';
