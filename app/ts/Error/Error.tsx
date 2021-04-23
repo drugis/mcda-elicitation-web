@@ -10,7 +10,8 @@ export default function Error() {
     minHeight: '5em',
     alignItems: 'center',
     display: 'flex',
-    padding: '1em 1em 1em 1em'
+    padding: '1em 1em 1em 1em',
+    marginTop: '1em'
   };
 
   return (
