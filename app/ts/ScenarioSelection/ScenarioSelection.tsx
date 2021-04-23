@@ -5,7 +5,7 @@ import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {ChangeEvent} from 'react';
 import {useHistory, useParams} from 'react-router';
-import {TTab} from '../Workspace/TabBar/TTab';
+import {TTab} from '../McdaApp/Workspace/TabBar/TTab';
 
 export default function ScenarioSelection({
   scenarios,

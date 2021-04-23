@@ -139,13 +139,7 @@ function initApp(): void {
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
-  // app.use((request: Request, response: Response, next: any): void => {
-  //   if (!request.user) {
-  //     response.status(403).send(USER_SESSION_EXPIRED);
-  //   } else {
-  //     next();
-  //   }
-  // });
+
   app.use('/api', rightsManagement.expressMiddleware);
 
   app.use('/api/v2/inProgress', inProgressRouter);

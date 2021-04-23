@@ -2,7 +2,7 @@ import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
 import _ from 'lodash';
-import ToggledColumns from '../WorkspaceSettings/ToggledColumns/ToggledColumns';
+import ToggledColumns from '../McdaApp/Workspace/WorkspaceSettings/ToggledColumns/ToggledColumns';
 
 export function calculateNumberOfToggledColumns(
   toggledColumns: IToggledColumns

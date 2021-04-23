@@ -7,7 +7,7 @@ import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {canBePercentage} from '../DisplayUtil/DisplayUtil';
 import {ErrorContext} from '../Error/ErrorContext';
-import {WorkspaceContext} from '../Workspace/WorkspaceContext';
+import {WorkspaceContext} from '../McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';
 import {
   calculateNumberOfToggledColumns,

@@ -4,7 +4,7 @@ import IScale from '@shared/interface/IScale';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {deselectedCellStyle} from 'app/ts/McdaApp/deselectedCellStyle';
+import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';

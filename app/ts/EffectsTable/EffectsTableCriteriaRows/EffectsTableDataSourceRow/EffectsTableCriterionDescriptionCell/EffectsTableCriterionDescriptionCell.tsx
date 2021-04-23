@@ -1,6 +1,6 @@
 import TableCell from '@material-ui/core/TableCell';
 import ICriterion from '@shared/interface/ICriterion';
-import {deselectedCellStyle} from 'app/ts/McdaApp/deselectedCellStyle';
+import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import React, {useContext} from 'react';
 

@@ -1,5 +1,5 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import significantDigits from '../ManualInput/Util/significantDigits';
+import significantDigits from '../McdaApp/ManualInput/Util/significantDigits';
 
 export function getPercentifiedValue(
   value: number,

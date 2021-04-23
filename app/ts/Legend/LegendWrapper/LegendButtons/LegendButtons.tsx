@@ -1,5 +1,5 @@
 import {Button, ButtonGroup} from '@material-ui/core';
-import {CurrentSubproblemContext} from 'app/ts/Workspace/SubproblemsContext/CurrentSubproblemContext/CurrentSubproblemContext';
+import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {generateSingleLetterLegend} from '../LegendUtil';
