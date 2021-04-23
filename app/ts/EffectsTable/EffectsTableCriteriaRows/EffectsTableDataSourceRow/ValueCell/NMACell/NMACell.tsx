@@ -20,7 +20,7 @@ export default function NMACell({
   isExcluded?: boolean;
 }) {
   const classes = useStyles();
-  const cellStyle = isExcluded ? deselectedCellStyle : {}; //FIXME also define gloabally?
+  const cellStyle = isExcluded ? deselectedCellStyle : {};
 
   return (
     <TableCell

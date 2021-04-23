@@ -15,7 +15,6 @@ import {
 import {SettingsContext} from 'app/ts/Settings/SettingsContext';
 import {getUpperBound} from 'app/ts/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {getUnitLabelNullsafe} from 'app/ts/util/getUnitLabel';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {createMarks} from '../AddSubproblemScaleRangesUtil';
@@ -165,16 +164,3 @@ export default function ScalesSlider({
     </Grid>
   );
 }
-
-function areEqual(prevProps: IProps, nextProps: IProps): boolean {
-  const toCompare = [
-    'criterion',
-    'dataSource',
-    'sliderRange',
-    'stepSize',
-    'configuredRange'
-  ];
-  return _.isEqual(_.pick(prevProps, toCompare), _.pick(nextProps, toCompare));
-}
-
-//FIXME export default memo(ScalesSlider, areEqual);
