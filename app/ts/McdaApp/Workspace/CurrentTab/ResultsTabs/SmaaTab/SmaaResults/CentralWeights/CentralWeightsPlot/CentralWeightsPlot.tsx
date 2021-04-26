@@ -1,7 +1,7 @@
 import {Grid} from '@material-ui/core';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
-import {LegendContext} from 'app/ts/Legend/LegendContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {LegendContext} from 'app/ts/PlotWithButtons/Legend/LegendContext';
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext} from 'react';
 import {generateCentralWeightsPlotSettings} from '../../SmaaResultsUtil';

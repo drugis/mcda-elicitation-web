@@ -1,4 +1,5 @@
 import {Grid, Typography} from '@material-ui/core';
+import PlotWithButtons from 'app/ts/PlotWithButtons/PlotWithButtons';
 import {InlineHelp} from 'help-popup';
 import React from 'react';
 import PreferencesSensitivitySelector from './PreferencesSensitivitySelector/PreferencesSensitivitySelector';
@@ -16,7 +17,9 @@ export default function PreferencesSensitivity(): JSX.Element {
         <PreferencesSensitivitySelector />
       </Grid>
       <Grid item xs={12}>
-        <PreferencesSensitivityPlot />
+        <PlotWithButtons plotId="preferences-sensitivity-plot">
+          <PreferencesSensitivityPlot />
+        </PlotWithButtons>
       </Grid>
     </Grid>
   );

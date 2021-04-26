@@ -2,9 +2,9 @@ import {Dialog, DialogActions, DialogContent, Tooltip} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
-import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
 import LegendButtons from './LegendButtons/LegendButtons';
@@ -12,11 +12,9 @@ import LegendTable from './LegendTable/LegendTable';
 import LegendTooltip from './LegendTooltip/LegendTooltip';
 import {initLegend} from './LegendUtil';
 
-export default function LegendWrapper({
-  children,
+export default function LegendButton({
   buttonId
 }: {
-  children: any;
   buttonId: string;
 }): JSX.Element {
   const {canEdit, legendByAlternativeId, saveLegend} = useContext(
@@ -74,63 +72,59 @@ export default function LegendWrapper({
   }
 
   return (
-    <>
-      <Grid item md={12} lg={8}>
-        {children}
-      </Grid>
-      <Grid container item md={12} lg={4} alignContent="flex-start">
-        <Tooltip title={<LegendTooltip />}>
-          <span>
-            <Button
-              id={buttonId}
-              color="primary"
-              variant="contained"
-              onClick={openDialog}
-              disabled={!canEdit}
-              size="small"
-            >
-              Labels
-            </Button>
-          </span>
-        </Tooltip>
-        <Dialog
-          open={isDialogOpen}
-          onClose={closeDialog}
-          fullWidth
-          maxWidth={'sm'}
-        >
-          <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
-            Rename alternatives in plots
-          </DialogTitleWithCross>
-          <DialogContent>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <LegendButtons setNewTitles={setNewTitles} />
-              </Grid>
-              <Grid item xs={12}>
-                <LegendTable
-                  newTitles={newTitles}
-                  handleKey={handleKey}
-                  handleLegendChange={handleLegendChange}
-                />
-              </Grid>
-              <DisplayErrors errors={[error]} identifier="missing-title" />
+    <Grid container item md={12} lg={4} alignContent="flex-start">
+      <Tooltip title={<LegendTooltip />}>
+        <span>
+          <Button
+            id={buttonId}
+            color="primary"
+            variant="contained"
+            onClick={openDialog}
+            disabled={!canEdit}
+            size="small"
+            style={{width: '55px'}}
+          >
+            Labels
+          </Button>
+        </span>
+      </Tooltip>
+      <Dialog
+        open={isDialogOpen}
+        onClose={closeDialog}
+        fullWidth
+        maxWidth={'sm'}
+      >
+        <DialogTitleWithCross id="dialog-title" onClose={closeDialog}>
+          Rename alternatives in plots
+        </DialogTitleWithCross>
+        <DialogContent>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <LegendButtons setNewTitles={setNewTitles} />
             </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              id="save-legend-button"
-              color="primary"
-              onClick={handleLegendSave}
-              variant="contained"
-              disabled={isDisabled()}
-              size="small"
-            >
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Grid>
-    </>
+            <Grid item xs={12}>
+              <LegendTable
+                newTitles={newTitles}
+                handleKey={handleKey}
+                handleLegendChange={handleLegendChange}
+              />
+            </Grid>
+            <DisplayErrors errors={[error]} identifier="missing-title" />
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            id="save-legend-button"
+            color="primary"
+            onClick={handleLegendSave}
+            variant="contained"
+            disabled={isDisabled()}
+            size="small"
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Grid>
   );
 }

@@ -1,4 +1,5 @@
 import {Grid, Typography} from '@material-ui/core';
+import PlotWithButtons from 'app/ts/PlotWithButtons/PlotWithButtons';
 import {InlineHelp} from 'help-popup';
 import React from 'react';
 import MeasurementSensitivityPlot from './MeasurementSensitivityPlot/MeasurementSensitivityPlot';
@@ -18,7 +19,9 @@ export default function MeasurementSensitivity(): JSX.Element {
         <MeasurementSensitivitySelectors />
       </Grid>
       <Grid item xs={12}>
-        <MeasurementSensitivityPlot />
+        <PlotWithButtons plotId="measurements-sensitivity-plot">
+          <MeasurementSensitivityPlot />
+        </PlotWithButtons>
       </Grid>
     </Grid>
   );
