@@ -5,12 +5,10 @@ import LegendButton from './Legend/LegendButton/LegendButton';
 
 export default function PlotWithButtons({
   children,
-  plotId,
-  skipLegendButton
+  plotId
 }: {
   children: any;
   plotId: string;
-  skipLegendButton?: boolean;
 }): JSX.Element {
   return (
     <Grid container>
@@ -29,13 +27,9 @@ export default function PlotWithButtons({
         <Grid item xs={6} md={12}>
           <ExportButton plotId={plotId} />
         </Grid>
-        {skipLegendButton ? (
-          <></>
-        ) : (
-          <Grid item xs={6} md={12}>
-            <LegendButton buttonId={`${plotId}-legend`} />
-          </Grid>
-        )}
+        <Grid item xs={6} md={12}>
+          <LegendButton buttonId={`${plotId}-legend`} />
+        </Grid>
       </Grid>
     </Grid>
   );
