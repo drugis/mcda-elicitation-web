@@ -55,7 +55,7 @@ function afterEach(browser) {
 }
 
 function changeAlternativeLabels(browser) {
-  const legendButton = '//*[@id="base-profile-plot-legend"]';
+  const legendButton = '//*[@id="value-profile-plot-base-legend"]';
   const firstAlternative =
     '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-plac > text';
   const secondAlternative =
@@ -86,7 +86,7 @@ function changeAlternativeLabels(browser) {
 }
 
 function reset(browser) {
-  const legendButton = '//*[@id="base-profile-plot-legend"]';
+  const legendButton = '//*[@id="value-profile-plot-base-legend"]';
   const firstAlternative =
     '#measurements-sensitivity-plot > svg > g:nth-child(4) > g.c3-legend-item.c3-legend-item-A > text';
   const secondAlternative =
