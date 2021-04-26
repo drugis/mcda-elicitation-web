@@ -1,6 +1,6 @@
 import DeterministicResults from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResults/DeterministicResults';
 import SmaaResults from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/SmaaTab/SmaaResults/SmaaResults';
-import {LegendContextProviderComponent} from 'app/ts/PlotWithButtons/Legend/LegendContext';
+import {LegendContextProviderComponent} from 'app/ts/PlotButtons/Legend/LegendContext';
 import React from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router';
 

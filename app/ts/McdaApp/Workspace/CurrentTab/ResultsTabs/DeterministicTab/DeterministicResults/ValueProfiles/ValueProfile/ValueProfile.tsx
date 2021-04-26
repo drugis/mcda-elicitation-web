@@ -1,6 +1,6 @@
 import {Grid, Typography} from '@material-ui/core';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import PlotWithButtons from 'app/ts/PlotWithButtons/PlotWithButtons';
+import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import React from 'react';
 import TotalValueTable from './TotalValueTable/TotalValueTable';
 import ValueProfilePlot from './ValueProfilePlot/ValueProfilePlot';
@@ -23,12 +23,12 @@ export default function ValueProfile({
         </Typography>
       </Grid>
       <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
-        <PlotWithButtons plotId={`value-profile-plot-${profileCase}`}>
+        <PlotButtons plotId={`value-profile-plot-${profileCase}`}>
           <ValueProfilePlot
             profileCase={profileCase}
             valueProfiles={valueProfiles}
           />
-        </PlotWithButtons>
+        </PlotButtons>
       </Grid>
       <Grid item xs={9}>
         <Typography variant="h6">Total value ({profileCase} case)</Typography>

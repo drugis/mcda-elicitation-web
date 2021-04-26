@@ -1,6 +1,7 @@
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
+import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import {InlineHelp} from 'help-popup';
 import React from 'react';
 import CentralWeightsPlot from './CentralWeightsPlot/CentralWeightsPlot';
@@ -21,7 +22,9 @@ export default function CentralWeights({
       {centralWeights ? (
         <>
           <Grid item xs={12}>
-            <CentralWeightsPlot centralWeights={centralWeights} />
+            <PlotButtons plotId="central-weights-plot">
+              <CentralWeightsPlot centralWeights={centralWeights} />
+            </PlotButtons>
           </Grid>
           <Grid container item xs={12} spacing={2}>
             <Grid container item xs={12} justify="flex-end">

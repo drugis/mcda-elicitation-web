@@ -1,6 +1,6 @@
 import {CircularProgress, Grid, Typography} from '@material-ui/core';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import PlotWithButtons from 'app/ts/PlotWithButtons/PlotWithButtons';
+import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import {InlineHelp} from 'help-popup';
 import React from 'react';
 import RankAcceptabilitiesPlot from './RankAcceptabilitiesPlot/RankAcceptabilitiesPlot';
@@ -23,9 +23,9 @@ export default function RankAcceptabilities({
       {ranks ? (
         <>
           <Grid container item xs={12} md={6}>
-            <PlotWithButtons plotId="rank-acceptabilities-plot">
+            <PlotButtons plotId="rank-acceptabilities-plot">
               <RankAcceptabilitiesPlot ranks={ranks} />
-            </PlotWithButtons>
+            </PlotButtons>
           </Grid>
           <Grid container item xs={12} md={6}>
             <Grid container item xs={12} justify="flex-end">

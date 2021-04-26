@@ -3,7 +3,7 @@ import React from 'react';
 import ExportButton from './ExportButton/ExportButton';
 import LegendButton from './Legend/LegendButton/LegendButton';
 
-export default function PlotWithButtons({
+export default function PlotButtons({
   children,
   plotId
 }: {
@@ -11,8 +11,8 @@ export default function PlotWithButtons({
   plotId: string;
 }): JSX.Element {
   return (
-    <Grid container>
-      <Grid item xs={12} md={7}>
+    <Grid container spacing={1}>
+      <Grid item xs="auto">
         {children}
       </Grid>
       <Grid
@@ -24,10 +24,10 @@ export default function PlotWithButtons({
         alignItems="flex-start"
         spacing={1}
       >
-        <Grid item xs={6} md={12}>
+        <Grid item xs={12} style={{marginTop: '1em'}}>
           <ExportButton plotId={plotId} />
         </Grid>
-        <Grid item xs={6} md={12}>
+        <Grid item xs={12}>
           <LegendButton buttonId={`${plotId}-legend`} />
         </Grid>
       </Grid>
