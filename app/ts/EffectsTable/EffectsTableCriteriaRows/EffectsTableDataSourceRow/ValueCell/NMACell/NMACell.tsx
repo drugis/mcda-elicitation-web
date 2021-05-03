@@ -1,8 +1,8 @@
 import TableCell from '@material-ui/core/TableCell';
 import IScale from '@shared/interface/IScale';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {useStyles} from 'app/ts/McdaApp/styles';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import {useStyles} from 'app/ts/McdaApp/McdaApp';
 import React from 'react';
 import UncertainValue from '../UncertainValue/UncertainValue';
 

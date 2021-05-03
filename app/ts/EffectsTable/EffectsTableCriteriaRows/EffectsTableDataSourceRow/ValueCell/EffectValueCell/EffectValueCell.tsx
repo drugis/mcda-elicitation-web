@@ -2,9 +2,9 @@ import TableCell from '@material-ui/core/TableCell';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import {useStyles} from 'app/ts/McdaApp/McdaApp';
+import {useStyles} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import React, {useContext} from 'react';
 import EmptyCell from '../EmptyCell/EmptyCell';
 import {

@@ -13,7 +13,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {useStyles} from 'app/ts/McdaApp/McdaApp';
+import {useStyles} from 'app/ts/McdaApp/styles';
 import {TWorkspaceType} from 'app/ts/McdaApp/Workspaces/TWorkspaceType';
 import Axios from 'axios';
 import React, {useContext, useState} from 'react';

@@ -7,9 +7,9 @@ import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router';
+import {SubproblemsContext} from '../SubproblemsContext/SubproblemsContext';
 import {WorkspaceContext} from '../WorkspaceContext/WorkspaceContext';
 import {hasScaleValues} from '../WorkspaceContext/WorkspaceContextUtil';
-import {SubproblemsContext} from '../SubproblemsContext/SubproblemsContext';
 import ICurrentSubproblemContext from './ICurrentSubproblemContext';
 import {
   applySubproblem,
@@ -107,7 +107,7 @@ export function CurrentSubproblemContextProviderComponent({
     updateSubproblem(subproblem);
   }
 
-  function setCurrentSubproblemWrapper(subproblem: IOldSubproblem): void {
+  function goToScenario(subproblem: IOldSubproblem): void {
     axios
       .get(
         `/api/v2/workspaces/${workspace.properties.id}/problems/${subproblem.id}/scenarios`
@@ -136,7 +136,7 @@ export function CurrentSubproblemContextProviderComponent({
         getCriterion,
         getConfiguredRange,
         getStepSizeForCriterion,
-        setCurrentSubproblem: setCurrentSubproblemWrapper
+        setCurrentSubproblem: goToScenario
       }}
     >
       {children}

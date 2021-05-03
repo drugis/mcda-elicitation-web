@@ -1,4 +1,4 @@
-import {useStyles} from 'app/ts/McdaApp/McdaApp';
+import {useStyles} from 'app/ts/McdaApp/styles';
 import React from 'react';
 
 export default function UncertainValue({
