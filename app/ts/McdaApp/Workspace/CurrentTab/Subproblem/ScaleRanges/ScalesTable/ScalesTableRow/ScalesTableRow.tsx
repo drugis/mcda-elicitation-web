@@ -1,10 +1,10 @@
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
-import {useStyles} from 'app/ts/McdaApp/McdaApp';
+import {textCenterStyle} from 'app/ts/McdaApp/styles';
+import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import React, {useContext} from 'react';
 import {
   getConfiguredRangeLabel,
@@ -13,8 +13,6 @@ import {
 } from '../ScalesTableUtil';
 
 export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
-  const classes = useStyles();
-
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const dataSourceId = criterion.dataSources[0].id;
   const {currentSubproblem, observedRanges} = useContext(
@@ -43,13 +41,13 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
         {criterion.title}
       </TableCell>
       <TableCell id={`theoretical-range-${criterion.id}`}>
-        <div className={classes.textCenter}>{theoreticalRangeLabel}</div>
+        <div style={textCenterStyle}>{theoreticalRangeLabel}</div>
       </TableCell>
       <TableCell id={`observed-range-${criterion.id}`}>
-        <div className={classes.textCenter}>{observedRangeLabel}</div>
+        <div style={textCenterStyle}>{observedRangeLabel}</div>
       </TableCell>
       <TableCell id={`configured-range-${criterion.id}`}>
-        <div className={classes.textCenter}>{configuredRangeLabel}</div>
+        <div style={textCenterStyle}>{configuredRangeLabel}</div>
       </TableCell>
       <TableCell id={`unit-${criterion.id}`}>
         {getUnitLabel(

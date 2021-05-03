@@ -1,14 +1,14 @@
 import {Button, TableCell} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import {
   getPercentifiedValue,
   getPercentifiedValueLabel
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/util/significantDigits';
-import {useStyles} from 'app/ts/McdaApp/McdaApp';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import significantDigits from 'app/ts/util/significantDigits';
 import React, {MouseEvent, useContext, useEffect, useState} from 'react';
 import SensitivityMeasurementsTablePopover from './SensitivityMeasurementsTablePopover/SensitivityMeasurementsTablePopover';
 
@@ -19,8 +19,6 @@ export default function SensitivityMeasurementsTableCell({
   criterion: ICriterion;
   alternativeId: string;
 }): JSX.Element {
-  const classes = useStyles();
-
   const {getUsePercentage} = useContext(SettingsContext);
   const {getStepSizeForCriterion, getConfiguredRange} = useContext(
     CurrentSubproblemContext
@@ -90,11 +88,7 @@ export default function SensitivityMeasurementsTableCell({
 
   return (
     <TableCell id={`sensitivity-cell-${criterion.id}-${alternativeId}`}>
-      <Button
-        className={classes.textCenter}
-        onClick={openPopover}
-        variant="text"
-      >
+      <Button style={textCenterStyle} onClick={openPopover} variant="text">
         <a> {getLabel()}</a>
       </Button>
       <SensitivityMeasurementsTablePopover

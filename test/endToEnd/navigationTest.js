@@ -57,6 +57,5 @@ function invalidUrl(browser) {
     .login(browser)
     .waitForElementVisible('#workspaces-header')
     .url('http://localhost:3002/workspaces/0/problems/1/scenarios/1/overview')
-    .expect.element('#error')
-    .text.to.equal('Request failed with status code 404');
+    .waitForElementVisible('#error');
 }

@@ -13,7 +13,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {useStyles} from 'app/ts/McdaApp/McdaApp';
+import {alertStyle} from 'app/ts/McdaApp/styles';
 import {TWorkspaceType} from 'app/ts/McdaApp/Workspaces/TWorkspaceType';
 import Axios from 'axios';
 import React, {useContext, useState} from 'react';
@@ -27,8 +27,6 @@ export default function DeleteWorkspaceButton({
   workspace: IOldWorkspace | IInProgressWorkspaceProperties;
   deleteLocalWorkspace: (workspaceId: string) => void;
 }): JSX.Element {
-  const classes = useStyles();
-
   const {setError} = useContext(ErrorContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -77,7 +75,7 @@ export default function DeleteWorkspaceButton({
                 <i>{workspace.title}</i>
               </Typography>
             </Grid>
-            <Grid item xs={12} className={classes.alert}>
+            <Grid item xs={12} style={alertStyle}>
               <Typography>This cannot be undone!</Typography>
             </Grid>
           </Grid>
