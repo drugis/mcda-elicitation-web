@@ -132,9 +132,9 @@ export default function ScalesSlider({
           value={configuredRange}
           onChange={handleChange}
           valueLabelDisplay="on"
-          valueLabelFormat={(x: number) => {
-            return getPercentifiedValue(x, usePercentage);
-          }}
+          valueLabelFormat={(x: number) =>
+            getPercentifiedValue(x, usePercentage)
+          }
           min={sliderRange[0]}
           max={sliderRange[1]}
           step={stepSize}
@@ -157,9 +157,8 @@ export default function ScalesSlider({
         </Tooltip>
       </Grid>
       <Grid item xs={2}>
-        <Typography>
-          Step size: <StepSizeSelector criterion={criterion} />
-        </Typography>
+        <Typography display="inline">Step size: </Typography>
+        <StepSizeSelector criterion={criterion} />
       </Grid>
     </Grid>
   );

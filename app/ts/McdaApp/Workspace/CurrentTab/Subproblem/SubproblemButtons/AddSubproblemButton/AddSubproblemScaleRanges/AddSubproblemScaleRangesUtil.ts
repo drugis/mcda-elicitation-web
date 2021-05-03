@@ -167,13 +167,14 @@ export function createMarks(
 export function getStepSizeAdjustedConfiguredRanges(
   dataSources: Record<string, IDataSource>,
   stepSizes: Record<string, number>,
-  configuredRanges: Record<string, [number, number]>
+  configuredRanges: Record<string, [number, number]>,
+  observedRanges: Record<string, [number, number]>
 ): Record<string, [number, number]> {
   return _.mapValues(dataSources, (dataSource: IDataSource): [number, number] =>
     adjustConfiguredRangeForStepSize(
       stepSizes[dataSource.id],
       configuredRanges[dataSource.id],
-      configuredRanges[dataSource.id]
+      observedRanges[dataSource.id]
     )
   );
 }
@@ -181,17 +182,14 @@ export function getStepSizeAdjustedConfiguredRanges(
 export function adjustConfiguredRangeForStepSize(
   stepSize: number,
   configuredRange: [number, number],
-  sliderRange: [number, number]
+  observedRange: [number, number]
 ): [number, number] {
-  const lowerValue = Math.max(
-    getAdjustedLowerBound(configuredRange[0], stepSize),
-    sliderRange[0]
-  );
-  const upperValue = Math.min(
-    getAdjustedUpperBound(configuredRange[1], stepSize),
-    sliderRange[1]
-  );
-  return [lowerValue, upperValue];
+  const lowerValue = getAdjustedLowerBound(configuredRange[0], stepSize);
+  const upperValue = getAdjustedUpperBound(configuredRange[1], stepSize);
+  return [
+    Math.min(lowerValue, observedRange[0]),
+    Math.max(upperValue, observedRange[1])
+  ];
 }
 
 function getAdjustedLowerBound(value: number, stepSize: number): number {
@@ -199,7 +197,7 @@ function getAdjustedLowerBound(value: number, stepSize: number): number {
   if (remainder === 0) {
     return value;
   } else {
-    return significantDigits(value - remainder);
+    return significantDigits(value - remainder - stepSize);
   }
 }
 

@@ -18,13 +18,15 @@ describe('addSubproblemScaleRangesUtil', () => {
         ds1Id: {id: 'ds1Id'} as IDataSource
       };
       const stepSizes = {ds1Id: 10};
-      const configuredRanges = {ds1Id: [-1, 55] as [number, number]};
+      const configuredRanges = {ds1Id: [-1.5, 55] as [number, number]};
+      const observedRanges = {ds1Id: [0, 50] as [number, number]};
       const result = getStepSizeAdjustedConfiguredRanges(
         dataSources,
         stepSizes,
-        configuredRanges
+        configuredRanges,
+        observedRanges
       );
-      const expectedResult = {ds1Id: [0, 55]};
+      const expectedResult = {ds1Id: [-10, 60]};
       expect(result).toEqual(expectedResult);
     });
   });
@@ -33,38 +35,26 @@ describe('addSubproblemScaleRangesUtil', () => {
     it('should return rounded configured ranges', () => {
       const stepSize = 0.1;
       const configuredRange: [number, number] = [1.04, 1.41];
-      const sliderRange: [number, number] = [0, 2];
+      const observedRange: [number, number] = [1.05, 1.4];
       const result = adjustConfiguredRangeForStepSize(
         stepSize,
         configuredRange,
-        sliderRange
+        observedRange
       );
-      const expectedResult: [number, number] = [1, 1.5];
+      const expectedResult: [number, number] = [0.9, 1.5];
       expect(result).toEqual(expectedResult);
     });
 
     it('should return original configured ranges', () => {
       const stepSize = 0.1;
       const configuredRange: [number, number] = [1, 1.4];
-      const sliderRange: [number, number] = [0, 2];
+      const observedRange: [number, number] = [1, 1.4];
       const result = adjustConfiguredRangeForStepSize(
         stepSize,
         configuredRange,
-        sliderRange
+        observedRange
       );
       expect(result).toEqual(result);
-    });
-
-    it('should return slider range', () => {
-      const stepSize = 0.1;
-      const configuredRange: [number, number] = [1.04, 1.4];
-      const sliderRange: [number, number] = [1.1, 1.4];
-      const result = adjustConfiguredRangeForStepSize(
-        stepSize,
-        configuredRange,
-        sliderRange
-      );
-      expect(result).toEqual(sliderRange);
     });
   });
 

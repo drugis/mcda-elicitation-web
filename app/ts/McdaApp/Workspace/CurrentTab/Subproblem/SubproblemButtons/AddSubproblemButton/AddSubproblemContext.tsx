@@ -172,16 +172,16 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       setStepSizeOptionsByDS(stepSizeOptions);
       setStepSizesByDS(stepSizes);
 
-      setSliderRangesByDS(newConfiguredRanges);
       setStepSizesByDS(stepSizes);
 
-      setConfiguredRanges(
-        getStepSizeAdjustedConfiguredRanges(
-          includedDataSourcesWithValidValues,
-          stepSizes,
-          newConfiguredRanges
-        )
+      const stepAdjustedConfiguredRanges = getStepSizeAdjustedConfiguredRanges(
+        includedDataSourcesWithValidValues,
+        stepSizes,
+        newConfiguredRanges,
+        updatedObservedRanges
       );
+      setSliderRangesByDS(stepAdjustedConfiguredRanges);
+      setConfiguredRanges(stepAdjustedConfiguredRanges);
     }
   }, [
     alternativeInclusions,
@@ -363,13 +363,13 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
       const [newMin, newMax] = adjustConfiguredRangeForStepSize(
         newStepSize,
         configuredRangesByDS[dataSourceId],
-        sliderRangesByDS[dataSourceId]
+        observedRanges[dataSourceId]
       );
       if (!_.isEqual(configuredRange, [newMin, newMax])) {
         setConfiguredRange(dataSourceId, newMin, newMax);
       }
     },
-    [configuredRangesByDS, setConfiguredRange, sliderRangesByDS, stepSizesByDS]
+    [configuredRangesByDS, observedRanges, setConfiguredRange, stepSizesByDS]
   );
 
   const getStepSizeForDS = useCallback(
