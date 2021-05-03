@@ -4,6 +4,8 @@ import CreateWorkspace from './CreateWorkspace/CreateWorkspace';
 import WorkspacesTables from './WorkspacesTables/WorkspacesTables';
 
 export default function Workspaces(): JSX.Element {
+  document.title = 'Workspaces';
+
   return (
     <Grid container>
       <CreateWorkspace />

@@ -13,8 +13,6 @@ import Workspace from './Workspace/Workspace';
 import Workspaces from './Workspaces/Workspaces';
 
 export default function McdaApp(): JSX.Element {
-  document.title = 'Workspaces';
-
   return (
     <ThemeProvider theme={mcdaTheme}>
       <ErrorContextProviderComponent>
