@@ -232,7 +232,7 @@ function cancelEditingGraphLabels(browser) {
   var paths = {
     valueToClear: '#label-input-0',
     tab: '#deterministic-results-tab',
-    actionButton: '//*[@id="base-profile-plot-legend"]',
+    actionButton: '//*[@id="value-profile-plot-base-legend"]',
     cancelButton: closeModalButtonPath,
     content:
       '#value-profile-plot-base > svg > g:nth-child(2) > g.c3-axis.c3-axis-x > g:nth-child(2) > text > tspan'
