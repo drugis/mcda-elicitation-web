@@ -4,6 +4,7 @@ import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
 import MoveUpDownButtons from 'app/ts/McdaApp/MoveUpDownButtons/MoveUpDownButtons';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineQuestionMark} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -89,20 +90,18 @@ export default function DataSourceRow({
 
   return (
     <TableRow id={`criterion-row-${criterion.id}`}>
-      {isFirstRowForCriterion ? (
+      <ShowIf condition={isFirstRowForCriterion}>
         <>
           <TableCell rowSpan={numberOfDataSourceRows} align={'center'}>
             <Grid container>
               <Grid item xs={12}>
                 <DeleteCriterionButton />
               </Grid>
-              {useFavourability ? (
+              <ShowIf condition={useFavourability}>
                 <Grid item xs={12}>
                   <ChangeFavourabilityButton />
                 </Grid>
-              ) : (
-                <></>
-              )}
+              </ShowIf>
             </Grid>
           </TableCell>
           <TableCell rowSpan={numberOfDataSourceRows} align="center">
@@ -116,9 +115,7 @@ export default function DataSourceRow({
           <CriterionTitleCell criterion={criterion} />
           <CriterionDescriptionCell criterion={criterion} />
         </>
-      ) : (
-        <></>
-      )}
+      </ShowIf>
       {dataSourceCells}
     </TableRow>
   );

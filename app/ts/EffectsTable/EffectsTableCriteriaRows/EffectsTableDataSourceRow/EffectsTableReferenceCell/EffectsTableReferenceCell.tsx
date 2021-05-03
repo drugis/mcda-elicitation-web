@@ -1,7 +1,8 @@
 import TableCell from '@material-ui/core/TableCell';
 import IDataSource from '@shared/interface/IDataSource';
-import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
+import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import React, {useContext} from 'react';
 
 export default function EffectsTableReferenceCell({
@@ -28,11 +29,11 @@ export default function EffectsTableReferenceCell({
     }
   }
 
-  return references ? (
-    <TableCell id={`reference-${dataSource.id}`} style={cellStyle}>
-      {renderReference()}
-    </TableCell>
-  ) : (
-    <></>
+  return (
+    <ShowIf condition={references}>
+      <TableCell id={`reference-${dataSource.id}`} style={cellStyle}>
+        {renderReference()}
+      </TableCell>
+    </ShowIf>
   );
 }

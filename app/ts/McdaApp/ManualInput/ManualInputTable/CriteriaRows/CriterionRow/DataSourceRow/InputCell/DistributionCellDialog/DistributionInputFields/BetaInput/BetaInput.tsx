@@ -1,4 +1,5 @@
 import {Checkbox, FormControlLabel, Grid} from '@material-ui/core';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import React, {useContext} from 'react';
 import {
   getBetaAlphaError,
@@ -34,14 +35,12 @@ export default function BetaInput() {
           label="Direct distribution input"
         />
       </Grid>
-      {useDirectBetaInput ? (
-        <></>
-      ) : (
+      <ShowIf condition={!useDirectBetaInput}>
         <Grid container item xs={12}>
           <EventsInput />
           <SampleSizeInput />
         </Grid>
-      )}
+      </ShowIf>
       <Grid container item xs={12}>
         <AlphaValueInput
           getAlphaError={getBetaAlphaError}

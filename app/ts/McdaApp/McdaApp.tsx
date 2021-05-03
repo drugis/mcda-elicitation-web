@@ -9,6 +9,7 @@ import {lexicon} from '../InlineHelp/lexicon';
 import ManualInputWrapper from './ManualInput/ManualInputWrapper';
 import NavigationBar from './NavigationBar/NavigationBar';
 import {mcdaTheme} from './styles';
+import {UserContextProviderComponent} from './UserContext/UserContext';
 import Workspace from './Workspace/Workspace';
 import Workspaces from './Workspaces/Workspaces';
 
@@ -22,20 +23,22 @@ export default function McdaApp(): JSX.Element {
             host={'@MCDA_HOST'}
             path="/manual.html"
           >
-            <BrowserRouter>
-              <NavigationBar />
-              <Switch>
-                <Route
-                  path="/manual-input/:inProgressId"
-                  component={ManualInputWrapper}
-                />
-                <Route
-                  path="/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId/:selectedTab"
-                  component={Workspace}
-                />
-                <Route path="/" component={Workspaces} />
-              </Switch>
-            </BrowserRouter>
+            <UserContextProviderComponent>
+              <BrowserRouter>
+                <NavigationBar />
+                <Switch>
+                  <Route
+                    path="/manual-input/:inProgressId"
+                    component={ManualInputWrapper}
+                  />
+                  <Route
+                    path="/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId/:selectedTab"
+                    component={Workspace}
+                  />
+                  <Route path="/" component={Workspaces} />
+                </Switch>
+              </BrowserRouter>
+            </UserContextProviderComponent>
           </HelpContextProviderComponent>
         </ErrorHandler>
       </ErrorContextProviderComponent>

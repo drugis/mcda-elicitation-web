@@ -389,7 +389,7 @@ export default function SubproblemHandler(db: IDB) {
   ): void {
     scenarioRepository.getScenarioIdsForSubproblem(
       subproblemId,
-      function (error, result) {
+      (error: OurError, result: string[]) => {
         if (error) {
           callback(error);
         } else {

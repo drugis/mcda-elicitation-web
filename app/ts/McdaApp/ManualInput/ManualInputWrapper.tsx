@@ -1,3 +1,4 @@
+import {CircularProgress} from '@material-ui/core';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import Axios, {AxiosResponse} from 'axios';
 import React, {useEffect, useState} from 'react';
@@ -28,6 +29,6 @@ export default function ManualInputWrapper() {
       <ManualInput />
     </ManualInputContextProviderComponent>
   ) : (
-    <span>...loading</span>
+    <CircularProgress />
   );
 }

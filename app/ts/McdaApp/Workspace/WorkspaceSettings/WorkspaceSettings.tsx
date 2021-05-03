@@ -1,15 +1,10 @@
 import {Button, Tooltip} from '@material-ui/core';
 import Settings from '@material-ui/icons/Settings';
-import IEditMode from '@shared/interface/IEditMode';
 import React, {useState} from 'react';
 import {WorkspaceSettingsContextProviderComponent} from './WorkspaceSettingsContext/WorkspaceSettingsContext';
 import WorkspaceSettingsDialog from './WorkspaceSettingsDialog/WorkspaceSettingsDialog';
 
-export default function WorkspaceSettings({
-  editMode
-}: {
-  editMode: IEditMode;
-}): JSX.Element {
+export default function WorkspaceSettings(): JSX.Element {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   function openDialog(): void {
@@ -20,7 +15,7 @@ export default function WorkspaceSettings({
     setIsDialogOpen(false);
   }
 
-  return editMode.canEdit ? (
+  return (
     <>
       <Tooltip title="Change workspace settings">
         <Button
@@ -40,7 +35,5 @@ export default function WorkspaceSettings({
         />
       </WorkspaceSettingsContextProviderComponent>
     </>
-  ) : (
-    <></>
   );
 }

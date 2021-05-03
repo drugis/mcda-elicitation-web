@@ -33,33 +33,36 @@ export default function WorkspacesTables(): JSX.Element {
 
   return (
     <>
-      <Grid item xs={12}>
-        <Grid item xs={8}>
-          <Typography id="workspaces-header" variant="h4">
-            <InlineHelp helpId="workspace">Workspaces</InlineHelp>
-          </Typography>
-        </Grid>
+      <Grid item xs={8}>
+        <Typography id="workspaces-header" variant="h4">
+          <InlineHelp helpId="workspace">Workspaces</InlineHelp>
+        </Typography>
       </Grid>
-      {workspaces === undefined ? (
-        <CircularProgress />
-      ) : (
-        <WorkspacesTable workspaces={workspaces} type="finished" />
-      )}
+      <Grid item xs={8}>
+        {workspaces === undefined ? (
+          <CircularProgress />
+        ) : (
+          <WorkspacesTable workspaces={workspaces} type="finished" />
+        )}
+      </Grid>
 
-      <Grid item xs={12}>
-        <Grid item xs={8}>
-          <Typography id="workspaces-header" variant="h4">
-            <InlineHelp helpId="incomplete-workspaces">
-              Unfinished workspaces
-            </InlineHelp>
-          </Typography>
-        </Grid>
+      <Grid item xs={8}>
+        <Typography id="workspaces-header" variant="h4">
+          <InlineHelp helpId="incomplete-workspaces">
+            Unfinished workspaces
+          </InlineHelp>
+        </Typography>
       </Grid>
-      {inProgressworkspaces === undefined ? (
-        <CircularProgress />
-      ) : (
-        <WorkspacesTable workspaces={inProgressworkspaces} type="inProgress" />
-      )}
+      <Grid item xs={8}>
+        {inProgressworkspaces === undefined ? (
+          <CircularProgress />
+        ) : (
+          <WorkspacesTable
+            workspaces={inProgressworkspaces}
+            type="inProgress"
+          />
+        )}
+      </Grid>
     </>
   );
 }

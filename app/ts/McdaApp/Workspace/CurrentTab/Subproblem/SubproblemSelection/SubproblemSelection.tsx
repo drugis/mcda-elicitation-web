@@ -10,12 +10,12 @@ import React, {ChangeEvent, useContext} from 'react';
 
 export default function SubproblemSelection() {
   const {subproblems} = useContext(SubproblemsContext);
-  const {currentSubproblem, setCurrentSubproblem} = useContext(
+  const {currentSubproblem, goToSubproblem} = useContext(
     CurrentSubproblemContext
   );
 
   function handleSubproblemChanged(event: ChangeEvent<{value: string}>): void {
-    setCurrentSubproblem(subproblems[event.target.value]);
+    goToSubproblem(subproblems[event.target.value]);
   }
 
   function getSubproblemOptions(): JSX.Element[] {

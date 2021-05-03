@@ -11,6 +11,7 @@ import {
   Typography
 } from '@material-ui/core';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import _ from 'lodash';
 import React, {ChangeEvent, useCallback, useContext} from 'react';
@@ -169,11 +170,9 @@ export default function CreateWorkspaceDialog({
             {selectedProblem ? renderWorkspaceInput() : <></>}
           </Grid>
           <Grid item xs={3}>
-            {!_.isEmpty(validationErrors) ? (
+            <ShowIf condition={!_.isEmpty(validationErrors)}>
               <Typography>Invalid upload:</Typography>
-            ) : (
-              ''
-            )}
+            </ShowIf>
           </Grid>
           <Grid item xs={9}>
             <DisplayErrors

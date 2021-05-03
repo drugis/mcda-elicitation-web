@@ -6,12 +6,11 @@ import {LegendContext} from '../../LegendContext';
 
 export default function LegendTooltip(): JSX.Element {
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
-  const {canEdit, legendByAlternativeId} = useContext(LegendContext);
+  const {legendByAlternativeId} = useContext(LegendContext);
 
   function generateLegendTooltip(
     alternatives: IAlternative[],
-    legend: Record<string, string>,
-    canEdit: boolean
+    legend: Record<string, string>
   ): JSX.Element {
     if (legend) {
       return (
@@ -19,17 +18,15 @@ export default function LegendTooltip(): JSX.Element {
           <table className="legend-table">
             <tbody>{buildLegendCells(alternatives, legend)}</tbody>
           </table>
-          <div>{canEdit ? 'Click to change' : ''}</div>
+          <div>Click to change</div>
         </>
       );
     } else {
-      return canEdit ? (
+      return (
         <div>
           Please click the button to create aliases for the alternatives to use
           in plots
         </div>
-      ) : (
-        <div>No legend set</div>
       );
     }
   }
@@ -50,9 +47,5 @@ export default function LegendTooltip(): JSX.Element {
     });
   }
 
-  return generateLegendTooltip(
-    filteredAlternatives,
-    legendByAlternativeId,
-    canEdit
-  );
+  return generateLegendTooltip(filteredAlternatives, legendByAlternativeId);
 }

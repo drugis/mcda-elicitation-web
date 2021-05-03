@@ -6,11 +6,12 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import ICriterion from '@shared/interface/ICriterion';
 import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
-import significantDigits from 'app/ts/util/significantDigits';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
@@ -102,7 +103,9 @@ export default function PreferencesWeightsTable() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {!_.isEmpty(pvfs) ? renderCriterionPreferences() : <></>}
+        <ShowIf condition={!_.isEmpty(pvfs)}>
+          {renderCriterionPreferences()}
+        </ShowIf>
       </TableBody>
     </Table>
   );

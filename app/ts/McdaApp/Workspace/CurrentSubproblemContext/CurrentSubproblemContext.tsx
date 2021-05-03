@@ -136,7 +136,7 @@ export function CurrentSubproblemContextProviderComponent({
         getCriterion,
         getConfiguredRange,
         getStepSizeForCriterion,
-        setCurrentSubproblem: goToSubproblem
+        goToSubproblem
       }}
     >
       {children}

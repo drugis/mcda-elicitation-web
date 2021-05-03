@@ -1,6 +1,7 @@
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import React from 'react';
 import AddSubproblemCriterionCells from './AddSubproblemCriterionCells/AddSubproblemCriterionCells';
 import AddSubproblemDataSourceCells from './AddSubproblemDataSourceCells/AddSubproblemDataSourceCells';
@@ -14,17 +15,11 @@ export default function AddSubproblemEffectsTableDataSourceRow({
   dataSource: IDataSource;
   rowIndex: number;
 }) {
-  function renderCriterionCells(): JSX.Element {
-    if (rowIndex === 0) {
-      return <AddSubproblemCriterionCells criterion={criterion} />;
-    } else {
-      return <></>;
-    }
-  }
-
   return (
     <TableRow id={`criterion-row-${criterion.id}`}>
-      {renderCriterionCells()}
+      <ShowIf condition={rowIndex === 0}>
+        <AddSubproblemCriterionCells criterion={criterion} />
+      </ShowIf>
       <AddSubproblemDataSourceCells
         criterion={criterion}
         dataSource={dataSource}
