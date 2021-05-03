@@ -1,4 +1,4 @@
-import {useStyles} from 'app/ts/McdaApp/styles';
+import {textCenterStyle, uncertainStyle} from 'app/ts/McdaApp/styles';
 import React from 'react';
 
 export default function UncertainValue({
@@ -10,11 +10,10 @@ export default function UncertainValue({
   lowerBound: number;
   upperBound: number;
 }) {
-  const classes = useStyles();
   return (
     <>
-      <div className={classes.textCenter}>{value}</div>
-      <div className={classes.uncertain}>
+      <div style={textCenterStyle}>{value}</div>
+      <div style={uncertainStyle}>
         {lowerBound}, {upperBound}
       </div>
     </>

@@ -4,7 +4,7 @@ import IScale from '@shared/interface/IScale';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {useStyles} from 'app/ts/McdaApp/styles';
+import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import React, {useContext} from 'react';
@@ -27,8 +27,6 @@ export default function DistributionValueCell({
   alternativeId: string;
   isExcluded?: boolean;
 }): JSX.Element {
-  const classes = useStyles();
-
   const {setErrorMessage} = useContext(ErrorContext);
   const {
     settings: {calculationMethod}
@@ -78,7 +76,7 @@ export default function DistributionValueCell({
       id={`value-cell-${dataSourceId}-${alternativeId}`}
       style={cellStyle}
     >
-      <div className={classes.textCenter}>{renderedDistribution} </div>
+      <div style={textCenterStyle}>{renderedDistribution} </div>
     </TableCell>
   ) : (
     <EmptyCell

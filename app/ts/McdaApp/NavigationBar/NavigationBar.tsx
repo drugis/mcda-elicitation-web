@@ -1,10 +1,7 @@
 import {
   AppBar,
-  createStyles,
   IconButton,
   Link as LinkHref,
-  makeStyles,
-  Theme,
   Toolbar,
   Tooltip,
   Typography,
@@ -15,22 +12,15 @@ import GroupIcon from '@material-ui/icons/Group';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import IUser from '@shared/interface/User/IUser';
 import Cookies from 'js-cookie';
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import {Link} from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    grow: {
-      flexGrow: 1
-    },
-    menuItem: {
-      textDecoration: 'none',
-      color: '#FFFFFF',
-      marginRight: 16,
-      marginLeft: 4
-    }
-  })
-);
+const menuItemStyle: CSSProperties = {
+  textDecoration: 'none',
+  color: '#FFFFFF',
+  marginRight: 16,
+  marginLeft: 4
+};
 
 function ElevationScroll({children}: {children: any}) {
   const trigger = useScrollTrigger({
@@ -44,9 +34,7 @@ function ElevationScroll({children}: {children: any}) {
 }
 
 export default function NavigationBar(): JSX.Element {
-  const user: IUser = JSON.parse(Cookies.get('LOGGED-IN-USER')); // userPicture for google!
-
-  const classes = useStyles();
+  const user: IUser = JSON.parse(Cookies.get('LOGGED-IN-USER'));
 
   function handleLogOut(): void {
     Cookies.remove('LOGGED-IN-USER');
@@ -64,20 +52,20 @@ export default function NavigationBar(): JSX.Element {
               noWrap
               component={Link}
               to="/"
-              className={classes.menuItem}
+              style={menuItemStyle}
             >
               mcda.drugis.org
             </Typography>
-            <div className={classes.grow} />
+            <div style={{flexGrow: 1}} />
             <GroupIcon style={{fill: '#FFFFFF'}} />
             <LinkHref href="http://drugis.org/services/index" target="_blank">
-              <Typography variant="h6" noWrap className={classes.menuItem}>
+              <Typography variant="h6" noWrap style={menuItemStyle}>
                 Services
               </Typography>
             </LinkHref>
             <MenuBookIcon style={{fill: '#FFFFFF'}} />
             <LinkHref id="manual-link" href="/manual.html" target="_blank">
-              <Typography variant="h6" noWrap className={classes.menuItem}>
+              <Typography variant="h6" noWrap style={menuItemStyle}>
                 Manual
               </Typography>
             </LinkHref>
@@ -85,7 +73,7 @@ export default function NavigationBar(): JSX.Element {
               id="user-name"
               variant="h6"
               noWrap
-              className={classes.menuItem}
+              style={menuItemStyle}
               component={Link}
               to="/"
             >
