@@ -173,7 +173,10 @@ export function getScaleBlockingWarnings(
   ) {
     warnings.push('Effects table contains multiple data sources per criterion');
   }
-  if (hasRowWithOnlySameValue(dataSourceInclusions, observedRanges)) {
+  if (
+    !_.isEmpty(observedRanges) &&
+    hasRowWithOnlySameValue(dataSourceInclusions, observedRanges)
+  ) {
     warnings.push(
       'Effects table contains criterion where all values are indentical'
     );

@@ -533,43 +533,84 @@ describe('addSubproblemUtil', () => {
       ];
       expect(result).toEqual(expectedResult);
     });
-    describe('hasTooManyCriteria', () => {
-      it('should return true if there are more than 12 criteria included', () => {
-        const includedCriteria: Record<string, boolean> = {
-          crit1Id: true,
-          crit2Id: true,
-          crit3Id: true,
-          crit4Id: true,
-          crit5Id: true,
-          crit6Id: true,
-          crit7Id: true,
-          crit8Id: true,
-          crit9Id: true,
-          crit10Id: true,
-          crit11Id: true,
-          crit12Id: true,
-          crit13Id: true
-        };
-        expect(hasTooManyCriteria(includedCriteria)).toBeTruthy();
-      });
 
-      it('should return false if 12 or less criteria are included', () => {
-        const includedCriteria: Record<string, boolean> = {
-          crit1Id: true,
-          crit2Id: true,
-          crit3Id: true,
-          crit4Id: true,
-          crit5Id: true,
-          crit6Id: true,
-          crit7Id: true,
-          crit8Id: true,
-          crit9Id: true,
-          crit10Id: true,
-          crit11Id: true,
-          crit12Id: true
-        };
-        expect(hasTooManyCriteria(includedCriteria)).toBeFalsy();
-      });
+    it('should not throw an error if there are no observed ranges (all text/empty cell problem)', () => {
+      const criterionInclusions = {crit1Id: true};
+      const dataSourceInclusions = {ds1Id: true};
+      const alternativeInclusions = {alt1Id: true};
+
+      const workspace = {
+        criteria: [{id: 'crit1Id', dataSources: [{id: 'ds1Id'}]}],
+        alternatives: [{id: 'alt1Id'}],
+        effects: [
+          {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'empty'
+          }
+        ],
+        distributions: [
+          {
+            criterionId: 'crit1Id',
+            dataSourceId: 'ds1Id',
+            alternativeId: 'alt1Id',
+            type: 'text',
+            text: 'blabla'
+          }
+        ],
+        relativePerformances: []
+      } as IWorkspace;
+      const emptyObservedRanges = {} as Record<string, [number, number]>;
+
+      const result = getScaleBlockingWarnings(
+        criterionInclusions,
+        dataSourceInclusions,
+        alternativeInclusions,
+        workspace,
+        emptyObservedRanges
+      );
+      const expectedResult: string[] = [missingValuesWarning];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('hasTooManyCriteria', () => {
+    it('should return true if there are more than 12 criteria included', () => {
+      const includedCriteria: Record<string, boolean> = {
+        crit1Id: true,
+        crit2Id: true,
+        crit3Id: true,
+        crit4Id: true,
+        crit5Id: true,
+        crit6Id: true,
+        crit7Id: true,
+        crit8Id: true,
+        crit9Id: true,
+        crit10Id: true,
+        crit11Id: true,
+        crit12Id: true,
+        crit13Id: true
+      };
+      expect(hasTooManyCriteria(includedCriteria)).toBeTruthy();
+    });
+
+    it('should return false if 12 or less criteria are included', () => {
+      const includedCriteria: Record<string, boolean> = {
+        crit1Id: true,
+        crit2Id: true,
+        crit3Id: true,
+        crit4Id: true,
+        crit5Id: true,
+        crit6Id: true,
+        crit7Id: true,
+        crit8Id: true,
+        crit9Id: true,
+        crit10Id: true,
+        crit11Id: true,
+        crit12Id: true
+      };
+      expect(hasTooManyCriteria(includedCriteria)).toBeFalsy();
     });
   });
 
