@@ -107,7 +107,7 @@ export function CurrentSubproblemContextProviderComponent({
     updateSubproblem(subproblem);
   }
 
-  function goToScenario(subproblem: IOldSubproblem): void {
+  function goToSubproblem(subproblem: IOldSubproblem): void {
     axios
       .get(
         `/api/v2/workspaces/${workspace.properties.id}/problems/${subproblem.id}/scenarios`
@@ -136,7 +136,7 @@ export function CurrentSubproblemContextProviderComponent({
         getCriterion,
         getConfiguredRange,
         getStepSizeForCriterion,
-        setCurrentSubproblem: goToScenario
+        setCurrentSubproblem: goToSubproblem
       }}
     >
       {children}
