@@ -9,6 +9,10 @@ import IWorkspace from '@shared/interface/IWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
+import {
+  updateProblemToCurrentSchema,
+  updateWorkspaceToCurrentSchema
+} from '@shared/SchemaUtil/SchemaUtil';
 import {buildInProgressCopy} from '@shared/workspaceService';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
@@ -83,7 +87,10 @@ export default function InProgressHandler(db: IDB) {
     workspace: IOldWorkspace,
     callback: (error: OurError, inProgressCopy: IWorkspace) => void
   ): void {
-    callback(null, buildInProgressCopy(workspace));
+    callback(
+      null,
+      buildInProgressCopy(updateWorkspaceToCurrentSchema(workspace))
+    );
   }
 
   function createNew(

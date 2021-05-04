@@ -9,7 +9,10 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import IWorkspaceExample from '@shared/interface/Workspace/IWorkspaceExample';
-import {updateProblemToCurrentSchema} from '@shared/SchemaUtil/SchemaUtil';
+import {
+  updateProblemToCurrentSchema,
+  updateWorkspaceToCurrentSchema
+} from '@shared/SchemaUtil/SchemaUtil';
 import {waterfall} from 'async';
 import {Request, Response} from 'express';
 import {readFileSync} from 'fs';
@@ -272,7 +275,7 @@ export default function WorkspaceHandler(db: IDB) {
         if (error) {
           handleError(error, next);
         } else {
-          response.json(result);
+          response.json(updateWorkspaceToCurrentSchema(result));
         }
       }
     );

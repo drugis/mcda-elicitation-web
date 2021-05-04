@@ -1,6 +1,7 @@
 //@ts-nocheck
 
 import {CURRENT_SCHEMA_VERSION} from '@shared/constants';
+import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {getDataSourcesById} from '@shared/util';
 import _ from 'lodash';
@@ -27,6 +28,15 @@ import _ from 'lodash';
  * 1.4.6 Store effect input as decimals
  * 1.4.7 Move pvfs off problem onto default scenario
  * *****/
+
+export function updateWorkspaceToCurrentSchema(
+  workspace: IOldWorkspace
+): IOldWorkspace {
+  return {
+    ...workspace,
+    problem: updateProblemToCurrentSchema(workspace.problem)
+  };
+}
 
 export function updateProblemToCurrentSchema(problem: IProblem) {
   let newProblem = _.cloneDeep(problem);
