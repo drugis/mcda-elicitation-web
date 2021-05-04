@@ -18,7 +18,6 @@ export default function PreferencesSensitivityPlot(): JSX.Element {
   const height = '400px';
 
   useEffect(() => {
-    const usePercentage = getUsePercentage(preferencesSensitivityCriterion);
     const settings: ChartConfiguration = getSensitivityLineChartSettings(
       preferencesSensitivityResults,
       filteredAlternatives,
@@ -26,12 +25,11 @@ export default function PreferencesSensitivityPlot(): JSX.Element {
       'Weight given to ' + preferencesSensitivityCriterion.title,
       true,
       '#preferences-sensitivity-plot',
-      usePercentage
+      false
     );
     generate(settings);
   }, [
     filteredAlternatives,
-    getUsePercentage,
     legendByAlternativeId,
     preferencesSensitivityCriterion,
     preferencesSensitivityResults
