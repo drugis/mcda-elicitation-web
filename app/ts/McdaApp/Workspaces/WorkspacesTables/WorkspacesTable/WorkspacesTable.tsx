@@ -1,5 +1,4 @@
 import {
-  Grid,
   Table,
   TableBody,
   TableCell,
@@ -9,6 +8,7 @@ import {
 } from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {TWorkspaceType} from '../../TWorkspaceType';
@@ -117,50 +117,44 @@ export default function WorkspacesTable({
   }
 
   return (
-    <Grid container item xs={12}>
-      <Grid item xs={8}>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
+    <Table size="small">
+      <TableHead>
+        <TableRow>
+          <TableCell>
+            <TableSortLabel
+              id="sort-workspaces-by-title"
+              active={orderBy === 'title'}
+              direction={orderBy === 'title' ? orderDirection : 'asc'}
+              onClick={_.partial(orderByProperty, 'title')}
+            >
+              Title
+            </TableSortLabel>
+          </TableCell>
+          <ShowIf condition={type === 'finished'}>
+            <>
               <TableCell>
                 <TableSortLabel
-                  id="sort-workspaces-by-title"
-                  active={orderBy === 'title'}
-                  direction={orderBy === 'title' ? orderDirection : 'asc'}
-                  onClick={_.partial(orderByProperty, 'title')}
+                  id="sort-workspaces-by-creation-date"
+                  active={orderBy === 'creationDate'}
+                  direction={
+                    orderBy === 'creationDate' ? orderDirection : 'asc'
+                  }
+                  onClick={_.partial(orderByProperty, 'creationDate')}
                 >
-                  Title
+                  Created
                 </TableSortLabel>
               </TableCell>
-              {type === 'finished' ? (
-                <>
-                  <TableCell>
-                    <TableSortLabel
-                      id="sort-workspaces-by-creation-date"
-                      active={orderBy === 'creationDate'}
-                      direction={
-                        orderBy === 'creationDate' ? orderDirection : 'asc'
-                      }
-                      onClick={_.partial(orderByProperty, 'creationDate')}
-                    >
-                      Created
-                    </TableSortLabel>
-                  </TableCell>
-                  <TableCell></TableCell>
-                </>
-              ) : (
-                <></>
-              )}
               <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          {sortedWorkspaces.length ? (
-            <WorkspacesTableBody />
-          ) : (
-            <EmptyWorkspaceMessage />
-          )}
-        </Table>
-      </Grid>
-    </Grid>
+            </>
+          </ShowIf>
+          <TableCell></TableCell>
+        </TableRow>
+      </TableHead>
+      {sortedWorkspaces.length ? (
+        <WorkspacesTableBody />
+      ) : (
+        <EmptyWorkspaceMessage />
+      )}
+    </Table>
   );
 }

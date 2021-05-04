@@ -8,8 +8,7 @@ export default function ResultsTabs() {
   const {path} = useRouteMatch();
   const noParenthesesPath = path.slice(0, path.indexOf('('));
   return (
-    <LegendContextProviderComponent canEdit={true}>
-      {/* FIXME canEdit */}
+    <LegendContextProviderComponent>
       <Switch>
         <Route
           exact

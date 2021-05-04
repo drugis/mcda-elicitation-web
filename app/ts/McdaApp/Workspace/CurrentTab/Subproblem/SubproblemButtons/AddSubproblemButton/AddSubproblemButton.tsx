@@ -1,6 +1,7 @@
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Add from '@material-ui/icons/Add';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import React, {useState} from 'react';
 import {AddSubproblemContextProviderComponent} from './AddSubproblemContext';
 import AddSubproblemDialog from './AddSubproblemDialog/AddSubproblemDialog';
@@ -28,16 +29,14 @@ export default function AddSubproblemButton() {
           <Add />
         </IconButton>
       </Tooltip>
-      {isDialogOpen ? (
+      <ShowIf condition={isDialogOpen}>
         <AddSubproblemContextProviderComponent>
           <AddSubproblemDialog
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
           />
         </AddSubproblemContextProviderComponent>
-      ) : (
-        <></>
-      )}
+      </ShowIf>
     </>
   );
 }

@@ -1,4 +1,5 @@
-import {Button, Grid} from '@material-ui/core';
+import {Button} from '@material-ui/core';
+import GetApp from '@material-ui/icons/GetApp';
 import IProblem from '@shared/interface/Problem/IProblem';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -28,15 +29,13 @@ export default function DownloadWorkspace() {
   }
 
   return (
-    <Grid item xs={12}>
-      <Button
-        onClick={downloadWorkspace}
-        variant={'contained'}
-        color={'primary'}
-        size="small"
-      >
-        Download workspace
-      </Button>
-    </Grid>
+    <Button
+      onClick={downloadWorkspace}
+      variant={'contained'}
+      color={'primary'}
+      size="small"
+    >
+      <GetApp /> Download workspace
+    </Button>
   );
 }

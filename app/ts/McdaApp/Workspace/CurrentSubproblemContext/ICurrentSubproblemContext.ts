@@ -20,5 +20,5 @@ export default interface ICurrentSubproblemContext {
   getCriterion: (id: string) => ICriterion;
   getConfiguredRange: (criterion: ICriterion) => [number, number];
   getStepSizeForCriterion: (criterion: ICriterion) => number;
-  setCurrentSubproblem: (newSubproblem: IOldSubproblem) => void;
+  goToSubproblem: (newSubproblem: IOldSubproblem) => void;
 }

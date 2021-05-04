@@ -1,7 +1,8 @@
 import TableCell from '@material-ui/core/TableCell';
 import IDataSource from '@shared/interface/IDataSource';
-import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
+import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import React, {useContext} from 'react';
 
@@ -18,11 +19,11 @@ export default function EffectsTableUnitOfMeasurementCell({
   } = useContext(SettingsContext);
   const cellStyle = isExcluded ? deselectedCellStyle : {};
 
-  return units ? (
-    <TableCell id={`unit-cell-${dataSource.id}`} style={cellStyle}>
-      {getUnitLabel(dataSource.unitOfMeasurement, showPercentages)}
-    </TableCell>
-  ) : (
-    <></>
+  return (
+    <ShowIf condition={units}>
+      <TableCell id={`unit-cell-${dataSource.id}`} style={cellStyle}>
+        {getUnitLabel(dataSource.unitOfMeasurement, showPercentages)}
+      </TableCell>
+    </ShowIf>
   );
 }

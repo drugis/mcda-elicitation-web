@@ -1,14 +1,10 @@
 import {Table, TableBody, TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {
-  getBest,
-  getWorst
-} from '../../PartialValueFunctions/PartialValueFunctionUtil';
+import {getWorst} from '../../PartialValueFunctions/PartialValueFunctionUtil';
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
 import {getImprovedValue, isImprovedValueRealistic} from '../tradeOffUtil';
 

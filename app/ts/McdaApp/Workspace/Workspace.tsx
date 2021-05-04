@@ -5,21 +5,19 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {ErrorContext} from '../../Error/ErrorContext';
 import {CurrentScenarioContextProviderComponent} from './CurrentScenarioContext/CurrentScenarioContext';
+import {CurrentSubproblemContextProviderComponent} from './CurrentSubproblemContext/CurrentSubproblemContext';
+import CurrentTab from './CurrentTab/CurrentTab';
 import {ScenariosContextProviderComponent} from './ScenariosContext/ScenariosContext';
 import {SettingsContextProviderComponent} from './SettingsContext/SettingsContext';
-import WorkspaceSettings from './WorkspaceSettings/WorkspaceSettings';
-import CurrentTab from './CurrentTab/CurrentTab';
-import {CurrentSubproblemContextProviderComponent} from './CurrentSubproblemContext/CurrentSubproblemContext';
 import {SubproblemsContextProviderComponent} from './SubproblemsContext/SubproblemsContext';
 import TabBar from './TabBar/TabBar';
+import WorkspaceButtons from './WorkspaceButtons/WorkspaceButtons';
 import {WorkspaceContextProviderComponent} from './WorkspaceContext/WorkspaceContext';
 import WorkspaceTitle from './WorkspaceTitle/WorkspaceTitle';
 
 export default function Workspace() {
-  const {workspaceId, subproblemId, scenarioId} = useParams<{
+  const {workspaceId} = useParams<{
     workspaceId: string;
-    subproblemId: string;
-    scenarioId: string;
   }>();
 
   const [workspace, setWorkspace] = useState<IOldWorkspace>();
@@ -39,13 +37,11 @@ export default function Workspace() {
     <WorkspaceContextProviderComponent originalWorkspace={workspace}>
       <SettingsContextProviderComponent>
         <Grid container>
-          <Grid item xs={10}>
+          <Grid item xs={12}>
             <WorkspaceTitle />
           </Grid>
-          <Grid container item xs={2} justify="flex-end">
-            <Grid item>
-              <WorkspaceSettings editMode={{canEdit: true}} />
-            </Grid>
+          <Grid item xs={12} style={{marginBottom: '1em'}}>
+            <WorkspaceButtons />
           </Grid>
         </Grid>
         <SubproblemsContextProviderComponent>

@@ -17,9 +17,7 @@ export default function LegendButton({
 }: {
   buttonId: string;
 }): JSX.Element {
-  const {canEdit, legendByAlternativeId, saveLegend} = useContext(
-    LegendContext
-  );
+  const {legendByAlternativeId, saveLegend} = useContext(LegendContext);
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -80,7 +78,6 @@ export default function LegendButton({
             color="primary"
             variant="contained"
             onClick={openDialog}
-            disabled={!canEdit}
             size="small"
             style={{width: '55px'}}
           >
