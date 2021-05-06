@@ -58,7 +58,7 @@ jobs:
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
 
       - name: remove container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker rm mcda'
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
 
       - name: run MCDA container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/run-mcda-from-registry.sh'
