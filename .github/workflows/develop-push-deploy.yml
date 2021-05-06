@@ -2,7 +2,8 @@ name: MCDA-test | push | deploy
 
 on:
   push:
-    branches: develop
+    # branches: develop
+    branches: ops/deployWorker
 
 jobs:
   test:
@@ -30,48 +31,62 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      - name: run yarn
-        run: yarn
+      # - name: run yarn
+      #   run: yarn
 
-      - name: back-end tests
-        id: jest
-        run: npx jest
+      # - name: unit tests
+      #   id: jest
+      #   run: yarn jest
 
-      - name: pull latest from drugis on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && git checkout develop && git pull'
-      # StrictHostKeyChecking=no ensures no prompt for 'add to known hosts'
+      - name: docker login
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      - name: build docker container in test server on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && docker build --build-arg MCDA_HOST=https://mcda-test.drugis.org --no-cache --tag mcda .'
+      # - name: build docker image
+      #   run: ./build-docker.sh GOOGLE Test https://mcda-test.drugis.org test
 
-      - name: stop MCDA docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
+      - name: build worker image
+        run: |
+          cd R
+          docker build --tag addis/patavi-smaa-worker:test .
 
-      - name: liquify database on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
+      # - name: docker push
+      #   run: docker push addis/mcda:test
 
-      - name: delete docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
+      # - name: pull latest from drugis on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && git checkout develop && git pull'
+      # # StrictHostKeyChecking=no ensures no prompt for 'add to known hosts'
 
-      - name: run MCDA container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/run-mcda.sh'
+      # - name: build docker container in test server on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && docker build --build-arg MCDA_HOST=https://mcda-test.drugis.org --no-cache --tag mcda .'
 
-      - name: prune docker on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
+      # - name: stop MCDA docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
 
-      - name: notify on slack channel on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop push:'
-          SLACK_MESSAGE: 'MCDA-test deploy failed'
+      # - name: liquify database on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
 
-      - name: notify on slack channel on success
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop push:'
-          SLACK_MESSAGE: 'MCDA-test deployed'
+      # - name: delete docker container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
+
+      # - name: run MCDA container on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/run-mcda.sh'
+
+      # - name: prune docker on the server
+      #   run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
+
+      # - name: notify on slack channel on failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'MCDA-test deploy failed'
+
+      # - name: notify on slack channel on success
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'MCDA-test deployed'
