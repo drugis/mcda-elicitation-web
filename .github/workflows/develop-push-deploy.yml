@@ -25,7 +25,6 @@ jobs:
           mkdir ssl
           echo "${{ secrets.pataviClientCrt }}" > ssl/crt.pem 
           echo "${{ secrets.pataviClientKey }}" > ssl/key.pem
-          ls ssl
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
