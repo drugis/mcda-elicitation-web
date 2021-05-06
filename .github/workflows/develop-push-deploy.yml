@@ -3,7 +3,7 @@ name: MCDA-test | push | deploy
 on:
   push:
     # branches: develop
-    branches: ops/deployWorker
+    branches: ops/buildImage
 
 jobs:
   test:
@@ -31,23 +31,18 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      # - name: run yarn
-      #   run: yarn
+      - name: run yarn
+        run: yarn
 
-      # - name: unit tests
-      #   id: jest
-      #   run: yarn jest
+      - name: unit tests
+        id: jest
+        run: yarn jest
 
       - name: docker login
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      # - name: build docker image
-      #   run: ./build-docker.sh GOOGLE Test https://mcda-test.drugis.org test
-
-      - name: build worker image
-        run: |
-          cd R
-          docker build --tag addis/patavi-smaa-worker:test .
+      - name: build docker image
+        run: ./build-docker.sh GOOGLE Test https://mcda-test.drugis.org test
 
       # - name: docker push
       #   run: docker push addis/mcda:test
