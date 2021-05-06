@@ -42,7 +42,7 @@ jobs:
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       - name: build docker image
-        run: ./build-docker.sh GOOGLE Test https://mcda-test.drugis.org test
+        run: ./build-docker-with-tag.sh GOOGLE Test https://mcda-test.drugis.org test
 
       # - name: docker push
       #   run: docker push addis/mcda:test
