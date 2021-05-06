@@ -2,8 +2,7 @@ name: MCDA-test | push | deploy
 
 on:
   push:
-    # branches: develop
-    branches: ops/buildImage
+    branches: develop
 
 jobs:
   test:
@@ -72,19 +71,19 @@ jobs:
       - name: prune docker on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
 
-      # - name: notify on slack channel on failure
-      #   if: failure()
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: 'Develop push:'
-      #     SLACK_MESSAGE: 'MCDA-test deploy failed'
+      - name: notify on slack channel on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Develop push:'
+          SLACK_MESSAGE: 'MCDA-test deploy failed'
 
-      # - name: notify on slack channel on success
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: 'Develop push:'
-      #     SLACK_MESSAGE: 'MCDA-test deployed'
+      - name: notify on slack channel on success
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: 'Develop push:'
+          SLACK_MESSAGE: 'MCDA-test deployed'
