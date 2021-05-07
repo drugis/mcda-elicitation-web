@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {OurError} from '@shared/interface/IError';
 import csurf from 'csurf';
-import express, {Request, Response} from 'express';
+import express, {CookieOptions, Request, Response} from 'express';
 import session, {SessionOptions} from 'express-session';
 import helmet from 'helmet';
 import http from 'http';
@@ -81,6 +81,11 @@ function initApp(): void {
   rightsManagement.setRequiredRights(
     getRequiredRights(workspaceOwnerRightsNeeded, inProgressOwnerRightsNeeded)
   );
+  const cookieSettings: CookieOptions = {
+    maxAge: 60 * 60 * 1000, // 1 hour,
+    secure: authenticationMethod === 'SSL',
+    sameSite: authenticationMethod === 'SSL' ? 'strict' : 'lax'
+  };
   const sessionOptions: SessionOptions = {
     store: new (require('connect-pg-simple')(session))({
       conString: buildDBUrl()
@@ -90,11 +95,7 @@ function initApp(): void {
     proxy: true,
     rolling: true,
     saveUninitialized: true,
-    cookie: {
-      maxAge: 60 * 60 * 1000, // 1 hour
-      secure: authenticationMethod === 'SSL'
-      // sameSite: true
-    }
+    cookie: cookieSettings
   };
 
   app.use(session(sessionOptions));
@@ -120,11 +121,12 @@ function initApp(): void {
   });
   app.use(csurf());
   app.use((request: Request, response: Response, next: any): void => {
-    response.cookie('XSRF-TOKEN', request.csrfToken());
+    response.cookie('XSRF-TOKEN', request.csrfToken(), cookieSettings);
     if (request.user) {
       response.cookie(
         'LOGGED-IN-USER',
-        JSON.stringify(_.omit(request.user, 'email', 'password'))
+        JSON.stringify(_.omit(request.user, 'email', 'password')),
+        cookieSettings
       );
     }
     next();
