@@ -70,6 +70,9 @@ jobs:
       - name: run docker container on remote server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && ./mcdaweb-run.sh'
 
+      - name: docker registry garbage collection
+        run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+
       - name: notify on slack channel on failure
         if: failure()
         uses: rtCamp/action-slack-notify@master
