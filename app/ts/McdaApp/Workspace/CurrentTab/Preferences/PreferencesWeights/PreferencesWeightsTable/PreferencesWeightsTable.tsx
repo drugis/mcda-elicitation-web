@@ -33,7 +33,7 @@ export default function PreferencesWeightsTable() {
     setImportances(
       buildImportance(filteredCriteria, currentScenario.state.prefs)
     );
-  }, [currentScenario, pvfs]);
+  }, [currentScenario, filteredCriteria, pvfs]);
 
   function getWeight(criterionId: string) {
     if (currentScenario.state.weights) {
@@ -52,7 +52,7 @@ export default function PreferencesWeightsTable() {
       filteredCriteria,
       (criterion: ICriterion): JSX.Element => {
         const unit = criterion.dataSources[0].unitOfMeasurement;
-        const usePercentage = getUsePercentage(criterion);
+        const usePercentage = getUsePercentage(criterion.dataSources[0]);
         return (
           <TableRow key={criterion.id}>
             <TableCell>

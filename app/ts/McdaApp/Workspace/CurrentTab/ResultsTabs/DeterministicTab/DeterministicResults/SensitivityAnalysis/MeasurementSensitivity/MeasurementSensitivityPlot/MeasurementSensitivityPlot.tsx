@@ -18,7 +18,9 @@ export default function MeasurementSensitivityPlot(): JSX.Element {
   const height = '400px';
 
   useEffect(() => {
-    const usePercentage = getUsePercentage(measurementSensitivityCriterion);
+    const usePercentage = getUsePercentage(
+      measurementSensitivityCriterion.dataSources[0]
+    );
     const settings: ChartConfiguration = getSensitivityLineChartSettings(
       measurementsSensitivityResults,
       filteredAlternatives,

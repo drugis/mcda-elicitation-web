@@ -17,7 +17,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
   const [anchorElement, setAnchorElement] = useState<HTMLButtonElement | null>(
     null
   );
-  const usePercentage = getUsePercentage(referenceCriterion);
+  const usePercentage = getUsePercentage(referenceCriterion.dataSources[0]);
 
   function openDialog(event: React.MouseEvent<HTMLButtonElement>): void {
     setDialogOpen(true);

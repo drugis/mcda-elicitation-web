@@ -21,7 +21,7 @@ export default function PvfDirection(): JSX.Element {
   const {getConfiguredRange} = useContext(CurrentSubproblemContext);
 
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
-  const usePercentage = getUsePercentage(advancedPvfCriterion);
+  const usePercentage = getUsePercentage(advancedPvfCriterion.dataSources[0]);
 
   function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
     setDirection(event.target.value as TPvfDirection);

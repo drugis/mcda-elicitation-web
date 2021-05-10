@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
+import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {generateAdvancedPvfPlotSettings} from 'app/ts/McdaApp/Workspace/CurrentTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ChartConfiguration, generate} from 'c3';
 import {selectAll} from 'd3';
 import React, {useContext, useEffect} from 'react';
@@ -15,12 +15,12 @@ export default function AdvancedPvfPlot() {
   const {getConfiguredRange} = useContext(CurrentSubproblemContext);
 
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
-  const usePercentage = getUsePercentage(advancedPvfCriterion);
 
   const width = '500px';
   const height = '400px';
 
   useEffect(() => {
+    const usePercentage = getUsePercentage(advancedPvfCriterion.dataSources[0]);
     const values =
       direction === 'decreasing'
         ? [1, 0.75, 0.5, 0.25, 0]
@@ -36,7 +36,14 @@ export default function AdvancedPvfPlot() {
     selectAll(`#pvfplot-${advancedPvfCriterion.id}`)
       .selectAll('.c3-line')
       .style('stroke-width', '2px');
-  }, [cutOffs, usePercentage, direction]);
+  }, [
+    advancedPvfCriterion.dataSources,
+    advancedPvfCriterion.id,
+    configuredRange,
+    cutOffs,
+    direction,
+    getUsePercentage
+  ]);
 
   return (
     <Grid container item xs={12} justify="flex-start">

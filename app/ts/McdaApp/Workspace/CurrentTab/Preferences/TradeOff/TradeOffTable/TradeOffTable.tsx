@@ -21,7 +21,7 @@ export default function TradeOffTable(): JSX.Element {
     return _.map(
       criteria,
       (criterion: ICriterion): JSX.Element => {
-        const usePercentage = getUsePercentage(criterion);
+        const usePercentage = getUsePercentage(criterion.dataSources[0]);
         const improvedValue = getImprovedValue(
           usePercentage,
           currentScenario.state.weights.mean[criterion.id],
