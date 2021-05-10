@@ -291,7 +291,7 @@ WHERE
 UPDATE
   workspacesettings
 SET
-  settings = settings # - '{settings, effectsDisplay}';
+  settings = settings #-'{settings, effectsDisplay}';
 
 COMMIT;
 
