@@ -31,7 +31,7 @@ export default function SensitivityMeasurementsTableCell({
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const values = sensitivityTableValues[criterion.id][alternativeId];
-  const usePercentage = getUsePercentage(criterion);
+  const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
   const [localValue, setLocalValue] = useState<number>(
     getPercentifiedValue(values.currentValue, usePercentage)

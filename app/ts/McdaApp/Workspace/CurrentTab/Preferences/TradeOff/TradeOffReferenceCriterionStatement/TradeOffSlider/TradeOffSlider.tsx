@@ -36,7 +36,7 @@ export default function TradeOffSlider({
 
   const marginTop = {marginTop: '50px'};
 
-  const usePercentage = getUsePercentage(referenceCriterion);
+  const usePercentage = getUsePercentage(referenceCriterion.dataSources[0]);
   const isDecreasingPvf = referenceValueFrom > referenceValueTo;
 
   const sliderParameters = isDecreasingPvf

@@ -18,7 +18,7 @@ export default function CutOffs(): JSX.Element {
 
   const stepSize = getStepSizeForCriterion(advancedPvfCriterion);
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
-  const usePercentage = getUsePercentage(advancedPvfCriterion);
+  const usePercentage = getUsePercentage(advancedPvfCriterion.dataSources[0]);
 
   const sliderParameters = {
     min: significantDigits(configuredRange[0] + stepSize),

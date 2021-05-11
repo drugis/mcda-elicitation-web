@@ -19,7 +19,7 @@ export default function ScalesTableRow({criterion}: {criterion: ICriterion}) {
     CurrentSubproblemContext
   );
 
-  const usePercentage = getUsePercentage(criterion);
+  const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
   const theoreticalRangeLabel = getTheoreticalRangeLabel(
     usePercentage,
