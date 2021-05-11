@@ -610,3 +610,7 @@ WHERE workspacesettings.workspaceId = newSettings.workspaceId;
 --rollback SET settings = jsonb_set(settings, '{settings, showPercentages}', newSettings.showPercentages->'showPercentages')
 --rollback FROM newSettings
 --rollback WHERE workspacesettings.workspaceId = newSettings.workspaceId;
+
+--changeset keijserj:29
+ALTER TABLE inprogressworkspace ADD COLUMN creationDate TIMESTAMP DEFAULT NOW() NOT NULL;
+--rollback ALTER TABLE inprogressworkspace DROP COLUMN creationDate
