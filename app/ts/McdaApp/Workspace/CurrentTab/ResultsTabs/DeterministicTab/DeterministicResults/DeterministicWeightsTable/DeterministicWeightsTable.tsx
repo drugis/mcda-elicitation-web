@@ -1,5 +1,4 @@
 import {
-  CircularProgress,
   Grid,
   Table,
   TableBody,
@@ -16,6 +15,7 @@ import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 
 export default function DeterministicWeightsTable(): JSX.Element {
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
@@ -32,7 +32,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
         <ClipboardButton targetId="#deterministic-weights-table" />
       </Grid>
       <Grid item xs={12}>
-        {weights ? (
+        <LoadingSpinner showSpinnerCondition={!weights}>
           <Table id="deterministic-weights-table">
             <TableHead>
               <TableRow>
@@ -54,9 +54,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
               </TableRow>
             </TableBody>
           </Table>
-        ) : (
-          <CircularProgress />
-        )}
+        </LoadingSpinner>
       </Grid>
     </Grid>
   );
