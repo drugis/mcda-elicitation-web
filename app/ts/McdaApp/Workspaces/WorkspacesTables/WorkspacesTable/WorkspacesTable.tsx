@@ -130,22 +130,18 @@ export default function WorkspacesTable({
               Title
             </TableSortLabel>
           </TableCell>
+          <TableCell>
+            <TableSortLabel
+              id="sort-workspaces-by-creation-date"
+              active={orderBy === 'creationDate'}
+              direction={orderBy === 'creationDate' ? orderDirection : 'asc'}
+              onClick={_.partial(orderByProperty, 'creationDate')}
+            >
+              Created
+            </TableSortLabel>
+          </TableCell>
           <ShowIf condition={type === 'finished'}>
-            <>
-              <TableCell>
-                <TableSortLabel
-                  id="sort-workspaces-by-creation-date"
-                  active={orderBy === 'creationDate'}
-                  direction={
-                    orderBy === 'creationDate' ? orderDirection : 'asc'
-                  }
-                  onClick={_.partial(orderByProperty, 'creationDate')}
-                >
-                  Created
-                </TableSortLabel>
-              </TableCell>
-              <TableCell></TableCell>
-            </>
+            <TableCell></TableCell>
           </ShowIf>
           <TableCell></TableCell>
         </TableRow>
