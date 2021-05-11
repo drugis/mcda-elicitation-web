@@ -21,7 +21,7 @@ export default function EffectsTable() {
   const {scales} = useContext(WorkspaceContext);
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
-  function renderTableHeaders(): JSX.Element {
+  function TableHeaders(): JSX.Element {
     return (
       <TableHead>
         <TableRow>
@@ -49,7 +49,7 @@ export default function EffectsTable() {
         </Grid>
         <Grid item xs={12}>
           <Table size="small" id="effects-table">
-            {renderTableHeaders()}
+            <TableHeaders />
             <EffectsTableCriteriaRows />
           </Table>
         </Grid>

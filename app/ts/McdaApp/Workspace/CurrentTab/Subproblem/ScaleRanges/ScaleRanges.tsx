@@ -26,21 +26,25 @@ export default function ScaleRanges() {
             <InlineHelp helpId="scale-ranges">Scale ranges</InlineHelp>
           </Typography>
         </Grid>
-        {warnings.length ? (
-          <>
-            <DisplayWarnings warnings={warnings} identifier="no-scales" />
-          </>
-        ) : (
-          <>
-            <Grid item container xs={3} justify="flex-end">
-              <ClipboardButton targetId="#scales-table" />
-            </Grid>
-            <Grid item xs={12}>
-              <ScalesTable />
-            </Grid>
-          </>
-        )}
+        <Grid item xs={12}>
+          <WarningsOrTable warnings={warnings} />
+        </Grid>
       </Grid>
     </LoadingSpinner>
+  );
+}
+
+function WarningsOrTable({warnings}: {warnings: string[]}): JSX.Element {
+  return warnings.length ? (
+    <DisplayWarnings warnings={warnings} identifier="no-scales" />
+  ) : (
+    <Grid container>
+      <Grid item container xs={3} justify="flex-end">
+        <ClipboardButton targetId="#scales-table" />
+      </Grid>
+      <Grid item xs={12}>
+        <ScalesTable />
+      </Grid>
+    </Grid>
   );
 }

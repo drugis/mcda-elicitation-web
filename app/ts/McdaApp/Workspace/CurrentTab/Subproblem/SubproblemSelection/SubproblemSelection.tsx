@@ -18,22 +18,12 @@ export default function SubproblemSelection() {
     goToSubproblem(subproblems[event.target.value]);
   }
 
-  function getSubproblemOptions(): JSX.Element[] {
-    return _.map(subproblems, (subproblem: IOldSubproblem) => {
-      return (
-        <option value={subproblem.id} key={subproblem.id}>
-          {subproblem.title}
-        </option>
-      );
-    });
-  }
-
   return (
     <LoadingSpinner showSpinnerCondition={!currentSubproblem}>
       <Typography display="inline">
         <InlineHelp helpId="problem">Problem</InlineHelp>
       </Typography>
-      :{' '}
+      {': '}
       <Select
         native
         id="subproblem-selector"
@@ -41,8 +31,26 @@ export default function SubproblemSelection() {
         onChange={handleSubproblemChanged}
         style={{minWidth: 220, maxWidth: 220}}
       >
-        {getSubproblemOptions()}
+        <SubproblemOptions subproblems={subproblems} />
       </Select>
     </LoadingSpinner>
+  );
+}
+
+function SubproblemOptions({
+  subproblems
+}: {
+  subproblems: Record<string, IOldSubproblem>;
+}): JSX.Element {
+  return (
+    <>
+      {_.map(subproblems, (subproblem: IOldSubproblem) => {
+        return (
+          <option value={subproblem.id} key={subproblem.id}>
+            {subproblem.title}
+          </option>
+        );
+      })}
+    </>
   );
 }

@@ -27,15 +27,6 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
     CurrentSubproblemContext
   );
 
-  function renderRows(): JSX.Element[] {
-    return _.map(filteredCriteria, (criterion: ICriterion) => (
-      <SensitivityMeasurementsTableRow
-        key={criterion.id}
-        criterion={criterion}
-      />
-    ));
-  }
-
   return (
     <Grid container item xs={12} spacing={1}>
       <Grid item xs={12} id="sensitivity-measurements-header">
@@ -69,7 +60,9 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
                   <ReferencesHeader />
                 </TableRow>
               </TableHead>
-              <TableBody>{renderRows()}</TableBody>
+              <TableBody>
+                <Rows criteria={filteredCriteria} />
+              </TableBody>
             </Table>
           </Grid>
           <Grid item xs={12}>
@@ -78,5 +71,18 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
         </LoadingSpinner>
       </Grid>
     </Grid>
+  );
+}
+
+function Rows({criteria}: {criteria: ICriterion[]}): JSX.Element {
+  return (
+    <>
+      {_.map(criteria, (criterion: ICriterion) => (
+        <SensitivityMeasurementsTableRow
+          key={criterion.id}
+          criterion={criterion}
+        />
+      ))}
+    </>
   );
 }

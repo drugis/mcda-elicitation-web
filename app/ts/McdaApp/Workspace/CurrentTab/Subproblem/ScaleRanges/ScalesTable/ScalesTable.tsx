@@ -16,12 +16,6 @@ export default function ScalesTable({}: {}) {
     CurrentSubproblemContext
   );
 
-  function createScaleTableRows() {
-    return _.map(filteredCriteria, (criterion: ICriterion) => {
-      return <ScalesTableRow key={criterion.id} criterion={criterion} />;
-    });
-  }
-
   return (
     <LoadingSpinner showSpinnerCondition={_.isEmpty(observedRanges)}>
       <Table size="small" id="scales-table">
@@ -48,8 +42,20 @@ export default function ScalesTable({}: {}) {
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>{createScaleTableRows()}</TableBody>
+        <TableBody>
+          <ScaleTableRows criteria={filteredCriteria} />
+        </TableBody>
       </Table>
     </LoadingSpinner>
+  );
+}
+
+function ScaleTableRows({criteria}: {criteria: ICriterion[]}): JSX.Element {
+  return (
+    <>
+      {_.map(criteria, (criterion: ICriterion) => {
+        return <ScalesTableRow key={criterion.id} criterion={criterion} />;
+      })}
+    </>
   );
 }
