@@ -49,24 +49,24 @@ jobs:
           docker cp patavi.schema.sql ${{ job.services.postgres.id }}:/patavi.schema.sql
           docker exec ${{ job.services.postgres.id }} psql -v ON_ERROR_STOP=1 -U patavi -f patavi.schema.sql
 
-      # - name: run rabbit
-      #   run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+      - name: run rabbit
+        run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
-      # - name: run patavi server
-      #   run: |
-      #     docker run -d --name patavi-server --network host -e PATAVI_BROKER_HOST=guest:guest@localhost -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop addis/patavi-server
+      - name: run patavi server
+        run: |
+          docker run -d --name patavi-server --network host -e PATAVI_BROKER_HOST=guest:guest@localhost -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop addis/patavi-server
 
-      # - name: copy certificates to patavi server
-      #   run: |
-      #     docker cp server-crt.pem patavi-server:/var/lib/patavi/ssl/
-      #     docker cp server-key.pem patavi-server:/var/lib/patavi/ssl/
+      - name: copy certificates to patavi server
+        run: |
+          docker cp server-crt.pem patavi-server:/var/lib/patavi/ssl/
+          docker cp server-key.pem patavi-server:/var/lib/patavi/ssl/
 
-      # - name: build and run patavi worker
-      #   run: |
-      #     cd R
-      #     docker build --tag addis/patavi-smaa-worker .
-      #     docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
-      #     cd ..
+      - name: build and run patavi worker
+        run: |
+          cd R
+          docker build --tag addis/patavi-smaa-worker .
+          docker run -d --link my-rabbit:rabbit -e PATAVI_BROKER_HOST=rabbit --name patavi-mcda-worker addis/patavi-smaa-worker
+          cd ..
 
       - name: setup mcda database
         run: |
