@@ -1,6 +1,7 @@
 -- liquibase formatted sql
 -- changeset kdonald:1
 
+>>>>>>
 CREATE TABLE UserConnection (
   userId varchar(255) NOT NULL,
   providerId varchar(255) NOT NULL,
