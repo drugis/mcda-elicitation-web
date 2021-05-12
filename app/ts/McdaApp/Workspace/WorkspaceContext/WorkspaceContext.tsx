@@ -1,4 +1,3 @@
-import {CircularProgress} from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
@@ -7,6 +6,7 @@ import IScale from '@shared/interface/IScale';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {buildWorkspace} from '@shared/workspaceService';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {getScalesCommand} from 'app/ts/util/PataviUtil';
 import {swapItems} from 'app/ts/util/swapUtil';
 import Axios, {AxiosResponse} from 'axios';
@@ -210,7 +210,9 @@ export function WorkspaceContextProviderComponent({
         swapDataSources
       }}
     >
-      {!isLoading ? children : <CircularProgress />}
+      <LoadingSpinner showSpinnerCondition={isLoading}>
+        {children}
+      </LoadingSpinner>
     </WorkspaceContext.Provider>
   );
 }

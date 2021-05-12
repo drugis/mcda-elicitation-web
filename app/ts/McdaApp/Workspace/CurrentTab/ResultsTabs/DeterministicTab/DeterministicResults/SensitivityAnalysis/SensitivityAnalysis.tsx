@@ -1,4 +1,5 @@
-import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@material-ui/core';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
@@ -20,19 +21,14 @@ export default function SensitivityAnalysis(): JSX.Element {
         </Typography>
       </Grid>
       <Grid item xs={6}>
-        {measurementsSensitivityResults ? (
+        <LoadingSpinner showSpinnerCondition={!measurementsSensitivityResults}>
           <MeasurementSensitivity />
-        ) : (
-          <CircularProgress />
-        )}
+        </LoadingSpinner>
       </Grid>
-
       <Grid item xs={6}>
-        {preferencesSensitivityResults ? (
+        <LoadingSpinner showSpinnerCondition={!preferencesSensitivityResults}>
           <PreferencesSensitivity />
-        ) : (
-          <CircularProgress />
-        )}
+        </LoadingSpinner>
       </Grid>
     </Grid>
   );

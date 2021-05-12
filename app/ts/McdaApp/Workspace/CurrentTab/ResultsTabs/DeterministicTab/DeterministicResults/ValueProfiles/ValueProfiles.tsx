@@ -1,4 +1,5 @@
-import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@material-ui/core';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
@@ -14,23 +15,23 @@ export default function ValueProfiles(): JSX.Element {
   } = useContext(DeterministicResultsContext);
 
   function renderRecalculatedCase(): JSX.Element {
-    if (
-      !areRecalculatedPlotsLoading &&
-      recalculatedTotalValues &&
-      recalculatedValueProfiles
-    ) {
-      return (
-        <ValueProfile
-          profileCase="recalculated"
-          totalValues={recalculatedTotalValues}
-          valueProfiles={recalculatedValueProfiles}
-        />
-      );
-    } else if (areRecalculatedPlotsLoading) {
-      return <CircularProgress />;
-    } else {
+    if (!areRecalculatedPlotsLoading && hasNoRecalculatedResults()) {
       return <></>;
+    } else {
+      return (
+        <LoadingSpinner showSpinnerCondition={areRecalculatedPlotsLoading}>
+          <ValueProfile
+            profileCase="recalculated"
+            totalValues={recalculatedTotalValues}
+            valueProfiles={recalculatedValueProfiles}
+          />
+        </LoadingSpinner>
+      );
     }
+  }
+
+  function hasNoRecalculatedResults(): boolean {
+    return !recalculatedTotalValues || !recalculatedValueProfiles;
   }
 
   return (
@@ -41,15 +42,15 @@ export default function ValueProfiles(): JSX.Element {
         </Typography>
       </Grid>
       <Grid item xs={6}>
-        {baseTotalValues && baseValueProfiles ? (
+        <LoadingSpinner
+          showSpinnerCondition={!baseTotalValues || !baseValueProfiles}
+        >
           <ValueProfile
             profileCase="base"
             totalValues={baseTotalValues}
             valueProfiles={baseValueProfiles}
           />
-        ) : (
-          <CircularProgress />
-        )}
+        </LoadingSpinner>
       </Grid>
       <Grid item xs={6}>
         {renderRecalculatedCase()}

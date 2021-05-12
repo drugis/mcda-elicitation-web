@@ -1,5 +1,4 @@
 import {
-  CircularProgress,
   Grid,
   Table,
   TableBody,
@@ -14,6 +13,7 @@ import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
@@ -73,8 +73,8 @@ export default function SmaaWeightsTable({
           <InlineHelp helpId="representative-weights">Weights</InlineHelp>
         </Typography>
       </Grid>
-      {smaaWeights ? (
-        <>
+      <Grid container item xs={12}>
+        <LoadingSpinner showSpinnerCondition={!smaaWeights}>
           <Grid container item xs={3} justify="flex-end">
             <ClipboardButton targetId="#weigths-table" />
           </Grid>
@@ -88,12 +88,8 @@ export default function SmaaWeightsTable({
               </TableBody>
             </Table>
           </Grid>
-        </>
-      ) : (
-        <Grid item xs={12}>
-          <CircularProgress />
-        </Grid>
-      )}
+        </LoadingSpinner>
+      </Grid>
     </Grid>
   );
 }

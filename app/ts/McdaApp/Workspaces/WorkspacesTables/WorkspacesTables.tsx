@@ -1,7 +1,8 @@
-import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
@@ -39,13 +40,10 @@ export default function WorkspacesTables(): JSX.Element {
         </Typography>
       </Grid>
       <Grid item xs={8}>
-        {workspaces === undefined ? (
-          <CircularProgress />
-        ) : (
+        <LoadingSpinner showSpinnerCondition={workspaces === undefined}>
           <WorkspacesTable workspaces={workspaces} type="finished" />
-        )}
+        </LoadingSpinner>
       </Grid>
-
       <Grid item xs={8}>
         <Typography id="workspaces-header" variant="h4">
           <InlineHelp helpId="incomplete-workspaces">
@@ -54,14 +52,14 @@ export default function WorkspacesTables(): JSX.Element {
         </Typography>
       </Grid>
       <Grid item xs={8}>
-        {inProgressworkspaces === undefined ? (
-          <CircularProgress />
-        ) : (
+        <LoadingSpinner
+          showSpinnerCondition={inProgressworkspaces === undefined}
+        >
           <WorkspacesTable
             workspaces={inProgressworkspaces}
             type="inProgress"
           />
-        )}
+        </LoadingSpinner>
       </Grid>
     </>
   );

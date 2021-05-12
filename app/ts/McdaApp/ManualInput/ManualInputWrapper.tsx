@@ -1,5 +1,5 @@
-import {CircularProgress} from '@material-ui/core';
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import Axios, {AxiosResponse} from 'axios';
 import React, {useEffect, useState} from 'react';
 import ManualInput from './ManualInput';
@@ -21,14 +21,14 @@ export default function ManualInputWrapper() {
     });
   }
 
-  return isLoaded ? (
-    <ManualInputContextProviderComponent
-      inProgressId={inProgressId}
-      message={message}
-    >
-      <ManualInput />
-    </ManualInputContextProviderComponent>
-  ) : (
-    <CircularProgress />
+  return (
+    <LoadingSpinner showSpinnerCondition={!isLoaded}>
+      <ManualInputContextProviderComponent
+        inProgressId={inProgressId}
+        message={message}
+      >
+        <ManualInput />
+      </ManualInputContextProviderComponent>
+    </LoadingSpinner>
   );
 }
