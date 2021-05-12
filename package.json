@@ -1,6 +1,6 @@
 {
   "name": "mcda-web",
-  "version": "1.0.1",
+  "version": "1.0.1-test",
   "description": "MCDA elicitation web interface (remote storage)",
   "repository": {
     "type": "git",
