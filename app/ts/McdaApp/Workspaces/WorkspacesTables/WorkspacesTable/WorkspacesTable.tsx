@@ -24,9 +24,8 @@ export default function WorkspacesTable({
   type: TWorkspaceType;
   workspaces: TWorkspaces;
 }): JSX.Element {
-  const [sortedWorkspaces, setSortedWorkspaces] = useState<TWorkspaces>(
-    workspaces
-  );
+  const [sortedWorkspaces, setSortedWorkspaces] =
+    useState<TWorkspaces>(workspaces);
 
   useEffect(() => {
     setSortedWorkspaces(workspaces);
@@ -80,7 +79,7 @@ export default function WorkspacesTable({
     return (
       <TableBody>
         <TableRow>
-          <TableCell colSpan={type === 'finished' ? 4 : 2}>
+          <TableCell colSpan={type === 'finished' ? 4 : 3}>
             <em id="empty-workspace-message">No workspaces defined</em>
           </TableCell>
         </TableRow>
