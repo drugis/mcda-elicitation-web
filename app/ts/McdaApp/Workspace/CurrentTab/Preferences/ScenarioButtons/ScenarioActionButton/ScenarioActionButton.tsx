@@ -100,7 +100,9 @@ export default function ScenarioActionButton({
                 fullWidth
               />
             </Grid>
-            <DisplayErrors errors={[error]} identifier="title" />
+            <Grid item xs={12}>
+              <DisplayErrors errors={[error]} identifier="title" />
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

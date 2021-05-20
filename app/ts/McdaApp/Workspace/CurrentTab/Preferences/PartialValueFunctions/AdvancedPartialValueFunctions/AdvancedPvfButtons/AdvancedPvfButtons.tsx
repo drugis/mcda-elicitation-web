@@ -32,11 +32,13 @@ export default function AdvancedPvfButtons(): JSX.Element {
   }
 
   return (
-    <>
-      <DisplayWarnings
-        warnings={isSaveDisabled ? ['Values must be unique'] : []}
-        identifier="advanced-pvf"
-      />
+    <Grid container>
+      <Grid item xs={12}>
+        <DisplayWarnings
+          warnings={isSaveDisabled ? ['Values must be unique'] : []}
+          identifier="advanced-pvf"
+        />
+      </Grid>
       <Grid item xs={12}>
         <ButtonGroup size="small">
           <Button
@@ -58,6 +60,6 @@ export default function AdvancedPvfButtons(): JSX.Element {
           </Button>
         </ButtonGroup>
       </Grid>
-    </>
+    </Grid>
   );
 }

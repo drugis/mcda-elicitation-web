@@ -106,7 +106,9 @@ export default function LegendButton({
                 handleLegendChange={handleLegendChange}
               />
             </Grid>
-            <DisplayErrors errors={[error]} identifier="missing-title" />
+            <Grid item xs={12}>
+              <DisplayErrors errors={[error]} identifier="missing-title" />
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

@@ -12,7 +12,7 @@ export default function DisplayWarnings({
   identifier: string;
 }) {
   return (
-    <>
+    <Grid container>
       {_.map(warnings, (warning, index) => (
         <Grid
           item
@@ -26,6 +26,6 @@ export default function DisplayWarnings({
           </Typography>
         </Grid>
       ))}
-    </>
+    </Grid>
   );
 }

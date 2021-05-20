@@ -13,9 +13,8 @@ import ScalesSlider from './ScalesSlider/ScalesSlider';
 
 export default function AddSubproblemScaleRanges() {
   const {criteria} = useContext(WorkspaceContext);
-  const {scaleRangesWarnings, isCriterionExcluded} = useContext(
-    AddSubproblemContext
-  );
+  const {scaleRangesWarnings, isCriterionExcluded} =
+    useContext(AddSubproblemContext);
 
   const {
     configuredRanges,
@@ -91,7 +90,7 @@ export default function AddSubproblemScaleRanges() {
   return scaleRangesWarnings.length > 0 ? (
     <DisplayWarnings warnings={scaleRangesWarnings} identifier="scale-ranges" />
   ) : (
-    <Grid container item xs={12} spacing={4}>
+    <Grid container spacing={4}>
       {renderSliders()}
     </Grid>
   );

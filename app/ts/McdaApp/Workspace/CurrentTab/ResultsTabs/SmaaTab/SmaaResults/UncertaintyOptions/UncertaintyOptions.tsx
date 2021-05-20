@@ -21,10 +21,8 @@ export default function UncertaintyOptions() {
   const {currentScenario, updateScenario} = useContext(CurrentScenarioContext);
 
   const [isDirty, setIsDirty] = useState<boolean>(false);
-  const [
-    localUseMeasurementsUncertainty,
-    setLocalUseMeasurementsUncertainty
-  ] = useState(useMeasurementsUncertainty);
+  const [localUseMeasurementsUncertainty, setLocalUseMeasurementsUncertainty] =
+    useState(useMeasurementsUncertainty);
 
   const [localUseWeightsUncertainty, setLocalUseWeightsUncertainty] = useState(
     useWeightsUncertainty
@@ -134,7 +132,9 @@ export default function UncertaintyOptions() {
           Recalculate
         </Button>
       </Grid>
-      <DisplayWarnings identifier="smaa-results" warnings={warnings} />
+      <Grid item xs={12}>
+        <DisplayWarnings identifier="smaa-results" warnings={warnings} />
+      </Grid>
     </Grid>
   );
 }

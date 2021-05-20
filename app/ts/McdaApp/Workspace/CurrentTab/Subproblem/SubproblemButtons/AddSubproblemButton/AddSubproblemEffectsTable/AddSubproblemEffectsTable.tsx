@@ -62,10 +62,12 @@ export default function AddSubproblemEffectsTable() {
           <AddSubproblemEffectsTableCriteriaRows />
         </Table>
       </Grid>
-      <DisplayWarnings
-        warnings={missingValueWarnings}
-        identifier="effects-table"
-      />
+      <Grid item xs={12}>
+        <DisplayWarnings
+          warnings={missingValueWarnings}
+          identifier="effects-table"
+        />
+      </Grid>
     </Grid>
   );
 }
