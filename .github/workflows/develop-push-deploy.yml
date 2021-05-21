@@ -61,17 +61,35 @@ jobs:
       - name: stop MCDA docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
 
-      # - name: update database
-      #   run: |
-      #     cd liquibase
-      #     cp ../database.pg.sql liquibase-changelog.sql
-      #     docker run --rm -v $(pwd):/liquibase/ --network host -e "LIQUIBASE_URL=jdbc:postgresql://psql-test.drugis.org:5432/mcdaweb" -e "LIQUIBASE_USERNAME=mcdaweb" -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" webdevops/liquibase:postgres update
+      - name: update database
+        run: |
+          cd liquibase
+          cp ../database.pg.sql liquibase-changelog.sql
+          docker run --rm -v $(pwd):/liquibase/ --network host -e "LIQUIBASE_URL=jdbc:postgresql://psql-test.drugis.org:5432/mcdaweb" -e "LIQUIBASE_USERNAME=mcdaweb" -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" webdevops/liquibase:postgres update
 
       - name: remove container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
 
       - name: run MCDA container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker run -e MCDAWEB_DB_USER=mcdaweb -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaTestDbPassword }} -e MCDA_HOST=https://mcda-test.drugis.org -e MCDAWEB_DB_HOST=psql-test.drugis.org -e MCDAWEB_DB_NAME=mcdaweb -e MCDAWEB_COOKIE_SECRET=${{ secrets.mcdaCookieSecret }} -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaGoogleKey }} -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaGoogleSecret }} -e PATAVI_HOST=patavi-test.drugis.org -e PATAVI_PORT=443 -e PATAVI_CLIENT_KEY=/var/lib/mcda/ssl/key.pem -e PATAVI_CLIENT_CRT=/var/lib/mcda/ssl/crt.pem -d --name=mcda -p 8080:3002 addis/mcda:test'
+        run: >
+          ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 
+          'docker run 
+            -e MCDAWEB_DB_USER=mcdaweb 
+            -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaTestDbPassword }} 
+            -e MCDA_HOST=https://mcda-test.drugis.org 
+            -e MCDAWEB_DB_HOST=psql-test.drugis.org 
+            -e MCDAWEB_DB_NAME=mcdaweb 
+            -e MCDAWEB_COOKIE_SECRET=${{ secrets.mcdaCookieSecret }} 
+            -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaGoogleKey }} 
+            -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaGoogleSecret }} 
+            -e PATAVI_HOST=patavi-test.drugis.org 
+            -e PATAVI_PORT=443 
+            -e PATAVI_CLIENT_KEY=/var/lib/mcda/ssl/key.pem 
+            -e PATAVI_CLIENT_CRT=/var/lib/mcda/ssl/crt.pem 
+            -d 
+            --name=mcda 
+            -p 8080:3002 
+            addis/mcda:test'
 
       # MCDA container takes time to spin up. Without sleep, prune will kill it.
       - name: Sleep for 10 seconds
