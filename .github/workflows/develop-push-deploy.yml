@@ -2,7 +2,7 @@ name: MCDA-test | push | deploy
 
 on:
   push:
-    branches: develop
+    branches: ops/updateWorkflows
 
 jobs:
   test:
@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['12']
-        os: [ubuntu-16.04]
+        os: [ubuntu-20.04]
 
     steps:
       - uses: actions/checkout@v2
@@ -47,7 +47,7 @@ jobs:
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       - name: build docker image
-        run: ./build-docker-with-tag.sh GOOGLE Test https://mcda-test.drugis.org test
+        run: ./build-docker.sh GOOGLE Test https://mcda-test.drugis.org test
 
       - name: docker push
         run: docker push addis/mcda:test
@@ -56,17 +56,23 @@ jobs:
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && git checkout develop && git pull'
       # StrictHostKeyChecking=no ensures no prompt for 'add to known hosts'
 
+      - name: pull image on server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker pull addis/mcda:test'
+
       - name: stop MCDA docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
 
-      - name: update database on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
+      - name: update database
+        run: |
+          cd liquibase
+          cp ../database.pg.sql liquibase-changelog.sql
+          docker run --rm -v $(pwd):/liquibase/ --network host -e "LIQUIBASE_URL=jdbc:postgresql://psql-test.drugis.org:5432/mcdaweb" -e "LIQUIBASE_USERNAME=mcdaweb" -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" webdevops/liquibase:postgres update
 
       - name: remove container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
 
       - name: run MCDA container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/run-mcda-from-registry.sh'
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker run -e MCDAWEB_DB_USER=mcdaweb -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaTestDbPassword }} -e MCDA_HOST=https://mcda-test.drugis.org -e MCDAWEB_DB_HOST=psql-test.drugis.org -e MCDAWEB_DB_NAME=mcdaweb -e MCDAWEB_COOKIE_SECRET=${{ secrets.mcdaCookieSecret }} -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaGoogleKey }} -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaGoogleSecret }} -e PATAVI_HOST=patavi-test.drugis.org -e PATAVI_PORT=443 -e PATAVI_CLIENT_KEY=/var/lib/mcda/ssl/key.pem -e PATAVI_CLIENT_CRT=/var/lib/mcda/ssl/crt.pem -d --name=mcda -p 8080:3002 addis/mcda:test'
 
       - name: prune docker on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
@@ -74,19 +80,19 @@ jobs:
       - name: docker registry garbage collection
         run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
 
-      - name: notify on slack channel on failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop push:'
-          SLACK_MESSAGE: 'MCDA-test deploy failed'
+      # - name: notify on slack channel on failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'MCDA-test deploy failed'
 
-      - name: notify on slack channel on success
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: 'Develop push:'
-          SLACK_MESSAGE: 'MCDA-test deployed'
+      # - name: notify on slack channel on success
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slackWebhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: 'Develop push:'
+      #     SLACK_MESSAGE: 'MCDA-test deployed'
