@@ -28,7 +28,7 @@ export default function ScaleRanges() {
           </Typography>
         </Grid>
         <Grid container item xs={3} justify="flex-end">
-          <ShowIf condition={!Boolean(warnings.length)}>
+          <ShowIf condition={warnings.length === 0}>
             <ClipboardButton targetId="#scales-table" />
           </ShowIf>
         </Grid>
