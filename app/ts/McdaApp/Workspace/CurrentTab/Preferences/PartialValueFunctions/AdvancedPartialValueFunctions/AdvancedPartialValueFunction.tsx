@@ -30,7 +30,9 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
       <PvfDirection />
       <AdvancedPvfPlot />
       <CutOffs />
-      <AdvancedPvfButtons />
+      <Grid item xs={12}>
+        <AdvancedPvfButtons />
+      </Grid>
     </Grid>
   );
 }

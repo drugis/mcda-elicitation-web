@@ -184,7 +184,9 @@ export default function EditOverviewDataSourceDialog({
               fullWidth
             />
           </Grid>
-          <DisplayErrors errors={[error]} identifier="uncertainties" />
+          <Grid item xs={12}>
+            <DisplayErrors errors={[error]} identifier="uncertainties" />
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
