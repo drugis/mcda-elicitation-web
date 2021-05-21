@@ -62,11 +62,14 @@ jobs:
       - name: stop MCDA docker container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
 
-      - name: update database
-        run: |
-          cd liquibase
-          cp ../database.pg.sql liquibase-changelog.sql
-          docker run --rm -v $(pwd):/liquibase/ --network host -e "LIQUIBASE_URL=jdbc:postgresql://psql-test.drugis.org:5432/mcdaweb" -e "LIQUIBASE_USERNAME=mcdaweb" -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" webdevops/liquibase:postgres update
+      # - name: update database
+      #   run: |
+      #     cd liquibase
+      #     cp ../database.pg.sql liquibase-changelog.sql
+      #     docker run --rm -v $(pwd):/liquibase/ --network host -e "LIQUIBASE_URL=jdbc:postgresql://psql-test.drugis.org:5432/mcdaweb" -e "LIQUIBASE_USERNAME=mcdaweb" -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" webdevops/liquibase:postgres update
+
+      - name: update database on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/liquibase/update-db.sh update'
 
       - name: remove container on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
