@@ -210,7 +210,9 @@ export default function UnitOfMeasurementDialog({
               })}
             </Select>
           </Grid>
-          <DisplayErrors identifier="unit-of-measurement" errors={[error]} />
+          <Grid item xs={12}>
+            <DisplayErrors identifier="unit-of-measurement" errors={[error]} />
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
