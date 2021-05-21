@@ -59,7 +59,7 @@ jobs:
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker pull addis/mcda:test'
 
       - name: stop MCDA docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda || true'
 
       - name: update database
         run: |
