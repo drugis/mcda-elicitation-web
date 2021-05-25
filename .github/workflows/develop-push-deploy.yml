@@ -2,7 +2,7 @@ name: MCDA-test | push | deploy
 
 on:
   push:
-    branches: ops/updateWorkflows
+    branches: develop
 
 jobs:
   test:
