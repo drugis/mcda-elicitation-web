@@ -73,7 +73,8 @@ export function generateValuePlotSettings(
       x: 'x',
       columns: plotValues,
       type: 'bar',
-      groups: [_.map(criteria, 'title')]
+      groups: [_.map(criteria, 'title')],
+      order: null
     },
     axis: {
       x: {
