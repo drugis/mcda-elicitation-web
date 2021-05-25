@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['12']
-        os: [ubuntu-16.04]
+        os: [ubuntu-20.04]
 
     steps:
       - uses: actions/checkout@v2
@@ -44,31 +44,62 @@ jobs:
         run: yarn jest
 
       - name: build docker image
-        run: ./build-docker.sh GOOGLE Live https://mcda.drugis.org
+        run: ./build-docker.sh GOOGLE Live https://mcda.drugis.org live
 
       - name: docker login
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       - name: docker push
-        run: docker push addis/mcda
+        run: docker push addis/mcda:live
 
       - name: pull latest from drugis on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && git pull'
 
+      - name: pull image on server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker pull addis/mcda:live'
+
       - name: stop container
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda'
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda || true'
 
       - name: update database
         run: |
           cd liquibase
           cp ../database.pg.sql liquibase-changelog.sql
-          docker run --rm -v $(pwd):/liquibase/ --network host -e "LIQUIBASE_URL=jdbc:postgresql://psql.drugis.org:5432/mcdaweb" -e "LIQUIBASE_USERNAME=mcdaweb" -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaLiveDbPassword }}" -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" webdevops/liquibase:postgres update
+          docker run --rm -v $(pwd):/liquibase/ --network host \
+           -e "LIQUIBASE_URL=jdbc:postgresql://psql.drugis.org:5432/mcdaweb" \
+           -e "LIQUIBASE_USERNAME=mcdaweb" \
+           -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaLiveDbPassword }}" \
+           -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
+           webdevops/liquibase:postgres update
 
       - name: remove container
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker rm mcda'
 
       - name: run docker container on remote server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && ./mcdaweb-run.sh'
+        run: >
+          ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org \
+          'docker run \
+           -e MCDAWEB_DB_USER=mcdaweb \
+           -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaLiveDbPassword }} \
+           -e MCDA_HOST=https://mcda.drugis.org \
+           -e MCDAWEB_DB_HOST=psql.drugis.org \
+           -e MCDAWEB_DB_NAME=mcdaweb \
+           -e MCDAWEB_COOKIE_SECRET=${{ secrets.mcdaLiveCookieSecret }} \
+           -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaLiveGoogleKey }} \
+           -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaLiveGoogleSecret }} \
+           -e PATAVI_HOST=patavi.drugis.org \
+           -e PATAVI_PORT=443 \
+           -e PATAVI_CLIENT_KEY=/var/lib/mcda/ssl/key.pem \
+           -e PATAVI_CLIENT_CRT=/var/lib/mcda/ssl/crt.pem \
+           -d --name=mcda -p 8080:3002 \
+           addis/mcda:live'
+
+      # Without sleep, prune will remove the container.
+      - name: Sleep for 30 seconds
+        run: sleep 30
+
+      - name: prune docker on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker system prune -f'
 
       - name: notify on slack channel on failure
         if: failure()
