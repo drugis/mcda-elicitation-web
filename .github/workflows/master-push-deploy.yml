@@ -65,7 +65,12 @@ jobs:
         run: |
           cd liquibase
           cp ../database.pg.sql liquibase-changelog.sql
-          docker run --rm -v $(pwd):/liquibase/ --network host -e "LIQUIBASE_URL=jdbc:postgresql://psql.drugis.org:5432/mcdaweb" -e "LIQUIBASE_USERNAME=mcdaweb" -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaLiveDbPassword }}" -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" webdevops/liquibase:postgres update
+          docker run --rm -v $(pwd):/liquibase/ --network host \
+           -e "LIQUIBASE_URL=jdbc:postgresql://psql.drugis.org:5432/mcdaweb" \
+           -e "LIQUIBASE_USERNAME=mcdaweb" \
+           -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaLiveDbPassword }}" \
+           -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
+           webdevops/liquibase:postgres update
 
       - name: remove container
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker rm mcda'
