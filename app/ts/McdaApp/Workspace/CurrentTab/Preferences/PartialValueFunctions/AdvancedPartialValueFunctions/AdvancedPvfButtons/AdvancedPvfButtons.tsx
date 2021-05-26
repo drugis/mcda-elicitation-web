@@ -1,15 +1,15 @@
 import {Button, ButtonGroup, Grid} from '@material-ui/core';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import React, {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function AdvancedPvfButtons(): JSX.Element {
   const {setActiveView, setPvf} = useContext(CurrentScenarioContext);
   const {getConfiguredRange} = useContext(CurrentSubproblemContext);
-  const {advancedPvfCriterion, direction, cutOffs, isSaveDisabled} = useContext(
+  const {advancedPvfCriterion, direction, cutoffs, isSaveDisabled} = useContext(
     AdvancedPartialValueFunctionContext
   );
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
@@ -24,7 +24,7 @@ export default function AdvancedPvfButtons(): JSX.Element {
       direction: direction,
       values:
         direction === 'increasing' ? [0.25, 0.5, 0.75] : [0.75, 0.5, 0.25],
-      cutoffs: cutOffs,
+      cutoffs,
       range: configuredRange
     };
     setPvf(advancedPvfCriterion.id, pvf);
