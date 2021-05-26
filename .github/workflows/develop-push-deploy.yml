@@ -58,11 +58,8 @@ jobs:
       - name: pull image on server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker pull addis/mcda:test'
 
-      - name: build docker container in test server on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && docker build --build-arg MCDA_HOST=https://mcda-test.drugis.org --no-cache --tag mcda .'
-
-      - name: stop MCDA docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda || true'
+      - name: remove container on the server
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm -f mcda || true'
 
       - name: update database
         run: |
@@ -74,9 +71,6 @@ jobs:
            -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" \
            -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
            webdevops/liquibase:postgres update
-
-      - name: delete docker container on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
 
       - name: run MCDA container on the server
         run: >

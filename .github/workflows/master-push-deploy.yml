@@ -58,8 +58,8 @@ jobs:
       - name: pull image on server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker pull addis/mcda:live'
 
-      - name: stop container
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker stop mcda || true'
+      - name: remove container
+        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker rm -f mcda || true'
 
       - name: update database
         run: |
@@ -71,9 +71,6 @@ jobs:
            -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaLiveDbPassword }}" \
            -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
            webdevops/liquibase:postgres update
-
-      - name: remove container
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker rm mcda'
 
       - name: run docker container on remote server
         run: >
