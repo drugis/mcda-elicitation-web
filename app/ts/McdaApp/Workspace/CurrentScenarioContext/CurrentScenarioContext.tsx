@@ -39,11 +39,12 @@ export function CurrentScenarioContextProviderComponent({
   children: any;
 }) {
   const history = useHistory();
-  const {workspaceId, subproblemId, scenarioId} = useParams<{
-    workspaceId: string;
-    subproblemId: string;
-    scenarioId: string;
-  }>();
+  const {workspaceId, subproblemId, scenarioId} =
+    useParams<{
+      workspaceId: string;
+      subproblemId: string;
+      scenarioId: string;
+    }>();
 
   const {setError} = useContext(ErrorContext);
   const {
@@ -68,10 +69,9 @@ export function CurrentScenarioContextProviderComponent({
   const [elicitationMethod, setElicitationMethod] = useState<string>(
     determineElicitationMethod(currentScenario.state.prefs)
   );
-  const [
-    advancedPvfCriterionId,
-    setAdvancedPvfCriterionId
-  ] = useState<string>();
+  const [advancedPvfCriterionId, setAdvancedPvfCriterionId] =
+    useState<string>();
+  const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
   const getWeights = useCallback(
     (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
@@ -159,6 +159,7 @@ export function CurrentScenarioContextProviderComponent({
       currentScenario
     );
     updateScenario(newScenario).then(() => {
+      setIsScenarioUpdating(false);
       if (areAllPvfsSet(filteredCriteria, newPvfs)) {
         resetPreferences(newScenario);
       }
@@ -166,6 +167,7 @@ export function CurrentScenarioContextProviderComponent({
   }
 
   function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
+    setIsScenarioUpdating(true);
     const range = getConfiguredRange(getCriterion(criterionId));
     const pvf: ILinearPvf = {
       type: 'linear',
@@ -185,6 +187,7 @@ export function CurrentScenarioContextProviderComponent({
         disableWeightsButtons,
         activeView,
         elicitationMethod,
+        isScenarioUpdating,
         setCurrentScenario,
         updateScenario,
         getPvf,

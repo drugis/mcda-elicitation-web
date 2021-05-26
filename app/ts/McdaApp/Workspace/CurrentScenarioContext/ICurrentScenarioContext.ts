@@ -11,6 +11,7 @@ export default interface ICurrentScenarioContext {
   disableWeightsButtons: boolean;
   activeView: TPreferencesView;
   elicitationMethod: string;
+  isScenarioUpdating: boolean;
   setCurrentScenario: (currentScenario: IMcdaScenario) => void;
   updateScenario: (newScenario: IMcdaScenario) => Promise<void>;
   getPvf: (criterionId: string) => TPvf;
