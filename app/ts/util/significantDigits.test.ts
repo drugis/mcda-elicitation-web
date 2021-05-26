@@ -24,12 +24,16 @@ describe('significantDigits', () => {
   it('should throw for spurious values', () => {
     expect(() => {
       significantDigits(undefined);
-    }).toThrow('attempt to apply significant digits to non-numeric value');
+    }).toThrow(
+      'attempt to apply significant digits to non-numeric value: undefined'
+    );
     expect(() => {
       significantDigits(null);
-    }).toThrow('attempt to apply significant digits to non-numeric value');
+    }).toThrow(
+      'attempt to apply significant digits to non-numeric value: null'
+    );
     expect(() => {
       significantDigits(NaN);
-    }).toThrow('attempt to apply significant digits to non-numeric value');
+    }).toThrow('attempt to apply significant digits to non-numeric value: NaN');
   });
 });

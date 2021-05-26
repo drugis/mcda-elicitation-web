@@ -9,16 +9,21 @@ import _ from 'lodash';
 import React, {ElementType, useContext} from 'react';
 import {getColorForIndex} from '../../PartialValueFunctionUtil';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
+
+const ColoredValueLabel: unknown = withStyles({
+  circle: {
+    color: getColorForIndex
+  }
+})(ValueLabel);
+
 export default function CutOffs(): JSX.Element {
   const {getUsePercentage} = useContext(SettingsContext);
   const {getStepSizeForCriterion, getConfiguredRange} = useContext(
     CurrentSubproblemContext
   );
-  const {
-    advancedPvfCriterion,
-    cutoffs,
-    setCutoffs: setCutOffs
-  } = useContext(AdvancedPartialValueFunctionContext);
+  const {advancedPvfCriterion, cutoffs, setCutoffs} = useContext(
+    AdvancedPartialValueFunctionContext
+  );
 
   const stepSize = getStepSizeForCriterion(advancedPvfCriterion);
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
@@ -35,14 +40,8 @@ export default function CutOffs(): JSX.Element {
     event: React.ChangeEvent<any>,
     newValue: [number, number, number]
   ) {
-    setCutOffs(_.sortBy(newValue) as [number, number, number]);
+    setCutoffs(_.sortBy(newValue) as [number, number, number]);
   }
-
-  const ColoredValueLabel: unknown = withStyles({
-    circle: {
-      color: getColorForIndex
-    }
-  })(ValueLabel);
 
   return (
     <div style={{width: '420px', marginLeft: '50px', marginRight: '30px'}}>
