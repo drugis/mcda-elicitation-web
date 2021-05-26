@@ -44,20 +44,8 @@ export default function CutOffs(): JSX.Element {
     }
   })(ValueLabel);
 
-  // const coloredValueLabelTheme = createMuiTheme({
-  //   overrides: {
-  //     MuiSlider: {
-  //       valueLabel: {
-  //         color: getColorForIndex,
-  //         background: getColorForIndex,
-  //       }
-  //     }
-  //   }
-  // });
-
   return (
     <div style={{width: '420px', marginLeft: '50px', marginRight: '30px'}}>
-      {/* <ThemeProvider theme={coloredValueLabelTheme}> */}
       <Slider
         id="cut-offs-slider"
         min={sliderParameters.min}
@@ -71,7 +59,6 @@ export default function CutOffs(): JSX.Element {
         step={stepSize}
         ValueLabelComponent={ColoredValueLabel as ElementType<ValueLabelProps>}
       />
-      {/* </ThemeProvider> */}
     </div>
   );
 }
