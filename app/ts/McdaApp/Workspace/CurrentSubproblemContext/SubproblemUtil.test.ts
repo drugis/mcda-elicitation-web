@@ -10,7 +10,8 @@ import {
   applySubproblem,
   getConfiguredRanges,
   getMagnitude,
-  getStepSize
+  getStepSize,
+  getStepSizeForCriterion
 } from './SubproblemUtil';
 
 describe('The Subproblem util', () => {
@@ -343,6 +344,54 @@ describe('The Subproblem util', () => {
       const result = getStepSize(configuredRange, 0.01);
       const expectedResult = 0.01;
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getStepSizeForCriterion', () => {
+    it('should work for criteria with a configured range', () => {
+      const criterion: ICriterion = {
+        dataSources: [
+          {
+            id: 'dsId'
+          }
+        ]
+      } as ICriterion;
+      const observedRanges = {};
+      const configuredRanges: Record<string, [number, number]> = {
+        dsId: [1, 2]
+      };
+      const stepSizes: Record<string, number> = {
+        dsId: 0.5
+      };
+      const result = getStepSizeForCriterion(
+        criterion,
+        observedRanges,
+        configuredRanges,
+        stepSizes
+      );
+      expect(result).toEqual(0.5);
+    });
+
+    it('should work for criteria without a configured range', () => {
+      const criterion: ICriterion = {
+        dataSources: [
+          {
+            id: 'dsId'
+          }
+        ]
+      } as ICriterion;
+      const observedRanges: Record<string, [number, number]> = {dsId: [1, 2]};
+      const configuredRanges = {};
+      const stepSizes: Record<string, number> = {
+        dsId: 0.5
+      };
+      const result = getStepSizeForCriterion(
+        criterion,
+        observedRanges,
+        configuredRanges,
+        stepSizes
+      );
+      expect(result).toEqual(0.5);
     });
   });
 

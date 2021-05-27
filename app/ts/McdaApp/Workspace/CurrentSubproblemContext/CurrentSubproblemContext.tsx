@@ -14,13 +14,11 @@ import ICurrentSubproblemContext from './ICurrentSubproblemContext';
 import {
   applySubproblem,
   getConfiguredRanges,
-  getStepSize,
-  hasNoRange
+  getStepSizeForCriterion
 } from './SubproblemUtil';
 
-export const CurrentSubproblemContext = createContext<ICurrentSubproblemContext>(
-  {} as ICurrentSubproblemContext
-);
+export const CurrentSubproblemContext =
+  createContext<ICurrentSubproblemContext>({} as ICurrentSubproblemContext);
 
 export function CurrentSubproblemContextProviderComponent({
   children
@@ -47,14 +45,12 @@ export function CurrentSubproblemContextProviderComponent({
   const [configuredRanges, setConfiguredRanges] = useState<
     Record<string, [number, number]>
   >({});
+  const [stepSizeByCriterion, setStepSizeByCriterion] = useState<
+    Record<string, number>
+  >({});
 
-  const {
-    alternatives,
-    criteria,
-    effects,
-    distributions,
-    relativePerformances
-  } = filteredWorkspace;
+  const {alternatives, criteria, effects, distributions, relativePerformances} =
+    filteredWorkspace;
 
   useEffect(() => {
     const newFilteredWorkspace = applySubproblem(workspace, currentSubproblem);
@@ -72,27 +68,24 @@ export function CurrentSubproblemContextProviderComponent({
           currentSubproblem.definition.ranges
         )
       );
+      const stepSizes = _(newFilteredWorkspace.criteria)
+        .keyBy('id')
+        .mapValues((criterion: ICriterion): number =>
+          getStepSizeForCriterion(
+            criterion,
+            newObservedRanges,
+            currentSubproblem.definition.ranges,
+            currentSubproblem.definition.stepSizes
+          )
+        )
+        .value();
+      setStepSizeByCriterion(stepSizes);
     }
   }, [workspace, currentSubproblem, scales]);
 
   useEffect(() => {
     setCurrentSubproblem(getSubproblem(subproblemId));
   }, [getSubproblem, subproblemId]);
-
-  function getStepSizeForCriterion(criterion: ICriterion) {
-    const dataSourceId = criterion.dataSources[0].id;
-    if (hasNoRange(currentSubproblem.definition.ranges, dataSourceId)) {
-      return getStepSize(
-        observedRanges[dataSourceId],
-        currentSubproblem.definition.stepSizes[dataSourceId]
-      );
-    } else {
-      return getStepSize(
-        currentSubproblem.definition.ranges[dataSourceId],
-        currentSubproblem.definition.stepSizes[dataSourceId]
-      );
-    }
-  }
 
   function getCriterion(id: string): ICriterion {
     return _.find(criteria, ['id', id]);
@@ -132,10 +125,10 @@ export function CurrentSubproblemContextProviderComponent({
         filteredRelativePerformances: relativePerformances,
         filteredWorkspace,
         observedRanges,
+        stepSizeByCriterion,
         editSubproblem,
         getCriterion,
         getConfiguredRange,
-        getStepSizeForCriterion,
         goToSubproblem
       }}
     >

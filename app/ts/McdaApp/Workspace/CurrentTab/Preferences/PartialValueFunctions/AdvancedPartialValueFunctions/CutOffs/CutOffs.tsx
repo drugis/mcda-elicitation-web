@@ -1,22 +1,22 @@
 import {Grid, Slider, Typography} from '@material-ui/core';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
-import significantDigits from 'app/ts/util/significantDigits';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function CutOffs(): JSX.Element {
   const {getUsePercentage} = useContext(SettingsContext);
-  const {getStepSizeForCriterion, getConfiguredRange} = useContext(
+  const {stepSizeByCriterion, getConfiguredRange} = useContext(
     CurrentSubproblemContext
   );
   const {advancedPvfCriterion, cutOffs, setCutOffs} = useContext(
     AdvancedPartialValueFunctionContext
   );
 
-  const stepSize = getStepSizeForCriterion(advancedPvfCriterion);
+  const stepSize = stepSizeByCriterion[advancedPvfCriterion.id];
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
   const usePercentage = getUsePercentage(advancedPvfCriterion.dataSources[0]);
 
