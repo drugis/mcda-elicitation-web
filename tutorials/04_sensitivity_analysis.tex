@@ -9,18 +9,20 @@ MCDA requires exact preference weights. However, in most benefit-risk assessment
 
 \subsection*{Subjects covered}
 \begin{itemize}
-\item Uncertainty in data and preferences
-\item Deterministic sensitivity analysis
-\item Stochastic sensitivity analysis
+    \item Uncertainty in data and preferences
+    \item Deterministic sensitivity analysis
+    \item Stochastic sensitivity analysis
 \end{itemize}
 
 \noindent \faExclamationTriangle \, Note that this tutorial continues from the simplified version of the \href{https://www.ema.europa.eu/en/medicines/human/EPAR/zinbryta#authorisation-details-section}{Zinbryta assessment} used in the previous tutorial about benefit-risk analysis. At several points during this tutorial we ask you to compare results to those of the previous one, so it is helpful to have your work from the previous tutorial open in a separate browser tab or window.
 
-\subsection*{Sign in to MCDA.drugis.org}
-\leftpointright \, Open your browser and navigate to \href{https://mcda.drugis.org}{https://mcda.drugis.org}. Use your Google account to sign in.
+\subsection*{Sign in to your organisation's ADDIS/MCDA.}
+\leftpointright \, Open your browser and navigate to the URL where your organisation provides ADDIS/MCDA.
+Use your username and password to sign in.
+You will be redirected to your personal homepage, containing your previously created workspaces, both finished and unfinished (if any).
 
 \subsection*{Create the example workspace}
-\leftpointright \, Click the ‘Create workspace’ button. In the dialog that appears, switch to 'Select tutorial workspace' and choose the ‘Zinbryta initial assessment simplified, stochastic’ option. You should now be on the Overview screen of a fresh workspace. Open the settings dialog and switch the ‘Measurements display mode’ to ‘Entered distributions’. Note the point estimates have confidence intervals for all measurements.
+\leftpointright \, Click the ‘Create workspace’ button. In the dialog that appears, switch to 'Select tutorial workspace' and choose the ‘Zinbryta initial assessment simplified, stochastic’ option. You should now be on the Overview screen of a fresh workspace. Open the settings dialog and switch the ‘Measurements display mode’ to ‘'Values used in SMAA'’. Note the point estimates have confidence intervals for all measurements. To see which distributions these confidence intervals are based on, switch the measurements display to 'Entered distributions.'
 \newline
 
 \noindent \faGraduationCap \, For this tutorial example, we indicated explicitly when entering the data that we assume they are approximately normally distributed for their given point estimate and confidence interval (see Figure 3 in the first tutorial). This lets their distributions be used to perform stochastic sensitivity analysis, as explained towards the end of this tutorial.
@@ -46,9 +48,9 @@ MCDA requires exact preference weights. However, in most benefit-risk assessment
 
 \begin{figure}[!h]
     \centering
-	\includegraphics[width=\textwidth]{fig/changeARR.png}
+    \includegraphics[width=\textwidth]{fig/changeARR.png}
     \caption{Changing the effect value}
-	\label{fig:changeARR}
+    \label{fig:changeARR}
 \end{figure}
 
 \noindent \leftpointright \, Scroll down to the bottom of the page and take a look at the plots in the ‘One-way sensitivity analysis’ section. These give some insight into what the consequences of changing a single value would be. In the left (‘Measurements’) plot select IFN $\beta$-1a 30$\mu$g as the alternative and observe the changes. Pay particular attention to the intersection point of the two lines.
@@ -68,9 +70,9 @@ MCDA requires exact preference weights. However, in most benefit-risk assessment
 
 \begin{figure}[!h]
     \centering
-	\includegraphics[width=\textwidth]{fig/rankAcceptabilities.png}
+    \includegraphics[width=\textwidth]{fig/rankAcceptabilities.png}
     \caption{Rank acceptabilities}
-	\label{fig:rankAcceptabilities}
+    \label{fig:rankAcceptabilities}
 \end{figure}
 
 \noindent \faGraduationCap \, SMAA models explore uncertainties in the measurements and preferences by systematically varying their values\footnotemark. The set of variations (of which there can be hundreds of thousands) can be analysed in several ways. We here use the rank acceptability: for each variation the alternatives are ranked according to their calculated value, and then the proportion of variations in which an alternative had each specific rank is reported.

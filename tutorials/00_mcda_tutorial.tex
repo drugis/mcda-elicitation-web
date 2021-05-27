@@ -13,13 +13,32 @@
             anchorcolor = blue]{hyperref}
 \usepackage{dingbat}
 \usepackage{fontawesome}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{caption}
 
+\mdtheorem[
+hidealllines=true,
+leftline=true,
+innertopmargin=0pt,
+innerbottommargin=0pt,
+linewidth=4pt,
+linecolor=gray!40,
+innerrightmargin=0pt,
+innertopmargin=-6pt,
+]{sidebar}{}
 
 \begin{document}
 \maketitle
 
 
 \tableofcontents
+
+\vspace{1em}
+\noindent \faLightbulbO \, Throughout this tutorial we also mention features only available in the Enterprise edition of ADDIS/MCDA (see \href{http://drugis.org/services/index}{here}). These features are marked with a bar on the left of the paragraphs, like so:
+
+\begin{sidebar*}
+Marked enterprise features.
+\end{sidebar*}
 
 \subfile{01_manual_input.tex}
 \clearpage
@@ -32,5 +51,10 @@
 
 \subfile{04_sensitivity_analysis.tex}
 \clearpage
+
+\subfile{05_user_administration.tex}
+\clearpage
+
+\subfile{06_survey_creation.tex}
 
 \end{document}

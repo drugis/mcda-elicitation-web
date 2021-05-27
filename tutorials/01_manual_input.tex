@@ -5,7 +5,7 @@
 \addtocounter{section}{1}
 \addcontentsline{toc}{section}{\protect\numberline{}Tutorial 1: manual data entry}
 
-This tutorial guides you through the process of manually entering data, so that you can create your own effects tables.
+This tutorial guides you through the process of manually entering data, from which you will be able to create your own effects tables.
 
 \subsection*{Subjects covered}
 \begin{itemize}
@@ -18,24 +18,27 @@ This tutorial guides you through the process of manually entering data, so that 
 \subsection*{Example effects table}
 The data that you are going to enter in this tutorial is taken from the effects table for lixisenatide as included in the \href{https://www.ema.europa.eu/documents/template-form/day-80-assessment-report-overview-d120-loq-template-guidance-rev-1019_en.docx}{EMA Guidance document for critical assessment reports} (see page 72).  For didactic purposes, we are going to work with a simplified version of that table which includes HbA1c as a favourable effect and nausea as an unfavourable effect (Figure \ref{fig:lixisenatide_effect_table}).
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\textwidth]{fig/lixiEffectTable.png}
     \caption{Simplified effects table for lixisenatide, a treatment for type 2 diabetes mellitus}
     \label{fig:lixisenatide_effect_table}
 \end{figure}
 
-\subsection*{Sign in to MCDA.drugis.org}
-\leftpointright \, Open your browser and navigate to \href{https://mcda.drugis.org}{https://mcda.drugis.org}. Use your Google account to sign in. You will be redirected to your personal homepage, containing your previously created workspaces, both finished and unfinished (if any).
+\subsection*{Sign in to your organisation's ADDIS/MCDA.}
+\leftpointright \, Open your browser and navigate to the URL where your organisation provides ADDIS/MCDA.
+Use your username and password to sign in.
+You will be redirected to your personal homepage, containing your previously created workspaces, both finished and unfinished (if any).
 
 \subsection*{Create a new workspace}
-\leftpointright \, Press the ‘Add workspace’ button, select the option ‘Create new workspace’, and press the ‘Add’ button. This leads to the first step of the manual entry process.
+\leftpointright \, Press the ‘Add workspace’ button, select the option ‘Create new workspace’, and press the ‘Add’ button.
+This leads to the manual entry process.
 \newline
 
-\noindent \faGraduationCap \, A workspace contains the clinical efficacy and safety data that you have entered for a particular benefit-risk assessment. Within a workspace you can build effects tables and perform quantitative benefit-risk analyses. Existing workspaces are opened by clicking on their name, or navigating to their URL directly via a link or bookmark. Workspaces can only be accessed by their owner.
+\noindent \faGraduationCap \, A workspace contains the clinical efficacy and safety data that you have entered for a particular benefit-risk assessment. Within a workspace you can build effects tables and perform quantitative benefit-risk analyses. Existing workspaces are opened by clicking on their name, or navigating to their URL directly via a link or bookmark. Workspaces can only be accessed by their owner and whoever the owner has granted access.
 \newline
 
-\noindent \faLightbulbO \, We here cover the manual workspace creation process; besides this you can also create workspaces based on example data uploaded by the ADDIS team, and upload JSON files exported by you or another user.
+\noindent \faLightbulbO \, In this tutorial we cover the manual workspace creation process; besides this you can also create workspaces based on example data uploaded by the ADDIS team, and upload JSON files exported by you or another user.
 
 \subsection*{Enter general information}
 \noindent \leftpointright \, Enter a descriptive title in the ‘Workspace title’ field at the top of the page. For example, “lixisenatide data entry tutorial”.
@@ -48,7 +51,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 
 \subsection*{Criteria and favourability}
 
-\noindent \faGraduationCap \, Criteria are the clinical efficacy and safety outcomes in terms of which the treatments under consideration are evaluated. A criterion has a name (a short identifier, such as  “HbA1c” or “Nausea”), and a description. The description specifies how the effect of a treatment on the selected outcome variable is measured statistically. For example, for “HbA1c” this could be “mean change of HbA1c from baseline” or “proportion of patients with a normal HbA1c value at week 24”.
+\noindent \faGraduationCap \, Criteria are the clinical efficacy and safety outcomes in terms of which the treatments under consideration are evaluated. A criterion has a name (a short identifier, such as  “HbA1c” or “Nausea”), and a description. The description can be used to give more detail about the criterion, such as a specification of how the selected outcome effect is measured statistically. For example, for “HbA1c” this could be “mean change of HbA1c from baseline” or “proportion of patients with a normal HbA1c value at week 24”.
 \newline
 
 \noindent \faGraduationCap \, For regulatory purposes, criteria can additionally be classified as favourable or unfavourable, with favourable criteria being ones where the new treatment under consideration outperforms the status quo.
@@ -76,7 +79,7 @@ The data that you are going to enter in this tutorial is taken from the effects 
 \noindent \leftpointright \, Change the reference to “Pooled data from all phase 2/3 controlled studies”.  There are no further references for this criterion.
 
 \subsection*{Add lixisenatide and placebo as alternatives}
-\noindent \leftpointright \, Rename 'alternative 1' by clicking on it and entering 'lixisenatide' in the text box. Rename 'alternative 1' to 'placebo'.
+\noindent \leftpointright \, Rename 'alternative 1' by clicking on it and entering 'lixisenatide' in the text box. Rename 'alternative 2' to 'placebo'.
 
 \subsection*{Set the units of measurement}
 \noindent \leftpointright \, We can set the unit of measurement for each reference. To do so, click on the ‘Unit of measurement’ cell.
@@ -146,7 +149,6 @@ You have now finished preparing your effects table for analysis.
 \clearpage
 
 
-
 %=========== APPENDIX =====================
 
 
@@ -169,7 +171,7 @@ Distributions can be specified directly by choosing a type of distribution and e
     \item Range
 \end{itemize}
 
-\noindent Distributions of the type 'Value' and 'Range' can be input either as percentages, decimals, or neither, see Section \ref{sec:uom}.
+\noindent Distributions of the type 'Value' and 'Range' can be input either as percentages, decimals, or neither, see 'Units of Measurement,' below.
 
 \subsection*{Types of effects (Frequentist)}
 The following data entry options are currently available for effects:
@@ -179,7 +181,7 @@ The following data entry options are currently available for effects:
     \item Range
 \end{itemize}
 
-\noindent These effects can be input either as percentages, decimals, or neither, see Section \ref{sec:uom}.
+\noindent These effects can be input either as percentages, decimals, or neither, see 'Units of Measurement', below.
 
 \subsection*{Unit of measurement}
 \label{sec:uom}
