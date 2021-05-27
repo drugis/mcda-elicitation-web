@@ -16,9 +16,9 @@ export default interface ICurrentSubproblemContext {
   filteredRelativePerformances: IRelativePerformance[];
   filteredWorkspace: IWorkspace;
   observedRanges: Record<string, [number, number]>;
+  stepSizesByCriterion: Record<string, number>;
   editSubproblem: (subproblem: IOldSubproblem) => void;
   getCriterion: (id: string) => ICriterion;
   getConfiguredRange: (criterion: ICriterion) => [number, number];
-  getStepSizeForCriterion: (criterion: ICriterion) => number;
   goToSubproblem: (newSubproblem: IOldSubproblem) => void;
 }
