@@ -24,15 +24,15 @@ export default function TradeOffSlider({
     referenceCriterion
   } = useContext(TradeOffContext);
   const {getUsePercentage} = useContext(SettingsContext);
-  const {stepSizeByCriterion} = useContext(CurrentSubproblemContext);
+  const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
 
   const [stepSize, setStepSize] = useState<number>(
-    stepSizeByCriterion[referenceCriterion.id]
+    stepSizesByCriterion[referenceCriterion.id]
   );
 
   useEffect(() => {
-    setStepSize(stepSizeByCriterion[referenceCriterion.id]);
-  }, [referenceCriterion.id, stepSizeByCriterion]);
+    setStepSize(stepSizesByCriterion[referenceCriterion.id]);
+  }, [referenceCriterion.id, stepSizesByCriterion]);
 
   const marginTop = {marginTop: '50px'};
 

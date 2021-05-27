@@ -45,7 +45,7 @@ export function CurrentSubproblemContextProviderComponent({
   const [configuredRanges, setConfiguredRanges] = useState<
     Record<string, [number, number]>
   >({});
-  const [stepSizeByCriterion, setStepSizeByCriterion] = useState<
+  const [stepSizesByCriterion, setStepSizesByCriterion] = useState<
     Record<string, number>
   >({});
 
@@ -79,7 +79,7 @@ export function CurrentSubproblemContextProviderComponent({
           )
         )
         .value();
-      setStepSizeByCriterion(stepSizes);
+      setStepSizesByCriterion(stepSizes);
     }
   }, [workspace, currentSubproblem, scales]);
 
@@ -125,7 +125,7 @@ export function CurrentSubproblemContextProviderComponent({
         filteredRelativePerformances: relativePerformances,
         filteredWorkspace,
         observedRanges,
-        stepSizeByCriterion,
+        stepSizesByCriterion,
         editSubproblem,
         getCriterion,
         getConfiguredRange,

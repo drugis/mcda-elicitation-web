@@ -348,20 +348,21 @@ describe('The Subproblem util', () => {
   });
 
   describe('getStepSizeForCriterion', () => {
+    const criterion: ICriterion = {
+      dataSources: [
+        {
+          id: 'dsId'
+        }
+      ]
+    } as ICriterion;
+    const stepSizes: Record<string, number> = {
+      dsId: 0.5
+    };
+
     it('should work for criteria with a configured range', () => {
-      const criterion: ICriterion = {
-        dataSources: [
-          {
-            id: 'dsId'
-          }
-        ]
-      } as ICriterion;
       const observedRanges = {};
       const configuredRanges: Record<string, [number, number]> = {
         dsId: [1, 2]
-      };
-      const stepSizes: Record<string, number> = {
-        dsId: 0.5
       };
       const result = getStepSizeForCriterion(
         criterion,
@@ -373,18 +374,8 @@ describe('The Subproblem util', () => {
     });
 
     it('should work for criteria without a configured range', () => {
-      const criterion: ICriterion = {
-        dataSources: [
-          {
-            id: 'dsId'
-          }
-        ]
-      } as ICriterion;
       const observedRanges: Record<string, [number, number]> = {dsId: [1, 2]};
       const configuredRanges = {};
-      const stepSizes: Record<string, number> = {
-        dsId: 0.5
-      };
       const result = getStepSizeForCriterion(
         criterion,
         observedRanges,

@@ -8424,9 +8424,9 @@ postgres-interval@^1.1.0:
   dependencies:
     xtend "^4.0.0"
 
-preference-elicitation@drugis/preference-elicitation#1.0.5:
-  version "1.0.5"
-  resolved "https://codeload.github.com/drugis/preference-elicitation/tar.gz/1c1b181598af457432cc8f88556247c188a2d13c"
+preference-elicitation@drugis/preference-elicitation#1.0.6:
+  version "1.0.6"
+  resolved "https://codeload.github.com/drugis/preference-elicitation/tar.gz/42abfc4f08069b863d0951340882db300f6c7123"
 
 prelude-ls@^1.2.1:
   version "1.2.1"

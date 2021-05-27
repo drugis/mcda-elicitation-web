@@ -18,7 +18,7 @@ import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialVal
 import PreferencesView from './PreferencesView/PreferencesView';
 
 export default function Preferences() {
-  const {filteredCriteria, stepSizeByCriterion} = useContext(
+  const {filteredCriteria, stepSizesByCriterion} = useContext(
     CurrentSubproblemContext
   );
   const {setActiveView, currentScenario, activeView, pvfs, updateScenario} =
@@ -79,7 +79,7 @@ export default function Preferences() {
           criteria={filteredCriteria}
           showPercentages={showPercentages}
           pvfs={pvfs}
-          stepSizeByCriterion={stepSizeByCriterion}
+          stepSizesByCriterion={stepSizesByCriterion}
           cancelCallback={cancelCallback}
           saveCallback={saveCallback}
           manualLexicon={lexicon}

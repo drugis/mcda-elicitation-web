@@ -9,14 +9,14 @@ import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFuncti
 
 export default function CutOffs(): JSX.Element {
   const {getUsePercentage} = useContext(SettingsContext);
-  const {stepSizeByCriterion, getConfiguredRange} = useContext(
+  const {stepSizesByCriterion, getConfiguredRange} = useContext(
     CurrentSubproblemContext
   );
   const {advancedPvfCriterion, cutOffs, setCutOffs} = useContext(
     AdvancedPartialValueFunctionContext
   );
 
-  const stepSize = stepSizeByCriterion[advancedPvfCriterion.id];
+  const stepSize = stepSizesByCriterion[advancedPvfCriterion.id];
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
   const usePercentage = getUsePercentage(advancedPvfCriterion.dataSources[0]);
 
