@@ -1,18 +1,27 @@
-import {Grid, Slider, Typography} from '@material-ui/core';
+import {Slider, ValueLabelProps, withStyles} from '@material-ui/core';
+//@ts-ignore
+import ValueLabel from '@material-ui/core/Slider/ValueLabel';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import React, {ElementType, useContext} from 'react';
+import {getColorForIndex} from '../../PartialValueFunctionUtil';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
+
+const ColoredValueLabel: unknown = withStyles({
+  circle: {
+    color: getColorForIndex
+  }
+})(ValueLabel);
 
 export default function CutOffs(): JSX.Element {
   const {getUsePercentage} = useContext(SettingsContext);
   const {stepSizesByCriterion, getConfiguredRange} = useContext(
     CurrentSubproblemContext
   );
-  const {advancedPvfCriterion, cutOffs, setCutOffs} = useContext(
+  const {advancedPvfCriterion, cutoffs, setCutoffs} = useContext(
     AdvancedPartialValueFunctionContext
   );
 
@@ -23,7 +32,7 @@ export default function CutOffs(): JSX.Element {
   const sliderParameters = {
     min: significantDigits(configuredRange[0] + stepSize),
     max: significantDigits(configuredRange[1] - stepSize),
-    values: cutOffs,
+    values: cutoffs,
     formatFunction: (x: number) => getPercentifiedValue(x, usePercentage)
   };
 
@@ -31,34 +40,24 @@ export default function CutOffs(): JSX.Element {
     event: React.ChangeEvent<any>,
     newValue: [number, number, number]
   ) {
-    setCutOffs(_.sortBy(newValue) as [number, number, number]);
+    setCutoffs(_.sortBy(newValue) as [number, number, number]);
   }
 
   return (
-    <>
-      <Grid container item xs={12} justify="flex-start">
-        <div style={{width: '420px', marginLeft: '50px', marginRight: '30px'}}>
-          <Slider
-            id="cut-offs-slider"
-            min={sliderParameters.min}
-            max={sliderParameters.max}
-            marks
-            track={false}
-            value={sliderParameters.values}
-            onChange={handleSliderChanged}
-            valueLabelDisplay="on"
-            valueLabelFormat={sliderParameters.formatFunction}
-            step={stepSize}
-          />
-        </div>
-      </Grid>
-      <Grid container item xs={12} justify="flex-start">
-        <Typography style={{width: '500px', textAlign: 'center'}}>
-          Use the sliders to adjust the shape of the function. They indicate for
-          which criterion value (the x-axis) the partial value (the y-axis) is
-          0.25, 0.5 and 0.75, respectively.
-        </Typography>
-      </Grid>
-    </>
+    <div style={{width: '420px', marginLeft: '50px', marginRight: '30px'}}>
+      <Slider
+        id="cut-offs-slider"
+        min={sliderParameters.min}
+        max={sliderParameters.max}
+        marks
+        track={false}
+        value={sliderParameters.values}
+        onChange={handleSliderChanged}
+        valueLabelDisplay="on"
+        valueLabelFormat={sliderParameters.formatFunction}
+        step={stepSize}
+        ValueLabelComponent={ColoredValueLabel as ElementType<ValueLabelProps>}
+      />
+    </div>
   );
 }

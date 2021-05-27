@@ -1,6 +1,5 @@
 import {
   FormControlLabel,
-  Grid,
   Radio,
   RadioGroup,
   Typography
@@ -28,7 +27,7 @@ export default function PvfDirection(): JSX.Element {
   }
 
   return (
-    <Grid item xs={12}>
+    <>
       <Typography>Choose partial value function's direction:</Typography>
       <RadioGroup
         name="pvf-direction-radio"
@@ -60,6 +59,6 @@ export default function PvfDirection(): JSX.Element {
           )} is best)`}
         />
       </RadioGroup>
-    </Grid>
+    </>
   );
 }
