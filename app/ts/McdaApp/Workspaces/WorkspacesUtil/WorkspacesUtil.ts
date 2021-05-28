@@ -1,6 +1,6 @@
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 
-export function getLink(workspace: IOldWorkspace): string {
+export function getLink(workspace: IWorkspaceSummary): string {
   return (
     '/workspaces/' +
     workspace.id +

@@ -1,4 +1,4 @@
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {getLink} from './WorkspacesUtil';
 
 describe('WorkspacesUtil', () => {
@@ -8,7 +8,7 @@ describe('WorkspacesUtil', () => {
         id: '1',
         defaultSubProblemId: '10',
         defaultScenarioId: '100'
-      } as IOldWorkspace;
+      } as IWorkspaceSummary;
       const result = getLink(workspace);
       const expectedResult = '/workspaces/1/problems/10/scenarios/100/overview';
       expect(result).toEqual(expectedResult);

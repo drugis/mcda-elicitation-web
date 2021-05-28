@@ -1,6 +1,6 @@
 import {Grid, Typography} from '@material-ui/core';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
+import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
@@ -11,15 +11,14 @@ import WorkspacesTable from './WorkspacesTable/WorkspacesTable';
 
 export default function WorkspacesTables(): JSX.Element {
   const {setError} = useContext(ErrorContext);
-  const [workspaces, setWorkspaces] = useState<IOldWorkspace[]>();
-  const [inProgressworkspaces, setInProgressWorkspaces] = useState<
-    IInProgressWorkspaceProperties[]
-  >();
+  const [workspaces, setWorkspaces] = useState<IWorkspaceSummary[]>();
+  const [inProgressworkspaces, setInProgressWorkspaces] =
+    useState<IInProgressWorkspaceProperties[]>();
 
   useEffect(() => {
     axios
       .get('/api/v2/workspaces/')
-      .then((result: AxiosResponse<IOldWorkspace[]>) => {
+      .then((result: AxiosResponse<IWorkspaceSummary[]>) => {
         setWorkspaces(_.sortBy(result.data, ['title']));
       })
       .catch(setError);

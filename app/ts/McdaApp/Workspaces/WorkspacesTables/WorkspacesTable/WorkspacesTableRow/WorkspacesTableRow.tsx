@@ -1,5 +1,5 @@
 import {TableCell, TableRow} from '@material-ui/core';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {getLink} from 'app/ts/McdaApp/Workspaces/WorkspacesUtil/WorkspacesUtil';
 import dateFormat from 'dateformat';
 import React from 'react';
@@ -12,7 +12,7 @@ export default function WorkspacesTableRow({
   index
 }: {
   deleteLocalWorkspace: (id: string) => void;
-  workspace: IOldWorkspace;
+  workspace: IWorkspaceSummary;
   index: number;
 }): JSX.Element {
   const date = new Date(workspace.creationDate);

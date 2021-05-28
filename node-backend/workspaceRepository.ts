@@ -3,6 +3,7 @@ import {OurError} from '@shared/interface/IError';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IProblem from '@shared/interface/Problem/IProblem';
+import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {PoolClient, QueryResult} from 'pg';
 import IDB from './interface/IDB';
 import logger from './logger';
@@ -166,14 +167,29 @@ export default function WorkspaceRepository(db: IDB) {
 
   function query(
     ownerId: number,
-    callback: (error: OurError, workspaces?: IOldWorkspace[]) => void
+    callback: (
+      error: OurError,
+      workspaceSummaries?: IWorkspaceSummary[]
+    ) => void
   ) {
-    const query =
-      'SELECT id, owner, title, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId", creationdate AS "creationDate" FROM Workspace WHERE owner = $1';
+    const query = `SELECT id, owner, title, 
+      (SELECT json_agg(criteria_json.value->'title') 
+        FROM json_each(workspace.problem->'criteria') AS criteria_json 
+        WHERE owner = 9
+      ) AS criteria, 
+      (SELECT json_agg(alternative_json.value->'title') 
+        FROM json_each(workspace.problem->'alternatives') AS alternative_json 
+        WHERE owner = 9
+      ) AS alternatives, 
+      defaultSubproblemId AS "defaultSubProblemId", 
+      defaultScenarioId AS "defaultScenarioId", 
+      creationdate AS "creationDate" 
+    FROM workspace 
+    WHERE owner = $1`;
     db.query(
       query,
       [ownerId],
-      function (error: OurError, result: QueryResult<IOldWorkspace>) {
+      (error: OurError, result: QueryResult<IWorkspaceSummary>) => {
         if (error) {
           callback(error);
         } else {
@@ -214,16 +230,16 @@ export default function WorkspaceRepository(db: IDB) {
   }
 
   return {
-    get: get,
-    create: create,
-    setDefaultSubProblem: setDefaultSubProblem,
-    getDefaultSubproblem: getDefaultSubproblem,
-    setDefaultScenario: setDefaultScenario,
-    getDefaultScenarioId: getDefaultScenarioId,
-    getDefaultIds: getDefaultIds,
-    getWorkspaceInfo: getWorkspaceInfo,
-    update: update,
+    get,
+    create,
+    setDefaultSubProblem,
+    getDefaultSubproblem,
+    setDefaultScenario,
+    getDefaultScenarioId,
+    getDefaultIds,
+    getWorkspaceInfo,
+    update,
     delete: del,
-    query: query
+    query
   };
 }

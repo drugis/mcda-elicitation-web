@@ -6,8 +6,8 @@ import {
   TableRow,
   TableSortLabel
 } from '@material-ui/core';
-import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
+import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
 import React, {useEffect, useState} from 'react';
@@ -15,7 +15,7 @@ import {TWorkspaceType} from '../../TWorkspaceType';
 import InProgressWorkspacesTableRow from './InProgressWorkspacesTableRow/InProgressWorkspacesTableRow';
 import WorkspacesTableRow from './WorkspacesTableRow/WorkspacesTableRow';
 
-type TWorkspaces = IOldWorkspace[] | IInProgressWorkspaceProperties[];
+type TWorkspaces = IWorkspaceSummary[] | IInProgressWorkspaceProperties[];
 
 export default function WorkspacesTable({
   type,
@@ -41,7 +41,7 @@ export default function WorkspacesTable({
   }
 
   function renderTableRow(
-    workspace: IOldWorkspace | IInProgressWorkspaceProperties,
+    workspace: IWorkspaceSummary | IInProgressWorkspaceProperties,
     index: number
   ): JSX.Element {
     if (isFinishedWorkspace(workspace)) {
@@ -66,8 +66,8 @@ export default function WorkspacesTable({
   }
 
   function isFinishedWorkspace(
-    workspace: IOldWorkspace | IInProgressWorkspaceProperties
-  ): workspace is IOldWorkspace {
+    workspace: IWorkspaceSummary | IInProgressWorkspaceProperties
+  ): workspace is IWorkspaceSummary {
     return type === 'finished';
   }
 
