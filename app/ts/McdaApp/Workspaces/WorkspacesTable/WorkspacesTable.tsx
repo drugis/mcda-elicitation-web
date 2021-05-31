@@ -13,7 +13,7 @@ import {WorkspacesContext} from '../WorkspacesContext/WorkspacesContext';
 import WorkspacesTableRow from './WorkspacesTableRow/WorkspacesTableRow';
 
 export default function WorkspacesTable(): JSX.Element {
-  const {filteredWorkspaces} = useContext(WorkspacesContext);
+  const {filteredWorkspaces, deleteWorkspace} = useContext(WorkspacesContext);
 
   const [sortedWorkspaces, setSortedWorkspaces] =
     useState<IWorkspaceSummary[]>(filteredWorkspaces);
@@ -47,6 +47,7 @@ export default function WorkspacesTable(): JSX.Element {
 
   function deleteLocalWorkspace(id: string): void {
     setSortedWorkspaces(_.reject(sortedWorkspaces, ['id', id]));
+    deleteWorkspace(id);
   }
 
   function EmptyWorkspaceMessage(): JSX.Element {

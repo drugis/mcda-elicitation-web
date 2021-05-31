@@ -4,6 +4,7 @@ export default interface IWorkspacesContext {
   availableAlternatives: string[];
   availableCriteria: string[];
   filteredWorkspaces: IWorkspaceSummary[];
+  deleteWorkspace: (id: string) => void;
   filterByAlternatives: (alternatives: string[]) => void;
   filterByCriteria: (criteria: string[]) => void;
 }

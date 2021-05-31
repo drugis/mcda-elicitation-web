@@ -58,12 +58,21 @@ export function WorkspacesContextProviderComponent({
     );
   }
 
+  function deleteWorkspace(workspaceId: string): void {
+    const newWorkspaces = _.reject(workspaces, ['id', workspaceId]);
+    setWorkspaces(newWorkspaces);
+    setFilteredWorkspaces(newWorkspaces);
+    setAvailableCriteria(extractUniqueCriteria(newWorkspaces));
+    setAvailableAlternatives(extractUniqueAlternatives(newWorkspaces));
+  }
+
   return (
     <WorkspacesContext.Provider
       value={{
         availableAlternatives,
         availableCriteria,
         filteredWorkspaces,
+        deleteWorkspace,
         filterByAlternatives,
         filterByCriteria
       }}
