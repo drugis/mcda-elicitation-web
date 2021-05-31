@@ -4,7 +4,7 @@ import workspaceService, {cleanList} from './util/workspaceService';
 
 export = {
   afterEach,
-  'Filter workspaces by criteria': filterByCriteria
+  'Filter workspaces by criteria and alternatives': filterByBoth
 };
 
 function afterEach(browser: NightwatchBrowser) {
@@ -17,7 +17,7 @@ const tervonen =
 const hansen =
   'Antidepressants - relative effectiveness analysis (Van Valkenhoef et al, J Clin Epi, 2012)';
 
-function filterByCriteria(browser: NightwatchBrowser) {
+function filterByBoth(browser: NightwatchBrowser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
   addWorkspaces(browser);
