@@ -12,7 +12,9 @@ export default function Workspaces(): JSX.Element {
 
   return (
     <Grid container spacing={1}>
-      <CreateWorkspace />
+      <Grid item xs={12}>
+        <CreateWorkspace />
+      </Grid>
       <Grid item xs={8}>
         <Typography id="workspaces-header" variant="h4">
           <InlineHelp helpId="workspace">Workspaces</InlineHelp>

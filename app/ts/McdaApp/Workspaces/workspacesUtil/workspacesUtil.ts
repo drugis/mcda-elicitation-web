@@ -59,20 +59,24 @@ function doesWorkspaceIncludesCriteria(
   workspaceCriteria: string[],
   criteriaToInclude: string[]
 ): boolean {
-  return _.isEmpty(criteriaToInclude)
-    ? true
-    : _.every(criteriaToInclude, (criterion: string): boolean =>
-        _.includes(workspaceCriteria, criterion)
-      );
+  return (
+    _.isEmpty(criteriaToInclude) ||
+    doAllInclude(workspaceCriteria, criteriaToInclude)
+  );
 }
 
 function doesWorkspaceIncludesAlternatives(
   workspaceAlternatives: string[],
   alternativesToInclude: string[]
 ): boolean {
-  return _.isEmpty(alternativesToInclude)
-    ? true
-    : _.every(alternativesToInclude, (criterion: string): boolean =>
-        _.includes(workspaceAlternatives, criterion)
-      );
+  return (
+    _.isEmpty(alternativesToInclude) ||
+    doAllInclude(workspaceAlternatives, alternativesToInclude)
+  );
+}
+
+function doAllInclude(items: string[], itemsNeeded: string[]): boolean {
+  return _.every(itemsNeeded, (itemNeeded: string): boolean =>
+    _.includes(items, itemNeeded)
+  );
 }

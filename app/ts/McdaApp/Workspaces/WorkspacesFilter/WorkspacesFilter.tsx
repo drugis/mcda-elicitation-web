@@ -27,8 +27,9 @@ export default function WorkspacesFilter(): JSX.Element {
 
   return (
     <Grid container>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <Autocomplete
+          id="criterion-filter"
           multiple
           options={availableCriteria}
           onChange={handleFilteredCriteriaChange}
@@ -41,9 +42,9 @@ export default function WorkspacesFilter(): JSX.Element {
           )}
         ></Autocomplete>
       </Grid>
-      <Grid item xs={6} />
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <Autocomplete
+          id="alternative-filter"
           multiple
           options={availableAlternatives}
           onChange={handleFilteredAlternativesChange}
@@ -56,7 +57,6 @@ export default function WorkspacesFilter(): JSX.Element {
           )}
         ></Autocomplete>
       </Grid>
-      <Grid item xs={6} />
     </Grid>
   );
 }

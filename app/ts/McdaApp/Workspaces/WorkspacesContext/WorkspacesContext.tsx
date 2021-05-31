@@ -8,7 +8,7 @@ import {
   extractUniqueAlternatives,
   extractUniqueCriteria,
   filterWorkspaces
-} from '../WorkspacesUtil/WorkspacesUtil';
+} from '../workspacesUtil/workspacesUtil';
 import IWorkspacesContext from './IWorkspacesContext';
 
 export const WorkspacesContext = createContext<IWorkspacesContext>(

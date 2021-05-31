@@ -175,11 +175,11 @@ export default function WorkspaceRepository(db: IDB) {
     const query = `SELECT id, owner, title, 
       (SELECT json_agg(criteria_json.value->'title') 
         FROM json_each(workspace.problem->'criteria') AS criteria_json 
-        WHERE owner = 9
+        WHERE owner = $1
       ) AS criteria, 
       (SELECT json_agg(alternative_json.value->'title') 
         FROM json_each(workspace.problem->'alternatives') AS alternative_json 
-        WHERE owner = 9
+        WHERE owner = $1
       ) AS alternatives, 
       defaultSubproblemId AS "defaultSubProblemId", 
       defaultScenarioId AS "defaultScenarioId", 
