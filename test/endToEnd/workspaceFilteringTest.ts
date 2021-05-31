@@ -5,8 +5,6 @@ import workspaceService, {cleanList} from './util/workspaceService';
 export = {
   afterEach,
   'Filter workspaces by criteria': filterByCriteria
-  // 'Filter workspaces by alternatives': filterByAlternative,
-  // 'Filter workspaces by criteria and alternatives': filterByBoth
 };
 
 function afterEach(browser: NightwatchBrowser) {
