@@ -6,30 +6,21 @@ import {
   TableRow,
   TableSortLabel
 } from '@material-ui/core';
-import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
-import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
-import React, {useEffect, useState} from 'react';
-import {TWorkspaceType} from '../../TWorkspaceType';
-import InProgressWorkspacesTableRow from './InProgressWorkspacesTableRow/InProgressWorkspacesTableRow';
+import React, {useContext, useEffect, useState} from 'react';
+import {WorkspacesContext} from '../WorkspacesContext/WorkspacesContext';
 import WorkspacesTableRow from './WorkspacesTableRow/WorkspacesTableRow';
 
-type TWorkspaces = IWorkspaceSummary[] | IInProgressWorkspaceProperties[];
+export default function WorkspacesTable(): JSX.Element {
+  const {filteredWorkspaces} = useContext(WorkspacesContext);
 
-export default function WorkspacesTable({
-  type,
-  workspaces
-}: {
-  type: TWorkspaceType;
-  workspaces: TWorkspaces;
-}): JSX.Element {
   const [sortedWorkspaces, setSortedWorkspaces] =
-    useState<TWorkspaces>(workspaces);
+    useState<IWorkspaceSummary[]>(filteredWorkspaces);
 
   useEffect(() => {
-    setSortedWorkspaces(workspaces);
-  }, [workspaces]);
+    setSortedWorkspaces(filteredWorkspaces);
+  }, [filteredWorkspaces]);
 
   const [orderBy, setOrderBy] = useState<TSortProperty>('title');
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
@@ -41,34 +32,17 @@ export default function WorkspacesTable({
   }
 
   function renderTableRow(
-    workspace: IWorkspaceSummary | IInProgressWorkspaceProperties,
+    workspace: IWorkspaceSummary,
     index: number
   ): JSX.Element {
-    if (isFinishedWorkspace(workspace)) {
-      return (
-        <WorkspacesTableRow
-          key={workspace.id}
-          workspace={workspace}
-          index={index}
-          deleteLocalWorkspace={deleteLocalWorkspace}
-        />
-      );
-    } else {
-      return (
-        <InProgressWorkspacesTableRow
-          key={workspace.id}
-          workspace={workspace}
-          index={index}
-          deleteLocalWorkspace={deleteLocalWorkspace}
-        />
-      );
-    }
-  }
-
-  function isFinishedWorkspace(
-    workspace: IWorkspaceSummary | IInProgressWorkspaceProperties
-  ): workspace is IWorkspaceSummary {
-    return type === 'finished';
+    return (
+      <WorkspacesTableRow
+        key={workspace.id}
+        workspace={workspace}
+        index={index}
+        deleteLocalWorkspace={deleteLocalWorkspace}
+      />
+    );
   }
 
   function deleteLocalWorkspace(id: string): void {
@@ -79,8 +53,10 @@ export default function WorkspacesTable({
     return (
       <TableBody>
         <TableRow>
-          <TableCell colSpan={type === 'finished' ? 4 : 3}>
-            <em id="empty-workspace-message">No workspaces defined</em>
+          <TableCell colSpan={4}>
+            <em id="empty-workspace-message">
+              No workspaces defined or match the filters
+            </em>
           </TableCell>
         </TableRow>
       </TableBody>
@@ -96,7 +72,7 @@ export default function WorkspacesTable({
     }
   }
 
-  function orderBySameProperty(newWorkspaces: TWorkspaces): void {
+  function orderBySameProperty(newWorkspaces: IWorkspaceSummary[]): void {
     if (orderDirection === 'desc') {
       setOrderDirection('asc');
       setSortedWorkspaces(newWorkspaces);
@@ -108,7 +84,7 @@ export default function WorkspacesTable({
 
   function orderByOtherProperty(
     propertyToOrder: TSortProperty,
-    newWorkspaces: TWorkspaces
+    newWorkspaces: IWorkspaceSummary[]
   ): void {
     setOrderBy(propertyToOrder);
     setSortedWorkspaces(newWorkspaces);
@@ -139,9 +115,8 @@ export default function WorkspacesTable({
               Created
             </TableSortLabel>
           </TableCell>
-          <ShowIf condition={type === 'finished'}>
-            <TableCell></TableCell>
-          </ShowIf>
+
+          <TableCell></TableCell>
           <TableCell></TableCell>
         </TableRow>
       </TableHead>

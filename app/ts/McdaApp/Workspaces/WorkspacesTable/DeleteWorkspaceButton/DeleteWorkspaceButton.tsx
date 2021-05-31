@@ -42,6 +42,7 @@ export default function DeleteWorkspaceButton({
     const path = type === 'finished' ? 'workspaces' : 'inProgress';
     Axios.delete(`/api/v2/${path}/${workspace.id}`).catch(setError);
     deleteLocalWorkspace(workspace.id);
+    //update filter lists
     closeDialog();
   }
 
