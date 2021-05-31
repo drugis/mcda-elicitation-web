@@ -71,7 +71,8 @@ server = http.createServer(app);
 
 startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
   if (errorBody) {
-    initError(errorBody);
+    process.exit(1);
+    // initError(errorBody);
   } else {
     initApp();
   }

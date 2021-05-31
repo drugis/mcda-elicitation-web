@@ -35,4 +35,4 @@ RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm 
 
 EXPOSE 3002
 
-CMD ["forever", "tscomp/index.js"]
+CMD ["node", "tscomp/index.js"]
