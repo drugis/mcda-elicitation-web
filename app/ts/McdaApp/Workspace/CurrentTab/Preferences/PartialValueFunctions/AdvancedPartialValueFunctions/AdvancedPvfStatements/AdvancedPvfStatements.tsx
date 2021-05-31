@@ -1,9 +1,19 @@
 import {Typography} from '@material-ui/core';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import React, {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function AdvancedPvfStatements() {
-  const {cutoffsByValue} = useContext(AdvancedPartialValueFunctionContext);
+  const {
+    advancedPvfCriterion: {
+      title,
+      dataSources: [dataSource]
+    },
+    cutoffsByValue,
+    usePercentage
+  } = useContext(AdvancedPartialValueFunctionContext);
+  const unitLabel = getUnitLabel(dataSource.unitOfMeasurement, usePercentage);
+
   return (
     <>
       <Typography>
@@ -12,25 +22,25 @@ export default function AdvancedPvfStatements() {
       </Typography>
       <ul>
         <li>
-          <Typography>
-            Changing from {cutoffsByValue[0]} to {cutoffsByValue[0.5]} is as
-            valuable as changing from {cutoffsByValue[0.5]} to{' '}
-            {cutoffsByValue[1]}
-          </Typography>
+          {renderStatement(title, unitLabel, [
+            cutoffsByValue[0],
+            cutoffsByValue[0.5],
+            cutoffsByValue[1]
+          ])}
         </li>
         <li>
-          <Typography>
-            Changing from {cutoffsByValue[0]} to {cutoffsByValue[0.25]} is as
-            valuable as changing from {cutoffsByValue[0.25]} to{' '}
-            {cutoffsByValue[0.5]}
-          </Typography>
+          {renderStatement(title, unitLabel, [
+            cutoffsByValue[0],
+            cutoffsByValue[0.25],
+            cutoffsByValue[0.5]
+          ])}
         </li>
         <li>
-          <Typography>
-            Changing from {cutoffsByValue[0.5]} to {cutoffsByValue[0.75]} is as
-            valuable as changing from {cutoffsByValue[0.75]} to{' '}
-            {cutoffsByValue[1]}
-          </Typography>
+          {renderStatement(title, unitLabel, [
+            cutoffsByValue[0.5],
+            cutoffsByValue[0.75],
+            cutoffsByValue[1]
+          ])}
         </li>
       </ul>
       <Typography>
@@ -38,5 +48,19 @@ export default function AdvancedPvfStatements() {
         sliders to correct it.
       </Typography>
     </>
+  );
+}
+
+function renderStatement(
+  criterionTitle: string,
+  unitLabel: string,
+  [lowerCutoff, middleCutoff, upperCutoff]: [number, number, number]
+): JSX.Element {
+  return (
+    <Typography>
+      Changing {criterionTitle} from {lowerCutoff} {unitLabel} to {middleCutoff}{' '}
+      {unitLabel} is as valuable as changing from {middleCutoff} {unitLabel} to{' '}
+      {upperCutoff} {unitLabel}
+    </Typography>
   );
 }
