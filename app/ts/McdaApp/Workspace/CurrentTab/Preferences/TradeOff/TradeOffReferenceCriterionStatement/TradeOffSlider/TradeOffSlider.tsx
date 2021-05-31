@@ -1,7 +1,7 @@
 import {Grid, Popover, Slider, Typography} from '@material-ui/core';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import React, {useContext, useEffect, useState} from 'react';
 import {TradeOffContext} from '../../TradeOffContext/TradeOffContext';
 
@@ -24,15 +24,15 @@ export default function TradeOffSlider({
     referenceCriterion
   } = useContext(TradeOffContext);
   const {getUsePercentage} = useContext(SettingsContext);
-  const {getStepSizeForCriterion} = useContext(CurrentSubproblemContext);
+  const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
 
   const [stepSize, setStepSize] = useState<number>(
-    getStepSizeForCriterion(referenceCriterion)
+    stepSizesByCriterion[referenceCriterion.id]
   );
 
   useEffect(() => {
-    setStepSize(getStepSizeForCriterion(referenceCriterion));
-  }, [getStepSizeForCriterion, referenceCriterion]);
+    setStepSize(stepSizesByCriterion[referenceCriterion.id]);
+  }, [referenceCriterion.id, stepSizesByCriterion]);
 
   const marginTop = {marginTop: '50px'};
 

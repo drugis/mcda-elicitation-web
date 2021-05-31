@@ -2,8 +2,8 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import {TPreferences} from '@shared/types/Preferences';
 import {lexicon} from 'app/ts/InlineHelp/lexicon';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import {PreferenceElicitation} from 'preference-elicitation';
 import React, {useContext} from 'react';
@@ -18,14 +18,11 @@ import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialVal
 import PreferencesView from './PreferencesView/PreferencesView';
 
 export default function Preferences() {
-  const {filteredCriteria} = useContext(CurrentSubproblemContext);
-  const {
-    setActiveView,
-    currentScenario,
-    activeView,
-    pvfs,
-    updateScenario
-  } = useContext(CurrentScenarioContext);
+  const {filteredCriteria, stepSizesByCriterion} = useContext(
+    CurrentSubproblemContext
+  );
+  const {setActiveView, currentScenario, activeView, pvfs, updateScenario} =
+    useContext(CurrentScenarioContext);
   const {showPercentages} = useContext(SettingsContext);
   const {
     workspace: {
@@ -82,6 +79,7 @@ export default function Preferences() {
           criteria={filteredCriteria}
           showPercentages={showPercentages}
           pvfs={pvfs}
+          stepSizesByCriterion={stepSizesByCriterion}
           cancelCallback={cancelCallback}
           saveCallback={saveCallback}
           manualLexicon={lexicon}

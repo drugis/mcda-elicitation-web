@@ -39,6 +39,7 @@ function setStepSizes(browser: NightwatchBrowser) {
   setPvfs(browser);
 
   verifyStepSizesDuringTradeOff(browser);
+  verifyStepSizesDuringMatching(browser);
 }
 
 function setupSubProblem(browser: NightwatchBrowser) {
@@ -99,5 +100,20 @@ function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
     .element('//*[@id="reference-slider-from"]')
     .text.to.equal('-2');
 
+  browser.useCss();
+}
+
+function verifyStepSizesDuringMatching(browser: NightwatchBrowser): void {
+  browser
+    .click('#matching-button')
+    .waitForElementVisible('#matching-title-header')
+    .click('#criterion-option-crit1Id')
+    .click('#next-button')
+    .useXpath()
+    .waitForElementVisible('//*[@id="matching-statement"]')
+    .click('//*[@id="matching-slider"]/span[3]')
+    .sendKeys('//*[@id="matching-slider"]/span[3]', browser.Keys.LEFT_ARROW);
+
+  browser.expect.element('//*[@id="matching-cell"]').text.to.equal('100');
   browser.useCss();
 }

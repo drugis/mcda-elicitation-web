@@ -13,13 +13,8 @@ export function applySubproblem(
   subproblem: IOldSubproblem
 ): IWorkspace {
   const {definition} = subproblem;
-  const {
-    alternatives,
-    criteria,
-    distributions,
-    effects,
-    relativePerformances
-  } = workspace;
+  const {alternatives, criteria, distributions, effects, relativePerformances} =
+    workspace;
   const filteredAlternatives = filterExclusions(
     alternatives,
     definition.excludedAlternatives
@@ -176,6 +171,20 @@ export function getStepSize(
       predefinedStepSize
     );
     return Math.pow(10, magnitude);
+  }
+}
+
+export function getStepSizeForCriterion(
+  criterion: ICriterion,
+  observedRanges: Record<string, [number, number]>,
+  configuredRanges: Record<string, [number, number]>,
+  stepSizes: Record<string, number>
+) {
+  const dataSourceId = criterion.dataSources[0].id;
+  if (hasNoRange(configuredRanges, dataSourceId)) {
+    return getStepSize(observedRanges[dataSourceId], stepSizes[dataSourceId]);
+  } else {
+    return getStepSize(configuredRanges[dataSourceId], stepSizes[dataSourceId]);
   }
 }
 

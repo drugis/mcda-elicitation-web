@@ -147,8 +147,18 @@
   </div>
 </div>
 
-<h3 id="mcda-preference-elicitation">Preferences</h3>
+<div class="enterprise-feature">
+  <p>
+    If the problem is analysable, a
+    <a href="#mcda-survey-creation">survey can be created for it</a>. A button
+    to do so will become available, or if a survey has already been created, the
+    button will navigate there instead.
+  </p>
 
+  <p>Deleting a problem will also delete the survey, if there is one.</p>
+</div>
+
+<h3 id="mcda-preference-elicitation">Preferences</h3>
 <h4 id="mcda-scenarios">Scenarios</h4>
 <p>
   For each <a href="#mcda-problems">MCDA analysis problem</a>, there can be one
@@ -323,8 +333,64 @@
   </div>
 </div>
 
-<h4 id="mcda-trade-off-table">Trade off table</h4>
+<div class="enterprise-feature">
+  <h4 id="mcda-choice-based-matching-elicitation">
+    Choice-based matching elicitation (Enterprise edition)
+  </h4>
+  <p>
+    The choice-based matching elicitation method uses an automatically-generated
+    series of questions to approximate the user's preferences. Each question
+    presents two alternative scenarios, and the user is asked which one they
+    prefer. The questions are generated in such a manner that the system's
+    uncertainty about the preferences is minimised as they are answered. This
+    process is somewhat more labourious than adjusting a single value for each
+    criterion, as in several other elicitation techniques. However, some users
+    prefer being asked to judge alternatives over having to provide a numerical
+    value directly.
+  </p>
+  <div class="figure">
+    <img src="img/choiceBasedMatching.png" />
+    <div class="caption">
+      One step in the choice-based matching process, asking the user to choose
+      between two treatment scenarios. The questions are automatically generated
+      based on previous responses to maximise certainty about the user's
+      preferences.
+    </div>
+  </div>
+</div>
 
+<div class="enterprise-feature">
+  <h4 id="mcda-threshold-elicitation">
+    Threshold technique elicitation (Enterprise edition)
+  </h4>
+  <p>
+    The threshold elicitation technique elicits what a user's trade-offs are
+    between different criteria. This method sets the preference weights by
+    choosing one criterion's change as a reference point, and then allowing the
+    user to determine how great a change in each other criterion corresponds to
+    a certain change in the reference criterion. It is similar to
+    <a href="mcda-precise-swing-elicitation">precise swing elicitation</a>, but
+    uses concrete values instead of abstract importances.
+  </p>
+  <div class="figure">
+    <img src="img/thresholdElicitation1.png" />
+    <div class="caption">
+      Step one of threshold elicitation, specifying the reference criterion and
+      its change, relative to which all other criteria's changes will be
+      compared.
+    </div>
+  </div>
+  <div class="figure">
+    <img src="img/thresholdElicitation2.png" />
+    <div class="caption">
+      Step two of threshold elicitation, specifying for each other criterion how
+      large a change for that criterion corresponds to the change in the
+      reference criterion.
+    </div>
+  </div>
+</div>
+
+<h4 id="mcda-trade-off-table">Trade off table</h4>
 <p>
   For many users, it is helpful to illustrate the concrete consequences of the
   abstract weights which result from preference elicitation. The trade off table
@@ -343,7 +409,6 @@
 </div>
 
 <h3 id="mcda-deterministic-analysis">Deterministic benefit-risk analysis</h3>
-
 <p>
   The deterministic analysis part of the ADDIS MCDA interface shows the
   consequences of a given preference scenario for each alternative's value. It
@@ -560,6 +625,183 @@
   <div class="caption">
     MCDA settings, controlling various aspects of the display as well as the
     random seed used in stochastic calculations.
+  </div>
+</div>
+
+<div class="enterprise-feature">
+  <h2 id="mcda-survey-module">Surveys (Enterprise edition)</h2>
+
+  <p>
+    Besides the ability to elicit and analyse preference scenarios in an
+    analytical or regulatory context, it is also possible to use ADDIS MCDA to
+    create surveys to gather the preferences of a larger group of people, e.g. a
+    group of regulators or the patient population for a disease. ADDIS MCDA lets
+    you create and distribute surveys to such groups simply by sharing a
+    hyperlink. Users following this link will have their preferences elicited,
+    and their response will be made available as a preference scenario and for
+    aggregate-level analysis.
+  </p>
+
+  <p>
+    The mcda <a href="mcdaTutorial.pdf">guided tutorial</a> also covers the
+    survey tool.
+  </p>
+
+  <h3 id="mcda-survey-creation">Survey creation</h3>
+
+  <p>
+    For each analysable problem, one survey can be created, using the button at
+    the top-right of the
+    <a href="#mcda-problem-creation">problem management screen</a>. If a survey
+    has already been created, the button will navigate to the existing survey
+    instead. In cases where one might wish to make multiple surveys for the same
+    problem, we currently support this by creating new problems based on the old
+    one and creating surveys for those new problems.
+  </p>
+
+  <p>
+    After creating a survey, it will open in a new tab or window, and show the
+    survey's overview tab. The system is designed such that it expects you to
+    proceed through the tabs from left to right before publishing your survey,
+    as explained in the following sections.
+  </p>
+
+  <h4 id="mcda-survey-overview">Survey overview</h4>
+  <p>
+    The overview tab is the default tab shown for a survey. As a reminder, it
+    shows the effects table and defined scale ranges and units for the problem
+    for which the survey was created.
+  </p>
+
+  <div class="figure">
+    <img src="img/surveyWelcome.png" />
+    <div class="caption">The survey's overview page.</div>
+  </div>
+
+  <h4 id="mcda-survey-criteria">Survey criteria</h4>
+
+  <p>
+    The survey criteria tab allows the customisation of the information about
+    the criteria that will be shown to the survey participants. The title,
+    description and unit labels of each criterion can be edited, for example to
+    simplify clinical terms for laypeople. Note that these labels are entirely
+    cosmetic, including the unit labels.
+  </p>
+
+  <h4 id="mcda-survey-pvfs">Survey partial value functions</h4>
+
+  <p>
+    A <a href="#mcda-setting-pvfs">partial value function</a> must be set for
+    each criterion before the survey can be tested or published. The survey tool
+    currently only supports linear partial value functions, so choosing
+    increasing/decreasing is sufficient.
+  </p>
+
+  <h4 id="mcda-survey-elicitation-method">Survey elicitation method</h4>
+
+  <p>
+    This tab lets you choose the elicitation method. For most methods, this is
+    as simple as choosing the option from the dropdown. In case of choice-based
+    matching, the system tells you how many questions will be asked, which is
+    based on the number of criteria.
+  </p>
+
+  <h4 id="mcda-survey-text-customisation">Survey text customisation</h4>
+
+  <p>
+    Many texts that are shown during the survey elicitation can be customised on
+    this tab. Here you can also perform a test run to see what a survey
+    participant will encounter, based on the settings and changes you made. What
+    can always be customised:
+  </p>
+  <ul>
+    <li>The question asked to identify the surveyee.</li>
+    <li>The introductory text that is shown before elicitation.</li>
+    <li>The message that is shown once the survey is over.</li>
+  </ul>
+  <p>
+    Besides this, for the matching and precise swing elicitation methods, the
+    question that is asked may be edited.
+  </p>
+  <p>
+    The texts can be edited using the built-in rich text editor which appears
+    when you click the 'Edit' button near any field. The editor also supports
+    several variables which will be substituted with the appropriate text or
+    value by the system during elicitation. A list of these variables is
+    accessible through the '?' button in the editor. Clicking the 'Default'
+    button in the editor will return the text to the system's default value for
+    that field.
+  </p>
+  <p>
+    You can perform a test run of your survey from this tab as well, during
+    which you can also edit the customisable texts. The test run lets you see
+    the consequences of all your changes, without needing to publish your survey
+    first.
+  </p>
+  <div class="figure">
+    <img src="img/templateStrings.png" />
+    <div class="caption">
+      Modifying a question with templates, during and after editing. Note the
+      explanation text which is toggled using the '?' button. Templates are
+      substituted by their corresponding values when shown to the surveyee.
+    </div>
+  </div>
+
+  <h4 id="mcda-survey-publishing">Survey publishing</h4>
+
+  <p>
+    Once you are satisfied with your survey's configuration and texts, you can
+    publish it from this tab. After publication, a unique URL will be generated
+    that can be shared any number of participants, who will be asked to identify
+    themselves with a name or text (further identification methods or a limited
+    number of unique URLs being generated will be in future versions of the
+    tool). Note that, since a survey should be identical for all participants,
+    surveys
+    <b>can no longer be modified after publication</b>.
+  </p>
+  <p>When a survey has run its course, it can also be closed from this tab.</p>
+
+  <h4 id="mcda-survey-responses">Survey responses</h4>
+
+  <p>
+    As they come in, an overview of survey responses is shown in this tab,
+    including their elicited preferences. These responses are also made
+    available to ADDIS MCDA for analysis.
+  </p>
+
+  <h3 id="mcda-aggregated-analysis">Survey response analysis</h3>
+
+  <p>
+    If a survey exists for the currently-selected problem, and there is at least
+    one survey response, the 'Survey results' tab will be active.
+  </p>
+
+  <p>
+    The ADDIS MCDA survey results analysis is based on the
+    <a href="#mcda-smaa">SMAA</a> interface, but instead of sampling
+    stochastically from the possibility space of the constraints given by the
+    measurements and preferences, each survey response is treated as a sample.
+    Therefore, the rank acceptabilities now show the distribution of preferences
+    in the surveyed population, i.e. which proportion of the population would
+    assign each rank to each alternative. Similarly, the weights shown for each
+    criterion are sampled from distributions which are constrained by the survey
+    responses.
+  </p>
+
+  <p>
+    The greatest difference from the <a href="#mcda-smaa">SMAA interface</a> is
+    that multiple aggregated analyses can be created from the survey responses.
+    The default analysis includes every response, but further analyses can be
+    created that only include a partial selection. You can switch between
+    aggregated analyses using a dropdown menu similar to the ones for the
+    problem and scenario.
+  </p>
+  <div class="figure">
+    <img src="img/aggregatedAnalysis.png" />
+    <div class="caption">
+      Creating a new aggregated analysis. Surveyee responses can be selected
+      individually.
+    </div>
   </div>
 </div>
 

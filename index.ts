@@ -140,6 +140,7 @@ function initApp(): void {
   });
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
+  app.use('/img', express.static('tutorials/fig'));
   app.use('/css/fonts', express.static(__dirname + '/dist/fonts'));
 
   app.use('/api', rightsManagement.expressMiddleware);

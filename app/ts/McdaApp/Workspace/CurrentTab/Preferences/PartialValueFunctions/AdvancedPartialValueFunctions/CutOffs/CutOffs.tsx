@@ -18,14 +18,14 @@ const ColoredValueLabel: unknown = withStyles({
 
 export default function CutOffs(): JSX.Element {
   const {getUsePercentage} = useContext(SettingsContext);
-  const {getStepSizeForCriterion, getConfiguredRange} = useContext(
+  const {stepSizesByCriterion, getConfiguredRange} = useContext(
     CurrentSubproblemContext
   );
   const {advancedPvfCriterion, cutoffs, setCutoffs} = useContext(
     AdvancedPartialValueFunctionContext
   );
 
-  const stepSize = getStepSizeForCriterion(advancedPvfCriterion);
+  const stepSize = stepSizesByCriterion[advancedPvfCriterion.id];
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
   const usePercentage = getUsePercentage(advancedPvfCriterion.dataSources[0]);
 
