@@ -28,20 +28,20 @@ export default function WorkspacesTable(): JSX.Element {
   type TSortProperty = 'title' | 'creationDate';
 
   function WorkspacesTableBody(): JSX.Element {
-    return <TableBody>{_.map(sortedWorkspaces, renderTableRow)}</TableBody>;
-  }
-
-  function renderTableRow(
-    workspace: IWorkspaceSummary,
-    index: number
-  ): JSX.Element {
     return (
-      <WorkspacesTableRow
-        key={workspace.id}
-        workspace={workspace}
-        index={index}
-        deleteLocalWorkspace={deleteLocalWorkspace}
-      />
+      <TableBody>
+        {_.map(
+          sortedWorkspaces,
+          (workspace: IWorkspaceSummary, index: number) => (
+            <WorkspacesTableRow
+              key={workspace.id}
+              workspace={workspace}
+              index={index}
+              deleteLocalWorkspace={deleteLocalWorkspace}
+            />
+          )
+        )}
+      </TableBody>
     );
   }
 
