@@ -10,7 +10,9 @@ export default function PartialValueFunctionButtons({
 }: {
   criterionId: string;
 }) {
-  const {setLinearPvf, goToAdvancedPvf} = useContext(CurrentScenarioContext);
+  const {setLinearPvf, goToAdvancedPvf, isScenarioUpdating} = useContext(
+    CurrentScenarioContext
+  );
 
   function handleIncreasingClick(): void {
     setLinearPvf(criterionId, 'increasing');
@@ -32,6 +34,7 @@ export default function PartialValueFunctionButtons({
           variant="contained"
           color="primary"
           onClick={handleIncreasingClick}
+          disabled={isScenarioUpdating}
         >
           Increasing
         </Button>
@@ -42,6 +45,7 @@ export default function PartialValueFunctionButtons({
           variant="contained"
           color="primary"
           onClick={handleDecreasingClick}
+          disabled={isScenarioUpdating}
         >
           Decreasing
         </Button>
@@ -52,6 +56,7 @@ export default function PartialValueFunctionButtons({
           variant="contained"
           color="primary"
           onClick={handleAdvancedClick}
+          disabled={isScenarioUpdating}
         >
           <TrendingUp />
           Advanced
