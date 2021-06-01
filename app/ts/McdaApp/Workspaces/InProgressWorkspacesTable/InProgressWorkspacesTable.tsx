@@ -42,7 +42,7 @@ export default function InProgressWorkspacesTable(): JSX.Element {
   }
 
   return (
-    <Table size="small">
+    <Table id="in-progress-workspaces-table" size="small">
       <TableHead>
         <TableRow>
           <TableCell>

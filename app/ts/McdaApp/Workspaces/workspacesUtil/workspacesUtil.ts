@@ -43,11 +43,11 @@ export function filterWorkspaces(
       _.method('toLowerCase')
     );
 
-    const includesCriteria = doesWorkspaceIncludesCriteria(
+    const includesCriteria = doesWorkspaceIncludeCriteria(
       workspaceCriteriaInLowerCase,
       criteriaInLowerCase
     );
-    const includesAlternatives = doesWorkspaceIncludesAlternatives(
+    const includesAlternatives = doesWorkspaceIncludeAlternatives(
       workspaceAlternativesInLowerCase,
       alternativesInLowerCase
     );
@@ -55,7 +55,7 @@ export function filterWorkspaces(
   });
 }
 
-function doesWorkspaceIncludesCriteria(
+function doesWorkspaceIncludeCriteria(
   workspaceCriteria: string[],
   criteriaToInclude: string[]
 ): boolean {
@@ -65,7 +65,7 @@ function doesWorkspaceIncludesCriteria(
   );
 }
 
-function doesWorkspaceIncludesAlternatives(
+function doesWorkspaceIncludeAlternatives(
   workspaceAlternatives: string[],
   alternativesToInclude: string[]
 ): boolean {
@@ -76,7 +76,5 @@ function doesWorkspaceIncludesAlternatives(
 }
 
 function doAllInclude(items: string[], itemsNeeded: string[]): boolean {
-  return _.every(itemsNeeded, (itemNeeded: string): boolean =>
-    _.includes(items, itemNeeded)
-  );
+  return itemsNeeded.length === _.intersection(items, itemsNeeded).length;
 }

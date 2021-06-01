@@ -24,6 +24,8 @@ function filterByBoth(browser: NightwatchBrowser) {
 
   filterByCriterion(browser, '2-YEAR SURVIVAL');
   browser.expect.element('#workspace-0').text.to.equal(getReal);
+  testIfExactNumberOfWorkspaces(browser, 1);
+
   const firstCriterionFilter = 'svg.MuiSvgIcon-root:nth-child(2)';
   removeFilter(browser, firstCriterionFilter);
   expectAllWorkspaces(browser);
@@ -31,9 +33,11 @@ function filterByBoth(browser: NightwatchBrowser) {
   filterByAlternative(browser, 'placebo');
   browser.expect.element('#workspace-0').text.to.equal(hansen);
   browser.expect.element('#workspace-1').text.to.equal(tervonen);
+  testIfExactNumberOfWorkspaces(browser, 2);
 
   filterByCriterion(browser, 'NAUSEA ADRs');
   browser.expect.element('#workspace-0').text.to.equal(tervonen);
+  testIfExactNumberOfWorkspaces(browser, 1);
 
   filterByCriterion(browser, '2-year survival');
   browser.waitForElementVisible('#empty-workspace-message');
@@ -70,4 +74,13 @@ function filterByAlternative(browser: NightwatchBrowser, alternative: string) {
 
 function removeFilter(browser: NightwatchBrowser, filterLocation: string) {
   browser.click(filterLocation);
+}
+
+function testIfExactNumberOfWorkspaces(
+  browser: NightwatchBrowser,
+  number: number
+) {
+  browser.waitForElementNotPresent(
+    `tr.MuiTableRow-root:nth-child(${number + 1})`
+  );
 }

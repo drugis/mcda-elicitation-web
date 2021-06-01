@@ -49,7 +49,7 @@ export default function WorkspacesTable(): JSX.Element {
   }
 
   return (
-    <Table size="small">
+    <Table id="workspaces-table" size="small">
       <TableHead>
         <TableRow>
           <TableCell>
@@ -79,7 +79,7 @@ export default function WorkspacesTable(): JSX.Element {
       </TableHead>
       {sortedWorkspaces?.length ? (
         <WorkspacesTableBody
-          workspaces={filteredWorkspaces}
+          workspaces={sortedWorkspaces}
           RowComponent={WorkspacesTableRow}
           deleteLocalWorkspace={deleteLocalWorkspace}
         />
