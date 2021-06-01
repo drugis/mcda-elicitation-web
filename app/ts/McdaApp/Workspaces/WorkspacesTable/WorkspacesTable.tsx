@@ -7,9 +7,11 @@ import {
   TableSortLabel
 } from '@material-ui/core';
 import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
+import useSorting from 'app/ts/McdaApp/Workspaces/workspacesUtil/useSorting';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {WorkspacesContext} from '../WorkspacesContext/WorkspacesContext';
+import WorkspacesTableBody from './WorkspacesTableBody';
 import WorkspacesTableRow from './WorkspacesTableRow/WorkspacesTableRow';
 
 export default function WorkspacesTable(): JSX.Element {
@@ -22,28 +24,10 @@ export default function WorkspacesTable(): JSX.Element {
     setSortedWorkspaces(filteredWorkspaces);
   }, [filteredWorkspaces]);
 
-  const [orderBy, setOrderBy] = useState<TSortProperty>('title');
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
-
-  type TSortProperty = 'title' | 'creationDate';
-
-  function WorkspacesTableBody(): JSX.Element {
-    return (
-      <TableBody>
-        {_.map(
-          sortedWorkspaces,
-          (workspace: IWorkspaceSummary, index: number) => (
-            <WorkspacesTableRow
-              key={workspace.id}
-              workspace={workspace}
-              index={index}
-              deleteLocalWorkspace={deleteLocalWorkspace}
-            />
-          )
-        )}
-      </TableBody>
-    );
-  }
+  const [orderBy, orderDirection, orderByProperty] = useSorting(
+    sortedWorkspaces,
+    setSortedWorkspaces
+  );
 
   function deleteLocalWorkspace(id: string): void {
     setSortedWorkspaces(_.reject(sortedWorkspaces, ['id', id]));
@@ -62,34 +46,6 @@ export default function WorkspacesTable(): JSX.Element {
         </TableRow>
       </TableBody>
     );
-  }
-
-  function orderByProperty(propertyToOrder: TSortProperty, event: any): void {
-    const newWorkspaces = _.sortBy(sortedWorkspaces, [propertyToOrder]);
-    if (orderBy === propertyToOrder) {
-      orderBySameProperty(newWorkspaces);
-    } else {
-      orderByOtherProperty(propertyToOrder, newWorkspaces);
-    }
-  }
-
-  function orderBySameProperty(newWorkspaces: IWorkspaceSummary[]): void {
-    if (orderDirection === 'desc') {
-      setOrderDirection('asc');
-      setSortedWorkspaces(newWorkspaces);
-    } else {
-      setOrderDirection('desc');
-      setSortedWorkspaces(newWorkspaces.reverse());
-    }
-  }
-
-  function orderByOtherProperty(
-    propertyToOrder: TSortProperty,
-    newWorkspaces: IWorkspaceSummary[]
-  ): void {
-    setOrderBy(propertyToOrder);
-    setSortedWorkspaces(newWorkspaces);
-    setOrderDirection('asc');
   }
 
   return (
@@ -121,8 +77,12 @@ export default function WorkspacesTable(): JSX.Element {
           <TableCell></TableCell>
         </TableRow>
       </TableHead>
-      {sortedWorkspaces.length ? (
-        <WorkspacesTableBody />
+      {sortedWorkspaces?.length ? (
+        <WorkspacesTableBody
+          workspaces={filteredWorkspaces}
+          RowComponent={WorkspacesTableRow}
+          deleteLocalWorkspace={deleteLocalWorkspace}
+        />
       ) : (
         <EmptyWorkspaceMessage />
       )}

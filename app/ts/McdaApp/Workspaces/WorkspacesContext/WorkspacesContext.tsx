@@ -1,3 +1,4 @@
+import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
@@ -22,6 +23,8 @@ export function WorkspacesContextProviderComponent({
 }) {
   const {setError} = useContext(ErrorContext);
   const [workspaces, setWorkspaces] = useState<IWorkspaceSummary[]>();
+  const [inProgressWorkspaces, setInProgressWorkspaces] =
+    useState<IInProgressWorkspaceProperties[]>();
   const [availableCriteria, setAvailableCriteria] = useState<string[]>();
   const [availableAlternatives, setAvailableAlternatives] =
     useState<string[]>();
@@ -40,6 +43,12 @@ export function WorkspacesContextProviderComponent({
         setFilteredWorkspaces(_.sortBy(result.data, ['title']));
         setAvailableCriteria(extractUniqueCriteria(result.data));
         setAvailableAlternatives(extractUniqueAlternatives(result.data));
+      })
+      .catch(setError);
+    axios
+      .get('/api/v2/inProgress/')
+      .then((result: AxiosResponse<IInProgressWorkspaceProperties[]>) => {
+        setInProgressWorkspaces(_.sortBy(result.data, ['title']));
       })
       .catch(setError);
   }, [setError]);
@@ -72,6 +81,7 @@ export function WorkspacesContextProviderComponent({
         availableAlternatives,
         availableCriteria,
         filteredWorkspaces,
+        inProgressWorkspaces,
         deleteWorkspace,
         filterByAlternatives,
         filterByCriteria
@@ -82,7 +92,8 @@ export function WorkspacesContextProviderComponent({
           workspaces === undefined ||
           availableCriteria === undefined ||
           availableAlternatives === undefined ||
-          filteredWorkspaces === undefined
+          filteredWorkspaces === undefined ||
+          inProgressWorkspaces === undefined
         }
       >
         {children}
