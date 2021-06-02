@@ -69,14 +69,19 @@ app.use(
 );
 server = http.createServer(app);
 
-startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
-  if (errorBody) {
-    process.exit(1);
-    // initError(errorBody);
-  } else {
-    initApp();
-  }
-});
+function runDiagnostics() {
+  startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
+    if (errorBody) {
+      // process.exit(1);
+      setTimeout(runDiagnostics, 10000);
+      // initError(errorBody);
+    } else {
+      initApp();
+    }
+  });
+}
+
+runDiagnostics();
 
 function initApp(): void {
   rightsManagement.setRequiredRights(
