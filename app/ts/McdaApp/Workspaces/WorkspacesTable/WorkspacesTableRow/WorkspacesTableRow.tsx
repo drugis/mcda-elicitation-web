@@ -3,6 +3,7 @@ import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {getLink} from 'app/ts/McdaApp/Workspaces/workspacesUtil/workspacesUtil';
 import dateFormat from 'dateformat';
 import React from 'react';
+import {Link} from 'react-router-dom';
 import CopyWorkspaceButton from '../CopyWorkspaceButton/CopyWorkspaceButton';
 import DeleteWorkspaceButton from '../DeleteWorkspaceButton/DeleteWorkspaceButton';
 
@@ -21,9 +22,9 @@ export default function WorkspacesTableRow({
   return (
     <TableRow>
       <TableCell width="100%">
-        <a id={`workspace-${index}`} href={getLink(workspace)}>
+        <Link id={`workspace-${index}`} to={getLink(workspace)}>
           {workspace.title}
-        </a>
+        </Link>
       </TableCell>
 
       <TableCell width="100%">{datestring}</TableCell>
