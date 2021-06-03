@@ -5,7 +5,8 @@ module.exports = {
   'Open manual from login page': goToManualFromLogin,
   'Open manual while logged in': goToManual,
   'Home navigation from login name': goToHomeFromLoginName,
-  'Navigate to problem that does not exists through URL manipulation': invalidUrl
+  'Navigate to problem that does not exists through URL manipulation':
+    invalidUrl
 };
 
 const loginService = require('./util/loginService');
@@ -57,5 +58,5 @@ function invalidUrl(browser) {
     .login(browser)
     .waitForElementVisible('#workspaces-header')
     .url('http://localhost:3002/workspaces/0/problems/1/scenarios/1/overview')
-    .waitForElementVisible('#error');
+    .waitForElementVisible('#workspaces-header');
 }
