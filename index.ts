@@ -132,13 +132,12 @@ function initApp(): void {
     }
     next();
   });
-  app.get('/', (request: any, response: Response): void => {
-    if (request.user || request.session.user) {
-      response.sendFile(__dirname + '/dist/index.html');
-    } else {
-      response.sendFile(__dirname + '/dist/signin.html');
-    }
-  });
+  app.get('/workspaces*', (request: any, response: Response): void =>
+    checkLogin(request, response)
+  );
+  app.get('/', (request: any, response: Response): void =>
+    checkLogin(request, response)
+  );
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
   app.use('/img', express.static('tutorials/fig'));
@@ -166,6 +165,14 @@ function initApp(): void {
   startListening((port: string): void => {
     logger.info('Listening on http://localhost:' + port);
   });
+}
+
+function checkLogin(request: any, response: Response): void {
+  if (request.user || request.session.user) {
+    response.sendFile(__dirname + '/dist/index.html');
+  } else {
+    response.sendFile(__dirname + '/dist/signin.html');
+  }
 }
 
 function errorHandler(
