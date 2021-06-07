@@ -45,7 +45,7 @@ jobs:
         run: yarn jest
 
       - name: build docker image
-        run: ./build-docker.sh GOOGLE Live https://mcda.drugis.org composed
+        run: ./build-docker-composed.sh https://mcda.drugis.org
 
       - name: docker login
         run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
