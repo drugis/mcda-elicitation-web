@@ -109,7 +109,7 @@ let config = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      filename: 'index.html',
+      filename: 'app.html',
       template: 'app/index.ejs',
       inject: 'head',
       chunks: ['main'],

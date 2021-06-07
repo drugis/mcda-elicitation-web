@@ -132,12 +132,6 @@ function initApp(): void {
     }
     next();
   });
-  app.get('/workspaces*', (request: any, response: Response): void =>
-    checkLogin(request, response)
-  );
-  app.get('/', (request: any, response: Response): void =>
-    checkLogin(request, response)
-  );
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
   app.use('/img', express.static('tutorials/fig'));
@@ -158,21 +152,17 @@ function initApp(): void {
   app.use(errorHandler);
 
   // Default route (ALWAYS Keep this as the last route)
-  app.get('*', (request: any, response: Response): void =>
-    response.redirect('/')
-  );
+  app.get('*', (request: any, response: Response): void => {
+    if (request.user || request.session.user) {
+      response.sendFile(__dirname + '/dist/app.html');
+    } else {
+      response.sendFile(__dirname + '/dist/signin.html');
+    }
+  });
 
   startListening((port: string): void => {
     logger.info('Listening on http://localhost:' + port);
   });
-}
-
-function checkLogin(request: any, response: Response): void {
-  if (request.user || request.session.user) {
-    response.sendFile(__dirname + '/dist/index.html');
-  } else {
-    response.sendFile(__dirname + '/dist/signin.html');
-  }
 }
 
 function errorHandler(
