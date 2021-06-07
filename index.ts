@@ -193,19 +193,6 @@ function errorHandler(
   }
 }
 
-function initError(errorBody: object): void {
-  app.get('*', (request: Request, response: Response): void => {
-    response
-      .status(INTERNAL_SERVER_ERROR)
-      .set('Content-Type', 'text/html')
-      .send(errorBody);
-  });
-
-  startListening((port: string): void => {
-    logger.error('Access the diagnostics summary at http://localhost:' + port);
-  });
-}
-
 function startListening(listenFunction: (port: string) => void): void {
   const port = getPort();
   server.listen(port, _.partial(listenFunction, port));
