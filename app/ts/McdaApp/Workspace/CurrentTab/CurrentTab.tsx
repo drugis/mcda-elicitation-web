@@ -2,8 +2,9 @@ import Preferences from 'app/ts/McdaApp/Workspace/CurrentTab/Preferences/Prefere
 import Subproblem from 'app/ts/McdaApp/Workspace/CurrentTab/Subproblem/Subproblem';
 import React from 'react';
 import {Route, Switch, useRouteMatch} from 'react-router';
-import ResultsTabs from './ResultsTabs/ResultsTabs';
+import PageNotFound from '../../PageNotFound/PageNotFound';
 import Overview from './Overview/Overview';
+import ResultsTabs from './ResultsTabs/ResultsTabs';
 
 export default function CurrentTab(): JSX.Element {
   const {path} = useRouteMatch();
@@ -18,6 +19,7 @@ export default function CurrentTab(): JSX.Element {
         path={path + '(deterministic-results|smaa-results)'}
         component={ResultsTabs}
       />
+      <Route path="*" component={PageNotFound} />
     </Switch>
   );
 }

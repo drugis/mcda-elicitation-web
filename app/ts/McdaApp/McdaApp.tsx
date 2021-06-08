@@ -8,6 +8,7 @@ import ErrorHandler from '../Error/ErrorHandler';
 import {lexicon} from '../InlineHelp/lexicon';
 import ManualInputWrapper from './ManualInput/ManualInputWrapper';
 import NavigationBar from './NavigationBar/NavigationBar';
+import PageNotFound from './PageNotFound/PageNotFound';
 import {mcdaTheme} from './styles';
 import {UserContextProviderComponent} from './UserContext/UserContext';
 import Workspace from './Workspace/Workspace';
@@ -35,7 +36,8 @@ export default function McdaApp(): JSX.Element {
                     path="/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId/:selectedTab"
                     component={Workspace}
                   />
-                  <Route path="/" component={Workspaces} />
+                  <Route path="/" exact component={Workspaces} />
+                  <Route path="*" component={PageNotFound} />
                 </Switch>
               </BrowserRouter>
             </UserContextProviderComponent>
