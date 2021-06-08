@@ -8,8 +8,13 @@ let basePath = path.join(__dirname, '/');
 let fs = require('fs');
 const MATOMO_VERSION = process.env.MATOMO_VERSION
   ? process.env.MATOMO_VERSION
-  : 'Test';
+  : 'None';
 const MCDA_HOST = process.env.MCDA_HOST;
+
+const matomo =
+  MATOMO_VERSION === 'None'
+    ? ''
+    : require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html');
 
 let config = {
   entry: {
@@ -48,7 +53,6 @@ let config = {
         use: ['babel-loader'],
         exclude: [
           /.*\/app\/ts.*/,
-          /.*angular-foundation-6.*/, // uses $templatecache so dont replace
           /node_modules/,
           /node-backend/,
           /.*interface.*/
@@ -113,27 +117,21 @@ let config = {
       template: 'app/index.ejs',
       inject: 'head',
       chunks: ['main'],
-      matomo: fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      )
+      matomo: matomo
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
       template: 'app/manual.ejs',
       inject: 'head',
       chunks: ['manual'],
-      matomo: fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      )
+      matomo: matomo
     }),
     new HtmlWebpackPlugin({
       filename: 'error.html',
       template: 'app/error.ejs',
       inject: 'head',
       chunks: ['error'],
-      matomo: fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      )
+      matomo: matomo
     }),
     new CleanWebpackPlugin()
   ],
