@@ -70,13 +70,19 @@ app.use(
 );
 server = http.createServer(app);
 
-startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
-  if (errorBody) {
-    initError(errorBody);
-  } else {
-    initApp();
-  }
-});
+function runDiagnostics(numberOftries: number) {
+  startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
+    if (errorBody && numberOftries === 0) {
+      process.exit(1);
+    } else if (errorBody) {
+      setTimeout(_.partial(runDiagnostics, numberOftries - 1), 10000);
+    } else {
+      initApp();
+    }
+  });
+}
+
+runDiagnostics(6);
 
 function initApp(): void {
   rightsManagement.setRequiredRights(
@@ -182,19 +188,6 @@ function errorHandler(
   } else {
     next();
   }
-}
-
-function initError(errorBody: object): void {
-  app.get('*', (request: Request, response: Response): void => {
-    response
-      .status(INTERNAL_SERVER_ERROR)
-      .set('Content-Type', 'text/html')
-      .send(errorBody);
-  });
-
-  startListening((port: string): void => {
-    logger.error('Access the diagnostics summary at http://localhost:' + port);
-  });
 }
 
 function startListening(listenFunction: (port: string) => void): void {
