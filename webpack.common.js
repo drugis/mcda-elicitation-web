@@ -14,7 +14,9 @@ const MCDA_HOST = process.env.MCDA_HOST;
 const matomo =
   MATOMO_VERSION === 'None'
     ? ''
-    : require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html');
+    : fs.readFileSync(
+        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
+      );
 
 let config = {
   entry: {
