@@ -97,7 +97,9 @@ export default function EditOverviewAlternativeButton({
                 fullWidth
               />
             </Grid>
-            <DisplayErrors errors={[error]} identifier="title" />
+            <Grid item xs={12}>
+              <DisplayErrors errors={[error]} identifier="title" />
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

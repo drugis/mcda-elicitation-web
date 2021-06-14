@@ -47,7 +47,7 @@ jobs:
       - name: initialize patavi database
         run: |
           docker cp patavi.schema.sql ${{ job.services.postgres.id }}:/patavi.schema.sql
-          docker exec ${{ job.services.postgres.id }} psql -U patavi -f patavi.schema.sql
+          docker exec ${{ job.services.postgres.id }} psql -v ON_ERROR_STOP=1 -U patavi -f patavi.schema.sql
 
       - name: run rabbit
         run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
@@ -76,7 +76,7 @@ jobs:
       - name: initialize mcda database
         run: |
           docker cp database.pg.sql ${{ job.services.postgres.id }}:/database.pg.sql
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sql
+          docker exec ${{ job.services.postgres.id }} psql -v ON_ERROR_STOP=1 -U mcdaweb -f database.pg.sql
 
       - name: add local users
         run: |

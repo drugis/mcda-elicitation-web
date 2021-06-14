@@ -662,7 +662,8 @@ export default function InProgressWorkspaceRepository(db: IDB) {
       result: IInProgressWorkspaceProperties[]
     ) => void
   ): void {
-    const query = 'SELECT id, title FROM inProgressWorkspace WHERE owner = $1';
+    const query =
+      'SELECT id, title, creationdate AS "creationDate"  FROM inProgressWorkspace WHERE owner = $1';
     db.query(
       query,
       [ownerId],

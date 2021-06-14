@@ -1,6 +1,5 @@
 import {
   FormControlLabel,
-  Grid,
   Radio,
   RadioGroup,
   Typography
@@ -21,14 +20,14 @@ export default function PvfDirection(): JSX.Element {
   const {getConfiguredRange} = useContext(CurrentSubproblemContext);
 
   const configuredRange = getConfiguredRange(advancedPvfCriterion);
-  const usePercentage = getUsePercentage(advancedPvfCriterion);
+  const usePercentage = getUsePercentage(advancedPvfCriterion.dataSources[0]);
 
   function handleRadioChanged(event: ChangeEvent<HTMLInputElement>): void {
     setDirection(event.target.value as TPvfDirection);
   }
 
   return (
-    <Grid item xs={12}>
+    <>
       <Typography>Choose partial value function's direction:</Typography>
       <RadioGroup
         name="pvf-direction-radio"
@@ -60,6 +59,6 @@ export default function PvfDirection(): JSX.Element {
           )} is best)`}
         />
       </RadioGroup>
-    </Grid>
+    </>
   );
 }

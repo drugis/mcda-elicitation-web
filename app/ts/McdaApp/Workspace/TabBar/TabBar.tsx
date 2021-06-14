@@ -7,12 +7,13 @@ import {CurrentSubproblemContext} from '../CurrentSubproblemContext/CurrentSubpr
 import {
   findCriterionWithTooManyDataSources,
   findMissingPvfs,
-  findMissingValue
+  findMissingValue,
+  isTTab
 } from './TabBarUtil';
 
 export default function TabBar() {
   const {selectedTab} = useParams<{selectedTab: TTab}>();
-  const activeTab = selectedTab || 'overview';
+  const activeTab = isTTab(selectedTab) ? selectedTab : 'overview';
 
   const {filteredCriteria, filteredWorkspace} = useContext(
     CurrentSubproblemContext
@@ -20,9 +21,8 @@ export default function TabBar() {
   const {pvfs} = useContext(CurrentScenarioContext);
 
   const hasTooManyCriteria = filteredCriteria.length > 12;
-  const hasTooManyDataSources = findCriterionWithTooManyDataSources(
-    filteredCriteria
-  );
+  const hasTooManyDataSources =
+    findCriterionWithTooManyDataSources(filteredCriteria);
   const hasMissingValues = findMissingValue(filteredWorkspace);
   const hasMissingPvfs = findMissingPvfs(pvfs, filteredCriteria);
 

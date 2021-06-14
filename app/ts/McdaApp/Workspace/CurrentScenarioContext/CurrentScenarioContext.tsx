@@ -1,4 +1,3 @@
-import {CircularProgress} from '@material-ui/core';
 import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
@@ -6,9 +5,10 @@ import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPreferences} from '@shared/types/Preferences';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import {getWeightsPataviProblem} from 'app/ts/util/PataviUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import {getWeightsPataviProblem} from 'app/ts/util/PataviUtil';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {
@@ -18,7 +18,7 @@ import React, {
   useEffect,
   useState
 } from 'react';
-import {useHistory, useParams} from 'react-router';
+import {useParams} from 'react-router';
 import {
   areAllPvfsSet,
   createScenarioWithPvf,
@@ -38,12 +38,12 @@ export function CurrentScenarioContextProviderComponent({
 }: {
   children: any;
 }) {
-  const history = useHistory();
-  const {workspaceId, subproblemId, scenarioId} = useParams<{
-    workspaceId: string;
-    subproblemId: string;
-    scenarioId: string;
-  }>();
+  const {workspaceId, subproblemId, scenarioId} =
+    useParams<{
+      workspaceId: string;
+      subproblemId: string;
+      scenarioId: string;
+    }>();
 
   const {setError} = useContext(ErrorContext);
   const {
@@ -68,10 +68,9 @@ export function CurrentScenarioContextProviderComponent({
   const [elicitationMethod, setElicitationMethod] = useState<string>(
     determineElicitationMethod(currentScenario.state.prefs)
   );
-  const [
-    advancedPvfCriterionId,
-    setAdvancedPvfCriterionId
-  ] = useState<string>();
+  const [advancedPvfCriterionId, setAdvancedPvfCriterionId] =
+    useState<string>();
+  const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
   const getWeights = useCallback(
     (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
@@ -159,6 +158,7 @@ export function CurrentScenarioContextProviderComponent({
       currentScenario
     );
     updateScenario(newScenario).then(() => {
+      setIsScenarioUpdating(false);
       if (areAllPvfsSet(filteredCriteria, newPvfs)) {
         resetPreferences(newScenario);
       }
@@ -166,6 +166,7 @@ export function CurrentScenarioContextProviderComponent({
   }
 
   function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
+    setIsScenarioUpdating(true);
     const range = getConfiguredRange(getCriterion(criterionId));
     const pvf: ILinearPvf = {
       type: 'linear',
@@ -185,6 +186,7 @@ export function CurrentScenarioContextProviderComponent({
         disableWeightsButtons,
         activeView,
         elicitationMethod,
+        isScenarioUpdating,
         setCurrentScenario,
         updateScenario,
         getPvf,
@@ -195,7 +197,9 @@ export function CurrentScenarioContextProviderComponent({
         setActiveView
       }}
     >
-      {currentScenario ? children : <CircularProgress />}
+      <LoadingSpinner showSpinnerCondition={!currentScenario}>
+        {children}
+      </LoadingSpinner>
     </CurrentScenarioContext.Provider>
   );
 }

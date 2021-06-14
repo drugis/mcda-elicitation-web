@@ -39,7 +39,7 @@ jobs:
       - name: run yarn
         run: yarn
 
-      - name: back-end tests
+      - name: unit tests
         id: jest
         run: yarn jest
 
@@ -97,6 +97,9 @@ jobs:
 
       - name: prune docker on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
+
+      - name: docker registry garbage collection
+        run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
 
       - name: notify on slack channel on failure
         if: failure()

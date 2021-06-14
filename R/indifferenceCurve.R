@@ -5,10 +5,10 @@
 run_indifferenceCurve <- function(params) {
   criteria <- getSelectedCriteria(params$indifferenceCurve)
   getDifferenceWithReference <- getDifferenceWithReferenceFunction(params, criteria)
-  cutOffs <- getCutoffs(params, criteria)
+  cutoffs <- getCutoffs(params, criteria)
   ranges <- getRanges(params$criteria, criteria)
-  coordinatesForCutoffs <- getCoordinatesForCutoffs(cutOffs, getDifferenceWithReference, ranges)
-  return(calculateIndifferenceCurve(cutOffs, coordinatesForCutoffs, ranges))
+  coordinatesForCutoffs <- getCoordinatesForCutoffs(cutoffs, getDifferenceWithReference, ranges)
+  return(calculateIndifferenceCurve(cutoffs, coordinatesForCutoffs, ranges))
 }
 
 getDifferenceWithReferenceFunction <- function(params, criteria) {
@@ -53,10 +53,10 @@ getRanges <- function(criteria, selectedCriteria) {
   return(ranges)
 }
 
-getCoordinatesForCutoffs <- function(cutOffs, getDifferenceWithReference, ranges) {
+getCoordinatesForCutoffs <- function(cutoffs, getDifferenceWithReference, ranges) {
   coordinatesForCutoffs <- list(
-    "xForY" = getXCoordinateForYCutOff(cutOffs$y, getDifferenceWithReference, ranges$y),
-    "yForX" = getYCoordinateForXCutoff(cutOffs$x, getDifferenceWithReference, ranges$y)
+    "xForY" = getXCoordinateForYCutOff(cutoffs$y, getDifferenceWithReference, ranges$y),
+    "yForX" = getYCoordinateForXCutoff(cutoffs$x, getDifferenceWithReference, ranges$y)
   )
   return(coordinatesForCutoffs)
 }
@@ -77,10 +77,10 @@ getXCoordinateForYCutOff <- function(yCutOffs, getDifferenceWithReference, yRang
   return(xCoordinateForYCutoff)
 }
 
-calculateIndifferenceCurve <- function(cutOffs, coordinatesForCutoffs, ranges) {
+calculateIndifferenceCurve <- function(cutoffs, coordinatesForCutoffs, ranges) {
   coordinates <- data.frame(
-    "x" = c(cutOffs$x, coordinatesForCutoffs$xForY),
-    "y" = c(coordinatesForCutoffs$yForX, cutOffs$y)
+    "x" = c(cutoffs$x, coordinatesForCutoffs$xForY),
+    "y" = c(coordinatesForCutoffs$yForX, cutoffs$y)
   )
   coordinates <- coordinates[order(coordinates$x),]
   coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$x, ranges$x)

@@ -3,9 +3,12 @@ import {TPvfDirection} from '@shared/types/TPvfDirection';
 
 export interface IAdvancedPartialValueFunctionContext {
   advancedPvfCriterion: ICriterion;
-  cutOffs: [number, number, number];
+  configuredRange: [number, number];
+  cutoffs: [number, number, number];
+  cutoffsByValue: Record<number, number>;
   direction: TPvfDirection;
   isSaveDisabled: boolean;
-  setCutOffs: (cutOffs: [number, number, number]) => void;
+  usePercentage: boolean;
+  setCutoffs: (cutoffs: [number, number, number]) => void;
   setDirection: (direction: TPvfDirection) => void;
 }

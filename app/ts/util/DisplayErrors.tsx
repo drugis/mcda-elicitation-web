@@ -12,7 +12,7 @@ export default function DisplayErrors({
   identifier: string;
 }) {
   return (
-    <>
+    <Grid container>
       {_.map(errors, (error, index) => {
         return (
           <Grid
@@ -26,6 +26,6 @@ export default function DisplayErrors({
           </Grid>
         );
       })}
-    </>
+    </Grid>
   );
 }

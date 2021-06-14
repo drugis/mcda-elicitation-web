@@ -81,7 +81,9 @@ export default function ReferenceDialog({
               onKeyDown={handleKey}
             />
           </Grid>
-          <DisplayErrors identifier="reference" errors={[error]} />
+          <Grid item xs={12}>
+            <DisplayErrors identifier="reference" errors={[error]} />
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>

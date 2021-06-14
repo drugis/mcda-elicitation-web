@@ -5,6 +5,7 @@ import {
   generateAdvancedPvfPlotSettings,
   generatePlotSettings,
   getBest,
+  getCutoffsByValue,
   getPvfCoordinates,
   getPvfLocation,
   getWorst
@@ -169,27 +170,106 @@ describe('getPvfLocation', () => {
   describe('generateAdvancedPlotSettings', () => {
     it('should return settings for generating a c3 plot', () => {
       const criterionId = 'critId';
-      const cutOffs: [number, number, number] = [1, 2, 3];
-      const values: [number, number, number] = [0.25, 0.5, 0.75];
+      const cutoffs: [number, number, number] = [1, 2, 3];
+      const direction = 'increasing';
       const configuredRange: [number, number] = [0, 10];
       const usePercentage = false;
       const result: ChartConfiguration = generateAdvancedPvfPlotSettings(
         criterionId,
-        cutOffs,
-        values,
+        direction,
+        cutoffs,
         configuredRange,
         usePercentage
       );
 
       const expectedColumns = [
         ['x', 0, 1, 2, 3, 10],
-        ['', 0.25, 0.5, 0.75]
+        ['y', 0, 0.25, 0.5, 0.75, 1],
+        ['cutoffsX', 1, 2, 3],
+        ['cutoffs', 0.25, 0.5, 0.75]
       ];
 
       expect(result.bindto).toEqual('#pvfplot-critId');
       expect(result.axis.x.min).toEqual(0);
       expect(result.axis.x.max).toEqual(10);
       expect(result.data.columns).toEqual(expectedColumns);
+    });
+  });
+
+  describe('getCutoffsByValue', () => {
+    describe('should create a record of percentified cutoff values indexed by value with values ranging from [0-1] in 0.25 step increments', () => {
+      const configuredRange: [number, number] = [-10, 10];
+      const cutoffs: [number, number, number] = [0, 2, 5];
+      describe('when percentification is off', () => {
+        const usePercentage = false;
+        it('for an increasing pvf', () => {
+          const result = getCutoffsByValue(
+            configuredRange,
+            cutoffs,
+            usePercentage,
+            'increasing'
+          );
+          const expectedResult = {
+            0: -10,
+            '0.25': 0,
+            '0.5': 2,
+            '0.75': 5,
+            1: 10
+          };
+          expect(result).toEqual(expectedResult);
+        });
+        it('for a decreasing pvf', () => {
+          const result = getCutoffsByValue(
+            configuredRange,
+            cutoffs,
+            usePercentage,
+            'decreasing'
+          );
+          const expectedResult = {
+            0: 10,
+            '0.25': 5,
+            '0.5': 2,
+            '0.75': 0,
+            1: -10
+          };
+          expect(result).toEqual(expectedResult);
+        });
+      });
+      describe('when percentification is on', () => {
+        const usePercentage = true;
+        it('for an increasing pvf', () => {
+          const result = getCutoffsByValue(
+            configuredRange,
+            cutoffs,
+            usePercentage,
+            'increasing'
+          );
+          const expectedResult = {
+            0: -1000,
+            '0.25': 0,
+            '0.5': 200,
+            '0.75': 500,
+            1: 1000
+          };
+          expect(result).toEqual(expectedResult);
+        });
+        it('for a decreasing pvf', () => {
+          const result = getCutoffsByValue(
+            configuredRange,
+            cutoffs,
+            usePercentage,
+            'decreasing'
+          );
+          const expectedResult = {
+            0: 1000,
+            '0.25': 500,
+            '0.5': 200,
+            '0.75': 0,
+            1: -1000
+          };
+          expect(result).toEqual(expectedResult);
+        });
+      });
     });
   });
 });

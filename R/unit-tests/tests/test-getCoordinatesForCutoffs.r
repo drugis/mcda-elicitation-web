@@ -1,5 +1,5 @@
 test_that("getCoordinatesForCutoffs should return coordinates for cutoffs", {
-  cutOffs <- list(
+  cutoffs <- list(
     "x" = c(5),
     "y" = c(5)
   )
@@ -11,7 +11,7 @@ test_that("getCoordinatesForCutoffs should return coordinates for cutoffs", {
     "y" = c(0, 10)
   )
 
-  result <- getCoordinatesForCutoffs(cutOffs, getDifferenceWithReference, ranges)
+  result <- getCoordinatesForCutoffs(cutoffs, getDifferenceWithReference, ranges)
   expectedResult <- list(
     "xForY" = c(0),
     "yForX" = c(0)

@@ -1,9 +1,9 @@
-import {CircularProgress} from '@material-ui/core';
 import IDefaultIdsMessage from '@shared/interface/Commands/IDefaultIdsMessage';
 import ISubproblemMessage from '@shared/interface/Commands/ISubproblemMessage';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import ISubproblemCommand from '@shared/interface/ISubproblemCommand';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {
@@ -103,7 +103,9 @@ export function SubproblemsContextProviderComponent({
         updateSubproblem
       }}
     >
-      {!_.isEmpty(subproblems) ? children : <CircularProgress />}
+      <LoadingSpinner showSpinnerCondition={_.isEmpty(subproblems)}>
+        {children}
+      </LoadingSpinner>
     </SubproblemsContext.Provider>
   );
 }

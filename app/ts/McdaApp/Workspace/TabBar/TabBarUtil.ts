@@ -6,6 +6,7 @@ import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IWorkspace from '@shared/interface/IWorkspace';
 import IPvf from '@shared/interface/Problem/IPvf';
 import _ from 'lodash';
+import {TTab} from './TTab';
 
 export function findMissingValue({
   criteria,
@@ -114,5 +115,15 @@ export function findCriterionWithTooManyDataSources(
   return _.some(
     criteria,
     (criterion: ICriterion) => criterion.dataSources.length > 1
+  );
+}
+
+export function isTTab(tab: string): tab is TTab {
+  return (
+    tab === 'overview' ||
+    tab === 'problem' ||
+    tab === 'preferences' ||
+    tab === 'deterministic-results' ||
+    tab === 'smaa-results'
   );
 }

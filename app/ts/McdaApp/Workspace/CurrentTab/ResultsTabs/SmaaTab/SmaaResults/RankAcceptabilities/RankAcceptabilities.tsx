@@ -1,6 +1,7 @@
-import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@material-ui/core';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import React from 'react';
 import RankAcceptabilitiesPlot from './RankAcceptabilitiesPlot/RankAcceptabilitiesPlot';
@@ -20,9 +21,9 @@ export default function RankAcceptabilities({
           </InlineHelp>
         </Typography>
       </Grid>
-      {ranks ? (
-        <>
-          <Grid container item xs={12} md={6}>
+      <Grid container item xs={12}>
+        <LoadingSpinner showSpinnerCondition={!ranks}>
+          <Grid item xs={12} md={6}>
             <PlotButtons plotId="rank-acceptabilities-plot">
               <RankAcceptabilitiesPlot ranks={ranks} />
             </PlotButtons>
@@ -35,12 +36,8 @@ export default function RankAcceptabilities({
               <RankAcceptabilitiesTable ranks={ranks} />
             </Grid>
           </Grid>
-        </>
-      ) : (
-        <Grid item xs={12}>
-          <CircularProgress />
-        </Grid>
-      )}
+        </LoadingSpinner>
+      </Grid>
     </Grid>
   );
 }

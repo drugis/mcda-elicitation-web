@@ -15,6 +15,7 @@ import React, {
   useEffect,
   useState
 } from 'react';
+import {useHistory} from 'react-router';
 import {
   extractPvfs,
   extractRanges
@@ -36,6 +37,7 @@ export function CreateWorkspaceContextProviderComponent({
 }: {
   children: any;
 }) {
+  const history = useHistory();
   const {setError} = useContext(ErrorContext);
   const [method, setMethod] = useState<TWorkspaceCreationMethod>('example');
   const [examples, setExamples] = useState<IWorkspaceExample[]>();
@@ -55,6 +57,15 @@ export function CreateWorkspaceContextProviderComponent({
       })
       .catch(setError);
   }, [setError, setTutorials, setExamples]);
+
+  const goToWorkspace = useCallback(
+    (response: AxiosResponse<IWorkspaceInfo>): void => {
+      const {id, defaultScenarioId, defaultSubProblemId} = response.data;
+      const url = `/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/overview`;
+      history.push(url);
+    },
+    [history]
+  );
 
   const validateProblemAndSetCommand = useCallback(
     (problem: IUploadProblem) => {
@@ -93,6 +104,45 @@ export function CreateWorkspaceContextProviderComponent({
     [validateProblemAndSetCommand]
   );
 
+  const createAndGoToPremadeWorkspace = useCallback(
+    (
+      selectedProblem: IWorkspaceExample,
+      setError: (error: IError) => void
+    ): void => {
+      axios
+        .post('/api/v2/workspaces/createPremade', selectedProblem)
+        .then(goToWorkspace)
+        .catch(setError);
+    },
+    [goToWorkspace]
+  );
+
+  const createAndGoToInprogressWorkspace = useCallback(
+    (setError: (error: IError) => void): void => {
+      axios
+        .post('/api/v2/inProgress')
+        .then((response: AxiosResponse<{id: string}>) => {
+          const url = `/manual-input/${response.data.id}`;
+          history.push(url);
+        })
+        .catch(setError);
+    },
+    [history]
+  );
+
+  const createAndGoToWorkspace = useCallback(
+    (
+      workspaceCommand: IWorkspaceCommand,
+      setError: (error: IError) => void
+    ): void => {
+      axios
+        .post('/api/v2/workspaces/', workspaceCommand)
+        .then(goToWorkspace)
+        .catch(setError);
+    },
+    [goToWorkspace]
+  );
+
   const addWorkspaceCallback = useCallback((): void => {
     switch (method) {
       case 'manual':
@@ -108,7 +158,15 @@ export function CreateWorkspaceContextProviderComponent({
         createAndGoToWorkspace(workspaceCommand, setError);
         break;
     }
-  }, [method, setError, selectedProblem, workspaceCommand]);
+  }, [
+    createAndGoToInprogressWorkspace,
+    createAndGoToPremadeWorkspace,
+    createAndGoToWorkspace,
+    method,
+    selectedProblem,
+    setError,
+    workspaceCommand
+  ]);
 
   return (
     <CreateWorkspaceContext.Provider
@@ -128,42 +186,4 @@ export function CreateWorkspaceContextProviderComponent({
       {examples && tutorials ? children : <></>}
     </CreateWorkspaceContext.Provider>
   );
-}
-
-function createAndGoToInprogressWorkspace(
-  setError: (error: IError) => void
-): void {
-  axios
-    .post('/api/v2/inProgress')
-    .then((response: AxiosResponse<{id: string}>) => {
-      const url = `/manual-input/${response.data.id}`;
-      window.location.assign(url);
-    })
-    .catch(setError);
-}
-
-function createAndGoToWorkspace(
-  workspaceCommand: IWorkspaceCommand,
-  setError: (error: IError) => void
-): void {
-  axios
-    .post('/api/v2/workspaces/', workspaceCommand)
-    .then(goToWorkspace)
-    .catch(setError);
-}
-
-function createAndGoToPremadeWorkspace(
-  selectedProblem: IWorkspaceExample,
-  setError: (error: IError) => void
-): void {
-  axios
-    .post('/api/v2/workspaces/createPremade', selectedProblem)
-    .then(goToWorkspace)
-    .catch(setError);
-}
-
-function goToWorkspace(response: AxiosResponse<IWorkspaceInfo>): void {
-  const {id, defaultScenarioId, defaultSubProblemId} = response.data;
-  const url = `/workspaces/${id}/problems/${defaultSubProblemId}/scenarios/${defaultScenarioId}/overview`;
-  window.location.assign(url);
 }

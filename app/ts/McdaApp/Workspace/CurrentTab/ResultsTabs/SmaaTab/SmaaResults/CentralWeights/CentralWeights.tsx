@@ -1,7 +1,8 @@
-import {CircularProgress, Grid, Typography} from '@material-ui/core';
+import {Grid, Typography} from '@material-ui/core';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import React from 'react';
 import CentralWeightsPlot from './CentralWeightsPlot/CentralWeightsPlot';
@@ -19,8 +20,8 @@ export default function CentralWeights({
           <InlineHelp helpId="central-weights">Central Weights</InlineHelp>
         </Typography>
       </Grid>
-      {centralWeights ? (
-        <>
+      <Grid container item xs={12}>
+        <LoadingSpinner showSpinnerCondition={!centralWeights}>
           <Grid item xs={12}>
             <PlotButtons plotId="central-weights-plot">
               <CentralWeightsPlot centralWeights={centralWeights} />
@@ -34,12 +35,8 @@ export default function CentralWeights({
               <CentralWeightsTable centralWeights={centralWeights} />
             </Grid>
           </Grid>
-        </>
-      ) : (
-        <Grid item xs={12}>
-          <CircularProgress />
-        </Grid>
-      )}
+        </LoadingSpinner>
+      </Grid>
     </Grid>
   );
 }

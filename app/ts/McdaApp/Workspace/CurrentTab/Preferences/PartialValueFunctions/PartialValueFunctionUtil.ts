@@ -1,8 +1,9 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
+import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/util/significantDigits';
-import {ChartConfiguration} from 'c3';
+import {ChartConfiguration, DataPoint} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
 
@@ -103,7 +104,7 @@ export function generatePlotSettings(
       }
     },
     point: {
-      show: false
+      show: true
     },
     legend: {
       show: false
@@ -132,27 +133,47 @@ function isPieceWiseLinearPvf(pvf: TPvf): pvf is IPieceWiseLinearPvf {
   return 'cutoffs' in pvf;
 }
 
+export function getColorForIndex(props: {index: number}): string {
+  switch (props.index) {
+    case 0:
+      return 'red';
+    case 1:
+      return 'green';
+    case 2:
+      return 'blue';
+    default:
+      console.error(
+        `Attempt to get colour for unexpected index ${props.index}`
+      );
+  }
+}
+
 export function generateAdvancedPvfPlotSettings(
   criterionId: string,
-  cutOffs: [number, number, number],
-  values: number[],
+  direction: TPvfDirection,
+  cutoffs: [number, number, number],
   configuredRange: [number, number],
   usePercentage: boolean
 ): ChartConfiguration {
+  const xCoords = getCutoffRange(configuredRange, cutoffs, usePercentage);
+  const values = getValues(direction);
   return {
     bindto: `#pvfplot-${criterionId}`,
     data: {
-      x: 'x',
+      xs: {y: 'x', cutoffs: 'cutoffsX'},
       columns: [
-        [
-          'x',
-          ..._.map(
-            [configuredRange[0], ...cutOffs, configuredRange[1]],
-            (x: number) => getPercentifiedValue(x, usePercentage)
-          )
-        ],
-        ['', ...values]
-      ]
+        ['x', ...xCoords],
+        ['y', ...values],
+        ['cutoffsX', ...xCoords.slice(1, 4)],
+        ['cutoffs', ...values.slice(1, 4)]
+      ],
+      types: {
+        y: 'line',
+        cutoffs: 'scatter'
+      },
+      color: (color: string, d: DataPoint): string => {
+        return d.id === 'cutoffs' ? getColorForIndex({index: d.index}) : color;
+      }
     },
     axis: {
       x: {
@@ -181,7 +202,8 @@ export function generateAdvancedPvfPlotSettings(
       }
     },
     point: {
-      show: false
+      show: false,
+      r: 10
     },
     legend: {
       show: false
@@ -196,4 +218,32 @@ export function generateAdvancedPvfPlotSettings(
       left: 45
     }
   };
+}
+
+function getCutoffRange(
+  configuredRange: [number, number],
+  cutoffs: [number, number, number],
+  usePercentage: boolean
+): number[] {
+  return _.map(
+    [configuredRange[0], ...cutoffs, configuredRange[1]],
+    (x: number) => getPercentifiedValue(x, usePercentage)
+  );
+}
+
+function getValues(direction: TPvfDirection): number[] {
+  return direction === 'decreasing'
+    ? [1, 0.75, 0.5, 0.25, 0]
+    : [0, 0.25, 0.5, 0.75, 1];
+}
+
+export function getCutoffsByValue(
+  configuredRange: [number, number],
+  cutoffs: [number, number, number],
+  usePercentage: boolean,
+  direction: TPvfDirection
+): Record<number, number> {
+  const values = getValues(direction);
+  const cutoffRange = getCutoffRange(configuredRange, cutoffs, usePercentage);
+  return _.zipObject(values, cutoffRange);
 }

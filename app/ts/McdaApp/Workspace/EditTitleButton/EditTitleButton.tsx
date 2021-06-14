@@ -87,10 +87,12 @@ export default function EditTitleButton() {
                 fullWidth
               />
             </Grid>
-            <DisplayErrors
-              errors={title ? [] : ['Empty title']}
-              identifier="title"
-            />
+            <Grid item xs={12}>
+              <DisplayErrors
+                errors={title ? [] : ['Empty title']}
+                identifier="title"
+              />
+            </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>

@@ -1,5 +1,6 @@
-import {CircularProgress, Grid} from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
 import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
@@ -33,36 +34,36 @@ export default function Workspace() {
       .catch(setError);
   }, [setError, workspaceId]);
 
-  return workspace ? (
-    <WorkspaceContextProviderComponent originalWorkspace={workspace}>
-      <SettingsContextProviderComponent>
-        <Grid container>
-          <Grid item xs={12}>
-            <WorkspaceTitle />
+  return (
+    <LoadingSpinner showSpinnerCondition={!workspace}>
+      <WorkspaceContextProviderComponent originalWorkspace={workspace}>
+        <SettingsContextProviderComponent>
+          <Grid container>
+            <Grid item xs={12}>
+              <WorkspaceTitle />
+            </Grid>
+            <Grid item xs={12} style={{marginBottom: '1em'}}>
+              <WorkspaceButtons />
+            </Grid>
           </Grid>
-          <Grid item xs={12} style={{marginBottom: '1em'}}>
-            <WorkspaceButtons />
-          </Grid>
-        </Grid>
-        <SubproblemsContextProviderComponent>
-          <CurrentSubproblemContextProviderComponent>
-            <ScenariosContextProviderComponent>
-              <CurrentScenarioContextProviderComponent>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <TabBar />
+          <SubproblemsContextProviderComponent>
+            <CurrentSubproblemContextProviderComponent>
+              <ScenariosContextProviderComponent>
+                <CurrentScenarioContextProviderComponent>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <TabBar />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CurrentTab />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12}>
-                    <CurrentTab />
-                  </Grid>
-                </Grid>
-              </CurrentScenarioContextProviderComponent>
-            </ScenariosContextProviderComponent>
-          </CurrentSubproblemContextProviderComponent>
-        </SubproblemsContextProviderComponent>
-      </SettingsContextProviderComponent>
-    </WorkspaceContextProviderComponent>
-  ) : (
-    <CircularProgress />
+                </CurrentScenarioContextProviderComponent>
+              </ScenariosContextProviderComponent>
+            </CurrentSubproblemContextProviderComponent>
+          </SubproblemsContextProviderComponent>
+        </SettingsContextProviderComponent>
+      </WorkspaceContextProviderComponent>
+    </LoadingSpinner>
   );
 }

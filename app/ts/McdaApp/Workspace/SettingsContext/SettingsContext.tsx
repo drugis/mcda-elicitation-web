@@ -1,10 +1,16 @@
-import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import ISettings from '@shared/interface/Settings/ISettings';
 import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import {canBePercentage} from '../../../DisplayUtil/DisplayUtil';
 import {ErrorContext} from '../../../Error/ErrorContext';
 import {WorkspaceContext} from '../WorkspaceContext/WorkspaceContext';
@@ -90,12 +96,12 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
     }
   }
 
-  function getUsePercentage(criterion: ICriterion): boolean {
-    return (
+  const getUsePercentage = useCallback(
+    (dataSource: IDataSource) =>
       settings.showPercentages === 'percentage' &&
-      canBePercentage(criterion.dataSources[0].unitOfMeasurement.type)
-    );
-  }
+      canBePercentage(dataSource.unitOfMeasurement.type),
+    [settings.showPercentages]
+  );
 
   return (
     <SettingsContext.Provider

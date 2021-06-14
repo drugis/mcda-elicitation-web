@@ -25,7 +25,7 @@ export default function PartialValueFunctionPlot({
   const height = '216px';
 
   useEffect(() => {
-    const usePercentage = getUsePercentage(criterion);
+    const usePercentage = getUsePercentage(criterion.dataSources[0]);
     const values = getPvfCoordinates(pvf, criterion.title, usePercentage);
     const settings: ChartConfiguration = generatePlotSettings(
       criterionId,
@@ -33,7 +33,14 @@ export default function PartialValueFunctionPlot({
     );
     generate(settings);
     selectAll('.c3-line').style('stroke-width', '2px');
-  }, [pvf, showPercentages]);
+  }, [
+    criterion.dataSources,
+    criterion.title,
+    criterionId,
+    getUsePercentage,
+    pvf,
+    showPercentages
+  ]);
 
   return (
     <Grid item>

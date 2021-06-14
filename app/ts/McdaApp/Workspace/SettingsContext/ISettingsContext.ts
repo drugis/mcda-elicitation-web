@@ -1,4 +1,4 @@
-import ICriterion from '@shared/interface/ICriterion';
+import IDataSource from '@shared/interface/IDataSource';
 import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 
@@ -10,7 +10,7 @@ export default interface ISettingsContext {
   numberOfToggledColumns: number;
   showPercentages: boolean;
   toggledColumns: IToggledColumns;
-  getUsePercentage: (criterion: ICriterion) => boolean;
+  getUsePercentage: (dataSource: IDataSource) => boolean;
   updateSettings: (
     updatedSettings: ISettings,
     updatedToggledColumns: IToggledColumns

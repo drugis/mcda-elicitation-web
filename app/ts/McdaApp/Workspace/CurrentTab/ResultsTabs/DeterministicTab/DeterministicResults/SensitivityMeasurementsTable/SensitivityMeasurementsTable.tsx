@@ -1,5 +1,4 @@
 import {
-  CircularProgress,
   Grid,
   Table,
   TableBody,
@@ -16,6 +15,7 @@ import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/References
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -27,15 +27,6 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
     CurrentSubproblemContext
   );
 
-  function renderRows(): JSX.Element[] {
-    return _.map(filteredCriteria, (criterion: ICriterion) => (
-      <SensitivityMeasurementsTableRow
-        key={criterion.id}
-        criterion={criterion}
-      />
-    ));
-  }
-
   return (
     <Grid container item xs={12} spacing={1}>
       <Grid item xs={12} id="sensitivity-measurements-header">
@@ -45,8 +36,8 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
           </InlineHelp>
         </Typography>
       </Grid>
-      {!_.isEmpty(configuredRanges) ? (
-        <>
+      <Grid container item xs={12}>
+        <LoadingSpinner showSpinnerCondition={_.isEmpty(configuredRanges)}>
           <Grid item xs={9}>
             <Typography>
               <em>Values can be changed by clicking them.</em>
@@ -69,18 +60,29 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
                   <ReferencesHeader />
                 </TableRow>
               </TableHead>
-              <TableBody>{renderRows()}</TableBody>
+              <TableBody>
+                <Rows criteria={filteredCriteria} />
+              </TableBody>
             </Table>
           </Grid>
           <Grid item xs={12}>
             <SensitivityTableButtons />
           </Grid>
-        </>
-      ) : (
-        <Grid item xs={12}>
-          <CircularProgress />
-        </Grid>
-      )}
+        </LoadingSpinner>
+      </Grid>
     </Grid>
+  );
+}
+
+function Rows({criteria}: {criteria: ICriterion[]}): JSX.Element {
+  return (
+    <>
+      {_.map(criteria, (criterion: ICriterion) => (
+        <SensitivityMeasurementsTableRow
+          key={criterion.id}
+          criterion={criterion}
+        />
+      ))}
+    </>
   );
 }

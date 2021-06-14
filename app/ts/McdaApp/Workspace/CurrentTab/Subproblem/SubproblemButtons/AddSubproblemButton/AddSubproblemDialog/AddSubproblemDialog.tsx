@@ -66,13 +66,17 @@ export default function AddSubproblemDialog({
             <Typography variant={'h5'}>
               <InlineHelp helpId="scale-ranges">Scale ranges</InlineHelp>
             </Typography>
+          </Grid>
+          <Grid item xs={12}>
             <AddSubproblemScaleRanges />
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Grid container spacing={1}>
-          <DisplayErrors errors={errors} identifier="add-subproblem" />
+          <Grid item xs={12}>
+            <DisplayErrors errors={errors} identifier="add-subproblem" />
+          </Grid>
           <Grid item xs={12} style={{textAlign: 'end'}}>
             <Button
               id={'add-subproblem-confirm-button'}
