@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcda
+  namespace: mcda
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3002
+  selector:
+    app: mcda
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcda
+  namespace: mcda
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcda
+  template:
+    metadata:
+      labels:
+        app: mcda
+    spec:
+      volumes:
+        - name: certificates
+          configMap:
+            name: certificates
+      containers:
+        - name: mcda
+          image: addis/mcda:live
+          volumeMounts:
+            - name: certificates
+              mountPath: /var/lib/mcda/ssl
+          env:
+            - name: MCDAWEB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MCDAWEB_DB_PASSWORD
+            - name: MCDAWEB_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mcda-secrets
+                  key: MCDAWEB_COOKIE_SECRET
+            - name: MCDAWEB_GOOGLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mcda-secrets
+                  key: MCDAWEB_GOOGLE_SECRET
+            - name: MCDAWEB_GOOGLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mcda-secrets
+                  key: MCDAWEB_GOOGLE_KEY
+          envFrom:
+            - configMapRef:
+                name: mcda-settings
+          ports:
+            - name: mcda
+              containerPort: 3002
