@@ -6,9 +6,8 @@ import React, {ChangeEvent, useContext} from 'react';
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
 
 export default function TradeOffReferenceCriterion(): JSX.Element {
-  const {referenceCriterion, updateReferenceCriterion} = useContext(
-    TradeOffContext
-  );
+  const {referenceCriterion, updateReferenceCriterion} =
+    useContext(TradeOffContext);
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
 
   function handleReferenceCriterionChanged(
@@ -29,7 +28,7 @@ export default function TradeOffReferenceCriterion(): JSX.Element {
   }
 
   return (
-    <>
+    <Grid container>
       <Grid item xs={2}>
         <Typography>Reference criterion:</Typography>
       </Grid>
@@ -44,6 +43,6 @@ export default function TradeOffReferenceCriterion(): JSX.Element {
           {getReferenceCriterionOptions()}
         </Select>
       </Grid>
-    </>
+    </Grid>
   );
 }

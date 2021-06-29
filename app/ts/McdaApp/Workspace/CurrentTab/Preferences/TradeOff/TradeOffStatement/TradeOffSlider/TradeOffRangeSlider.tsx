@@ -5,7 +5,7 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import React, {useContext, useEffect, useState} from 'react';
 import {TradeOffContext} from '../../TradeOffContext/TradeOffContext';
 
-export default function TradeOffSlider({
+export default function TradeOffRangeSlider({
   anchorElement,
   isDialogOpen,
   closeDialog
@@ -62,7 +62,7 @@ export default function TradeOffSlider({
       };
 
   function handleSliderChanged(
-    event: React.ChangeEvent<any>,
+    _event: React.ChangeEvent<any>,
     newValue: [number, number]
   ) {
     if (isDecreasingPvf) {

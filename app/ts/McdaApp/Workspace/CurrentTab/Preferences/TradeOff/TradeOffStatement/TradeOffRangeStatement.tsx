@@ -5,12 +5,11 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
-import TradeOffSlider from './TradeOffSlider/TradeOffSlider';
+import TradeOffRangeSlider from './TradeOffSlider/TradeOffRangeSlider';
 
-export default function TradeOffReferenceCriterionStatement(): JSX.Element {
-  const {referenceValueFrom, referenceValueTo, referenceCriterion} = useContext(
-    TradeOffContext
-  );
+export default function TradeOffRangeStatement(): JSX.Element {
+  const {referenceValueFrom, referenceValueTo, referenceCriterion} =
+    useContext(TradeOffContext);
   const {getUsePercentage} = useContext(SettingsContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -51,7 +50,7 @@ export default function TradeOffReferenceCriterionStatement(): JSX.Element {
         </Button>{' '}
         is equivalent to:
       </Typography>
-      <TradeOffSlider
+      <TradeOffRangeSlider
         anchorElement={anchorElement}
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}

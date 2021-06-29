@@ -2,6 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {hasNoRange} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/SubproblemUtil';
+import {TradeOffType} from 'app/ts/type/TradeOffType';
 import _ from 'lodash';
 import React, {
   createContext,
@@ -11,6 +12,7 @@ import React, {
   useState
 } from 'react';
 import {
+  getInitialReferenceValueBy,
   getInitialReferenceValueFrom,
   getInitialReferenceValueTo,
   getPartOfInterval
@@ -54,11 +56,13 @@ export function TradeOffContextProviderComponent({
   ]);
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
+  const [referenceValueBy, setReferenceValueBy] = useState<number>();
   const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
   const [referenceValueTo, setReferenceValueTo] = useState<number>();
   const referenceWeight =
     currentScenario.state.weights.mean[referenceCriterion.id];
   const [partOfInterval, setPartOfInterval] = useState<number>();
+  const [tradeOffType, setTradeOffType] = useState<TradeOffType>('amount');
 
   useEffect(reset, [
     referenceCriterion,
@@ -93,6 +97,9 @@ export function TradeOffContextProviderComponent({
       );
       setLowerBound(configuredLowerBound);
       setUpperBound(configuredUpperBound);
+      setReferenceValueBy(
+        getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
+      );
       setReferenceValueFrom(
         getInitialReferenceValueFrom(
           configuredLowerBound,
@@ -123,11 +130,15 @@ export function TradeOffContextProviderComponent({
         partOfInterval,
         referenceCriterion,
         upperBound,
+        referenceValueBy,
         referenceValueFrom,
         referenceValueTo,
         referenceWeight,
+        tradeOffType,
+        setReferenceValueBy,
         setReferenceValueFrom,
         setReferenceValueTo,
+        setTradeOffType,
         updateReferenceCriterion
       }}
     >

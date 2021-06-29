@@ -11,6 +11,13 @@ export function getPartOfInterval(
   return Math.abs(to - from) / (upperbound - lowerBound);
 }
 
+export function getInitialReferenceValueBy(
+  lowerBound: number,
+  upperBound: number
+): number {
+  return upperBound - lowerBound;
+}
+
 export function getInitialReferenceValueFrom(
   lowerBound: number,
   upperBound: number,

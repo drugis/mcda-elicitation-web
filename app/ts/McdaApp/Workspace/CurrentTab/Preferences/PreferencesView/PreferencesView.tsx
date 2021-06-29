@@ -25,10 +25,10 @@ export default function PreferencesView() {
         <PartialValueFunctions />
       </Grid>
       <Grid item xs={12}>
-        <PreferencesWeights />
+        <TradeOff />
       </Grid>
       <Grid item xs={12}>
-        <TradeOff />
+        <PreferencesWeights />
       </Grid>
     </Grid>
   );

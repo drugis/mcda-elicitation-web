@@ -6,8 +6,9 @@ import React, {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
 import {TradeOffContextProviderComponent} from './TradeOffContext/TradeOffContext';
 import TradeOffReferenceCriterion from './TradeOffReferenceCriterion/TradeOffReferenceCriterion';
-import TradeOffReferenceCriterionStatement from './TradeOffReferenceCriterionStatement/TradeOffReferenceCriterionStatement';
+import TradeOffStatement from './TradeOffStatement/TradeOffStatement';
 import TradeOffTable from './TradeOffTable/TradeOffTable';
+import TradeOffTypeToggle from './TradeOffTypeToggle/TradeOffTypeToggle';
 
 export default function TradeOff(): JSX.Element {
   const {observedRanges} = useContext(CurrentSubproblemContext);
@@ -27,18 +28,19 @@ export default function TradeOff(): JSX.Element {
         </Typography>
       </Grid>
       {canShowTradeOffs ? (
-        <Grid container item xs={12}>
+        <Grid container item xs={12} spacing={2}>
           <TradeOffContextProviderComponent>
-            <Grid container spacing={2}>
-              <Grid container item xs={12}>
-                <TradeOffReferenceCriterion />
-              </Grid>
-              <Grid item xs={12}>
-                <TradeOffReferenceCriterionStatement />
-              </Grid>
-              <Grid item xs={12}>
-                <TradeOffTable />
-              </Grid>
+            <Grid item xs={12}>
+              <TradeOffTypeToggle />
+            </Grid>
+            <Grid item xs={12}>
+              <TradeOffReferenceCriterion />
+            </Grid>
+            <Grid item xs={12}>
+              <TradeOffStatement />
+            </Grid>
+            <Grid item xs={12}>
+              <TradeOffTable />
             </Grid>
           </TradeOffContextProviderComponent>
         </Grid>
