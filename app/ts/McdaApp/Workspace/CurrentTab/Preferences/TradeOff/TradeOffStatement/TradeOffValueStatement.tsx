@@ -4,7 +4,7 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
-import TradeOffRangeSlider from './TradeOffSlider/TradeOffRangeSlider';
+import TradeOffValueSlider from './TradeOffSlider/TradeOffValueSlider';
 
 export default function TradeOffValueStatement() {
   const {referenceCriterion, referenceValueBy} = useContext(TradeOffContext);
@@ -37,7 +37,7 @@ export default function TradeOffValueStatement() {
         </Button>{' '}
         is equivalent to:
       </Typography>
-      <TradeOffRangeSlider
+      <TradeOffValueSlider
         anchorElement={anchorElement}
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}

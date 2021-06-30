@@ -1,5 +1,8 @@
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import significantDigits from 'app/ts/util/significantDigits';
+import _ from 'lodash';
 import {getBest} from '../PartialValueFunctions/PartialValueFunctionUtil';
 
 export function getPartOfInterval(
@@ -64,4 +67,23 @@ export function isImprovedValueRealistic(
   } else {
     return value >= best;
   }
+}
+
+export function increaseSliderRange(
+  currentUpperValue: number,
+  stepSize: number,
+  unit: IUnitOfMeasurement
+): number {
+  const theoreticalUpper = unit.type === 'custom' ? unit.upperBound : 1;
+  const limit = _.isNull(theoreticalUpper) ? Infinity : theoreticalUpper;
+  const newTo = significantDigits(currentUpperValue + stepSize * 10);
+  return Math.min(newTo, limit);
+}
+
+export function isSliderExtenderDisabled(
+  currentUpperValue: number,
+  unit: IUnitOfMeasurement
+): boolean {
+  const theoreticalUpper = unit.type === 'custom' ? unit.upperBound : 1;
+  return currentUpperValue === theoreticalUpper;
 }

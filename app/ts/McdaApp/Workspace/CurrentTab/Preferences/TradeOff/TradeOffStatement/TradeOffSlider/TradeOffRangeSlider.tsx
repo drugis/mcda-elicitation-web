@@ -34,8 +34,6 @@ export default function TradeOffRangeSlider({
     setStepSize(stepSizesByCriterion[referenceCriterion.id]);
   }, [referenceCriterion.id, stepSizesByCriterion]);
 
-  const marginTop = {marginTop: '50px'};
-
   const usePercentage = getUsePercentage(referenceCriterion.dataSources[0]);
   const isDecreasingPvf = referenceValueFrom > referenceValueTo;
 
@@ -83,7 +81,7 @@ export default function TradeOffRangeSlider({
           </Typography>
           <Typography>{sliderParameters.displayFrom}</Typography>
         </Grid>
-        <Grid item xs={8} style={marginTop}>
+        <Grid item xs={8} style={{marginTop: '38px'}}>
           <Slider
             id="trade-off-slider"
             marks
