@@ -69,12 +69,13 @@ export default function TradeOffValueSlider({
   }
 
   return (
-    <Popover open={isDialogOpen} onClose={closeDialog} anchorEl={anchorElement}>
-      <Grid
-        container
-        style={{minWidth: '400px', minHeight: '65px'}}
-        spacing={2}
-      >
+    <Popover
+      open={isDialogOpen}
+      onClose={closeDialog}
+      anchorEl={anchorElement}
+      PaperProps={{style: {height: '80px', minWidth: '400px'}}}
+    >
+      <Grid container spacing={2}>
         <Grid item style={{marginTop: '25px', textAlign: 'center'}}>
           <Typography>
             {getPercentifiedValue(stepSize, usePercentage)}
@@ -101,7 +102,7 @@ export default function TradeOffValueSlider({
             {getPercentifiedValue(maxValue, usePercentage)}
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid item style={{marginTop: '1em'}}>
           <Tooltip
             title={
               isExtensionDisabled

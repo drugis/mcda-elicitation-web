@@ -18,7 +18,7 @@ export function getInitialReferenceValueBy(
   lowerBound: number,
   upperBound: number
 ): number {
-  return upperBound - lowerBound;
+  return (upperBound - lowerBound) / 2;
 }
 
 export function getInitialReferenceValueFrom(
