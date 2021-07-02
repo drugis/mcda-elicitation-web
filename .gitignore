@@ -59,6 +59,7 @@ test/endToEnd/workspaceSortingTest.js
 test/endToEnd/onlyEmptyAndTextTest.js
 test/endToEnd/stepSizeTest.js
 test/endToEnd/uploadTest.js
+test/endToEnd/equivalentChangeTest.js
 
 #latex nonsense
 *.fls
