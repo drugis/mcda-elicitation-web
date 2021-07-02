@@ -47,7 +47,7 @@ function equivalentValueChangeTest(browser: NightwatchBrowser) {
   browser
     .click('#reference-slider-by')
     .useXpath()
-    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
+    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[10]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementNotPresent('.MuiPopover-root');
@@ -59,7 +59,7 @@ function equivalentRangeChangeTest(browser: NightwatchBrowser) {
     .click('#equivalent-change-range-type')
     .waitForElementVisible('#reference-slider-from');
 
-  checkEqualRangeValues(browser, 90);
+  checkEqualRangeValues(browser, 50);
 
   browser
     .click('#reference-slider-from')
