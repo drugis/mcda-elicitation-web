@@ -1,7 +1,7 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {
-  getImprovedValue,
+  getEquivalentRangeValue,
   getInitialReferenceValueFrom,
   getInitialReferenceValueTo,
   getPartOfInterval,
@@ -73,7 +73,7 @@ describe('equivalentChangeUtil', () => {
     });
   });
 
-  describe('getImprovedValue', () => {
+  describe('getEquivalentRangeValue', () => {
     const usePercentage = false;
     const criterionWeight = 0.1;
     const partOfInterval = 0.5;
@@ -81,7 +81,7 @@ describe('equivalentChangeUtil', () => {
 
     it('should return an improved value given a worst value, considering the weights, and ratio to the reference criterion, for an increasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'increasing'} as TPvf;
-      const result = getImprovedValue(
+      const result = getEquivalentRangeValue(
         usePercentage,
         criterionWeight,
         pvf,
@@ -93,7 +93,7 @@ describe('equivalentChangeUtil', () => {
 
     it('should return an improved value given a worst value, considering the weights, and ratio to the reference criterion, for a decreasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'decreasing'} as TPvf;
-      const result = getImprovedValue(
+      const result = getEquivalentRangeValue(
         usePercentage,
         criterionWeight,
         pvf,
@@ -101,6 +101,12 @@ describe('equivalentChangeUtil', () => {
         referenceWeight
       );
       expect(result).toEqual(-1.5);
+    });
+  });
+
+  describe('getEquivalentValue', () => {
+    it('should', () => {
+      fail();
     });
   });
 

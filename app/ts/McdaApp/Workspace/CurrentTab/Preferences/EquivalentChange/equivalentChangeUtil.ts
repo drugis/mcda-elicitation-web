@@ -39,7 +39,7 @@ export function getInitialReferenceValueTo(
   return (upperBound - lowerBound) * multiplier + lowerBound;
 }
 
-export function getImprovedValue(
+export function getEquivalentRangeValue(
   usePercentage: boolean,
   criterionWeight: number,
   pvf: TPvf,
@@ -53,6 +53,23 @@ export function getImprovedValue(
     return getPercentifiedValue(pvf.range[0] + change, usePercentage);
   } else {
     return getPercentifiedValue(pvf.range[1] - change, usePercentage);
+  }
+}
+
+export function getEquivalentValue(
+  usePercentage: boolean,
+  criterionWeight: number,
+  pvf: TPvf,
+  partOfInterval: number,
+  referenceWeight: number
+) {
+  const interval = pvf.range[1] - pvf.range[0];
+  const change =
+    (referenceWeight / criterionWeight) * partOfInterval * interval;
+  if (pvf.direction === 'increasing') {
+    return getPercentifiedValue(change, usePercentage);
+  } else {
+    return getPercentifiedValue(-change, usePercentage);
   }
 }
 

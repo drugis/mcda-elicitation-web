@@ -1,5 +1,6 @@
 import {Grid, Typography} from '@material-ui/core';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -9,14 +10,8 @@ import EquivalentChangeStatement from './EquivalentChangeStatement/EquivalentCha
 import EquivalentChangeTypeToggle from './EquivalentChangeTypeToggle/EquivalentChangeTypeToggle';
 
 export default function EquivalentChange(): JSX.Element {
-  const {observedRanges} = useContext(CurrentSubproblemContext);
-  const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-
+  const {pvfs} = useContext(CurrentScenarioContext);
   const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
-  const canShow =
-    areAllPvfsLinear &&
-    currentScenario.state.weights &&
-    !_.isEmpty(observedRanges);
 
   return (
     <Grid container>
@@ -27,7 +22,7 @@ export default function EquivalentChange(): JSX.Element {
           </InlineHelp>
         </Typography>
       </Grid>
-      {canShow ? (
+      <ShowIf condition={areAllPvfsLinear}>
         <Grid container item xs={12} spacing={2}>
           <Grid item xs={12}>
             <EquivalentChangeTypeToggle />
@@ -39,14 +34,15 @@ export default function EquivalentChange(): JSX.Element {
             <EquivalentChangeStatement />
           </Grid>
         </Grid>
-      ) : (
+      </ShowIf>
+      <ShowIf condition={!areAllPvfsLinear}>
         <Grid item xs={12}>
           <Typography>
             Equivalent changes not available for nonlinear partial value
             functions.
           </Typography>
         </Grid>
-      )}
+      </ShowIf>
     </Grid>
   );
 }
