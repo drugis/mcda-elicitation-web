@@ -6,9 +6,9 @@ import workspaceService from './util/workspaceService';
 export = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Trade offs': equivalentChangeTest,
-  'Changing reference criterion': changeReferenceCriterion,
-  'Show warning for unrealistic values': unrealisticValues
+  'Equivalent value changes': equivalentValueChangeTest,
+  'Equivalent range changes': equivalentRangeChangeTest,
+  'Changing reference criterion': changeReferenceCriterion
 };
 
 function beforeEach(browser: NightwatchBrowser) {
@@ -24,6 +24,7 @@ function beforeEach(browser: NightwatchBrowser) {
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
     .click('#preferences-tab');
+  performEqualSwing(browser);
 }
 
 function afterEach(browser) {
@@ -31,16 +32,34 @@ function afterEach(browser) {
   workspaceService.deleteFromList(browser, 0).end();
 }
 
-function equivalentChangeTest(browser: NightwatchBrowser) {
+function equivalentValueChangeTest(browser: NightwatchBrowser) {
+  checkEqualValueValues(browser, -50);
+
   browser
-    .waitForElementVisible('#precise-swing-button')
-    .click('#precise-swing-button')
-    .waitForElementVisible('#swing-weighting-title-header')
-    .click('#ranking-choice-HAM-D')
-    .click('#next-button')
-    .click('#save-button')
-    .waitForElementVisible('#equivalent-change-header');
-  checkEqualValues(browser, 90);
+    .click('#reference-slider-by')
+    .useXpath()
+    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
+    .useCss()
+    .waitForElementNotPresent('.MuiPopover-root');
+  checkEqualValueValues(browser, -10);
+
+  browser
+    .click('#reference-slider-by')
+    .useXpath()
+    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
+    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
+    .useCss()
+    .waitForElementNotPresent('.MuiPopover-root');
+  checkEqualValueValues(browser, -80);
+}
+
+function equivalentRangeChangeTest(browser: NightwatchBrowser) {
+  browser
+    .click('#equivalent-change-range-type')
+    .waitForElementVisible('#reference-slider-from');
+
+  checkEqualRangeValues(browser, 90);
 
   browser
     .click('#reference-slider-from')
@@ -48,8 +67,8 @@ function equivalentChangeTest(browser: NightwatchBrowser) {
     .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
-    .waitForElementVisible('#equivalent-change-header');
-  checkEqualValues(browser, 45);
+    .waitForElementNotPresent('.MuiPopover-root');
+  checkEqualRangeValues(browser, 45);
 
   browser
     .pause(250)
@@ -58,26 +77,42 @@ function equivalentChangeTest(browser: NightwatchBrowser) {
     .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
-    .waitForElementVisible('#equivalent-change-header');
-  checkEqualValues(browser, 0);
+    .waitForElementNotPresent('.MuiPopover-root');
+  checkEqualRangeValues(browser, 0);
 }
 
-function checkEqualValues(browser: NightwatchBrowser, value: number) {
+function checkEqualValueValues(browser: NightwatchBrowser, value: number) {
   browser.expect
-    .element('#equivalent-change-statement-Diarrhea')
-    .text.to.equal(`Changing Diarrhea from 100 to ${value}`);
+    .element('#equivalent-change-Diarrhea')
+    .text.to.equal(`${value}`);
   browser.expect
-    .element('#equivalent-change-statement-Dizziness')
-    .text.to.equal(`Changing Dizziness from 100 to ${value}`);
+    .element('#equivalent-change-Dizziness')
+    .text.to.equal(`${value}`);
   browser.expect
-    .element('#equivalent-change-statement-Headache')
-    .text.to.equal(`Changing Headache from 100 to ${value}`);
+    .element('#equivalent-change-Headache')
+    .text.to.equal(`${value}`);
   browser.expect
-    .element('#equivalent-change-statement-Insomnia')
-    .text.to.equal(`Changing Insomnia from 100 to ${value}`);
+    .element('#equivalent-change-Insomnia')
+    .text.to.equal(`${value}`);
+  browser.expect.element('#equivalent-change-Nausea').text.to.equal(`${value}`);
+}
+
+function checkEqualRangeValues(browser: NightwatchBrowser, value: number) {
   browser.expect
-    .element('#equivalent-change-statement-Nausea')
-    .text.to.equal(`Changing Nausea from 100 to ${value}`);
+    .element('#equivalent-change-Diarrhea')
+    .text.to.equal(`100 to ${value}`);
+  browser.expect
+    .element('#equivalent-change-Dizziness')
+    .text.to.equal(`100 to ${value}`);
+  browser.expect
+    .element('#equivalent-change-Headache')
+    .text.to.equal(`100 to ${value}`);
+  browser.expect
+    .element('#equivalent-change-Insomnia')
+    .text.to.equal(`100 to ${value}`);
+  browser.expect
+    .element('#equivalent-change-Nausea')
+    .text.to.equal(`100 to ${value}`);
 }
 
 function changeReferenceCriterion(browser: NightwatchBrowser) {
@@ -90,35 +125,13 @@ function changeReferenceCriterion(browser: NightwatchBrowser) {
     .assert.containsText('#reference-criterion-selector', 'Diarrhea');
 }
 
-function unrealisticValues(browser: NightwatchBrowser) {
+function performEqualSwing(browser: NightwatchBrowser) {
   browser
     .waitForElementVisible('#precise-swing-button')
-    .click('#reference-slider-from')
-    .useXpath()
-    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .useCss()
-    .waitForElementVisible('#equivalent-change-header');
-
-  browser
-    .pause(250)
-    .click('#reference-slider-to')
-    .useXpath()
-    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .useCss()
-    .waitForElementVisible('#equivalent-change-header');
-  browser.expect
-    .element('#equivalent-change-warning-Diarrhea')
-    .text.to.equal(`This value is unrealistic given the criterion's range`);
-  browser.expect
-    .element('#equivalent-change-warning-Dizziness')
-    .text.to.equal('');
-  browser.expect
-    .element('#equivalent-change-warning-Headache')
-    .text.to.equal('');
-  browser.expect
-    .element('#equivalent-change-warning-Insomnia')
-    .text.to.equal('');
-  browser.expect.element('#equivalent-change-warning-Nausea').text.to.equal('');
+    .click('#precise-swing-button')
+    .waitForElementVisible('#swing-weighting-title-header')
+    .click('#ranking-choice-HAM-D')
+    .click('#next-button')
+    .click('#save-button')
+    .waitForElementVisible('#equivalent-change-basis');
 }

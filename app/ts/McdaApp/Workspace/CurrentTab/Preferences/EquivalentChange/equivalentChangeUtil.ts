@@ -3,7 +3,6 @@ import {TPvf} from '@shared/interface/Problem/IPvf';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
-import {getBest} from '../PartialValueFunctions/PartialValueFunctionUtil';
 
 export function getPartOfInterval(
   from: number,
@@ -70,19 +69,6 @@ export function getEquivalentValue(
     return getPercentifiedValue(change, usePercentage);
   } else {
     return getPercentifiedValue(-change, usePercentage);
-  }
-}
-
-export function isImprovedValueRealistic(
-  value: number,
-  usePercentage: boolean,
-  pvf: TPvf
-): boolean {
-  const best = getBest(pvf, usePercentage);
-  if (pvf.direction === 'increasing') {
-    return value <= best;
-  } else {
-    return value >= best;
   }
 }
 
