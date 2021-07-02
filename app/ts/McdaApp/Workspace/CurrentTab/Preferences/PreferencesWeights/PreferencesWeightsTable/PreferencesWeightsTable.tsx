@@ -15,6 +15,8 @@ import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import {getImprovedValue} from '../../EquivalentChange/equivalentChangeUtil';
 import {
   getBest,
   getWorst
@@ -22,12 +24,21 @@ import {
 import {buildImportance} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
+  const {equivalentChangeType} = useContext(EquivalentChangeContext);
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {filteredCriteria} = useContext(CurrentSubproblemContext);
+  const {filteredCriteria, observedRanges} = useContext(
+    CurrentSubproblemContext
+  );
   const [importances, setImportances] = useState<Record<string, string>>(
     buildImportance(filteredCriteria, currentScenario.state.prefs)
   );
+
+  const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
+  const canShowEquivalentChanges =
+    areAllPvfsLinear &&
+    currentScenario.state.weights &&
+    !_.isEmpty(observedRanges);
 
   useEffect(() => {
     setImportances(
@@ -47,39 +58,99 @@ export default function PreferencesWeightsTable() {
     }
   }
 
-  function renderCriterionPreferences(): JSX.Element[] {
-    return _.map(
-      filteredCriteria,
-      (criterion: ICriterion): JSX.Element => {
-        const unit = criterion.dataSources[0].unitOfMeasurement;
-        const usePercentage = getUsePercentage(criterion.dataSources[0]);
-        return (
-          <TableRow key={criterion.id}>
-            <TableCell>
-              <CriterionTooltip
-                title={criterion.title}
-                description={criterion.description}
-              />
-            </TableCell>
-            <TableCell id={`unit-${criterion.id}`}>
-              {getUnitLabel(unit, showPercentages)}
-            </TableCell>
-            <TableCell id={`worst-${criterion.id}`}>
-              {getWorst(pvfs[criterion.id], usePercentage)}
-            </TableCell>
-            <TableCell id={`best-${criterion.id}`}>
-              {getBest(pvfs[criterion.id], usePercentage)}
-            </TableCell>
-            <TableCell id={`importance-criterion-${criterion.id}`}>
-              {importances[criterion.id]}
-            </TableCell>
-            <TableCell id={`weight-criterion-${criterion.id}`}>
-              {getWeight(criterion.id)}
-            </TableCell>
-          </TableRow>
-        );
-      }
+  function getEquivalentChange(criterion: ICriterion) {
+    switch (equivalentChangeType) {
+      case 'amount':
+        return <EquivalentValueChange criterion={criterion} />;
+      case 'range':
+        return <EquivalentRangeChange criterion={criterion} />;
+    }
+  }
+
+  function EquivalentValueChange({
+    criterion
+  }: {
+    criterion: ICriterion;
+  }): JSX.Element {
+    const {referenceWeight, partOfInterval} = useContext(
+      EquivalentChangeContext
     );
+    const otherWeight = currentScenario.state.weights.mean[criterion.id];
+    const usePercentage = getUsePercentage(criterion.dataSources[0]);
+
+    return (
+      <span>
+        {getImprovedValue(
+          usePercentage,
+          otherWeight,
+          pvfs[criterion.id],
+          partOfInterval,
+          referenceWeight
+        )}
+      </span>
+    );
+  }
+
+  function EquivalentRangeChange({
+    criterion
+  }: {
+    criterion: ICriterion;
+  }): JSX.Element {
+    const {referenceWeight, partOfInterval} = useContext(
+      EquivalentChangeContext
+    );
+    const otherWeight = currentScenario.state.weights.mean[criterion.id];
+    const usePercentage = getUsePercentage(criterion.dataSources[0]);
+
+    return (
+      <span>
+        {getWorst(pvfs[criterion.id], usePercentage)} to{' '}
+        {getImprovedValue(
+          usePercentage,
+          otherWeight,
+          pvfs[criterion.id],
+          partOfInterval,
+          referenceWeight
+        )}
+      </span>
+    );
+  }
+
+  function renderCriterionPreferences(): JSX.Element[] {
+    return _.map(filteredCriteria, (criterion: ICriterion): JSX.Element => {
+      const unit = criterion.dataSources[0].unitOfMeasurement;
+      const usePercentage = getUsePercentage(criterion.dataSources[0]);
+      return (
+        <TableRow key={criterion.id}>
+          <TableCell>
+            <CriterionTooltip
+              title={criterion.title}
+              description={criterion.description}
+            />
+          </TableCell>
+          <TableCell id={`unit-${criterion.id}`}>
+            {getUnitLabel(unit, showPercentages)}
+          </TableCell>
+          <TableCell id={`worst-${criterion.id}`}>
+            {getWorst(pvfs[criterion.id], usePercentage)}
+          </TableCell>
+          <TableCell id={`best-${criterion.id}`}>
+            {getBest(pvfs[criterion.id], usePercentage)}
+          </TableCell>
+          <TableCell id={`importance-criterion-${criterion.id}`}>
+            {importances[criterion.id]}
+          </TableCell>
+          <TableCell id={`weight-criterion-${criterion.id}`}>
+            {getWeight(criterion.id)}
+          </TableCell>
+          <ShowIf condition={canShowEquivalentChanges}>
+            <TableCell id={`equivalent-change-${criterion.id}`}>
+              {getEquivalentChange(criterion)}
+            </TableCell>
+          </ShowIf>
+        </TableRow>
+      );
+    });
   }
 
   return (
@@ -100,6 +171,13 @@ export default function PreferencesWeightsTable() {
           <TableCell>
             <InlineHelp helpId="representative-weights">Weight</InlineHelp>
           </TableCell>
+          <ShowIf condition={canShowEquivalentChanges}>
+            <TableCell>
+              <InlineHelp helpId="equivalent-change-basis">
+                Equivalent change
+              </InlineHelp>
+            </TableCell>
+          </ShowIf>
         </TableRow>
       </TableHead>
       <TableBody>

@@ -3,11 +3,13 @@ import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
-import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
-import TradeOffValueSlider from './TradeOffSlider/TradeOffValueSlider';
+import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
+import EquivalentChangeValueSlider from './EquivalentChangeSlider/EquivalentChangeValueslider';
 
-export default function TradeOffValueStatement() {
-  const {referenceCriterion, referenceValueBy} = useContext(TradeOffContext);
+export default function EquivalentChangeValueStatement() {
+  const {referenceCriterion, referenceValueBy} = useContext(
+    EquivalentChangeContext
+  );
   const {getUsePercentage} = useContext(SettingsContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -22,22 +24,23 @@ export default function TradeOffValueStatement() {
   function closeDialog(): void {
     setDialogOpen(false);
   }
+  const unit = referenceCriterion.dataSources[0].unitOfMeasurement;
 
   return _.isNumber(referenceValueBy) ? (
     <>
       <Typography>
-        Based on the elicited preferences, changing {referenceCriterion.title}{' '}
-        by{' '}
+        The change of {referenceCriterion.title} by{' '}
         <Button
           id="reference-slider-by"
           onClick={openDialog}
           variant="outlined"
         >
           {getPercentifiedValue(referenceValueBy, usePercentage)}
-        </Button>{' '}
-        is equivalent to:
+        </Button>
+        {unit.label} is the basis for calculating the equivalent changes in the
+        table below.
       </Typography>
-      <TradeOffValueSlider
+      <EquivalentChangeValueSlider
         anchorElement={anchorElement}
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}

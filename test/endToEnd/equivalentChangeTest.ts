@@ -6,7 +6,7 @@ import workspaceService from './util/workspaceService';
 export = {
   beforeEach: beforeEach,
   afterEach: afterEach,
-  'Trade offs': tradeOffTest,
+  'Trade offs': equivalentChangeTest,
   'Changing reference criterion': changeReferenceCriterion,
   'Show warning for unrealistic values': unrealisticValues
 };
@@ -31,7 +31,7 @@ function afterEach(browser) {
   workspaceService.deleteFromList(browser, 0).end();
 }
 
-function tradeOffTest(browser: NightwatchBrowser) {
+function equivalentChangeTest(browser: NightwatchBrowser) {
   browser
     .waitForElementVisible('#precise-swing-button')
     .click('#precise-swing-button')
@@ -39,7 +39,7 @@ function tradeOffTest(browser: NightwatchBrowser) {
     .click('#ranking-choice-HAM-D')
     .click('#next-button')
     .click('#save-button')
-    .waitForElementVisible('#trade-off-header');
+    .waitForElementVisible('#equivalent-change-header');
   checkEqualValues(browser, 90);
 
   browser
@@ -48,7 +48,7 @@ function tradeOffTest(browser: NightwatchBrowser) {
     .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
-    .waitForElementVisible('#trade-off-header');
+    .waitForElementVisible('#equivalent-change-header');
   checkEqualValues(browser, 45);
 
   browser
@@ -58,25 +58,25 @@ function tradeOffTest(browser: NightwatchBrowser) {
     .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
-    .waitForElementVisible('#trade-off-header');
+    .waitForElementVisible('#equivalent-change-header');
   checkEqualValues(browser, 0);
 }
 
 function checkEqualValues(browser: NightwatchBrowser, value: number) {
   browser.expect
-    .element('#trade-off-statement-Diarrhea')
+    .element('#equivalent-change-statement-Diarrhea')
     .text.to.equal(`Changing Diarrhea from 100 to ${value}`);
   browser.expect
-    .element('#trade-off-statement-Dizziness')
+    .element('#equivalent-change-statement-Dizziness')
     .text.to.equal(`Changing Dizziness from 100 to ${value}`);
   browser.expect
-    .element('#trade-off-statement-Headache')
+    .element('#equivalent-change-statement-Headache')
     .text.to.equal(`Changing Headache from 100 to ${value}`);
   browser.expect
-    .element('#trade-off-statement-Insomnia')
+    .element('#equivalent-change-statement-Insomnia')
     .text.to.equal(`Changing Insomnia from 100 to ${value}`);
   browser.expect
-    .element('#trade-off-statement-Nausea')
+    .element('#equivalent-change-statement-Nausea')
     .text.to.equal(`Changing Nausea from 100 to ${value}`);
 }
 
@@ -98,7 +98,7 @@ function unrealisticValues(browser: NightwatchBrowser) {
     .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
-    .waitForElementVisible('#trade-off-header');
+    .waitForElementVisible('#equivalent-change-header');
 
   browser
     .pause(250)
@@ -107,12 +107,18 @@ function unrealisticValues(browser: NightwatchBrowser) {
     .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
-    .waitForElementVisible('#trade-off-header');
+    .waitForElementVisible('#equivalent-change-header');
   browser.expect
-    .element('#trade-off-warning-Diarrhea')
+    .element('#equivalent-change-warning-Diarrhea')
     .text.to.equal(`This value is unrealistic given the criterion's range`);
-  browser.expect.element('#trade-off-warning-Dizziness').text.to.equal('');
-  browser.expect.element('#trade-off-warning-Headache').text.to.equal('');
-  browser.expect.element('#trade-off-warning-Insomnia').text.to.equal('');
-  browser.expect.element('#trade-off-warning-Nausea').text.to.equal('');
+  browser.expect
+    .element('#equivalent-change-warning-Dizziness')
+    .text.to.equal('');
+  browser.expect
+    .element('#equivalent-change-warning-Headache')
+    .text.to.equal('');
+  browser.expect
+    .element('#equivalent-change-warning-Insomnia')
+    .text.to.equal('');
+  browser.expect.element('#equivalent-change-warning-Nausea').text.to.equal('');
 }

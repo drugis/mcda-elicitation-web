@@ -11,13 +11,13 @@ import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import React, {useContext, useEffect, useState} from 'react';
-import {TradeOffContext} from '../../TradeOffContext/TradeOffContext';
+import {EquivalentChangeContext} from '../../EquivalentChangeContext/EquivalentChangeContext';
 import {
   increaseSliderRange,
   isSliderExtenderDisabled
-} from '../../tradeOffUtil';
+} from '../../equivalentChangeUtil';
 
-export default function TradeOffValueSlider({
+export default function EquivalentChangeValueSlider({
   anchorElement,
   isDialogOpen,
   closeDialog
@@ -32,7 +32,7 @@ export default function TradeOffValueSlider({
     referenceCriterion,
     upperBound,
     setReferenceValueBy
-  } = useContext(TradeOffContext);
+  } = useContext(EquivalentChangeContext);
   const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
   const {getUsePercentage} = useContext(SettingsContext);
 

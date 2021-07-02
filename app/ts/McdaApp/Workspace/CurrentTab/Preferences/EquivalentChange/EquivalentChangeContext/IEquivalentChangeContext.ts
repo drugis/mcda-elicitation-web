@@ -1,7 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
-import { TradeOffType } from 'app/ts/type/TradeOffType';
+import {EquivalentChangeType} from 'app/ts/type/EquivalentChangeType';
 
-export default interface ITradeOffContext {
+export default interface IEquivalentChangeContext {
   otherCriteria: ICriterion[];
   lowerBound: number;
   partOfInterval: number;
@@ -11,10 +11,10 @@ export default interface ITradeOffContext {
   referenceValueFrom: number;
   referenceValueTo: number;
   referenceWeight: number;
-  tradeOffType: TradeOffType;
+  equivalentChangeType: EquivalentChangeType;
   setReferenceValueFrom: (newValue: number) => void;
   setReferenceValueTo: (newValue: number) => void;
   setReferenceValueBy: (newValue: number) => void;
-  setTradeOffType: (newValue: TradeOffType) => void;
+  setEquivalentChangeType: (newValue: EquivalentChangeType) => void;
   updateReferenceCriterion: (newId: string) => void;
 }

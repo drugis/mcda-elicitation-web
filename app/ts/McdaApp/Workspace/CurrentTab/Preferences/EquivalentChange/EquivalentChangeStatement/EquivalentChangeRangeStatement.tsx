@@ -4,12 +4,13 @@ import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import _ from 'lodash';
 import React, {useContext, useState} from 'react';
-import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
-import TradeOffRangeSlider from './TradeOffSlider/TradeOffRangeSlider';
+import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
+import EquivalentChangeRangeSlider from './EquivalentChangeSlider/EquivalentChangeRangeSlider';
 
-export default function TradeOffRangeStatement(): JSX.Element {
-  const {referenceValueFrom, referenceValueTo, referenceCriterion} =
-    useContext(TradeOffContext);
+export default function EquivalentChangeRangeStatement(): JSX.Element {
+  const {referenceValueFrom, referenceValueTo, referenceCriterion} = useContext(
+    EquivalentChangeContext
+  );
   const {getUsePercentage} = useContext(SettingsContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -27,6 +28,7 @@ export default function TradeOffRangeStatement(): JSX.Element {
     setDialogOpen(false);
     setAnchorElement(null);
   }
+  const unit = referenceCriterion.dataSources[0].unitOfMeasurement;
 
   return _.isNumber(referenceValueFrom) && _.isNumber(referenceValueTo) ? (
     <>
@@ -39,18 +41,18 @@ export default function TradeOffRangeStatement(): JSX.Element {
           variant="outlined"
         >
           {getPercentifiedValue(referenceValueFrom, usePercentage)}
-        </Button>{' '}
-        to{' '}
+        </Button>
+        {unit.label} to{' '}
         <Button
           id="reference-slider-to"
           onClick={openDialog}
           variant="outlined"
         >
           {getPercentifiedValue(referenceValueTo, usePercentage)}
-        </Button>{' '}
-        is equivalent to:
+        </Button>
+        {unit.label} is equivalent to:
       </Typography>
-      <TradeOffRangeSlider
+      <EquivalentChangeRangeSlider
         anchorElement={anchorElement}
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}

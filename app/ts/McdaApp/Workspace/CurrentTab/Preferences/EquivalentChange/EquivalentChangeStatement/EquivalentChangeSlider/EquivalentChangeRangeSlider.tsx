@@ -3,9 +3,9 @@ import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import React, {useContext, useEffect, useState} from 'react';
-import {TradeOffContext} from '../../TradeOffContext/TradeOffContext';
+import {EquivalentChangeContext} from '../../EquivalentChangeContext/EquivalentChangeContext';
 
-export default function TradeOffRangeSlider({
+export default function EquivalentChangeRangeSlider({
   anchorElement,
   isDialogOpen,
   closeDialog
@@ -22,7 +22,7 @@ export default function TradeOffRangeSlider({
     setReferenceValueFrom,
     setReferenceValueTo,
     referenceCriterion
-  } = useContext(TradeOffContext);
+  } = useContext(EquivalentChangeContext);
   const {getUsePercentage} = useContext(SettingsContext);
   const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
 
@@ -83,7 +83,7 @@ export default function TradeOffRangeSlider({
         </Grid>
         <Grid item xs={8} style={{marginTop: '38px'}}>
           <Slider
-            id="trade-off-slider"
+            id="equivalent-change-slider"
             marks
             valueLabelDisplay="on"
             valueLabelFormat={sliderParameters.formatFunction}

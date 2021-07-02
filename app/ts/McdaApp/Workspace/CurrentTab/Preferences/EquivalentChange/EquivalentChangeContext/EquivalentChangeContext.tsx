@@ -2,7 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {hasNoRange} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/SubproblemUtil';
-import {TradeOffType} from 'app/ts/type/TradeOffType';
+import {EquivalentChangeType as EquivalentChangeType} from 'app/ts/type/EquivalentChangeType';
 import _ from 'lodash';
 import React, {
   createContext,
@@ -16,14 +16,14 @@ import {
   getInitialReferenceValueFrom,
   getInitialReferenceValueTo,
   getPartOfInterval
-} from '../tradeOffUtil';
-import ITradeOffContext from './ITradeOffContext';
+} from '../equivalentChangeUtil';
+import IEquivalentChangeContext from './IEquivalentChangeContext';
 
-export const TradeOffContext = createContext<ITradeOffContext>(
-  {} as ITradeOffContext
+export const EquivalentChangeContext = createContext<IEquivalentChangeContext>(
+  {} as IEquivalentChangeContext
 );
 
-export function TradeOffContextProviderComponent({
+export function EquivalentChangeContextProviderComponent({
   children
 }: {
   children: any;
@@ -56,13 +56,35 @@ export function TradeOffContextProviderComponent({
   ]);
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
-  const [referenceValueBy, setReferenceValueBy] = useState<number>();
-  const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
-  const [referenceValueTo, setReferenceValueTo] = useState<number>();
+  const [referenceValueBy, setReferenceValueBy] = useState<number>(
+    getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
+  );
+  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
+    getInitialReferenceValueFrom(
+      configuredLowerBound,
+      configuredUpperBound,
+      pvfs[referenceCriterion.id]
+    )
+  );
+  const [referenceValueTo, setReferenceValueTo] = useState<number>(
+    getInitialReferenceValueTo(
+      configuredLowerBound,
+      configuredUpperBound,
+      pvfs[referenceCriterion.id]
+    )
+  );
   const referenceWeight =
     currentScenario.state.weights.mean[referenceCriterion.id];
-  const [partOfInterval, setPartOfInterval] = useState<number>();
-  const [tradeOffType, setTradeOffType] = useState<TradeOffType>('amount');
+  const [partOfInterval, setPartOfInterval] = useState<number>(
+    getPartOfInterval(
+      0,
+      referenceValueBy,
+      configuredLowerBound,
+      configuredUpperBound
+    )
+  );
+  const [equivalentChangeType, setEquivalentChangeType] =
+    useState<EquivalentChangeType>('amount');
 
   useEffect(reset, [
     referenceCriterion,
@@ -87,6 +109,17 @@ export function TradeOffContextProviderComponent({
     referenceValueFrom,
     referenceValueTo
   ]);
+
+  useEffect(() => {
+    setPartOfInterval(
+      getPartOfInterval(
+        0,
+        referenceValueBy,
+        configuredLowerBound,
+        configuredUpperBound
+      )
+    );
+  }, [configuredLowerBound, configuredUpperBound, referenceValueBy]);
 
   function reset(): void {
     if (areAllPvfsSet) {
@@ -123,7 +156,7 @@ export function TradeOffContextProviderComponent({
   }
 
   return (
-    <TradeOffContext.Provider
+    <EquivalentChangeContext.Provider
       value={{
         otherCriteria,
         lowerBound,
@@ -134,16 +167,16 @@ export function TradeOffContextProviderComponent({
         referenceValueFrom,
         referenceValueTo,
         referenceWeight,
-        tradeOffType,
+        equivalentChangeType,
         setReferenceValueBy,
         setReferenceValueFrom,
         setReferenceValueTo,
-        setTradeOffType,
+        setEquivalentChangeType,
         updateReferenceCriterion
       }}
     >
       {children}
-    </TradeOffContext.Provider>
+    </EquivalentChangeContext.Provider>
   );
 }
 

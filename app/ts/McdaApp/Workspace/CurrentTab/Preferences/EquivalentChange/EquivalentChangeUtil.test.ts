@@ -6,9 +6,9 @@ import {
   getInitialReferenceValueTo,
   getPartOfInterval,
   isImprovedValueRealistic
-} from './tradeOffUtil';
+} from './equivalentChangeUtil';
 
-describe('tradeOffUtil', () => {
+describe('equivalentChangeUtil', () => {
   describe('getPartOfInterval', () => {
     it('should calculate the ratio of the chosen interval to the total range for a favourable criterion', () => {
       const from = 0;
