@@ -2,7 +2,6 @@ import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeRangeSlider from './EquivalentChangeSlider/EquivalentChangeRangeSlider';
@@ -30,7 +29,7 @@ export default function EquivalentChangeRangeStatement(): JSX.Element {
   }
   const unit = referenceCriterion.dataSources[0].unitOfMeasurement;
 
-  return _.isNumber(referenceValueFrom) && _.isNumber(referenceValueTo) ? (
+  return (
     <>
       <Typography>
         Based on the elicited preferences, changing {referenceCriterion.title}{' '}
@@ -58,7 +57,5 @@ export default function EquivalentChangeRangeStatement(): JSX.Element {
         closeDialog={closeDialog}
       />
     </>
-  ) : (
-    <></>
   );
 }

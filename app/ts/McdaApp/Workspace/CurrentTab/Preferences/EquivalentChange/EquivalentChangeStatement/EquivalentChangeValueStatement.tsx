@@ -1,7 +1,6 @@
 import {Button, Typography} from '@material-ui/core';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeValueSlider from './EquivalentChangeSlider/EquivalentChangeValueslider';
@@ -26,7 +25,7 @@ export default function EquivalentChangeValueStatement() {
   }
   const unit = referenceCriterion.dataSources[0].unitOfMeasurement;
 
-  return _.isNumber(referenceValueBy) ? (
+  return (
     <>
       <Typography>
         The change of {referenceCriterion.title} by{' '}
@@ -46,7 +45,5 @@ export default function EquivalentChangeValueStatement() {
         closeDialog={closeDialog}
       />
     </>
-  ) : (
-    <></>
   );
 }
