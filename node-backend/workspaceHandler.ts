@@ -9,6 +9,7 @@ import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import IWorkspaceExample from '@shared/interface/Workspace/IWorkspaceExample';
+import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {
   updateProblemToCurrentSchema,
   updateWorkspaceToCurrentSchema
@@ -36,7 +37,7 @@ export default function WorkspaceHandler(db: IDB) {
   function query(request: Request, response: Response, next: any): void {
     workspaceRepository.query(
       getUser(request).id,
-      (error: OurError, result: IOldWorkspace[]): void => {
+      (error: OurError, result: IWorkspaceSummary[]): void => {
         if (error) {
           handleError(error, next);
         } else {

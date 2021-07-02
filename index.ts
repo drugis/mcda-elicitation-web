@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {OurError} from '@shared/interface/IError';
+import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import csurf from 'csurf';
 import express, {CookieOptions, Request, Response} from 'express';
 import session, {SessionOptions} from 'express-session';
@@ -69,13 +70,19 @@ app.use(
 );
 server = http.createServer(app);
 
-startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
-  if (errorBody) {
-    initError(errorBody);
-  } else {
-    initApp();
-  }
-});
+function runDiagnostics(numberOftries: number) {
+  startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
+    if (numberOftries <= 0) {
+      process.exit(1);
+    } else if (errorBody) {
+      setTimeout(_.partial(runDiagnostics, numberOftries - 1), 10000);
+    } else {
+      initApp();
+    }
+  });
+}
+
+runDiagnostics(6);
 
 function initApp(): void {
   rightsManagement.setRequiredRights(
@@ -131,13 +138,6 @@ function initApp(): void {
     }
     next();
   });
-  app.get('/', (request: any, response: Response): void => {
-    if (request.user || request.session.user) {
-      response.sendFile(__dirname + '/dist/index.html');
-    } else {
-      response.sendFile(__dirname + '/dist/signin.html');
-    }
-  });
   app.use(express.static(__dirname + '/dist'));
   app.use(express.static('public'));
   app.use('/img', express.static('tutorials/fig'));
@@ -160,7 +160,7 @@ function initApp(): void {
   // Default route (ALWAYS Keep this as the last route)
   app.get('*', (request: any, response: Response): void => {
     if (request.user || request.session.user) {
-      response.sendFile(__dirname + '/dist/index.html');
+      response.sendFile(__dirname + '/dist/app.html');
     } else {
       response.sendFile(__dirname + '/dist/signin.html');
     }
@@ -178,7 +178,7 @@ function errorHandler(
   next: any
 ): void {
   logger.error(JSON.stringify(error.message, null, 2));
-  if (error && error.type === signin.SIGNIN_ERROR) {
+  if (error?.type === signin.SIGNIN_ERROR) {
     response.status(UNAUTHORIZED).send('login failed');
   } else if (error) {
     const errorMessage = error.err ? error.err.message : error.message;
@@ -190,25 +190,17 @@ function errorHandler(
   }
 }
 
-function initError(errorBody: object): void {
-  app.get('*', (request: Request, response: Response): void => {
-    response
-      .status(INTERNAL_SERVER_ERROR)
-      .set('Content-Type', 'text/html')
-      .send(errorBody);
-  });
-
-  startListening((port: string): void => {
-    logger.error('Access the diagnostics summary at http://localhost:' + port);
-  });
+function startListening(listenFunction: (port: string) => void): void {
+  const port = getPort();
+  server.listen(port, _.partial(listenFunction, port));
 }
 
-function startListening(listenFunction: (port: string) => void): void {
-  let port = '3002';
+function getPort(): string {
   if (process.argv[2] === 'port' && process.argv[3]) {
-    port = process.argv[3];
+    return process.argv[3];
+  } else {
+    return '3002';
   }
-  server.listen(port, _.partial(listenFunction, port));
 }
 
 function workspaceOwnerRightsNeeded(
@@ -245,7 +237,7 @@ function rightsCallback(
   if (error) {
     next(error);
   } else {
-    const workspace = result;
+    const workspace: IOldWorkspace = result;
     if (!workspace) {
       response.status(NOT_FOUND).send('Workspace not found');
     } else if (workspace.owner !== userId) {

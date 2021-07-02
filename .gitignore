@@ -60,6 +60,7 @@ test/endToEnd/onlyEmptyAndTextTest.js
 test/endToEnd/stepSizeTest.js
 test/endToEnd/uploadTest.js
 test/endToEnd/equivalentChangeTest.js
+test/endToEnd/workspaceFilteringTest.js
 
 #latex nonsense
 *.fls

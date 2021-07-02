@@ -18,7 +18,7 @@ import React, {
   useEffect,
   useState
 } from 'react';
-import {useHistory, useParams} from 'react-router';
+import {useParams} from 'react-router';
 import {
   areAllPvfsSet,
   createScenarioWithPvf,
@@ -38,7 +38,6 @@ export function CurrentScenarioContextProviderComponent({
 }: {
   children: any;
 }) {
-  const history = useHistory();
   const {workspaceId, subproblemId, scenarioId} =
     useParams<{
       workspaceId: string;

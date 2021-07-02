@@ -39,29 +39,26 @@ export default function SmaaWeightsTable({
   function SmaaWeightsValueRow(): JSX.Element {
     return (
       <TableRow>
-        {_.map(
-          filteredCriteria,
-          (criterion: ICriterion): JSX.Element => {
-            const weight = significantDigits(smaaWeights.mean[criterion.id]);
-            const lowerBound = significantDigits(
-              smaaWeights['2.5%'][criterion.id]
-            );
-            const upperBound = significantDigits(
-              smaaWeights['97.5%'][criterion.id]
-            );
-            return (
-              <TableCell key={criterion.id}>
-                <div style={textCenterStyle}>
-                  <UncertainValue
-                    value={weight}
-                    lowerBound={lowerBound}
-                    upperBound={upperBound}
-                  />
-                </div>
-              </TableCell>
-            );
-          }
-        )}
+        {_.map(filteredCriteria, (criterion: ICriterion): JSX.Element => {
+          const weight = significantDigits(smaaWeights.mean[criterion.id]);
+          const lowerBound = significantDigits(
+            smaaWeights['2.5%'][criterion.id]
+          );
+          const upperBound = significantDigits(
+            smaaWeights['97.5%'][criterion.id]
+          );
+          return (
+            <TableCell key={criterion.id}>
+              <div style={textCenterStyle}>
+                <UncertainValue
+                  value={weight}
+                  lowerBound={lowerBound}
+                  upperBound={upperBound}
+                />
+              </div>
+            </TableCell>
+          );
+        })}
       </TableRow>
     );
   }
@@ -73,11 +70,11 @@ export default function SmaaWeightsTable({
           <InlineHelp helpId="representative-weights">Weights</InlineHelp>
         </Typography>
       </Grid>
+      <Grid container item xs={3} justify="flex-end">
+        <ClipboardButton targetId="#weigths-table" />
+      </Grid>
       <Grid container item xs={12}>
         <LoadingSpinner showSpinnerCondition={!smaaWeights}>
-          <Grid container item xs={3} justify="flex-end">
-            <ClipboardButton targetId="#weigths-table" />
-          </Grid>
           <Grid item xs={12}>
             <Table id="weigths-table">
               <TableHead>

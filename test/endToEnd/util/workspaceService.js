@@ -6,7 +6,8 @@ const util = require('./util.js');
 function goHomeAfterLoading(browser, title) {
   errorService
     .isErrorBarNotPresent(browser)
-    .assert.containsText('#workspace-title', title);
+    .expect.element('#workspace-title')
+    .text.to.equal(title);
   return util
     .delayedClick(browser, '#logo', '#workspaces-header')
     .waitForElementVisible('#workspaces-header');

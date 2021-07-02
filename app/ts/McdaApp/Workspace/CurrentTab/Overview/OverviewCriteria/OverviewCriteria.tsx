@@ -2,13 +2,14 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ICriterion from '@shared/interface/ICriterion';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {OverviewCriterionContextProviderComponent} from './OverviewCriterionContext/OverviewCriterionContext';
-import OverviewCriterion from './OverviewCriterion/OverviewCriterion';
 import {WorkspaceContext} from '../../../WorkspaceContext/WorkspaceContext';
+import OverviewCriterion from './OverviewCriterion/OverviewCriterion';
+import {OverviewCriterionContextProviderComponent} from './OverviewCriterionContext/OverviewCriterionContext';
 
 const style = {backgroundColor: '#eaeaea', margin: '0px'};
 
@@ -25,18 +26,22 @@ export default function OverviewCriteria() {
       );
       return (
         <Grid container item xs={12} spacing={2}>
-          <Grid item xs={12}>
-            <CriteriaBackground>
-              <FavorabilityHeader>Favourable criteria</FavorabilityHeader>
-              <Criteria criteria={favourableCriteria} />
-            </CriteriaBackground>
-          </Grid>
-          <Grid item xs={12}>
-            <CriteriaBackground>
-              <FavorabilityHeader>Unfavourable criteria</FavorabilityHeader>
-              <Criteria criteria={unfavourableCriteria} />
-            </CriteriaBackground>
-          </Grid>
+          <ShowIf condition={Boolean(favourableCriteria.length)}>
+            <Grid item xs={12}>
+              <CriteriaBackground>
+                <FavorabilityHeader>Favourable criteria</FavorabilityHeader>
+                <Criteria criteria={favourableCriteria} />
+              </CriteriaBackground>
+            </Grid>
+          </ShowIf>
+          <ShowIf condition={Boolean(unfavourableCriteria.length)}>
+            <Grid item xs={12}>
+              <CriteriaBackground>
+                <FavorabilityHeader>Unfavourable criteria</FavorabilityHeader>
+                <Criteria criteria={unfavourableCriteria} />
+              </CriteriaBackground>
+            </Grid>
+          </ShowIf>
         </Grid>
       );
     } else {
