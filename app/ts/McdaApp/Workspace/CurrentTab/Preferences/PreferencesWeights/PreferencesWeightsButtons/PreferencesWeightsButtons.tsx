@@ -5,12 +5,9 @@ import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioCo
 import React, {useContext} from 'react';
 
 export default function PreferencesWeightsButtons() {
-  const {
-    resetPreferences,
-    currentScenario,
-    disableWeightsButtons,
-    setActiveView
-  } = useContext(CurrentScenarioContext);
+  const {resetPreferences, currentScenario, setActiveView} = useContext(
+    CurrentScenarioContext
+  );
 
   function handleResetClick() {
     resetPreferences(currentScenario);

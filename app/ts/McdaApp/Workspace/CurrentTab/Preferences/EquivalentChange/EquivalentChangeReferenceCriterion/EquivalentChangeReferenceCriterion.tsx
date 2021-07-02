@@ -3,11 +3,11 @@ import ICriterion from '@shared/interface/ICriterion';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
-import {TradeOffContext} from '../TradeOffContext/TradeOffContext';
+import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 
-export default function TradeOffReferenceCriterion(): JSX.Element {
+export default function EquivalentChangeReferenceCriterion(): JSX.Element {
   const {referenceCriterion, updateReferenceCriterion} = useContext(
-    TradeOffContext
+    EquivalentChangeContext
   );
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
 
@@ -29,7 +29,7 @@ export default function TradeOffReferenceCriterion(): JSX.Element {
   }
 
   return (
-    <>
+    <Grid container>
       <Grid item xs={2}>
         <Typography>Reference criterion:</Typography>
       </Grid>
@@ -44,6 +44,6 @@ export default function TradeOffReferenceCriterion(): JSX.Element {
           {getReferenceCriterionOptions()}
         </Select>
       </Grid>
-    </>
+    </Grid>
   );
 }

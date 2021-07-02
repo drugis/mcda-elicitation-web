@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {ChartConfiguration} from 'c3';

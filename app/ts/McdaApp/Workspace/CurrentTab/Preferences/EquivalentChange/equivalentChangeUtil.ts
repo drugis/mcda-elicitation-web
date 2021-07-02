@@ -1,6 +1,8 @@
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
-import {getBest} from '../PartialValueFunctions/PartialValueFunctionUtil';
+import significantDigits from 'app/ts/util/significantDigits';
+import _ from 'lodash';
 
 export function getPartOfInterval(
   from: number,
@@ -9,6 +11,13 @@ export function getPartOfInterval(
   upperbound: number
 ): number {
   return Math.abs(to - from) / (upperbound - lowerBound);
+}
+
+export function getInitialReferenceValueBy(
+  lowerBound: number,
+  upperBound: number
+): number {
+  return (upperBound - lowerBound) / 2;
 }
 
 export function getInitialReferenceValueFrom(
@@ -29,7 +38,7 @@ export function getInitialReferenceValueTo(
   return (upperBound - lowerBound) * multiplier + lowerBound;
 }
 
-export function getImprovedValue(
+export function getEquivalentRangeValue(
   usePercentage: boolean,
   criterionWeight: number,
   pvf: TPvf,
@@ -46,15 +55,38 @@ export function getImprovedValue(
   }
 }
 
-export function isImprovedValueRealistic(
-  value: number,
+export function getEquivalentValue(
   usePercentage: boolean,
-  pvf: TPvf
-): boolean {
-  const best = getBest(pvf, usePercentage);
+  criterionWeight: number,
+  pvf: TPvf,
+  partOfInterval: number,
+  referenceWeight: number
+) {
+  const interval = pvf.range[1] - pvf.range[0];
+  const change =
+    (referenceWeight / criterionWeight) * partOfInterval * interval;
   if (pvf.direction === 'increasing') {
-    return value <= best;
+    return getPercentifiedValue(change, usePercentage);
   } else {
-    return value >= best;
+    return getPercentifiedValue(-change, usePercentage);
   }
+}
+
+export function increaseSliderRange(
+  currentUpperValue: number,
+  stepSize: number,
+  unit: IUnitOfMeasurement
+): number {
+  const theoreticalUpper = unit.type === 'custom' ? unit.upperBound : 1;
+  const limit = _.isNull(theoreticalUpper) ? Infinity : theoreticalUpper;
+  const newTo = significantDigits(currentUpperValue + stepSize * 10);
+  return Math.min(newTo, limit);
+}
+
+export function isSliderExtenderDisabled(
+  currentUpperValue: number,
+  unit: IUnitOfMeasurement
+): boolean {
+  const theoreticalUpper = unit.type === 'custom' ? unit.upperBound : 1;
+  return currentUpperValue === theoreticalUpper;
 }
