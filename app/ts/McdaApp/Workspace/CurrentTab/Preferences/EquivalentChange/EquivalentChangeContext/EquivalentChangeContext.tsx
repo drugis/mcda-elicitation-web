@@ -2,6 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {hasNoRange} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/SubproblemUtil';
+import {EquivalentChangeType as EquivalentChangeType} from 'app/ts/type/EquivalentChangeType';
 import _ from 'lodash';
 import React, {
   createContext,
@@ -11,17 +12,18 @@ import React, {
   useState
 } from 'react';
 import {
+  getInitialReferenceValueBy,
   getInitialReferenceValueFrom,
   getInitialReferenceValueTo,
   getPartOfInterval
-} from '../tradeOffUtil';
-import ITradeOffContext from './ITradeOffContext';
+} from '../equivalentChangeUtil';
+import IEquivalentChangeContext from './IEquivalentChangeContext';
 
-export const TradeOffContext = createContext<ITradeOffContext>(
-  {} as ITradeOffContext
+export const EquivalentChangeContext = createContext<IEquivalentChangeContext>(
+  {} as IEquivalentChangeContext
 );
 
-export function TradeOffContextProviderComponent({
+export function EquivalentChangeContextProviderComponent({
   children
 }: {
   children: any;
@@ -54,11 +56,35 @@ export function TradeOffContextProviderComponent({
   ]);
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
-  const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
-  const [referenceValueTo, setReferenceValueTo] = useState<number>();
+  const [referenceValueBy, setReferenceValueBy] = useState<number>(
+    getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
+  );
+  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
+    getInitialReferenceValueFrom(
+      configuredLowerBound,
+      configuredUpperBound,
+      pvfs[referenceCriterion.id]
+    )
+  );
+  const [referenceValueTo, setReferenceValueTo] = useState<number>(
+    getInitialReferenceValueTo(
+      configuredLowerBound,
+      configuredUpperBound,
+      pvfs[referenceCriterion.id]
+    )
+  );
   const referenceWeight =
     currentScenario.state.weights.mean[referenceCriterion.id];
-  const [partOfInterval, setPartOfInterval] = useState<number>();
+  const [partOfInterval, setPartOfInterval] = useState<number>(
+    getPartOfInterval(
+      0,
+      referenceValueBy,
+      configuredLowerBound,
+      configuredUpperBound
+    )
+  );
+  const [equivalentChangeType, setEquivalentChangeType] =
+    useState<EquivalentChangeType>('amount');
 
   useEffect(reset, [
     referenceCriterion,
@@ -84,6 +110,17 @@ export function TradeOffContextProviderComponent({
     referenceValueTo
   ]);
 
+  useEffect(() => {
+    setPartOfInterval(
+      getPartOfInterval(
+        0,
+        referenceValueBy,
+        configuredLowerBound,
+        configuredUpperBound
+      )
+    );
+  }, [configuredLowerBound, configuredUpperBound, referenceValueBy]);
+
   function reset(): void {
     if (areAllPvfsSet) {
       const [configuredLowerBound, configuredUpperBound] = getBounds(
@@ -93,6 +130,9 @@ export function TradeOffContextProviderComponent({
       );
       setLowerBound(configuredLowerBound);
       setUpperBound(configuredUpperBound);
+      setReferenceValueBy(
+        getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
+      );
       setReferenceValueFrom(
         getInitialReferenceValueFrom(
           configuredLowerBound,
@@ -116,23 +156,27 @@ export function TradeOffContextProviderComponent({
   }
 
   return (
-    <TradeOffContext.Provider
+    <EquivalentChangeContext.Provider
       value={{
         otherCriteria,
         lowerBound,
         partOfInterval,
         referenceCriterion,
         upperBound,
+        referenceValueBy,
         referenceValueFrom,
         referenceValueTo,
         referenceWeight,
+        equivalentChangeType,
+        setReferenceValueBy,
         setReferenceValueFrom,
         setReferenceValueTo,
+        setEquivalentChangeType,
         updateReferenceCriterion
       }}
     >
       {children}
-    </TradeOffContext.Provider>
+    </EquivalentChangeContext.Provider>
   );
 }
 
