@@ -19,7 +19,7 @@ project. For more information on all components of the drugis project, please re
 
 ## Prerequisites for running mcda-web
 
-- A PostgreSQL instance with an initialised database. You can create one in a docker container by running the `setup-db.sh` script. Make sure to change the passwords from the default.
+- A PostgreSQL instance with an initialised database. See `liquibase/process.md` for information on how to initialize.
 
 If you already have a postgresql database you can use, it can be initialised as follows (change passwords as desired):
 
@@ -76,9 +76,9 @@ Because the default patavi-server image users a certificate signed by our [certi
 
 ## Setting up the database
 
-`sudo -u postgres psql -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"`
-`sudo -u postgres psql -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"`
-`psql -d mcdaweb -U mcdaweb -f database.pg.sql`
+`sudo -u postgres psql -c "CREATE USER mcda WITH PASSWORD 'develop'"`
+`sudo -u postgres psql -c "CREATE DATABASE mcda ENCODING 'utf-8' OWNER mcda"`
+`psql -d mcda -U mcda -f database.pg.sql`
 
 ## Running
 
@@ -88,7 +88,7 @@ Set environment variables:
 export MCDAWEB_DB_USER=mcdaweb
 export MCDAWEB_DB_PASSWORD=develop
 export MCDAWEB_DB_HOST=localhost
-export MCDAWEB_DB_NAME=mcdaweb
+export MCDAWEB_DB_NAME=mcda
 export MCDAWEB_GOOGLE_KEY=<something>
 export MCDAWEB_GOOGLE_SECRET=<something-else>
 export MCDAWEB_COOKIE_SECRET=<some-random-string>
