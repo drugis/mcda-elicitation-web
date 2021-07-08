@@ -50,8 +50,8 @@ export default function NavigationBar(): JSX.Element {
               id="logo"
               variant="h6"
               noWrap
-              component={Link}
-              to="/"
+              component={LinkHref}
+              href="/"
               style={menuItemStyle}
             >
               mcda.drugis.org
