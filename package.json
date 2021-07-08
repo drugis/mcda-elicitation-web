@@ -27,7 +27,6 @@
     "browserslist": "4.16.5",
     "css-what": "5.0.1",
     "dot-prop": "6.0.1",
-    "help-popup": "drugis/help-popup#1.2.0",
     "jquery": "3.5.1",
     "lodash": "4.17.21",
     "minimist": "1.2.5",
