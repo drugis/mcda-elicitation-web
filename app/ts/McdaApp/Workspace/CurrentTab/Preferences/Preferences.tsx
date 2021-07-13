@@ -1,10 +1,12 @@
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPreferences} from '@shared/types/Preferences';
 import {lexicon} from 'app/ts/InlineHelp/lexicon';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import _ from 'lodash';
 import {PreferenceElicitation} from 'preference-elicitation';
 import React, {useContext} from 'react';
 import {CurrentScenarioContext} from '../../CurrentScenarioContext/CurrentScenarioContext';
@@ -34,9 +36,18 @@ export default function Preferences() {
     setActiveView('preferences');
   }
 
-  function saveCallback(preferences: TPreferences): void {
-    updateScenario(buildScenarioWithPreferences(currentScenario, preferences));
-    setActiveView('preferences');
+  function saveCallback(
+    preferences: TPreferences,
+    thresholdValuesByCriterion?: Record<string, number>
+  ): Promise<any> {
+    const scenarioWithPreferences = buildScenarioWithPreferences(
+      currentScenario,
+      preferences,
+      thresholdValuesByCriterion
+    );
+    return updateScenario(scenarioWithPreferences).then(() => {
+      setActiveView('preferences');
+    });
   }
 
   function setDocumentTitle(activeView: TPreferencesView): void {
@@ -56,10 +67,13 @@ export default function Preferences() {
       case 'ranking':
         document.title = 'Ranking';
         break;
+      case 'threshold':
+        document.title = 'Threshold technique elicitation';
+        break;
     }
   }
 
-  function renderView(): JSX.Element {
+  function ElicitationView(): JSX.Element {
     setDocumentTitle(activeView);
 
     if (activeView === 'preferences') {
@@ -92,5 +106,5 @@ export default function Preferences() {
     }
   }
 
-  return renderView();
+  return <ElicitationView />;
 }

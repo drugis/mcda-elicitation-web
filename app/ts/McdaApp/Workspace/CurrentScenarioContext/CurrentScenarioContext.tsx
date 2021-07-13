@@ -23,6 +23,7 @@ import {
   areAllPvfsSet,
   createScenarioWithPvf,
   determineElicitationMethod,
+  hasNonLinearPvf,
   initPvfs
 } from '../ScenariosContext/PreferencesUtil';
 import {ScenariosContext} from '../ScenariosContext/ScenariosContext';
@@ -38,12 +39,11 @@ export function CurrentScenarioContextProviderComponent({
 }: {
   children: any;
 }) {
-  const {workspaceId, subproblemId, scenarioId} =
-    useParams<{
-      workspaceId: string;
-      subproblemId: string;
-      scenarioId: string;
-    }>();
+  const {workspaceId, subproblemId, scenarioId} = useParams<{
+    workspaceId: string;
+    subproblemId: string;
+    scenarioId: string;
+  }>();
 
   const {setError} = useContext(ErrorContext);
   const {
@@ -70,6 +70,8 @@ export function CurrentScenarioContextProviderComponent({
   );
   const [advancedPvfCriterionId, setAdvancedPvfCriterionId] =
     useState<string>();
+  const [isThresholdElicitationDisabled, setIsThresholdElicitationDisabled] =
+    useState(true);
   const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
   const getWeights = useCallback(
@@ -105,6 +107,7 @@ export function CurrentScenarioContextProviderComponent({
         configuredRanges
       );
       setPvfs(newPvfs);
+      setIsThresholdElicitationDisabled(hasNonLinearPvf(newPvfs));
       if (
         areAllPvfsSet(filteredCriteria, newPvfs) &&
         !currentScenario.state.weights
@@ -122,11 +125,12 @@ export function CurrentScenarioContextProviderComponent({
   }
 
   function resetPreferences(scenario: IMcdaScenario) {
-    const newScenario = {
+    const newScenario: IMcdaScenario = {
       ...scenario,
       state: {
         ..._.pick(scenario.state, ['problem', 'legend', 'uncertaintyOptions']),
-        prefs: [] as TPreferences
+        prefs: [] as TPreferences,
+        thresholdValuesByCriterion: {}
       }
     };
     getWeights(newScenario, pvfs);
@@ -183,6 +187,7 @@ export function CurrentScenarioContextProviderComponent({
         areAllPvfsSet: areAllPvfsSet(filteredCriteria, pvfs),
         currentScenario,
         pvfs,
+        isThresholdElicitationDisabled,
         disableWeightsButtons,
         activeView,
         elicitationMethod,

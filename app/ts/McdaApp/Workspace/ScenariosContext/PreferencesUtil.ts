@@ -3,6 +3,7 @@ import {TPvf} from '@shared/interface/Problem/IPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IPieceWiseLinearScenarioPvf from '@shared/interface/Scenario/IPieceWiseLinearScenarioPvf';
+import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
@@ -75,11 +76,19 @@ function getScenarioPvf(
 
 export function buildScenarioWithPreferences(
   scenario: IMcdaScenario,
-  preferences: TPreferences
+  preferences: TPreferences,
+  thresholdValuesByCriterion: Record<string, number>
 ): IMcdaScenario {
-  const newState = {
-    ..._.omit(scenario.state, ['weights', 'prefs']),
-    prefs: preferences
+  const newState: IScenarioState = {
+    ..._.omit(scenario.state, [
+      'weights',
+      'prefs',
+      'thresholdValuesByCriterion'
+    ]),
+    prefs: preferences,
+    thresholdValuesByCriterion: _.isEmpty(thresholdValuesByCriterion)
+      ? {}
+      : thresholdValuesByCriterion
   };
   return {..._.omit(scenario, ['state']), state: newState};
 }
@@ -113,6 +122,8 @@ export function determineElicitationMethod(preferences: TPreferences): string {
         return 'Matching';
       case 'imprecise':
         return 'Imprecise Swing Weighting';
+      case 'threshold':
+        return 'Threshold';
     }
   }
 }
@@ -169,6 +180,14 @@ export function isElicitationView(activeView: TPreferencesView): boolean {
     activeView === 'precise' ||
     activeView === 'imprecise' ||
     activeView === 'matching' ||
-    activeView === 'ranking'
+    activeView === 'ranking' ||
+    activeView === 'threshold'
+  );
+}
+
+export function hasNonLinearPvf(pvfs: Record<string, TPvf>): boolean {
+  return (
+    _.some(pvfs, ['type', 'piecewise-linear']) ||
+    _.some(pvfs, ['type', 'piece-wise-linear']) // FIXME: refactor into single correct type (piecewise-linear)
   );
 }

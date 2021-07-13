@@ -15,6 +15,7 @@ import {
   createScenarioWithPvf,
   determineElicitationMethod,
   filterScenariosWithPvfs,
+  hasNonLinearPvf,
   initPvfs
 } from './PreferencesUtil';
 
@@ -92,6 +93,7 @@ describe('PreferencesUtil', () => {
         title: 'scenario 1',
         state: {
           prefs: [],
+          thresholdValuesByCriterion: {},
           problem: {
             criteria: {
               crit1Id: {
@@ -151,7 +153,8 @@ describe('PreferencesUtil', () => {
             }
           ],
           problem: {criteria: {}},
-          weights: {} as IWeights
+          weights: {} as IWeights,
+          thresholdValuesByCriterion: {}
         }
       };
       const preferences: TPreferences = [
@@ -162,9 +165,11 @@ describe('PreferencesUtil', () => {
           ratio: 1
         }
       ];
+      const thresholdValuesByCriterion = {};
       const result: IMcdaScenario = buildScenarioWithPreferences(
         scenario,
-        preferences
+        preferences,
+        thresholdValuesByCriterion
       );
       const expectedResult: IMcdaScenario = {
         id: '1',
@@ -173,7 +178,8 @@ describe('PreferencesUtil', () => {
         workspaceId: '100',
         state: {
           prefs: preferences,
-          problem: {criteria: {}}
+          problem: {criteria: {}},
+          thresholdValuesByCriterion: thresholdValuesByCriterion
         }
       };
       expect(result).toEqual(expectedResult);
@@ -323,7 +329,8 @@ describe('PreferencesUtil', () => {
             }
           }
         },
-        prefs: []
+        prefs: [],
+        thresholdValuesByCriterion: {}
       }
     };
 
@@ -354,7 +361,8 @@ describe('PreferencesUtil', () => {
               }
             }
           },
-          prefs: []
+          prefs: [],
+          thresholdValuesByCriterion: {}
         }
       };
       expect(result).toEqual(expectedResult);
@@ -391,7 +399,8 @@ describe('PreferencesUtil', () => {
               }
             }
           },
-          prefs: []
+          prefs: [],
+          thresholdValuesByCriterion: {}
         }
       };
       expect(result).toEqual(expectedResult);
@@ -441,6 +450,20 @@ describe('PreferencesUtil', () => {
       };
       const result = areAllPvfsSet(criteria, pvfs);
       expect(result).toBeFalsy();
+    });
+
+    describe('hasNonLinearPvf', () => {
+      it('should return true if there is a nonlinear pvf', () => {
+        const pvfs = {
+          crit1Id: {
+            type: 'linear'
+          } as TPvf,
+          crit2Id: {
+            type: 'piecewise-linear'
+          } as TPvf
+        };
+        expect(hasNonLinearPvf(pvfs)).toBe(true);
+      });
     });
   });
 });

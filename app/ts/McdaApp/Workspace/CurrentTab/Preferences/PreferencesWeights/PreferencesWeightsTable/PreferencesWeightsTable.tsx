@@ -67,6 +67,7 @@ export default function PreferencesWeightsTable() {
             filteredCriteria,
             (criterion: ICriterion): JSX.Element => (
               <PreferencesWeightsTableRow
+                key={criterion.id}
                 criterion={criterion}
                 importance={importances[criterion.id]}
               />
