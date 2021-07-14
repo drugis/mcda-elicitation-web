@@ -65,11 +65,7 @@ export function getEquivalentValue(
   const interval = pvf.range[1] - pvf.range[0];
   const change =
     (referenceWeight / criterionWeight) * partOfInterval * interval;
-  if (pvf.direction === 'increasing') {
-    return getPercentifiedValue(change, usePercentage);
-  } else {
-    return getPercentifiedValue(-change, usePercentage);
-  }
+  return Math.abs(getPercentifiedValue(change, usePercentage));
 }
 
 export function increaseSliderRange(
