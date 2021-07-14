@@ -73,7 +73,7 @@ export default function Preferences() {
     }
   }
 
-  function ElicitationView(): JSX.Element {
+  function PreferencesTabView(): JSX.Element {
     setDocumentTitle(activeView);
 
     if (activeView === 'preferences') {
@@ -81,9 +81,7 @@ export default function Preferences() {
     } else if (activeView === 'advancedPvf') {
       return (
         <AdvancedPartialValueFunctionContextProviderComponent>
-          <Grid container justify="center" component={Box} mt={2}>
-            <AdvancedPartialValueFunction />
-          </Grid>
+          <AdvancedPartialValueFunction />
         </AdvancedPartialValueFunctionContextProviderComponent>
       );
     } else if (isElicitationView(activeView)) {
@@ -106,5 +104,5 @@ export default function Preferences() {
     }
   }
 
-  return <ElicitationView />;
+  return <PreferencesTabView />;
 }
