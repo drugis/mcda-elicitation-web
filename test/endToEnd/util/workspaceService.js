@@ -1,16 +1,13 @@
 'use strict';
 
 const errorService = require('./errorService.js');
-const util = require('./util.js');
 
 function goHomeAfterLoading(browser, title) {
   errorService
     .isErrorBarNotPresent(browser)
     .expect.element('#workspace-title')
     .text.to.equal(title);
-  return util
-    .delayedClick(browser, '#logo', '#workspaces-header')
-    .waitForElementVisible('#workspaces-header');
+  return browser.click('#logo').waitForElementVisible('#workspaces-header');
 }
 
 function addExample(browser, title) {

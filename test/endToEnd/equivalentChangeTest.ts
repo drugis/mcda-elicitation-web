@@ -1,6 +1,5 @@
 import {NightwatchBrowser} from 'nightwatch';
 import loginService from './util/loginService';
-import util from './util/util';
 import workspaceService from './util/workspaceService';
 
 export = {
@@ -28,12 +27,12 @@ function beforeEach(browser: NightwatchBrowser) {
 }
 
 function afterEach(browser) {
-  util.delayedClick(browser, '#logo', '#workspaces-header');
+  browser.click('#logo').waitForElementVisible('#workspaces-header');
   workspaceService.deleteFromList(browser, 0).end();
 }
 
 function equivalentValueChangeTest(browser: NightwatchBrowser) {
-  checkEqualValueValues(browser, -50);
+  checkEqualValueValues(browser, 50);
 
   browser
     .click('#reference-slider-by')
@@ -42,7 +41,7 @@ function equivalentValueChangeTest(browser: NightwatchBrowser) {
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementNotPresent('.MuiPopover-root');
-  checkEqualValueValues(browser, -10);
+  checkEqualValueValues(browser, 10);
 
   browser
     .click('#reference-slider-by')
@@ -51,7 +50,7 @@ function equivalentValueChangeTest(browser: NightwatchBrowser) {
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .useCss()
     .waitForElementNotPresent('.MuiPopover-root');
-  checkEqualValueValues(browser, -80);
+  checkEqualValueValues(browser, 80);
 }
 
 function equivalentRangeChangeTest(browser: NightwatchBrowser) {
