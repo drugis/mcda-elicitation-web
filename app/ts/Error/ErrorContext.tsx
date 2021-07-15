@@ -17,7 +17,7 @@ export function ErrorContextProviderComponent(props: {children: any}) {
   return (
     <ErrorContext.Provider
       value={{
-        error: error,
+        error,
         setError: setErrorWrapper,
         setErrorMessage: setError
       }}

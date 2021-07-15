@@ -95,6 +95,11 @@ jobs:
       - name: Sleep for 30 seconds
         run: sleep 30
 
+      - name: check container logs for issues
+        run: >
+          ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org \
+          docker logs mcda
+
       - name: prune docker on the server
         run: ssh -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
 

@@ -62,18 +62,16 @@ export default function PreferencesWeightsTable() {
         </TableRow>
       </TableHead>
       <TableBody>
-        <ShowIf condition={!_.isEmpty(pvfs)}>
-          {_.map(
-            filteredCriteria,
-            (criterion: ICriterion): JSX.Element => (
-              <PreferencesWeightsTableRow
-                key={criterion.id}
-                criterion={criterion}
-                importance={importances[criterion.id]}
-              />
-            )
-          )}
-        </ShowIf>
+        {_.map(
+          filteredCriteria,
+          (criterion: ICriterion): JSX.Element => (
+            <PreferencesWeightsTableRow
+              key={criterion.id}
+              criterion={criterion}
+              importance={importances[criterion.id]}
+            />
+          )
+        )}
       </TableBody>
     </Table>
   );

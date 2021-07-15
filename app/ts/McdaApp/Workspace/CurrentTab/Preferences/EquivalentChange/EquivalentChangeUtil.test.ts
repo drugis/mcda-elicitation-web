@@ -124,7 +124,7 @@ describe('equivalentChangeUtil', () => {
         partOfInterval, // 0.5
         referenceWeight // 0.4
       );
-      expect(result).toEqual(-2);
+      expect(result).toEqual(2);
     });
   });
 });
