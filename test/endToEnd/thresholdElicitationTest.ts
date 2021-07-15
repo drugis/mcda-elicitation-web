@@ -77,11 +77,14 @@ function changeSettings(browser: NightwatchBrowser) {
     .click('#settings-button')
     .click('#show-decimals-radio')
     .click('#save-settings-button');
+  checkStep1Values(browser);
   goToStep2(browser);
   checkStep2DecimalValues(browser)
     .click('#settings-button')
     .click('#show-percentages-radio')
     .click('#save-settings-button');
+  checkStep1Values(browser);
+  goToStep2(browser);
   checkStep2PercentageValues(browser)
     .click('#save-button')
     .waitForElementVisible('#partial-value-functions-block');
