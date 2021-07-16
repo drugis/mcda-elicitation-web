@@ -232,21 +232,15 @@ function cancelEditingGraphLabels(browser) {
   var paths = {
     valueToClear: '#label-input-0',
     tab: '#deterministic-results-tab',
-    actionButton: '//*[@id="value-profile-plot-base-legend"]',
+    actionButton: '#value-profile-plot-base-legend',
     cancelButton: closeModalButtonPath,
     content:
       '#value-profile-plot-base > svg > g:nth-child(2) > g.c3-axis.c3-axis-x > g:nth-child(2) > text > tspan'
   };
-  util
-    .delayedClick(
-      browser,
-      paths.tab,
-      paths.actionButton,
-      util.xpathSelectorType
-    )
-    .useXpath()
+  browser
+    .click(paths.tab)
+    .waitForElementVisible(paths.actionButton)
     .click(paths.actionButton)
-    .useCss()
     .clearValue(paths.valueToClear)
     .click(paths.cancelButton)
     .assert.containsText(paths.content, 'Placebo');
