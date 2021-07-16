@@ -7400,7 +7400,7 @@ path-to-regexp@^1.7.0:
 
 path-to-regexp@^3.0.0:
   version "3.2.0"
-  resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-3.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-3.2.0.tgz#fa7877ecbc495c601907562222453c43cc204a5f"
   integrity sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==
 
 path-type@^4.0.0:
@@ -7857,9 +7857,9 @@ postgres-interval@^1.1.0:
   dependencies:
     xtend "^4.0.0"
 
-preference-elicitation@drugis/preference-elicitation#testing:
-  version "1.0.8"
-  resolved "https://codeload.github.com/drugis/preference-elicitation/tar.gz/02ffd8c6f7d156861cb860acf857f42af3e7c037"
+preference-elicitation@drugis/preference-elicitation#1.0.9:
+  version "1.0.9"
+  resolved "https://codeload.github.com/drugis/preference-elicitation/tar.gz/e0d591321d17e3a732e0903e0cc2af866ba1c5d6"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
