@@ -7398,10 +7398,10 @@ path-to-regexp@^1.7.0:
   dependencies:
     isarray "0.0.1"
 
-path-to-regexp@^3.0.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-3.2.0.tgz#fa7877ecbc495c601907562222453c43cc204a5f"
-  integrity sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==
+path-to-regexp@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-6.2.0.tgz#f7b3803336104c346889adece614669230645f38"
+  integrity sha512-f66KywYG6+43afgE/8j/GoiNyygk/bnoCbps++3ErRKsIYkGGupyv07R2Ok5m9i67Iqc+T2g1eAUGUPzWhYTyg==
 
 path-type@^4.0.0:
   version "4.0.0"
@@ -8375,12 +8375,12 @@ rgba-regex@^1.0.0:
   resolved "https://registry.npmjs.org/rgba-regex/-/rgba-regex-1.0.0.tgz"
   integrity sha1-QzdOLiyglosO8VI0YLfXMP8i7rM=
 
-rights-management@drugis/rights-management#1.0.4:
-  version "1.0.4"
-  resolved "https://codeload.github.com/drugis/rights-management/tar.gz/0de43fd4db61abfc10d27c25d294d3c111402cca"
+rights-management@drugis/rights-management#1.0.8:
+  version "1.0.8"
+  resolved "https://codeload.github.com/drugis/rights-management/tar.gz/4bcb327edb4577321f0e737c41172bcebde5cc37"
   dependencies:
-    lodash "^4.17.14"
-    path-to-regexp "^3.0.0"
+    lodash "^4.17.21"
+    path-to-regexp "^6.2.0"
 
 rimraf@^2.6.3:
   version "2.7.1"

@@ -54,8 +54,8 @@ function threshold(browser: NightwatchBrowser) {
     .element('#elicitation-method')
     .text.to.equal('Elicitation method: Threshold');
   browser.expect.element('#equivalent-change-OS').text.to.equal('10');
-  browser.expect.element('#equivalent-change-severe').text.to.equal('-40');
-  browser.expect.element('#equivalent-change-moderate').text.to.equal('-20');
+  browser.expect.element('#equivalent-change-severe').text.to.equal('40');
+  browser.expect.element('#equivalent-change-moderate').text.to.equal('20');
 }
 
 function goBack(browser: NightwatchBrowser) {
