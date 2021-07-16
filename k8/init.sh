@@ -1,11 +1,9 @@
-rancher kubectl create -f k8s/namespace.yaml #namespace creation works only thourgh GUI for now
+rancher kubectl create -f k8s/namespace.yaml #namespace creation works only through GUI for now
 
 rancher kubectl create secret generic mcda-secrets \
   -n mcda \
-  --from-literal=MCDAWEB_COOKIE_SECRET=GDFBDF#$%*asdfg098 \
-  --from-literal=MCDAWEB_GOOGLE_SECRET=Ju9grxy6LU72NlyHUUZ1xjDd \
-  --from-literal=MCDAWEB_GOOGLE_KEY=221368301791-7ark4468l8p2tt9sc5dvr9bb36si181h.apps.googleusercontent.com
-
+  --from-literal=MCDAWEB_COOKIE_SECRET=GDFBDF#$%*asdfg098 
+  
 rancher kubectl create configmap certificates \
   -n mcda \
   --from-file=secrets/ssl/client-crt.pem \

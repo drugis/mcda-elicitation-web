@@ -4,7 +4,7 @@ metadata:
   name: patavi-server-composed
   namespace: mcda
 spec:
-  type: LoadBalancer
+  type: Service
   ports:
     - port: 3000
   selector:

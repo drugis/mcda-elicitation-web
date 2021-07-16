@@ -4,7 +4,7 @@ metadata:
   name: mcda
   namespace: mcda
 spec:
-  type: LoadBalancer
+  type: Service
   ports:
     - port: 3002
   selector:
@@ -31,7 +31,7 @@ spec:
             name: certificates
       containers:
         - name: mcda
-          image: addis/mcda:live
+          image: addis/mcda:composed
           volumeMounts:
             - name: certificates
               mountPath: /var/lib/mcda/ssl
