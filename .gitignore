@@ -45,6 +45,7 @@ Chromium_*
 R/.Rhistory
 R/*.json
 .vscode
+
 # TSC artifacts
 app/js/interface/*.js
 app/js/type/*.js
@@ -61,6 +62,7 @@ test/endToEnd/stepSizeTest.js
 test/endToEnd/uploadTest.js
 test/endToEnd/equivalentChangeTest.js
 test/endToEnd/workspaceFilteringTest.js
+test/endToEnd/thresholdElicitationTest.js
 
 #latex nonsense
 *.fls

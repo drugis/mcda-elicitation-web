@@ -8,4 +8,5 @@ export default interface IScenarioState {
   legend?: Record<string, {baseTitle: string; newTitle: string}>;
   uncertaintyOptions?: Record<string, boolean>;
   weights?: IWeights;
+  thresholdValuesByCriterion: Record<string, number>;
 }

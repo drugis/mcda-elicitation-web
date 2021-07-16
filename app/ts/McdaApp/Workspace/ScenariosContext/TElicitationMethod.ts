@@ -3,4 +3,5 @@ export type TElicitationMethod =
   | 'precise'
   | 'matching'
   | 'imprecise'
+  | 'threshold'
   | 'none';

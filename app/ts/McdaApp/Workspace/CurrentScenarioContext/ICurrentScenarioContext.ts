@@ -12,6 +12,7 @@ export default interface ICurrentScenarioContext {
   activeView: TPreferencesView;
   elicitationMethod: string;
   isScenarioUpdating: boolean;
+  isThresholdElicitationDisabled: boolean;
   setCurrentScenario: (currentScenario: IMcdaScenario) => void;
   updateScenario: (newScenario: IMcdaScenario) => Promise<void>;
   getPvf: (criterionId: string) => TPvf;

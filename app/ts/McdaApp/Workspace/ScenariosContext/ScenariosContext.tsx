@@ -76,7 +76,11 @@ export function ScenariosContextProviderComponent({children}: {children: any}) {
   function addScenario(newTitle: string): void {
     const scenarioCommand: IScenarioCommand = {
       title: newTitle,
-      state: {prefs: [], problem: {criteria: {}}},
+      state: {
+        prefs: [],
+        problem: {criteria: {}},
+        thresholdValuesByCriterion: {}
+      },
       subproblemId: subproblemId,
       workspaceId: workspaceId
     };

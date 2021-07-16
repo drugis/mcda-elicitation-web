@@ -5,9 +5,12 @@ import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioCo
 import React, {useContext} from 'react';
 
 export default function PreferencesWeightsButtons() {
-  const {resetPreferences, currentScenario, setActiveView} = useContext(
-    CurrentScenarioContext
-  );
+  const {
+    resetPreferences,
+    currentScenario,
+    setActiveView,
+    isThresholdElicitationDisabled
+  } = useContext(CurrentScenarioContext);
 
   function handleResetClick() {
     resetPreferences(currentScenario);
@@ -27,6 +30,10 @@ export default function PreferencesWeightsButtons() {
 
   function handleImpreciseClick() {
     setActiveView('imprecise');
+  }
+
+  function handleThresholdClick() {
+    setActiveView('threshold');
   }
 
   return (
@@ -79,6 +86,17 @@ export default function PreferencesWeightsButtons() {
           variant="contained"
         >
           Imprecise Swing Weighting
+        </Button>
+      </Tooltip>
+      <Tooltip title="Saving this preference will reset all criteria trade-off preferences">
+        <Button
+          id="threshold-button"
+          onClick={handleThresholdClick}
+          color="primary"
+          variant="contained"
+          disabled={isThresholdElicitationDisabled}
+        >
+          Threshold
         </Button>
       </Tooltip>
     </ButtonGroup>
