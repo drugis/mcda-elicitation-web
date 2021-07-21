@@ -11,12 +11,13 @@ import {IPreferencesSensitivityResults} from '@shared/interface/Patavi/IPreferen
 import {IRecalculatedCell} from '@shared/interface/Patavi/IRecalculatedCell';
 import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import IWeights from '@shared/interface/Scenario/IWeights';
+import {TValueProfile} from '@shared/types/TValueProfile';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import ISensitivityValue from 'app/ts/interface/ISensitivityValue';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import React, {
@@ -29,9 +30,10 @@ import React, {
 import {getInitialSensitivityValues} from '../DeterministicResultsUtil';
 import IDeterministicResultsContext from './IDeterministicResultsContext';
 
-export const DeterministicResultsContext = createContext<IDeterministicResultsContext>(
-  {} as IDeterministicResultsContext
-);
+export const DeterministicResultsContext =
+  createContext<IDeterministicResultsContext>(
+    {} as IDeterministicResultsContext
+  );
 
 export function DeterministicResultsContextProviderComponent({
   children
@@ -62,44 +64,32 @@ export function DeterministicResultsContextProviderComponent({
     IRecalculatedCell[]
   >([]);
   const [weights, setWeights] = useState<IWeights>();
-  const [baseTotalValues, setBaseTotalValues] = useState<
-    Record<string, number>
-  >();
-  const [baseValueProfiles, setBaseValueProfiles] = useState<
-    Record<string, Record<string, number>>
-  >();
-  const [recalculatedTotalValues, setRecalculatedTotalValues] = useState<
-    Record<string, number>
-  >();
-  const [recalculatedValueProfiles, setRecalculatedValueProfiles] = useState<
-    Record<string, Record<string, number>>
-  >();
+  const [baseTotalValues, setBaseTotalValues] =
+    useState<Record<string, number>>();
+  const [baseValueProfiles, setBaseValueProfiles] =
+    useState<Record<string, Record<string, number>>>();
+  const [recalculatedTotalValues, setRecalculatedTotalValues] =
+    useState<Record<string, number>>();
+  const [recalculatedValueProfiles, setRecalculatedValueProfiles] =
+    useState<Record<string, Record<string, number>>>();
+  const [valueProfileType, setValueProfileType] =
+    useState<TValueProfile>('absolute');
 
-  const [
-    measurementSensitivityCriterion,
-    setMeasurementSensitivityCriterion
-  ] = useState<ICriterion>(filteredCriteria[0]);
+  const [measurementSensitivityCriterion, setMeasurementSensitivityCriterion] =
+    useState<ICriterion>(filteredCriteria[0]);
   const [
     measurementSensitivityAlternative,
     setMeasurementSensitivityAlternative
   ] = useState<IAlternative>(filteredAlternatives[0]);
-  const [
-    measurementsSensitivityResults,
-    setMeasurementsSensitivityResults
-  ] = useState<Record<string, Record<number, number>>>();
+  const [measurementsSensitivityResults, setMeasurementsSensitivityResults] =
+    useState<Record<string, Record<number, number>>>();
 
-  const [
-    preferencesSensitivityCriterion,
-    setPreferencesSensitivityCriterion
-  ] = useState<ICriterion>(filteredCriteria[0]);
-  const [
-    preferencesSensitivityResults,
-    setPreferencesSensitivityResults
-  ] = useState<Record<string, Record<number, number>>>();
-  const [
-    areRecalculatedPlotsLoading,
-    setAreRecalculatedPlotsLoading
-  ] = useState<boolean>(false);
+  const [preferencesSensitivityCriterion, setPreferencesSensitivityCriterion] =
+    useState<ICriterion>(filteredCriteria[0]);
+  const [preferencesSensitivityResults, setPreferencesSensitivityResults] =
+    useState<Record<string, Record<number, number>>>();
+  const [areRecalculatedPlotsLoading, setAreRecalculatedPlotsLoading] =
+    useState<boolean>(false);
 
   const getDeterministicResults = useCallback(
     (pataviProblem: IPataviProblem): void => {
@@ -311,13 +301,15 @@ export function DeterministicResultsContextProviderComponent({
         recalculatedTotalValues,
         recalculatedValueProfiles,
         sensitivityTableValues,
+        valueProfileType,
         weights,
         recalculateValuePlots,
         resetSensitivityTable,
         setCurrentValue,
         setMeasurementSensitivityAlternative,
         setMeasurementSensitivityCriterion,
-        setPreferencesSensitivityCriterion
+        setPreferencesSensitivityCriterion,
+        setValueProfileType
       }}
     >
       {children}

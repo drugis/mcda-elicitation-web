@@ -16,9 +16,8 @@ import DataSourceRow from './CriterionRow/DataSourceRow/DataSourceRow';
 import {DataSourceRowContextProviderComponent} from './CriterionRow/DataSourceRowContext/DataSourceRowContext';
 
 export default function CriteriaRows() {
-  const {useFavourability, alternatives, criteria} = useContext(
-    ManualInputContext
-  );
+  const {useFavourability, alternatives, criteria} =
+    useContext(ManualInputContext);
 
   const favourableCriteria = _.filter(criteria, ['isFavourable', true]);
   const unfavourableCriteria = _.filter(criteria, ['isFavourable', false]);
@@ -86,7 +85,13 @@ export default function CriteriaRows() {
             colSpan={10 + alternatives.length}
             align="center"
           >
-            <Grid container item alignItems="center" xs={12} justify="center">
+            <Grid
+              container
+              item
+              alignItems="center"
+              xs={12}
+              justifyContent="center"
+            >
               <AddCriterionButton isFavourable={true} />
               <InlineQuestionMark helpId="criterion" />
             </Grid>
@@ -108,7 +113,13 @@ export default function CriteriaRows() {
             colSpan={10 + alternatives.length}
             align="center"
           >
-            <Grid container item alignItems="center" xs={12} justify="center">
+            <Grid
+              container
+              item
+              alignItems="center"
+              xs={12}
+              justifyContent="center"
+            >
               <AddCriterionButton isFavourable={false} />
               <InlineQuestionMark helpId="criterion" />
             </Grid>
@@ -126,7 +137,13 @@ export default function CriteriaRows() {
             colSpan={10 + alternatives.length}
             align="center"
           >
-            <Grid container item alignItems="center" xs={12} justify="center">
+            <Grid
+              container
+              item
+              alignItems="center"
+              xs={12}
+              justifyContent="center"
+            >
               <AddCriterionButton isFavourable={false} />
               <InlineQuestionMark helpId="criterion" />
             </Grid>

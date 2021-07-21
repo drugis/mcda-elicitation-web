@@ -31,7 +31,7 @@ export default function Error() {
       <Grid item xs={11}>
         <Typography variant="h6">Error</Typography>
       </Grid>
-      <Grid container item xs={1} justify="flex-end">
+      <Grid container item xs={1} justifyContent="flex-end">
         <IconButton
           id="close-modal-button"
           aria-label="close"

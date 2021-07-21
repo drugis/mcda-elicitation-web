@@ -1,9 +1,9 @@
 import {Box, Paper} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import MoveUpDownButtons from 'app/ts/McdaApp/MoveUpDownButtons/MoveUpDownButtons';
 import {OverviewCriterionContext} from 'app/ts/McdaApp/Workspace/CurrentTab/Overview/OverviewCriteria/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
-import MoveUpDownButtons from 'app/ts/McdaApp/MoveUpDownButtons/MoveUpDownButtons';
 import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import EditOverviewCriterionButton from './EditOverviewCriterionButton/EditOverviewCriterionButton';
@@ -23,7 +23,7 @@ export default function OverviewCriterion() {
             {criterion.title}
           </Typography>
         </Grid>
-        <Grid container item xs={1} justify="flex-end">
+        <Grid container item xs={1} justifyContent="flex-end">
           <EditOverviewCriterionButton />
           <MoveUpDownButtons
             id={criterion.id}

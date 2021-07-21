@@ -29,7 +29,7 @@ export default function RankAcceptabilities({
             </PlotButtons>
           </Grid>
           <Grid container item xs={12} md={6}>
-            <Grid container item xs={12} justify="flex-end">
+            <Grid container item xs={12} justifyContent="flex-end">
               <ClipboardButton targetId="#rank-acceptabilities-table" />
             </Grid>
             <Grid item xs={12}>

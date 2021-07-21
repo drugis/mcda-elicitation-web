@@ -1,4 +1,4 @@
-import {createMuiTheme} from '@material-ui/core';
+import {createTheme} from '@material-ui/core';
 import {CSSProperties} from 'react';
 
 export const alertStyle: CSSProperties = {color: 'red'};
@@ -17,7 +17,7 @@ export const uncertainStyle: CSSProperties = {
 
 export const textCenterStyle: CSSProperties = {textAlign: 'center'};
 
-export const mcdaTheme = createMuiTheme({
+export const mcdaTheme = createTheme({
   overrides: {
     MuiTableCell: {
       root: {
