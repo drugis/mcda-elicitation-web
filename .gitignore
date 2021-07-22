@@ -64,6 +64,9 @@ test/endToEnd/equivalentChangeTest.js
 test/endToEnd/workspaceFilteringTest.js
 test/endToEnd/thresholdElicitationTest.js
 test/endToEnd/deterministicResultsTest.js
+test/endToEnd/deterministicResultsTest.js
+test/endToEnd/closeModalTest.js
+test/endToEnd/util/util.js
 
 #latex nonsense
 *.fls

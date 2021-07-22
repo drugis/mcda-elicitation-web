@@ -1,6 +1,9 @@
-'use strict';
+import {NightwatchBrowser} from 'nightwatch';
+import loginService from './util/loginService';
+import {delayedClick, xpathSelectorType} from './util/util';
+import workspaceService from './util/workspaceService';
 
-module.exports = {
+export = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Cancel editing workspace title': cancelEditingWorkspaceTitle,
@@ -22,19 +25,26 @@ module.exports = {
   'Cancel editing graph labels': cancelEditingGraphLabels
 };
 
-const loginService = require('./util/loginService');
-const workspaceService = require('./util/workspaceService');
-const util = require('./util/util');
-
 const title =
   'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const preferenceTabPath = '#preferences-tab';
 const importanceCellPath = '#importance-criterion-treatmentRespondersId';
 const closeModalButtonPath = '#close-modal-button';
 
-function cancelAction(browser, paths, expectedValue) {
-  util
-    .delayedClick(browser, paths.tab, paths.actionButton)
+type Paths = {
+  tab?: string;
+  actionButton: string;
+  cancelButton: string;
+  content: string;
+  valueToClear?: string;
+};
+
+function cancelAction(
+  browser: NightwatchBrowser,
+  paths: Paths,
+  expectedValue: string
+) {
+  delayedClick(browser, paths.tab, paths.actionButton)
     .click(paths.actionButton)
     .click(paths.cancelButton)
     .assert.containsText(paths.content, expectedValue);
@@ -48,7 +58,7 @@ function clearValueCancelAction(browser, paths, expectedValue) {
     .assert.containsText(paths.content, expectedValue);
 }
 
-function beforeEach(browser) {
+function beforeEach(browser: NightwatchBrowser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
   workspaceService.cleanList(browser);
@@ -58,12 +68,12 @@ function beforeEach(browser) {
     .waitForElementVisible('#workspace-title');
 }
 
-function afterEach(browser) {
-  util.delayedClick(browser, '#logo', '#workspaces-header');
+function afterEach(browser: NightwatchBrowser) {
+  delayedClick(browser, '#logo', '#workspaces-header');
   workspaceService.deleteFromList(browser, 0).end();
 }
 
-function cancelEditingWorkspaceTitle(browser) {
+function cancelEditingWorkspaceTitle(browser: NightwatchBrowser) {
   browser
     .click('#edit-workspace-title-button')
     .click('#close-modal-button')
@@ -71,8 +81,8 @@ function cancelEditingWorkspaceTitle(browser) {
     .text.to.equal(title);
 }
 
-function cancelEditingTherapeuticContext(browser) {
-  var paths = {
+function cancelEditingTherapeuticContext(browser: NightwatchBrowser) {
+  var paths: Paths = {
     valueToClear: '#therapeutic-context-input',
     actionButton: '#edit-therapeutic-context-button',
     cancelButton: closeModalButtonPath,
@@ -81,7 +91,7 @@ function cancelEditingTherapeuticContext(browser) {
   clearValueCancelAction(browser, paths, 'SMAA');
 }
 
-function cancelEditingCriterion(browser) {
+function cancelEditingCriterion(browser: NightwatchBrowser) {
   var paths = {
     valueToClear: '#criterion-title-input',
     actionButton: '#edit-criterion-button-treatmentRespondersId',
@@ -91,7 +101,7 @@ function cancelEditingCriterion(browser) {
   clearValueCancelAction(browser, paths, 'Treatment responders');
 }
 
-function cancelEditingDataSource(browser) {
+function cancelEditingDataSource(browser: NightwatchBrowser) {
   var paths = {
     valueToClear: '#reference-input',
     actionButton:
@@ -102,7 +112,7 @@ function cancelEditingDataSource(browser) {
   clearValueCancelAction(browser, paths, 'Nemeroff and Thase (2007)');
 }
 
-function cancelEditingAlternative(browser) {
+function cancelEditingAlternative(browser: NightwatchBrowser) {
   var paths = {
     valueToClear: '#alternative-title-input',
     actionButton: '#edit-alternative-button-placeboId',
@@ -112,7 +122,7 @@ function cancelEditingAlternative(browser) {
   clearValueCancelAction(browser, paths, 'Placebo');
 }
 
-function cancelSettings(browser) {
+function cancelSettings(browser: NightwatchBrowser) {
   var actionButtonPath = '#settings-button';
   var contentPath =
     '#value-cell-029909c4-cb8c-43cb-9816-e8550ef561be-placeboId';
@@ -125,18 +135,17 @@ function cancelSettings(browser) {
     .assert.containsText(contentPath, '36.6');
 }
 
-function cancelEditingSubroblemTitle(browser) {
+function cancelEditingSubroblemTitle(browser: NightwatchBrowser) {
   var actionButtonPath = '#edit-subproblem-button';
   var contentPath = '#subproblem-selector';
-  util
-    .delayedClick(browser, '#problem-definition-tab', actionButtonPath)
+  delayedClick(browser, '#problem-definition-tab', actionButtonPath)
     .click(actionButtonPath)
     .clearValue('#subproblem-title-input')
     .click(closeModalButtonPath)
     .assert.containsText(contentPath, 'Default');
 }
 
-function cancelCreatingSubproblem(browser) {
+function cancelCreatingSubproblem(browser: NightwatchBrowser) {
   var paths = {
     tab: '#problem-definition-tab',
     actionButton: '#add-subproblem-button',
@@ -146,7 +155,7 @@ function cancelCreatingSubproblem(browser) {
   cancelAction(browser, paths, 'Default');
 }
 
-function cancelSettingPartialValueFunction(browser) {
+function cancelSettingPartialValueFunction(browser: NightwatchBrowser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: `#advanced-pvf-button-treatmentRespondersId`,
@@ -156,7 +165,7 @@ function cancelSettingPartialValueFunction(browser) {
   cancelAction(browser, paths, 'Partial Value Functions');
 }
 
-function cancelSettingRankingWeights(browser) {
+function cancelSettingRankingWeights(browser: NightwatchBrowser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#ranking-button',
@@ -166,7 +175,7 @@ function cancelSettingRankingWeights(browser) {
   cancelAction(browser, paths, '?');
 }
 
-function cancelSettingMatchingWeights(browser) {
+function cancelSettingMatchingWeights(browser: NightwatchBrowser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#matching-button',
@@ -176,7 +185,7 @@ function cancelSettingMatchingWeights(browser) {
   cancelAction(browser, paths, '?');
 }
 
-function cancelSettingPreciseSwingWeights(browser) {
+function cancelSettingPreciseSwingWeights(browser: NightwatchBrowser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#precise-swing-button',
@@ -186,7 +195,7 @@ function cancelSettingPreciseSwingWeights(browser) {
   cancelAction(browser, paths, '?');
 }
 
-function cancelSettingImpreciseSwingWeights(browser) {
+function cancelSettingImpreciseSwingWeights(browser: NightwatchBrowser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#imprecise-swing-button',
@@ -196,19 +205,18 @@ function cancelSettingImpreciseSwingWeights(browser) {
   cancelAction(browser, paths, '?');
 }
 
-function cancelEditingScenario(browser) {
+function cancelEditingScenario(browser: NightwatchBrowser) {
   var actionButtonPath = '#edit-scenario-button';
   var cancelButtonPath = closeModalButtonPath;
   var contentPath = '#scenario-selector';
-  util
-    .delayedClick(browser, '#preferences-tab', actionButtonPath)
+  delayedClick(browser, '#preferences-tab', actionButtonPath)
     .click(actionButtonPath)
     .clearValue('#new-scenario-title')
     .click(cancelButtonPath)
     .assert.containsText(contentPath, 'Default');
 }
 
-function cancelCreatingScenario(browser) {
+function cancelCreatingScenario(browser: NightwatchBrowser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#add-scenario-button',
@@ -218,7 +226,7 @@ function cancelCreatingScenario(browser) {
   cancelAction(browser, paths, 'Default');
 }
 
-function cancelCopyingScenario(browser) {
+function cancelCopyingScenario(browser: NightwatchBrowser) {
   var paths = {
     tab: preferenceTabPath,
     actionButton: '#copy-scenario-button',
@@ -228,7 +236,7 @@ function cancelCopyingScenario(browser) {
   cancelAction(browser, paths, 'Default');
 }
 
-function cancelEditingGraphLabels(browser) {
+function cancelEditingGraphLabels(browser: NightwatchBrowser) {
   var paths = {
     valueToClear: '#label-input-0',
     tab: '#deterministic-results-tab',
@@ -237,13 +245,7 @@ function cancelEditingGraphLabels(browser) {
     content:
       '#value-profile-plot-base > svg > g:nth-child(2) > g.c3-axis.c3-axis-x > g:nth-child(2) > text > tspan'
   };
-  util
-    .delayedClick(
-      browser,
-      paths.tab,
-      paths.actionButton,
-      util.xpathSelectorType
-    )
+  delayedClick(browser, paths.tab, paths.actionButton, xpathSelectorType)
     .useXpath()
     .click(paths.actionButton)
     .useCss()

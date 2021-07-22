@@ -24,7 +24,7 @@ import {
 import ITestCriterionRow from './util/ITestCriterionRow';
 import ITestCriterionRowWithUncertainty from './util/ITestCriterionRowWithUncertainty';
 import loginService from './util/loginService';
-import util from './util/util';
+import {delayedClick} from './util/util';
 import workspaceService from './util/workspaceService';
 
 export = {
@@ -49,11 +49,7 @@ function checkDisplayedValues(browser: NightwatchBrowser) {
 }
 
 function runAssertions(browser: NightwatchBrowser) {
-  util.delayedClick(
-    browser,
-    '#problem-definition-tab',
-    '#effects-table-header'
-  );
+  delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
   assertCriterionRow(
     browser,
     percentageCriterionWithEffectsPercentifiedEntered

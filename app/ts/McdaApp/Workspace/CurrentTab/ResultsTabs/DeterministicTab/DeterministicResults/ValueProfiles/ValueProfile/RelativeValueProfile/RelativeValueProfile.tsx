@@ -54,16 +54,16 @@ export default function ({
       <Grid item xs={12}>
         <RelativeAlternativeSelect />
       </Grid>
-      <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
-        <PlotButtons plotId={`value-profile-plot-${profileCase}`}>
-          <ShowIf condition={Boolean(plotValues)}>
+      <ShowIf condition={Boolean(plotValues)}>
+        <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
+          <PlotButtons plotId={`value-profile-plot-${profileCase}`}>
             <ValueProfilePlot
               profileCase={profileCase}
               plotValues={plotValues}
             />
-          </ShowIf>
-        </PlotButtons>
-      </Grid>
+          </PlotButtons>
+        </Grid>
+      </ShowIf>
       <Grid item xs={9}>
         <Typography variant="h6">
           Relative value ({profileCase} case)
