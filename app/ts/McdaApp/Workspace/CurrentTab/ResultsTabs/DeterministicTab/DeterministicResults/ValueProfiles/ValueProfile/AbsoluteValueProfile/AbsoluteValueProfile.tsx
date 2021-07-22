@@ -3,7 +3,8 @@ import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
-import React, {useContext} from 'react';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
+import React, {useContext, useEffect} from 'react';
 import {pataviResultToAbsoluteValueProfile} from '../../../../DeterministicResultsUtil';
 import TotalValueTable from './TotalValueTable/TotalValueTable';
 import ValueProfilePlot from './ValueProfilePlot/ValueProfilePlot';
@@ -21,13 +22,24 @@ export default function AbsoluteValueProfile({
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
   const {legendByAlternativeId} = useContext(LegendContext);
+  const [plotValues, setPlotValues] =
+    React.useState<[string, ...(string | number)[]][]>(undefined);
 
-  const plotValues = pataviResultToAbsoluteValueProfile(
+  useEffect(() => {
+    setPlotValues(
+      pataviResultToAbsoluteValueProfile(
+        valueProfiles,
+        filteredCriteria,
+        filteredAlternatives,
+        legendByAlternativeId
+      )
+    );
+  }, [
     valueProfiles,
     filteredCriteria,
     filteredAlternatives,
     legendByAlternativeId
-  );
+  ]);
 
   return (
     <Grid container spacing={1}>
@@ -36,11 +48,16 @@ export default function AbsoluteValueProfile({
           {profileCase.charAt(0).toUpperCase() + profileCase.substr(1)} case
         </Typography>
       </Grid>
-      <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
-        <PlotButtons plotId={`value-profile-plot-${profileCase}`}>
-          <ValueProfilePlot profileCase={profileCase} plotValues={plotValues} />
-        </PlotButtons>
-      </Grid>
+      <ShowIf condition={Boolean(plotValues)}>
+        <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
+          <PlotButtons plotId={`value-profile-plot-${profileCase}`}>
+            <ValueProfilePlot
+              profileCase={profileCase}
+              plotValues={plotValues}
+            />
+          </PlotButtons>
+        </Grid>
+      </ShowIf>
       <Grid item xs={9}>
         <Typography variant="h6">Total value ({profileCase} case)</Typography>
       </Grid>
