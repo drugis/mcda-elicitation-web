@@ -36,18 +36,14 @@ export default function DataSourceRow({
     nextDataSourceId,
     previousDataSourceId
   } = useContext(DataSourceRowContext);
-  const {
-    alternatives,
-    useFavourability,
-    swapCriteria,
-    swapDataSources
-  } = useContext(ManualInputContext);
+  const {alternatives, useFavourability, swapCriteria, swapDataSources} =
+    useContext(ManualInputContext);
   const numberOfColumns = alternatives.length + 6;
   const numberOfDataSourceRows = criterion.dataSources.length;
 
   const dataSourceCells = dataSource.id.startsWith(DUMMY_ID) ? (
     <TableCell colSpan={numberOfColumns}>
-      <Grid container item alignItems="center" xs={12} justify="center">
+      <Grid container item alignItems="center" xs={12} justifyContent="center">
         <AddDataSourceButton criterion={criterion} />
         <InlineQuestionMark helpId="data-source" />
       </Grid>

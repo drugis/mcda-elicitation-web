@@ -5,9 +5,10 @@ import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
 import ISensitivityValue from '../../../../../interface/ISensitivityValue';
 import {
+  calcImportances,
   getInitialSensitivityValues,
-  pataviResultToLineValues,
-  pataviResultToValueProfile
+  pataviResultToAbsoluteValueProfile,
+  pataviResultToLineValues
 } from './DeterministicResultsUtil';
 
 describe('DeterministicResultsUtil', () => {
@@ -109,7 +110,7 @@ describe('DeterministicResultsUtil', () => {
         } as ICriterion
       ];
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
-      const result = pataviResultToValueProfile(
+      const result = pataviResultToAbsoluteValueProfile(
         valueProfiles,
         criteria,
         alternatives,
@@ -135,7 +136,7 @@ describe('DeterministicResultsUtil', () => {
         } as ICriterion
       ];
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
-      const result = pataviResultToValueProfile(
+      const result = pataviResultToAbsoluteValueProfile(
         valueProfiles,
         criteria,
         alternatives,
@@ -145,6 +146,27 @@ describe('DeterministicResultsUtil', () => {
         ['x', 'legend'],
         ['crit1', 10]
       ];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('calcImportances', () => {
+    it('should calculate the normalised importances of the reference vs the comparator values', () => {
+      const valueProfiles = {
+        alt1Id: {
+          crit1Id: 10,
+          crit2Id: 20
+        },
+        alt2Id: {
+          crit1Id: 20,
+          crit2Id: 40
+        }
+      };
+      const result = calcImportances(valueProfiles);
+      const expectedResult: Record<string, number> = {
+        crit1Id: 50,
+        crit2Id: 100
+      };
       expect(result).toEqual(expectedResult);
     });
   });

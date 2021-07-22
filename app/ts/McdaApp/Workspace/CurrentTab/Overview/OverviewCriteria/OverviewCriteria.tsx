@@ -62,7 +62,7 @@ export default function OverviewCriteria() {
         component={Paper}
         style={style}
         spacing={1}
-        justify="center"
+        justifyContent="center"
       >
         {children}
       </Grid>
@@ -71,7 +71,7 @@ export default function OverviewCriteria() {
 
   function FavorabilityHeader({children}: {children: any}): JSX.Element {
     return (
-      <Grid container item xs={12} justify="center">
+      <Grid container item xs={12} justifyContent="center">
         <Typography variant="h6">{children}</Typography>
       </Grid>
     );

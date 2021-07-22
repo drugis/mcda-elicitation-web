@@ -56,17 +56,9 @@ function getValue(effect: Effect, scale: IScale): number {
 
 export function generateValuePlotSettings(
   profileCase: string,
-  valueProfiles: Record<string, Record<string, number>>,
   criteria: ICriterion[],
-  alternatives: IAlternative[],
-  legend: Record<string, string>
+  plotValues: [string, ...(string | number)[]][]
 ): ChartConfiguration {
-  const plotValues = pataviResultToValueProfile(
-    valueProfiles,
-    criteria,
-    alternatives,
-    legend
-  );
   return {
     bindto: `#value-profile-plot-${profileCase}`,
     data: {
@@ -104,7 +96,7 @@ export function generateValuePlotSettings(
   };
 }
 
-export function pataviResultToValueProfile(
+export function pataviResultToAbsoluteValueProfile(
   valueProfiles: Record<string, Record<string, number>>,
   criteria: ICriterion[],
   alternatives: IAlternative[],
@@ -117,6 +109,25 @@ export function pataviResultToValueProfile(
   ];
 }
 
+export function pataviResultToRelativeValueProfile(
+  valueProfiles: Record<string, Record<string, number>>,
+  criteria: ICriterion[],
+  [reference, comparator]: IAlternative[],
+  legend: Record<string, string>
+): [string, ...(string | number)[]][] {
+  const alternativeTitles = getAlternativesTitles(
+    [reference, comparator],
+    legend
+  );
+  return [
+    alternativeTitles,
+    ...getRelativeValueProfilePlotValues(valueProfiles, criteria, [
+      reference,
+      comparator
+    ])
+  ];
+}
+
 function getAlternativesTitles(
   alternatives: IAlternative[],
   legend: Record<string, string>
@@ -126,6 +137,31 @@ function getAlternativesTitles(
     ..._.map(alternatives, (alternative: IAlternative): string =>
       legend ? legend[alternative.id] : alternative.title
     )
+  ];
+}
+
+function getRelativeValueProfilePlotValues(
+  valueProfiles: Record<string, Record<string, number>>,
+  criteria: ICriterion[],
+  alternatives: [IAlternative, IAlternative]
+): [string, ...number[]][] {
+  return _.map(criteria, (criterion) =>
+    getRelativeValueData(valueProfiles, criterion, alternatives)
+  );
+}
+
+function getRelativeValueData(
+  valueProfiles: Record<string, Record<string, number>>,
+  criterion: ICriterion,
+  [reference, comparator]: [IAlternative, IAlternative]
+): [string, ...number[]] {
+  const referenceValue = valueProfiles[reference.id][criterion.id];
+  const comparatorValue = valueProfiles[comparator.id][criterion.id];
+  const relativeValue = referenceValue - comparatorValue;
+  return [
+    criterion.title,
+    relativeValue > 0 ? relativeValue : null,
+    relativeValue < 0 ? Math.abs(relativeValue) : null
   ];
 }
 
@@ -250,11 +286,24 @@ function getLineYValues(
   alternatives: IAlternative[],
   legend: Record<string, string>
 ): [string, ...number[]][] {
-  return _.map(alternatives, (alternative: IAlternative): [
-    string,
-    ...number[]
-  ] => [
-    legend ? legend[alternative.id] : alternative.title,
-    ..._.values(measurementsSensitivityResults[alternative.id])
-  ]);
+  return _.map(
+    alternatives,
+    (alternative: IAlternative): [string, ...number[]] => [
+      legend ? legend[alternative.id] : alternative.title,
+      ..._.values(measurementsSensitivityResults[alternative.id])
+    ]
+  );
+}
+
+export function calcImportances(
+  valueProfiles: Record<string, Record<string, number>>
+): Record<string, number> {
+  const [referenceValues, comparatorValues] = _.values(valueProfiles);
+  const diffs = _.mapValues(
+    referenceValues,
+    (referenceValue: number, key: string): number =>
+      referenceValue - comparatorValues[key]
+  );
+  const largestDiff = _.max(_.map(_.values(diffs), (diff) => Math.abs(diff)));
+  return _.mapValues(diffs, (diff) => (100 * Math.abs(diff)) / largestDiff);
 }

@@ -1,30 +1,24 @@
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {generateValuePlotSettings} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsUtil';
-import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext, useEffect} from 'react';
 
 export default function ValueProfilePlot({
   profileCase,
-  valueProfiles
+  plotValues
 }: {
   profileCase: string;
-  valueProfiles: Record<string, Record<string, number>>;
+  plotValues: [string, ...(string | number)[]][];
 }): JSX.Element {
-  const {filteredAlternatives, filteredCriteria} = useContext(
-    CurrentSubproblemContext
-  );
-  const {legendByAlternativeId} = useContext(LegendContext);
   const width = '400px';
   const height = '400px';
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
 
   useEffect(() => {
     const settings: ChartConfiguration = generateValuePlotSettings(
       profileCase,
-      valueProfiles,
       filteredCriteria,
-      filteredAlternatives,
-      legendByAlternativeId
+      plotValues
     );
     generate(settings);
   });
