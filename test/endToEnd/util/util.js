@@ -18,21 +18,25 @@ function delayedClick(
     browser.pause(1000);
     browser.waitForElementVisible(clickPath);
     browser.click(clickPath);
-    browser.elements(selectorType, expectPath, function (result) {
-      if (result.value.length === 0) {
-        console.log(
-          '! Could not locate "' +
-            expectPath +
-            '". Attempting again in ' +
-            TIMEOUT +
-            ' milliseconds.'
-        );
-        browser.pause(TIMEOUT);
-        delayedClick(browser, clickPath, expectPath, selectorType, --attempts);
-      }
-    });
+    waitForElement(browser, expectPath, selectorType, attempts - 1);
   }
   return browser;
+}
+
+function waitForElement(browser, expectPath, selectorType, attempts = 10) {
+  browser.elements(selectorType, expectPath, function (result) {
+    if (result.value.length === 0) {
+      console.log(
+        '! Could not locate "' +
+          expectPath +
+          '". Attempting again in ' +
+          TIMEOUT +
+          ' milliseconds.'
+      );
+      browser.pause(TIMEOUT);
+      waitForElement(browser, selectorType, attempts - 1);
+    }
+  });
 }
 
 function getFirstProperty(value) {
