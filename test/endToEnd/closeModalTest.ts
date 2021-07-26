@@ -245,14 +245,9 @@ function cancelEditingGraphLabels(browser: NightwatchBrowser) {
     content:
       '#value-profile-plot-base > svg > g:nth-child(2) > g.c3-axis.c3-axis-x > g:nth-child(2) > text > tspan'
   };
-<<<<<<< HEAD:test/endToEnd/closeModalTest.js
   browser
     .click(paths.tab)
     .waitForElementVisible(paths.actionButton)
-=======
-  delayedClick(browser, paths.tab, paths.actionButton, xpathSelectorType)
-    .useXpath()
->>>>>>> 9ab7d16a5f3f0b7108fa60944de4e8866cee4043:test/endToEnd/closeModalTest.ts
     .click(paths.actionButton)
     .clearValue(paths.valueToClear)
     .click(paths.cancelButton)
