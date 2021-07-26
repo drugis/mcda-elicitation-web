@@ -17,6 +17,7 @@ import ISensitivityValue from 'app/ts/interface/ISensitivityValue';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import {TProfileCase} from 'app/ts/type/ProfileCase';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
@@ -91,6 +92,41 @@ export function DeterministicResultsContextProviderComponent({
   const [areRecalculatedPlotsLoading, setAreRecalculatedPlotsLoading] =
     useState<boolean>(false);
 
+  const [baseReference, setBaseReference] = useState<IAlternative>(
+    filteredAlternatives[0]
+  );
+  const [baseComparator, setBaseComparator] = useState<IAlternative>(
+    filteredAlternatives[1]
+  );
+  const [recalculatedReference, setRecalculatedReference] =
+    useState<IAlternative>(filteredAlternatives[0]);
+  const [recalculatedComparator, setRecalculatedComparator] =
+    useState<IAlternative>(filteredAlternatives[1]);
+
+  function getReference(profileCase: TProfileCase) {
+    return profileCase === 'base' ? baseReference : recalculatedReference;
+  }
+
+  function getComparator(profileCase: TProfileCase) {
+    return profileCase === 'base' ? baseComparator : recalculatedComparator;
+  }
+
+  function setReference(profileCase: TProfileCase, value: IAlternative) {
+    if (profileCase === 'base') {
+      setBaseReference(value);
+    } else {
+      setRecalculatedReference(value);
+    }
+  }
+
+  function setComparator(profileCase: TProfileCase, value: IAlternative) {
+    if (profileCase === 'base') {
+      setBaseComparator(value);
+    } else {
+      setRecalculatedComparator(value);
+    }
+  }
+
   const getDeterministicResults = useCallback(
     (pataviProblem: IPataviProblem): void => {
       const pataviCommand: IDeterministicResultsCommand = {
@@ -111,6 +147,7 @@ export function DeterministicResultsContextProviderComponent({
     },
     [setError]
   );
+
   const getMeasurementsSensitivityResults = useCallback(
     (pataviProblem: IPataviProblem): void => {
       const pataviCommand: IMeasurementsSensitivityCommand = {
@@ -280,6 +317,8 @@ export function DeterministicResultsContextProviderComponent({
         setRecalculatedTotalValues(result.data.total);
         setRecalculatedValueProfiles(result.data.value);
         setAreRecalculatedPlotsLoading(false);
+        setRecalculatedReference(baseReference);
+        setRecalculatedComparator(baseComparator);
       })
       .catch((error: IError) => {
         setAreRecalculatedPlotsLoading(false);
@@ -303,8 +342,12 @@ export function DeterministicResultsContextProviderComponent({
         sensitivityTableValues,
         valueProfileType,
         weights,
+        getReference,
+        getComparator,
         recalculateValuePlots,
         resetSensitivityTable,
+        setReference,
+        setComparator,
         setCurrentValue,
         setMeasurementSensitivityAlternative,
         setMeasurementSensitivityCriterion,

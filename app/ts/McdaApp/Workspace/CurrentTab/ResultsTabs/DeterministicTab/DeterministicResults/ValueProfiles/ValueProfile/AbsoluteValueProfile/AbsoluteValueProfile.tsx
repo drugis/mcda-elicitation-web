@@ -4,7 +4,8 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import React, {useContext, useEffect} from 'react';
+import {TProfileCase} from 'app/ts/type/ProfileCase';
+import React, {useContext, useEffect, useState} from 'react';
 import {pataviResultToAbsoluteValueProfile} from '../../../../DeterministicResultsUtil';
 import TotalValueTable from './TotalValueTable/TotalValueTable';
 import ValueProfilePlot from './ValueProfilePlot/ValueProfilePlot';
@@ -15,7 +16,7 @@ export default function AbsoluteValueProfile({
   totalValues,
   valueProfiles
 }: {
-  profileCase: 'base' | 'recalculated';
+  profileCase: TProfileCase;
   totalValues: Record<string, number>;
   valueProfiles: Record<string, Record<string, number>>;
 }): JSX.Element {
@@ -23,7 +24,7 @@ export default function AbsoluteValueProfile({
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
   const {legendByAlternativeId} = useContext(LegendContext);
   const [plotValues, setPlotValues] =
-    React.useState<[string, ...(string | number)[]][]>(undefined);
+    useState<[string, ...(string | number)[]][]>(undefined);
 
   useEffect(() => {
     setPlotValues(
@@ -49,7 +50,7 @@ export default function AbsoluteValueProfile({
         </Typography>
       </Grid>
       <ShowIf condition={Boolean(plotValues)}>
-        <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
+        <Grid item xs={12} id={`${profileCase}-profile-plot`}>
           <PlotButtons plotId={`value-profile-plot-${profileCase}`}>
             <ValueProfilePlot
               profileCase={profileCase}
@@ -68,6 +69,7 @@ export default function AbsoluteValueProfile({
         <TotalValueTable
           alternatives={filteredAlternatives}
           totalValues={totalValues}
+          profileCase={profileCase}
         />
       </Grid>
       <Grid item xs={9}>

@@ -1,5 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
-import {EquivalentChangeType} from 'app/ts/type/EquivalentChangeType';
+import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
 
 export default interface IEquivalentChangeContext {
   otherCriteria: ICriterion[];
@@ -11,10 +11,10 @@ export default interface IEquivalentChangeContext {
   referenceValueFrom: number;
   referenceValueTo: number;
   referenceWeight: number;
-  equivalentChangeType: EquivalentChangeType;
+  equivalentChangeType: TEquivalentChange;
   setReferenceValueFrom: (newValue: number) => void;
   setReferenceValueTo: (newValue: number) => void;
   setReferenceValueBy: (newValue: number) => void;
-  setEquivalentChangeType: (newValue: EquivalentChangeType) => void;
+  setEquivalentChangeType: (newValue: TEquivalentChange) => void;
   updateReferenceCriterion: (newId: string) => void;
 }

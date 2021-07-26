@@ -2,7 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {hasNoRange} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/SubproblemUtil';
-import {EquivalentChangeType as EquivalentChangeType} from 'app/ts/type/EquivalentChangeType';
+import {TEquivalentChange as TEquivalentChange} from 'app/ts/type/EquivalentChange';
 import _ from 'lodash';
 import React, {
   createContext,
@@ -84,7 +84,7 @@ export function EquivalentChangeContextProviderComponent({
     )
   );
   const [equivalentChangeType, setEquivalentChangeType] =
-    useState<EquivalentChangeType>('amount');
+    useState<TEquivalentChange>('amount');
 
   useEffect(reset, [
     referenceCriterion,

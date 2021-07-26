@@ -1,5 +1,3 @@
-'use strict';
-
 import {NightwatchBrowser} from 'nightwatch';
 import loginService from './util/loginService';
 import workspaceService from './util/workspaceService';
@@ -124,7 +122,27 @@ function modifyPreferencesPlot(browser: NightwatchBrowser) {
 function relativeSensitivity(browser: NightwatchBrowser) {
   browser
     .click('#value-profile-type-relative')
-    .waitForElementPresent('#value-profile-reference-select')
+    .waitForElementPresent('#value-profile-reference-select-base')
     .expect.element('#relative-total-difference')
     .text.to.equal('0.112');
+  browser
+    .click('#value-profile-comparator-select-base')
+    .click(
+      '#value-profile-comparator-select-base > option[value="venlafaxineId"]'
+    )
+    .pause(500)
+    .expect.element('#relative-total-difference')
+    .text.to.equal('0.279');
+  browser
+    .click('#recalculate-button')
+    .waitForElementVisible('#recalculated-profile-plot')
+    .expect.element('#total-value-alternative-header-1-recalculated')
+    .text.to.equal('Venlafaxine');
+  browser
+    .click('#value-profile-comparator-select-base')
+    .click(
+      '#value-profile-comparator-select-base > option[value="fluoxetineId"]'
+    )
+    .expect.element('#total-value-alternative-header-1-recalculated')
+    .text.to.equal('Venlafaxine');
 }
