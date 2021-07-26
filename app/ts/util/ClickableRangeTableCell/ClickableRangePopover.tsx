@@ -89,7 +89,7 @@ export default function ClickableRangePopover({
               max: max,
               step: stepSize
             }}
-            error={!!inputError}
+            error={Boolean(inputError)}
             helperText={inputError ? inputError : ''}
             autoFocus
           />

@@ -1,16 +1,15 @@
-import {Button, TableCell} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import {
   getPercentifiedValue,
   getPercentifiedValueLabel
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import ClickableRangeTableCell from 'app/ts/util/ClickableRangeTableCell/ClickableRangeTableCell';
 import significantDigits from 'app/ts/util/significantDigits';
-import React, {MouseEvent, useContext, useEffect, useState} from 'react';
-import ClickableRangePopover from '../../../../../../../../../util/ClickableRangeTableCell/ClickableRangePopover';
+import _ from 'lodash';
+import React, {useContext} from 'react';
 
 export default function SensitivityMeasurementsTableCell({
   criterion,
@@ -27,8 +26,11 @@ export default function SensitivityMeasurementsTableCell({
     DeterministicResultsContext
   );
 
-  const value = sensitivityTableValues[criterion.id][alternativeId];
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
+  const value = _.mapValues(
+    sensitivityTableValues[criterion.id][alternativeId],
+    _.partialRight(getPercentifiedValue, usePercentage)
+  );
 
   const [minConfigured, maxConfigured] = getConfiguredRange(criterion);
   const min = getPercentifiedValue(minConfigured, usePercentage);
@@ -38,31 +40,22 @@ export default function SensitivityMeasurementsTableCell({
     usePercentage
   );
 
-  useEffect(() => {
-    if (isDirty && value.currentValue === value.originalValue) {
-      setIsDirty(false);
-    }
-  }, [
-    isDirty,
-    sensitivityTableValues,
-    value.currentValue,
-    value.originalValue
-  ]);
+  function setterCallback(localValue: number) {
+    const newValue = usePercentage
+      ? significantDigits(localValue / 100)
+      : significantDigits(localValue);
+    setCurrentValue(criterion.id, alternativeId, newValue);
+  }
 
   return (
-    <TableCell id={`sensitivity-cell-${criterion.id}-${alternativeId}`}>
-      <Button style={textCenterStyle} onClick={openPopover} variant="text">
-        <a>{getLabel()}</a>
-      </Button>
-      <ClickableRangePopover
-        anchorEl={anchorEl}
-        closeCallback={closeCallback}
-        min={min}
-        max={max}
-        localValue={localValue}
-        setLocalValue={setLocalValue}
-        stepSize={stepSize}
-      />
-    </TableCell>
+    <ClickableRangeTableCell
+      id={`sensitivity-cell-${criterion.id}-${alternativeId}`}
+      value={value}
+      min={min}
+      max={max}
+      stepSize={stepSize}
+      labelRenderer={_.partialRight(getPercentifiedValueLabel, usePercentage)}
+      setterCallback={setterCallback}
+    />
   );
 }

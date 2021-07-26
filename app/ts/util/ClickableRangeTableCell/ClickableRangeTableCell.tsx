@@ -1,30 +1,30 @@
 import {Button, TableCell} from '@material-ui/core';
-import {
-  getPercentifiedValue,
-  getPercentifiedValueLabel
-} from 'app/ts/DisplayUtil/DisplayUtil';
 import IChangeableValue from 'app/ts/interface/ISensitivityValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
-import {max, min} from 'lodash';
-import React, {useState} from 'react';
-import significantDigits from '../significantDigits';
+import React, {MouseEvent, useState} from 'react';
 import ClickableRangePopover from './ClickableRangePopover';
 
 export default function ClickableRangeTableCell({
   id,
   value,
-  usePercentage
+  min,
+  max,
+  stepSize,
+  setterCallback,
+  labelRenderer
 }: {
   id: string;
   value: IChangeableValue;
-  usePercentage: boolean;
+  min: number;
+  max: number;
+  stepSize: number;
+  setterCallback: (value: number) => void;
+  labelRenderer: (value: number) => string;
 }): JSX.Element {
   const [isDirty, setIsDirty] = useState<boolean>(false);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [localValue, setLocalValue] = useState<number>(
-    getPercentifiedValue(value.currentValue, usePercentage)
-  );
+  const [localValue, setLocalValue] = useState<number>(value.currentValue);
 
   function openPopover(event: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
@@ -36,10 +36,7 @@ export default function ClickableRangeTableCell({
     } else {
       setIsDirty(true);
       if (!inputError) {
-        const newValue = usePercentage
-          ? significantDigits(localValue / 100)
-          : significantDigits(localValue);
-        setCurrentValue(criterion.id, alternativeId, newValue);
+        setterCallback(localValue);
       }
       setAnchorEl(null);
     }
@@ -47,17 +44,16 @@ export default function ClickableRangeTableCell({
 
   function getLabel(): string {
     if (isDirty) {
-      return `${getPercentifiedValueLabel(
-        value.currentValue,
-        usePercentage
-      )} (${getPercentifiedValueLabel(value.originalValue, usePercentage)})`;
+      return `${labelRenderer(value.currentValue)} (${labelRenderer(
+        value.originalValue
+      )})`;
     } else {
-      return getPercentifiedValueLabel(value.currentValue, usePercentage);
+      return labelRenderer(value.currentValue);
     }
   }
 
   return (
-    <TableCell id={`sensitivity-cell-${criterion.id}-${alternativeId}`}>
+    <TableCell id={id}>
       <Button style={textCenterStyle} onClick={openPopover} variant="text">
         <a>{getLabel()}</a>
       </Button>
