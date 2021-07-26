@@ -19,7 +19,7 @@ export default function PartialValueFunctions() {
           <Grid item xs={12} style={{textAlign: 'center'}}>
             <Typography>{criterion.title}</Typography>
           </Grid>
-          <Grid container item xs={12} justify="center">
+          <Grid container item xs={12} justifyContent="center">
             {getPlotOrQuestionMark(criterion.id)}
           </Grid>
           <Grid item xs={12} style={{textAlign: 'center'}}>

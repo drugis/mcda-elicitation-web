@@ -70,7 +70,7 @@ export default function SmaaWeightsTable({
           <InlineHelp helpId="representative-weights">Weights</InlineHelp>
         </Typography>
       </Grid>
-      <Grid container item xs={3} justify="flex-end">
+      <Grid container item xs={3} justifyContent="flex-end">
         <ClipboardButton targetId="#weigths-table" />
       </Grid>
       <Grid container item xs={12}>

@@ -1,21 +1,25 @@
 'use strict';
 
+import {NightwatchBrowser} from 'nightwatch';
+import loginService from './util/loginService';
+import workspaceService from './util/workspaceService';
+
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Deterministic results': results,
   'Deterministic results with recalculated values': recalculatedResults,
-  'Switch alternative and criterion for one-way sensitivity analysis measurements plot': modifyMeasurementsPlot,
-  'Switch criterion for one-way sensitivity analysis preferences plot': modifyPreferencesPlot
+  'Switch alternative and criterion for one-way sensitivity analysis measurements plot':
+    modifyMeasurementsPlot,
+  'Switch criterion for one-way sensitivity analysis preferences plot':
+    modifyPreferencesPlot,
+  'Perform relative-based sensitivity analysis': relativeSensitivity
 };
-
-const loginService = require('./util/loginService');
-const workspaceService = require('./util/workspaceService');
 
 const title =
   'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
-function beforeEach(browser) {
+function beforeEach(browser: NightwatchBrowser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
   workspaceService.cleanList(browser);
@@ -28,12 +32,12 @@ function beforeEach(browser) {
     .waitForElementVisible('#sensitivity-measurements-table');
 }
 
-function afterEach(browser) {
-  browser.click('#logo');
+function afterEach(browser: NightwatchBrowser) {
+  browser.useCss().click('#logo');
   workspaceService.deleteFromList(browser, 0).end();
 }
 
-function results(browser) {
+function results(browser: NightwatchBrowser) {
   browser
     .waitForElementVisible('#deterministic-weights-table')
     .waitForElementVisible('#value-profile-plot-base')
@@ -59,7 +63,7 @@ function results(browser) {
   browser.useCss();
 }
 
-function recalculatedResults(browser) {
+function recalculatedResults(browser: NightwatchBrowser) {
   const measurementValuePath =
     '//*[@id="sensitivity-cell-treatmentRespondersId-placeboId"]/button/span[1]';
   const measurementValueInputPath = '//*[@id="sensitivity-value-input"]';
@@ -68,12 +72,13 @@ function recalculatedResults(browser) {
     .useXpath()
     .click(measurementValuePath)
     .clearValue(measurementValueInputPath)
-    .setValue(measurementValueInputPath, 63)
+    .setValue(measurementValueInputPath, '63')
     .sendKeys(measurementValueInputPath, browser.Keys.ESCAPE)
     .pause(1000)
     .click('//*[@id="sensitivity-measurements-header"]')
-    .click('//*[@id="recalculate-button"]')
-    .assert.containsText(measurementValuePath, '63 (36.6)')
+    .click('//*[@id="recalculate-button"]');
+  browser.assert
+    .containsText(measurementValuePath, '63 (36.6)')
     .waitForElementVisible('//*[@id="value-profile-plot-recalculated"]')
     .waitForElementVisible('//*[@id="recalculated-total-value-table"]')
     .waitForElementVisible('//*[@id="recalculated-value-profiles-table"]');
@@ -86,9 +91,10 @@ function recalculatedResults(browser) {
   browser.expect.element(recalculatedTotalValuePath).text.to.equal('0.903');
   browser.expect.element(recalculatedValueProfilePath).text.to.equal('0.25');
 
-  browser.click('//*[@id="reset-button"]');
-
-  browser.expect.element(measurementValuePath).text.to.equal('36.6');
+  browser
+    .click('//*[@id="reset-button"]')
+    .expect.element(measurementValuePath)
+    .text.to.equal('36.6');
 
   browser.useCss();
   browser.assert.not
@@ -97,7 +103,7 @@ function recalculatedResults(browser) {
     .assert.not.elementPresent('#recalculated-value-profile-table');
 }
 
-function modifyMeasurementsPlot(browser) {
+function modifyMeasurementsPlot(browser: NightwatchBrowser) {
   browser
     .click('#measurements-alternative-selector')
     .click('option[value="fluoxetineId"]')
@@ -108,9 +114,17 @@ function modifyMeasurementsPlot(browser) {
     .assert.containsText('#measurements-criterion-selector', 'Nausea ADRs');
 }
 
-function modifyPreferencesPlot(browser) {
+function modifyPreferencesPlot(browser: NightwatchBrowser) {
   browser
     .click('#preferences-criterion-selector')
     .click('option[value="nauseaId"]')
     .assert.containsText('#preferences-criterion-selector', 'Nausea ADRs');
+}
+
+function relativeSensitivity(browser: NightwatchBrowser) {
+  browser
+    .click('#value-profile-type-relative')
+    .waitForElementPresent('#value-profile-reference-select')
+    .expect.element('#relative-total-difference')
+    .text.to.equal('0.112');
 }

@@ -1,6 +1,7 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IWeights from '@shared/interface/Scenario/IWeights';
+import {TValueProfile} from '@shared/types/TValueProfile';
 import ISensitivityValue from 'app/ts/interface/ISensitivityValue';
 
 export default interface IDeterministicResultsContext {
@@ -15,6 +16,7 @@ export default interface IDeterministicResultsContext {
   recalculatedValueProfiles: Record<string, Record<string, number>>;
   recalculatedTotalValues: Record<string, number>;
   sensitivityTableValues: Record<string, Record<string, ISensitivityValue>>;
+  valueProfileType: TValueProfile;
   weights: IWeights;
   recalculateValuePlots: () => void;
   resetSensitivityTable: () => void;
@@ -26,4 +28,5 @@ export default interface IDeterministicResultsContext {
   setMeasurementSensitivityAlternative: (criterion: IAlternative) => void;
   setMeasurementSensitivityCriterion: (criterion: ICriterion) => void;
   setPreferencesSensitivityCriterion: (criterion: ICriterion) => void;
+  setValueProfileType: (valueProfileType: TValueProfile) => void;
 }

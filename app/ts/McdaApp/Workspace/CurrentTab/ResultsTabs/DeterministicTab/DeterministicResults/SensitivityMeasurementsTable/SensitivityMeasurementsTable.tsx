@@ -43,7 +43,7 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
               <em>Values can be changed by clicking them.</em>
             </Typography>
           </Grid>
-          <Grid container item xs={3} justify="flex-end">
+          <Grid container item xs={3} justifyContent="flex-end">
             <ClipboardButton targetId="#sensitivity-measurements-table" />
           </Grid>
           <Grid item xs={12}>

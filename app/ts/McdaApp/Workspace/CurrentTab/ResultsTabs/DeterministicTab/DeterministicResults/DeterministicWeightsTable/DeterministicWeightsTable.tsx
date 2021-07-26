@@ -8,15 +8,15 @@ import {
   Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
+import IWeights from '@shared/interface/Scenario/IWeights';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import significantDigits from 'app/ts/util/significantDigits';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
-import IWeights from '@shared/interface/Scenario/IWeights';
 
 export default function DeterministicWeightsTable(): JSX.Element {
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
@@ -29,7 +29,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
           <InlineHelp helpId="representative-weights">Weights</InlineHelp>
         </Typography>
       </Grid>
-      <Grid container item xs={3} justify="flex-end">
+      <Grid container item xs={3} justifyContent="flex-end">
         <ClipboardButton targetId="#deterministic-weights-table" />
       </Grid>
       <Grid item xs={12}>

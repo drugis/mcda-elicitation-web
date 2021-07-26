@@ -1,4 +1,10 @@
-import {Box, Grid, Paper, Typography} from '@material-ui/core';
+import {
+  Box,
+  Grid,
+  GridJustification,
+  Paper,
+  Typography
+} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
 import React, {useContext, useEffect} from 'react';
 import {AdvancedPartialValueFunctionContext} from './AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
@@ -18,7 +24,12 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
   }, [advancedPvfCriterion.title]);
 
   return (
-    <Grid container justify="center" component={Box} mt={2}>
+    <Grid
+      container
+      justifyContent={'center' as GridJustification} // FIXME: why is this 'as' necessary?
+      component={Box}
+      mt={2}
+    >
       <Grid container item spacing={4} sm={12} md={9} component={Paper}>
         <Grid item xs={12}>
           <Typography variant="h4">
@@ -32,13 +43,13 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
         <Grid item xs={12}>
           <PvfDirection />
         </Grid>
-        <Grid item container xs={12} justify="flex-start">
+        <Grid item container xs={12} justifyContent="flex-start">
           <AdvancedPvfPlot />
         </Grid>
-        <Grid item container xs={12} justify="flex-start">
+        <Grid item container xs={12} justifyContent="flex-start">
           <CutOffs />
         </Grid>
-        <Grid item container xs={12} justify="flex-start">
+        <Grid item container xs={12} justifyContent="flex-start">
           <Typography style={{width: '500px', textAlign: 'center'}}>
             Use the sliders to adjust the shape of the function. They indicate
             for which criterion value (the x-axis) the partial value (the

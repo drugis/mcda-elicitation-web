@@ -1,7 +1,7 @@
 import {NightwatchBrowser} from 'nightwatch';
 import errorService from './util/errorService';
 import loginService from './util/loginService';
-import util from './util/util';
+import {delayedClick} from './util/util';
 import workspaceService from './util/workspaceService';
 
 export = {
@@ -18,16 +18,12 @@ function beforeEach(browser: NightwatchBrowser) {
     browser,
     '/createSubproblemTestProblem.json'
   );
-  util.delayedClick(
-    browser,
-    '#problem-definition-tab',
-    '#effects-table-header'
-  );
+  delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
 }
 
 function afterEach(browser: NightwatchBrowser) {
   errorService.isErrorBarNotPresent(browser);
-  util.delayedClick(browser, '#logo', '#workspaces-header');
+  delayedClick(browser, '#logo', '#workspaces-header');
   workspaceService.deleteFromList(browser, 0).end();
 }
 
@@ -65,11 +61,7 @@ function setStepSize(
 }
 
 function setPvfs(browser: NightwatchBrowser): void {
-  util.delayedClick(
-    browser,
-    '#preferences-tab',
-    '#partial-value-functions-header'
-  );
+  delayedClick(browser, '#preferences-tab', '#partial-value-functions-header');
   browser
     .click('#increasing-pvf-button-crit1Id')
     .click('#decreasing-pvf-button-crit2Id');

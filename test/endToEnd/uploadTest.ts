@@ -1,6 +1,6 @@
 import {NightwatchBrowser} from 'nightwatch';
 import loginService from './util/loginService.js';
-import util from './util/util';
+import {delayedClick} from './util/util';
 import workspaceService from './util/workspaceService.js';
 
 module.exports = {
@@ -22,7 +22,7 @@ function uploadSuccess(browser: NightwatchBrowser) {
   const workspacePath = '../../../../examples/regular-examples/getreal.json';
   workspaceService.uploadTestWorkspace(browser, workspacePath);
   browser.assert.containsText('#workspace-title', title);
-  util.delayedClick(browser, '#logo', '#workspaces-header');
+  delayedClick(browser, '#logo', '#workspaces-header');
   workspaceService.deleteFromList(browser, 0).end();
 }
 
