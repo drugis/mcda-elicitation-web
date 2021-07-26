@@ -1,4 +1,4 @@
-export default interface ISensitivityValue {
-  originalValue: number;
-  currentValue: number;
+export default interface IChangeableValue<T = number> {
+  originalValue: T;
+  currentValue: T;
 }

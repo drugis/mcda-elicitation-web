@@ -2,7 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
-import {buildImportance} from './PreferencesWeightsTableUtil';
+import {buildImportances} from './PreferencesWeightsTableUtil';
 
 describe('buildImportance', () => {
   const criteria: ICriterion[] = [
@@ -15,7 +15,7 @@ describe('buildImportance', () => {
   ];
 
   it('should return "?" if there are no preferences', () => {
-    const result = buildImportance(criteria, []);
+    const result = buildImportances(criteria, []);
     const expectedResult: Record<string, string> = {
       critId1: '?',
       critId2: '?'
@@ -31,7 +31,7 @@ describe('buildImportance', () => {
         elicitationMethod: 'ranking'
       }
     ];
-    const result = buildImportance(criteria, preferences);
+    const result = buildImportances(criteria, preferences);
     const expectedResult: Record<string, string> = {
       critId1: '1',
       critId2: '2'
@@ -48,7 +48,7 @@ describe('buildImportance', () => {
         elicitationMethod: 'matching'
       }
     ];
-    const result = buildImportance(criteria, preferences);
+    const result = buildImportances(criteria, preferences);
     const expectedResult: Record<string, string> = {
       critId1: '100%',
       critId2: '50%'
@@ -65,7 +65,7 @@ describe('buildImportance', () => {
         elicitationMethod: 'imprecise'
       }
     ];
-    const result = buildImportance(criteria, preferences);
+    const result = buildImportances(criteria, preferences);
     const expectedResult: Record<string, string> = {
       critId1: '100%',
       critId2: '1-100%'

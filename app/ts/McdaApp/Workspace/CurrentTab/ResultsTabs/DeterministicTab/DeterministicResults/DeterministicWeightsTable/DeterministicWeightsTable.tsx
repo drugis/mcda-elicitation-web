@@ -8,19 +8,26 @@ import {
   Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import IWeights from '@shared/interface/Scenario/IWeights';
+import {TPreferences} from '@shared/types/Preferences';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
+import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import EquivalentChangeCell from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/EquivalentChangeTableComponents/EquivalentChangeCell';
+import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/PreferencesWeightsTableUtil';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
+  const {currentScenario} = useContext(CurrentScenarioContext);
   const {weights} = useContext(DeterministicResultsContext);
+  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
 
   return (
     <Grid container item xs={12}>
@@ -37,55 +44,61 @@ export default function DeterministicWeightsTable(): JSX.Element {
           <Table id="deterministic-weights-table">
             <TableHead>
               <TableRow>
-                <CriterionTitleCells criteria={filteredCriteria} />
+                <TitleCells
+                  canShowEquivalentChanges={canShowEquivalentChanges}
+                />
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <WeightCells
-                  filteredCriteria={filteredCriteria}
-                  weights={weights}
-                />
-              </TableRow>
+              <WeightRows preferences={currentScenario.state.prefs} />
             </TableBody>
           </Table>
         </LoadingSpinner>
       </Grid>
     </Grid>
   );
+
+  function WeightRows({preferences}: {preferences: TPreferences}): JSX.Element {
+    const importances = buildImportances(filteredCriteria, preferences);
+
+    return (
+      <>
+        {_.map(filteredCriteria, (criterion: ICriterion) => (
+          <TableRow key={criterion.id}>
+            <TableCell id={`title-${criterion.id}`}>
+              {criterion.title}
+            </TableCell>
+            <TableCell id={`weight-${criterion.id}`}>
+              {significantDigits(weights.mean[criterion.id])}
+            </TableCell>
+            <TableCell id={`importance-${criterion.id}`}>
+              {importances[criterion.id]}
+            </TableCell>
+            <ShowIf condition={canShowEquivalentChanges}>
+              <TableCell id={`equivalent-change-${criterion.id}`}>
+                <EquivalentChangeCell criterion={criterion} />
+              </TableCell>
+            </ShowIf>
+          </TableRow>
+        ))}
+      </>
+    );
+  }
 }
 
-function WeightCells({
-  filteredCriteria,
-  weights
+function TitleCells({
+  canShowEquivalentChanges
 }: {
-  filteredCriteria: ICriterion[];
-  weights: IWeights;
+  canShowEquivalentChanges: boolean;
 }): JSX.Element {
   return (
     <>
-      {_.map(filteredCriteria, (criterion: ICriterion) => (
-        <TableCell key={criterion.id}>
-          {significantDigits(weights.mean[criterion.id])}
-        </TableCell>
-      ))}
-    </>
-  );
-}
-
-function CriterionTitleCells({
-  criteria
-}: {
-  criteria: ICriterion[];
-}): JSX.Element {
-  return (
-    <>
-      {_.map(
-        criteria,
-        (criterion: ICriterion): JSX.Element => (
-          <TableCell key={criterion.id}>{criterion.title}</TableCell>
-        )
-      )}
+      <TableCell>Criterion</TableCell>
+      <TableCell>Weight</TableCell>
+      <TableCell>Importance</TableCell>
+      <ShowIf condition={canShowEquivalentChanges}>
+        <TableCell>Equivalent change</TableCell>
+      </ShowIf>
     </>
   );
 }

@@ -1,22 +1,18 @@
 import {TableCell, TableRow, Tooltip} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
-import _ from 'lodash';
 import React, {useContext} from 'react';
 import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {
   getBest,
   getWorst
 } from '../../PartialValueFunctions/PartialValueFunctionUtil';
-import EquivalentRangeChange from './EquivalentRangeChange';
-import EquivalentValueChange from './EquivalentValueChange';
+import EquivalentChangeCell from './EquivalentChangeTableComponents/EquivalentChangeCell';
 
 export default function PreferencesWeightsTableRow({
   criterion,
@@ -25,23 +21,12 @@ export default function PreferencesWeightsTableRow({
   criterion: ICriterion;
   importance: string;
 }): JSX.Element {
-  const {
-    equivalentChangeType,
-    referenceValueFrom,
-    referenceValueTo,
-    referenceCriterion
-  } = useContext(EquivalentChangeContext);
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {observedRanges} = useContext(CurrentSubproblemContext);
+  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
 
   const unit = criterion.dataSources[0].unitOfMeasurement;
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
-  const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
-  const canShowEquivalentChanges =
-    areAllPvfsLinear &&
-    currentScenario.state.weights &&
-    !_.isEmpty(observedRanges);
 
   function getWeight(criterionId: string) {
     if (currentScenario.state.weights) {
@@ -52,36 +37,6 @@ export default function PreferencesWeightsTableRow({
           <span>?</span>
         </Tooltip>
       );
-    }
-  }
-
-  function EquivalentChangeCell({criterion}: {criterion: ICriterion}) {
-    switch (equivalentChangeType) {
-      case 'amount':
-        return (
-          <EquivalentValueChange
-            usePercentage={usePercentage}
-            pvf={pvfs[criterion.id]}
-            otherWeight={currentScenario.state.weights.mean[criterion.id]}
-          />
-        );
-      case 'range':
-        if (criterion.id === referenceCriterion.id) {
-          return (
-            <span>
-              {getPercentifiedValue(referenceValueFrom, usePercentage)} to{' '}
-              {getPercentifiedValue(referenceValueTo, usePercentage)}
-            </span>
-          );
-        } else {
-          return (
-            <EquivalentRangeChange
-              usePercentage={usePercentage}
-              pvf={pvfs[criterion.id]}
-              otherWeight={currentScenario.state.weights.mean[criterion.id]}
-            />
-          );
-        }
     }
   }
 

@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
-import ISensitivityValue from '../../../../../interface/ISensitivityValue';
+import IChangeableValue from '../../../../../interface/ISensitivityValue';
 import {
   calcImportances,
   getInitialSensitivityValues,
@@ -65,10 +65,7 @@ describe('DeterministicResultsUtil', () => {
         effects,
         scales
       );
-      const expectedResult: Record<
-        string,
-        Record<string, ISensitivityValue>
-      > = {
+      const expectedResult: Record<string, Record<string, IChangeableValue>> = {
         crit1Id: {
           alt1Id: {
             originalValue: 1,

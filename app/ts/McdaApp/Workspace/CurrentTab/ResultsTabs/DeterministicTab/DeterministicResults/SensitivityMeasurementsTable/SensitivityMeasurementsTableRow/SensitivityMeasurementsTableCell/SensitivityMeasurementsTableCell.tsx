@@ -10,7 +10,7 @@ import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/R
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import significantDigits from 'app/ts/util/significantDigits';
 import React, {MouseEvent, useContext, useEffect, useState} from 'react';
-import SensitivityMeasurementsTablePopover from './SensitivityMeasurementsTablePopover/SensitivityMeasurementsTablePopover';
+import ClickableRangePopover from '../../../../../../../../../util/ClickableRangeTableCell/ClickableRangePopover';
 
 export default function SensitivityMeasurementsTableCell({
   criterion,
@@ -27,73 +27,36 @@ export default function SensitivityMeasurementsTableCell({
     DeterministicResultsContext
   );
 
-  const [isDirty, setIsDirty] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-  const values = sensitivityTableValues[criterion.id][alternativeId];
+  const value = sensitivityTableValues[criterion.id][alternativeId];
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
-  const [localValue, setLocalValue] = useState<number>(
-    getPercentifiedValue(values.currentValue, usePercentage)
-  );
-
-  const configuredRange = getConfiguredRange(criterion);
-  const min = getPercentifiedValue(configuredRange[0], usePercentage);
-  const max = getPercentifiedValue(configuredRange[1], usePercentage);
+  const [minConfigured, maxConfigured] = getConfiguredRange(criterion);
+  const min = getPercentifiedValue(minConfigured, usePercentage);
+  const max = getPercentifiedValue(maxConfigured, usePercentage);
   const stepSize = getPercentifiedValue(
     stepSizesByCriterion[criterion.id],
     usePercentage
   );
 
   useEffect(() => {
-    if (isDirty && values.currentValue === values.originalValue) {
+    if (isDirty && value.currentValue === value.originalValue) {
       setIsDirty(false);
     }
   }, [
     isDirty,
     sensitivityTableValues,
-    values.currentValue,
-    values.originalValue
+    value.currentValue,
+    value.originalValue
   ]);
-
-  function openPopover(event: MouseEvent<HTMLButtonElement>) {
-    setAnchorEl(event.currentTarget);
-  }
-
-  function closePopover(inputError: string) {
-    if (localValue === values.originalValue) {
-      setIsDirty(false);
-    } else {
-      setIsDirty(true);
-      if (!inputError) {
-        const newValue = usePercentage
-          ? significantDigits(localValue / 100)
-          : significantDigits(localValue);
-        setCurrentValue(criterion.id, alternativeId, newValue);
-      }
-      setAnchorEl(null);
-    }
-  }
-
-  function getLabel(): string {
-    if (isDirty) {
-      return `${getPercentifiedValueLabel(
-        values.currentValue,
-        usePercentage
-      )} (${getPercentifiedValueLabel(values.originalValue, usePercentage)})`;
-    } else {
-      return getPercentifiedValueLabel(values.currentValue, usePercentage);
-    }
-  }
 
   return (
     <TableCell id={`sensitivity-cell-${criterion.id}-${alternativeId}`}>
       <Button style={textCenterStyle} onClick={openPopover} variant="text">
-        <a> {getLabel()}</a>
+        <a>{getLabel()}</a>
       </Button>
-      <SensitivityMeasurementsTablePopover
+      <ClickableRangePopover
         anchorEl={anchorEl}
-        closePopover={closePopover}
+        closeCallback={closeCallback}
         min={min}
         max={max}
         localValue={localValue}

@@ -43,6 +43,19 @@ export function EquivalentChangeContextProviderComponent({
     filteredCriteria.slice(1)
   );
 
+  const [canShowEquivalentChanges, setCanShowEquivalentChanges] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (pvfs && currentScenario) {
+      setCanShowEquivalentChanges(
+        _.every(pvfs, ['type', 'linear']) &&
+          currentScenario.state.weights &&
+          !_.isEmpty(observedRanges)
+      );
+    }
+  }, [pvfs, currentScenario.state.weights, observedRanges, currentScenario]);
+
   const [configuredLowerBound, configuredUpperBound] = useMemo(() => {
     return getBounds(
       referenceCriterion.dataSources[0].id,
@@ -59,22 +72,11 @@ export function EquivalentChangeContextProviderComponent({
   const [referenceValueBy, setReferenceValueBy] = useState<number>(
     getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
   );
-  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
-    getInitialReferenceValueFrom(
-      configuredLowerBound,
-      configuredUpperBound,
-      pvfs[referenceCriterion.id]
-    )
-  );
-  const [referenceValueTo, setReferenceValueTo] = useState<number>(
-    getInitialReferenceValueTo(
-      configuredLowerBound,
-      configuredUpperBound,
-      pvfs[referenceCriterion.id]
-    )
-  );
-  const referenceWeight =
-    currentScenario.state.weights.mean[referenceCriterion.id];
+  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(0);
+  const [referenceValueTo, setReferenceValueTo] = useState<number>(100);
+  const referenceWeight = currentScenario.state.weights
+    ? currentScenario.state.weights.mean[referenceCriterion.id]
+    : undefined;
   const [partOfInterval, setPartOfInterval] = useState<number>(
     getPartOfInterval(
       0,
@@ -158,6 +160,7 @@ export function EquivalentChangeContextProviderComponent({
   return (
     <EquivalentChangeContext.Provider
       value={{
+        canShowEquivalentChanges,
         otherCriteria,
         lowerBound,
         partOfInterval,

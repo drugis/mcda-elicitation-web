@@ -66,7 +66,7 @@ function results(browser: NightwatchBrowser) {
 function recalculatedResults(browser: NightwatchBrowser) {
   const measurementValuePath =
     '//*[@id="sensitivity-cell-treatmentRespondersId-placeboId"]/button/span[1]';
-  const measurementValueInputPath = '//*[@id="sensitivity-value-input"]';
+  const measurementValueInputPath = '//*[@id="value-input"]';
 
   browser
     .useXpath()

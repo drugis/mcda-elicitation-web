@@ -13,7 +13,7 @@ import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {TValueProfile} from '@shared/types/TValueProfile';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import ISensitivityValue from 'app/ts/interface/ISensitivityValue';
+import IChangeableValue from 'app/ts/interface/ISensitivityValue';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
@@ -51,7 +51,7 @@ export function DeterministicResultsContextProviderComponent({
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
 
   const [sensitivityTableValues, setSensitivityTableValues] = useState<
-    Record<string, Record<string, ISensitivityValue>>
+    Record<string, Record<string, IChangeableValue>>
   >(
     getInitialSensitivityValues(
       filteredCriteria,

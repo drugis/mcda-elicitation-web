@@ -2,6 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {EquivalentChangeType} from 'app/ts/type/EquivalentChangeType';
 
 export default interface IEquivalentChangeContext {
+  canShowEquivalentChanges: boolean;
   otherCriteria: ICriterion[];
   lowerBound: number;
   partOfInterval: number;

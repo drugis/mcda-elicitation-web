@@ -34,14 +34,12 @@ export default function PreferencesView() {
         <PartialValueFunctions />
       </Grid>
       <ShowIf condition={canShow}>
-        <EquivalentChangeContextProviderComponent>
-          <Grid item xs={12}>
-            <EquivalentChange />
-          </Grid>
-          <Grid item xs={12}>
-            <PreferencesWeights />
-          </Grid>
-        </EquivalentChangeContextProviderComponent>
+        <Grid item xs={12}>
+          <EquivalentChange />
+        </Grid>
+        <Grid item xs={12}>
+          <PreferencesWeights />
+        </Grid>
       </ShowIf>
       <ShowIf condition={!canShow}>
         <Grid item xs={12}>

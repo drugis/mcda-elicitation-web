@@ -1,9 +1,9 @@
 import {Grid, Popover, Slider, TextField, Typography} from '@material-ui/core';
 import React, {ChangeEvent, CSSProperties, useState} from 'react';
 
-export default function SensitivityMeasurementsTablePopover({
+export default function ClickableRangePopover({
   anchorEl,
-  closePopover,
+  closeCallback,
   min,
   max,
   localValue,
@@ -11,7 +11,7 @@ export default function SensitivityMeasurementsTablePopover({
   stepSize
 }: {
   anchorEl: HTMLButtonElement | null;
-  closePopover: (inputError: string) => void;
+  closeCallback: (inputError: string) => void;
   min: number;
   max: number;
   localValue: number;
@@ -44,12 +44,12 @@ export default function SensitivityMeasurementsTablePopover({
   }
 
   function handleClose(): void {
-    closePopover(inputError);
+    closeCallback(inputError);
   }
 
   return (
     <Popover
-      open={!!anchorEl}
+      open={Boolean(anchorEl)}
       onClose={handleClose}
       anchorOrigin={{vertical: 'center', horizontal: 'center'}}
       transformOrigin={{
@@ -64,7 +64,7 @@ export default function SensitivityMeasurementsTablePopover({
         </Grid>
         <Grid item xs={8} style={marginTop}>
           <Slider
-            id="sensitivity-value-slider"
+            id="value-slider"
             marks
             valueLabelDisplay="on"
             value={localValue}
@@ -80,7 +80,7 @@ export default function SensitivityMeasurementsTablePopover({
         </Grid>
         <Grid item xs={12} style={{textAlign: 'center', marginBottom: '20px'}}>
           <TextField
-            id="sensitivity-value-input"
+            id="value-input"
             value={localValue}
             onChange={inputChanged}
             type="number"

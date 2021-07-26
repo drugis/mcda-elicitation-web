@@ -2,7 +2,7 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import IWeights from '@shared/interface/Scenario/IWeights';
 import {TValueProfile} from '@shared/types/TValueProfile';
-import ISensitivityValue from 'app/ts/interface/ISensitivityValue';
+import IChangeableValue from 'app/ts/interface/ISensitivityValue';
 
 export default interface IDeterministicResultsContext {
   areRecalculatedPlotsLoading: boolean;
@@ -15,7 +15,7 @@ export default interface IDeterministicResultsContext {
   preferencesSensitivityResults: Record<string, Record<number, number>>;
   recalculatedValueProfiles: Record<string, Record<string, number>>;
   recalculatedTotalValues: Record<string, number>;
-  sensitivityTableValues: Record<string, Record<string, ISensitivityValue>>;
+  sensitivityTableValues: Record<string, Record<string, IChangeableValue>>;
   valueProfileType: TValueProfile;
   weights: IWeights;
   recalculateValuePlots: () => void;

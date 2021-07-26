@@ -5,7 +5,7 @@ import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstra
 import {TPreferences} from '@shared/types/Preferences';
 import _ from 'lodash';
 
-export function buildImportance(
+export function buildImportances(
   criteria: ICriterion[],
   preferences: TPreferences
 ): Record<string, string> {
@@ -27,9 +27,10 @@ export function buildImportance(
 }
 
 function determineRank(preferences: IRanking[], criterionId: string) {
-  const preference = _.findIndex(preferences, (preference) => {
-    return preference.criteria[1] === criterionId;
-  });
+  const preference = _.findIndex(
+    preferences,
+    (preference) => preference.criteria[1] === criterionId
+  );
   return preference !== undefined ? `${preference + 2}` : '1';
 }
 
@@ -39,9 +40,8 @@ function buildCriterionImportance(
 ): string {
   const preference = _.find(
     preferences,
-    (preference: IExactSwingRatio | IRatioBoundConstraint) => {
-      return preference.criteria[1] === criterionId;
-    }
+    (preference: IExactSwingRatio | IRatioBoundConstraint) =>
+      preference.criteria[1] === criterionId
   );
   if (!preference) {
     return '100%';

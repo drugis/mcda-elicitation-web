@@ -1,7 +1,7 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import React, {useContext} from 'react';
-import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
-import {getEquivalentValue} from '../../EquivalentChange/equivalentChangeUtil';
+import {EquivalentChangeContext} from '../../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import {getEquivalentValue} from '../../../EquivalentChange/equivalentChangeUtil';
 
 export default function EquivalentValueChange({
   usePercentage,

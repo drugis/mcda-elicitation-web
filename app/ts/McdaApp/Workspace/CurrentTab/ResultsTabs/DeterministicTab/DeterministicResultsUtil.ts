@@ -10,7 +10,7 @@ import {
   findScale,
   findValue
 } from '../../../../../EffectsTable/EffectsTableUtil';
-import ISensitivityValue from '../../../../../interface/ISensitivityValue';
+import IChangeableValue from '../../../../../interface/ISensitivityValue';
 import significantDigits from '../../../../../util/significantDigits';
 
 export function getInitialSensitivityValues(
@@ -18,7 +18,7 @@ export function getInitialSensitivityValues(
   alternatives: IAlternative[],
   effects: Effect[],
   scales: Record<string, Record<string, IScale>>
-): Record<string, Record<string, ISensitivityValue>> {
+): Record<string, Record<string, IChangeableValue>> {
   return _.mapValues(_.keyBy(criteria, 'id'), (criterion) => {
     return _.mapValues(_.keyBy(alternatives, 'id'), (alternative) => {
       const effect = findValue(

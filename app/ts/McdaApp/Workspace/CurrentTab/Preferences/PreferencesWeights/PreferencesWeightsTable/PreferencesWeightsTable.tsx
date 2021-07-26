@@ -10,27 +10,22 @@ import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
-import {buildImportance} from './PreferencesWeightsTableUtil';
+import {buildImportances} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {filteredCriteria, observedRanges} = useContext(
-    CurrentSubproblemContext
-  );
-  const [importances, setImportances] = useState<Record<string, string>>(
-    buildImportance(filteredCriteria, currentScenario.state.prefs)
-  );
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
+  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
 
-  const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
-  const canShowEquivalentChanges =
-    areAllPvfsLinear &&
-    currentScenario.state.weights &&
-    !_.isEmpty(observedRanges);
+  const [importances, setImportances] = useState<Record<string, string>>(
+    buildImportances(filteredCriteria, currentScenario.state.prefs)
+  );
 
   useEffect(() => {
     setImportances(
-      buildImportance(filteredCriteria, currentScenario.state.prefs)
+      buildImportances(filteredCriteria, currentScenario.state.prefs)
     );
   }, [currentScenario, filteredCriteria, pvfs]);
 
