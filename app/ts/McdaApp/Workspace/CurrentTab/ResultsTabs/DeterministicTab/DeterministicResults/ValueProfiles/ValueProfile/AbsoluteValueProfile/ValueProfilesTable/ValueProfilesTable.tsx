@@ -62,9 +62,7 @@ export default function ValueProfilesTable({
                       valueProfiles[alternatives[1].id][criterion.id]
                   )}
                 </TableCell>
-                <TableCell>
-                  {significantDigits(importances[criterion.id])}%
-                </TableCell>
+                <TableCell>{Math.round(importances[criterion.id])}%</TableCell>
               </ShowIf>
             </TableRow>
           )

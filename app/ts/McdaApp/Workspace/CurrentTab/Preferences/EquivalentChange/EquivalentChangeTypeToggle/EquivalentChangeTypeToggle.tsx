@@ -1,5 +1,5 @@
 import {FormControlLabel, Radio, RadioGroup} from '@material-ui/core';
-import {EquivalentChangeType} from 'app/ts/type/EquivalentChangeType';
+import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
 import React, {ChangeEvent, useContext} from 'react';
 import {EquivalentChangeContext as EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 
@@ -11,7 +11,7 @@ export default function EquivalentChangeTypeToggle() {
   function handleequivalentChangeTypeChanged(
     event: ChangeEvent<HTMLInputElement>
   ): void {
-    setEquivalentChangeType(event.target.value as EquivalentChangeType);
+    setEquivalentChangeType(event.target.value as TEquivalentChange);
   }
 
   return (
