@@ -8,10 +8,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import {TPreferences} from '@shared/types/Preferences';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import IChangeableValue from 'app/ts/interface/IChangeableValue';
-import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import ClickableRangeTableCell from 'app/ts/util/ClickableRangeTableCell/ClickableRangeTableCell';
@@ -21,14 +18,12 @@ import _ from 'lodash';
 import React, {useContext} from 'react';
 import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeCell from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/EquivalentChangeTableComponents/EquivalentChangeCell';
-import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/PreferencesWeightsTableUtil';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 import {DeterministicWeightsContext} from './DeterministicWeightsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
-  const {currentScenario} = useContext(CurrentScenarioContext);
   const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
-  const {deterministicChangeableWeights} = useContext(
+  const {deterministicChangeableWeights, setImportance} = useContext(
     DeterministicWeightsContext
   );
 
@@ -52,14 +47,14 @@ export default function DeterministicWeightsTable(): JSX.Element {
             </TableRow>
           </TableHead>
           <TableBody>
-            <WeightRows preferences={currentScenario.state.prefs} />
+            <WeightRows />
           </TableBody>
         </Table>
       </Grid>
     </Grid>
   );
 
-  function WeightRows({preferences}: {preferences: TPreferences}): JSX.Element {
+  function WeightRows(): JSX.Element {
     const {filteredCriteria} = useContext(CurrentSubproblemContext);
     const {} = useContext(DeterministicResultsContext);
     return (
@@ -71,7 +66,6 @@ export default function DeterministicWeightsTable(): JSX.Element {
             deterministicChangeableWeights.importances[criterion.id];
           const equivalentChange =
             deterministicChangeableWeights.equivalentChanges[criterion.id];
-          const setterCallback = () => {};
           return (
             <TableRow key={criterion.id}>
               <TableCell id={`title-${criterion.id}`}>
@@ -86,10 +80,10 @@ export default function DeterministicWeightsTable(): JSX.Element {
                 min={1}
                 max={100}
                 stepSize={1}
-                labelRenderer={(value: number) => {
-                  return value + '%';
-                }}
-                setterCallback={setterCallback}
+                labelRenderer={(value: number) => `${value}%`}
+                setterCallback={(newValue: number) =>
+                  setImportance(criterion.id, newValue)
+                }
               />
               <ShowIf condition={canShowEquivalentChanges}>
                 <TableCell id={`equivalent-change-${criterion.id}`}>

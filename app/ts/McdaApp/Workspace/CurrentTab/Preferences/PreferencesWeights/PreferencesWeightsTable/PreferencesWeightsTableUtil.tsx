@@ -12,14 +12,10 @@ export function buildImportances(
   return _(criteria)
     .keyBy('id')
     .mapValues((criterion): number => {
-      if (_.isEmpty(preferences)) {
-        return null;
-      } else {
-        return buildCriterionImportance(
-          preferences as IExactSwingRatio[] | IRatioBoundConstraint[],
-          criterion.id
-        );
-      }
+      return buildCriterionImportance(
+        preferences as IExactSwingRatio[] | IRatioBoundConstraint[],
+        criterion.id
+      );
     })
     .value();
 }
@@ -38,7 +34,7 @@ function buildCriterionImportance(
   } else if (preference.type === 'exact swing') {
     return getExactValue(preference);
   }
-  // } else if (preference.type === 'ratio bound') {
+  // } else if (preference.type === 'ratio bound') { //TODO figure out how to deal with imprecise/ranking
   //   return getImpreciseValue(preference);
   // }
 }
