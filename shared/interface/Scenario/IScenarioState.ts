@@ -1,6 +1,6 @@
 import {TPreferences} from '@shared/types/Preferences';
+import IWeights from '../IWeights';
 import IScenarioProblem from './IScenarioProblem';
-import IWeights from './IWeights';
 
 export default interface IScenarioState {
   problem: IScenarioProblem;

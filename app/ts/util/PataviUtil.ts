@@ -5,6 +5,7 @@ import {Distribution} from '@shared/interface/IDistribution';
 import {Effect} from '@shared/interface/IEffect';
 import IRelativePerformance from '@shared/interface/IRelativePerformance';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
+import IWeights from '@shared/interface/IWeights';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {IAbsolutePataviTableEntry} from '@shared/interface/Patavi/IAbsolutePataviTableEntry';
 import {IPataviCriterion} from '@shared/interface/Patavi/IPataviCriterion';
@@ -62,10 +63,11 @@ export function getPataviProblem(
   workspace: IWorkspace,
   preferences: TPreferences,
   pvfs: Record<string, TPvf>,
+  weights: IWeights,
   effectsHavePriority: boolean
 ): IPataviProblem {
   return {
-    preferences: preferences,
+    preferences,
     performanceTable: buildPataviPerformanceTable(
       workspace,
       effectsHavePriority
@@ -74,7 +76,8 @@ export function getPataviProblem(
     criteria: _(workspace.criteria)
       .map(_.partial(buildPataviCriterion, pvfs))
       .keyBy('id')
-      .value()
+      .value(),
+    weights
   };
 }
 

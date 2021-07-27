@@ -7,6 +7,8 @@ import React, {useContext} from 'react';
 import {DeterministicResultsContextProviderComponent} from '../DeterministicResultsContext/DeterministicResultsContext';
 import DeterministicWeightsTable from './DeterministicWeightsTable/DeterministicWeightsTable';
 import SensitivityAnalysis from './SensitivityAnalysis/SensitivityAnalysis';
+import {SensitivityAnalysisContextProviderComponent} from './SensitivityAnalysis/SensitivityAnalysisContext';
+import {SensitivityMeasurementsContextProviderComponent} from './SensitivityMeasurementsTable/SensitivityMeasurementsContext';
 import SensitivityMeasurementsTable from './SensitivityMeasurementsTable/SensitivityMeasurementsTable';
 import ValueProfiles from './ValueProfiles/ValueProfiles';
 
@@ -30,10 +32,16 @@ export default function DeterministicResults(): JSX.Element {
             currentScenario={currentScenario}
           />
         </Grid>
-        <SensitivityMeasurementsTable />
-        <DeterministicWeightsTable />
+        <SensitivityMeasurementsContextProviderComponent>
+          <SensitivityMeasurementsTable />
+        </SensitivityMeasurementsContextProviderComponent>
+        <DeterministicWeightsContextProviderComponent>
+          <DeterministicWeightsTable />
+        </DeterministicWeightsContextProviderComponent>
         <ValueProfiles />
-        <SensitivityAnalysis />
+        <SensitivityAnalysisContextProviderComponent>
+          <SensitivityAnalysis />
+        </SensitivityAnalysisContextProviderComponent>
       </Grid>
     </DeterministicResultsContextProviderComponent>
   );

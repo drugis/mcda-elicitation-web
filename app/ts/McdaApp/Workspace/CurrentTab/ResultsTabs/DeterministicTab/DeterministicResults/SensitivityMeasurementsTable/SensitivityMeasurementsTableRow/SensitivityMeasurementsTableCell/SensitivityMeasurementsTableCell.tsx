@@ -10,6 +10,7 @@ import ClickableRangeTableCell from 'app/ts/util/ClickableRangeTableCell/Clickab
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import {SensitivityMeasurementsContext} from '../../SensitivityMeasurementsContext';
 
 export default function SensitivityMeasurementsTableCell({
   criterion,
@@ -23,7 +24,7 @@ export default function SensitivityMeasurementsTableCell({
     CurrentSubproblemContext
   );
   const {sensitivityTableValues, setCurrentValue} = useContext(
-    DeterministicResultsContext
+    SensitivityMeasurementsContext
   );
 
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
