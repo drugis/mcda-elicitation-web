@@ -19,7 +19,7 @@ export default function PreferencesWeightsTableRow({
   importance
 }: {
   criterion: ICriterion;
-  importance: string;
+  importance: number;
 }): JSX.Element {
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
@@ -58,7 +58,7 @@ export default function PreferencesWeightsTableRow({
         {getBest(pvfs[criterion.id], usePercentage)}
       </TableCell>
       <TableCell id={`importance-criterion-${criterion.id}`}>
-        {importance}
+        {importance}%
       </TableCell>
       <TableCell id={`weight-criterion-${criterion.id}`}>
         {getWeight(criterion.id)}

@@ -43,19 +43,6 @@ export function EquivalentChangeContextProviderComponent({
     filteredCriteria.slice(1)
   );
 
-  const [canShowEquivalentChanges, setCanShowEquivalentChanges] =
-    useState<boolean>(false);
-
-  useEffect(() => {
-    if (pvfs && currentScenario) {
-      setCanShowEquivalentChanges(
-        _.every(pvfs, ['type', 'linear']) &&
-          currentScenario.state.weights &&
-          !_.isEmpty(observedRanges)
-      );
-    }
-  }, [pvfs, currentScenario.state.weights, observedRanges, currentScenario]);
-
   const [configuredLowerBound, configuredUpperBound] = useMemo(() => {
     return getBounds(
       referenceCriterion.dataSources[0].id,
@@ -122,6 +109,19 @@ export function EquivalentChangeContextProviderComponent({
       )
     );
   }, [configuredLowerBound, configuredUpperBound, referenceValueBy]);
+
+  const [canShowEquivalentChanges, setCanShowEquivalentChanges] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (pvfs && currentScenario) {
+      setCanShowEquivalentChanges(
+        _.every(pvfs, ['type', 'linear']) &&
+          currentScenario.state.weights &&
+          !_.isEmpty(observedRanges)
+      );
+    }
+  }, [pvfs, currentScenario.state.weights, observedRanges, currentScenario]);
 
   function reset(): void {
     if (areAllPvfsSet) {

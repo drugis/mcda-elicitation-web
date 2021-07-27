@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
-import IChangeableValue from '../../../../../interface/ISensitivityValue';
+import IChangeableValue from '../../../../../interface/IChangeableValue';
 import {
   calcImportances,
   getInitialSensitivityValues,

@@ -10,9 +10,11 @@ import {
 import ICriterion from '@shared/interface/ICriterion';
 import {TPreferences} from '@shared/types/Preferences';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
+import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
+import ClickableRangeTableCell from 'app/ts/util/ClickableRangeTableCell/ClickableRangeTableCell';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
@@ -24,7 +26,6 @@ import {buildImportances} from '../../../../Preferences/PreferencesWeights/Prefe
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
-  const {filteredCriteria} = useContext(CurrentSubproblemContext);
   const {currentScenario} = useContext(CurrentScenarioContext);
   const {weights} = useContext(DeterministicResultsContext);
   const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
@@ -44,7 +45,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
           <Table id="deterministic-weights-table">
             <TableHead>
               <TableRow>
-                <TitleCells
+                <ColumnHeaders
                   canShowEquivalentChanges={canShowEquivalentChanges}
                 />
               </TableRow>
@@ -59,34 +60,50 @@ export default function DeterministicWeightsTable(): JSX.Element {
   );
 
   function WeightRows({preferences}: {preferences: TPreferences}): JSX.Element {
+    const {filteredCriteria} = useContext(CurrentSubproblemContext);
+    const {} = useContext(DeterministicResultsContext);
     const importances = buildImportances(filteredCriteria, preferences);
-
     return (
       <>
-        {_.map(filteredCriteria, (criterion: ICriterion) => (
-          <TableRow key={criterion.id}>
-            <TableCell id={`title-${criterion.id}`}>
-              {criterion.title}
-            </TableCell>
-            <TableCell id={`weight-${criterion.id}`}>
-              {significantDigits(weights.mean[criterion.id])}
-            </TableCell>
-            <TableCell id={`importance-${criterion.id}`}>
-              {importances[criterion.id]}
-            </TableCell>
-            <ShowIf condition={canShowEquivalentChanges}>
-              <TableCell id={`equivalent-change-${criterion.id}`}>
-                <EquivalentChangeCell criterion={criterion} />
+        {_.map(filteredCriteria, (criterion: ICriterion) => {
+          const value: IChangeableValue = {
+            currentValue: importances[criterion.id],
+            originalValue: importances[criterion.id]
+          };
+          const setterCallback = () => {};
+          return (
+            <TableRow key={criterion.id}>
+              <TableCell id={`title-${criterion.id}`}>
+                {criterion.title}
               </TableCell>
-            </ShowIf>
-          </TableRow>
-        ))}
+              <TableCell id={`weight-${criterion.id}`}>
+                {significantDigits(weights.mean[criterion.id])}
+              </TableCell>
+              <ClickableRangeTableCell
+                id={`importance-${criterion.id}`}
+                value={value}
+                min={1}
+                max={100}
+                stepSize={1}
+                labelRenderer={(value: number) => {
+                  return value + '%';
+                }}
+                setterCallback={setterCallback}
+              />
+              <ShowIf condition={canShowEquivalentChanges}>
+                <TableCell id={`equivalent-change-${criterion.id}`}>
+                  <EquivalentChangeCell criterion={criterion} />
+                </TableCell>
+              </ShowIf>
+            </TableRow>
+          );
+        })}
       </>
     );
   }
 }
 
-function TitleCells({
+function ColumnHeaders({
   canShowEquivalentChanges
 }: {
   canShowEquivalentChanges: boolean;

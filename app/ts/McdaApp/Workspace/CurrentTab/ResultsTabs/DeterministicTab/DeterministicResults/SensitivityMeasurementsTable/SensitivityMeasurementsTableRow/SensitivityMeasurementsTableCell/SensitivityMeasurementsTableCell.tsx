@@ -54,7 +54,7 @@ export default function SensitivityMeasurementsTableCell({
       min={min}
       max={max}
       stepSize={stepSize}
-      labelRenderer={_.partialRight(getPercentifiedValueLabel, usePercentage)}
+      labelRenderer={_.identity}
       setterCallback={setterCallback}
     />
   );

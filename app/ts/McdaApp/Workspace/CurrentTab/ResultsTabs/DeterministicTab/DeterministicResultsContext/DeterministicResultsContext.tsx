@@ -11,11 +11,14 @@ import {IPreferencesSensitivityResults} from '@shared/interface/Patavi/IPreferen
 import {IRecalculatedCell} from '@shared/interface/Patavi/IRecalculatedCell';
 import {IRecalculatedDeterministicResultsCommand} from '@shared/interface/Patavi/IRecalculatedDeterministicResultsCommand';
 import IWeights from '@shared/interface/Scenario/IWeights';
+import {TPreferences} from '@shared/types/Preferences';
 import {TValueProfile} from '@shared/types/TValueProfile';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import IChangeableValue from 'app/ts/interface/ISensitivityValue';
+import IChangeableValue from 'app/ts/interface/IChangeableValue';
+import IDeterministicWeights from 'app/ts/interface/IDeterministicWeights';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import {TProfileCase} from 'app/ts/type/ProfileCase';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
@@ -28,6 +31,9 @@ import React, {
   useEffect,
   useState
 } from 'react';
+import {EquivalentChangeContext} from '../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import {getEquivalentValue} from '../../../Preferences/EquivalentChange/equivalentChangeUtil';
+import {buildImportances} from '../../../Preferences/PreferencesWeights/PreferencesWeightsTable/PreferencesWeightsTableUtil';
 import {getInitialSensitivityValues} from '../DeterministicResultsUtil';
 import IDeterministicResultsContext from './IDeterministicResultsContext';
 
@@ -50,7 +56,8 @@ export function DeterministicResultsContextProviderComponent({
     filteredWorkspace
   } = useContext(CurrentSubproblemContext);
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-
+  const {partOfInterval, referenceWeight} = useContext(EquivalentChangeContext);
+  const {getUsePercentage} = useContext(SettingsContext);
   const [sensitivityTableValues, setSensitivityTableValues] = useState<
     Record<string, Record<string, IChangeableValue>>
   >(
@@ -89,6 +96,7 @@ export function DeterministicResultsContextProviderComponent({
     useState<ICriterion>(filteredCriteria[0]);
   const [preferencesSensitivityResults, setPreferencesSensitivityResults] =
     useState<Record<string, Record<number, number>>>();
+
   const [areRecalculatedPlotsLoading, setAreRecalculatedPlotsLoading] =
     useState<boolean>(false);
 
@@ -102,6 +110,50 @@ export function DeterministicResultsContextProviderComponent({
     useState<IAlternative>(filteredAlternatives[0]);
   const [recalculatedComparator, setRecalculatedComparator] =
     useState<IAlternative>(filteredAlternatives[1]);
+
+  const [deterministicWeights, setDeterministicWeights] =
+    useState<IDeterministicWeights>(
+      buildDeterministicWeights(
+        filteredCriteria,
+        currentScenario.state.prefs,
+        currentScenario.state.weights
+      )
+    );
+
+  function buildDeterministicWeights(
+    criteria: ICriterion[],
+    preferences: TPreferences,
+    weights: IWeights
+  ): IDeterministicWeights {
+    const importances = _.mapValues(
+      buildImportances(criteria, preferences),
+      (importance: number): IChangeableValue => {
+        return {originalValue: importance, currentValue: importance};
+      }
+    );
+    const equivalentChanges = _(criteria)
+      .map((criterion: ICriterion): IChangeableValue => {
+        return {
+          originalValue: getEquivalentValue(
+            getUsePercentage(criterion.dataSources[0]),
+            weights.mean[criterion.id],
+            pvfs[criterion.id],
+            partOfInterval,
+            referenceWeight
+          ),
+          currentValue: 1
+        };
+      })
+      .keyBy('id')
+      .value();
+
+    return {
+      importances,
+      weights,
+      equivalentChanges,
+      partOfInterval
+    };
+  }
 
   function getReference(profileCase: TProfileCase) {
     return profileCase === 'base' ? baseReference : recalculatedReference;
@@ -276,6 +328,17 @@ export function DeterministicResultsContextProviderComponent({
     );
   }
 
+  function setImportance(criterionId: string, newValue: number): void {
+    const newValues: Record<string, IChangeableValue> = {
+      ...importances,
+      [criterionId]: {
+        originalValue: importances[criterionId].originalValue,
+        currentValue: newValue
+      }
+    };
+    setImportances(newValues);
+  }
+
   function resetSensitivityTable(): void {
     setSensitivityTableValues(
       getInitialSensitivityValues(
@@ -332,6 +395,7 @@ export function DeterministicResultsContextProviderComponent({
         areRecalculatedPlotsLoading,
         baseTotalValues,
         baseValueProfiles,
+        importances,
         measurementSensitivityAlternative,
         measurementSensitivityCriterion,
         measurementsSensitivityResults,
@@ -349,6 +413,7 @@ export function DeterministicResultsContextProviderComponent({
         setReference,
         setComparator,
         setCurrentValue,
+        setImportance,
         setMeasurementSensitivityAlternative,
         setMeasurementSensitivityCriterion,
         setPreferencesSensitivityCriterion,

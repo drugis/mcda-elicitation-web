@@ -7,10 +7,11 @@ import _ from 'lodash';
 export function buildImportances(
   criteria: ICriterion[],
   preferences: TPreferences
-): Record<string, number | [number, number]> {
+): Record<string, number> {
+  // | [number, number]
   return _(criteria)
     .keyBy('id')
-    .mapValues((criterion): number | [number, number] => {
+    .mapValues((criterion): number => {
       if (_.isEmpty(preferences)) {
         return null;
       } else {
@@ -26,7 +27,7 @@ export function buildImportances(
 function buildCriterionImportance(
   preferences: IExactSwingRatio[] | IRatioBoundConstraint[],
   criterionId: string
-): number | [number, number] {
+): number {
   const preference = _.find(
     preferences,
     (preference: IExactSwingRatio | IRatioBoundConstraint) =>
@@ -36,9 +37,10 @@ function buildCriterionImportance(
     return 100;
   } else if (preference.type === 'exact swing') {
     return getExactValue(preference);
-  } else if (preference.type === 'ratio bound') {
-    return getImpreciseValue(preference);
   }
+  // } else if (preference.type === 'ratio bound') {
+  //   return getImpreciseValue(preference);
+  // }
 }
 
 function getImpreciseValue(

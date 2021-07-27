@@ -19,7 +19,7 @@ export default function PreferencesWeightsTable() {
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
   const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
 
-  const [importances, setImportances] = useState<Record<string, string>>(
+  const [importances, setImportances] = useState<Record<string, number>>(
     buildImportances(filteredCriteria, currentScenario.state.prefs)
   );
 

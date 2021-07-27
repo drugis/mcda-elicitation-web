@@ -1,5 +1,5 @@
 import {Button, TableCell} from '@material-ui/core';
-import IChangeableValue from 'app/ts/interface/ISensitivityValue';
+import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import React, {MouseEvent, useState} from 'react';
 import ClickableRangePopover from './ClickableRangePopover';

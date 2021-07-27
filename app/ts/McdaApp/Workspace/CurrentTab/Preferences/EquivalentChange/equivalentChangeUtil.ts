@@ -61,7 +61,7 @@ export function getEquivalentValue(
   pvf: TPvf,
   partOfInterval: number,
   referenceWeight: number
-) {
+): number {
   const interval = pvf.range[1] - pvf.range[0];
   const change =
     (referenceWeight / criterionWeight) * partOfInterval * interval;

@@ -10,7 +10,7 @@ import {
   findScale,
   findValue
 } from '../../../../../EffectsTable/EffectsTableUtil';
-import IChangeableValue from '../../../../../interface/ISensitivityValue';
+import IChangeableValue from '../../../../../interface/IChangeableValue';
 import significantDigits from '../../../../../util/significantDigits';
 
 export function getInitialSensitivityValues(
