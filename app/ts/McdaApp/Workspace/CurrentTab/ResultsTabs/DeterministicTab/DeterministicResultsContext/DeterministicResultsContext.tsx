@@ -10,7 +10,6 @@ import {TValueProfile} from '@shared/types/TValueProfile';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {TProfileCase} from 'app/ts/type/ProfileCase';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import axios, {AxiosResponse} from 'axios';
@@ -36,9 +35,9 @@ export function DeterministicResultsContextProviderComponent({
 }): JSX.Element {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
   const {setError} = useContext(ErrorContext);
-  const {filteredCriteria, filteredAlternatives, filteredWorkspace} =
-    useContext(CurrentSubproblemContext);
-  const {getUsePercentage} = useContext(SettingsContext);
+  const {filteredAlternatives, filteredWorkspace} = useContext(
+    CurrentSubproblemContext
+  );
 
   const [recalculatedCells, setRecalculatedCells] = useState<
     IRecalculatedCell[]
@@ -47,6 +46,7 @@ export function DeterministicResultsContextProviderComponent({
     useState<Record<string, number>>();
   const [recalculatedValueProfiles, setRecalculatedValueProfiles] =
     useState<Record<string, Record<string, number>>>();
+  const [recalculatedWeights, setRecalculatedWeights] = useState<IWeights>();
 
   const [valueProfileType, setValueProfileType] =
     useState<TValueProfile>('absolute');
@@ -131,7 +131,7 @@ export function DeterministicResultsContextProviderComponent({
       filteredWorkspace,
       currentScenario.state.prefs,
       pvfs,
-      currentScenario.state.weights, // FIXME: recalculated weights
+      recalculatedWeights,
       true
     );
 
@@ -161,8 +161,6 @@ export function DeterministicResultsContextProviderComponent({
         setError(error);
       });
   }
-
-  const [recalculatedWeights, setRecalculatedWeights] = useState<IWeights>();
 
   return (
     <DeterministicResultsContext.Provider

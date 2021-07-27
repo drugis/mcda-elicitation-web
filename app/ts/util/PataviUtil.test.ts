@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IWeights from '@shared/interface/IWeights';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
@@ -35,8 +36,15 @@ describe('PataviUtil', () => {
       const pvfs: Record<string, ILinearPvf> = {
         crit1Id: {direction: 'increasing', type: 'linear', range: [0, 100]}
       };
+      const weights: IWeights = undefined;
       const preferences: TPreferences = [];
-      const result = getPataviProblem(workspace, preferences, pvfs, false);
+      const result = getPataviProblem(
+        workspace,
+        preferences,
+        pvfs,
+        weights,
+        false
+      );
       const expectedResult: IPataviProblem = {
         alternatives: {alt1Id: {id: 'alt1Id', title: 'alt1'}},
         criteria: {
@@ -48,9 +56,11 @@ describe('PataviUtil', () => {
           }
         },
         performanceTable: [],
-        preferences: preferences
+        preferences: preferences,
+        weights: undefined
       };
       expect(result).toEqual(expectedResult);
+      fail(); //FIXME: add proper weights
     });
   });
 

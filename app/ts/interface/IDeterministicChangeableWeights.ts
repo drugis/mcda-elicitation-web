@@ -1,4 +1,4 @@
-import IWeights from '@shared/interface/Scenario/IWeights';
+import IWeights from '@shared/interface/IWeights';
 import IChangeableValue from './IChangeableValue';
 
 export default interface IDeterministicChangeableWeights {

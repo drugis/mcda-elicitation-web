@@ -1,4 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
+import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
@@ -6,7 +7,6 @@ import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
-import IWeights from '@shared/interface/Scenario/IWeights';
 import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
 import {TPreferences} from '@shared/types/Preferences';
 import {

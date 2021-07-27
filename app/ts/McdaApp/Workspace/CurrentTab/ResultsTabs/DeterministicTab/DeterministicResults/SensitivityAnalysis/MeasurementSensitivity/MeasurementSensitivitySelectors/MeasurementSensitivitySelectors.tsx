@@ -1,9 +1,9 @@
 import {Grid, Select, Typography} from '@material-ui/core';
-import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
-import SelectOptions from 'app/ts/SelectOptions/SelectOptions';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import SelectOptions from 'app/ts/SelectOptions/SelectOptions';
 import _ from 'lodash';
 import React, {ChangeEvent, useContext} from 'react';
+import {SensitivityAnalysisContext} from '../../SensitivityAnalysisContext';
 
 export default function MeasurementSensitivitySelectors(): JSX.Element {
   const {filteredCriteria, filteredAlternatives} = useContext(
@@ -14,7 +14,7 @@ export default function MeasurementSensitivitySelectors(): JSX.Element {
     setMeasurementSensitivityCriterion,
     measurementSensitivityAlternative,
     setMeasurementSensitivityAlternative
-  } = useContext(DeterministicResultsContext);
+  } = useContext(SensitivityAnalysisContext);
 
   function handleCriterionChanged(event: ChangeEvent<{value: string}>): void {
     const newCriterion = _.find(filteredCriteria, ['id', event.target.value]);

@@ -1,6 +1,6 @@
 import {TPreferences} from '@shared/types/Preferences';
 import IAlternative from '../IAlternative';
-import IWeights from '../Scenario/IWeights';
+import IWeights from '../IWeights';
 import {IPataviCriterion} from './IPataviCriterion';
 import {TPataviPerformanceTableEntry} from './TPataviPerfomanceTableEntry';
 

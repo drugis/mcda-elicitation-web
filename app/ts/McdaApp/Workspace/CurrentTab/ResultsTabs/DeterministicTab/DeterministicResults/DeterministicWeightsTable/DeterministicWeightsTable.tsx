@@ -15,7 +15,6 @@ import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioCo
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import ClickableRangeTableCell from 'app/ts/util/ClickableRangeTableCell/ClickableRangeTableCell';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
@@ -24,11 +23,14 @@ import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/
 import EquivalentChangeCell from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/EquivalentChangeTableComponents/EquivalentChangeCell';
 import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/PreferencesWeightsTableUtil';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
+import {DeterministicWeightsContext} from './DeterministicWeightsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
   const {currentScenario} = useContext(CurrentScenarioContext);
-  const {weights} = useContext(DeterministicResultsContext);
   const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
+  const {deterministicChangeableWeights} = useContext(
+    DeterministicWeightsContext
+  );
 
   return (
     <Grid container item xs={12}>
@@ -41,20 +43,18 @@ export default function DeterministicWeightsTable(): JSX.Element {
         <ClipboardButton targetId="#deterministic-weights-table" />
       </Grid>
       <Grid item xs={12}>
-        <LoadingSpinner showSpinnerCondition={!weights}>
-          <Table id="deterministic-weights-table">
-            <TableHead>
-              <TableRow>
-                <ColumnHeaders
-                  canShowEquivalentChanges={canShowEquivalentChanges}
-                />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <WeightRows preferences={currentScenario.state.prefs} />
-            </TableBody>
-          </Table>
-        </LoadingSpinner>
+        <Table id="deterministic-weights-table">
+          <TableHead>
+            <TableRow>
+              <ColumnHeaders
+                canShowEquivalentChanges={canShowEquivalentChanges}
+              />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <WeightRows preferences={currentScenario.state.prefs} />
+          </TableBody>
+        </Table>
       </Grid>
     </Grid>
   );
@@ -62,14 +62,15 @@ export default function DeterministicWeightsTable(): JSX.Element {
   function WeightRows({preferences}: {preferences: TPreferences}): JSX.Element {
     const {filteredCriteria} = useContext(CurrentSubproblemContext);
     const {} = useContext(DeterministicResultsContext);
-    const importances = buildImportances(filteredCriteria, preferences);
     return (
       <>
         {_.map(filteredCriteria, (criterion: ICriterion) => {
-          const value: IChangeableValue = {
-            currentValue: importances[criterion.id],
-            originalValue: importances[criterion.id]
-          };
+          const weight =
+            deterministicChangeableWeights.weights.mean[criterion.id];
+          const importance =
+            deterministicChangeableWeights.importances[criterion.id];
+          const equivalentChange =
+            deterministicChangeableWeights.equivalentChanges[criterion.id];
           const setterCallback = () => {};
           return (
             <TableRow key={criterion.id}>
@@ -77,11 +78,11 @@ export default function DeterministicWeightsTable(): JSX.Element {
                 {criterion.title}
               </TableCell>
               <TableCell id={`weight-${criterion.id}`}>
-                {significantDigits(weights.mean[criterion.id])}
+                {significantDigits(weight)}
               </TableCell>
               <ClickableRangeTableCell
                 id={`importance-${criterion.id}`}
-                value={value}
+                value={importance}
                 min={1}
                 max={100}
                 stepSize={1}

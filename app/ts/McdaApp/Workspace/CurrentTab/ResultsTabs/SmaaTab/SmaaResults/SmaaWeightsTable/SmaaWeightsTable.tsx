@@ -8,7 +8,7 @@ import {
   Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import IWeights from '@shared/interface/Scenario/IWeights';
+import IWeights from '@shared/interface/IWeights';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
