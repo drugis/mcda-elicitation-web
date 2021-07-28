@@ -11,14 +11,13 @@ import ICriterion from '@shared/interface/ICriterion';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import ClickableRangeTableCell from 'app/ts/util/ClickableRangeTableCell/ClickableRangeTableCell';
+import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
 import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
-import EquivalentChangeCell from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/EquivalentChangeTableComponents/EquivalentChangeCell';
-import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
+import DeterministicEquivalentChangeCell from './DeterministicEquivalentChangeCell/DeterministicEquivalentChangeCell';
 import {DeterministicWeightsContext} from './DeterministicWeightsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
@@ -56,16 +55,13 @@ export default function DeterministicWeightsTable(): JSX.Element {
 
   function WeightRows(): JSX.Element {
     const {filteredCriteria} = useContext(CurrentSubproblemContext);
-    const {} = useContext(DeterministicResultsContext);
+    const {} = useContext(EquivalentChangeContext);
     return (
       <>
         {_.map(filteredCriteria, (criterion: ICriterion) => {
-          const weight =
-            deterministicChangeableWeights.weights.mean[criterion.id];
+          const weight = deterministicChangeableWeights.weights[criterion.id];
           const importance =
             deterministicChangeableWeights.importances[criterion.id];
-          const equivalentChange =
-            deterministicChangeableWeights.equivalentChanges[criterion.id];
           return (
             <TableRow key={criterion.id}>
               <TableCell id={`title-${criterion.id}`}>
@@ -74,7 +70,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
               <TableCell id={`weight-${criterion.id}`}>
                 {significantDigits(weight)}
               </TableCell>
-              <ClickableRangeTableCell
+              <ClickableSliderTableCell
                 id={`importance-${criterion.id}`}
                 value={importance}
                 min={1}
@@ -86,9 +82,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
                 }
               />
               <ShowIf condition={canShowEquivalentChanges}>
-                <TableCell id={`equivalent-change-${criterion.id}`}>
-                  <EquivalentChangeCell criterion={criterion} />
-                </TableCell>
+                <DeterministicEquivalentChangeCell criterion={criterion} />
               </ShowIf>
             </TableRow>
           );

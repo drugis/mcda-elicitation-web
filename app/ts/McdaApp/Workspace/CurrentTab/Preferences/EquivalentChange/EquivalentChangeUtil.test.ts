@@ -1,8 +1,8 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {
+  getEquivalentChange,
   getEquivalentRangeValue,
-  getEquivalentValue,
   getInitialReferenceValueFrom,
   getInitialReferenceValueTo,
   getPartOfInterval
@@ -81,7 +81,6 @@ describe('equivalentChangeUtil', () => {
     it('should return an improved value given a worst value, considering the weights, and ratio to the reference criterion, for an increasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'increasing'} as TPvf;
       const result = getEquivalentRangeValue(
-        usePercentage,
         criterionWeight,
         pvf,
         partOfInterval,
@@ -93,7 +92,6 @@ describe('equivalentChangeUtil', () => {
     it('should return an improved value given a worst value, considering the weights, and ratio to the reference criterion, for a decreasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'decreasing'} as TPvf;
       const result = getEquivalentRangeValue(
-        usePercentage,
         criterionWeight,
         pvf,
         partOfInterval,
@@ -106,8 +104,7 @@ describe('equivalentChangeUtil', () => {
   describe('getEquivalentValue', () => {
     it('should return the equivalent change for a second criterion, based on its pvf, a reference change and the relative weights of the criteria, for increasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'increasing'} as TPvf;
-      const result = getEquivalentValue(
-        usePercentage,
+      const result = getEquivalentChange(
         criterionWeight, // 0.1
         pvf,
         partOfInterval, // 0.5
@@ -117,8 +114,7 @@ describe('equivalentChangeUtil', () => {
     });
     it('should return the equivalent change for a second criterion, based on its pvf, a reference change and the relative weights of the criteria, for decreasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'decreasing'} as TPvf;
-      const result = getEquivalentValue(
-        usePercentage,
+      const result = getEquivalentChange(
         criterionWeight, // 0.1
         pvf,
         partOfInterval, // 0.5

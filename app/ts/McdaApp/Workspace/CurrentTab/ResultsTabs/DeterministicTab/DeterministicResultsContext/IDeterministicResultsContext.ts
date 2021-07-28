@@ -1,5 +1,4 @@
 import IAlternative from '@shared/interface/IAlternative';
-import IWeights from '@shared/interface/IWeights';
 import {IRecalculatedCell} from '@shared/interface/Patavi/IRecalculatedCell';
 import {TValueProfile} from '@shared/types/TValueProfile';
 import {TProfileCase} from 'app/ts/type/ProfileCase';
@@ -12,7 +11,7 @@ export default interface IDeterministicResultsContext {
   recalculatedTotalValues: Record<string, number>;
   recalculatedValueProfiles: Record<string, Record<string, number>>;
   valueProfileType: TValueProfile;
-  recalculatedWeights: IWeights;
+  recalculatedWeights: Record<string, number>;
   getComparator: (profileCase: TProfileCase) => IAlternative;
   getReference: (profileCase: TProfileCase) => IAlternative;
   recalculateValuePlots: () => void;
@@ -22,7 +21,7 @@ export default interface IDeterministicResultsContext {
   setRecalculatedValueProfiles: (
     valueProfiles: Record<string, Record<string, number>>
   ) => void;
-  setRecalculatedWeights: (weights: IWeights) => void;
+  setRecalculatedWeights: (weights: Record<string, number>) => void;
   setReference: (profileCase: TProfileCase, alternative: IAlternative) => void;
   setValueProfileType: (valueProfileType: TValueProfile) => void;
 }

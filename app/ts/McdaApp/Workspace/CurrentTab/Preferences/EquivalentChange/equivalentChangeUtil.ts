@@ -1,8 +1,13 @@
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {
+  getPercentifiedValue,
+  getPercentifiedValueLabel
+} from 'app/ts/DisplayUtil/DisplayUtil';
+import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
+import {getWorst} from '../PartialValueFunctions/PartialValueFunctionUtil';
 
 export function getPartOfInterval(
   from: number,
@@ -25,7 +30,7 @@ export function getInitialReferenceValueFrom(
   upperBound: number,
   pvf: TPvf
 ): number {
-  const multiplier = pvf.direction === 'increasing' ? 0.45 : 0.55;
+  const multiplier = pvf.direction === 'increasing' ? 0.25 : 0.75;
   return (upperBound - lowerBound) * multiplier + lowerBound;
 }
 
@@ -34,38 +39,37 @@ export function getInitialReferenceValueTo(
   upperBound: number,
   pvf: TPvf
 ): number {
-  const multiplier = pvf.direction === 'increasing' ? 0.55 : 0.45;
+  const multiplier = pvf.direction === 'increasing' ? 0.75 : 0.25;
   return (upperBound - lowerBound) * multiplier + lowerBound;
 }
 
 export function getEquivalentRangeValue(
-  usePercentage: boolean,
   criterionWeight: number,
   pvf: TPvf,
   partOfInterval: number,
   referenceWeight: number
 ): number {
-  const interval = pvf.range[1] - pvf.range[0];
-  const change =
-    (referenceWeight / criterionWeight) * partOfInterval * interval;
+  const change = getEquivalentChange(
+    criterionWeight,
+    pvf,
+    partOfInterval,
+    referenceWeight
+  );
   if (pvf.direction === 'increasing') {
-    return getPercentifiedValue(pvf.range[0] + change, usePercentage);
+    return pvf.range[0] + change;
   } else {
-    return getPercentifiedValue(pvf.range[1] - change, usePercentage);
+    return pvf.range[1] - change;
   }
 }
 
-export function getEquivalentValue(
-  usePercentage: boolean,
+export function getEquivalentChange(
   criterionWeight: number,
   pvf: TPvf,
   partOfInterval: number,
   referenceWeight: number
 ): number {
   const interval = pvf.range[1] - pvf.range[0];
-  const change =
-    (referenceWeight / criterionWeight) * partOfInterval * interval;
-  return Math.abs(getPercentifiedValue(change, usePercentage));
+  return (referenceWeight / criterionWeight) * partOfInterval * interval;
 }
 
 export function increaseSliderRange(
@@ -85,4 +89,35 @@ export function isSliderExtenderDisabled(
 ): boolean {
   const theoreticalUpper = unit.type === 'custom' ? unit.upperBound : 1;
   return currentUpperValue === theoreticalUpper;
+}
+
+export function getEquivalentChangeLabel(
+  equivalentChangeType: TEquivalentChange,
+  equivalentChange: number,
+  pvf: TPvf,
+  usePercentage: boolean
+): string {
+  switch (equivalentChangeType) {
+    case 'amount':
+      return getPercentifiedValueLabel(equivalentChange, usePercentage);
+    case 'range':
+      return getEquivalentChangeRangeLabel(
+        equivalentChange,
+        usePercentage,
+        pvf
+      );
+  }
+}
+
+function getEquivalentChangeRangeLabel(
+  equivalentValue: number,
+  usePercentage: boolean,
+  pvf: TPvf
+): string {
+  const worst = getWorst(pvf, usePercentage);
+  const value =
+    pvf.direction === 'increasing'
+      ? worst + getPercentifiedValue(equivalentValue, usePercentage)
+      : worst - getPercentifiedValue(equivalentValue, usePercentage);
+  return `${worst} to ${significantDigits(value)}`;
 }

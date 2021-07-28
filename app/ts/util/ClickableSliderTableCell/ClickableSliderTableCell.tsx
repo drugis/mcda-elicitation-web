@@ -2,9 +2,9 @@ import {Button, TableCell} from '@material-ui/core';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import React, {MouseEvent, useState} from 'react';
-import ClickableRangePopover from './ClickableRangePopover';
+import ClickableSliderPopover from './ClickableSliderPopover';
 
-export default function ClickableRangeTableCell({
+export default function ClickableSliderTableCell({
   id,
   value,
   min,
@@ -21,29 +21,21 @@ export default function ClickableRangeTableCell({
   setterCallback: (value: number) => void;
   labelRenderer: (value: number) => string;
 }): JSX.Element {
-  const [isDirty, setIsDirty] = useState<boolean>(false);
-
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [localValue, setLocalValue] = useState<number>(value.currentValue);
 
   function openPopover(event: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
   }
 
-  function closeCallback(inputError: string) {
-    if (localValue === value.originalValue) {
-      setIsDirty(false);
-    } else {
-      setIsDirty(true);
-      if (!inputError) {
-        setterCallback(localValue);
-      }
-      setAnchorEl(null);
+  function closeCallback(inputError: string, newValue: number) {
+    if (!inputError) {
+      setterCallback(newValue);
     }
+    setAnchorEl(null);
   }
 
   function getLabel(): string {
-    if (isDirty) {
+    if (value.currentValue !== value.originalValue) {
       return `${labelRenderer(value.currentValue)} (${labelRenderer(
         value.originalValue
       )})`;
@@ -57,13 +49,12 @@ export default function ClickableRangeTableCell({
       <Button style={textCenterStyle} onClick={openPopover} variant="text">
         <a>{getLabel()}</a>
       </Button>
-      <ClickableRangePopover
+      <ClickableSliderPopover
         anchorEl={anchorEl}
         closeCallback={closeCallback}
         min={min}
         max={max}
-        localValue={localValue}
-        setLocalValue={setLocalValue}
+        initialValue={value.currentValue}
         stepSize={stepSize}
       />
     </TableCell>

@@ -1,38 +1,26 @@
-import {Grid, Popover, Slider, TextField, Typography} from '@material-ui/core';
-import React, {ChangeEvent, CSSProperties, useState} from 'react';
+import {Grid, Popover, TextField} from '@material-ui/core';
+import React, {ChangeEvent, useState} from 'react';
 
-export default function ClickableRangePopover({
+export default function DeterministicEquivalentChangePopover({
   anchorEl,
   closeCallback,
   min,
   max,
-  localValue,
-  setLocalValue,
-  stepSize
+  initialValue
 }: {
   anchorEl: HTMLButtonElement | null;
-  closeCallback: (inputError: string) => void;
+  closeCallback: (inputError: string, localValue: number) => void;
   min: number;
   max: number;
-  localValue: number;
-  setLocalValue: (value: number) => void;
-  stepSize: number;
-}): JSX.Element {
+  initialValue: number;
+}) {
   const [inputError, setInputError] = useState<string>('');
-
-  const marginTop: CSSProperties = {marginTop: '50px', textAlign: 'center'};
+  const [localValue, setLocalValue] = useState<number>(initialValue);
 
   function inputChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void {
-    valueChanged(Number.parseFloat(event.target.value));
-  }
-
-  function sliderChanged(event: ChangeEvent<any>, newValue: number): void {
-    valueChanged(newValue);
-  }
-
-  function valueChanged(newValue: number): void {
+    const newValue = Number.parseFloat(event.target.value);
     if (isNaN(newValue)) {
       setInputError('Invalid value');
     } else if (newValue < min || newValue > max) {
@@ -44,7 +32,7 @@ export default function ClickableRangePopover({
   }
 
   function handleClose(): void {
-    closeCallback(inputError);
+    closeCallback(inputError, localValue);
   }
 
   return (
@@ -59,25 +47,6 @@ export default function ClickableRangePopover({
       anchorEl={anchorEl}
     >
       <Grid container style={{minWidth: '300px', minHeight: '100px'}}>
-        <Grid item xs={2} style={marginTop}>
-          <Typography>{min}</Typography>
-        </Grid>
-        <Grid item xs={8} style={marginTop}>
-          <Slider
-            id="value-slider"
-            marks
-            valueLabelDisplay="on"
-            value={localValue}
-            min={min}
-            max={max}
-            onChange={sliderChanged}
-            step={stepSize}
-            track={false}
-          />
-        </Grid>
-        <Grid item xs={2} style={marginTop}>
-          <Typography>{max}</Typography>
-        </Grid>
         <Grid item xs={12} style={{textAlign: 'center', marginBottom: '20px'}}>
           <TextField
             id="value-input"
@@ -86,8 +55,7 @@ export default function ClickableRangePopover({
             type="number"
             inputProps={{
               min: min,
-              max: max,
-              step: stepSize
+              max: max
             }}
             error={Boolean(inputError)}
             helperText={inputError ? inputError : ''}

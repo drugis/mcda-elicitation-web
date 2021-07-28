@@ -1,6 +1,5 @@
 import IAlternative from '@shared/interface/IAlternative';
 import IError from '@shared/interface/IError';
-import IWeights from '@shared/interface/IWeights';
 import {IDeterministicResults} from '@shared/interface/Patavi/IDeterministicResults';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
@@ -46,7 +45,8 @@ export function DeterministicResultsContextProviderComponent({
     useState<Record<string, number>>();
   const [recalculatedValueProfiles, setRecalculatedValueProfiles] =
     useState<Record<string, Record<string, number>>>();
-  const [recalculatedWeights, setRecalculatedWeights] = useState<IWeights>();
+  const [recalculatedWeights, setRecalculatedWeights] =
+    useState<Record<string, number>>();
 
   const [valueProfileType, setValueProfileType] =
     useState<TValueProfile>('absolute');
@@ -131,7 +131,7 @@ export function DeterministicResultsContextProviderComponent({
       filteredWorkspace,
       currentScenario.state.prefs,
       pvfs,
-      recalculatedWeights,
+      {'2.5%': {}, mean: recalculatedWeights, '97.5%': {}},
       true
     );
 

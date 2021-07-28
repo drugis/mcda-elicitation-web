@@ -1,12 +1,8 @@
 import ICriterion from '@shared/interface/ICriterion';
-import {
-  getPercentifiedValue,
-  getPercentifiedValueLabel
-} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import ClickableRangeTableCell from 'app/ts/util/ClickableRangeTableCell/ClickableRangeTableCell';
+import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -49,7 +45,7 @@ export default function SensitivityMeasurementsTableCell({
   }
 
   return (
-    <ClickableRangeTableCell
+    <ClickableSliderTableCell
       id={`sensitivity-cell-${criterion.id}-${alternativeId}`}
       value={value}
       min={min}

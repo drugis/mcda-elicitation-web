@@ -7,12 +7,12 @@ import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
 import React, {useContext} from 'react';
+import EquivalentChangeCell from '../../EquivalentChange/EquivalentChangeCell/EquivalentChangeCell';
 import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {
   getBest,
   getWorst
 } from '../../PartialValueFunctions/PartialValueFunctionUtil';
-import EquivalentChangeCell from './EquivalentChangeTableComponents/EquivalentChangeCell';
 
 export default function PreferencesWeightsTableRow({
   criterion,
@@ -28,9 +28,13 @@ export default function PreferencesWeightsTableRow({
   const unit = criterion.dataSources[0].unitOfMeasurement;
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
-  function getWeight(criterionId: string) {
+  function getWeight(criterionId: string): JSX.Element {
     if (currentScenario.state.weights) {
-      return significantDigits(currentScenario.state.weights.mean[criterionId]);
+      return (
+        <>
+          {significantDigits(currentScenario.state.weights.mean[criterionId])}
+        </>
+      );
     } else {
       return (
         <Tooltip title="Not all partial value functions have been set">
@@ -64,9 +68,7 @@ export default function PreferencesWeightsTableRow({
         {getWeight(criterion.id)}
       </TableCell>
       <ShowIf condition={canShowEquivalentChanges}>
-        <TableCell id={`equivalent-change-${criterion.id}`}>
-          <EquivalentChangeCell criterion={criterion} />
-        </TableCell>
+        <EquivalentChangeCell criterion={criterion} />
       </ShowIf>
     </TableRow>
   );
