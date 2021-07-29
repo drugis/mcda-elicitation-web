@@ -24,7 +24,7 @@ export default function ValueProfilesTable({
   isRelative?: boolean;
 }): JSX.Element {
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
-  const importances = calcImportances(valueProfiles);
+  const importances = calcImportances(valueProfiles, alternatives);
   return (
     <Table>
       <TableHead>
