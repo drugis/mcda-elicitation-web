@@ -38,7 +38,7 @@ export default function PreferencesWeightsTable() {
     !_.isEmpty(observedRanges);
 
   return (
-    <Table id="perferences-weights-table">
+    <Table id="preferences-weights-table">
       <TableHead>
         <TableRow>
           <TableCell>
@@ -49,13 +49,13 @@ export default function PreferencesWeightsTable() {
           </TableCell>
           <TableCell>Worst</TableCell>
           <TableCell>Best</TableCell>
+          <TableCell>Ranking</TableCell>
           <TableCell>
             <InlineHelp helpId="importance">Importance</InlineHelp>
           </TableCell>
           <TableCell>
             <InlineHelp helpId="representative-weights">Weight</InlineHelp>
           </TableCell>
-          <TableCell>Ranking</TableCell>
           <ShowIf condition={canShowEquivalentChanges}>
             <TableCell>
               <InlineHelp helpId="equivalent-change-basis">

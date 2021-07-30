@@ -42,7 +42,7 @@ function resetWeights(browser: NightwatchBrowser) {
 
 function checkMethod(browser: NightwatchBrowser, method: string) {
   browser
-    .waitForElementVisible('#perferences-weights-table')
+    .waitForElementVisible('#preferences-weights-table')
     .assert.containsText('#elicitation-method', method);
 }
 

@@ -1,4 +1,4 @@
-import {TableCell, TableRow, Tooltip} from '@material-ui/core';
+import {TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
@@ -56,13 +56,13 @@ export default function PreferencesWeightsTableRow({
       <TableCell id={`best-${criterion.id}`}>
         {getBest(pvfs[criterion.id], usePercentage)}
       </TableCell>
+      <TableCell id={`ranking-criterion-${criterion.id}`}>{ranking}</TableCell>
       <TableCell id={`importance-criterion-${criterion.id}`}>
         {importance}
       </TableCell>
       <TableCell id={`weight-criterion-${criterion.id}`}>
         {significantDigits(currentScenario.state.weights.mean[criterion.id])}
       </TableCell>
-      <TableCell id={`ranking-criterion-${criterion.id}`}>{ranking}</TableCell>
       <ShowIf condition={canShowEquivalentChanges}>
         <TableCell id={`equivalent-change-${criterion.id}`}>
           <EquivalentChangeCell criterion={criterion} />
