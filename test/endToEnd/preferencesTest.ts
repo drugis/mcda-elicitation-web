@@ -1,13 +1,13 @@
-'use strict';
+import {NightwatchBrowser} from 'nightwatch';
 
-module.exports = {
+export = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Setting the weights through ranking': ranking,
   'Ranking previous button': rankingGoBack,
   'Setting the weights through matching': matching,
-  // 'Setting the weights through matching with a piecewise-linear pvf': matchingPiecewiseLinear,
-  //FIXME
+  'Setting the weights through matching with a piecewise-linear pvf':
+    matchingPiecewiseLinear,
   'Matching previous button': matchingGoBack,
   'Setting the weights through precise swing weighting': preciseSwing,
   'Precise swing previous button': preciseSwingGoBack,
@@ -19,7 +19,7 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-function loadTestWorkspace(browser) {
+function loadTestWorkspace(browser: NightwatchBrowser) {
   workspaceService
     .addExample(browser, 'GetReal course LU 4, activity 4.4')
     .click('#workspace-0')
@@ -31,43 +31,47 @@ function loadTestWorkspace(browser) {
     .waitForElementVisible('#partial-value-functions-block');
 }
 
-function resetWeights(browser) {
+function resetWeights(browser: NightwatchBrowser) {
   browser
     .click('#reset-button')
     .assert.containsText('#elicitation-method', 'None')
-    .assert.containsText('#importance-criterion-OS', '?')
-    .assert.containsText('#importance-criterion-severe', '?')
-    .assert.containsText('#importance-criterion-moderate', '?');
+    .assert.containsText('#importance-criterion-OS', '99%')
+    .assert.containsText('#importance-criterion-severe', '99%') // weird values until https://trello.com/c/GU9kYoX0/3744-mcda-change-how-weights-are-calculated done
+    .assert.containsText('#importance-criterion-moderate', '100%');
 }
 
-function matchImportanceColumnContents(
-  browser,
-  method,
-  value1,
-  value2,
-  value3
-) {
+function checkMethod(browser: NightwatchBrowser, method: string) {
   browser
     .waitForElementVisible('#perferences-weights-table')
-    .assert.containsText('#elicitation-method', method)
-    .assert.containsText('#importance-criterion-OS', value1)
-    .assert.containsText('#importance-criterion-severe', value2)
-    .assert.containsText('#importance-criterion-moderate', value3);
+    .assert.containsText('#elicitation-method', method);
 }
 
-function beforeEach(browser) {
+function checkColumnContents(
+  browser: NightwatchBrowser,
+  column: string,
+  value1: string,
+  value2: string,
+  value3: string
+) {
+  browser.assert
+    .containsText(`#${column}-criterion-OS`, value1)
+    .assert.containsText(`#${column}-criterion-severe`, value2)
+    .assert.containsText(`#${column}-criterion-moderate`, value3);
+}
+
+function beforeEach(browser: NightwatchBrowser) {
   loginService.login(browser);
   workspaceService.cleanList(browser);
   loadTestWorkspace(browser);
   browser.pause(1000);
 }
 
-function afterEach(browser) {
+function afterEach(browser: NightwatchBrowser) {
   browser.click('#logo');
   workspaceService.deleteFromList(browser, 0).end();
 }
 
-function ranking(browser) {
+function ranking(browser: NightwatchBrowser) {
   browser
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
@@ -76,11 +80,13 @@ function ranking(browser) {
     .click('#criterion-option-severe')
     .click('#save-button');
 
-  matchImportanceColumnContents(browser, 'Ranking', 1, 2, 3);
+  checkMethod(browser, 'Ranking');
+  checkColumnContents(browser, 'importance', '100%', '46%', '18%');
+  checkColumnContents(browser, 'ranking', '1', '2', '3');
   resetWeights(browser);
 }
 
-function rankingGoBack(browser) {
+function rankingGoBack(browser: NightwatchBrowser) {
   browser
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
@@ -112,17 +118,20 @@ function matching(browser, expectedOsImportance) {
     .click('#next-button')
     .click('#save-button');
 
-  matchImportanceColumnContents(
+  checkMethod(browser, 'Matching');
+  checkColumnContents(
     browser,
-    'Matching',
+    'importance',
     expectedOsImportance ? expectedOsImportance : '96%',
     '100%',
     '100%'
   );
+  checkColumnContents(browser, 'ranking', '3', '1', '1');
+
   resetWeights(browser);
 }
 
-function matchingPiecewiseLinear(browser) {
+function matchingPiecewiseLinear(browser: NightwatchBrowser) {
   browser
     .click('#advanced-pvf-button-severe')
     .click('#decreasing-pvf-option')
@@ -135,7 +144,7 @@ function matchingPiecewiseLinear(browser) {
   matching(browser, '93%');
 }
 
-function matchingGoBack(browser) {
+function matchingGoBack(browser: NightwatchBrowser) {
   browser
     .click('#matching-button')
     .waitForElementVisible('#matching-title-header')
@@ -147,7 +156,7 @@ function matchingGoBack(browser) {
     .assert.containsText('#step-counter', 'Step 1 of 3');
 }
 
-function preciseSwing(browser) {
+function preciseSwing(browser: NightwatchBrowser) {
   browser
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
@@ -155,17 +164,13 @@ function preciseSwing(browser) {
     .click('#next-button')
     .click('#save-button');
 
-  matchImportanceColumnContents(
-    browser,
-    'Precise Swing Weighting',
-    '100%',
-    '100%',
-    '100%'
-  );
+  checkMethod(browser, 'Precise Swing Weighting');
+  checkColumnContents(browser, 'importance', '100%', '100%', '100%');
+  checkColumnContents(browser, 'ranking', '1', '1', '1');
   resetWeights(browser);
 }
 
-function preciseSwingGoBack(browser) {
+function preciseSwingGoBack(browser: NightwatchBrowser) {
   browser
     .click('#precise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
@@ -177,7 +182,7 @@ function preciseSwingGoBack(browser) {
     .assert.containsText('#step-counter', 'Step 1 of 2');
 }
 
-function impreciseSwing(browser) {
+function impreciseSwing(browser: NightwatchBrowser) {
   browser
     .click('#imprecise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')
@@ -185,17 +190,14 @@ function impreciseSwing(browser) {
     .click('#next-button')
     .click('#save-button');
 
-  matchImportanceColumnContents(
-    browser,
-    'Imprecise Swing Weighting',
-    '100%',
-    '1-100%',
-    '1-100%'
-  );
+  checkMethod(browser, 'Imprecise Swing Weighting');
+  checkColumnContents(browser, 'importance', '100%', '33%', '33%');
+  checkColumnContents(browser, 'ranking', '1', '2', '3');
+
   resetWeights(browser);
 }
 
-function impreciseSwingGoBack(browser) {
+function impreciseSwingGoBack(browser: NightwatchBrowser) {
   browser
     .click('#imprecise-swing-button')
     .waitForElementVisible('#swing-weighting-title-header')

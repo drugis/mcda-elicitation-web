@@ -1,6 +1,6 @@
 import {NightwatchBrowser} from 'nightwatch';
 import loginService from './util/loginService';
-import {delayedClick, xpathSelectorType} from './util/util';
+import {delayedClick} from './util/util';
 import workspaceService from './util/workspaceService';
 
 export = {
@@ -172,7 +172,7 @@ function cancelSettingRankingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '?');
+  cancelAction(browser, paths, '100%');
 }
 
 function cancelSettingMatchingWeights(browser: NightwatchBrowser) {
@@ -182,7 +182,7 @@ function cancelSettingMatchingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '?');
+  cancelAction(browser, paths, '100%');
 }
 
 function cancelSettingPreciseSwingWeights(browser: NightwatchBrowser) {
@@ -192,7 +192,7 @@ function cancelSettingPreciseSwingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '?');
+  cancelAction(browser, paths, '100%');
 }
 
 function cancelSettingImpreciseSwingWeights(browser: NightwatchBrowser) {
@@ -202,7 +202,7 @@ function cancelSettingImpreciseSwingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '?');
+  cancelAction(browser, paths, '100%');
 }
 
 function cancelEditingScenario(browser: NightwatchBrowser) {

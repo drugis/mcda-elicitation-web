@@ -7,7 +7,8 @@ module.exports = {
   'Set linear partial value functions via button': setLinearPvf,
   'Display weights when all PVFs are set': displayWeights,
   'Reset set trade-offs when setting a PVF': resetTradeOffs,
-  'Display deterministic results without initialized configured ranges': deterministic
+  'Display deterministic results without initialized configured ranges':
+    deterministic
 };
 
 const loginService = require('./util/loginService');
@@ -95,19 +96,17 @@ function resetTradeOffs(browser) {
   browser
     .click('#increasing-pvf-button-c1')
     .click('#increasing-pvf-button-c2')
-    .assert.containsText('#importance-criterion-c1', '?')
-    .assert.containsText('#importance-criterion-c2', '?')
+    .assert.containsText('#importance-criterion-c1', '100%')
+    .assert.containsText('#importance-criterion-c2', '100%')
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
     .click('#criterion-option-c1')
     .click('#save-button')
-    .assert.containsText('#importance-criterion-c1', '1')
-    .assert.containsText('#importance-criterion-c2', '2')
-    .assert.not.containsText('#weight-criterion-c1', '?')
-    .assert.not.containsText('#weight-criterion-c2', '?')
+    .assert.containsText('#ranking-criterion-c1', '1')
+    .assert.containsText('#ranking-criterion-c2', '2')
     .click('#decreasing-pvf-button-c1')
-    .assert.containsText('#importance-criterion-c1', '?')
-    .assert.containsText('#importance-criterion-c2', '?');
+    .assert.containsText('#importance-criterion-c1', '100%')
+    .assert.containsText('#importance-criterion-c2', '100%');
 }
 
 function deterministic(browser) {

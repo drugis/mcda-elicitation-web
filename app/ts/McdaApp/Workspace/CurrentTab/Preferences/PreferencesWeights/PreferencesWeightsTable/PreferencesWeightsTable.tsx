@@ -11,7 +11,10 @@ import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
-import {buildImportance} from './PreferencesWeightsTableUtil';
+import {
+  buildImportance,
+  calculateRankings
+} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
@@ -19,29 +22,10 @@ export default function PreferencesWeightsTable() {
     CurrentSubproblemContext
   );
   const [importances, setImportances] = useState<Record<string, string>>(
-    buildImportance(filteredCriteria, currentScenario.state.prefs)
+    buildImportance(currentScenario.state.weights.mean)
   );
   const rankings: Record<string, number> = useMemo(() => {
-    const weightRankCriterionIds = _(currentScenario.state.weights.mean)
-      .map((weight, criterionId) => {
-        return {weight, criterionId};
-      })
-      .orderBy('weight', 'desc')
-      .map((value, index) => {
-        return {...value, rank: index + 1};
-      })
-      .keyBy('criterionId')
-      .value();
-    return _.mapValues(weightRankCriterionIds, (current) => {
-      const sameWeightOther = _.find(weightRankCriterionIds, (other) => {
-        return other.weight === current.weight;
-      });
-      if (sameWeightOther) {
-        return Math.min(sameWeightOther.rank, current.rank);
-      } else {
-        return current.rank;
-      }
-    });
+    return calculateRankings(currentScenario.state.weights.mean);
   }, [currentScenario.state.weights.mean]);
 
   const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
@@ -51,9 +35,7 @@ export default function PreferencesWeightsTable() {
     !_.isEmpty(observedRanges);
 
   useEffect(() => {
-    setImportances(
-      buildImportance(filteredCriteria, currentScenario.state.prefs)
-    );
+    setImportances(buildImportance(currentScenario.state.weights.mean));
   }, [currentScenario, filteredCriteria, pvfs]);
 
   return (
