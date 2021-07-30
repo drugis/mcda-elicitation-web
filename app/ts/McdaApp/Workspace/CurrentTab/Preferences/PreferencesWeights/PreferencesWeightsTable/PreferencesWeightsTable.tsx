@@ -22,7 +22,7 @@ export default function PreferencesWeightsTable() {
     buildImportance(filteredCriteria, currentScenario.state.prefs)
   );
   const rankings: Record<string, number> = useMemo(() => {
-    return _(currentScenario.state.weights.mean)
+    const weightRankCriterionIds = _(currentScenario.state.weights.mean)
       .map((weight, criterionId) => {
         return {weight, criterionId};
       })
@@ -33,8 +33,17 @@ export default function PreferencesWeightsTable() {
         return {...value, rank: index + 1};
       })
       .keyBy('criterionId')
-      .mapValues('rank')
       .value();
+    return _.mapValues(weightRankCriterionIds, (current) => {
+      const sameWeightOther = _.find(weightRankCriterionIds, (other) => {
+        return other.weight === current.weight;
+      });
+      if (sameWeightOther) {
+        return Math.min(sameWeightOther.rank, current.rank);
+      } else {
+        return current.rank;
+      }
+    });
   }, [currentScenario.state.weights.mean]);
 
   const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
