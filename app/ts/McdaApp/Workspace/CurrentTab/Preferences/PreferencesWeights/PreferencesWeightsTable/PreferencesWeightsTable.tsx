@@ -9,7 +9,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
+import React, {useContext, useMemo} from 'react';
 import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
 import {
   buildImportance,
@@ -21,9 +21,12 @@ export default function PreferencesWeightsTable() {
   const {filteredCriteria, observedRanges} = useContext(
     CurrentSubproblemContext
   );
-  const [importances, setImportances] = useState<Record<string, string>>(
-    buildImportance(currentScenario.state.weights.mean)
+
+  const importances: Record<string, string> = useMemo(
+    () => buildImportance(currentScenario.state.weights.mean),
+    [currentScenario.state.weights.mean]
   );
+
   const rankings: Record<string, number> = useMemo(() => {
     return calculateRankings(currentScenario.state.weights.mean);
   }, [currentScenario.state.weights.mean]);
@@ -33,10 +36,6 @@ export default function PreferencesWeightsTable() {
     areAllPvfsLinear &&
     currentScenario.state.weights &&
     !_.isEmpty(observedRanges);
-
-  useEffect(() => {
-    setImportances(buildImportance(currentScenario.state.weights.mean));
-  }, [currentScenario, filteredCriteria, pvfs]);
 
   return (
     <Table id="perferences-weights-table">
