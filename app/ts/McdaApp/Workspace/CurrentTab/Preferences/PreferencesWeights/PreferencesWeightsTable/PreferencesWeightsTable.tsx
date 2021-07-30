@@ -22,13 +22,18 @@ export default function PreferencesWeightsTable() {
     buildImportance(filteredCriteria, currentScenario.state.prefs)
   );
   const rankings: Record<string, number> = useMemo(() => {
-    let rank = 0;
     return _(currentScenario.state.weights.mean)
       .map((weight, criterionId) => {
         return {weight, criterionId};
       })
-      .sortBy('weight')
-      .mapValues((value, index) => index + 1)
+      .sortBy((val) => {
+        return -val.weight;
+      })
+      .map((value, index) => {
+        return {...value, rank: index + 1};
+      })
+      .keyBy('criterionId')
+      .mapValues('rank')
       .value();
   }, [currentScenario.state.weights.mean]);
 
