@@ -26,9 +26,7 @@ export default function PreferencesWeightsTable() {
       .map((weight, criterionId) => {
         return {weight, criterionId};
       })
-      .sortBy((val) => {
-        return -val.weight;
-      })
+      .orderBy('weight', 'desc')
       .map((value, index) => {
         return {...value, rank: index + 1};
       })
