@@ -101,7 +101,7 @@ function ColumnHeaders({
     <>
       <TableCell>Criterion</TableCell>
       <TableCell>Weight</TableCell>
-      <TableCell>Importance</TableCell>
+      <TableCell>Importance (worst → best)</TableCell>
       <ShowIf condition={canShowEquivalentChanges}>
         <TableCell>Equivalent change</TableCell>
       </ShowIf>
