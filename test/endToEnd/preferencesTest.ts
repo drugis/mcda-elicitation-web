@@ -134,7 +134,9 @@ function matching(browser, expectedOsImportance) {
 function matchingPiecewiseLinear(browser: NightwatchBrowser) {
   browser
     .click('#advanced-pvf-button-severe')
+    .waitForElementVisible('#advanced-pvf-header')
     .click('#decreasing-pvf-option')
+    .waitForElementVisible('span.MuiSlider-mark:nth-child(14)')
     .click('span.MuiSlider-mark:nth-child(14)') // 11 on slider
     .click('span.MuiSlider-mark:nth-child(37)') // 34 on slider
     .click('span.MuiSlider-mark:nth-child(79)') // 76 on slider

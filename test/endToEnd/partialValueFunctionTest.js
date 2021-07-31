@@ -96,7 +96,8 @@ function resetTradeOffs(browser) {
   browser
     .click('#increasing-pvf-button-c1')
     .click('#increasing-pvf-button-c2')
-    .assert.containsText('#importance-criterion-c1', '100%')
+    .waitForElementVisible('#importance-criterion-c1')
+    .assert.containsText('#importance-criterion-c1', '99%')
     .assert.containsText('#importance-criterion-c2', '100%')
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
@@ -106,7 +107,7 @@ function resetTradeOffs(browser) {
     .assert.containsText('#ranking-criterion-c2', '2')
     .click('#decreasing-pvf-button-c1')
     .assert.containsText('#importance-criterion-c1', '100%')
-    .assert.containsText('#importance-criterion-c2', '100%');
+    .assert.containsText('#importance-criterion-c2', '33%');
 }
 
 function deterministic(browser) {
