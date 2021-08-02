@@ -11,9 +11,22 @@ export function buildImportance(
 }
 
 export function calculateRankings(
-  meanWeights: Record<string, number>
+  weights: Record<string, number>
 ): Record<string, number> {
-  const weightRankCriterionIds = _(meanWeights)
+  const weightRankCriterionIds = getCriterionWeightAndRank(weights);
+  return getCorrectRanks(weightRankCriterionIds);
+}
+
+interface IWeightRankCriterionId {
+  rank: number;
+  weight: number;
+  criterionId: string;
+}
+
+function getCriterionWeightAndRank(
+  weights: Record<string, number>
+): Record<string, IWeightRankCriterionId> {
+  return _(weights)
     .map((weight, criterionId) => {
       return {weight, criterionId};
     })
@@ -23,6 +36,10 @@ export function calculateRankings(
     })
     .keyBy('criterionId')
     .value();
+}
+function getCorrectRanks(
+  weightRankCriterionIds: Record<string, IWeightRankCriterionId>
+) {
   return _.mapValues(weightRankCriterionIds, (current) => {
     const sameWeightOther = _.find(weightRankCriterionIds, (other) => {
       return other.weight === current.weight;
