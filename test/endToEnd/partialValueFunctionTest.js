@@ -101,6 +101,7 @@ function resetTradeOffs(browser) {
     .assert.containsText('#importance-criterion-c2', '100%')
     .click('#ranking-button')
     .waitForElementVisible('#ranking-title-header')
+    .waitForElementVisible('#criterion-option-c1')
     .click('#criterion-option-c1')
     .click('#save-button')
     .assert.containsText('#ranking-criterion-c1', '1')

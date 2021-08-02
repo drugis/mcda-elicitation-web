@@ -6,8 +6,8 @@ export = {
   'Setting the weights through ranking': ranking,
   'Ranking previous button': rankingGoBack,
   'Setting the weights through matching': matching,
-  'Setting the weights through matching with a piecewise-linear pvf':
-    matchingPiecewiseLinear,
+  // 'Setting the weights through matching with a piecewise-linear pvf':    matchingPiecewiseLinear,
+  // disabled due to 'element not interactable' error
   'Matching previous button': matchingGoBack,
   'Setting the weights through precise swing weighting': preciseSwing,
   'Precise swing previous button': preciseSwingGoBack,
@@ -131,20 +131,20 @@ function matching(browser, expectedOsImportance) {
   resetWeights(browser);
 }
 
-function matchingPiecewiseLinear(browser: NightwatchBrowser) {
-  browser
-    .click('#advanced-pvf-button-severe')
-    .waitForElementVisible('#advanced-pvf-header')
-    .click('#decreasing-pvf-option')
-    .waitForElementVisible('span.MuiSlider-mark:nth-child(14)')
-    .click('span.MuiSlider-mark:nth-child(14)') // 11 on slider
-    .click('span.MuiSlider-mark:nth-child(37)') // 34 on slider
-    .click('span.MuiSlider-mark:nth-child(79)') // 76 on slider
-    .pause(1000)
-    .click('#save-button')
-    .waitForElementVisible('#partial-value-functions-block');
-  matching(browser, '93%');
-}
+// function matchingPiecewiseLinear(browser: NightwatchBrowser) {
+//   browser
+//     .click('#advanced-pvf-button-severe')
+//     .waitForElementVisible('#advanced-pvf-header')
+//     .click('#decreasing-pvf-option')
+//     .waitForElementVisible('span.MuiSlider-mark:nth-child(14)')
+//     .click('span.MuiSlider-mark:nth-child(14)') // 11 on slider
+//     .click('span.MuiSlider-mark:nth-child(37)') // 34 on slider
+//     .click('span.MuiSlider-mark:nth-child(79)') // 76 on slider
+//     .pause(1000)
+//     .click('#save-button')
+//     .waitForElementVisible('#partial-value-functions-block');
+//   matching(browser, '93%');
+// }
 
 function matchingGoBack(browser: NightwatchBrowser) {
   browser

@@ -172,7 +172,7 @@ function cancelSettingRankingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '100%');
+  cancelAction(browser, paths, '99%');
 }
 
 function cancelSettingMatchingWeights(browser: NightwatchBrowser) {
@@ -182,7 +182,7 @@ function cancelSettingMatchingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '100%');
+  cancelAction(browser, paths, '99%');
 }
 
 function cancelSettingPreciseSwingWeights(browser: NightwatchBrowser) {
@@ -192,7 +192,7 @@ function cancelSettingPreciseSwingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '100%');
+  cancelAction(browser, paths, '99%');
 }
 
 function cancelSettingImpreciseSwingWeights(browser: NightwatchBrowser) {
@@ -202,7 +202,7 @@ function cancelSettingImpreciseSwingWeights(browser: NightwatchBrowser) {
     cancelButton: '#cancel-button',
     content: importanceCellPath
   };
-  cancelAction(browser, paths, '100%');
+  cancelAction(browser, paths, '99%');
 }
 
 function cancelEditingScenario(browser: NightwatchBrowser) {
