@@ -64,7 +64,7 @@ function results(browser: NightwatchBrowser) {
 
 function recalculatedMeasurementResults(browser: NightwatchBrowser) {
   const measurementValuePath =
-    '#sensitivity-cell-treatmentRespondersId-placeboId > button > span';
+    '#sensitivity-cell-treatmentRespondersId-placeboId';
   const measurementValueInputPath = '#value-input';
 
   browser
@@ -72,11 +72,10 @@ function recalculatedMeasurementResults(browser: NightwatchBrowser) {
     .clearValue(measurementValueInputPath)
     .setValue(measurementValueInputPath, '63')
     .sendKeys(measurementValueInputPath, browser.Keys.ESCAPE)
-    .pause(1000)
-    .click('#sensitivity-measurements-header')
-    .click('#measurements-recalculate-button');
-  browser.assert
-    .containsText(measurementValuePath, '63 (36.6)')
+    .waitForElementVisible(measurementValuePath);
+  browser.expect.element(measurementValuePath).text.to.equal('63 (36.6)');
+  browser
+    .click('#measurements-recalculate-button')
     .waitForElementVisible('#value-profile-plot-recalculated')
     .waitForElementVisible('#recalculated-total-value-table')
     .waitForElementVisible('#recalculated-value-profiles-table');
@@ -110,9 +109,8 @@ function recalculatedWeights(browser: NightwatchBrowser) {
     .waitForElementVisible('#value-input')
     .clearValue('#value-input')
     .setValue('#value-input', '63')
-    .pause(5000)
     .sendKeys('#value-input', browser.Keys.ESCAPE)
-    .pause(750);
+    .waitForElementVisible('#equivalent-change-treatmentRespondersId');
   browser.expect
     .element('#equivalent-change-treatmentRespondersId')
     .text.to.equal('11.1 (17.5) %');
@@ -120,24 +118,30 @@ function recalculatedWeights(browser: NightwatchBrowser) {
 
 function modifyMeasurementsPlot(browser: NightwatchBrowser) {
   browser
+    .waitForElementVisible('#measurements-alternative-selector')
     .click('#measurements-alternative-selector')
     .click('option[value="fluoxetineId"]')
-    .assert.containsText('#measurements-alternative-selector', 'Fluoxetine')
+    .expect.element('#measurements-alternative-selector')
+    .text.to.equal('Fluoxetine')
 
     .click('#measurements-criterion-selector')
     .click('option[value="nauseaId"]')
-    .assert.containsText('#measurements-criterion-selector', 'Nausea ADRs');
+    .expect.element('#measurements-criterion-selector')
+    .text.to.equal('Nausea ADRs');
 }
 
 function modifyPreferencesPlot(browser: NightwatchBrowser) {
   browser
+    .waitForElementPresent('#preferences-criterion-selector')
     .click('#preferences-criterion-selector')
     .click('option[value="nauseaId"]')
-    .assert.containsText('#preferences-criterion-selector', 'Nausea ADRs');
+    .expect.element('#preferences-criterion-selector')
+    .text.to.equal('Nausea ADRs');
 }
 
 function relativeSensitivity(browser: NightwatchBrowser) {
   browser
+    .waitForElementPresent('#value-profile-type-relative')
     .click('#value-profile-type-relative')
     .waitForElementPresent('#value-profile-reference-select-base')
     .expect.element('#relative-total-difference')
