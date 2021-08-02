@@ -1,6 +1,10 @@
 import {Button, TableCell} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
+import {
+  getDepercentifiedValue,
+  getPercentifiedValue,
+  getPercentifiedValueLabel
+} from 'app/ts/DisplayUtil/DisplayUtil';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import significantDigits from 'app/ts/util/significantDigits';
@@ -19,6 +23,7 @@ export default function DeterministicEquivalentChangeCell({
   const {getUsePercentage} = useContext(SettingsContext);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const unitLabel = criterion.dataSources[0].unitOfMeasurement.label;
 
   const equivalentChange =
     deterministicChangeableWeights.equivalentChanges[criterion.id];
@@ -32,7 +37,10 @@ export default function DeterministicEquivalentChangeCell({
 
   function closeCallback(inputError: string, newValue: number) {
     if (!inputError) {
-      setEquivalentValue(criterion.id, newValue);
+      setEquivalentValue(
+        criterion.id,
+        getDepercentifiedValue(newValue, usePercentage)
+      );
     }
     setAnchorEl(null);
   }
@@ -60,14 +68,18 @@ export default function DeterministicEquivalentChangeCell({
   return (
     <TableCell id={`equivalent-change-${criterion.id}`}>
       <Button style={textCenterStyle} onClick={openPopover} variant="text">
-        <a>{getLabel()}</a>
+        <a>{`${getLabel()} ${unitLabel}`}</a>
       </Button>
       <DeterministicEquivalentChangePopover
         anchorEl={anchorEl}
         closeCallback={closeCallback}
-        min={min}
-        max={max}
-        initialValue={equivalentChange.currentValue}
+        min={getPercentifiedValue(min, usePercentage)}
+        max={getPercentifiedValue(max, usePercentage)}
+        initialValue={getPercentifiedValue(
+          equivalentChange.currentValue,
+          usePercentage
+        )}
+        unitLabel={unitLabel}
       />
     </TableCell>
   );

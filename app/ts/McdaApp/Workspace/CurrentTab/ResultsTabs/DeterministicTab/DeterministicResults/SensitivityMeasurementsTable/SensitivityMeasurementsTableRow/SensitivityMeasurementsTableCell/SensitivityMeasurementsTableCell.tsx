@@ -1,5 +1,8 @@
 import ICriterion from '@shared/interface/ICriterion';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {
+  getDepercentifiedValue,
+  getPercentifiedValue
+} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
@@ -38,9 +41,7 @@ export default function SensitivityMeasurementsTableCell({
   );
 
   function setterCallback(localValue: number) {
-    const newValue = usePercentage
-      ? significantDigits(localValue / 100)
-      : significantDigits(localValue);
+    const newValue = getDepercentifiedValue(localValue, usePercentage);
     setCurrentValue(criterion.id, alternativeId, newValue);
   }
 

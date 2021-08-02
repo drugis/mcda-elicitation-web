@@ -1,11 +1,21 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import {
   canBePercentage,
+  getDepercentifiedValue,
   getPercentifiedValueLabel,
   valueToString
 } from './DisplayUtil';
 
 describe('displayUtil', () => {
+  describe('getDepercentifiedValue', () => {
+    it('should return the value if it is not a percentage', () => {
+      expect(getDepercentifiedValue(1, false)).toBe(1);
+    });
+    it('should return the value / 100 if it is a percentage', () => {
+      expect(getDepercentifiedValue(1, true)).toBe(0.01);
+    });
+  });
+
   describe('getPercentifiedValueLabel', () => {
     it('should return a percentified value if it should show percentages', () => {
       const value = 0.010001;

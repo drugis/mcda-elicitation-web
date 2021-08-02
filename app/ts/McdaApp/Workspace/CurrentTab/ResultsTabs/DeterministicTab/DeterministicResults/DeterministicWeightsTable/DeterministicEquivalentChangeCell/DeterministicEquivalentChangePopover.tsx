@@ -1,4 +1,4 @@
-import {Grid, Popover, TextField} from '@material-ui/core';
+import {Grid, InputAdornment, Popover, TextField} from '@material-ui/core';
 import React, {ChangeEvent, useState} from 'react';
 
 export default function DeterministicEquivalentChangePopover({
@@ -6,13 +6,15 @@ export default function DeterministicEquivalentChangePopover({
   closeCallback,
   min,
   max,
-  initialValue
+  initialValue,
+  unitLabel
 }: {
   anchorEl: HTMLButtonElement | null;
   closeCallback: (inputError: string, localValue: number) => void;
   min: number;
   max: number;
   initialValue: number;
+  unitLabel: string;
 }) {
   const [inputError, setInputError] = useState<string>('');
   const [localValue, setLocalValue] = useState<number>(initialValue);
@@ -46,13 +48,22 @@ export default function DeterministicEquivalentChangePopover({
       }}
       anchorEl={anchorEl}
     >
-      <Grid container style={{minWidth: '300px', minHeight: '100px'}}>
+      <Grid
+        container
+        style={{minWidth: '300px', minHeight: '100px'}}
+        alignItems={'center'}
+      >
         <Grid item xs={12} style={{textAlign: 'center', marginBottom: '20px'}}>
           <TextField
             id="value-input"
             value={localValue}
             onChange={inputChanged}
             type="number"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">{unitLabel}</InputAdornment>
+              )
+            }}
             inputProps={{
               min: min,
               max: max
