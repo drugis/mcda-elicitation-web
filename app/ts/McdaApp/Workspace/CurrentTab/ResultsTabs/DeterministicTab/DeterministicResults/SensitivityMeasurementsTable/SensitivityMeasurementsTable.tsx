@@ -19,13 +19,15 @@ import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import SensitivityTableButtons from '../SensitivityTableButtons/SensitivityTableButtons';
+import {SensitivityMeasurementsContext} from './SensitivityMeasurementsContext';
 import SensitivityMeasurementsTableRow from './SensitivityMeasurementsTableRow/SensitivityMeasurementsTableRow';
-import SensitivityTableButtons from './SensitivityTableButtons/SensitivityTableButtons';
 
 export default function SensitivityMeasurementsTable(): JSX.Element {
   const {filteredAlternatives, filteredCriteria, configuredRanges} = useContext(
     CurrentSubproblemContext
   );
+  const {resetSensitivityTable} = useContext(SensitivityMeasurementsContext);
 
   return (
     <Grid container item xs={12} spacing={1}>
@@ -66,7 +68,10 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
             </Table>
           </Grid>
           <Grid item xs={12}>
-            <SensitivityTableButtons />
+            <SensitivityTableButtons
+              resetter={resetSensitivityTable}
+              idContext="measurements"
+            />
           </Grid>
         </LoadingSpinner>
       </Grid>

@@ -7,6 +7,7 @@ import {
 } from 'app/ts/DisplayUtil/DisplayUtil';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
 import React, {MouseEvent, useContext, useState} from 'react';
 import {DeterministicWeightsContext} from '../DeterministicWeightsContext';
@@ -20,10 +21,13 @@ export default function DeterministicEquivalentChangeCell({
   const {deterministicChangeableWeights, setEquivalentValue} = useContext(
     DeterministicWeightsContext
   );
-  const {getUsePercentage} = useContext(SettingsContext);
+  const {getUsePercentage, showPercentages} = useContext(SettingsContext);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const unitLabel = criterion.dataSources[0].unitOfMeasurement.label;
+  const unitLabel = getUnitLabel(
+    criterion.dataSources[0].unitOfMeasurement,
+    showPercentages
+  );
 
   const equivalentChange =
     deterministicChangeableWeights.equivalentChanges[criterion.id];

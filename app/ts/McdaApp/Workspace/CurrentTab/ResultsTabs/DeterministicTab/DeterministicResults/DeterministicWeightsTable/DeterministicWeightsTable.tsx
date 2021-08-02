@@ -17,14 +17,14 @@ import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import SensitivityTableButtons from '../SensitivityTableButtons/SensitivityTableButtons';
 import DeterministicEquivalentChangeCell from './DeterministicEquivalentChangeCell/DeterministicEquivalentChangeCell';
 import {DeterministicWeightsContext} from './DeterministicWeightsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
   const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
-  const {deterministicChangeableWeights, setImportance} = useContext(
-    DeterministicWeightsContext
-  );
+  const {deterministicChangeableWeights, setImportance, resetWeightsTable} =
+    useContext(DeterministicWeightsContext);
 
   return (
     <Grid container item xs={12}>
@@ -50,12 +50,17 @@ export default function DeterministicWeightsTable(): JSX.Element {
           </TableBody>
         </Table>
       </Grid>
+      <Grid item xs={12}>
+        <SensitivityTableButtons
+          resetter={resetWeightsTable}
+          idContext="weights"
+        />
+      </Grid>
     </Grid>
   );
 
   function WeightRows(): JSX.Element {
     const {filteredCriteria} = useContext(CurrentSubproblemContext);
-    const {} = useContext(EquivalentChangeContext);
     return (
       <>
         {_.map(filteredCriteria, (criterion: ICriterion) => {
@@ -76,7 +81,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
                 min={1}
                 max={100}
                 stepSize={1}
-                labelRenderer={(value: number) => `${value}%`}
+                labelRenderer={(value: number) => `${Math.round(value)}%`}
                 setterCallback={(newValue: number) =>
                   setImportance(criterion.id, newValue)
                 }

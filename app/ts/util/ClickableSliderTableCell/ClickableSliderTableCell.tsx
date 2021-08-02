@@ -2,6 +2,7 @@ import {Button, TableCell} from '@material-ui/core';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import React, {MouseEvent, useState} from 'react';
+import significantDigits from '../significantDigits';
 import ClickableSliderPopover from './ClickableSliderPopover';
 
 export default function ClickableSliderTableCell({
@@ -35,7 +36,10 @@ export default function ClickableSliderTableCell({
   }
 
   function getLabel(): string {
-    if (value.currentValue !== value.originalValue) {
+    if (
+      significantDigits(value.currentValue) !==
+      significantDigits(value.originalValue)
+    ) {
       return `${labelRenderer(value.currentValue)} (${labelRenderer(
         value.originalValue
       )})`;

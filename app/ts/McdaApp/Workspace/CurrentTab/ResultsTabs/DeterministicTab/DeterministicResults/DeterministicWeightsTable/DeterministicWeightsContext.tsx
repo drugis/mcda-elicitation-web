@@ -29,7 +29,11 @@ export function DeterministicWeightsContextProviderComponent({
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
   const {partOfInterval, referenceWeight} = useContext(EquivalentChangeContext);
-  const {setRecalculatedWeights} = useContext(DeterministicResultsContext);
+  const {
+    setRecalculatedWeights,
+    setRecalculatedTotalValues,
+    setRecalculatedValueProfiles
+  } = useContext(DeterministicResultsContext);
   const [deterministicChangeableWeights, setDeterministicChangeableWeights] =
     useState<IDeterministicChangeableWeights>(
       buildDeterministicWeights(
@@ -144,18 +148,32 @@ export function DeterministicWeightsContextProviderComponent({
       equivalentChanges,
       (equivalentChange, criterionId: string) => {
         const importance = importances[criterionId];
-        const newValue =
+        const newValue = Math.round(
           (importance.originalValue * equivalentChange.currentValue) /
-          equivalentChange.originalValue;
+            equivalentChange.originalValue
+        );
         return {...importance, currentValue: significantDigits(newValue)};
       }
     );
+  }
+
+  function resetWeightsTable() {
+    setDeterministicChangeableWeights(
+      buildDeterministicWeights(
+        filteredCriteria,
+        currentScenario.state.prefs,
+        currentScenario.state.weights
+      )
+    );
+    setRecalculatedTotalValues(undefined);
+    setRecalculatedValueProfiles(undefined);
   }
 
   return (
     <DeterministicWeightsContext.Provider
       value={{
         deterministicChangeableWeights,
+        resetWeightsTable,
         setImportance,
         setEquivalentValue
       }}
