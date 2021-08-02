@@ -296,9 +296,12 @@ function getLineYValues(
 }
 
 export function calcImportances(
-  valueProfiles: Record<string, Record<string, number>>
+  valueProfiles: Record<string, Record<string, number>>,
+  alternatives: IAlternative[]
 ): Record<string, number> {
-  const [referenceValues, comparatorValues] = _.values(valueProfiles);
+  const [referenceValues, comparatorValues] = _.values(
+    _.pick(valueProfiles, _.map(alternatives, 'id'))
+  );
   const diffs = _.mapValues(
     referenceValues,
     (referenceValue: number, key: string): number =>

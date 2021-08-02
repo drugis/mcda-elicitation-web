@@ -9,28 +9,36 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
-import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import React, {useContext, useMemo} from 'react';
 import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
-import {buildImportances} from './PreferencesWeightsTableUtil';
+import {
+  buildImportances,
+  calculateRankings
+} from './PreferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {filteredCriteria} = useContext(CurrentSubproblemContext);
-  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
-
-  const [importances, setImportances] = useState<Record<string, number>>(
-    buildImportances(filteredCriteria, currentScenario.state.prefs)
+  const {filteredCriteria, observedRanges} = useContext(
+    CurrentSubproblemContext
   );
 
-  useEffect(() => {
-    setImportances(
-      buildImportances(filteredCriteria, currentScenario.state.prefs)
-    );
-  }, [currentScenario, filteredCriteria, pvfs]);
+  const importances: Record<string, string> = useMemo(
+    () => buildImportances(currentScenario.state.weights.mean),
+    [currentScenario.state.weights.mean]
+  );
+
+  const rankings: Record<string, number> = useMemo(() => {
+    return calculateRankings(currentScenario.state.weights.mean);
+  }, [currentScenario.state.weights.mean]);
+
+  const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
+  const canShowEquivalentChanges =
+    areAllPvfsLinear &&
+    currentScenario.state.weights &&
+    !_.isEmpty(observedRanges);
 
   return (
-    <Table id="perferences-weights-table">
+    <Table id="preferences-weights-table">
       <TableHead>
         <TableRow>
           <TableCell>
@@ -41,6 +49,7 @@ export default function PreferencesWeightsTable() {
           </TableCell>
           <TableCell>Worst</TableCell>
           <TableCell>Best</TableCell>
+          <TableCell>Ranking</TableCell>
           <TableCell>
             <InlineHelp helpId="importance">Importance</InlineHelp>
           </TableCell>
@@ -64,6 +73,7 @@ export default function PreferencesWeightsTable() {
               key={criterion.id}
               criterion={criterion}
               importance={importances[criterion.id]}
+              ranking={rankings[criterion.id]}
             />
           )
         )}

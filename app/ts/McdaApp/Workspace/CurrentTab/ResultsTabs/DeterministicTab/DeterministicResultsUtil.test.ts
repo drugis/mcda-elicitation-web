@@ -150,6 +150,10 @@ describe('DeterministicResultsUtil', () => {
   describe('calcImportances', () => {
     it('should calculate the normalised importances of the reference vs the comparator values', () => {
       const valueProfiles = {
+        alt0Id: {
+          crit1Id: 80,
+          crit2Id: 2000
+        },
         alt1Id: {
           crit1Id: 10,
           crit2Id: 20
@@ -159,7 +163,11 @@ describe('DeterministicResultsUtil', () => {
           crit2Id: 40
         }
       };
-      const result = calcImportances(valueProfiles);
+      const alternatives: IAlternative[] = [
+        {id: 'alt1Id'} as IAlternative,
+        {id: 'alt2Id'} as IAlternative
+      ];
+      const result = calcImportances(valueProfiles, alternatives);
       const expectedResult: Record<string, number> = {
         crit1Id: 50,
         crit2Id: 100

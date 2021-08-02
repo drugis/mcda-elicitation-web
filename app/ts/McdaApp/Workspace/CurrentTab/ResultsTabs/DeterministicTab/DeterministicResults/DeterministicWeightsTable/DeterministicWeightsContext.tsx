@@ -1,6 +1,5 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IWeights from '@shared/interface/IWeights';
-import {TPreferences} from '@shared/types/Preferences';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import IDeterministicChangeableWeights from 'app/ts/interface/IDeterministicChangeableWeights';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
@@ -36,19 +35,14 @@ export function DeterministicWeightsContextProviderComponent({
   } = useContext(DeterministicResultsContext);
   const [deterministicChangeableWeights, setDeterministicChangeableWeights] =
     useState<IDeterministicChangeableWeights>(
-      buildDeterministicWeights(
-        filteredCriteria,
-        currentScenario.state.prefs,
-        currentScenario.state.weights
-      )
+      buildDeterministicWeights(filteredCriteria, currentScenario.state.weights)
     );
 
   function buildDeterministicWeights(
     criteria: ICriterion[],
-    preferences: TPreferences,
     weights: IWeights
   ): IDeterministicChangeableWeights {
-    const importances = getDetermisticImportances(criteria, preferences);
+    const importances = getDetermisticImportances(weights.mean);
     const equivalentChanges = getDeterministicEquivalentChanges(
       criteria,
       weights,
@@ -159,11 +153,7 @@ export function DeterministicWeightsContextProviderComponent({
 
   function resetWeightsTable() {
     setDeterministicChangeableWeights(
-      buildDeterministicWeights(
-        filteredCriteria,
-        currentScenario.state.prefs,
-        currentScenario.state.weights
-      )
+      buildDeterministicWeights(filteredCriteria, currentScenario.state.weights)
     );
     setRecalculatedTotalValues(undefined);
     setRecalculatedValueProfiles(undefined);

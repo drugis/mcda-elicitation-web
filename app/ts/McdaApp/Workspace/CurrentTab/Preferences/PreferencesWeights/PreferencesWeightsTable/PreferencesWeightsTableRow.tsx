@@ -1,4 +1,4 @@
-import {TableCell, TableRow, Tooltip} from '@material-ui/core';
+import {TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
@@ -16,10 +16,12 @@ import {
 
 export default function PreferencesWeightsTableRow({
   criterion,
-  importance
+  importance,
+  ranking
 }: {
   criterion: ICriterion;
-  importance: number;
+  importance: string;
+  ranking: number;
 }): JSX.Element {
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
@@ -27,22 +29,6 @@ export default function PreferencesWeightsTableRow({
 
   const unit = criterion.dataSources[0].unitOfMeasurement;
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
-
-  function getWeight(criterionId: string): JSX.Element {
-    if (currentScenario.state.weights) {
-      return (
-        <>
-          {significantDigits(currentScenario.state.weights.mean[criterionId])}
-        </>
-      );
-    } else {
-      return (
-        <Tooltip title="Not all partial value functions have been set">
-          <span>?</span>
-        </Tooltip>
-      );
-    }
-  }
 
   return (
     <TableRow key={criterion.id}>
@@ -61,11 +47,12 @@ export default function PreferencesWeightsTableRow({
       <TableCell id={`best-${criterion.id}`}>
         {getBest(pvfs[criterion.id], usePercentage)}
       </TableCell>
+      <TableCell id={`ranking-criterion-${criterion.id}`}>{ranking}</TableCell>
       <TableCell id={`importance-criterion-${criterion.id}`}>
         {importance}%
       </TableCell>
       <TableCell id={`weight-criterion-${criterion.id}`}>
-        {getWeight(criterion.id)}
+        {significantDigits(currentScenario.state.weights.mean[criterion.id])}
       </TableCell>
       <ShowIf condition={canShowEquivalentChanges}>
         <EquivalentChangeCell criterion={criterion} />

@@ -31,7 +31,7 @@ export default function AdvancedPartialValueFunction(): JSX.Element {
       mt={2}
     >
       <Grid container item spacing={4} sm={12} md={9} component={Paper}>
-        <Grid item xs={12}>
+        <Grid item xs={12} id="advanced-pvf-header">
           <Typography variant="h4">
             Define{' '}
             <InlineHelp helpId="partial-value-function">
