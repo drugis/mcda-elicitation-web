@@ -1,4 +1,4 @@
-import {TableCell, TableRow, Tooltip} from '@material-ui/core';
+import {TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
@@ -20,17 +20,13 @@ import EquivalentValueChange from './EquivalentValueChange';
 
 export default function PreferencesWeightsTableRow({
   criterion,
-  importance
+  importance,
+  ranking
 }: {
   criterion: ICriterion;
   importance: string;
+  ranking: number;
 }): JSX.Element {
-  const {
-    equivalentChangeType,
-    referenceValueFrom,
-    referenceValueTo,
-    referenceCriterion
-  } = useContext(EquivalentChangeContext);
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
   const {observedRanges} = useContext(CurrentSubproblemContext);
@@ -42,48 +38,6 @@ export default function PreferencesWeightsTableRow({
     areAllPvfsLinear &&
     currentScenario.state.weights &&
     !_.isEmpty(observedRanges);
-
-  function getWeight(criterionId: string) {
-    if (currentScenario.state.weights) {
-      return significantDigits(currentScenario.state.weights.mean[criterionId]);
-    } else {
-      return (
-        <Tooltip title="Not all partial value functions have been set">
-          <span>?</span>
-        </Tooltip>
-      );
-    }
-  }
-
-  function EquivalentChangeCell({criterion}: {criterion: ICriterion}) {
-    switch (equivalentChangeType) {
-      case 'amount':
-        return (
-          <EquivalentValueChange
-            usePercentage={usePercentage}
-            pvf={pvfs[criterion.id]}
-            otherWeight={currentScenario.state.weights.mean[criterion.id]}
-          />
-        );
-      case 'range':
-        if (criterion.id === referenceCriterion.id) {
-          return (
-            <span>
-              {getPercentifiedValue(referenceValueFrom, usePercentage)} to{' '}
-              {getPercentifiedValue(referenceValueTo, usePercentage)}
-            </span>
-          );
-        } else {
-          return (
-            <EquivalentRangeChange
-              usePercentage={usePercentage}
-              pvf={pvfs[criterion.id]}
-              otherWeight={currentScenario.state.weights.mean[criterion.id]}
-            />
-          );
-        }
-    }
-  }
 
   return (
     <TableRow key={criterion.id}>
@@ -102,11 +56,12 @@ export default function PreferencesWeightsTableRow({
       <TableCell id={`best-${criterion.id}`}>
         {getBest(pvfs[criterion.id], usePercentage)}
       </TableCell>
+      <TableCell id={`ranking-criterion-${criterion.id}`}>{ranking}</TableCell>
       <TableCell id={`importance-criterion-${criterion.id}`}>
         {importance}
       </TableCell>
       <TableCell id={`weight-criterion-${criterion.id}`}>
-        {getWeight(criterion.id)}
+        {significantDigits(currentScenario.state.weights.mean[criterion.id])}
       </TableCell>
       <ShowIf condition={canShowEquivalentChanges}>
         <TableCell id={`equivalent-change-${criterion.id}`}>
@@ -115,4 +70,48 @@ export default function PreferencesWeightsTableRow({
       </ShowIf>
     </TableRow>
   );
+}
+
+function EquivalentChangeCell({
+  criterion
+}: {
+  criterion: ICriterion;
+}): JSX.Element {
+  const {
+    equivalentChangeType,
+    referenceValueFrom,
+    referenceValueTo,
+    referenceCriterion
+  } = useContext(EquivalentChangeContext);
+  const {getUsePercentage} = useContext(SettingsContext);
+  const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
+  const usePercentage = getUsePercentage(criterion.dataSources[0]);
+
+  switch (equivalentChangeType) {
+    case 'amount':
+      return (
+        <EquivalentValueChange
+          usePercentage={usePercentage}
+          pvf={pvfs[criterion.id]}
+          otherWeight={currentScenario.state.weights.mean[criterion.id]}
+        />
+      );
+    case 'range':
+      if (criterion.id === referenceCriterion.id) {
+        return (
+          <span>
+            {getPercentifiedValue(referenceValueFrom, usePercentage)} to{' '}
+            {getPercentifiedValue(referenceValueTo, usePercentage)}
+          </span>
+        );
+      } else {
+        return (
+          <EquivalentRangeChange
+            usePercentage={usePercentage}
+            pvf={pvfs[criterion.id]}
+            otherWeight={currentScenario.state.weights.mean[criterion.id]}
+          />
+        );
+      }
+  }
 }

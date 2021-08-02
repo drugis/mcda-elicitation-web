@@ -65,6 +65,7 @@ test/endToEnd/workspaceFilteringTest.js
 test/endToEnd/thresholdElicitationTest.js
 test/endToEnd/deterministicResultsTest.js
 test/endToEnd/closeModalTest.js
+test/endToEnd/preferencesTest.js
 test/endToEnd/util/util.js
 
 #latex nonsense

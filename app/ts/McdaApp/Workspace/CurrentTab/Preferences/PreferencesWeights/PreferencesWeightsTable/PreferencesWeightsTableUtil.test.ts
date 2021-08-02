@@ -1,75 +1,94 @@
-import ICriterion from '@shared/interface/ICriterion';
-import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
-import IRanking from '@shared/interface/Scenario/IRanking';
-import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
-import {buildImportance} from './PreferencesWeightsTableUtil';
+import {
+  buildImportance,
+  calculateRankings
+} from './PreferencesWeightsTableUtil';
 
 describe('buildImportance', () => {
-  const criteria: ICriterion[] = [
-    {
-      id: 'critId1'
-    } as ICriterion,
-    {
-      id: 'critId2'
-    } as ICriterion
-  ];
-
-  it('should return "?" if there are no preferences', () => {
-    const result = buildImportance(criteria, []);
-    const expectedResult: Record<string, string> = {
-      critId1: '?',
-      critId2: '?'
+  it('should return all-100% if there are equal weights', () => {
+    const weights: Record<string, number> = {
+      critId1: 0.33,
+      critId2: 0.33,
+      critId3: 0.33
     };
-    expect(result).toEqual(expectedResult);
-  });
 
-  it('should return ranks if preferences are ranked', () => {
-    const preferences: IRanking[] = [
-      {
-        type: 'ordinal',
-        criteria: ['critId1', 'critId2'],
-        elicitationMethod: 'ranking'
-      }
-    ];
-    const result = buildImportance(criteria, preferences);
-    const expectedResult: Record<string, string> = {
-      critId1: '1',
-      critId2: '2'
+    const result = buildImportance(weights);
+    const expectedResult = {
+      critId1: '100%',
+      critId2: '100%',
+      critId3: '100%'
     };
+
     expect(result).toEqual(expectedResult);
   });
 
   it('should return correct importances for exact swing preferences', () => {
-    const preferences: IExactSwingRatio[] = [
-      {
-        type: 'exact swing',
-        criteria: ['critId1', 'critId2'],
-        ratio: 2,
-        elicitationMethod: 'matching'
-      }
-    ];
-    const result = buildImportance(criteria, preferences);
+    const weights: Record<string, number> = {
+      critId1: 0.3,
+      critId2: 0.1,
+      critId3: 0.6
+    };
+
+    const result = buildImportance(weights);
     const expectedResult: Record<string, string> = {
-      critId1: '100%',
-      critId2: '50%'
+      critId1: '50%',
+      critId2: '17%',
+      critId3: '100%'
     };
     expect(result).toEqual(expectedResult);
   });
+});
 
-  it('should return correct importances for ratio bound preferences', () => {
-    const preferences: IRatioBoundConstraint[] = [
-      {
-        type: 'ratio bound',
-        criteria: ['critId1', 'critId2'],
-        bounds: [1, 100],
-        elicitationMethod: 'imprecise'
-      }
-    ];
-    const result = buildImportance(criteria, preferences);
-    const expectedResult: Record<string, string> = {
-      critId1: '100%',
-      critId2: '1-100%'
+describe('calculateRankings', () => {
+  it('should work for all-different weights', () => {
+    const weights: Record<string, number> = {
+      critId1: 0.2,
+      critId2: 0.1,
+      critId3: 0.7
     };
+
+    const result = calculateRankings(weights);
+    const expectedResult = {
+      critId1: 2,
+      critId2: 3,
+      critId3: 1
+    };
+
+    expect(result).toEqual(expectedResult);
+  });
+  it('should work for all-same weights', () => {
+    const weights: Record<string, number> = {
+      critId1: 0.33,
+      critId2: 0.33,
+      critId3: 0.33
+    };
+
+    const result = calculateRankings(weights);
+    const expectedResult = {
+      critId1: 1,
+      critId2: 1,
+      critId3: 1
+    };
+
+    expect(result).toEqual(expectedResult);
+  });
+  it('should work for some-same weights', () => {
+    const weights: Record<string, number> = {
+      critId1: 0.4,
+      critId2: 0.4,
+      critId3: 0.1,
+      critId4: 0.1,
+      critId5: 0.01
+    };
+
+    const result = calculateRankings(weights);
+    const expectedResult = {
+      critId1: 1,
+      critId2: 1,
+      critId3: 3,
+      critId4: 3,
+      critId5: 5
+    };
+
     expect(result).toEqual(expectedResult);
   });
 });
