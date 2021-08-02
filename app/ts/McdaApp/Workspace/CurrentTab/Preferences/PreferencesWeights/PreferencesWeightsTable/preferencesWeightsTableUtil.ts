@@ -40,7 +40,7 @@ function getCriterionWeightAndRank(
 
 function getCorrectRanks(
   weightRankCriterionIds: Record<string, IWeightRankCriterionId>
-) {
+): Record<string, number> {
   return _.mapValues(weightRankCriterionIds, (current) => {
     const sameWeightOther = _.find(weightRankCriterionIds, (other) => {
       return other.weight === current.weight;
@@ -72,7 +72,7 @@ export function calculateNewImportances(
 function getNewImportances(
   equivalentChanges: Record<string, IChangeableValue>,
   importances: Record<string, IChangeableValue>
-) {
+): Record<string, IChangeableValue> {
   return _.mapValues(
     equivalentChanges,
     (equivalentChange, criterionId: string) => {

@@ -1,19 +1,16 @@
-import ICriterion from '@shared/interface/ICriterion';
-import IWeights from '@shared/interface/IWeights';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import IDeterministicChangeableWeights from 'app/ts/interface/IDeterministicChangeableWeights';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import significantDigits from 'app/ts/util/significantDigits';
-import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {calculateNewImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 import {
+  calculateNewDeterministicEquivalentChanges,
+  calculateWeightsFromImportances,
   getDeterministicEquivalentChanges,
   getDetermisticImportances
-} from './deterministicWeightsUtils';
+} from './deterministicWeightsUtil';
 import IDeterministicWeightsContext from './IDeterministicWeightsContext';
 
 export const DeterministicWeightsContext =
@@ -27,25 +24,22 @@ export function DeterministicWeightsContextProviderComponent({
   children: any;
 }) {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {filteredCriteria} = useContext(CurrentSubproblemContext);
   const {partOfInterval, referenceWeight} = useContext(EquivalentChangeContext);
   const {
-    setRecalculatedWeights,
+    setSensitivityWeights,
     setRecalculatedTotalValues,
     setRecalculatedValueProfiles
   } = useContext(DeterministicResultsContext);
   const [deterministicChangeableWeights, setDeterministicChangeableWeights] =
     useState<IDeterministicChangeableWeights>(
-      buildDeterministicWeights(filteredCriteria, currentScenario.state.weights)
+      buildDeterministicWeights(currentScenario.state.weights.mean)
     );
 
   function buildDeterministicWeights(
-    criteria: ICriterion[],
-    weights: IWeights
+    weights: Record<string, number>
   ): IDeterministicChangeableWeights {
-    const importances = getDetermisticImportances(weights.mean);
+    const importances = getDetermisticImportances(weights);
     const equivalentChanges = getDeterministicEquivalentChanges(
-      criteria,
       weights,
       pvfs,
       partOfInterval,
@@ -53,7 +47,7 @@ export function DeterministicWeightsContextProviderComponent({
     );
     return {
       importances,
-      weights: weights.mean,
+      weights,
       equivalentChanges,
       partOfInterval
     };
@@ -67,9 +61,10 @@ export function DeterministicWeightsContextProviderComponent({
         currentValue: value
       }
     };
-    const weights: Record<string, number> = calculateNewWeights(importances);
+    const weights: Record<string, number> =
+      calculateWeightsFromImportances(importances);
     const equivalentChanges: Record<string, IChangeableValue> =
-      calculateNewEquivalentChanges(
+      calculateNewDeterministicEquivalentChanges(
         importances,
         deterministicChangeableWeights.equivalentChanges
       );
@@ -80,34 +75,8 @@ export function DeterministicWeightsContextProviderComponent({
       partOfInterval
     };
 
-    setRecalculatedWeights(weights);
+    setSensitivityWeights(weights);
     setDeterministicChangeableWeights(newValues);
-  }
-
-  function calculateNewEquivalentChanges(
-    importances: Record<string, IChangeableValue>,
-    equivalentChanges: Record<string, IChangeableValue>
-  ): Record<string, IChangeableValue> {
-    return _.mapValues(importances, (importance, criterionId: string) => {
-      const equivalentChange = equivalentChanges[criterionId];
-      const newValue =
-        (equivalentChange.originalValue * importance.currentValue) /
-        importance.originalValue;
-      return {...equivalentChange, currentValue: significantDigits(newValue)};
-    });
-  }
-
-  function calculateNewWeights(
-    importances: Record<string, IChangeableValue>
-  ): Record<string, number> {
-    const totalImportance = _.reduce(
-      importances,
-      (accum, importance) => accum + importance.currentValue,
-      0
-    );
-    return _.mapValues(importances, (importance) => {
-      return importance.currentValue / totalImportance;
-    });
   }
 
   function setEquivalentValue(criterionId: string, value: number) {
@@ -123,7 +92,8 @@ export function DeterministicWeightsContextProviderComponent({
         equivalentChanges,
         deterministicChangeableWeights.importances
       );
-    const weights: Record<string, number> = calculateNewWeights(importances);
+    const weights: Record<string, number> =
+      calculateWeightsFromImportances(importances);
     const newValues: IDeterministicChangeableWeights = {
       weights,
       importances,
@@ -131,13 +101,13 @@ export function DeterministicWeightsContextProviderComponent({
       partOfInterval
     };
 
-    setRecalculatedWeights(weights);
+    setSensitivityWeights(weights);
     setDeterministicChangeableWeights(newValues);
   }
 
   function resetWeightsTable() {
     setDeterministicChangeableWeights(
-      buildDeterministicWeights(filteredCriteria, currentScenario.state.weights)
+      buildDeterministicWeights(currentScenario.state.weights.mean)
     );
     setRecalculatedTotalValues(undefined);
     setRecalculatedValueProfiles(undefined);

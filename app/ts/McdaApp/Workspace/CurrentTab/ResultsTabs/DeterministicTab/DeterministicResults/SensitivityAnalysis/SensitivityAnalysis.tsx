@@ -10,7 +10,7 @@ export default function SensitivityAnalysis(): JSX.Element {
   const {measurementsSensitivityResults, preferencesSensitivityResults} =
     useContext(SensitivityAnalysisContext);
   return (
-    <Grid container item xs={12} spacing={1}>
+    <Grid container spacing={1}>
       <Grid item xs={12}>
         <Typography variant="h5">
           <InlineHelp helpId="one-way-sensitivity-analysis">

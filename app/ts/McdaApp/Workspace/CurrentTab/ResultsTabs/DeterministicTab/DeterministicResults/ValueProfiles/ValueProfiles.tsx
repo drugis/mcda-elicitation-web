@@ -48,7 +48,7 @@ export default function ValueProfiles(): JSX.Element {
   }
 
   return (
-    <Grid container item xs={12} spacing={2}>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
         <Typography variant="h5">
           <InlineHelp helpId="value-profiles">Value profiles</InlineHelp>

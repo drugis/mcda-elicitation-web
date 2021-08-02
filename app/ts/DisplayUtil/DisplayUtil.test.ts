@@ -11,6 +11,7 @@ describe('displayUtil', () => {
     it('should return the value if it is not a percentage', () => {
       expect(getDepercentifiedValue(1, false)).toBe(1);
     });
+
     it('should return the value / 100 if it is a percentage', () => {
       expect(getDepercentifiedValue(1, true)).toBe(0.01);
     });

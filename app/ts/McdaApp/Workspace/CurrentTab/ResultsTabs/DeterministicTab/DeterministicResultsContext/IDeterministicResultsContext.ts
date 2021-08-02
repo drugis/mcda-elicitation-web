@@ -11,7 +11,6 @@ export default interface IDeterministicResultsContext {
   recalculatedTotalValues: Record<string, number>;
   recalculatedValueProfiles: Record<string, Record<string, number>>;
   valueProfileType: TValueProfile;
-  recalculatedWeights: Record<string, number>;
   getComparator: (profileCase: TProfileCase) => IAlternative;
   getReference: (profileCase: TProfileCase) => IAlternative;
   recalculateValuePlots: () => void;
@@ -21,7 +20,7 @@ export default interface IDeterministicResultsContext {
   setRecalculatedValueProfiles: (
     valueProfiles: Record<string, Record<string, number>>
   ) => void;
-  setRecalculatedWeights: (weights: Record<string, number>) => void;
+  setSensitivityWeights: (weights: Record<string, number>) => void;
   setReference: (profileCase: TProfileCase, alternative: IAlternative) => void;
   setValueProfileType: (valueProfileType: TValueProfile) => void;
 }

@@ -7,7 +7,6 @@ import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentSce
 import {CurrentSubproblemContext} from '../../../CurrentSubproblemContext/CurrentSubproblemContext';
 import {ScenariosContext} from '../../../ScenariosContext/ScenariosContext';
 import EquivalentChange from '../EquivalentChange/Equivalentchange';
-import {EquivalentChangeContextProviderComponent} from '../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import PartialValueFunctions from '../PartialValueFunctions/PartialValueFunctions';
 import PreferencesWeights from '../PreferencesWeights/PreferencesWeights';
 import ScenarioButtons from '../ScenarioButtons/ScenarioButtons';
@@ -23,7 +22,7 @@ export default function PreferencesView() {
 
   return (
     <Grid container spacing={2}>
-      <Grid container item xs={12}>
+      <Grid item xs={12}>
         <ScenarioSelection
           scenarios={scenarios}
           currentScenario={currentScenario}

@@ -27,7 +27,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
     useContext(DeterministicWeightsContext);
 
   return (
-    <Grid container item xs={12}>
+    <Grid container>
       <Grid item xs={9}>
         <Typography variant="h5">
           <InlineHelp helpId="representative-weights">Weights</InlineHelp>

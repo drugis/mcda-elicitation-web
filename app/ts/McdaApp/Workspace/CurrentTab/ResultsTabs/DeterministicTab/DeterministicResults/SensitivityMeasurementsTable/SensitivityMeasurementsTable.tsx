@@ -30,7 +30,7 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
   const {resetSensitivityTable} = useContext(SensitivityMeasurementsContext);
 
   return (
-    <Grid container item xs={12} spacing={1}>
+    <Grid container spacing={1}>
       <Grid item xs={12} id="sensitivity-measurements-header">
         <Typography variant="h5">
           <InlineHelp helpId="deterministic-effects-table">

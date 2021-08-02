@@ -2,15 +2,14 @@ import {Button, TableCell} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import {
   getDepercentifiedValue,
-  getPercentifiedValue,
-  getPercentifiedValueLabel
+  getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import significantDigits from 'app/ts/util/significantDigits';
 import React, {MouseEvent, useContext, useState} from 'react';
 import {DeterministicWeightsContext} from '../DeterministicWeightsContext';
+import {getDeterministicEquivalentChangeLabel} from '../deterministicWeightsUtil';
 import DeterministicEquivalentChangePopover from './DeterministicEquivalentChangePopover';
 
 export default function DeterministicEquivalentChangeCell({
@@ -33,11 +32,11 @@ export default function DeterministicEquivalentChangeCell({
     deterministicChangeableWeights.equivalentChanges[criterion.id];
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
-  function openPopover(event: MouseEvent<HTMLButtonElement>) {
+  function openPopover(event: MouseEvent<HTMLButtonElement>): void {
     setAnchorEl(event.currentTarget);
   }
 
-  function closeCallback(inputError: string, newValue: number) {
+  function closeCallback(inputError: string, newValue: number): void {
     if (!inputError) {
       setEquivalentValue(
         criterion.id,
@@ -47,30 +46,13 @@ export default function DeterministicEquivalentChangeCell({
     setAnchorEl(null);
   }
 
-  function getLabel(): string {
-    if (
-      significantDigits(equivalentChange.currentValue) !==
-      significantDigits(equivalentChange.originalValue)
-    ) {
-      return `${getPercentifiedValueLabel(
-        equivalentChange.currentValue,
-        usePercentage
-      )} (${getPercentifiedValueLabel(
-        equivalentChange.originalValue,
-        usePercentage
-      )})`;
-    } else {
-      return getPercentifiedValueLabel(
-        equivalentChange.currentValue,
-        usePercentage
-      );
-    }
-  }
-
   return (
     <TableCell id={`equivalent-change-${criterion.id}`}>
       <Button style={textCenterStyle} onClick={openPopover} variant="text">
-        <a>{`${getLabel()} ${unitLabel}`}</a>
+        <a>{`${getDeterministicEquivalentChangeLabel(
+          equivalentChange,
+          usePercentage
+        )} ${unitLabel}`}</a>
       </Button>
       <DeterministicEquivalentChangePopover
         anchorEl={anchorEl}

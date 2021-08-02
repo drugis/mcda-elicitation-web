@@ -61,9 +61,9 @@ export function EquivalentChangeContextProviderComponent({
   );
   const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
   const [referenceValueTo, setReferenceValueTo] = useState<number>();
-  const referenceWeight = currentScenario.state.weights
-    ? currentScenario.state.weights.mean[referenceCriterion.id]
-    : undefined;
+  const referenceWeight =
+    currentScenario.state.weights?.mean[referenceCriterion.id];
+
   const [partOfInterval, setPartOfInterval] = useState<number>(
     getPartOfInterval(
       0,

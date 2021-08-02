@@ -45,7 +45,7 @@ export function DeterministicResultsContextProviderComponent({
     useState<Record<string, number>>();
   const [recalculatedValueProfiles, setRecalculatedValueProfiles] =
     useState<Record<string, Record<string, number>>>();
-  const [recalculatedWeights, setRecalculatedWeights] = useState<
+  const [sensitivityWeights, setSensitivityWeights] = useState<
     Record<string, number>
   >(currentScenario.state.weights.mean);
 
@@ -132,7 +132,7 @@ export function DeterministicResultsContextProviderComponent({
       filteredWorkspace,
       currentScenario.state.prefs,
       pvfs,
-      {'2.5%': {}, mean: recalculatedWeights, '97.5%': {}},
+      {'2.5%': {}, mean: sensitivityWeights, '97.5%': {}},
       true
     );
 
@@ -173,14 +173,13 @@ export function DeterministicResultsContextProviderComponent({
         recalculatedTotalValues,
         recalculatedValueProfiles,
         valueProfileType,
-        recalculatedWeights,
         getReference,
         getComparator,
         recalculateValuePlots,
         setRecalculatedCells,
         setRecalculatedTotalValues,
         setRecalculatedValueProfiles,
-        setRecalculatedWeights,
+        setSensitivityWeights,
         setReference,
         setComparator,
         setValueProfileType

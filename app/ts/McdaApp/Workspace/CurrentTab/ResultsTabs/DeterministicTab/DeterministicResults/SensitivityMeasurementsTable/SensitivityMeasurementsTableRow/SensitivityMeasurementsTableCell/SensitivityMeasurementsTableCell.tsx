@@ -3,10 +3,10 @@ import {
   getDepercentifiedValue,
   getPercentifiedValue
 } from 'app/ts/DisplayUtil/DisplayUtil';
+import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
-import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {SensitivityMeasurementsContext} from '../../SensitivityMeasurementsContext';
@@ -27,7 +27,7 @@ export default function SensitivityMeasurementsTableCell({
   );
 
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
-  const value = _.mapValues(
+  const value: IChangeableValue = _.mapValues(
     sensitivityTableValues[criterion.id][alternativeId],
     _.partialRight(getPercentifiedValue, usePercentage)
   );

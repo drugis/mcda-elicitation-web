@@ -24,11 +24,11 @@ export default function ClickableSliderTableCell({
 }): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-  function openPopover(event: MouseEvent<HTMLButtonElement>) {
+  function openPopover(event: MouseEvent<HTMLButtonElement>): void {
     setAnchorEl(event.currentTarget);
   }
 
-  function closeCallback(inputError: string, newValue: number) {
+  function closeCallback(inputError: string, newValue: number): void {
     if (!inputError) {
       setterCallback(newValue);
     }
