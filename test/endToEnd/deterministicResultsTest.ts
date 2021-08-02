@@ -6,7 +6,9 @@ module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Deterministic results': results,
-  'Deterministic results with recalculated values': recalculatedResults,
+  'Deterministic results with recalculated measurement values':
+    recalculatedMeasurementResults,
+  'Deterministic results with recalculated weights': recalculatedWeights,
   'Switch alternative and criterion for one-way sensitivity analysis measurements plot':
     modifyMeasurementsPlot,
   'Switch criterion for one-way sensitivity analysis preferences plot':
@@ -46,8 +48,7 @@ function results(browser: NightwatchBrowser) {
 
   const measurementValuePath =
     '//*[@id="sensitivity-cell-treatmentRespondersId-placeboId"]/button/span[1]';
-  const weightValuePath =
-    '//*[@id="deterministic-weights-table"]/tbody/tr/td[1]';
+  const weightValuePath = '//*[@id="weight-treatmentRespondersId"]';
   const baseTotalValuePath =
     '//*[@id="base-total-value-table"]/table/tbody/tr/td[1]';
   const baseValueProfilePath =
@@ -61,44 +62,60 @@ function results(browser: NightwatchBrowser) {
   browser.useCss();
 }
 
-function recalculatedResults(browser: NightwatchBrowser) {
+function recalculatedMeasurementResults(browser: NightwatchBrowser) {
   const measurementValuePath =
-    '//*[@id="sensitivity-cell-treatmentRespondersId-placeboId"]/button/span[1]';
-  const measurementValueInputPath = '//*[@id="value-input"]';
+    '#sensitivity-cell-treatmentRespondersId-placeboId > button > span';
+  const measurementValueInputPath = '#value-input';
 
   browser
-    .useXpath()
     .click(measurementValuePath)
     .clearValue(measurementValueInputPath)
     .setValue(measurementValueInputPath, '63')
     .sendKeys(measurementValueInputPath, browser.Keys.ESCAPE)
     .pause(1000)
-    .click('//*[@id="sensitivity-measurements-header"]')
-    .click('//*[@id="recalculate-button"]');
+    .click('#sensitivity-measurements-header')
+    .click('#measurements-recalculate-button');
   browser.assert
     .containsText(measurementValuePath, '63 (36.6)')
-    .waitForElementVisible('//*[@id="value-profile-plot-recalculated"]')
-    .waitForElementVisible('//*[@id="recalculated-total-value-table"]')
-    .waitForElementVisible('//*[@id="recalculated-value-profiles-table"]');
+    .waitForElementVisible('#value-profile-plot-recalculated')
+    .waitForElementVisible('#recalculated-total-value-table')
+    .waitForElementVisible('#recalculated-value-profiles-table');
 
   const recalculatedTotalValuePath =
     '//*[@id="recalculated-total-value-table"]/table/tbody/tr/td[1]';
   const recalculatedValueProfilePath =
     '//*[@id="recalculated-value-profiles-table"]/table/tbody/tr[1]/td[2]';
 
-  browser.expect.element(recalculatedTotalValuePath).text.to.equal('0.903');
+  browser
+    .useXpath()
+    .expect.element(recalculatedTotalValuePath)
+    .text.to.equal('0.903');
   browser.expect.element(recalculatedValueProfilePath).text.to.equal('0.25');
+  browser.useCss();
 
   browser
-    .click('//*[@id="reset-button"]')
+    .click('#measurements-reset-button')
     .expect.element(measurementValuePath)
     .text.to.equal('36.6');
 
-  browser.useCss();
   browser.assert.not
     .elementPresent('#recalculated-case-table')
     .assert.not.elementPresent('#recalculated-case-plot')
     .assert.not.elementPresent('#recalculated-value-profile-table');
+}
+
+function recalculatedWeights(browser: NightwatchBrowser) {
+  browser
+    .click('#importance-treatmentRespondersId > button')
+    .waitForElementVisible('#value-input')
+    .clearValue('#value-input')
+    .setValue('#value-input', '63')
+    .pause(5000)
+    .sendKeys('#value-input', browser.Keys.ESCAPE)
+    .pause(750);
+  browser.expect
+    .element('#equivalent-change-treatmentRespondersId')
+    .text.to.equal('11.1 (17.5) %');
 }
 
 function modifyMeasurementsPlot(browser: NightwatchBrowser) {
@@ -134,7 +151,7 @@ function relativeSensitivity(browser: NightwatchBrowser) {
     .expect.element('#relative-total-difference')
     .text.to.equal('0.279');
   browser
-    .click('#recalculate-button')
+    .click('#measurements-recalculate-button')
     .waitForElementVisible('#recalculated-profile-plot')
     .expect.element('#total-value-alternative-header-1-recalculated')
     .text.to.equal('Venlafaxine');
