@@ -4,15 +4,11 @@ import React, {ChangeEvent, useState} from 'react';
 export default function DeterministicEquivalentChangePopover({
   anchorEl,
   closeCallback,
-  min,
-  max,
   initialValue,
   unitLabel
 }: {
   anchorEl: HTMLButtonElement | null;
   closeCallback: (inputError: string, localValue: number) => void;
-  min: number;
-  max: number;
   initialValue: number;
   unitLabel: string;
 }) {
@@ -25,8 +21,6 @@ export default function DeterministicEquivalentChangePopover({
     const newValue = Number.parseFloat(event.target.value);
     if (isNaN(newValue)) {
       setInputError('Invalid value');
-    } else if (newValue < min || newValue > max) {
-      setInputError(`Value must be between ${min} and ${max}`);
     } else {
       setInputError('');
     }
@@ -63,10 +57,6 @@ export default function DeterministicEquivalentChangePopover({
               endAdornment: (
                 <InputAdornment position="end">{unitLabel}</InputAdornment>
               )
-            }}
-            inputProps={{
-              min: min,
-              max: max
             }}
             error={Boolean(inputError)}
             helperText={inputError ? inputError : ''}

@@ -36,7 +36,7 @@ describe('PataviUtil', () => {
       const pvfs: Record<string, ILinearPvf> = {
         crit1Id: {direction: 'increasing', type: 'linear', range: [0, 100]}
       };
-      const weights: IWeights = undefined;
+      const weights: IWeights = {'2.5%': {}, mean: {crit1Id: 1}, '97.5%': {}};
       const preferences: TPreferences = [];
       const result = getPataviProblem(
         workspace,
@@ -57,10 +57,9 @@ describe('PataviUtil', () => {
         },
         performanceTable: [],
         preferences: preferences,
-        weights: undefined
+        weights: {'2.5%': {}, mean: {crit1Id: 1}, '97.5%': {}}
       };
       expect(result).toEqual(expectedResult);
-      fail(); //FIXME: add proper weights
     });
   });
 

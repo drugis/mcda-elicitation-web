@@ -75,7 +75,7 @@ export default function ValueProfiles(): JSX.Element {
           />
         </RadioGroup>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item md={6} xs={12}>
         <LoadingSpinner
           showSpinnerCondition={!baseTotalValues || !baseValueProfiles}
         >
@@ -86,7 +86,7 @@ export default function ValueProfiles(): JSX.Element {
           />
         </LoadingSpinner>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item md={6} xs={12}>
         <RecalculatedProfile />
       </Grid>
     </Grid>

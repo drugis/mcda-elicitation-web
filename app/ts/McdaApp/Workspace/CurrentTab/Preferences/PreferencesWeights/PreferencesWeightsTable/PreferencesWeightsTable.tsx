@@ -14,7 +14,7 @@ import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
 import {
   buildImportances,
   calculateRankings
-} from './PreferencesWeightsTableUtil';
+} from './preferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
@@ -22,7 +22,7 @@ export default function PreferencesWeightsTable() {
     CurrentSubproblemContext
   );
 
-  const importances: Record<string, string> = useMemo(
+  const importances: Record<string, number> = useMemo(
     () => buildImportances(currentScenario.state.weights.mean),
     [currentScenario.state.weights.mean]
   );

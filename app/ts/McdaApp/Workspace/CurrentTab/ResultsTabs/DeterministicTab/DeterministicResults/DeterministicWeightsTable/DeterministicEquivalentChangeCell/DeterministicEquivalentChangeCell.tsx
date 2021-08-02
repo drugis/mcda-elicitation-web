@@ -32,8 +32,6 @@ export default function DeterministicEquivalentChangeCell({
   const equivalentChange =
     deterministicChangeableWeights.equivalentChanges[criterion.id];
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
-  const min = criterion.dataSources[0].unitOfMeasurement.lowerBound;
-  const max = criterion.dataSources[0].unitOfMeasurement.upperBound;
 
   function openPopover(event: MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
@@ -77,8 +75,6 @@ export default function DeterministicEquivalentChangeCell({
       <DeterministicEquivalentChangePopover
         anchorEl={anchorEl}
         closeCallback={closeCallback}
-        min={getPercentifiedValue(min, usePercentage)}
-        max={getPercentifiedValue(max, usePercentage)}
         initialValue={getPercentifiedValue(
           equivalentChange.currentValue,
           usePercentage

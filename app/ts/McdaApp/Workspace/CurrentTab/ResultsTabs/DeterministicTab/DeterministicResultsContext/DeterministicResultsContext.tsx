@@ -45,8 +45,9 @@ export function DeterministicResultsContextProviderComponent({
     useState<Record<string, number>>();
   const [recalculatedValueProfiles, setRecalculatedValueProfiles] =
     useState<Record<string, Record<string, number>>>();
-  const [recalculatedWeights, setRecalculatedWeights] =
-    useState<Record<string, number>>();
+  const [recalculatedWeights, setRecalculatedWeights] = useState<
+    Record<string, number>
+  >(currentScenario.state.weights.mean);
 
   const [valueProfileType, setValueProfileType] =
     useState<TValueProfile>('absolute');

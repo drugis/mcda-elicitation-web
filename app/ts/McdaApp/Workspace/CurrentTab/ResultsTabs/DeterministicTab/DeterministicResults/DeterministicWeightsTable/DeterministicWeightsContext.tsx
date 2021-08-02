@@ -8,6 +8,7 @@ import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import React, {createContext, useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import {calculateNewImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 import {
   getDeterministicEquivalentChanges,
@@ -132,23 +133,6 @@ export function DeterministicWeightsContextProviderComponent({
 
     setRecalculatedWeights(weights);
     setDeterministicChangeableWeights(newValues);
-  }
-
-  function calculateNewImportances(
-    equivalentChanges: Record<string, IChangeableValue>,
-    importances: Record<string, IChangeableValue>
-  ): Record<string, IChangeableValue> {
-    return _.mapValues(
-      equivalentChanges,
-      (equivalentChange, criterionId: string) => {
-        const importance = importances[criterionId];
-        const newValue = Math.round(
-          (importance.originalValue * equivalentChange.currentValue) /
-            equivalentChange.originalValue
-        );
-        return {...importance, currentValue: significantDigits(newValue)};
-      }
-    );
   }
 
   function resetWeightsTable() {

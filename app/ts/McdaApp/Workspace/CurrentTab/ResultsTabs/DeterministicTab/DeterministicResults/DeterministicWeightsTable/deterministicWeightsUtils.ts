@@ -4,7 +4,7 @@ import {TPvf} from '@shared/interface/Problem/IPvf';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import _ from 'lodash';
 import {getEquivalentChange} from '../../../../Preferences/EquivalentChange/equivalentChangeUtil';
-import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/PreferencesWeightsTableUtil';
+import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
 
 export function getDetermisticImportances(
   weights: Record<string, number>

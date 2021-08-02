@@ -37,7 +37,7 @@ describe('equivalentChangeUtil', () => {
         type: 'linear'
       };
       const result = getInitialReferenceValueFrom(0, 1, pvf);
-      expect(result).toEqual(0.45);
+      expect(result).toEqual(0.25);
     });
 
     it('should return an inital value at 55% of the interval for a decreasing pvf', () => {
@@ -47,7 +47,7 @@ describe('equivalentChangeUtil', () => {
         type: 'linear'
       };
       const result = getInitialReferenceValueFrom(0, 1, pvf);
-      expect(result).toEqual(0.55);
+      expect(result).toEqual(0.75);
     });
   });
 
@@ -59,7 +59,7 @@ describe('equivalentChangeUtil', () => {
         type: 'linear'
       };
       const result = getInitialReferenceValueTo(0, 1, pvf);
-      expect(result).toEqual(0.55);
+      expect(result).toEqual(0.75);
     });
 
     it('should return an inital value at 45% of the interval for a decreasing pvf', () => {
@@ -69,11 +69,10 @@ describe('equivalentChangeUtil', () => {
         type: 'linear'
       };
       const result = getInitialReferenceValueTo(0, 1, pvf);
-      expect(result).toEqual(0.45);
+      expect(result).toEqual(0.25);
     });
   });
 
-  const usePercentage = false;
   const criterionWeight = 0.1;
   const partOfInterval = 0.5;
   const referenceWeight = 0.4;
@@ -112,6 +111,7 @@ describe('equivalentChangeUtil', () => {
       );
       expect(result).toEqual(2);
     });
+
     it('should return the equivalent change for a second criterion, based on its pvf, a reference change and the relative weights of the criteria, for decreasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'decreasing'} as TPvf;
       const result = getEquivalentChange(

@@ -20,7 +20,7 @@ export default function PreferencesWeightsTableRow({
   ranking
 }: {
   criterion: ICriterion;
-  importance: string;
+  importance: number;
   ranking: number;
 }): JSX.Element {
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
