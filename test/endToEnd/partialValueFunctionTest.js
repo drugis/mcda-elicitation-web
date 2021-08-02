@@ -107,8 +107,8 @@ function resetTradeOffs(browser) {
     .assert.containsText('#ranking-criterion-c1', '1')
     .assert.containsText('#ranking-criterion-c2', '2')
     .click('#decreasing-pvf-button-c1')
-    .assert.containsText('#importance-criterion-c1', '100%')
-    .assert.containsText('#importance-criterion-c2', '33%');
+    .assert.containsText('#importance-criterion-c1', '99%')
+    .assert.containsText('#importance-criterion-c2', '100%');
 }
 
 function deterministic(browser) {
