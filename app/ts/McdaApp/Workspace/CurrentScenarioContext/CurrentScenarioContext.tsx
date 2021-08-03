@@ -2,7 +2,7 @@ import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
@@ -21,6 +21,7 @@ import React, {
 import {useParams} from 'react-router';
 import {
   areAllPvfsSet,
+  calculateWeightsFromPreferences,
   createScenarioWithPvf,
   determineElicitationMethod,
   hasNonLinearPvf,
@@ -76,21 +77,34 @@ export function CurrentScenarioContextProviderComponent({
 
   const getWeights = useCallback(
     (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
-      const postCommand = getWeightsPataviProblem(
-        filteredWorkspace,
-        scenario,
-        pvfs,
-        randomSeed
-      );
-      Axios.post('/api/v2/patavi/weights', postCommand).then(
-        (result: AxiosResponse<IWeights>) => {
-          const updatedScenario = _.merge({}, scenario, {
-            state: {weights: result.data}
-          });
-          setCurrentScenario(updatedScenario);
-          updateScenarios(updatedScenario);
-        }
-      );
+      if (scenario.state.prefs[0].elicitationMethod === 'imprecise') {
+        const postCommand = getWeightsPataviProblem(
+          filteredWorkspace,
+          scenario,
+          pvfs,
+          randomSeed
+        );
+        Axios.post('/api/v2/patavi/weights', postCommand).then(
+          (result: AxiosResponse<IWeights>) => {
+            const updatedScenario = _.merge({}, scenario, {
+              state: {weights: result.data}
+            });
+            setCurrentScenario(updatedScenario);
+            updateScenarios(updatedScenario);
+          }
+        );
+      } else {
+        const updatedScenario = _.merge({}, scenario, {
+          state: {
+            weights: calculateWeightsFromPreferences(
+              filteredCriteria,
+              scenario.state.prefs
+            )
+          }
+        });
+        setCurrentScenario(updatedScenario);
+        updateScenarios(updatedScenario);
+      }
     },
     [filteredWorkspace, randomSeed, updateScenarios]
   );

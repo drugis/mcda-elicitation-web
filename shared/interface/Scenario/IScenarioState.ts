@@ -1,4 +1,4 @@
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import IWeights from '../IWeights';
 import IScenarioProblem from './IScenarioProblem';
 

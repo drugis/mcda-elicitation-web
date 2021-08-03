@@ -8,7 +8,7 @@ import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
 import {TPataviPerformanceTableEntry} from '@shared/interface/Patavi/TPataviPerfomanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {
   buildPataviPerformanceTable,
   getPataviProblem,

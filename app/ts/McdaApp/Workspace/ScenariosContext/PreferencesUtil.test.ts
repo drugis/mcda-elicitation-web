@@ -8,7 +8,7 @@ import IRanking from '@shared/interface/Scenario/IRanking';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {
   areAllPvfsSet,
   buildScenarioWithPreferences,

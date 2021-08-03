@@ -31,7 +31,7 @@ import {IRelativePerformanceTableEntry} from '@shared/interface/Problem/IRelativ
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {TPerformanceTableEntry} from '@shared/interface/Problem/TPerformanceTableEntry';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {isAbsoluteEntry} from '@shared/workspaceService';
 import _ from 'lodash';
 

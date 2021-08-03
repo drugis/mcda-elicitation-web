@@ -5,7 +5,7 @@ import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
@@ -211,19 +211,19 @@ function getCentralWeightsPlotValues(
   alternatives: IAlternative[],
   legend: Record<string, string>
 ): [string, ...number[]][] {
-  return _.map(alternatives, (alternative: IAlternative): [
-    string,
-    ...number[]
-  ] => {
-    return [
-      legend ? legend[alternative.id] : alternative.title,
-      ...getCentralWeightsForAlternative(
-        centralWeights,
-        alternative.id,
-        criteria
-      )
-    ];
-  });
+  return _.map(
+    alternatives,
+    (alternative: IAlternative): [string, ...number[]] => {
+      return [
+        legend ? legend[alternative.id] : alternative.title,
+        ...getCentralWeightsForAlternative(
+          centralWeights,
+          alternative.id,
+          criteria
+        )
+      ];
+    }
+  );
 }
 
 function getCentralWeightsForAlternative(
