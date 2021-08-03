@@ -6,10 +6,9 @@ import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/
 import {calculateNewImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 import {
+  buildDeterministicWeights,
   calculateNewDeterministicEquivalentChanges,
-  calculateWeightsFromImportances,
-  getDeterministicEquivalentChanges,
-  getDetermisticImportances
+  calculateWeightsFromImportances
 } from './deterministicWeightsUtil';
 import IDeterministicWeightsContext from './IDeterministicWeightsContext';
 
@@ -32,26 +31,13 @@ export function DeterministicWeightsContextProviderComponent({
   } = useContext(DeterministicResultsContext);
   const [deterministicChangeableWeights, setDeterministicChangeableWeights] =
     useState<IDeterministicChangeableWeights>(
-      buildDeterministicWeights(currentScenario.state.weights.mean)
+      buildDeterministicWeights(
+        currentScenario.state.weights.mean,
+        pvfs,
+        partOfInterval,
+        referenceWeight
+      )
     );
-
-  function buildDeterministicWeights(
-    weights: Record<string, number>
-  ): IDeterministicChangeableWeights {
-    const importances = getDetermisticImportances(weights);
-    const equivalentChanges = getDeterministicEquivalentChanges(
-      weights,
-      pvfs,
-      partOfInterval,
-      referenceWeight
-    );
-    return {
-      importances,
-      weights,
-      equivalentChanges,
-      partOfInterval
-    };
-  }
 
   function setImportance(criterionId: string, value: number) {
     const importances: Record<string, IChangeableValue> = {
@@ -107,7 +93,12 @@ export function DeterministicWeightsContextProviderComponent({
 
   function resetWeightsTable() {
     setDeterministicChangeableWeights(
-      buildDeterministicWeights(currentScenario.state.weights.mean)
+      buildDeterministicWeights(
+        currentScenario.state.weights.mean,
+        pvfs,
+        partOfInterval,
+        referenceWeight
+      )
     );
     setRecalculatedTotalValues(undefined);
     setRecalculatedValueProfiles(undefined);

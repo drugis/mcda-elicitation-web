@@ -1,10 +1,32 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
+import IDeterministicChangeableWeights from 'app/ts/interface/IDeterministicChangeableWeights';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import {getEquivalentChange} from '../../../../Preferences/EquivalentChange/equivalentChangeUtil';
 import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
+
+export function buildDeterministicWeights(
+  weights: Record<string, number>,
+  pvfs: Record<string, TPvf>,
+  partOfInterval: number,
+  referenceWeight: number
+): IDeterministicChangeableWeights {
+  const importances = getDetermisticImportances(weights);
+  const equivalentChanges = getDeterministicEquivalentChanges(
+    weights,
+    pvfs,
+    partOfInterval,
+    referenceWeight
+  );
+  return {
+    importances,
+    weights,
+    equivalentChanges,
+    partOfInterval
+  };
+}
 
 export function getDetermisticImportances(
   weights: Record<string, number>
@@ -23,20 +45,18 @@ export function getDeterministicEquivalentChanges(
   partOfInterval: number,
   referenceWeight: number
 ) {
-  return _(weights)
-    .mapValues((weight, criterionId): IChangeableValue => {
-      const equivalentChange = getEquivalentChange(
-        weight,
-        pvfs[criterionId],
-        partOfInterval,
-        referenceWeight
-      );
-      return {
-        originalValue: equivalentChange,
-        currentValue: equivalentChange
-      };
-    })
-    .value();
+  return _.mapValues(weights, (weight, criterionId): IChangeableValue => {
+    const equivalentChange = getEquivalentChange(
+      weight,
+      pvfs[criterionId],
+      partOfInterval,
+      referenceWeight
+    );
+    return {
+      originalValue: equivalentChange,
+      currentValue: equivalentChange
+    };
+  });
 }
 
 export function getDeterministicEquivalentChangeLabel(

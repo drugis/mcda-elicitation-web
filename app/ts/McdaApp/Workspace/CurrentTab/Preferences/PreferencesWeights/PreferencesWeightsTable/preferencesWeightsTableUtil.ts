@@ -14,7 +14,7 @@ export function calculateRankings(
   weights: Record<string, number>
 ): Record<string, number> {
   const weightRankCriterionIds = getCriterionWeightAndRank(weights);
-  return getCorrectRanks(weightRankCriterionIds);
+  return mergeSameWeightRanks(weightRankCriterionIds);
 }
 
 interface IWeightRankCriterionId {
@@ -38,7 +38,7 @@ function getCriterionWeightAndRank(
     .value();
 }
 
-function getCorrectRanks(
+function mergeSameWeightRanks(
   weightRankCriterionIds: Record<string, IWeightRankCriterionId>
 ): Record<string, number> {
   return _.mapValues(weightRankCriterionIds, (current) => {

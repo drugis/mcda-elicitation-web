@@ -110,18 +110,14 @@ export function EquivalentChangeContextProviderComponent({
     );
   }, [configuredLowerBound, configuredUpperBound, referenceValueBy]);
 
-  const [canShowEquivalentChanges, setCanShowEquivalentChanges] =
-    useState<boolean>(false);
-
-  useEffect(() => {
-    if (pvfs && currentScenario) {
-      setCanShowEquivalentChanges(
-        _.every(pvfs, ['type', 'linear']) &&
-          currentScenario.state.weights &&
-          !_.isEmpty(observedRanges)
-      );
-    }
-  }, [pvfs, currentScenario.state.weights, observedRanges, currentScenario]);
+  const canShowEquivalentChanges = useMemo(
+    () =>
+      pvfs &&
+      currentScenario?.state?.weights &&
+      _.every(pvfs, ['type', 'linear']) &&
+      !_.isEmpty(observedRanges),
+    [currentScenario, observedRanges, pvfs]
+  );
 
   function reset(): void {
     if (areAllPvfsSet) {
