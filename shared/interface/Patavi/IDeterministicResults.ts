@@ -1,4 +1,4 @@
-import IWeights from '@shared/interface/Scenario/IWeights';
+import IWeights from '../IWeights';
 
 export interface IDeterministicResults {
   total: Record<string, number>;

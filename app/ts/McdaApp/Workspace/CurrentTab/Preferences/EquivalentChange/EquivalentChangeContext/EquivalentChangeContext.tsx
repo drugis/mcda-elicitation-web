@@ -44,10 +44,12 @@ export function EquivalentChangeContextProviderComponent({
   );
 
   const [configuredLowerBound, configuredUpperBound] = useMemo(() => {
-    return getBounds(
-      referenceCriterion.dataSources[0].id,
-      currentSubproblem.definition.ranges,
-      observedRanges
+    return (
+      getBounds(
+        referenceCriterion.dataSources[0].id,
+        currentSubproblem.definition.ranges,
+        observedRanges
+      ) || [undefined, undefined]
     );
   }, [
     currentSubproblem.definition.ranges,
@@ -59,22 +61,11 @@ export function EquivalentChangeContextProviderComponent({
   const [referenceValueBy, setReferenceValueBy] = useState<number>(
     getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
   );
-  const [referenceValueFrom, setReferenceValueFrom] = useState<number>(
-    getInitialReferenceValueFrom(
-      configuredLowerBound,
-      configuredUpperBound,
-      pvfs[referenceCriterion.id]
-    )
-  );
-  const [referenceValueTo, setReferenceValueTo] = useState<number>(
-    getInitialReferenceValueTo(
-      configuredLowerBound,
-      configuredUpperBound,
-      pvfs[referenceCriterion.id]
-    )
-  );
+  const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
+  const [referenceValueTo, setReferenceValueTo] = useState<number>();
   const referenceWeight =
-    currentScenario.state.weights.mean[referenceCriterion.id];
+    currentScenario.state.weights?.mean[referenceCriterion.id];
+
   const [partOfInterval, setPartOfInterval] = useState<number>(
     getPartOfInterval(
       0,
@@ -121,6 +112,15 @@ export function EquivalentChangeContextProviderComponent({
     );
   }, [configuredLowerBound, configuredUpperBound, referenceValueBy]);
 
+  const canShowEquivalentChanges = useMemo(
+    () =>
+      pvfs &&
+      currentScenario?.state?.weights &&
+      _.every(pvfs, ['type', 'linear']) &&
+      !_.isEmpty(observedRanges),
+    [currentScenario, observedRanges, pvfs]
+  );
+
   function reset(): void {
     if (areAllPvfsSet) {
       const [configuredLowerBound, configuredUpperBound] = getBounds(
@@ -158,6 +158,7 @@ export function EquivalentChangeContextProviderComponent({
   return (
     <EquivalentChangeContext.Provider
       value={{
+        canShowEquivalentChanges,
         otherCriteria,
         lowerBound,
         partOfInterval,

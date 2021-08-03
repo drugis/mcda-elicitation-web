@@ -1,4 +1,4 @@
-import IWeights from '@shared/interface/Scenario/IWeights';
+import IWeights from '../IWeights';
 import {ICentralWeight} from './ICentralWeight';
 
 export interface ISmaaResults {

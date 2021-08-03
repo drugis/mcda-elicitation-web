@@ -12,9 +12,9 @@ import _ from 'lodash';
 import React, {useContext, useMemo} from 'react';
 import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
 import {
-  buildImportance,
+  buildImportances,
   calculateRankings
-} from './PreferencesWeightsTableUtil';
+} from './preferencesWeightsTableUtil';
 
 export default function PreferencesWeightsTable() {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
@@ -22,8 +22,8 @@ export default function PreferencesWeightsTable() {
     CurrentSubproblemContext
   );
 
-  const importances: Record<string, string> = useMemo(
-    () => buildImportance(currentScenario.state.weights.mean),
+  const importances: Record<string, number> = useMemo(
+    () => buildImportances(currentScenario.state.weights.mean),
     [currentScenario.state.weights.mean]
   );
 

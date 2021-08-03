@@ -73,13 +73,13 @@ function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
     .waitForElementVisible('//*[@id="equivalent-change-basis"]')
     .click('//*[@id="equivalent-change-range-type"]')
     .click('//*[@id="reference-slider-from"]')
-    .click('//*[@id="equivalent-change-slider"]/span[4]')
+    .click('//*[@id="equivalent-change-slider"]/span[3]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .waitForElementNotPresent('//*[@id="equivalent-change-slider"]');
 
   browser.expect
     .element('//*[@id="reference-slider-from"]')
-    .text.to.equal('-100');
+    .text.to.equal('-200');
 
   browser
     .click('//*[@id="reference-criterion-selector"]')

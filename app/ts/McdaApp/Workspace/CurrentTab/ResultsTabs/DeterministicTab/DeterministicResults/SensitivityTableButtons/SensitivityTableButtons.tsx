@@ -2,15 +2,19 @@ import {Button, ButtonGroup} from '@material-ui/core';
 import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import React, {useContext} from 'react';
 
-export default function SensitivityTableButtons(): JSX.Element {
-  const {resetSensitivityTable, recalculateValuePlots} = useContext(
-    DeterministicResultsContext
-  );
+export default function SensitivityTableButtons({
+  resetter,
+  idContext
+}: {
+  resetter: () => void;
+  idContext: string;
+}): JSX.Element {
+  const {recalculateValuePlots} = useContext(DeterministicResultsContext);
 
   return (
     <ButtonGroup size="small">
       <Button
-        id="recalculate-button"
+        id={`${idContext}-recalculate-button`}
         variant="contained"
         color="primary"
         onClick={recalculateValuePlots}
@@ -18,12 +22,12 @@ export default function SensitivityTableButtons(): JSX.Element {
         Recalculate value profiles
       </Button>
       <Button
-        id="reset-button"
+        id={`${idContext}-reset-button`}
         variant="contained"
         color="secondary"
-        onClick={resetSensitivityTable}
+        onClick={resetter}
       >
-        Reset
+        Reset {idContext}
       </Button>
     </ButtonGroup>
   );

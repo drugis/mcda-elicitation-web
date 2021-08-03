@@ -38,7 +38,7 @@ export default function ValueProfilesTable({
           )}
           <ShowIf condition={isRelative}>
             <TableCell>Difference</TableCell>
-            <TableCell>Importance</TableCell>
+            <TableCell>Importance (difference)</TableCell>
           </ShowIf>
         </TableRow>
       </TableHead>
