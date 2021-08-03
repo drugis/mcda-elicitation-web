@@ -17,20 +17,6 @@ export default function SensitivityMeasurementsTableRow({
 }): JSX.Element {
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
-  function Cells(): JSX.Element {
-    return (
-      <>
-        {_.map(filteredAlternatives, (alternative) => (
-          <SensitivityMeasurementsTableCell
-            key={criterion.id + alternative.id}
-            criterion={criterion}
-            alternativeId={alternative.id}
-          />
-        ))}
-      </>
-    );
-  }
-
   return (
     <TableRow>
       <EffectsTableCriterionTitleCell criterion={criterion} />
@@ -38,7 +24,13 @@ export default function SensitivityMeasurementsTableRow({
       <EffectsTableUnitOfMeasurementCell
         dataSource={criterion.dataSources[0]}
       />
-      <Cells />
+      {_.map(filteredAlternatives, (alternative) => (
+        <SensitivityMeasurementsTableCell
+          key={criterion.id + alternative.id}
+          criterion={criterion}
+          alternativeId={alternative.id}
+        />
+      ))}
       <EffectsTableStrengthsAndUncertainties
         dataSource={criterion.dataSources[0]}
       />

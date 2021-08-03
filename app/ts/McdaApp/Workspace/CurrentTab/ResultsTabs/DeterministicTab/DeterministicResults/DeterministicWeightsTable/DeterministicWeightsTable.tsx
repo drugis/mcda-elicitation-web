@@ -22,9 +22,8 @@ import DeterministicEquivalentChangeCell from './DeterministicEquivalentChangeCe
 import {DeterministicWeightsContext} from './DeterministicWeightsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
+  const {resetWeightsTable} = useContext(DeterministicWeightsContext);
   const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
-  const {deterministicChangeableWeights, setImportance, resetWeightsTable} =
-    useContext(DeterministicWeightsContext);
 
   return (
     <Grid container>
@@ -58,43 +57,49 @@ export default function DeterministicWeightsTable(): JSX.Element {
       </Grid>
     </Grid>
   );
+}
 
-  function WeightRows(): JSX.Element {
-    const {filteredCriteria} = useContext(CurrentSubproblemContext);
-    return (
-      <>
-        {_.map(filteredCriteria, (criterion: ICriterion) => {
-          const weight = deterministicChangeableWeights.weights[criterion.id];
-          const importance =
-            deterministicChangeableWeights.importances[criterion.id];
-          return (
-            <TableRow key={criterion.id}>
-              <TableCell id={`title-${criterion.id}`}>
-                {criterion.title}
-              </TableCell>
-              <TableCell id={`weight-${criterion.id}`}>
-                {significantDigits(weight)}
-              </TableCell>
-              <ClickableSliderTableCell
-                id={`importance-${criterion.id}`}
-                value={importance}
-                min={1}
-                max={100}
-                stepSize={1}
-                labelRenderer={(value: number) => `${Math.round(value)}%`}
-                setterCallback={(newValue: number) =>
-                  setImportance(criterion.id, newValue)
-                }
-              />
-              <ShowIf condition={canShowEquivalentChanges}>
-                <DeterministicEquivalentChangeCell criterion={criterion} />
-              </ShowIf>
-            </TableRow>
-          );
-        })}
-      </>
-    );
-  }
+function WeightRows(): JSX.Element {
+  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
+  const {deterministicChangeableWeights, setImportance} = useContext(
+    DeterministicWeightsContext
+  );
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
+
+  return (
+    <>
+      {_.map(filteredCriteria, (criterion: ICriterion) => {
+        const weight = deterministicChangeableWeights.weights[criterion.id];
+        const importance =
+          deterministicChangeableWeights.importances[criterion.id];
+        return (
+          <TableRow key={`${criterion.id}-weights-table-row`}>
+            <TableCell id={`title-${criterion.id}`}>
+              {criterion.title}
+            </TableCell>
+            <TableCell id={`weight-${criterion.id}`}>
+              {significantDigits(weight)}
+            </TableCell>
+            <ClickableSliderTableCell
+              key={`${criterion.id}-importance-cell`}
+              id={`importance-${criterion.id}-cell`}
+              value={importance}
+              min={1}
+              max={100}
+              stepSize={1}
+              labelRenderer={(value: number) => `${Math.round(value)}%`}
+              setterCallback={(newValue: number) =>
+                setImportance(criterion.id, newValue)
+              }
+            />
+            <ShowIf condition={canShowEquivalentChanges}>
+              <DeterministicEquivalentChangeCell criterion={criterion} />
+            </ShowIf>
+          </TableRow>
+        );
+      })}
+    </>
+  );
 }
 
 function ColumnHeaders({

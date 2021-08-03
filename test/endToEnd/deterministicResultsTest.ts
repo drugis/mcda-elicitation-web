@@ -33,7 +33,7 @@ function beforeEach(browser: NightwatchBrowser) {
 }
 
 function afterEach(browser: NightwatchBrowser) {
-  browser.useCss().click('#logo');
+  browser.waitForElementNotPresent('.MuiPopover-root').useCss().click('#logo');
   workspaceService.deleteFromList(browser, 0).end();
 }
 
@@ -65,16 +65,12 @@ function results(browser: NightwatchBrowser) {
 function recalculatedMeasurementResults(browser: NightwatchBrowser) {
   const measurementValuePath =
     '#sensitivity-cell-treatmentRespondersId-placeboId';
-  const measurementValueInputPath = '#value-input';
 
-  browser
-    .click(measurementValuePath)
-    .clearValue(measurementValueInputPath)
-    .setValue(measurementValueInputPath, '63')
-    .sendKeys(measurementValueInputPath, browser.Keys.ESCAPE)
-    .waitForElementVisible(measurementValuePath);
+  setCellValue(browser, measurementValuePath, '63');
+
   browser.expect.element(measurementValuePath).text.to.equal('63 (36.6)');
   browser
+    .waitForElementNotPresent('.MuiPopover-root')
     .click('#measurements-recalculate-button')
     .waitForElementVisible('#value-profile-plot-recalculated')
     .waitForElementVisible('#recalculated-total-value-table')
@@ -104,39 +100,46 @@ function recalculatedMeasurementResults(browser: NightwatchBrowser) {
 }
 
 function recalculatedWeights(browser: NightwatchBrowser) {
-  browser
-    .click('#importance-treatmentRespondersId > button')
-    .waitForElementVisible('#value-input')
-    .clearValue('#value-input')
-    .setValue('#value-input', '63')
-    .sendKeys('#value-input', browser.Keys.ESCAPE)
-    .waitForElementVisible('#equivalent-change-treatmentRespondersId');
+  setCellValue(browser, '#importance-treatmentRespondersId-cell', '63');
+
   browser.expect
     .element('#equivalent-change-treatmentRespondersId')
     .text.to.equal('11.1 (17.5) %');
+  browser.waitForElementNotPresent('.MuiPopover-root');
+  setCellValue(browser, '#equivalent-change-anxietyId', '10');
+  browser.expect
+    .element('#importance-treatmentRespondersId-cell')
+    .text.to.equal('53% (99%)');
+  browser
+    .waitForElementNotPresent('.MuiPopover-root')
+    .click('#weights-recalculate-button')
+    .waitForElementVisible('#recalculated-profile-plot')
+    .expect.element('#total-value-alternative-value-0-recalculated')
+    .text.to.equal('0.771');
 }
 
 function modifyMeasurementsPlot(browser: NightwatchBrowser) {
   browser
     .waitForElementVisible('#measurements-alternative-selector')
     .click('#measurements-alternative-selector')
-    .click('option[value="fluoxetineId"]')
+    .click('#measurements-alternative-selector > option[value="fluoxetineId"]')
     .expect.element('#measurements-alternative-selector')
-    .text.to.equal('Fluoxetine')
+    .value.to.equal('fluoxetineId');
 
+  browser
     .click('#measurements-criterion-selector')
-    .click('option[value="nauseaId"]')
+    .click('#measurements-criterion-selector > option[value="nauseaId"]')
     .expect.element('#measurements-criterion-selector')
-    .text.to.equal('Nausea ADRs');
+    .value.to.equal('nauseaId');
 }
 
 function modifyPreferencesPlot(browser: NightwatchBrowser) {
   browser
     .waitForElementPresent('#preferences-criterion-selector')
     .click('#preferences-criterion-selector')
-    .click('option[value="nauseaId"]')
+    .click('#preferences-criterion-selector > option[value="nauseaId"]')
     .expect.element('#preferences-criterion-selector')
-    .text.to.equal('Nausea ADRs');
+    .value.to.equal('nauseaId');
 }
 
 function relativeSensitivity(browser: NightwatchBrowser) {
@@ -166,4 +169,17 @@ function relativeSensitivity(browser: NightwatchBrowser) {
     )
     .expect.element('#total-value-alternative-header-1-recalculated')
     .text.to.equal('Venlafaxine');
+}
+
+function setCellValue(
+  browser: NightwatchBrowser,
+  cellId: string,
+  newValue: string
+) {
+  browser
+    .click(`${cellId} > button`)
+    .waitForElementVisible('#value-input')
+    .clearValue('#value-input')
+    .setValue('#value-input', newValue)
+    .sendKeys('#value-input', browser.Keys.ESCAPE);
 }
