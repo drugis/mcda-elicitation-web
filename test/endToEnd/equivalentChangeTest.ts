@@ -36,19 +36,15 @@ function equivalentValueChangeTest(browser: NightwatchBrowser) {
 
   browser
     .click('#reference-slider-by')
-    .useXpath()
-    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .useCss()
+    .click('#reference-criterion-slider > span:nth-child(4)') // set to 10
+    .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
   checkEqualValueValues(browser, 10);
 
   browser
     .click('#reference-slider-by')
-    .useXpath()
-    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[10]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .useCss()
+    .click('#reference-criterion-slider > span:nth-child(11)') // set to 80
+    .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
   checkEqualValueValues(browser, 80);
 }
@@ -62,22 +58,17 @@ function equivalentRangeChangeTest(browser: NightwatchBrowser) {
 
   browser
     .click('#reference-slider-from')
-    .useXpath()
-    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[3]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .useCss()
+    .click('#equivalent-change-slider > span:nth-child(5)') // set to 10
+    .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
-  checkEqualRangeValues(browser, 45);
+  checkEqualRangeValues(browser, 35);
 
   browser
-    .pause(250)
     .click('#reference-slider-to')
-    .useXpath()
-    .click('/html/body/div[2]/div[3]/div/div[2]/span/span[13]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .useCss()
+    .click('#equivalent-change-slider > span:nth-child(14)') // set to 100
+    .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
-  checkEqualRangeValues(browser, 0);
+  checkEqualRangeValues(browser, 10);
 }
 
 function checkEqualValueValues(browser: NightwatchBrowser, value: number) {

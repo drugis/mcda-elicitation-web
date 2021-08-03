@@ -44,10 +44,12 @@ export function EquivalentChangeContextProviderComponent({
   );
 
   const [configuredLowerBound, configuredUpperBound] = useMemo(() => {
-    return getBounds(
-      referenceCriterion.dataSources[0].id,
-      currentSubproblem.definition.ranges,
-      observedRanges
+    return (
+      getBounds(
+        referenceCriterion.dataSources[0].id,
+        currentSubproblem.definition.ranges,
+        observedRanges
+      ) || [undefined, undefined]
     );
   }, [
     currentSubproblem.definition.ranges,

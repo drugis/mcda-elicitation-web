@@ -8,7 +8,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import React, {useContext, useMemo} from 'react';
 import {SensitivityMeasurementsContext} from '../../SensitivityMeasurementsContext';
 
 export default function SensitivityMeasurementsTableCell({
@@ -27,9 +27,13 @@ export default function SensitivityMeasurementsTableCell({
   );
 
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
-  const value: IChangeableValue = _.mapValues(
-    sensitivityTableValues[criterion.id][alternativeId],
-    _.partialRight(getPercentifiedValue, usePercentage)
+  const percentifiedValue: IChangeableValue = useMemo(
+    () =>
+      _.mapValues(
+        sensitivityTableValues[criterion.id][alternativeId],
+        (value: number) => getPercentifiedValue(value, usePercentage)
+      ),
+    [alternativeId, criterion.id, sensitivityTableValues, usePercentage]
   );
 
   const [minConfigured, maxConfigured] = getConfiguredRange(criterion);
@@ -48,7 +52,7 @@ export default function SensitivityMeasurementsTableCell({
   return (
     <ClickableSliderTableCell
       id={`sensitivity-cell-${criterion.id}-${alternativeId}`}
-      value={value}
+      value={percentifiedValue}
       min={min}
       max={max}
       stepSize={stepSize}
