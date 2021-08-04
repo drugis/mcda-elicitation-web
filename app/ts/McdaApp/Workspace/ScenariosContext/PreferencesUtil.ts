@@ -210,7 +210,7 @@ export function calculateWeightsFromPreferences(
   } else if (isExactPreferences(preferences)) {
     return getExactWeights(preferences);
   } else {
-    //something is broken
+    throw 'Cannot calculate weights from set preferences';
   }
 }
 function isRankingPreferences(
@@ -233,7 +233,7 @@ function getRankingWeights(preferences: IRanking[], numberOfCriteria: number) {
       preference: IRanking,
       index: number
     ): Record<string, number> => {
-      accum[preference.criteria[1]] = index + 2;
+      accum[preference.criteria[1]] = index + 3;
       return accum;
     },
     {
@@ -256,7 +256,7 @@ function getExactWeights(preferences: IExactSwingRatio[]) {
     (accum, preference) => {
       return accum + preference.ratio;
     },
-    0
+    1 // most important criterion is not in the list, has ratio of 1 to itself
   );
 
   const weights: Record<string, number> = _.reduce(
