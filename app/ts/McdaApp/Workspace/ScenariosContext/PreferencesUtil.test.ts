@@ -624,10 +624,10 @@ describe('PreferencesUtil', () => {
       ];
       const result = calculateWeightsFromPreferences(criteria, preferences);
       const weights: Record<string, number> = {
-        crit1Id: 0.1,
-        crit2Id: 0.2,
-        crit3Id: 0.3,
-        crit4Id: 0.4
+        crit1Id: 0.4800000000000001, // rounding errors
+        crit2Id: 0.24000000000000005,
+        crit3Id: 0.16,
+        crit4Id: 0.12000000000000002
       };
       const expectedResult: IWeights = {
         '2.5%': weights,

@@ -77,7 +77,7 @@ export function CurrentScenarioContextProviderComponent({
 
   const getWeights = useCallback(
     (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
-      if (scenario.state.prefs[0].elicitationMethod === 'imprecise') {
+      if (scenario.state.prefs[0]?.elicitationMethod === 'imprecise') {
         const postCommand = getWeightsPataviProblem(
           filteredWorkspace,
           scenario,
@@ -106,7 +106,7 @@ export function CurrentScenarioContextProviderComponent({
         updateScenarios(updatedScenario);
       }
     },
-    [filteredWorkspace, randomSeed, updateScenarios]
+    [filteredCriteria, filteredWorkspace, randomSeed, updateScenarios]
   );
 
   useEffect(() => {

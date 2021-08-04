@@ -32,18 +32,22 @@ function loadTestWorkspace(browser: NightwatchBrowser) {
 }
 
 function resetWeights(browser: NightwatchBrowser) {
-  browser
-    .click('#reset-button')
-    .assert.containsText('#elicitation-method', 'None')
-    .assert.containsText('#importance-criterion-OS', '99%')
-    .assert.containsText('#importance-criterion-severe', '99%') // weird values until https://trello.com/c/GU9kYoX0/3744-mcda-change-how-weights-are-calculated done
-    .assert.containsText('#importance-criterion-moderate', '100%');
+  browser.click('#reset-button');
+  browser.expect
+    .element('#elicitation-method')
+    .text.to.equal('Elicitation method: None');
+  browser.expect.element('#importance-criterion-OS').text.to.equal('100%');
+  browser.expect.element('#importance-criterion-severe').text.to.equal('100%');
+  browser.expect
+    .element('#importance-criterion-moderate')
+    .text.to.equal('100%');
 }
 
 function checkMethod(browser: NightwatchBrowser, method: string) {
-  browser
-    .waitForElementVisible('#preferences-weights-table')
-    .assert.containsText('#elicitation-method', method);
+  browser.waitForElementVisible('#preferences-weights-table');
+  browser.expect
+    .element('#elicitation-method')
+    .text.to.equal(`Elicitation method: ${method}`);
 }
 
 function checkColumnContents(
@@ -53,10 +57,9 @@ function checkColumnContents(
   value2: string,
   value3: string
 ) {
-  browser.assert
-    .containsText(`#${column}-criterion-OS`, value1)
-    .assert.containsText(`#${column}-criterion-severe`, value2)
-    .assert.containsText(`#${column}-criterion-moderate`, value3);
+  browser.expect.element(`#${column}-criterion-OS`).text.to.equal(value1);
+  browser.expect.element(`#${column}-criterion-severe`).text.to.equal(value2);
+  browser.expect.element(`#${column}-criterion-moderate`).text.to.equal(value3);
 }
 
 function beforeEach(browser: NightwatchBrowser) {
@@ -81,7 +84,7 @@ function ranking(browser: NightwatchBrowser) {
     .click('#save-button');
 
   checkMethod(browser, 'Ranking');
-  checkColumnContents(browser, 'importance', '100%', '46%', '18%');
+  checkColumnContents(browser, 'importance', '100%', '67%', '33%');
   checkColumnContents(browser, 'ranking', '1', '2', '3');
   resetWeights(browser);
 }

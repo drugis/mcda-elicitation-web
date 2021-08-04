@@ -190,11 +190,11 @@ export default function ScenarioHandler(db: IDB) {
   }
 
   return {
-    query: query,
-    queryForSubProblem: queryForSubProblem,
-    get: get,
-    create: create,
-    update: update,
+    query,
+    queryForSubProblem,
+    get,
+    create,
+    update,
     delete: deleteScenario
   };
 }

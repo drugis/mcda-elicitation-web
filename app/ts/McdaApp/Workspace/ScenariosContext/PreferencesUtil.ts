@@ -254,7 +254,7 @@ function getExactWeights(preferences: IExactSwingRatio[]) {
   const totalRatio = _.reduce(
     preferences,
     (accum, preference) => {
-      return accum + preference.ratio;
+      return accum + 1 / preference.ratio;
     },
     1 // most important criterion is not in the list, has ratio of 1 to itself
   );
@@ -265,7 +265,7 @@ function getExactWeights(preferences: IExactSwingRatio[]) {
       accum: Record<string, number>,
       preference: IExactSwingRatio
     ): Record<string, number> => {
-      accum[preference.criteria[1]] = preference.ratio / totalRatio;
+      accum[preference.criteria[1]] = 1 / preference.ratio / totalRatio;
       return accum;
     },
     {

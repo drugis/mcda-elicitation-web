@@ -84,7 +84,7 @@ function recalculatedMeasurementResults(browser: NightwatchBrowser) {
   browser
     .useXpath()
     .expect.element(recalculatedTotalValuePath)
-    .text.to.equal('0.903');
+    .text.to.equal('0.902');
   browser.expect.element(recalculatedValueProfilePath).text.to.equal('0.25');
   browser.useCss();
 
@@ -104,12 +104,12 @@ function recalculatedWeights(browser: NightwatchBrowser) {
 
   browser.expect
     .element('#equivalent-change-treatmentRespondersId')
-    .text.to.equal('11.1 (17.5) %');
+    .text.to.equal('11 (17.5) %');
   browser.waitForElementNotPresent('.MuiPopover-root');
   setCellValue(browser, '#equivalent-change-anxietyId', '10');
   browser.expect
     .element('#importance-treatmentRespondersId-cell')
-    .text.to.equal('53% (99%)');
+    .text.to.equal('53% (100%)');
   browser
     .waitForElementNotPresent('.MuiPopover-root')
     .click('#weights-recalculate-button')
@@ -156,7 +156,7 @@ function relativeSensitivity(browser: NightwatchBrowser) {
     )
     .pause(500)
     .expect.element('#relative-total-difference')
-    .text.to.equal('0.279');
+    .text.to.equal('0.28');
   browser
     .click('#measurements-recalculate-button')
     .waitForElementVisible('#recalculated-profile-plot')
