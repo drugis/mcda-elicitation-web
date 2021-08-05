@@ -241,12 +241,16 @@ function getRankingWeights(preferences: IRanking[], numberOfCriteria: number) {
       [preferences[0].criteria[1]]: 2
     }
   );
-  const weights = _.mapValues(
-    rankByCriterionId,
-    (rank) =>
-      (numberOfCriteria - rank + 1) /
-      ((numberOfCriteria * (numberOfCriteria + 1)) / 2)
-  );
+  const weights = _.mapValues(rankByCriterionId, (rank) => {
+    const sum = _.reduce(
+      _.range(rank, numberOfCriteria + 1),
+      (accum: number, k: number) => {
+        return accum + 1 / k;
+      },
+      0
+    );
+    return sum / numberOfCriteria;
+  });
   return {'2.5%': weights, mean: weights, '97.5%': weights};
 }
 

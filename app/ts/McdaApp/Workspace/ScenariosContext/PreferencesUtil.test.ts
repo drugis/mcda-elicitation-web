@@ -23,7 +23,6 @@ import {
   isElicitationView,
   isPieceWiseLinearPvf
 } from './PreferencesUtil';
-import {TPreferencesView} from './TPreferencesView';
 
 const criterion1: ICriterion = {
   id: 'crit1Id',
@@ -588,10 +587,10 @@ describe('PreferencesUtil', () => {
       ];
       const result = calculateWeightsFromPreferences(criteria, preferences);
       const weights: Record<string, number> = {
-        crit1Id: 0.4,
-        crit2Id: 0.3,
-        crit3Id: 0.2,
-        crit4Id: 0.1
+        crit1Id: 0.5208333333333333,
+        crit2Id: 0.2708333333333333,
+        crit3Id: 0.14583333333333331,
+        crit4Id: 0.0625
       };
       const expectedResult: IWeights = {
         '2.5%': weights,

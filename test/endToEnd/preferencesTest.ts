@@ -84,7 +84,7 @@ function ranking(browser: NightwatchBrowser) {
     .click('#save-button');
 
   checkMethod(browser, 'Ranking');
-  checkColumnContents(browser, 'importance', '100%', '67%', '33%');
+  checkColumnContents(browser, 'importance', '100%', '45%', '18%');
   checkColumnContents(browser, 'ranking', '1', '2', '3');
   resetWeights(browser);
 }
