@@ -2,7 +2,7 @@ import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
@@ -21,11 +21,12 @@ import React, {
 import {useParams} from 'react-router';
 import {
   areAllPvfsSet,
+  calculateWeightsFromPreferences,
   createScenarioWithPvf,
   determineElicitationMethod,
   hasNonLinearPvf,
   initPvfs
-} from '../ScenariosContext/PreferencesUtil';
+} from '../ScenariosContext/preferencesUtil';
 import {ScenariosContext} from '../ScenariosContext/ScenariosContext';
 import {TPreferencesView} from '../ScenariosContext/TPreferencesView';
 import ICurrentScenarioContext from './ICurrentScenarioContext';
@@ -74,8 +75,8 @@ export function CurrentScenarioContextProviderComponent({
     useState(true);
   const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
-  const getWeights = useCallback(
-    (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
+  const getWeightsFromPatavi = useCallback(
+    (scenario: IMcdaScenario, pvfs: Record<string, TPvf>) => {
       const postCommand = getWeightsPataviProblem(
         filteredWorkspace,
         scenario,
@@ -93,6 +94,33 @@ export function CurrentScenarioContextProviderComponent({
       );
     },
     [filteredWorkspace, randomSeed, updateScenarios]
+  );
+
+  const getWeightsThroughCalculation = useCallback(
+    (scenario: IMcdaScenario) => {
+      const updatedScenario = _.merge({}, scenario, {
+        state: {
+          weights: calculateWeightsFromPreferences(
+            filteredCriteria,
+            scenario.state.prefs
+          )
+        }
+      });
+      setCurrentScenario(updatedScenario);
+      updateScenarios(updatedScenario);
+    },
+    [filteredCriteria, updateScenarios]
+  );
+
+  const getWeights = useCallback(
+    (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
+      if (scenario.state.prefs[0]?.elicitationMethod === 'imprecise') {
+        getWeightsFromPatavi(scenario, pvfs);
+      } else {
+        getWeightsThroughCalculation(scenario);
+      }
+    },
+    [getWeightsFromPatavi, getWeightsThroughCalculation]
   );
 
   useEffect(() => {

@@ -1,19 +1,15 @@
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {lexicon} from 'app/ts/InlineHelp/lexicon';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
-import _ from 'lodash';
 import {PreferenceElicitation} from 'preference-elicitation';
 import React, {useContext} from 'react';
 import {CurrentScenarioContext} from '../../CurrentScenarioContext/CurrentScenarioContext';
 import {
   buildScenarioWithPreferences,
   isElicitationView
-} from '../../ScenariosContext/PreferencesUtil';
+} from '../../ScenariosContext/preferencesUtil';
 import {TPreferencesView} from '../../ScenariosContext/TPreferencesView';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';

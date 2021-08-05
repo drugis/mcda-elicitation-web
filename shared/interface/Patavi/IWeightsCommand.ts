@@ -1,4 +1,4 @@
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import IMcdaScenario from '../Scenario/IMcdaScenario';
 import {IPataviProblem} from './IPataviProblem';
 

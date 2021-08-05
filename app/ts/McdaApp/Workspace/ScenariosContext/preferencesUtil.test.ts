@@ -3,21 +3,26 @@ import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
+import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import IRanking from '@shared/interface/Scenario/IRanking';
+import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
 import IScenarioProblem from '@shared/interface/Scenario/IScenarioProblem';
 import IScenarioState from '@shared/interface/Scenario/IScenarioState';
 import {TScenarioPvf} from '@shared/interface/Scenario/TScenarioPvf';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {
   areAllPvfsSet,
   buildScenarioWithPreferences,
+  calculateWeightsFromPreferences,
   createScenarioWithPvf,
   determineElicitationMethod,
   filterScenariosWithPvfs,
   hasNonLinearPvf,
-  initPvfs
-} from './PreferencesUtil';
+  initPvfs,
+  isElicitationView,
+  isPieceWiseLinearPvf
+} from './preferencesUtil';
 
 const criterion1: ICriterion = {
   id: 'crit1Id',
@@ -464,6 +469,186 @@ describe('PreferencesUtil', () => {
         };
         expect(hasNonLinearPvf(pvfs)).toBe(true);
       });
+    });
+  });
+
+  describe('isPieceWiseLinearPvf', () => {
+    it('should return true if the pvf is piecewise', () => {
+      const pvf: IPieceWiseLinearPvf = {
+        cutoffs: [0, 1],
+        direction: 'decreasing',
+        type: 'piecewise-linear',
+        values: [1, 2],
+        range: [0, 100]
+      };
+      expect(isPieceWiseLinearPvf(pvf)).toBeTruthy();
+    });
+
+    it('should return false for a linear pvf', () => {
+      const pvf: ILinearPvf = {
+        direction: 'decreasing',
+        type: 'linear',
+        range: [0, 100]
+      };
+      expect(isPieceWiseLinearPvf(pvf)).toBeFalsy();
+    });
+  });
+
+  describe('isElicitationView', () => {
+    it('should return true if the view is precise', () => {
+      expect(isElicitationView('precise')).toBeTruthy();
+    });
+
+    it('should return true if the view is imprecise', () => {
+      expect(isElicitationView('imprecise')).toBeTruthy();
+    });
+
+    it('should return true if the view is matching', () => {
+      expect(isElicitationView('matching')).toBeTruthy();
+    });
+
+    it('should return true if the view is ranking', () => {
+      expect(isElicitationView('ranking')).toBeTruthy();
+    });
+
+    it('should return true if the view is threshold', () => {
+      expect(isElicitationView('threshold')).toBeTruthy();
+    });
+
+    it('should return false if the view is advancedPvf', () => {
+      expect(isElicitationView('advancedPvf')).toBeFalsy();
+    });
+
+    it('should return false if the view is preferences', () => {
+      expect(isElicitationView('preferences')).toBeFalsy();
+    });
+  });
+
+  describe('hasNonLinearPvf', () => {
+    it('should return true if there is at least one piecewise pvf', () => {
+      const pvfs: Record<string, TPvf> = {
+        crit1Id: {type: 'linear'} as ILinearPvf,
+        crit2Id: {type: 'piecewise-linear'} as IPieceWiseLinearPvf
+      };
+      expect(hasNonLinearPvf(pvfs)).toBeTruthy();
+    });
+
+    it('should return false if there is no piecewise pvf', () => {
+      const pvfs: Record<string, TPvf> = {
+        crit1Id: {type: 'linear'} as ILinearPvf,
+        crit2Id: {type: 'linear'} as ILinearPvf
+      };
+      expect(hasNonLinearPvf(pvfs)).toBeFalsy();
+    });
+  });
+
+  describe('calculateWeightsFromPreferences', () => {
+    const criteria: ICriterion[] = [
+      {id: 'crit1Id'} as ICriterion,
+      {id: 'crit2Id'} as ICriterion,
+      {id: 'crit3Id'} as ICriterion,
+      {id: 'crit4Id'} as ICriterion
+    ];
+
+    it('should return equal weights if no preferences are set', () => {
+      const preferences: TPreferences = [];
+      const result = calculateWeightsFromPreferences(criteria, preferences);
+      const weights: Record<string, number> = {
+        crit1Id: 0.25,
+        crit2Id: 0.25,
+        crit3Id: 0.25,
+        crit4Id: 0.25
+      };
+      const expectedResult: IWeights = {
+        '2.5%': weights,
+        mean: weights,
+        '97.5%': weights
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return weights for ranking if the preferences are ordinal', () => {
+      const preferences: IRanking[] = [
+        {
+          type: 'ordinal',
+          criteria: ['crit1Id', 'crit2Id'],
+          elicitationMethod: 'ranking'
+        },
+        {
+          type: 'ordinal',
+          criteria: ['crit2Id', 'crit3Id'],
+          elicitationMethod: 'ranking'
+        },
+        {
+          type: 'ordinal',
+          criteria: ['crit3Id', 'crit4Id'],
+          elicitationMethod: 'ranking'
+        }
+      ];
+      const result = calculateWeightsFromPreferences(criteria, preferences);
+      const weights: Record<string, number> = {
+        crit1Id: 0.5208333333333333,
+        crit2Id: 0.2708333333333333,
+        crit3Id: 0.14583333333333331,
+        crit4Id: 0.0625
+      };
+      const expectedResult: IWeights = {
+        '2.5%': weights,
+        mean: weights,
+        '97.5%': weights
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return weights for exact preferences', () => {
+      const preferences: IExactSwingRatio[] = [
+        {
+          type: 'exact swing',
+          criteria: ['crit1Id', 'crit2Id'],
+          elicitationMethod: 'precise',
+          ratio: 2
+        },
+        {
+          type: 'exact swing',
+          criteria: ['crit1Id', 'crit3Id'],
+          elicitationMethod: 'precise',
+          ratio: 3
+        },
+        {
+          type: 'exact swing',
+          criteria: ['crit1Id', 'crit4Id'],
+          elicitationMethod: 'precise',
+          ratio: 4
+        }
+      ];
+      const result = calculateWeightsFromPreferences(criteria, preferences);
+      const weights: Record<string, number> = {
+        crit1Id: 0.4800000000000001, // rounding errors
+        crit2Id: 0.24000000000000005,
+        crit3Id: 0.16,
+        crit4Id: 0.12000000000000002
+      };
+      const expectedResult: IWeights = {
+        '2.5%': weights,
+        mean: weights,
+        '97.5%': weights
+      };
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should throw an error for other elicitation types', () => {
+      const preferences: IRatioBoundConstraint[] = [
+        {
+          type: 'ratio bound',
+          criteria: ['crit1Id', 'crit2Id'],
+          elicitationMethod: 'imprecise',
+          bounds: [0, 2]
+        }
+      ];
+      const error = 'Cannot calculate weights from set preferences';
+      expect(() => {
+        calculateWeightsFromPreferences(criteria, preferences);
+      }).toThrow(error);
     });
   });
 });
