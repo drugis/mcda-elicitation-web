@@ -14,7 +14,7 @@ import {useHistory, useParams} from 'react-router';
 import {ErrorContext} from '../../../Error/ErrorContext';
 import {CurrentSubproblemContext} from '../CurrentSubproblemContext/CurrentSubproblemContext';
 import IScenariosContext from './IScenariosContext';
-import {filterScenariosWithPvfs} from './PreferencesUtil';
+import {filterScenariosWithPvfs} from './preferencesUtil';
 
 export const ScenariosContext = createContext<IScenariosContext>(
   {} as IScenariosContext

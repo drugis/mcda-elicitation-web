@@ -22,7 +22,7 @@ import {
   initPvfs,
   isElicitationView,
   isPieceWiseLinearPvf
-} from './PreferencesUtil';
+} from './preferencesUtil';
 
 const criterion1: ICriterion = {
   id: 'crit1Id',

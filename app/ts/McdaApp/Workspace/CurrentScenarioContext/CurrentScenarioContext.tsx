@@ -26,7 +26,7 @@ import {
   determineElicitationMethod,
   hasNonLinearPvf,
   initPvfs
-} from '../ScenariosContext/PreferencesUtil';
+} from '../ScenariosContext/preferencesUtil';
 import {ScenariosContext} from '../ScenariosContext/ScenariosContext';
 import {TPreferencesView} from '../ScenariosContext/TPreferencesView';
 import ICurrentScenarioContext from './ICurrentScenarioContext';
@@ -75,38 +75,52 @@ export function CurrentScenarioContextProviderComponent({
     useState(true);
   const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
+  const getWeightsFromPatavi = useCallback(
+    (scenario: IMcdaScenario, pvfs: Record<string, TPvf>) => {
+      const postCommand = getWeightsPataviProblem(
+        filteredWorkspace,
+        scenario,
+        pvfs,
+        randomSeed
+      );
+      Axios.post('/api/v2/patavi/weights', postCommand).then(
+        (result: AxiosResponse<IWeights>) => {
+          const updatedScenario = _.merge({}, scenario, {
+            state: {weights: result.data}
+          });
+          setCurrentScenario(updatedScenario);
+          updateScenarios(updatedScenario);
+        }
+      );
+    },
+    [filteredWorkspace, randomSeed, updateScenarios]
+  );
+
+  const getWeightsThroughCalculation = useCallback(
+    (scenario: IMcdaScenario) => {
+      const updatedScenario = _.merge({}, scenario, {
+        state: {
+          weights: calculateWeightsFromPreferences(
+            filteredCriteria,
+            scenario.state.prefs
+          )
+        }
+      });
+      setCurrentScenario(updatedScenario);
+      updateScenarios(updatedScenario);
+    },
+    [filteredCriteria, updateScenarios]
+  );
+
   const getWeights = useCallback(
     (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
       if (scenario.state.prefs[0]?.elicitationMethod === 'imprecise') {
-        const postCommand = getWeightsPataviProblem(
-          filteredWorkspace,
-          scenario,
-          pvfs,
-          randomSeed
-        );
-        Axios.post('/api/v2/patavi/weights', postCommand).then(
-          (result: AxiosResponse<IWeights>) => {
-            const updatedScenario = _.merge({}, scenario, {
-              state: {weights: result.data}
-            });
-            setCurrentScenario(updatedScenario);
-            updateScenarios(updatedScenario);
-          }
-        );
+        getWeightsFromPatavi(scenario, pvfs);
       } else {
-        const updatedScenario = _.merge({}, scenario, {
-          state: {
-            weights: calculateWeightsFromPreferences(
-              filteredCriteria,
-              scenario.state.prefs
-            )
-          }
-        });
-        setCurrentScenario(updatedScenario);
-        updateScenarios(updatedScenario);
+        getWeightsThroughCalculation(scenario);
       }
     },
-    [filteredCriteria, filteredWorkspace, randomSeed, updateScenarios]
+    [getWeightsFromPatavi, getWeightsThroughCalculation]
   );
 
   useEffect(() => {
