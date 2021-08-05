@@ -125,7 +125,7 @@
     "selenium-server": "^3.141.59",
     "string-replace-loader": "^3.0.1",
     "style-loader": "^2.0.0",
-    "svg-crowbar": "^0.6.5",
+    "svg-crowbar": "drugis/svg-crowbar#png-scaling",
     "terser-webpack-plugin": "^5.1.1",
     "tocbot": "^4.8.1",
     "ts-jest": "^27.0.3",
