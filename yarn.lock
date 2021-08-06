@@ -9017,7 +9017,7 @@ supports-hyperlinks@^2.0.0:
 
 svg-crowbar@drugis/svg-crowbar#png-scaling:
   version "0.6.5"
-  resolved "https://codeload.github.com/drugis/svg-crowbar/tar.gz/05f6d4551e55a95af4bec3f60aec0fcbafef57e3"
+  resolved "https://codeload.github.com/drugis/svg-crowbar/tar.gz/5ba8c8ffe4168a6ca919b398c8c4bf2f221b7aaa"
 
 svgo@^2.3.0:
   version "2.3.0"
