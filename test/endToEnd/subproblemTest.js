@@ -39,7 +39,7 @@ function setupSubProblem(browser) {
     )
     .assert.containsText(
       '#scale-ranges-warning-2',
-      'Effects table contains criterion where all values are indentical'
+      'Effects table contains criterion where all values are identical'
     )
     .clearValue('#subproblem-title-input')
     .setValue('#subproblem-title-input', subproblem1.title)
