@@ -4,88 +4,66 @@ import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {TPataviCommands} from '@shared/types/PataviCommands';
 import {TPataviResults} from '@shared/types/PataviResults';
-import Axios, {AxiosError, AxiosResponse} from 'axios';
-import fs from 'fs';
-import {IncomingMessage} from 'http';
+import Axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import httpStatus from 'http-status-codes';
-import https from 'https';
 import _ from 'lodash';
 import {client as WebSocketClient, connection, IMessage} from 'websocket';
 import logger from './logger';
 
-const {
-  PATAVI_HOST,
-  PATAVI_PORT,
-  PATAVI_CLIENT_KEY,
-  PATAVI_CLIENT_CRT,
-  PATAVI_CA
-} = process.env;
-const pataviTaskUrl = `https://${PATAVI_HOST}:${PATAVI_PORT}/task?service=smaa_v2&ttl=PT5M`;
-
-let httpsOptionsNoCa = {
-  hostname: PATAVI_HOST,
-  port: Number.parseInt(PATAVI_PORT),
-  cert: fs.readFileSync(PATAVI_CLIENT_CRT!),
-  key: fs.readFileSync(PATAVI_CLIENT_KEY!)
-};
-let ca;
-try {
-  ca = fs.readFileSync(PATAVI_CA!);
-} catch (exception) {
-  logger.warn('Certificate autority file not found at: ' + PATAVI_CA);
-}
-const httpsOptions = ca ? {...httpsOptionsNoCa, ca: ca} : httpsOptionsNoCa;
-const httpsAgent = new https.Agent({...httpsOptions, path: pataviTaskUrl});
+const {PATAVI_HOST, PATAVI_PORT, PATAVI_API_KEY} = process.env;
+const protocol = process.env.SECURE_TRAFFIC === 'true' ? 'https' : 'http';
+const pataviTaskUrl = `${protocol}://${PATAVI_HOST}:${PATAVI_PORT}/task?service=smaa_v2&ttl=PT5M`;
 
 export default function createPataviTask(
   problem: IPataviProblem,
   callback: (error: OurError, location?: string) => void
 ): void {
   logger.debug('pataviTaskRepository.createPataviTask');
-  const requestOptions = {
-    path: '/task?service=smaa_v2&ttl=PT5M',
-    method: 'POST',
+  const requestOptions: AxiosRequestConfig = {
+    url: pataviTaskUrl,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-api-key': PATAVI_API_KEY,
+      'X-client-name': 'MCDA-open'
     }
   };
 
-  const postRequest = https.request(
-    _.extend(httpsOptions, requestOptions),
-    (response: IncomingMessage): void => {
+  Axios.post(pataviTaskUrl, problem, requestOptions).then(
+    (response: AxiosResponse): void => {
       logger.debug('patavi service task created');
-      const {statusCode, headers} = response;
-      if (statusCode === httpStatus.CREATED && headers.location) {
+      const {status, headers} = response;
+      if (status === httpStatus.CREATED && headers.location) {
         callback(null, headers.location);
       } else {
         callback({
-          status: statusCode,
-          message: 'Error queueing task: server returned code ' + statusCode
+          status: status,
+          message: 'Error queueing task: server returned code ' + status
         });
       }
     }
   );
-  postRequest.write(JSON.stringify(problem));
-  postRequest.end();
 }
 
 export function postAndHandleResults(
   problem: TPataviCommands,
   callback: (error: OurError, result?: TPataviResults) => void
 ) {
-  Axios.post(pataviTaskUrl, problem, {httpsAgent})
+  const requestOptions: AxiosRequestConfig = {
+    url: pataviTaskUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-api-key': PATAVI_API_KEY,
+      'X-client-name': 'MCDA-open'
+    }
+  };
+  Axios.post(pataviTaskUrl, problem, requestOptions)
     .then((pataviResponse: AxiosResponse) => {
       return handleUpdateResponse(pataviResponse, callback);
     })
     .then((updatesUrl) => {
-      const client = new WebSocketClient({
-        tlsOptions: {...httpsOptions, path: updatesUrl}
-      });
+      const client = new WebSocketClient();
       client.on('connectFailed', _.partial(failedConnectionCallback, callback));
-      client.on(
-        'connect',
-        _.partial(successfullConnectionCallback, httpsAgent, callback)
-      );
+      client.on('connect', _.partial(successfullConnectionCallback, callback));
       client.connect(updatesUrl);
     })
     .catch((error: AxiosError) => {
@@ -121,14 +99,13 @@ function failedConnectionCallback(
 }
 
 function successfullConnectionCallback(
-  httpsAgent: https.Agent,
   callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void,
   connection: connection
 ) {
   connection.on('message', (message: IMessage) => {
     if (message.utf8Data) {
       const data = JSON.parse(message.utf8Data);
-      handleMessage(connection, httpsAgent, data, callback);
+      handleMessage(connection, data, callback);
     } else {
       errorHandler('Malformed response from Patavi', callback);
     }
@@ -137,17 +114,14 @@ function successfullConnectionCallback(
 
 function handleMessage(
   connection: connection,
-  httpsAgent: https.Agent,
   messageData: {eventType: string; eventData: {href: string}},
   callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void
 ) {
   if (messageData.eventType === 'done') {
     connection.close();
-    Axios.get(messageData.eventData.href, {httpsAgent}).then(
-      (resultsResponse: any) => {
-        callback(null, resultsResponse.data);
-      }
-    );
+    Axios.get(messageData.eventData.href).then((resultsResponse: any) => {
+      callback(null, resultsResponse.data);
+    });
   } else {
     errorHandler(
       `Patavi returned event type: ${messageData.eventType}`,
