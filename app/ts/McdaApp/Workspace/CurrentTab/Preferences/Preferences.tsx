@@ -1,6 +1,4 @@
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {lexicon} from 'app/ts/InlineHelp/lexicon';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
@@ -11,7 +9,7 @@ import {CurrentScenarioContext} from '../../CurrentScenarioContext/CurrentScenar
 import {
   buildScenarioWithPreferences,
   isElicitationView
-} from '../../ScenariosContext/PreferencesUtil';
+} from '../../ScenariosContext/preferencesUtil';
 import {TPreferencesView} from '../../ScenariosContext/TPreferencesView';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
@@ -34,9 +32,18 @@ export default function Preferences() {
     setActiveView('preferences');
   }
 
-  function saveCallback(preferences: TPreferences): void {
-    updateScenario(buildScenarioWithPreferences(currentScenario, preferences));
-    setActiveView('preferences');
+  function saveCallback(
+    preferences: TPreferences,
+    thresholdValuesByCriterion?: Record<string, number>
+  ): Promise<any> {
+    const scenarioWithPreferences = buildScenarioWithPreferences(
+      currentScenario,
+      preferences,
+      thresholdValuesByCriterion
+    );
+    return updateScenario(scenarioWithPreferences).then(() => {
+      setActiveView('preferences');
+    });
   }
 
   function setDocumentTitle(activeView: TPreferencesView): void {
@@ -56,10 +63,13 @@ export default function Preferences() {
       case 'ranking':
         document.title = 'Ranking';
         break;
+      case 'threshold':
+        document.title = 'Threshold technique elicitation';
+        break;
     }
   }
 
-  function renderView(): JSX.Element {
+  function PreferencesTabView(): JSX.Element {
     setDocumentTitle(activeView);
 
     if (activeView === 'preferences') {
@@ -67,9 +77,7 @@ export default function Preferences() {
     } else if (activeView === 'advancedPvf') {
       return (
         <AdvancedPartialValueFunctionContextProviderComponent>
-          <Grid container justify="center" component={Box} mt={2}>
-            <AdvancedPartialValueFunction />
-          </Grid>
+          <AdvancedPartialValueFunction />
         </AdvancedPartialValueFunctionContextProviderComponent>
       );
     } else if (isElicitationView(activeView)) {
@@ -92,5 +100,5 @@ export default function Preferences() {
     }
   }
 
-  return renderView();
+  return <PreferencesTabView />;
 }

@@ -1,4 +1,4 @@
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import IAlternative from '../IAlternative';
 import IProblemCriterion from './IProblemCriterion';
 import {TPerformanceTableEntry} from './TPerformanceTableEntry';

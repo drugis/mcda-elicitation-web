@@ -2,7 +2,7 @@ import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
@@ -21,10 +21,12 @@ import React, {
 import {useParams} from 'react-router';
 import {
   areAllPvfsSet,
+  calculateWeightsFromPreferences,
   createScenarioWithPvf,
   determineElicitationMethod,
+  hasNonLinearPvf,
   initPvfs
-} from '../ScenariosContext/PreferencesUtil';
+} from '../ScenariosContext/preferencesUtil';
 import {ScenariosContext} from '../ScenariosContext/ScenariosContext';
 import {TPreferencesView} from '../ScenariosContext/TPreferencesView';
 import ICurrentScenarioContext from './ICurrentScenarioContext';
@@ -38,12 +40,11 @@ export function CurrentScenarioContextProviderComponent({
 }: {
   children: any;
 }) {
-  const {workspaceId, subproblemId, scenarioId} =
-    useParams<{
-      workspaceId: string;
-      subproblemId: string;
-      scenarioId: string;
-    }>();
+  const {workspaceId, subproblemId, scenarioId} = useParams<{
+    workspaceId: string;
+    subproblemId: string;
+    scenarioId: string;
+  }>();
 
   const {setError} = useContext(ErrorContext);
   const {
@@ -70,10 +71,12 @@ export function CurrentScenarioContextProviderComponent({
   );
   const [advancedPvfCriterionId, setAdvancedPvfCriterionId] =
     useState<string>();
+  const [isThresholdElicitationDisabled, setIsThresholdElicitationDisabled] =
+    useState(true);
   const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
-  const getWeights = useCallback(
-    (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
+  const getWeightsFromPatavi = useCallback(
+    (scenario: IMcdaScenario, pvfs: Record<string, TPvf>) => {
       const postCommand = getWeightsPataviProblem(
         filteredWorkspace,
         scenario,
@@ -93,6 +96,33 @@ export function CurrentScenarioContextProviderComponent({
     [filteredWorkspace, randomSeed, updateScenarios]
   );
 
+  const getWeightsThroughCalculation = useCallback(
+    (scenario: IMcdaScenario) => {
+      const updatedScenario = _.merge({}, scenario, {
+        state: {
+          weights: calculateWeightsFromPreferences(
+            filteredCriteria,
+            scenario.state.prefs
+          )
+        }
+      });
+      setCurrentScenario(updatedScenario);
+      updateScenarios(updatedScenario);
+    },
+    [filteredCriteria, updateScenarios]
+  );
+
+  const getWeights = useCallback(
+    (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
+      if (scenario.state.prefs[0]?.elicitationMethod === 'imprecise') {
+        getWeightsFromPatavi(scenario, pvfs);
+      } else {
+        getWeightsThroughCalculation(scenario);
+      }
+    },
+    [getWeightsFromPatavi, getWeightsThroughCalculation]
+  );
+
   useEffect(() => {
     setCurrentScenario(getScenario(scenarioId));
   }, [getScenario, scenarioId]);
@@ -105,6 +135,7 @@ export function CurrentScenarioContextProviderComponent({
         configuredRanges
       );
       setPvfs(newPvfs);
+      setIsThresholdElicitationDisabled(hasNonLinearPvf(newPvfs));
       if (
         areAllPvfsSet(filteredCriteria, newPvfs) &&
         !currentScenario.state.weights
@@ -122,11 +153,12 @@ export function CurrentScenarioContextProviderComponent({
   }
 
   function resetPreferences(scenario: IMcdaScenario) {
-    const newScenario = {
+    const newScenario: IMcdaScenario = {
       ...scenario,
       state: {
         ..._.pick(scenario.state, ['problem', 'legend', 'uncertaintyOptions']),
-        prefs: [] as TPreferences
+        prefs: [] as TPreferences,
+        thresholdValuesByCriterion: {}
       }
     };
     getWeights(newScenario, pvfs);
@@ -183,6 +215,7 @@ export function CurrentScenarioContextProviderComponent({
         areAllPvfsSet: areAllPvfsSet(filteredCriteria, pvfs),
         currentScenario,
         pvfs,
+        isThresholdElicitationDisabled,
         disableWeightsButtons,
         activeView,
         elicitationMethod,

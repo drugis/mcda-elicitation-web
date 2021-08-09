@@ -62,9 +62,8 @@ export default function ScalesSlider({
   const usePercentage = showPercentages && canBePercentage(unit);
 
   // ranges
-  const [lowestObservedValue, highestObservedValue] = newObservedRanges[
-    dataSource.id
-  ];
+  const [lowestObservedValue, highestObservedValue] =
+    newObservedRanges[dataSource.id];
   const [lowerTheoretical, upperTheoretical]: [number, number] = [
     dataSource.unitOfMeasurement.lowerBound,
     getUpperBound(dataSource.unitOfMeasurement)
@@ -107,7 +106,7 @@ export default function ScalesSlider({
   const classes = useStyles();
 
   return (
-    <Grid container item xs={12} spacing={4} justify="center">
+    <Grid container item xs={12} spacing={4} justifyContent="center">
       <Grid item xs={12}>
         <Typography>
           {`${criterion.title} ${getUnitLabelNullsafe(

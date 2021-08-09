@@ -4,9 +4,9 @@
     "outDir": "./test/endToEnd",
     "esModuleInterop": true,
     "module": "commonjs",
-    "sourceMap": true,
     "allowJs": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "target": "esnext"
   },
   "include": ["test/endToEnd/*.ts"],
   "exclude": ["node_modules"]

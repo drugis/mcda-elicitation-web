@@ -8,8 +8,8 @@ export default function PreferencesWeightsButtons() {
   const {
     resetPreferences,
     currentScenario,
-    disableWeightsButtons,
-    setActiveView
+    setActiveView,
+    isThresholdElicitationDisabled
   } = useContext(CurrentScenarioContext);
 
   function handleResetClick() {
@@ -30,6 +30,10 @@ export default function PreferencesWeightsButtons() {
 
   function handleImpreciseClick() {
     setActiveView('imprecise');
+  }
+
+  function handleThresholdClick() {
+    setActiveView('threshold');
   }
 
   return (
@@ -82,6 +86,17 @@ export default function PreferencesWeightsButtons() {
           variant="contained"
         >
           Imprecise Swing Weighting
+        </Button>
+      </Tooltip>
+      <Tooltip title="Saving this preference will reset all criteria trade-off preferences">
+        <Button
+          id="threshold-button"
+          onClick={handleThresholdClick}
+          color="primary"
+          variant="contained"
+          disabled={isThresholdElicitationDisabled}
+        >
+          Threshold
         </Button>
       </Tooltip>
     </ButtonGroup>

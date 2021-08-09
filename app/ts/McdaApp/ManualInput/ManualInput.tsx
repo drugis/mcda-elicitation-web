@@ -20,7 +20,7 @@ export default function ManualInput() {
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid container item xs={12} component={Paper} spacing={2}>
         <Grid item xs={12}>
           <Typography id="manual-input-header-step1" variant="h3">

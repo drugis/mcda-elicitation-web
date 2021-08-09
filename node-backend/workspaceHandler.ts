@@ -232,7 +232,8 @@ export default function WorkspaceHandler(db: IDB) {
             workspaceInfo.workspace.pvfs
           )
         },
-        prefs: []
+        prefs: [],
+        thresholdValuesByCriterion: {}
       }
     };
     scenarioRepository.createInTransaction(

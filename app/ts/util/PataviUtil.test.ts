@@ -1,5 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
+import IWeights from '@shared/interface/IWeights';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
 import {IRelativePataviTableEntry} from '@shared/interface/Patavi/IRelativePataviTableEntry';
@@ -7,7 +8,7 @@ import IScalesCommand from '@shared/interface/Patavi/IScalesCommand';
 import {TPataviPerformanceTableEntry} from '@shared/interface/Patavi/TPataviPerfomanceTableEntry';
 import IProblem from '@shared/interface/Problem/IProblem';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {
   buildPataviPerformanceTable,
   getPataviProblem,
@@ -35,8 +36,15 @@ describe('PataviUtil', () => {
       const pvfs: Record<string, ILinearPvf> = {
         crit1Id: {direction: 'increasing', type: 'linear', range: [0, 100]}
       };
+      const weights: IWeights = {'2.5%': {}, mean: {crit1Id: 1}, '97.5%': {}};
       const preferences: TPreferences = [];
-      const result = getPataviProblem(workspace, preferences, pvfs, false);
+      const result = getPataviProblem(
+        workspace,
+        preferences,
+        pvfs,
+        weights,
+        false
+      );
       const expectedResult: IPataviProblem = {
         alternatives: {alt1Id: {id: 'alt1Id', title: 'alt1'}},
         criteria: {
@@ -48,7 +56,8 @@ describe('PataviUtil', () => {
           }
         },
         performanceTable: [],
-        preferences: preferences
+        preferences: preferences,
+        weights: {'2.5%': {}, mean: {crit1Id: 1}, '97.5%': {}}
       };
       expect(result).toEqual(expectedResult);
     });

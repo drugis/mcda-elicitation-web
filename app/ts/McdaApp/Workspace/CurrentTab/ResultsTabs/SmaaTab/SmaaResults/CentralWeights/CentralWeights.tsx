@@ -28,7 +28,7 @@ export default function CentralWeights({
             </PlotButtons>
           </Grid>
           <Grid container item xs={12} spacing={2}>
-            <Grid container item xs={12} justify="flex-end">
+            <Grid container item xs={12} justifyContent="flex-end">
               <ClipboardButton targetId="#central-weights-table" />
             </Grid>
             <Grid item xs={12}>

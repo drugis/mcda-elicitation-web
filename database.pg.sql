@@ -614,3 +614,15 @@ WHERE workspacesettings.workspaceId = newSettings.workspaceId;
 --changeset keijserj:29
 ALTER TABLE inprogressworkspace ADD COLUMN creationDate TIMESTAMP DEFAULT NOW() NOT NULL;
 --rollback ALTER TABLE inprogressworkspace DROP COLUMN creationDate
+
+--changeset keijserj:30
+START TRANSACTION;
+CREATE TABLE thresholdElicitationValues (
+  scenarioid INTEGER REFERENCES scenario (id) ON DELETE CASCADE,
+  criterionid VARCHAR NOT NULL,
+  thresholdvalue FLOAT NOT NULL
+);
+ALTER TABLE thresholdElicitationValues
+  ADD CONSTRAINT criterion_scenario_combination UNIQUE (scenarioid, criterionid);
+COMMIT;
+--rollback DROP TABLE thresholdElicitationValues;

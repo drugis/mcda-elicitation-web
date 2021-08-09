@@ -9,83 +9,112 @@ import {
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import significantDigits from 'app/ts/util/significantDigits';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
+import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
+import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
-import IWeights from '@shared/interface/Scenario/IWeights';
+import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
+import SensitivityTableButtons from '../SensitivityTableButtons/SensitivityTableButtons';
+import DeterministicEquivalentChangeCell from './DeterministicEquivalentChangeCell/DeterministicEquivalentChangeCell';
+import {DeterministicWeightsContext} from './DeterministicWeightsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
-  const {filteredCriteria} = useContext(CurrentSubproblemContext);
-  const {weights} = useContext(DeterministicResultsContext);
+  const {resetWeightsTable} = useContext(DeterministicWeightsContext);
+  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
 
   return (
-    <Grid container item xs={12}>
+    <Grid container>
       <Grid item xs={9}>
         <Typography variant="h5">
           <InlineHelp helpId="representative-weights">Weights</InlineHelp>
         </Typography>
       </Grid>
-      <Grid container item xs={3} justify="flex-end">
+      <Grid container item xs={3} justifyContent="flex-end">
         <ClipboardButton targetId="#deterministic-weights-table" />
       </Grid>
       <Grid item xs={12}>
-        <LoadingSpinner showSpinnerCondition={!weights}>
-          <Table id="deterministic-weights-table">
-            <TableHead>
-              <TableRow>
-                <CriterionTitleCells criteria={filteredCriteria} />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <WeightCells
-                  filteredCriteria={filteredCriteria}
-                  weights={weights}
-                />
-              </TableRow>
-            </TableBody>
-          </Table>
-        </LoadingSpinner>
+        <Table id="deterministic-weights-table">
+          <TableHead>
+            <TableRow>
+              <ColumnHeaders
+                canShowEquivalentChanges={canShowEquivalentChanges}
+              />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <WeightRows />
+          </TableBody>
+        </Table>
+      </Grid>
+      <Grid item xs={12}>
+        <SensitivityTableButtons
+          resetter={resetWeightsTable}
+          idContext="weights"
+        />
       </Grid>
     </Grid>
   );
 }
 
-function WeightCells({
-  filteredCriteria,
-  weights
-}: {
-  filteredCriteria: ICriterion[];
-  weights: IWeights;
-}): JSX.Element {
+function WeightRows(): JSX.Element {
+  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
+  const {deterministicChangeableWeights, setImportance} = useContext(
+    DeterministicWeightsContext
+  );
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
+
   return (
     <>
-      {_.map(filteredCriteria, (criterion: ICriterion) => (
-        <TableCell key={criterion.id}>
-          {significantDigits(weights.mean[criterion.id])}
-        </TableCell>
-      ))}
+      {_.map(filteredCriteria, (criterion: ICriterion) => {
+        const weight = deterministicChangeableWeights.weights[criterion.id];
+        const importance =
+          deterministicChangeableWeights.importances[criterion.id];
+        return (
+          <TableRow key={`${criterion.id}-weights-table-row`}>
+            <TableCell id={`title-${criterion.id}`}>
+              {criterion.title}
+            </TableCell>
+            <TableCell id={`weight-${criterion.id}`}>
+              {significantDigits(weight)}
+            </TableCell>
+            <ClickableSliderTableCell
+              key={`${criterion.id}-importance-cell`}
+              id={`importance-${criterion.id}-cell`}
+              value={importance}
+              min={1}
+              max={100}
+              stepSize={1}
+              labelRenderer={(value: number) => `${Math.round(value)}%`}
+              setterCallback={(newValue: number) =>
+                setImportance(criterion.id, newValue)
+              }
+            />
+            <ShowIf condition={canShowEquivalentChanges}>
+              <DeterministicEquivalentChangeCell criterion={criterion} />
+            </ShowIf>
+          </TableRow>
+        );
+      })}
     </>
   );
 }
 
-function CriterionTitleCells({
-  criteria
+function ColumnHeaders({
+  canShowEquivalentChanges
 }: {
-  criteria: ICriterion[];
+  canShowEquivalentChanges: boolean;
 }): JSX.Element {
   return (
     <>
-      {_.map(
-        criteria,
-        (criterion: ICriterion): JSX.Element => (
-          <TableCell key={criterion.id}>{criterion.title}</TableCell>
-        )
-      )}
+      <TableCell>Criterion</TableCell>
+      <TableCell>Weight</TableCell>
+      <TableCell>Importance (worst → best)</TableCell>
+      <ShowIf condition={canShowEquivalentChanges}>
+        <TableCell>Equivalent change</TableCell>
+      </ShowIf>
     </>
   );
 }
