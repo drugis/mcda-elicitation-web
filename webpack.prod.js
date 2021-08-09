@@ -5,13 +5,6 @@ const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-let basePath = path.join(__dirname, '/');
-let fs = require('fs');
-const MATOMO_VERSION = process.env.MATOMO_VERSION
-  ? process.env.MATOMO_VERSION
-  : 'Test';
 
 module.exports = merge(common, {
   mode: 'production',

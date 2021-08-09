@@ -1,47 +1,33 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: patavi-server-composed
+  name: patavi-server
   namespace: mcda
 spec:
   type: LoadBalancer
   ports:
     - port: 3000
   selector:
-    app: patavi-server-composed
+    app: patavi-server
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: patavi-server-composed
+  name: patavi-server
   namespace: mcda
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: patavi-server-composed
+      app: patavi-server
   template:
     metadata:
       labels:
-        app: patavi-server-composed
+        app: patavi-server
     spec:
-      volumes:
-        - name: certificates
-          configMap:
-            name: certificates
-            items:
-              - key: patavi-server-crt.pem
-                path: server-crt.pem
-              - key: patavi-server-key.pem
-                path: server-key.pem
-              - key: ca-crt.pem
-                path: ca-crt.pem
       containers:
-        - name: patavi-server-composed
-          image: addis/patavi-server
-          volumeMounts:
-            - name: certificates
-              mountPath: /var/lib/patavi/ssl
+        - name: patavi-server
+          image: addis/patavi:secure
           envFrom:
             - configMapRef:
                 name: patavi-settings
@@ -51,6 +37,11 @@ spec:
                 secretKeyRef:
                   name: db-credentials
                   key: PATAVI_DB_PASSWORD
+            - name: PATAVI_AUTHORISED_TOKEN
+              valueFrom: 
+                secretKeyRef:
+                  name: passwords
+                  key: PATAVI_AUTHORISED_TOKEN
           ports:
             - name: patavi-server
               containerPort: 3000
