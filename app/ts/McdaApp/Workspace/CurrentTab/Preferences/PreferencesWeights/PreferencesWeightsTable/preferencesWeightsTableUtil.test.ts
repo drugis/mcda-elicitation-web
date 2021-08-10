@@ -80,21 +80,21 @@ describe('preferencesWeightsTableUtil', () => {
         crit1: {currentValue: 0.5, originalValue: 1}
       };
       const importances: Record<string, IChangeableValue> = {
-        crit1: {currentValue: 100, originalValue: 100}
+        crit1: {currentValue: 50, originalValue: 50}
       };
       const result: Record<string, IChangeableValue> = calculateNewImportances(
         equivalentChanges,
         importances
       );
       const expectedResult: Record<string, IChangeableValue> = {
-        crit1: {currentValue: 50, originalValue: 100}
+        crit1: {currentValue: 100, originalValue: 50}
       };
       expect(result).toEqual(expectedResult);
     });
 
     it('should return normalized new importances based on new equivalent change values if one of the new importances exceeds 100', () => {
       const equivalentChanges: Record<string, IChangeableValue> = {
-        crit1: {currentValue: 2, originalValue: 1},
+        crit1: {currentValue: 0.5, originalValue: 1},
         crit2: {currentValue: 1, originalValue: 1}
       };
       const importances: Record<string, IChangeableValue> = {

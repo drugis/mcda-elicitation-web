@@ -89,8 +89,8 @@ export function calculateNewDeterministicEquivalentChanges(
   return _.mapValues(importances, (importance, criterionId: string) => {
     const equivalentChange = equivalentChanges[criterionId];
     const newValue =
-      (equivalentChange.originalValue * importance.currentValue) /
-      importance.originalValue;
+      (importance.originalValue / importance.currentValue) *
+      equivalentChange.originalValue;
     return {...equivalentChange, currentValue: significantDigits(newValue)};
   });
 }

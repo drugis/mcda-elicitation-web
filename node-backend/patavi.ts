@@ -10,7 +10,7 @@ import {IncomingMessage} from 'http';
 import httpStatus from 'http-status-codes';
 import https from 'https';
 import _ from 'lodash';
-import {client as WebSocketClient, connection, IMessage} from 'websocket';
+import {client as WebSocketClient, connection} from 'websocket';
 import logger from './logger';
 
 const {
@@ -125,7 +125,7 @@ function successfullConnectionCallback(
   callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void,
   connection: connection
 ) {
-  connection.on('message', (message: IMessage) => {
+  connection.on('message', (message: any) => {
     if (message.utf8Data) {
       const data = JSON.parse(message.utf8Data);
       handleMessage(connection, httpsAgent, data, callback);
