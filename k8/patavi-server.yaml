@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: patavi-server
-          image: addis/patavi:secure
+          image: addis/patavi:secure3
           envFrom:
             - configMapRef:
                 name: patavi-settings
@@ -38,7 +38,7 @@ spec:
                   name: db-credentials
                   key: PATAVI_DB_PASSWORD
             - name: PATAVI_AUTHORISED_TOKEN
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: passwords
                   key: PATAVI_AUTHORISED_TOKEN
