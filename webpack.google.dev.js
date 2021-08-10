@@ -6,9 +6,17 @@ const common = require('./webpack.common.js');
 
 let basePath = path.join(__dirname, '/');
 let fs = require('fs');
+
 const MATOMO_VERSION = process.env.MATOMO_VERSION
   ? process.env.MATOMO_VERSION
-  : 'Test';
+  : 'None';
+
+const matomo =
+  MATOMO_VERSION === 'None'
+    ? ''
+    : fs.readFileSync(
+        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
+      );
 
 let config = merge(common, {
   mode: 'development',
