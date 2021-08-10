@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: patavi-server
-          image: addis/patavi:secure3
+          image: addis/patavi:secure5
           envFrom:
             - configMapRef:
                 name: patavi-settings

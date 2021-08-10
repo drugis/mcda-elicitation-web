@@ -42,7 +42,8 @@ rancher kubectl create configmap patavi-settings \
   --from-literal=PATAVI_BROKER_HOST=guest:develop@rabbitmq \
   --from-literal=PATAVI_BROKER_USER=guest \
   --from-literal=PATAVI_BROKER_PASSWORD=develop \
-  --from-literal=SECURE_TRAFFIC=true
+  --from-literal=SECURE_TRAFFIC=true\
+  --from-literal=PROXY_HOST=patavi.edge.molgenis.org 
 
 rancher kubectl apply -f postgres.yaml #not 100%, does not include pv and pv claim, those were done manually
 rancher kubectl apply -f rabbitmq.yaml
