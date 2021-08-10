@@ -12,7 +12,8 @@ import logger from './logger';
 
 const {PATAVI_HOST, PATAVI_PORT, PATAVI_API_KEY} = process.env;
 const protocol = process.env.SECURE_TRAFFIC === 'true' ? 'https' : 'http';
-const pataviTaskUrl = `${protocol}://${PATAVI_HOST}:${PATAVI_PORT}/task?service=smaa_v2&ttl=PT5M`;
+const portChunk = PATAVI_PORT ? `:${PATAVI_PORT}` : '';
+const pataviTaskUrl = `${protocol}://${PATAVI_HOST}${portChunk}/task?service=smaa_v2&ttl=PT5M`;
 
 export default function createPataviTask(
   problem: IPataviProblem,
