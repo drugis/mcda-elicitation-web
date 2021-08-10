@@ -26,9 +26,7 @@ module.exports = merge(prod, {
       inject: 'head',
       chunks: ['signin'],
       signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
-      matomo: fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      )
+      matomo: matomo
     })
   ]
 });
