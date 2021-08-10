@@ -25,16 +25,9 @@ spec:
       labels:
         app: mcda
     spec:
-      volumes:
-        - name: certificates
-          configMap:
-            name: certificates
       containers:
         - name: mcda
-          image: addis/mcda:composed
-          volumeMounts:
-            - name: certificates
-              mountPath: /var/lib/mcda/ssl
+          image: addis/mcda:secure-patavi-test
           env:
             - name: MCDAWEB_DB_PASSWORD
               valueFrom:
@@ -56,6 +49,11 @@ spec:
                 secretKeyRef:
                   name: mcda-secrets
                   key: MCDAWEB_GOOGLE_KEY
+            - name: PATAVI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: PATAVI_AUTHORISED_TOKEN
           envFrom:
             - configMapRef:
                 name: mcda-settings
