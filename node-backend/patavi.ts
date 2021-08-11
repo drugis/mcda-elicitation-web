@@ -7,7 +7,7 @@ import {TPataviResults} from '@shared/types/PataviResults';
 import Axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
-import {client as WebSocketClient, connection, IMessage} from 'websocket';
+import {client as WebSocketClient, connection} from 'websocket';
 import logger from './logger';
 
 const {PATAVI_HOST, PATAVI_PORT, PATAVI_API_KEY} = process.env;
@@ -103,7 +103,7 @@ function successfullConnectionCallback(
   callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void,
   connection: connection
 ) {
-  connection.on('message', (message: IMessage) => {
+  connection.on('message', (message: any) => {
     if (message.utf8Data) {
       const data = JSON.parse(message.utf8Data);
       handleMessage(connection, data, callback);

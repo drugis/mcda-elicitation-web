@@ -112,7 +112,7 @@ describe('deterministicWeightsTableUtil', () => {
         equivalentChanges
       );
       const expectedResult: Record<string, IChangeableValue> = {
-        crit1: {currentValue: 5, originalValue: 10}
+        crit1: {currentValue: 20, originalValue: 10}
       };
       expect(result).toEqual(expectedResult);
     });
