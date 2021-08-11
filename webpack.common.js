@@ -4,19 +4,21 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-let basePath = path.join(__dirname, '/');
-let fs = require('fs');
-const MATOMO_VERSION = process.env.MATOMO_VERSION
-  ? process.env.MATOMO_VERSION
-  : 'None';
+const basePath = path.join(__dirname, '/');
+const fs = require('fs');
 const MCDA_HOST = process.env.MCDA_HOST;
 
-const matomo =
-  MATOMO_VERSION === 'None'
+function getMatomo() {
+  const MATOMO_VERSION = process.env.MATOMO_VERSION
+    ? process.env.MATOMO_VERSION
+    : 'None';
+
+  return MATOMO_VERSION === 'None'
     ? ''
     : fs.readFileSync(
         require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
       );
+}
 
 let config = {
   entry: {
@@ -119,21 +121,21 @@ let config = {
       template: 'app/index.ejs',
       inject: 'head',
       chunks: ['main'],
-      matomo: matomo
+      matomo: getMatomo()
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
       template: 'app/manual.ejs',
       inject: 'head',
       chunks: ['manual'],
-      matomo: matomo
+      matomo: getMatomo()
     }),
     new HtmlWebpackPlugin({
       filename: 'error.html',
       template: 'app/error.ejs',
       inject: 'head',
       chunks: ['error'],
-      matomo: matomo
+      matomo: getMatomo()
     }),
     new CleanWebpackPlugin()
   ],
@@ -146,4 +148,4 @@ let config = {
   }
 };
 
-module.exports = config;
+module.exports = {config, getMatomo};

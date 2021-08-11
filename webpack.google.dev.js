@@ -4,21 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {merge} = require('webpack-merge');
 const common = require('./webpack.common.js');
 
-let basePath = path.join(__dirname, '/');
 let fs = require('fs');
 
-const MATOMO_VERSION = process.env.MATOMO_VERSION
-  ? process.env.MATOMO_VERSION
-  : 'None';
-
-const matomo =
-  MATOMO_VERSION === 'None'
-    ? ''
-    : fs.readFileSync(
-        require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html')
-      );
-
-let config = merge(common, {
+let config = merge(common.config, {
   mode: 'development',
   devtool: 'inline-source-map',
   module: {
@@ -36,7 +24,7 @@ let config = merge(common, {
       inject: 'head',
       chunks: ['signin'],
       signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
-      matomo: matomo
+      matomo: common.getMatomo()
     })
   ]
 });

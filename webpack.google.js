@@ -3,6 +3,7 @@ const path = require('path');
 const {merge} = require('webpack-merge');
 const prod = require('./webpack.prod');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {getMatomo} = require('./webpack.common');
 
 let basePath = path.join(__dirname, '/');
 let fs = require('fs');
@@ -26,7 +27,7 @@ module.exports = merge(prod, {
       inject: 'head',
       chunks: ['signin'],
       signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
-      matomo: matomo
+      matomo: getMatomo()
     })
   ]
 });
