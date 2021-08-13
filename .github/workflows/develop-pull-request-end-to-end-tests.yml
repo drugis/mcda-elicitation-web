@@ -101,7 +101,7 @@ jobs:
           MCDAWEB_COOKIE_SECRET: abc
           MCDA_HOST: localhost
           PATAVI_HOST: localhost
-          PATAVI_API_TOKEN: ${{ secrets.pataviApiToken }}
+          PATAVI_API_KEY: ${{ secrets.pataviApiKeyTest }}
 
       - name: run nightwatch tests
         id: nightwatch

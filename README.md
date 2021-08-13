@@ -93,7 +93,7 @@ export MCDAWEB_COOKIE_SECRET=<some-random-string>
 export MCDA_HOST=localhost
 export PATAVI_HOST=localhost
 export PATAVI_PORT=3000
-export PATAVI_API_TOKEN=sometokenvalue
+export PATAVI_API_KEY=somekeyvalue
 export SECURE_TRAFFIC=false
 ```
 

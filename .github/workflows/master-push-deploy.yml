@@ -79,7 +79,7 @@ jobs:
            -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaLiveGoogleKey }} \
            -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaLiveGoogleSecret }} \
            -e PATAVI_HOST=patavi.drugis.org \
-           -e PATAVI_API_TOKEN=${{ secrets.pataviApiToken }} \
+           -e PATAVI_API_KEY=${{ secrets.pataviApiKeyLive }} \
            -e SECURE_TRAFFIC=true \
            -d --name=mcda -p 8080:3002 \
            addis/mcda:live'
