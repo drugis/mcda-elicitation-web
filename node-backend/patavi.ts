@@ -7,7 +7,12 @@ import {TPataviResults} from '@shared/types/PataviResults';
 import Axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import httpStatus from 'http-status-codes';
 import _ from 'lodash';
-import {client as WebSocketClient, connection} from 'websocket';
+import {
+  client as WebSocketClient,
+  connection,
+  IUtf8Message,
+  Message
+} from 'websocket';
 import logger from './logger';
 
 const {PATAVI_HOST, PATAVI_PORT, PATAVI_API_KEY} = process.env;
@@ -103,14 +108,18 @@ function successfullConnectionCallback(
   callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void,
   connection: connection
 ) {
-  connection.on('message', (message: any) => {
-    if (message.utf8Data) {
+  connection.on('message', (message: Message) => {
+    if (isUtf8Message(message)) {
       const data = JSON.parse(message.utf8Data);
       handleMessage(connection, data, callback);
     } else {
       errorHandler('Malformed response from Patavi', callback);
     }
   });
+}
+
+function isUtf8Message(message: Message): message is IUtf8Message {
+  return (message as IUtf8Message).utf8Data !== undefined;
 }
 
 function handleMessage(
