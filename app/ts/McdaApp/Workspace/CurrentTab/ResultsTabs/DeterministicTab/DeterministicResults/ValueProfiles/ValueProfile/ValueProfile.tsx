@@ -1,55 +1,30 @@
-import {Grid, Typography} from '@material-ui/core';
-import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
-import React from 'react';
-import TotalValueTable from './TotalValueTable/TotalValueTable';
-import ValueProfilePlot from './ValueProfilePlot/ValueProfilePlot';
-import ValueProfilesTable from './ValueProfilesTable/ValueProfilesTable';
+import {TProfileCase} from 'app/ts/type/ProfileCase';
+import React, {useContext} from 'react';
+import {DeterministicResultsContext} from '../../../DeterministicResultsContext/DeterministicResultsContext';
+import AbsoluteValueProfile from './AbsoluteValueProfile/AbsoluteValueProfile';
+import RelativeValueProfile from './RelativeValueProfile/RelativeValueProfile';
 
 export default function ValueProfile({
   profileCase,
   totalValues,
   valueProfiles
 }: {
-  profileCase: 'base' | 'recalculated';
+  profileCase: TProfileCase;
   totalValues: Record<string, number>;
   valueProfiles: Record<string, Record<string, number>>;
 }): JSX.Element {
-  return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <Typography variant="h6">
-          {profileCase.charAt(0).toUpperCase() + profileCase.substr(1)} case
-        </Typography>
-      </Grid>
-      <Grid container item xs={12} id={`${profileCase}-profile-plot`}>
-        <PlotButtons plotId={`value-profile-plot-${profileCase}`}>
-          <ValueProfilePlot
-            profileCase={profileCase}
-            valueProfiles={valueProfiles}
-          />
-        </PlotButtons>
-      </Grid>
-      <Grid item xs={9}>
-        <Typography variant="h6">Total value ({profileCase} case)</Typography>
-      </Grid>
-      <Grid container item xs={3} justify="flex-end">
-        <ClipboardButton targetId={`#${profileCase}-total-value-table`} />
-      </Grid>
-      <Grid item xs={12} id={`${profileCase}-total-value-table`}>
-        <TotalValueTable totalValues={totalValues} />
-      </Grid>
-      <Grid item xs={9}>
-        <Typography variant="h6">
-          Value profiles table ({profileCase} case)
-        </Typography>
-      </Grid>
-      <Grid container item xs={3} justify="flex-end">
-        <ClipboardButton targetId={`#${profileCase}-value-profiles-table`} />
-      </Grid>
-      <Grid item xs={12} id={`${profileCase}-value-profiles-table`}>
-        <ValueProfilesTable valueProfiles={valueProfiles} />
-      </Grid>
-    </Grid>
+  const {valueProfileType} = useContext(DeterministicResultsContext);
+  return valueProfileType === 'absolute' ? (
+    <AbsoluteValueProfile
+      profileCase={profileCase}
+      totalValues={totalValues}
+      valueProfiles={valueProfiles}
+    />
+  ) : (
+    <RelativeValueProfile
+      profileCase={profileCase}
+      totalValues={totalValues}
+      valueProfiles={valueProfiles}
+    />
   );
 }

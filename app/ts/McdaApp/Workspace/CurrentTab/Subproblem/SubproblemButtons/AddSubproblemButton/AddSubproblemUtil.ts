@@ -178,7 +178,7 @@ export function getScaleBlockingWarnings(
     hasRowWithOnlySameValue(dataSourceInclusions, observedRanges)
   ) {
     warnings.push(
-      'Effects table contains criterion where all values are indentical'
+      'Effects table contains criterion where all values are identical'
     );
   }
   if (hasTooManyCriteria(criterionInclusions)) {

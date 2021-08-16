@@ -173,7 +173,8 @@ export default function SubproblemHandler(db: IDB) {
     );
     const state: IScenarioState = {
       problem: {criteria: {}},
-      prefs: []
+      prefs: [],
+      thresholdValuesByCriterion: {}
     };
     const scenario: IScenarioCommand = {
       title: 'Default',

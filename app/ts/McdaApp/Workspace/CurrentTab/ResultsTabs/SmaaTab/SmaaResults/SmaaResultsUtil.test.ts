@@ -9,7 +9,7 @@ import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
 import {Primitive} from 'c3';
 import {
   getCentralWeightsPlotData,

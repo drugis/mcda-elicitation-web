@@ -5,7 +5,9 @@ import {downloadPng} from 'svg-crowbar';
 
 export default function ExportButton({plotId}: {plotId: string}): JSX.Element {
   function handleClick() {
-    downloadPng(document.querySelector(`#${plotId} > svg`), plotId);
+    downloadPng(document.querySelector(`#${plotId} > svg`), plotId, {
+      downloadPNGOptions: {scale: 4}
+    });
   }
 
   return (

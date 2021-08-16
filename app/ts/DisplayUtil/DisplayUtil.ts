@@ -12,6 +12,17 @@ export function getPercentifiedValue(
   }
 }
 
+export function getDepercentifiedValue(
+  value: number,
+  usePercentage: boolean
+): number {
+  if (usePercentage) {
+    return significantDigits(value / 100);
+  } else {
+    return significantDigits(value);
+  }
+}
+
 export function getPercentifiedValueLabel(
   value: number,
   usePercentage: boolean

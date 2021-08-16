@@ -1,6 +1,6 @@
-import {TPreferences} from '@shared/types/Preferences';
+import {TPreferences} from '@shared/types/preferences';
+import IWeights from '../IWeights';
 import IScenarioProblem from './IScenarioProblem';
-import IWeights from './IWeights';
 
 export default interface IScenarioState {
   problem: IScenarioProblem;
@@ -8,4 +8,5 @@ export default interface IScenarioState {
   legend?: Record<string, {baseTitle: string; newTitle: string}>;
   uncertaintyOptions?: Record<string, boolean>;
   weights?: IWeights;
+  thresholdValuesByCriterion: Record<string, number>;
 }

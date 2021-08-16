@@ -1,18 +1,16 @@
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
 import {getSensitivityLineChartSettings} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import {ChartConfiguration, generate} from 'c3';
 import React, {useContext, useEffect} from 'react';
+import {SensitivityAnalysisContext} from '../../SensitivityAnalysisContext';
 
 export default function MeasurementSensitivityPlot(): JSX.Element {
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
   const {legendByAlternativeId} = useContext(LegendContext);
-  const {
-    measurementSensitivityCriterion,
-    measurementsSensitivityResults
-  } = useContext(DeterministicResultsContext);
+  const {measurementSensitivityCriterion, measurementsSensitivityResults} =
+    useContext(SensitivityAnalysisContext);
   const {getUsePercentage} = useContext(SettingsContext);
   const width = '400px';
   const height = '400px';

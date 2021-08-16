@@ -45,13 +45,13 @@ Chromium_*
 R/.Rhistory
 R/*.json
 .vscode
+
 # TSC artifacts
 app/js/interface/*.js
 app/js/type/*.js
 test/endToEnd/*.map
 test/endToEnd/effectsTableDisplayTest.js
 test/endToEnd/missingEffectTest.js
-test/endToEnd/tradeOffTest.js
 test/endToEnd/util/effectsTableDisplayTestUtil.js
 test/endToEnd/util/ITestCriterionRow.js
 test/endToEnd/util/ITestCriterionRowWithUncertainty.js
@@ -59,7 +59,13 @@ test/endToEnd/workspaceSortingTest.js
 test/endToEnd/onlyEmptyAndTextTest.js
 test/endToEnd/stepSizeTest.js
 test/endToEnd/uploadTest.js
+test/endToEnd/equivalentChangeTest.js
 test/endToEnd/workspaceFilteringTest.js
+test/endToEnd/thresholdElicitationTest.js
+test/endToEnd/deterministicResultsTest.js
+test/endToEnd/closeModalTest.js
+test/endToEnd/preferencesTest.js
+test/endToEnd/util/util.js
 
 #latex nonsense
 *.fls

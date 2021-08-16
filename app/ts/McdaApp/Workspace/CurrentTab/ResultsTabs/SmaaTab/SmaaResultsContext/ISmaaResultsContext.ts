@@ -1,5 +1,5 @@
+import IWeights from '@shared/interface/IWeights';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
-import IWeights from '@shared/interface/Scenario/IWeights';
 
 export interface ISmaaResultsContext {
   centralWeights: Record<string, ICentralWeight>;

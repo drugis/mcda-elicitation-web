@@ -3,11 +3,12 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
-import ISensitivityValue from '../../../../../interface/ISensitivityValue';
+import IChangeableValue from '../../../../../interface/IChangeableValue';
 import {
+  calcImportances,
   getInitialSensitivityValues,
-  pataviResultToLineValues,
-  pataviResultToValueProfile
+  pataviResultToAbsoluteValueProfile,
+  pataviResultToLineValues
 } from './DeterministicResultsUtil';
 
 describe('DeterministicResultsUtil', () => {
@@ -64,10 +65,7 @@ describe('DeterministicResultsUtil', () => {
         effects,
         scales
       );
-      const expectedResult: Record<
-        string,
-        Record<string, ISensitivityValue>
-      > = {
+      const expectedResult: Record<string, Record<string, IChangeableValue>> = {
         crit1Id: {
           alt1Id: {
             originalValue: 1,
@@ -109,7 +107,7 @@ describe('DeterministicResultsUtil', () => {
         } as ICriterion
       ];
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
-      const result = pataviResultToValueProfile(
+      const result = pataviResultToAbsoluteValueProfile(
         valueProfiles,
         criteria,
         alternatives,
@@ -135,7 +133,7 @@ describe('DeterministicResultsUtil', () => {
         } as ICriterion
       ];
       const alternatives: IAlternative[] = [{id: 'alt1Id', title: 'alt1'}];
-      const result = pataviResultToValueProfile(
+      const result = pataviResultToAbsoluteValueProfile(
         valueProfiles,
         criteria,
         alternatives,
@@ -145,6 +143,35 @@ describe('DeterministicResultsUtil', () => {
         ['x', 'legend'],
         ['crit1', 10]
       ];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('calcImportances', () => {
+    it('should calculate the normalised importances of the reference vs the comparator values', () => {
+      const valueProfiles = {
+        alt0Id: {
+          crit1Id: 80,
+          crit2Id: 2000
+        },
+        alt1Id: {
+          crit1Id: 10,
+          crit2Id: 20
+        },
+        alt2Id: {
+          crit1Id: 20,
+          crit2Id: 40
+        }
+      };
+      const alternatives: IAlternative[] = [
+        {id: 'alt1Id'} as IAlternative,
+        {id: 'alt2Id'} as IAlternative
+      ];
+      const result = calcImportances(valueProfiles, alternatives);
+      const expectedResult: Record<string, number> = {
+        crit1Id: 50,
+        crit2Id: 100
+      };
       expect(result).toEqual(expectedResult);
     });
   });

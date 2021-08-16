@@ -19,16 +19,18 @@ import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import SensitivityTableButtons from '../SensitivityTableButtons/SensitivityTableButtons';
+import {SensitivityMeasurementsContext} from './SensitivityMeasurementsContext';
 import SensitivityMeasurementsTableRow from './SensitivityMeasurementsTableRow/SensitivityMeasurementsTableRow';
-import SensitivityTableButtons from './SensitivityTableButtons/SensitivityTableButtons';
 
 export default function SensitivityMeasurementsTable(): JSX.Element {
   const {filteredAlternatives, filteredCriteria, configuredRanges} = useContext(
     CurrentSubproblemContext
   );
+  const {resetSensitivityTable} = useContext(SensitivityMeasurementsContext);
 
   return (
-    <Grid container item xs={12} spacing={1}>
+    <Grid container spacing={1}>
       <Grid item xs={12} id="sensitivity-measurements-header">
         <Typography variant="h5">
           <InlineHelp helpId="deterministic-effects-table">
@@ -43,7 +45,7 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
               <em>Values can be changed by clicking them.</em>
             </Typography>
           </Grid>
-          <Grid container item xs={3} justify="flex-end">
+          <Grid container item xs={3} justifyContent="flex-end">
             <ClipboardButton targetId="#sensitivity-measurements-table" />
           </Grid>
           <Grid item xs={12}>
@@ -66,7 +68,10 @@ export default function SensitivityMeasurementsTable(): JSX.Element {
             </Table>
           </Grid>
           <Grid item xs={12}>
-            <SensitivityTableButtons />
+            <SensitivityTableButtons
+              resetter={resetSensitivityTable}
+              idContext="measurements"
+            />
           </Grid>
         </LoadingSpinner>
       </Grid>

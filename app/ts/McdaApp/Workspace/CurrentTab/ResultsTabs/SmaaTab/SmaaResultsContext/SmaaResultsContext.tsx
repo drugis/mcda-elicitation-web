@@ -1,7 +1,6 @@
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
-import IWeights from '@shared/interface/Scenario/IWeights';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
@@ -21,6 +20,7 @@ import {
   hasStochasticWeights
 } from '../SmaaResults/SmaaResultsUtil';
 import {ISmaaResultsContext} from './ISmaaResultsContext';
+import IWeights from '@shared/interface/IWeights';
 
 export const SmaaResultsContext = createContext<ISmaaResultsContext>(
   {} as ISmaaResultsContext
@@ -51,15 +51,13 @@ export function SmaaResultsContextProviderComponent({
     currentScenario.state.prefs
   );
 
-  const [
-    useMeasurementsUncertainty,
-    setUseMeasurementsUncertainty
-  ] = useState<boolean>(
-    problemHasStochasticMeasurements &&
-      (currentScenario.state.uncertaintyOptions
-        ? currentScenario.state.uncertaintyOptions.measurements
-        : true)
-  );
+  const [useMeasurementsUncertainty, setUseMeasurementsUncertainty] =
+    useState<boolean>(
+      problemHasStochasticMeasurements &&
+        (currentScenario.state.uncertaintyOptions
+          ? currentScenario.state.uncertaintyOptions.measurements
+          : true)
+    );
   const [useWeightsUncertainty, setUseWeightsUncertainty] = useState<boolean>(
     problemHasStochasticWeights &&
       (currentScenario.state.uncertaintyOptions
@@ -67,9 +65,8 @@ export function SmaaResultsContextProviderComponent({
         : true)
   );
 
-  const [centralWeights, setCentralWeights] = useState<
-    Record<string, ICentralWeight>
-  >();
+  const [centralWeights, setCentralWeights] =
+    useState<Record<string, ICentralWeight>>();
   const [ranks, setRanks] = useState<Record<string, number[]>>();
   const [smaaWeights, setSmaaWeights] = useState<IWeights>();
 
@@ -78,6 +75,7 @@ export function SmaaResultsContextProviderComponent({
       filteredWorkspace,
       currentScenario.state.prefs,
       pvfs,
+      currentScenario.state.weights,
       false
     );
 
@@ -105,6 +103,7 @@ export function SmaaResultsContextProviderComponent({
       .catch(setError);
   }, [
     currentScenario.state.prefs,
+    currentScenario.state.weights,
     filteredWorkspace,
     pvfs,
     randomSeed,

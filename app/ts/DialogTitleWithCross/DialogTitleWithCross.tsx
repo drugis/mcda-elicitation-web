@@ -1,11 +1,11 @@
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
-import {createMuiTheme} from '@material-ui/core/styles';
+import {createTheme} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import React, {CSSProperties, ReactNode} from 'react';
 
-const theme = createMuiTheme();
+const theme = createTheme();
 const closeButtonStyle: CSSProperties = {
   position: 'absolute',
   right: theme.spacing(1),

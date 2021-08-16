@@ -1,14 +1,14 @@
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
+import DisplayWarnings from 'app/ts/util/DisplayWarnings';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import React, {useContext} from 'react';
 import {getScaleRangeWarnings} from './ScaleRangesUtil';
 import ScalesTable from './ScalesTable/ScalesTable';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
-import ShowIf from 'app/ts/ShowIf/ShowIf';
 
 export default function ScaleRanges() {
   const {filteredWorkspace, observedRanges} = useContext(
@@ -27,7 +27,7 @@ export default function ScaleRanges() {
             <InlineHelp helpId="scale-ranges">Scale ranges</InlineHelp>
           </Typography>
         </Grid>
-        <Grid container item xs={3} justify="flex-end">
+        <Grid container item xs={3} justifyContent="flex-end">
           <ShowIf condition={warnings.length === 0}>
             <ClipboardButton targetId="#scales-table" />
           </ShowIf>

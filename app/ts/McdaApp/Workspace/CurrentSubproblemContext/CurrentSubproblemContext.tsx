@@ -119,7 +119,7 @@ export function CurrentSubproblemContextProviderComponent({
         configuredRanges,
         currentSubproblem,
         filteredAlternatives: alternatives,
-        filteredCriteria: criteria,
+        filteredCriteria: _.flatten(_.partition(criteria, 'isFavourable')),
         filteredEffects: effects,
         filteredDistributions: distributions,
         filteredRelativePerformances: relativePerformances,
