@@ -4,7 +4,7 @@ import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import React, {useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
-import EquivalentChangeRangeSlider from './EquivalentChangeSlider/EquivalentChangeRangeSlider';
+import EquivalentChangeRangeSlider from './EquivalentChangeInput/EquivalentChangeRangeSlider';
 
 export default function EquivalentChangeRangeStatement(): JSX.Element {
   const {referenceValueFrom, referenceValueTo, referenceCriterion} = useContext(

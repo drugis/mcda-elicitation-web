@@ -1,3 +1,4 @@
+import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import {
@@ -5,7 +6,8 @@ import {
   getEquivalentRangeValue,
   getInitialReferenceValueFrom,
   getInitialReferenceValueTo,
-  getPartOfInterval
+  getPartOfInterval,
+  getTheoreticalRange
 } from './equivalentChangeUtil';
 
 describe('equivalentChangeUtil', () => {
@@ -121,6 +123,76 @@ describe('equivalentChangeUtil', () => {
         referenceWeight // 0.4
       );
       expect(result).toEqual(2);
+    });
+  });
+
+  describe('getTheoreticalRange', () => {
+    it('should return [-Infinity, Infinity] if the bounds are null', () => {
+      const unit = {lowerBound: null, upperBound: null} as IUnitOfMeasurement;
+      const usePercentage = false;
+      const result = getTheoreticalRange(unit, usePercentage);
+      const expectedResult = [-Infinity, Infinity];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return [0,1] if usePercentage is false for a decimal unit', () => {
+      const unit = {
+        lowerBound: 0,
+        upperBound: 1,
+        type: 'decimal'
+      } as IUnitOfMeasurement;
+      const usePercentage = false;
+      const result = getTheoreticalRange(unit, usePercentage);
+      const expectedResult = [0, 1];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return [0,1] if usePercentage is false for a percentage unit', () => {
+      const unit = {
+        lowerBound: 0,
+        upperBound: 100,
+        type: 'percentage'
+      } as IUnitOfMeasurement;
+      const usePercentage = false;
+      const result = getTheoreticalRange(unit, usePercentage);
+      const expectedResult = [0, 1];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return [0,100] if usePercentage is true for a decimal unit', () => {
+      const unit = {
+        lowerBound: 0,
+        upperBound: 1,
+        type: 'decimal'
+      } as IUnitOfMeasurement;
+      const usePercentage = true;
+      const result = getTheoreticalRange(unit, usePercentage);
+      const expectedResult = [0, 100];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return [0,100] if usePercentage is true for a percentage unit', () => {
+      const unit = {
+        lowerBound: 0,
+        upperBound: 100,
+        type: 'percentage'
+      } as IUnitOfMeasurement;
+      const usePercentage = true;
+      const result = getTheoreticalRange(unit, usePercentage);
+      const expectedResult = [0, 100];
+      expect(result).toEqual(expectedResult);
+    });
+
+    it('should return the bounds otherwise', () => {
+      const unit = {
+        lowerBound: 37,
+        upperBound: 42,
+        type: 'custom'
+      } as IUnitOfMeasurement;
+      const usePercentage = true;
+      const result = getTheoreticalRange(unit, usePercentage);
+      const expectedResult = [37, 42];
+      expect(result).toEqual(expectedResult);
     });
   });
 });
