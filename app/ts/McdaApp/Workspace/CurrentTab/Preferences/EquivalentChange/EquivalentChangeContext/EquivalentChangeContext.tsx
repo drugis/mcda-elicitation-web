@@ -6,6 +6,7 @@ import {TEquivalentChange as TEquivalentChange} from 'app/ts/type/EquivalentChan
 import _ from 'lodash';
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -32,12 +33,16 @@ export function EquivalentChangeContextProviderComponent({
     CurrentSubproblemContext
   );
   const {currentSubproblem} = useContext(CurrentSubproblemContext);
-  const {currentScenario, pvfs, areAllPvfsSet} = useContext(
+  const {currentScenario, pvfs, areAllPvfsSet, updateScenario} = useContext(
     CurrentScenarioContext
   );
 
   const [referenceCriterion, setReferenceCriterion] = useState<ICriterion>(
-    filteredCriteria[0]
+    _.find(
+      filteredCriteria,
+      ['id', currentScenario.state.equivalentChange?.referenceCriterionId] ||
+        filteredCriteria[0]
+    )
   );
   const [otherCriteria, setCriteria] = useState<ICriterion[]>(
     filteredCriteria.slice(1)
@@ -59,7 +64,9 @@ export function EquivalentChangeContextProviderComponent({
   const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
   const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
   const [referenceValueBy, setReferenceValueBy] = useState<number>(
-    getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
+    currentScenario.state.equivalentChange?.referenceValueBy
+      ? currentScenario.state.equivalentChange.referenceValueBy
+      : getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
   );
   const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
   const [referenceValueTo, setReferenceValueTo] = useState<number>();
@@ -77,13 +84,78 @@ export function EquivalentChangeContextProviderComponent({
   const [equivalentChangeType, setEquivalentChangeType] =
     useState<TEquivalentChange>('amount');
 
-  useEffect(reset, [
-    referenceCriterion,
-    pvfs,
-    areAllPvfsSet,
-    currentSubproblem.definition.ranges,
-    observedRanges
-  ]);
+  const canShowEquivalentChanges = useMemo(
+    () =>
+      pvfs &&
+      areAllPvfsSet &&
+      currentScenario.state?.weights &&
+      _.every(pvfs, ['type', 'linear']) &&
+      !_.isEmpty(observedRanges),
+    [areAllPvfsSet, currentScenario.state?.weights, observedRanges, pvfs]
+  );
+
+  const updateReferenceCriterion = useCallback(
+    (newId: string): void => {
+      if (canShowEquivalentChanges) {
+        const newReferenceCriterion = _.find(filteredCriteria, ['id', newId]);
+        const [lowerBound, upperBound] = getBounds(
+          newReferenceCriterion.dataSources[0].id,
+          currentSubproblem.definition.ranges,
+          observedRanges
+        );
+        const newReferenceValueBy = getInitialReferenceValueBy(
+          lowerBound,
+          upperBound
+        );
+        const newReferencevalueFrom = getInitialReferenceValueFrom(
+          lowerBound,
+          upperBound,
+          pvfs[newReferenceCriterion.id]
+        );
+        const newReferenceValueTo = getInitialReferenceValueTo(
+          lowerBound,
+          upperBound,
+          pvfs[newReferenceCriterion.id]
+        );
+
+        updateScenario({
+          ...currentScenario,
+          state: {
+            ...currentScenario.state,
+            equivalentChange: {
+              referenceCriterionId: newId,
+              referenceValueBy: newReferenceValueBy,
+              referenceValueTo: newReferenceValueTo,
+              referenceValueFrom: newReferencevalueFrom
+            }
+          }
+        }).then(() => {
+          setReferenceCriterion(newReferenceCriterion);
+          setCriteria(_.reject(filteredCriteria, ['id', newId]));
+          setLowerBound(lowerBound);
+          setUpperBound(upperBound);
+          setReferenceValueBy(newReferenceValueBy);
+          setReferenceValueFrom(newReferencevalueFrom);
+          setReferenceValueTo(newReferenceValueTo);
+        });
+      }
+    },
+    [
+      canShowEquivalentChanges,
+      currentScenario,
+      currentSubproblem.definition.ranges,
+      filteredCriteria,
+      observedRanges,
+      pvfs,
+      updateScenario
+    ]
+  );
+
+  function reset(): void {
+    updateReferenceCriterion(filteredCriteria[0].id);
+  }
+
+  useEffect(reset, [filteredCriteria, updateReferenceCriterion]);
 
   useEffect(() => {
     setPartOfInterval(
@@ -112,67 +184,70 @@ export function EquivalentChangeContextProviderComponent({
     );
   }, [configuredLowerBound, configuredUpperBound, referenceValueBy]);
 
-  const canShowEquivalentChanges = useMemo(
-    () =>
-      pvfs &&
-      currentScenario?.state?.weights &&
-      _.every(pvfs, ['type', 'linear']) &&
-      !_.isEmpty(observedRanges),
-    [currentScenario, observedRanges, pvfs]
-  );
-
-  function reset(): void {
-    if (areAllPvfsSet) {
-      const [configuredLowerBound, configuredUpperBound] = getBounds(
-        referenceCriterion.dataSources[0].id,
-        currentSubproblem.definition.ranges,
-        observedRanges
-      );
-      setLowerBound(configuredLowerBound);
-      setUpperBound(configuredUpperBound);
-      setReferenceValueBy(
-        getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
-      );
-      setReferenceValueFrom(
-        getInitialReferenceValueFrom(
-          configuredLowerBound,
-          configuredUpperBound,
-          pvfs[referenceCriterion.id]
-        )
-      );
-      setReferenceValueTo(
-        getInitialReferenceValueTo(
-          configuredLowerBound,
-          configuredUpperBound,
-          pvfs[referenceCriterion.id]
-        )
-      );
-    }
+  function updateReferenceValueBy(newValue: number) {
+    updateScenario({
+      ...currentScenario,
+      state: {
+        ...currentScenario.state,
+        equivalentChange: {
+          ...currentScenario.state.equivalentChange,
+          referenceValueBy: newValue
+        }
+      }
+    }).then(() => {
+      setReferenceValueBy(newValue);
+    });
   }
 
-  function updateReferenceCriterion(newId: string): void {
-    setReferenceCriterion(_.find(filteredCriteria, ['id', newId]));
-    setCriteria(_.reject(filteredCriteria, ['id', newId]));
+  function updateReferenceValueFrom(newValue: number) {
+    updateScenario({
+      ...currentScenario,
+      state: {
+        ...currentScenario.state,
+        equivalentChange: {
+          ...currentScenario.state.equivalentChange,
+          referenceValueFrom: newValue
+        }
+      }
+    }).then(() => {
+      setReferenceValueFrom(newValue);
+    });
+  }
+
+  function updateReferenceValueTo(newValue: number) {
+    updateScenario({
+      ...currentScenario,
+      state: {
+        ...currentScenario.state,
+        equivalentChange: {
+          ...currentScenario.state.equivalentChange,
+          referenceValueTo: newValue
+        }
+      }
+    }).then(() => {
+      setReferenceValueTo(newValue);
+    });
   }
 
   return (
     <EquivalentChangeContext.Provider
       value={{
         canShowEquivalentChanges,
-        otherCriteria,
+        equivalentChangeType,
         lowerBound,
+        otherCriteria,
         partOfInterval,
         referenceCriterion,
-        upperBound,
         referenceValueBy,
         referenceValueFrom,
         referenceValueTo,
         referenceWeight,
-        equivalentChangeType,
-        setReferenceValueBy,
-        setReferenceValueFrom,
-        setReferenceValueTo,
+        upperBound,
+        resetEquivalentChange: reset,
         setEquivalentChangeType,
+        updateReferenceValueFrom,
+        updateReferenceValueBy,
+        updateReferenceValueTo,
         updateReferenceCriterion
       }}
     >

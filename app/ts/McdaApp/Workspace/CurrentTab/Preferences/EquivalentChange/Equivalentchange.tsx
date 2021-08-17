@@ -1,16 +1,18 @@
-import {Grid, Typography} from '@material-ui/core';
+import {Button, Grid, Typography} from '@material-ui/core';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
+import {EquivalentChangeContext} from './EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeReferenceCriterion from './EquivalentChangeReferenceCriterion/EquivalentChangeReferenceCriterion';
 import EquivalentChangeStatement from './EquivalentChangeStatement/EquivalentChangeStatement';
 import EquivalentChangeTypeToggle from './EquivalentChangeTypeToggle/EquivalentChangeTypeToggle';
 
 export default function EquivalentChange(): JSX.Element {
   const {pvfs} = useContext(CurrentScenarioContext);
+  const {resetEquivalentChange} = useContext(EquivalentChangeContext);
   const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
 
   return (
@@ -32,6 +34,15 @@ export default function EquivalentChange(): JSX.Element {
           </Grid>
           <Grid item xs={12}>
             <EquivalentChangeStatement />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              id="reset-equivalent-change"
+              onClick={resetEquivalentChange}
+              variant="contained"
+            >
+              Default
+            </Button>
           </Grid>
         </Grid>
       </ShowIf>

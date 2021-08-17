@@ -15,7 +15,7 @@ export default function EquivalentChangeValueInput({
   closeDialog: () => void;
   isDialogOpen: boolean;
 }): JSX.Element {
-  const {referenceValueBy, referenceCriterion, setReferenceValueBy} =
+  const {referenceValueBy, referenceCriterion, updateReferenceValueBy} =
     useContext(EquivalentChangeContext);
   const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
   const {getUsePercentage} = useContext(SettingsContext);
@@ -60,7 +60,7 @@ export default function EquivalentChangeValueInput({
 
   function handleCloseDialog() {
     if (!inputError) {
-      setReferenceValueBy(usePercentage ? localValue / 100 : localValue);
+      updateReferenceValueBy(usePercentage ? localValue / 100 : localValue);
     }
     closeDialog();
   }

@@ -19,8 +19,8 @@ export default function EquivalentChangeRangeSlider({
     upperBound,
     referenceValueFrom,
     referenceValueTo,
-    setReferenceValueFrom,
-    setReferenceValueTo,
+    updateReferenceValueFrom,
+    updateReferenceValueTo,
     referenceCriterion
   } = useContext(EquivalentChangeContext);
   const {getUsePercentage} = useContext(SettingsContext);
@@ -64,11 +64,11 @@ export default function EquivalentChangeRangeSlider({
     newValue: [number, number]
   ) {
     if (isDecreasingPvf) {
-      setReferenceValueFrom(-newValue[0]);
-      setReferenceValueTo(-newValue[1]);
+      updateReferenceValueFrom(-newValue[0]);
+      updateReferenceValueTo(-newValue[1]);
     } else {
-      setReferenceValueFrom(newValue[0]);
-      setReferenceValueTo(newValue[1]);
+      updateReferenceValueFrom(newValue[0]);
+      updateReferenceValueTo(newValue[1]);
     }
   }
 
