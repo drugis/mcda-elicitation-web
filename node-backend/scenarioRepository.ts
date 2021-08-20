@@ -133,7 +133,9 @@ export default function ScenarioRepository(db: IDB) {
           prefs: state.prefs,
           legend: state.legend,
           uncertaintyOptions: state.uncertaintyOptions,
-          weights: state.weights
+          weights: state.weights,
+          equivalentChange: state.equivalentChange,
+          thresholdValuesByCriterion: state.thresholdValuesByCriterion
         },
         title,
         scenarioId

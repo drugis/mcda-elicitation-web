@@ -14,9 +14,8 @@ export default interface IEquivalentChangeContext {
   referenceValueTo: number;
   referenceWeight: number;
   resetEquivalentChange: () => void;
-  setEquivalentChangeType: (newValue: TEquivalentChange) => void;
-  updateReferenceValueFrom: (newValue: number) => void;
-  updateReferenceValueTo: (newValue: number) => void;
+  updateEquivalentChangeType: (newValue: TEquivalentChange) => void;
+  updateReferenceValueRange: (newFrom: number, newTo: number) => void;
   updateReferenceValueBy: (newValue: number) => void;
   updateReferenceCriterion: (newId: string) => void;
 }

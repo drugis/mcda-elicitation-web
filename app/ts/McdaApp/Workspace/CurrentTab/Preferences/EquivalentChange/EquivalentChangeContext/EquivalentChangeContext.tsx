@@ -6,7 +6,6 @@ import {TEquivalentChange as TEquivalentChange} from 'app/ts/type/EquivalentChan
 import _ from 'lodash';
 import React, {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -37,50 +36,18 @@ export function EquivalentChangeContextProviderComponent({
     CurrentScenarioContext
   );
 
-  const [referenceCriterion, setReferenceCriterion] = useState<ICriterion>(
-    _.find(
-      filteredCriteria,
-      ['id', currentScenario.state.equivalentChange?.referenceCriterionId] ||
-        filteredCriteria[0]
-    )
-  );
-  const [otherCriteria, setCriteria] = useState<ICriterion[]>(
-    filteredCriteria.slice(1)
-  );
+  const [referenceCriterion, setReferenceCriterion] = useState<ICriterion>();
+  const [otherCriteria, setOtherCriteria] = useState<ICriterion[]>();
 
-  const [configuredLowerBound, configuredUpperBound] = useMemo(() => {
-    return (
-      getBounds(
-        referenceCriterion.dataSources[0].id,
-        currentSubproblem.definition.ranges,
-        observedRanges
-      ) || [undefined, undefined]
-    );
-  }, [
-    currentSubproblem.definition.ranges,
-    observedRanges,
-    referenceCriterion.dataSources
-  ]);
-  const [lowerBound, setLowerBound] = useState<number>(configuredLowerBound);
-  const [upperBound, setUpperBound] = useState<number>(configuredUpperBound);
-  const [referenceValueBy, setReferenceValueBy] = useState<number>(
-    currentScenario.state.equivalentChange?.referenceValueBy
-      ? currentScenario.state.equivalentChange.referenceValueBy
-      : getInitialReferenceValueBy(configuredLowerBound, configuredUpperBound)
-  );
+  const [lowerBound, setLowerBound] = useState<number>();
+  const [upperBound, setUpperBound] = useState<number>();
+  const [referenceValueBy, setReferenceValueBy] = useState<number>();
   const [referenceValueFrom, setReferenceValueFrom] = useState<number>();
   const [referenceValueTo, setReferenceValueTo] = useState<number>();
   const referenceWeight =
-    currentScenario.state.weights?.mean[referenceCriterion.id];
+    currentScenario.state.weights?.mean[referenceCriterion?.id] || null;
 
-  const [partOfInterval, setPartOfInterval] = useState<number>(
-    getPartOfInterval(
-      0,
-      referenceValueBy,
-      configuredLowerBound,
-      configuredUpperBound
-    )
-  );
+  const [partOfInterval, setPartOfInterval] = useState<number>();
   const [equivalentChangeType, setEquivalentChangeType] =
     useState<TEquivalentChange>('amount');
 
@@ -94,95 +61,131 @@ export function EquivalentChangeContextProviderComponent({
     [areAllPvfsSet, currentScenario.state?.weights, observedRanges, pvfs]
   );
 
-  const updateReferenceCriterion = useCallback(
-    (newId: string): void => {
-      if (canShowEquivalentChanges) {
-        const newReferenceCriterion = _.find(filteredCriteria, ['id', newId]);
-        const [lowerBound, upperBound] = getBounds(
-          newReferenceCriterion.dataSources[0].id,
-          currentSubproblem.definition.ranges,
-          observedRanges
-        );
-        const newReferenceValueBy = getInitialReferenceValueBy(
-          lowerBound,
-          upperBound
-        );
-        const newReferencevalueFrom = getInitialReferenceValueFrom(
-          lowerBound,
-          upperBound,
-          pvfs[newReferenceCriterion.id]
-        );
-        const newReferenceValueTo = getInitialReferenceValueTo(
-          lowerBound,
-          upperBound,
-          pvfs[newReferenceCriterion.id]
-        );
+  useEffect(() => {
+    if (canShowEquivalentChanges) {
+      const newReferenceCriterion =
+        _.find(filteredCriteria, [
+          'id',
+          currentScenario.state.equivalentChange?.referenceCriterionId
+        ]) || filteredCriteria[0];
+      const newOtherCriteria = _.reject(filteredCriteria, [
+        'id',
+        newReferenceCriterion.id
+      ]);
+      const [initialLowerBound, initialUpperBound] = getBounds(
+        newReferenceCriterion.dataSources[0].id,
+        currentSubproblem.definition.ranges,
+        observedRanges
+      );
+      const newReferenceValueBy = currentScenario.state.equivalentChange
+        ?.referenceValueBy
+        ? currentScenario.state.equivalentChange.referenceValueBy
+        : getInitialReferenceValueBy(initialLowerBound, initialUpperBound);
+      const newReferencevalueFrom = currentScenario.state.equivalentChange
+        ?.referenceValueFrom
+        ? currentScenario.state.equivalentChange.referenceValueFrom
+        : getInitialReferenceValueFrom(
+            initialLowerBound,
+            initialUpperBound,
+            pvfs[newReferenceCriterion.id]
+          );
+      const newReferenceValueTo = currentScenario.state.equivalentChange
+        ?.referenceValueTo
+        ? currentScenario.state.equivalentChange.referenceValueTo
+        : getInitialReferenceValueTo(
+            initialLowerBound,
+            initialUpperBound,
+            pvfs[newReferenceCriterion.id]
+          );
+      const newPartOfInterval = getPartOfInterval(
+        0,
+        newReferenceValueBy,
+        initialLowerBound,
+        initialUpperBound
+      );
+      setReferenceCriterion(newReferenceCriterion);
+      setOtherCriteria(newOtherCriteria);
+      setLowerBound(initialLowerBound);
+      setUpperBound(initialUpperBound);
+      setReferenceValueBy(newReferenceValueBy);
+      setReferenceValueFrom(newReferencevalueFrom);
+      setReferenceValueTo(newReferenceValueTo);
+      setPartOfInterval(newPartOfInterval);
+    }
+    // currentScenario is not in here because I don't want it to trigger this
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    canShowEquivalentChanges,
+    currentSubproblem.definition.ranges,
+    filteredCriteria,
+    observedRanges,
+    pvfs
+  ]);
 
-        updateScenario({
-          ...currentScenario,
-          state: {
-            ...currentScenario.state,
-            equivalentChange: {
-              referenceCriterionId: newId,
-              referenceValueBy: newReferenceValueBy,
-              referenceValueTo: newReferenceValueTo,
-              referenceValueFrom: newReferencevalueFrom
-            }
+  function updateReferenceCriterion(newId: string): void {
+    if (canShowEquivalentChanges) {
+      const newReferenceCriterion = _.find(filteredCriteria, ['id', newId]);
+      const [newLowerBound, newUpperBound] = getBounds(
+        newReferenceCriterion.dataSources[0].id,
+        currentSubproblem.definition.ranges,
+        observedRanges
+      );
+      const newReferenceValueBy = getInitialReferenceValueBy(
+        newLowerBound,
+        newUpperBound
+      );
+      const newReferencevalueFrom = getInitialReferenceValueFrom(
+        newLowerBound,
+        newUpperBound,
+        pvfs[newReferenceCriterion.id]
+      );
+      const newReferenceValueTo = getInitialReferenceValueTo(
+        newLowerBound,
+        newUpperBound,
+        pvfs[newReferenceCriterion.id]
+      );
+      const newPartOfInterval =
+        equivalentChangeType === 'amount'
+          ? getPartOfInterval(
+              0,
+              newReferenceValueBy,
+              newLowerBound,
+              newUpperBound
+            )
+          : getPartOfInterval(
+              newReferencevalueFrom,
+              newReferenceValueTo,
+              newLowerBound,
+              newUpperBound
+            );
+
+      updateScenario({
+        ...currentScenario,
+        state: {
+          ...currentScenario.state,
+          equivalentChange: {
+            referenceCriterionId: newId,
+            referenceValueBy: newReferenceValueBy,
+            referenceValueTo: newReferenceValueTo,
+            referenceValueFrom: newReferencevalueFrom
           }
-        }).then(() => {
-          setReferenceCriterion(newReferenceCriterion);
-          setCriteria(_.reject(filteredCriteria, ['id', newId]));
-          setLowerBound(lowerBound);
-          setUpperBound(upperBound);
-          setReferenceValueBy(newReferenceValueBy);
-          setReferenceValueFrom(newReferencevalueFrom);
-          setReferenceValueTo(newReferenceValueTo);
-        });
-      }
-    },
-    [
-      canShowEquivalentChanges,
-      currentScenario,
-      currentSubproblem.definition.ranges,
-      filteredCriteria,
-      observedRanges,
-      pvfs,
-      updateScenario
-    ]
-  );
+        }
+      }).then(() => {
+        setReferenceCriterion(newReferenceCriterion);
+        setOtherCriteria(_.reject(filteredCriteria, ['id', newId]));
+        setLowerBound(newLowerBound);
+        setUpperBound(newUpperBound);
+        setReferenceValueBy(newReferenceValueBy);
+        setReferenceValueFrom(newReferencevalueFrom);
+        setReferenceValueTo(newReferenceValueTo);
+        setPartOfInterval(newPartOfInterval);
+      });
+    }
+  }
 
   function reset(): void {
     updateReferenceCriterion(filteredCriteria[0].id);
   }
-
-  useEffect(reset, [filteredCriteria, updateReferenceCriterion]);
-
-  useEffect(() => {
-    setPartOfInterval(
-      getPartOfInterval(
-        referenceValueFrom,
-        referenceValueTo,
-        configuredLowerBound,
-        configuredUpperBound
-      )
-    );
-  }, [
-    configuredLowerBound,
-    configuredUpperBound,
-    referenceValueFrom,
-    referenceValueTo
-  ]);
-
-  useEffect(() => {
-    setPartOfInterval(
-      getPartOfInterval(
-        0,
-        referenceValueBy,
-        configuredLowerBound,
-        configuredUpperBound
-      )
-    );
-  }, [configuredLowerBound, configuredUpperBound, referenceValueBy]);
 
   function updateReferenceValueBy(newValue: number) {
     updateScenario({
@@ -196,37 +199,42 @@ export function EquivalentChangeContextProviderComponent({
       }
     }).then(() => {
       setReferenceValueBy(newValue);
+      setPartOfInterval(getPartOfInterval(0, newValue, lowerBound, upperBound));
     });
   }
 
-  function updateReferenceValueFrom(newValue: number) {
+  function updateReferenceValueRange(newFrom: number, newTo: number) {
     updateScenario({
       ...currentScenario,
       state: {
         ...currentScenario.state,
         equivalentChange: {
           ...currentScenario.state.equivalentChange,
-          referenceValueFrom: newValue
+          referenceValueFrom: newFrom,
+          referenceValueTo: newTo
         }
       }
     }).then(() => {
-      setReferenceValueFrom(newValue);
+      setReferenceValueFrom(newFrom);
+      setReferenceValueTo(newTo);
+      setPartOfInterval(
+        getPartOfInterval(newFrom, newTo, lowerBound, upperBound)
+      );
     });
   }
 
-  function updateReferenceValueTo(newValue: number) {
-    updateScenario({
-      ...currentScenario,
-      state: {
-        ...currentScenario.state,
-        equivalentChange: {
-          ...currentScenario.state.equivalentChange,
-          referenceValueTo: newValue
-        }
-      }
-    }).then(() => {
-      setReferenceValueTo(newValue);
-    });
+  function updateEquivalentChangeType(newType: TEquivalentChange) {
+    setEquivalentChangeType(newType);
+    const newPartOfInterval =
+      newType === 'amount'
+        ? getPartOfInterval(0, referenceValueBy, lowerBound, upperBound)
+        : getPartOfInterval(
+            referenceValueFrom,
+            referenceValueTo,
+            lowerBound,
+            upperBound
+          );
+    setPartOfInterval(newPartOfInterval);
   }
 
   return (
@@ -244,10 +252,9 @@ export function EquivalentChangeContextProviderComponent({
         referenceWeight,
         upperBound,
         resetEquivalentChange: reset,
-        setEquivalentChangeType,
-        updateReferenceValueFrom,
+        updateEquivalentChangeType,
         updateReferenceValueBy,
-        updateReferenceValueTo,
+        updateReferenceValueRange,
         updateReferenceCriterion
       }}
     >

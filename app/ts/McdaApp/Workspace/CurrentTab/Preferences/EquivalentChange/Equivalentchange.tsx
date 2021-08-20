@@ -1,6 +1,6 @@
 import {Button, Grid, Typography} from '@material-ui/core';
-import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import React, {useContext} from 'react';
@@ -12,7 +12,9 @@ import EquivalentChangeTypeToggle from './EquivalentChangeTypeToggle/EquivalentC
 
 export default function EquivalentChange(): JSX.Element {
   const {pvfs} = useContext(CurrentScenarioContext);
-  const {resetEquivalentChange} = useContext(EquivalentChangeContext);
+  const {resetEquivalentChange, referenceCriterion} = useContext(
+    EquivalentChangeContext
+  );
   const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
 
   return (
@@ -25,26 +27,29 @@ export default function EquivalentChange(): JSX.Element {
         </Typography>
       </Grid>
       <ShowIf condition={areAllPvfsLinear}>
-        <Grid container item xs={12} spacing={2}>
-          <Grid item xs={12}>
-            <EquivalentChangeTypeToggle />
+        <LoadingSpinner showSpinnerCondition={!Boolean(referenceCriterion)}>
+          <Grid container item xs={12} spacing={2}>
+            <Grid item xs={12}>
+              <EquivalentChangeTypeToggle />
+            </Grid>
+            <Grid item xs={12}>
+              <EquivalentChangeReferenceCriterion />
+            </Grid>
+            <Grid item xs={12}>
+              <EquivalentChangeStatement />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                id="reset-equivalent-change"
+                onClick={resetEquivalentChange}
+                variant="contained"
+                color="primary"
+              >
+                Default
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <EquivalentChangeReferenceCriterion />
-          </Grid>
-          <Grid item xs={12}>
-            <EquivalentChangeStatement />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              id="reset-equivalent-change"
-              onClick={resetEquivalentChange}
-              variant="contained"
-            >
-              Default
-            </Button>
-          </Grid>
-        </Grid>
+        </LoadingSpinner>
       </ShowIf>
       <ShowIf condition={!areAllPvfsLinear}>
         <Grid item xs={12}>

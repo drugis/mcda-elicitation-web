@@ -19,8 +19,7 @@ export default function EquivalentChangeRangeSlider({
     upperBound,
     referenceValueFrom,
     referenceValueTo,
-    updateReferenceValueFrom,
-    updateReferenceValueTo,
+    updateReferenceValueRange,
     referenceCriterion
   } = useContext(EquivalentChangeContext);
   const {getUsePercentage} = useContext(SettingsContext);
@@ -29,6 +28,8 @@ export default function EquivalentChangeRangeSlider({
   const [stepSize, setStepSize] = useState<number>(
     stepSizesByCriterion[referenceCriterion.id]
   );
+  const [localFrom, setLocalFrom] = useState<number>(referenceValueFrom);
+  const [localTo, setLocalTo] = useState<number>(referenceValueTo);
 
   useEffect(() => {
     setStepSize(stepSizesByCriterion[referenceCriterion.id]);
@@ -43,7 +44,7 @@ export default function EquivalentChangeRangeSlider({
         displayTo: getPercentifiedValue(lowerBound, usePercentage),
         min: -upperBound,
         max: -lowerBound,
-        values: [-referenceValueFrom, -referenceValueTo],
+        values: [-localFrom, -localTo],
         formatFunction: (x: number) => {
           return getPercentifiedValue(-x, usePercentage);
         }
@@ -53,7 +54,7 @@ export default function EquivalentChangeRangeSlider({
         displayTo: getPercentifiedValue(upperBound, usePercentage),
         min: lowerBound,
         max: upperBound,
-        values: [referenceValueFrom, referenceValueTo],
+        values: [localFrom, localTo],
         formatFunction: (x: number) => {
           return getPercentifiedValue(x, usePercentage);
         }
@@ -64,16 +65,25 @@ export default function EquivalentChangeRangeSlider({
     newValue: [number, number]
   ) {
     if (isDecreasingPvf) {
-      updateReferenceValueFrom(-newValue[0]);
-      updateReferenceValueTo(-newValue[1]);
+      setLocalFrom(-newValue[0]);
+      setLocalTo(-newValue[1]);
     } else {
-      updateReferenceValueFrom(newValue[0]);
-      updateReferenceValueTo(newValue[1]);
+      setLocalFrom(newValue[0]);
+      setLocalTo(newValue[1]);
     }
   }
 
+  function handleCloseDialog() {
+    updateReferenceValueRange(localFrom, localTo);
+    closeDialog();
+  }
+
   return (
-    <Popover open={isDialogOpen} onClose={closeDialog} anchorEl={anchorElement}>
+    <Popover
+      open={isDialogOpen}
+      onClose={handleCloseDialog}
+      anchorEl={anchorElement}
+    >
       <Grid container style={{minWidth: '400px', minHeight: '60px'}}>
         <Grid item xs={2} style={{marginTop: '25px', textAlign: 'center'}}>
           <Typography>

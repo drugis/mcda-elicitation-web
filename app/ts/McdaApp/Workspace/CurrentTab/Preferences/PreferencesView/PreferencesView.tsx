@@ -15,6 +15,7 @@ export default function PreferencesView() {
   const {observedRanges} = useContext(CurrentSubproblemContext);
   const {scenarios} = useContext(ScenariosContext);
   const {currentScenario, areAllPvfsSet} = useContext(CurrentScenarioContext);
+
   const canShow =
     areAllPvfsSet &&
     currentScenario?.state?.weights &&

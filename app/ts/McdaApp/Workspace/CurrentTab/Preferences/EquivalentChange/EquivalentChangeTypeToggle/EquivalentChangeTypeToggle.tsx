@@ -4,14 +4,14 @@ import React, {ChangeEvent, useContext} from 'react';
 import {EquivalentChangeContext as EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 
 export default function EquivalentChangeTypeToggle() {
-  const {equivalentChangeType, setEquivalentChangeType} = useContext(
+  const {equivalentChangeType, updateEquivalentChangeType} = useContext(
     EquivalentChangeContext
   );
 
   function handleequivalentChangeTypeChanged(
     event: ChangeEvent<HTMLInputElement>
   ): void {
-    setEquivalentChangeType(event.target.value as TEquivalentChange);
+    updateEquivalentChangeType(event.target.value as TEquivalentChange);
   }
 
   return (

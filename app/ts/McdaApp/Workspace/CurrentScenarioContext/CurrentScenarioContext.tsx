@@ -159,12 +159,7 @@ export function CurrentScenarioContextProviderComponent({
         ..._.pick(scenario.state, ['problem', 'legend', 'uncertaintyOptions']),
         prefs: [] as TPreferences,
         thresholdValuesByCriterion: {},
-        equivalentChange: {
-          referenceCriterionId: filteredCriteria[0].id,
-          referenceValueBy: 1, //FIXME
-          referenceValueFrom: 0, //FIXME
-          referenceValueTo: 100 //FIXME
-        }
+        equivalentChange: undefined
       }
     };
     getWeights(newScenario, pvfs);

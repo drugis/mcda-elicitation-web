@@ -35,17 +35,24 @@ export default function EquivalentChangeCell({
     referenceWeight
   );
 
-  return (
-    <TableCell id={`equivalent-change-${criterion.id}`}>
-      {criterion.id === referenceCriterion.id && equivalentChangeType == 'range'
+  function getLabel(): string {
+    if (!referenceCriterion) {
+      return '';
+    } else {
+      return criterion.id === referenceCriterion.id &&
+        equivalentChangeType == 'range'
         ? getReferenceLabel(referenceValueFrom, referenceValueTo, usePercentage)
         : getEquivalentChangeLabel(
             equivalentChangeType,
             equivalentChange,
             pvfs[criterion.id],
             usePercentage
-          )}
-    </TableCell>
+          );
+    }
+  }
+
+  return (
+    <TableCell id={`equivalent-change-${criterion.id}`}>{getLabel()}</TableCell>
   );
 }
 
