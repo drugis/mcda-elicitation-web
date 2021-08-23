@@ -31,7 +31,7 @@ import IValueCIPerformance from '@shared/interface/Problem/IValueCIPerformance';
 import IValuePerformance from '@shared/interface/Problem/IValuePerformance';
 import {TDistributionPerformance} from '@shared/interface/Problem/TDistributionPerformance';
 import {generateUuid} from '@shared/util';
-import {TableInputMode} from 'app/ts/type/TableInputMode';
+import {TableInputMode} from 'app/ts/type/tableInputMode';
 import _ from 'lodash';
 import significantDigits from '../app/ts/util/significantDigits';
 
@@ -49,17 +49,15 @@ export function mapWorkspace(
 export function mapCriteria(criteria: ICriterionQueryResult[]): ICriterion[] {
   return _(criteria)
     .sortBy('orderindex')
-    .map(
-      (queryCriterion: ICriterionQueryResult): ICriterion => {
-        return {
-          id: queryCriterion.id,
-          title: queryCriterion.title,
-          description: queryCriterion.description,
-          isFavourable: queryCriterion.isfavourable,
-          dataSources: []
-        };
-      }
-    )
+    .map((queryCriterion: ICriterionQueryResult): ICriterion => {
+      return {
+        id: queryCriterion.id,
+        title: queryCriterion.title,
+        description: queryCriterion.description,
+        isFavourable: queryCriterion.isfavourable,
+        dataSources: []
+      };
+    })
     .value();
 }
 
@@ -68,14 +66,12 @@ export function mapAlternatives(
 ): IAlternative[] {
   return _(alternatives)
     .sortBy('orderindex')
-    .map(
-      (queryAlternative: IAlternativeQueryResult): IAlternative => {
-        return {
-          id: queryAlternative.id,
-          title: queryAlternative.title
-        };
-      }
-    )
+    .map((queryAlternative: IAlternativeQueryResult): IAlternative => {
+      return {
+        id: queryAlternative.id,
+        title: queryAlternative.title
+      };
+    })
     .value();
 }
 
@@ -84,30 +80,28 @@ export function mapDataSources(
 ): IDataSource[] {
   return _(dataSources)
     .sortBy('orderindex')
-    .map(
-      (queryDataSource: IDataSourceQueryResult): IDataSource => {
-        return {
-          id: queryDataSource.id,
-          criterionId: queryDataSource.criterionid,
-          reference: queryDataSource.reference,
-          referenceLink: queryDataSource.referencelink,
-          uncertainty: queryDataSource.uncertainty,
-          strengthOfEvidence: queryDataSource.strengthofevidence,
-          unitOfMeasurement: {
-            label: queryDataSource.unitlabel,
-            type: queryDataSource.unittype,
-            lowerBound:
-              queryDataSource.unitlowerbound === null
-                ? undefined
-                : queryDataSource.unitlowerbound,
-            upperBound:
-              queryDataSource.unitupperbound === null
-                ? undefined
-                : queryDataSource.unitupperbound
-          }
-        };
-      }
-    )
+    .map((queryDataSource: IDataSourceQueryResult): IDataSource => {
+      return {
+        id: queryDataSource.id,
+        criterionId: queryDataSource.criterionid,
+        reference: queryDataSource.reference,
+        referenceLink: queryDataSource.referencelink,
+        uncertainty: queryDataSource.uncertainty,
+        strengthOfEvidence: queryDataSource.strengthofevidence,
+        unitOfMeasurement: {
+          label: queryDataSource.unitlabel,
+          type: queryDataSource.unittype,
+          lowerBound:
+            queryDataSource.unitlowerbound === null
+              ? undefined
+              : queryDataSource.unitlowerbound,
+          upperBound:
+            queryDataSource.unitupperbound === null
+              ? undefined
+              : queryDataSource.unitupperbound
+        }
+      };
+    })
     .value();
 }
 
@@ -139,9 +133,8 @@ function createEffectRecords(
       if (!accum[effectQueryResult.datasourceid]) {
         accum[effectQueryResult.datasourceid] = {};
       }
-      accum[effectQueryResult.datasourceid][
-        effectQueryResult.alternativeid
-      ] = mapEffect(effectQueryResult);
+      accum[effectQueryResult.datasourceid][effectQueryResult.alternativeid] =
+        mapEffect(effectQueryResult);
       return accum;
     },
     {}
@@ -300,45 +293,39 @@ function mapDataSourcesOntoCriteria(
   dataSources: IDataSource[]
 ): ICriterion[] {
   const dataSourcesGroupedByCriterion = _.groupBy(dataSources, 'criterionId');
-  return _.map(
-    criteria,
-    (criterion): ICriterion => {
-      return {
-        ...criterion,
-        dataSources: dataSourcesGroupedByCriterion[criterion.id]
-          ? dataSourcesGroupedByCriterion[criterion.id]
-          : []
-      };
-    }
-  );
+  return _.map(criteria, (criterion): ICriterion => {
+    return {
+      ...criterion,
+      dataSources: dataSourcesGroupedByCriterion[criterion.id]
+        ? dataSourcesGroupedByCriterion[criterion.id]
+        : []
+    };
+  });
 }
 
 export function mapCellCommands(
   cellCommands: ICellCommand[]
 ): IDatabaseInputCell[] {
-  return _.map(
-    cellCommands,
-    (command): IDatabaseInputCell => {
-      return {
-        inprogressworkspaceid: command.inProgressWorkspaceId,
-        alternativeid: command.alternativeId,
-        datasourceid: command.dataSourceId,
-        criterionid: command.criterionId,
-        val: command.value,
-        lowerbound: command.lowerBound,
-        upperbound: command.upperBound,
-        isnotestimablelowerbound: command.isNotEstimableLowerBound,
-        isnotestimableupperbound: command.isNotEstimableUpperBound,
-        txt: command.text,
-        mean: command.mean,
-        standarderror: command.standardError,
-        alpha: command.alpha,
-        beta: command.beta,
-        celltype: command.cellType,
-        inputtype: command.type
-      };
-    }
-  );
+  return _.map(cellCommands, (command): IDatabaseInputCell => {
+    return {
+      inprogressworkspaceid: command.inProgressWorkspaceId,
+      alternativeid: command.alternativeId,
+      datasourceid: command.dataSourceId,
+      criterionid: command.criterionId,
+      val: command.value,
+      lowerbound: command.lowerBound,
+      upperbound: command.upperBound,
+      isnotestimablelowerbound: command.isNotEstimableLowerBound,
+      isnotestimableupperbound: command.isNotEstimableUpperBound,
+      txt: command.text,
+      mean: command.mean,
+      standarderror: command.standardError,
+      alpha: command.alpha,
+      beta: command.beta,
+      celltype: command.cellType,
+      inputtype: command.type
+    };
+  });
 }
 
 export function buildProblem(inProgressMessage: IInProgressMessage): IProblem {
@@ -659,16 +646,13 @@ export function mapToCellCommands(
   inProgressId: number,
   cellType: TableInputMode
 ): ICellCommand[] {
-  return _.map(
-    tableCells,
-    (cell): ICellCommand => {
-      return {
-        ...cell,
-        cellType: cellType,
-        inProgressWorkspaceId: inProgressId
-      };
-    }
-  );
+  return _.map(tableCells, (cell): ICellCommand => {
+    return {
+      ...cell,
+      cellType: cellType,
+      inProgressWorkspaceId: inProgressId
+    };
+  });
 }
 
 export function mapToCriteriaQueryResult(

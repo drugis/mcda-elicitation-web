@@ -1,7 +1,7 @@
 import IAlternative from '@shared/interface/IAlternative';
 import {IRecalculatedCell} from '@shared/interface/Patavi/IRecalculatedCell';
 import {TValueProfile} from '@shared/types/TValueProfile';
-import {TProfileCase} from 'app/ts/type/ProfileCase';
+import {TProfileCase} from 'app/ts/type/profileCase';
 
 export default interface IDeterministicResultsContext {
   areRecalculatedPlotsLoading: boolean;

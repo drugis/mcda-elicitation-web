@@ -22,8 +22,10 @@ export function DeterministicWeightsContextProviderComponent({
 }: {
   children: any;
 }) {
-  const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {partOfInterval, referenceWeight} = useContext(EquivalentChangeContext);
+  const {pvfs, currentScenario, equivalentChange} = useContext(
+    CurrentScenarioContext
+  );
+  const {referenceWeight} = useContext(EquivalentChangeContext);
   const {
     setSensitivityWeights,
     setRecalculatedTotalValues,
@@ -34,7 +36,7 @@ export function DeterministicWeightsContextProviderComponent({
       buildDeterministicWeights(
         currentScenario.state.weights.mean,
         pvfs,
-        partOfInterval,
+        equivalentChange.partOfInterval,
         referenceWeight
       )
     );
@@ -58,7 +60,7 @@ export function DeterministicWeightsContextProviderComponent({
       weights,
       importances,
       equivalentChanges,
-      partOfInterval
+      partOfInterval: equivalentChange.partOfInterval
     };
 
     setSensitivityWeights(weights);
@@ -84,7 +86,7 @@ export function DeterministicWeightsContextProviderComponent({
       weights,
       importances,
       equivalentChanges,
-      partOfInterval
+      partOfInterval: equivalentChange.partOfInterval
     };
 
     setSensitivityWeights(weights);
@@ -96,7 +98,7 @@ export function DeterministicWeightsContextProviderComponent({
       buildDeterministicWeights(
         currentScenario.state.weights.mean,
         pvfs,
-        partOfInterval,
+        equivalentChange.partOfInterval,
         referenceWeight
       )
     );

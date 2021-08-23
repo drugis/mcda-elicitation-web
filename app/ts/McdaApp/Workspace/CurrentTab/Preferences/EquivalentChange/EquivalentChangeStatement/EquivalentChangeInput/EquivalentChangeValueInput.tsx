@@ -1,4 +1,5 @@
 import {Grid, InputAdornment, Popover, TextField} from '@material-ui/core';
+import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
@@ -15,8 +16,10 @@ export default function EquivalentChangeValueInput({
   closeDialog: () => void;
   isDialogOpen: boolean;
 }): JSX.Element {
-  const {referenceValueBy, referenceCriterion, updateReferenceValueBy} =
-    useContext(EquivalentChangeContext);
+  const {referenceCriterion, updateReferenceValueBy} = useContext(
+    EquivalentChangeContext
+  );
+  const {equivalentChange} = useContext(CurrentScenarioContext);
   const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
   const {getUsePercentage} = useContext(SettingsContext);
   const [inputError, setInputError] = useState<string>('');
@@ -29,7 +32,7 @@ export default function EquivalentChangeValueInput({
       : stepSizesByCriterion[referenceCriterion.id]
   );
   const [localValue, setLocalValue] = useState<number>(
-    usePercentage ? referenceValueBy * 100 : referenceValueBy
+    usePercentage ? equivalentChange.by * 100 : equivalentChange.by
   );
   const [minValue, maxValue] = getTheoreticalRange(unit, usePercentage);
 

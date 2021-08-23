@@ -1,17 +1,12 @@
 import ICriterion from '@shared/interface/ICriterion';
-import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
+import {TEquivalentChange} from 'app/ts/type/equivalentChange';
 
 export default interface IEquivalentChangeContext {
   canShowEquivalentChanges: boolean;
-  equivalentChangeType: TEquivalentChange;
   lowerBound: number;
   otherCriteria: ICriterion[];
-  partOfInterval: number;
   referenceCriterion: ICriterion;
   upperBound: number;
-  referenceValueBy: number;
-  referenceValueFrom: number;
-  referenceValueTo: number;
   referenceWeight: number;
   resetEquivalentChange: () => void;
   updateEquivalentChangeType: (newValue: TEquivalentChange) => void;

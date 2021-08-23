@@ -1,12 +1,14 @@
 import {FormControlLabel, Radio, RadioGroup} from '@material-ui/core';
-import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
+import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
+import {TEquivalentChange} from 'app/ts/type/equivalentChange';
 import React, {ChangeEvent, useContext} from 'react';
 import {EquivalentChangeContext as EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 
 export default function EquivalentChangeTypeToggle() {
-  const {equivalentChangeType, updateEquivalentChangeType} = useContext(
-    EquivalentChangeContext
-  );
+  const {
+    equivalentChange: {type}
+  } = useContext(CurrentScenarioContext);
+  const {updateEquivalentChangeType} = useContext(EquivalentChangeContext);
 
   function handleequivalentChangeTypeChanged(
     event: ChangeEvent<HTMLInputElement>
@@ -18,7 +20,7 @@ export default function EquivalentChangeTypeToggle() {
     <RadioGroup
       row
       name="equivalent-change-type-radio"
-      value={equivalentChangeType}
+      value={type}
       onChange={handleequivalentChangeTypeChanged}
     >
       <FormControlLabel

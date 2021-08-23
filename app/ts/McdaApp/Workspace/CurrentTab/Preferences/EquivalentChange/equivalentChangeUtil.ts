@@ -6,7 +6,7 @@ import {
   getPercentifiedValue,
   getPercentifiedValueLabel
 } from 'app/ts/DisplayUtil/DisplayUtil';
-import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
+import {TEquivalentChange} from 'app/ts/type/equivalentChange';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import {hasNoRange} from '../../../CurrentSubproblemContext/SubproblemUtil';
@@ -18,7 +18,9 @@ export function getPartOfInterval(
     from,
     to,
     type
-  }: Omit<IEquivalentChange, 'partOfInterval' | 'referenceCriterionId'>,
+  }:
+    | IEquivalentChange
+    | Omit<IEquivalentChange, 'partOfInterval' | 'referenceCriterionId'>,
   [lowerBound, upperBound]: [number, number]
 ): number {
   return type === 'amount'

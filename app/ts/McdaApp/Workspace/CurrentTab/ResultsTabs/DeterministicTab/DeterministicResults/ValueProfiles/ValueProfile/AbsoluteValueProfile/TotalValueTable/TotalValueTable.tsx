@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import {TProfileCase} from 'app/ts/type/ProfileCase';
+import {TProfileCase} from 'app/ts/type/profileCase';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import React from 'react';

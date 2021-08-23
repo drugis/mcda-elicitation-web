@@ -1,15 +1,15 @@
 import {Typography} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import React, {useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeRangeSlider from './EquivalentChangeInput/EquivalentChangeRangeSlider';
 
 export default function EquivalentChangeRangeStatement(): JSX.Element {
-  const {referenceValueFrom, referenceValueTo, referenceCriterion} = useContext(
-    EquivalentChangeContext
-  );
+  const {referenceCriterion} = useContext(EquivalentChangeContext);
+  const {equivalentChange} = useContext(CurrentScenarioContext);
   const {getUsePercentage} = useContext(SettingsContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -39,7 +39,7 @@ export default function EquivalentChangeRangeStatement(): JSX.Element {
           onClick={openDialog}
           variant="outlined"
         >
-          {getPercentifiedValue(referenceValueFrom, usePercentage)}
+          {getPercentifiedValue(equivalentChange.from, usePercentage)}
         </Button>
         {unit.label} to{' '}
         <Button
@@ -47,7 +47,7 @@ export default function EquivalentChangeRangeStatement(): JSX.Element {
           onClick={openDialog}
           variant="outlined"
         >
-          {getPercentifiedValue(referenceValueTo, usePercentage)}
+          {getPercentifiedValue(equivalentChange.to, usePercentage)}
         </Button>
         {unit.label} is equivalent to:
       </Typography>

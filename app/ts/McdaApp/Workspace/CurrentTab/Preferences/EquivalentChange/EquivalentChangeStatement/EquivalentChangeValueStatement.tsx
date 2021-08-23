@@ -1,15 +1,18 @@
 import {Button, Typography} from '@material-ui/core';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import _ from 'lodash';
 import React, {useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeValueInput from './EquivalentChangeInput/EquivalentChangeValueInput';
 
 export default function EquivalentChangeValueStatement() {
-  const {referenceCriterion, referenceValueBy} = useContext(
-    EquivalentChangeContext
-  );
+  const {referenceCriterion} = useContext(EquivalentChangeContext);
+  const {
+    equivalentChange: {by}
+  } = useContext(CurrentScenarioContext);
   const {getUsePercentage} = useContext(SettingsContext);
 
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -17,6 +20,7 @@ export default function EquivalentChangeValueStatement() {
   const anchorElement = document.getElementById(
     'reference-value-by'
   ) as HTMLButtonElement;
+
   function openDialog(event: React.MouseEvent<HTMLButtonElement>): void {
     setDialogOpen(true);
   }
@@ -31,7 +35,7 @@ export default function EquivalentChangeValueStatement() {
       <Typography>
         The change of {referenceCriterion.title} by{' '}
         <Button id="reference-value-by" onClick={openDialog} variant="outlined">
-          {getPercentifiedValue(referenceValueBy, usePercentage)}
+          {_.isNumber(by) ? getPercentifiedValue(by, usePercentage) : ''}
         </Button>
         {getUnitLabel(unit, usePercentage)} is the basis for calculating the
         equivalent changes in the table below.

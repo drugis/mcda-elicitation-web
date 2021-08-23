@@ -1,4 +1,4 @@
-import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
+import {TEquivalentChange} from 'app/ts/type/equivalentChange';
 
 export default interface IEquivalentChange {
   referenceCriterionId: string;

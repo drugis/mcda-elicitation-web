@@ -230,16 +230,16 @@ export function CurrentScenarioContextProviderComponent({
   return (
     <CurrentScenarioContext.Provider
       value={{
+        activeView,
         advancedPvfCriterionId,
         areAllPvfsSet: areAllPvfsSet(filteredCriteria, pvfs),
         currentScenario,
-        pvfs,
-        isThresholdElicitationDisabled,
         disableWeightsButtons,
-        activeView,
         elicitationMethod,
         equivalentChange: currentScenario.state.equivalentChange,
         isScenarioUpdating,
+        isThresholdElicitationDisabled,
+        pvfs,
         setCurrentScenario,
         updateScenario,
         getPvf,

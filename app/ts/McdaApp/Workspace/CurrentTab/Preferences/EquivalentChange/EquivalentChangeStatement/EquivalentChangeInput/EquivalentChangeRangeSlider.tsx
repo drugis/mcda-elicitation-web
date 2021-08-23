@@ -1,5 +1,6 @@
 import {Grid, Popover, Slider, Typography} from '@material-ui/core';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import React, {useContext, useEffect, useState} from 'react';
@@ -17,26 +18,27 @@ export default function EquivalentChangeRangeSlider({
   const {
     lowerBound,
     upperBound,
-    referenceValueFrom,
-    referenceValueTo,
     updateReferenceValueRange,
     referenceCriterion
   } = useContext(EquivalentChangeContext);
   const {getUsePercentage} = useContext(SettingsContext);
   const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
+  const {
+    equivalentChange: {from, to}
+  } = useContext(CurrentScenarioContext);
 
   const [stepSize, setStepSize] = useState<number>(
     stepSizesByCriterion[referenceCriterion.id]
   );
-  const [localFrom, setLocalFrom] = useState<number>(referenceValueFrom);
-  const [localTo, setLocalTo] = useState<number>(referenceValueTo);
+  const [localFrom, setLocalFrom] = useState<number>(from);
+  const [localTo, setLocalTo] = useState<number>(to);
 
   useEffect(() => {
     setStepSize(stepSizesByCriterion[referenceCriterion.id]);
   }, [referenceCriterion.id, stepSizesByCriterion]);
 
   const usePercentage = getUsePercentage(referenceCriterion.dataSources[0]);
-  const isDecreasingPvf = referenceValueFrom > referenceValueTo;
+  const isDecreasingPvf = from > to;
 
   const sliderParameters = isDecreasingPvf
     ? {
