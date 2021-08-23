@@ -121,3 +121,24 @@ function getEquivalentChangeRangeLabel(
       : worst - getPercentifiedValue(equivalentValue, usePercentage);
   return `${worst} to ${significantDigits(value)}`;
 }
+
+export function getTheoreticalRange(
+  unit: IUnitOfMeasurement,
+  usePercentage: boolean
+): [number, number] {
+  const lowerBound = _.isNull(unit.lowerBound) ? -Infinity : unit.lowerBound;
+  const upperBound = getUpperBound(unit, usePercentage);
+  return [lowerBound, upperBound];
+}
+
+function getUpperBound(unit: IUnitOfMeasurement, usePercentage: boolean) {
+  if (_.isNull(unit.upperBound)) {
+    return Infinity;
+  } else if (usePercentage && unit.type === 'decimal') {
+    return 100;
+  } else if (!usePercentage && unit.type === 'percentage') {
+    return 1;
+  } else {
+    return unit.upperBound;
+  }
+}

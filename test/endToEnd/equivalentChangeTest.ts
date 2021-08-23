@@ -35,15 +35,19 @@ function equivalentValueChangeTest(browser: NightwatchBrowser) {
   checkEqualValueValues(browser, 50);
 
   browser
-    .click('#reference-slider-by')
-    .click('#reference-criterion-slider > span:nth-child(4)') // set to 10
+    .click('#reference-value-by')
+    .waitForElementVisible('#value-input')
+    .clearValue('#value-input')
+    .setValue('#value-input', '10')
     .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
   checkEqualValueValues(browser, 10);
 
   browser
-    .click('#reference-slider-by')
-    .click('#reference-criterion-slider > span:nth-child(11)') // set to 80
+    .click('#reference-value-by')
+    .waitForElementVisible('#value-input')
+    .clearValue('#value-input')
+    .setValue('#value-input', '80')
     .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
   checkEqualValueValues(browser, 80);
