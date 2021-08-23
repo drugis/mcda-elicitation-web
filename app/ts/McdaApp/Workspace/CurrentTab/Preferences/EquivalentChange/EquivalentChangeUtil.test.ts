@@ -1,12 +1,15 @@
+import ICriterion from '@shared/interface/ICriterion';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
+import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
 import {
   getEquivalentChange,
+  getEquivalentChangeValue,
   getEquivalentRangeValue,
-  getInitialReferenceValueFrom,
-  getInitialReferenceValueTo,
   getPartOfInterval,
+  getReferenceValueFrom,
+  getReferenceValueTo,
   getTheoreticalRange
 } from './equivalentChangeUtil';
 
@@ -17,7 +20,10 @@ describe('equivalentChangeUtil', () => {
       const to = 0.5;
       const lowerBound = 0;
       const upperBound = 1;
-      const result = getPartOfInterval(from, to, lowerBound, upperBound);
+      const result = getPartOfInterval({from, to, by: 0, type: 'range'}, [
+        lowerBound,
+        upperBound
+      ]);
       expect(result).toEqual(0.5);
     });
 
@@ -26,7 +32,10 @@ describe('equivalentChangeUtil', () => {
       const to = 0;
       const lowerBound = 0;
       const upperBound = 1;
-      const result = getPartOfInterval(from, to, lowerBound, upperBound);
+      const result = getPartOfInterval({from, to, by: 0, type: 'range'}, [
+        lowerBound,
+        upperBound
+      ]);
       expect(result).toEqual(0.5);
     });
   });
@@ -38,7 +47,7 @@ describe('equivalentChangeUtil', () => {
         direction: 'increasing',
         type: 'linear'
       };
-      const result = getInitialReferenceValueFrom(0, 1, pvf);
+      const result = getReferenceValueFrom(0, 1, pvf);
       expect(result).toEqual(0.25);
     });
 
@@ -48,7 +57,7 @@ describe('equivalentChangeUtil', () => {
         direction: 'decreasing',
         type: 'linear'
       };
-      const result = getInitialReferenceValueFrom(0, 1, pvf);
+      const result = getReferenceValueFrom(0, 1, pvf);
       expect(result).toEqual(0.75);
     });
   });
@@ -60,7 +69,7 @@ describe('equivalentChangeUtil', () => {
         direction: 'increasing',
         type: 'linear'
       };
-      const result = getInitialReferenceValueTo(0, 1, pvf);
+      const result = getReferenceValueTo(0, 1, pvf);
       expect(result).toEqual(0.75);
     });
 
@@ -70,7 +79,7 @@ describe('equivalentChangeUtil', () => {
         direction: 'decreasing',
         type: 'linear'
       };
-      const result = getInitialReferenceValueTo(0, 1, pvf);
+      const result = getReferenceValueTo(0, 1, pvf);
       expect(result).toEqual(0.25);
     });
   });
@@ -102,10 +111,10 @@ describe('equivalentChangeUtil', () => {
     });
   });
 
-  describe('getEquivalentValue', () => {
+  describe('getEquivalentChangeValue', () => {
     it('should return the equivalent change for a second criterion, based on its pvf, a reference change and the relative weights of the criteria, for increasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'increasing'} as TPvf;
-      const result = getEquivalentChange(
+      const result = getEquivalentChangeValue(
         criterionWeight, // 0.1
         pvf,
         partOfInterval, // 0.5
@@ -116,7 +125,7 @@ describe('equivalentChangeUtil', () => {
 
     it('should return the equivalent change for a second criterion, based on its pvf, a reference change and the relative weights of the criteria, for decreasing pvf', () => {
       const pvf = {range: [0, 1], direction: 'decreasing'} as TPvf;
-      const result = getEquivalentChange(
+      const result = getEquivalentChangeValue(
         criterionWeight, // 0.1
         pvf,
         partOfInterval, // 0.5
@@ -192,6 +201,28 @@ describe('equivalentChangeUtil', () => {
       const usePercentage = true;
       const result = getTheoreticalRange(unit, usePercentage);
       const expectedResult = [37, 42];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getEquivalentChange', () => {
+    const referenceCriterion = {
+      id: 'crit1'
+    } as ICriterion;
+    const bounds: [number, number] = [0, 1];
+    const pvf = {
+      direction: 'increasing'
+    } as TPvf;
+    it('should calculate default values for equivalent change', () => {
+      const result = getEquivalentChange(referenceCriterion, bounds, pvf);
+      const expectedResult: IEquivalentChange = {
+        referenceCriterionId: 'crit1',
+        by: 0.5,
+        from: 0.25,
+        to: 0.75,
+        partOfInterval: 0.5,
+        type: 'amount'
+      };
       expect(result).toEqual(expectedResult);
     });
   });

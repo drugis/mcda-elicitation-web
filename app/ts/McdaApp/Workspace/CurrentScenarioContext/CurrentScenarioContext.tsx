@@ -1,6 +1,7 @@
 import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
+import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPreferences} from '@shared/types/preferences';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
@@ -166,6 +167,7 @@ export function CurrentScenarioContextProviderComponent({
   }
 
   function updateScenario(newScenario: IMcdaScenario): Promise<void> {
+    setIsScenarioUpdating(true);
     return Axios.post(
       `/api/v2/workspaces/${workspaceId}/problems/${subproblemId}/scenarios/${newScenario.id}`,
       newScenario
@@ -174,7 +176,10 @@ export function CurrentScenarioContextProviderComponent({
         setCurrentScenario(newScenario);
         updateScenarios(newScenario);
       })
-      .catch(setError);
+      .catch(setError)
+      .finally(() => {
+        setIsScenarioUpdating(false);
+      });
   }
 
   function goToAdvancedPvf(criterionId: string): void {
@@ -182,7 +187,7 @@ export function CurrentScenarioContextProviderComponent({
     setActiveView('advancedPvf');
   }
 
-  function setPvf(criterionId: string, pvf: TPvf): void {
+  function setPvf(criterionId: string, pvf: TPvf): Promise<void> {
     const newPvfs = {...pvfs, [criterionId]: pvf};
     setPvfs(newPvfs);
     const newScenario = createScenarioWithPvf(
@@ -190,23 +195,36 @@ export function CurrentScenarioContextProviderComponent({
       pvf,
       currentScenario
     );
-    updateScenario(newScenario).then(() => {
-      setIsScenarioUpdating(false);
+    return updateScenario(newScenario).then(() => {
       if (areAllPvfsSet(filteredCriteria, newPvfs)) {
         resetPreferences(newScenario);
       }
     });
   }
 
-  function setLinearPvf(criterionId: string, direction: TPvfDirection): void {
-    setIsScenarioUpdating(true);
+  function setLinearPvf(
+    criterionId: string,
+    direction: TPvfDirection
+  ): Promise<void> {
     const range = getConfiguredRange(getCriterion(criterionId));
     const pvf: ILinearPvf = {
       type: 'linear',
       range: range,
       direction: direction
     };
-    setPvf(criterionId, pvf);
+    return setPvf(criterionId, pvf);
+  }
+
+  function updateEquivalentChange(
+    newEquivalentChange: IEquivalentChange
+  ): Promise<void> {
+    return updateScenario({
+      ...currentScenario,
+      state: {
+        ...currentScenario.state,
+        equivalentChange: newEquivalentChange
+      }
+    });
   }
 
   return (
@@ -220,6 +238,7 @@ export function CurrentScenarioContextProviderComponent({
         disableWeightsButtons,
         activeView,
         elicitationMethod,
+        equivalentChange: currentScenario.state.equivalentChange,
         isScenarioUpdating,
         setCurrentScenario,
         updateScenario,
@@ -227,6 +246,7 @@ export function CurrentScenarioContextProviderComponent({
         goToAdvancedPvf,
         setPvf,
         setLinearPvf,
+        updateEquivalentChange,
         resetPreferences,
         setActiveView
       }}

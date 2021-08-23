@@ -1,4 +1,5 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
+import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {TPreferencesView} from '../ScenariosContext/TPreferencesView';
@@ -11,14 +12,18 @@ export default interface ICurrentScenarioContext {
   disableWeightsButtons: boolean;
   activeView: TPreferencesView;
   elicitationMethod: string;
+  equivalentChange: IEquivalentChange;
   isScenarioUpdating: boolean;
   isThresholdElicitationDisabled: boolean;
   setCurrentScenario: (currentScenario: IMcdaScenario) => void;
   updateScenario: (newScenario: IMcdaScenario) => Promise<void>;
   getPvf: (criterionId: string) => TPvf;
-  goToAdvancedPvf: (criterionId: string) => void;
-  setPvf: (criterionId: string, pvf: TPvf) => void;
-  setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
   resetPreferences: (scenario: IMcdaScenario) => void;
+  goToAdvancedPvf: (criterionId: string) => void;
   setActiveView: (newView: TPreferencesView) => void;
+  updateEquivalentChange: (
+    newEquivalentChange: IEquivalentChange
+  ) => Promise<void>;
+  setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
+  setPvf: (criterionId: string, pvf: TPvf) => void;
 }

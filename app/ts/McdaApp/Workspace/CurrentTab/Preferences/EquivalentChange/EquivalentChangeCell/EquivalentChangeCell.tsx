@@ -6,8 +6,8 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import React, {useContext} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 import {
-  getEquivalentChange,
-  getEquivalentChangeLabel
+  getEquivalentChangeLabel,
+  getEquivalentChangeValue
 } from '../equivalentChangeUtil';
 
 export default function EquivalentChangeCell({
@@ -28,7 +28,7 @@ export default function EquivalentChangeCell({
     referenceValueTo
   } = useContext(EquivalentChangeContext);
 
-  const equivalentChange = getEquivalentChange(
+  const equivalentChange = getEquivalentChangeValue(
     currentScenario.state.weights.mean[criterion.id],
     pvfs[criterion.id],
     partOfInterval,

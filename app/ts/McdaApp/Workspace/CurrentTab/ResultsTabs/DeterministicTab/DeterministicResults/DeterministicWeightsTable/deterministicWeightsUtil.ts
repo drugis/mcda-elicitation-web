@@ -4,7 +4,7 @@ import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import IDeterministicChangeableWeights from 'app/ts/interface/IDeterministicChangeableWeights';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
-import {getEquivalentChange} from '../../../../Preferences/EquivalentChange/equivalentChangeUtil';
+import {getEquivalentChangeValue} from '../../../../Preferences/EquivalentChange/equivalentChangeUtil';
 import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
 
 export function buildDeterministicWeights(
@@ -46,7 +46,7 @@ export function getDeterministicEquivalentChanges(
   referenceWeight: number
 ) {
   return _.mapValues(weights, (weight, criterionId): IChangeableValue => {
-    const equivalentChange = getEquivalentChange(
+    const equivalentChange = getEquivalentChangeValue(
       weight,
       pvfs[criterionId],
       partOfInterval,

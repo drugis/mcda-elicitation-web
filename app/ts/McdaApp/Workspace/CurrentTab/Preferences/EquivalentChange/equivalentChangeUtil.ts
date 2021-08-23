@@ -1,5 +1,7 @@
+import ICriterion from '@shared/interface/ICriterion';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
+import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
 import {
   getPercentifiedValue,
   getPercentifiedValueLabel
@@ -7,25 +9,31 @@ import {
 import {TEquivalentChange} from 'app/ts/type/EquivalentChange';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
+import {hasNoRange} from '../../../CurrentSubproblemContext/SubproblemUtil';
 import {getWorst} from '../PartialValueFunctions/PartialValueFunctionUtil';
 
 export function getPartOfInterval(
-  from: number,
-  to: number,
-  lowerBound: number,
-  upperbound: number
+  {
+    by,
+    from,
+    to,
+    type
+  }: Omit<IEquivalentChange, 'partOfInterval' | 'referenceCriterionId'>,
+  [lowerBound, upperBound]: [number, number]
 ): number {
-  return Math.abs(to - from) / (upperbound - lowerBound);
+  return type === 'amount'
+    ? Math.abs(by) / (upperBound - lowerBound)
+    : Math.abs(to - from) / (upperBound - lowerBound);
 }
 
-export function getInitialReferenceValueBy(
+export function getReferenceValueBy(
   lowerBound: number,
   upperBound: number
 ): number {
   return (upperBound - lowerBound) / 2;
 }
 
-export function getInitialReferenceValueFrom(
+export function getReferenceValueFrom(
   lowerBound: number,
   upperBound: number,
   pvf: TPvf
@@ -34,7 +42,7 @@ export function getInitialReferenceValueFrom(
   return (upperBound - lowerBound) * multiplier + lowerBound;
 }
 
-export function getInitialReferenceValueTo(
+export function getReferenceValueTo(
   lowerBound: number,
   upperBound: number,
   pvf: TPvf
@@ -49,7 +57,7 @@ export function getEquivalentRangeValue(
   partOfInterval: number,
   referenceWeight: number
 ): number {
-  const change = getEquivalentChange(
+  const change = getEquivalentChangeValue(
     criterionWeight,
     pvf,
     partOfInterval,
@@ -62,7 +70,7 @@ export function getEquivalentRangeValue(
   }
 }
 
-export function getEquivalentChange(
+export function getEquivalentChangeValue(
   criterionWeight: number,
   pvf: TPvf,
   partOfInterval: number,
@@ -140,5 +148,39 @@ function getUpperBound(unit: IUnitOfMeasurement, usePercentage: boolean) {
     return 1;
   } else {
     return unit.upperBound;
+  }
+}
+
+export function getEquivalentChange(
+  newReferenceCriterion: ICriterion,
+  [lowerBound, upperBound]: [number, number],
+  pvf: TPvf
+): IEquivalentChange {
+  const by = getReferenceValueBy(lowerBound, upperBound);
+  const from = getReferenceValueFrom(lowerBound, upperBound, pvf);
+  const to = getReferenceValueTo(lowerBound, upperBound, pvf);
+  const type = 'amount';
+  return {
+    by,
+    from,
+    to,
+    referenceCriterionId: newReferenceCriterion.id,
+    partOfInterval: getPartOfInterval({by, from, to, type}, [
+      lowerBound,
+      upperBound
+    ]),
+    type
+  };
+}
+
+export function getBounds(
+  dataSourceId: string,
+  configuredRanges: Record<string, [number, number]>,
+  observedRanges: Record<string, [number, number]>
+): [number, number] {
+  if (hasNoRange(configuredRanges, dataSourceId)) {
+    return observedRanges[dataSourceId];
+  } else {
+    return configuredRanges[dataSourceId];
   }
 }
