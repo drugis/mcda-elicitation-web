@@ -6,10 +6,7 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import React, {useContext} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
-import {
-  getEquivalentChangeLabel,
-  getEquivalentChangeValue
-} from '../equivalentChangeUtil';
+import {getEquivalentChangeValue} from '../equivalentChangeUtil';
 
 export default function EquivalentChangeCell({
   criterion
@@ -36,19 +33,7 @@ export default function EquivalentChangeCell({
     if (!referenceCriterion) {
       return '';
     } else {
-      return criterion.id === referenceCriterion.id &&
-        equivalentChange.type == 'range'
-        ? getReferenceRangeLabel(
-            equivalentChange.from,
-            equivalentChange.to,
-            usePercentage
-          )
-        : getEquivalentChangeLabel(
-            equivalentChange.type,
-            equivalentChangeValue,
-            pvfs[criterion.id],
-            usePercentage
-          );
+      return getPercentifiedValueLabel(equivalentChangeValue, usePercentage);
     }
   }
 
@@ -59,15 +44,4 @@ export default function EquivalentChangeCell({
       </LoadingSpinner>
     </TableCell>
   );
-}
-
-function getReferenceRangeLabel(
-  from: number,
-  to: number,
-  usePercentage: boolean
-): string {
-  return `${getPercentifiedValueLabel(
-    from,
-    usePercentage
-  )} to ${getPercentifiedValueLabel(to, usePercentage)}`;
 }

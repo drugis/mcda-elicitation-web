@@ -1,7 +1,6 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import {TEquivalentChange as TEquivalentChange} from 'app/ts/type/equivalentChange';
 import _ from 'lodash';
 import React, {
   createContext,
@@ -39,6 +38,8 @@ export function EquivalentChangeContextProviderComponent({
     updateEquivalentChange
   } = useContext(CurrentScenarioContext);
 
+  const [isEquivalentChangeUpdating, setIsEquivalentChangeUpdating] =
+    useState<boolean>(false);
   const [otherCriteria, setOtherCriteria] = useState<ICriterion[]>();
   const referenceWeight: number =
     currentScenario.state.weights?.mean[
@@ -48,13 +49,18 @@ export function EquivalentChangeContextProviderComponent({
     _.find(filteredCriteria, ['id', equivalentChange?.referenceCriterionId]) ||
     filteredCriteria[0];
 
-  const canShowEquivalentChanges: boolean = useMemo(
+  const canCalculateEquivalentChanges: boolean = useMemo(
     () =>
       areAllPvfsSet &&
       currentScenario.state?.weights &&
       _.every(pvfs, ['type', 'linear']) &&
       !_.isEmpty(observedRanges),
     [areAllPvfsSet, currentScenario.state?.weights, observedRanges, pvfs]
+  );
+
+  const canShowEquivalentChange: boolean = useMemo(
+    () => Boolean(equivalentChange),
+    [equivalentChange]
   );
 
   const [lowerBound, upperBound]: [number, number] = useMemo(() => {
@@ -71,13 +77,12 @@ export function EquivalentChangeContextProviderComponent({
 
   const setDefaultEquivalentChange = useCallback(() => {
     const newReferenceCriterion = filteredCriteria[0];
-    const defaultEquivalentChange = getEquivalentChange(
-      newReferenceCriterion,
-      [lowerBound, upperBound],
-      pvfs[newReferenceCriterion.id]
-    );
+    const defaultEquivalentChange = getEquivalentChange(newReferenceCriterion, [
+      lowerBound,
+      upperBound
+    ]);
     updateEquivalentChange(defaultEquivalentChange);
-  }, [filteredCriteria, lowerBound, pvfs, updateEquivalentChange, upperBound]);
+  }, [filteredCriteria, lowerBound, updateEquivalentChange, upperBound]);
 
   const initialise = useCallback(() => {
     const initialOtherCriteria = _.reject(filteredCriteria, [
@@ -88,26 +93,27 @@ export function EquivalentChangeContextProviderComponent({
   }, [filteredCriteria, referenceCriterion]);
 
   useEffect(() => {
-    if (canShowEquivalentChanges && !equivalentChange) {
-      setDefaultEquivalentChange();
-    } else if (canShowEquivalentChanges) {
-      initialise();
+    if (canCalculateEquivalentChanges) {
+      if (!Boolean(equivalentChange)) {
+        setDefaultEquivalentChange();
+      } else {
+        initialise();
+      }
     }
   }, [
-    canShowEquivalentChanges,
+    canCalculateEquivalentChanges,
     equivalentChange,
     initialise,
     setDefaultEquivalentChange
   ]);
 
   function updateReferenceCriterion(newId: string): void {
-    if (canShowEquivalentChanges) {
+    if (canShowEquivalentChange) {
       const newReferenceCriterion = _.find(filteredCriteria, ['id', newId]);
-      const newEquivalentChange = getEquivalentChange(
-        newReferenceCriterion,
-        [lowerBound, upperBound],
-        pvfs[newReferenceCriterion.id]
-      );
+      const newEquivalentChange = getEquivalentChange(newReferenceCriterion, [
+        lowerBound,
+        upperBound
+      ]);
 
       updateEquivalentChange(newEquivalentChange);
     }
@@ -121,49 +127,21 @@ export function EquivalentChangeContextProviderComponent({
     updateEquivalentChange({
       ...equivalentChange,
       by: newValue,
-      partOfInterval: getPartOfInterval({...equivalentChange, by: newValue}, [
-        lowerBound,
-        upperBound
-      ])
-    });
-  }
-
-  function updateReferenceValueRange(newFrom: number, newTo: number) {
-    updateEquivalentChange({
-      ...equivalentChange,
-      from: newFrom,
-      to: newTo,
-      partOfInterval: getPartOfInterval(
-        {...equivalentChange, from: newFrom, to: newTo},
-        [lowerBound, upperBound]
-      )
-    });
-  }
-
-  function updateEquivalentChangeType(newType: TEquivalentChange) {
-    updateEquivalentChange({
-      ...equivalentChange,
-      type: newType,
-      partOfInterval: getPartOfInterval({...equivalentChange, type: newType}, [
-        lowerBound,
-        upperBound
-      ])
+      partOfInterval: getPartOfInterval(newValue, [lowerBound, upperBound])
     });
   }
 
   return (
     <EquivalentChangeContext.Provider
       value={{
-        canShowEquivalentChanges,
+        canShowEquivalentChange,
         lowerBound,
         otherCriteria,
         referenceCriterion,
         referenceWeight,
         upperBound,
         resetEquivalentChange: reset,
-        updateEquivalentChangeType,
         updateReferenceValueBy,
-        updateReferenceValueRange,
         updateReferenceCriterion
       }}
     >

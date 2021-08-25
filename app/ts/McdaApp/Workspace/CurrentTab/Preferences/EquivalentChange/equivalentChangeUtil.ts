@@ -2,30 +2,15 @@ import ICriterion from '@shared/interface/ICriterion';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
-import {
-  getPercentifiedValue,
-  getPercentifiedValueLabel
-} from 'app/ts/DisplayUtil/DisplayUtil';
-import {TEquivalentChange} from 'app/ts/type/equivalentChange';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 import {hasNoRange} from '../../../CurrentSubproblemContext/SubproblemUtil';
-import {getWorst} from '../PartialValueFunctions/PartialValueFunctionUtil';
 
 export function getPartOfInterval(
-  {
-    by,
-    from,
-    to,
-    type
-  }:
-    | IEquivalentChange
-    | Omit<IEquivalentChange, 'partOfInterval' | 'referenceCriterionId'>,
+  by: number,
   [lowerBound, upperBound]: [number, number]
 ): number {
-  return type === 'amount'
-    ? Math.abs(by) / (upperBound - lowerBound)
-    : Math.abs(to - from) / (upperBound - lowerBound);
+  return Math.abs(by) / (upperBound - lowerBound);
 }
 
 export function getReferenceValueBy(
@@ -101,37 +86,6 @@ export function isSliderExtenderDisabled(
   return currentUpperValue === theoreticalUpper;
 }
 
-export function getEquivalentChangeLabel(
-  equivalentChangeType: TEquivalentChange,
-  equivalentChange: number,
-  pvf: TPvf,
-  usePercentage: boolean
-): string {
-  switch (equivalentChangeType) {
-    case 'amount':
-      return getPercentifiedValueLabel(equivalentChange, usePercentage);
-    case 'range':
-      return getEquivalentChangeRangeLabel(
-        equivalentChange,
-        usePercentage,
-        pvf
-      );
-  }
-}
-
-function getEquivalentChangeRangeLabel(
-  equivalentValue: number,
-  usePercentage: boolean,
-  pvf: TPvf
-): string {
-  const worst = getWorst(pvf, usePercentage);
-  const value =
-    pvf.direction === 'increasing'
-      ? worst + getPercentifiedValue(equivalentValue, usePercentage)
-      : worst - getPercentifiedValue(equivalentValue, usePercentage);
-  return `${worst} to ${significantDigits(value)}`;
-}
-
 export function getTheoreticalRange(
   unit: IUnitOfMeasurement,
   usePercentage: boolean
@@ -155,23 +109,13 @@ function getUpperBound(unit: IUnitOfMeasurement, usePercentage: boolean) {
 
 export function getEquivalentChange(
   newReferenceCriterion: ICriterion,
-  [lowerBound, upperBound]: [number, number],
-  pvf: TPvf
+  [lowerBound, upperBound]: [number, number]
 ): IEquivalentChange {
   const by = getReferenceValueBy(lowerBound, upperBound);
-  const from = getReferenceValueFrom(lowerBound, upperBound, pvf);
-  const to = getReferenceValueTo(lowerBound, upperBound, pvf);
-  const type = 'amount';
   return {
     by,
-    from,
-    to,
     referenceCriterionId: newReferenceCriterion.id,
-    partOfInterval: getPartOfInterval({by, from, to, type}, [
-      lowerBound,
-      upperBound
-    ]),
-    type
+    partOfInterval: getPartOfInterval(by, [lowerBound, upperBound])
   };
 }
 

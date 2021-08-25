@@ -11,6 +11,7 @@ import {
   isElicitationView
 } from '../../ScenariosContext/preferencesUtil';
 import {TPreferencesView} from '../../ScenariosContext/TPreferencesView';
+import {EquivalentChangeContextProviderComponent} from './EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import PreferencesView from './PreferencesView/PreferencesView';
@@ -73,7 +74,11 @@ export default function Preferences() {
     setDocumentTitle(activeView);
 
     if (activeView === 'preferences') {
-      return <PreferencesView />;
+      return (
+        <EquivalentChangeContextProviderComponent>
+          <PreferencesView />
+        </EquivalentChangeContextProviderComponent>
+      );
     } else if (activeView === 'advancedPvf') {
       return (
         <AdvancedPartialValueFunctionContextProviderComponent>

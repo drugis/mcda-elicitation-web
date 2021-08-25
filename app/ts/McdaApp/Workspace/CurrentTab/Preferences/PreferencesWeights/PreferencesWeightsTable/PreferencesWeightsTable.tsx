@@ -19,10 +19,8 @@ import {
 
 export default function PreferencesWeightsTable() {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {filteredCriteria, observedRanges} = useContext(
-    CurrentSubproblemContext
-  );
-  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
+  const {canShowEquivalentChange} = useContext(EquivalentChangeContext);
 
   const importances: Record<string, number> = useMemo(
     () => buildImportances(currentScenario.state.weights.mean),
@@ -32,8 +30,6 @@ export default function PreferencesWeightsTable() {
   const rankings: Record<string, number> = useMemo(() => {
     return calculateRankings(currentScenario.state.weights.mean);
   }, [currentScenario.state.weights.mean]);
-
-  const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
 
   return (
     <Table id="preferences-weights-table">
@@ -54,7 +50,7 @@ export default function PreferencesWeightsTable() {
           <TableCell>
             <InlineHelp helpId="representative-weights">Weight</InlineHelp>
           </TableCell>
-          <ShowIf condition={canShowEquivalentChanges}>
+          <ShowIf condition={canShowEquivalentChange}>
             <TableCell>
               <InlineHelp helpId="equivalent-change-basis">
                 Equivalent change

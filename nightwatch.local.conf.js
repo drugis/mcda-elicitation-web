@@ -24,7 +24,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'firefox',
         'moz:firefoxOptions': {
-          args: ['window-size=1366,728', '-headless']
+          args: ['window-size=1366,728'] // '-headless']
         },
         javascriptEnabled: true,
         acceptSslCerts: true,

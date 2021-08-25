@@ -7,14 +7,12 @@ import React, {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
 import {EquivalentChangeContext} from './EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeReferenceCriterion from './EquivalentChangeReferenceCriterion/EquivalentChangeReferenceCriterion';
-import EquivalentChangeStatement from './EquivalentChangeStatement/EquivalentChangeStatement';
-import EquivalentChangeTypeToggle from './EquivalentChangeTypeToggle/EquivalentChangeTypeToggle';
+import EquivalentChangeValueStatement from './EquivalentChangeStatement/EquivalentChangeValueStatement';
 
 export default function EquivalentChange(): JSX.Element {
   const {pvfs} = useContext(CurrentScenarioContext);
-  const {resetEquivalentChange, referenceCriterion} = useContext(
-    EquivalentChangeContext
-  );
+  const {canShowEquivalentChange, resetEquivalentChange, referenceCriterion} =
+    useContext(EquivalentChangeContext);
   const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
 
   return (
@@ -27,16 +25,13 @@ export default function EquivalentChange(): JSX.Element {
         </Typography>
       </Grid>
       <ShowIf condition={areAllPvfsLinear}>
-        <LoadingSpinner showSpinnerCondition={!Boolean(referenceCriterion)}>
+        <LoadingSpinner showSpinnerCondition={!canShowEquivalentChange}>
           <Grid container item xs={12} spacing={2}>
-            <Grid item xs={12}>
-              <EquivalentChangeTypeToggle />
-            </Grid>
             <Grid item xs={12}>
               <EquivalentChangeReferenceCriterion />
             </Grid>
             <Grid item xs={12}>
-              <EquivalentChangeStatement />
+              <EquivalentChangeValueStatement />
             </Grid>
             <Grid item xs={12}>
               <Button

@@ -21,7 +21,7 @@ export default function EquivalentChangeValueStatement() {
     'reference-value-by'
   ) as HTMLButtonElement;
 
-  function openDialog(event: React.MouseEvent<HTMLButtonElement>): void {
+  function openDialog(_event: React.MouseEvent<HTMLButtonElement>): void {
     setDialogOpen(true);
   }
 

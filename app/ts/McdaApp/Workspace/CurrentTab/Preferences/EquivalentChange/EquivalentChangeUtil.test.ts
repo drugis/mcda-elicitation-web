@@ -15,27 +15,10 @@ import {
 
 describe('equivalentChangeUtil', () => {
   describe('getPartOfInterval', () => {
-    it('should calculate the ratio of the chosen interval to the total range for a favourable criterion', () => {
-      const from = 0;
-      const to = 0.5;
+    it('should calculate the ratio of the chosen value to the total range', () => {
       const lowerBound = 0;
-      const upperBound = 1;
-      const result = getPartOfInterval({from, to, by: 0, type: 'range'}, [
-        lowerBound,
-        upperBound
-      ]);
-      expect(result).toEqual(0.5);
-    });
-
-    it('should calculate the ratio of the chosen interval to the total range for an unfavourable criterion', () => {
-      const from = 0.5;
-      const to = 0;
-      const lowerBound = 0;
-      const upperBound = 1;
-      const result = getPartOfInterval({from, to, by: 0, type: 'range'}, [
-        lowerBound,
-        upperBound
-      ]);
+      const upperBound = 5;
+      const result = getPartOfInterval(2.5, [lowerBound, upperBound]);
       expect(result).toEqual(0.5);
     });
   });
@@ -210,18 +193,13 @@ describe('equivalentChangeUtil', () => {
       id: 'crit1'
     } as ICriterion;
     const bounds: [number, number] = [0, 1];
-    const pvf = {
-      direction: 'increasing'
-    } as TPvf;
+
     it('should calculate default values for equivalent change', () => {
-      const result = getEquivalentChange(referenceCriterion, bounds, pvf);
+      const result = getEquivalentChange(referenceCriterion, bounds);
       const expectedResult: IEquivalentChange = {
         referenceCriterionId: 'crit1',
         by: 0.5,
-        from: 0.25,
-        to: 0.75,
-        partOfInterval: 0.5,
-        type: 'amount'
+        partOfInterval: 0.5
       };
       expect(result).toEqual(expectedResult);
     });

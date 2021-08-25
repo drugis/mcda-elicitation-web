@@ -1,3 +1,4 @@
+import IError from '@shared/interface/IError';
 import IWeights from '@shared/interface/IWeights';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
@@ -168,16 +169,17 @@ export function CurrentScenarioContextProviderComponent({
 
   function updateScenario(newScenario: IMcdaScenario): Promise<void> {
     setIsScenarioUpdating(true);
-    return Axios.post(
+    setCurrentScenario(newScenario);
+    updateScenarios(newScenario);
+    return Axios.put(
       `/api/v2/workspaces/${workspaceId}/problems/${subproblemId}/scenarios/${newScenario.id}`,
       newScenario
     )
       .then(() => {
-        setCurrentScenario(newScenario);
-        updateScenarios(newScenario);
+        setIsScenarioUpdating(false);
       })
-      .catch(setError)
-      .finally(() => {
+      .catch((error: IError) => {
+        setError(error);
         setIsScenarioUpdating(false);
       });
   }

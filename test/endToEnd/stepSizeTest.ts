@@ -69,11 +69,10 @@ function setPvfs(browser: NightwatchBrowser): void {
 
 function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
   browser
-    .useXpath()
-    .waitForElementVisible('//*[@id="equivalent-change-basis"]')
-    .click('//*[@id="equivalent-change-range-type"]')
-    .click('//*[@id="reference-slider-from"]')
-    .click('//*[@id="equivalent-change-slider"]/span[3]')
+    .waitForElementVisible('#equivalent-change-basis')
+    .click('#equivalent-change-range-type')
+    .click('#reference-slider-from')
+    .click('#equivalent-change-slider"]/span[3]')
     .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
     .waitForElementNotPresent('//*[@id="equivalent-change-slider"]');
 
