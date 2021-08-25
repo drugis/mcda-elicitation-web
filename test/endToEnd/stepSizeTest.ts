@@ -34,7 +34,6 @@ function setStepSizes(browser: NightwatchBrowser) {
   browser.click('#add-subproblem-confirm-button');
   setPvfs(browser);
 
-  verifyStepSizesDuringTradeOff(browser);
   verifyStepSizesDuringMatching(browser);
 }
 
@@ -65,34 +64,6 @@ function setPvfs(browser: NightwatchBrowser): void {
   browser
     .click('#increasing-pvf-button-crit1Id')
     .click('#decreasing-pvf-button-crit2Id');
-}
-
-function verifyStepSizesDuringTradeOff(browser: NightwatchBrowser): void {
-  browser
-    .waitForElementVisible('#equivalent-change-basis')
-    .click('#equivalent-change-range-type')
-    .click('#reference-slider-from')
-    .click('#equivalent-change-slider"]/span[3]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .waitForElementNotPresent('//*[@id="equivalent-change-slider"]');
-
-  browser.expect
-    .element('//*[@id="reference-slider-from"]')
-    .text.to.equal('-200');
-
-  browser
-    .click('//*[@id="reference-criterion-selector"]')
-    .click('//*[@id="reference-criterion-selector"]/option[@value="crit2Id"]')
-    .click('//*[@id="reference-slider-from"]')
-    .click('//*[@id="equivalent-change-slider"]/span[4]')
-    .sendKeys('/html/body/div[2]/div[3]', browser.Keys.ESCAPE)
-    .waitForElementNotPresent('//*[@id="equivalent-change-slider"]');
-
-  browser.expect
-    .element('//*[@id="reference-slider-from"]')
-    .text.to.equal('-2');
-
-  browser.useCss();
 }
 
 function verifyStepSizesDuringMatching(browser: NightwatchBrowser): void {

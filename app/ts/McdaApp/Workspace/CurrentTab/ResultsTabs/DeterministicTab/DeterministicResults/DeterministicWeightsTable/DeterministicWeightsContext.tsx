@@ -1,7 +1,7 @@
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import IDeterministicChangeableWeights from 'app/ts/interface/IDeterministicChangeableWeights';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {EquivalentChangeContext} from '../../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {calculateNewImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
@@ -36,7 +36,7 @@ export function DeterministicWeightsContextProviderComponent({
       buildDeterministicWeights(
         currentScenario.state.weights.mean,
         pvfs,
-        equivalentChange.partOfInterval,
+        equivalentChange?.partOfInterval,
         referenceWeight
       )
     );
@@ -94,17 +94,28 @@ export function DeterministicWeightsContextProviderComponent({
   }
 
   function resetWeightsTable() {
-    setDeterministicChangeableWeights(
-      buildDeterministicWeights(
-        currentScenario.state.weights.mean,
-        pvfs,
-        equivalentChange.partOfInterval,
-        referenceWeight
-      )
-    );
+    if (equivalentChange) {
+      setDeterministicChangeableWeights(
+        buildDeterministicWeights(
+          currentScenario.state.weights.mean,
+          pvfs,
+          equivalentChange.partOfInterval,
+          referenceWeight
+        )
+      );
+    }
     setRecalculatedTotalValues(undefined);
     setRecalculatedValueProfiles(undefined);
   }
+
+  useEffect(resetWeightsTable, [
+    currentScenario.state.weights.mean,
+    equivalentChange,
+    pvfs,
+    referenceWeight,
+    setRecalculatedTotalValues,
+    setRecalculatedValueProfiles
+  ]);
 
   return (
     <DeterministicWeightsContext.Provider

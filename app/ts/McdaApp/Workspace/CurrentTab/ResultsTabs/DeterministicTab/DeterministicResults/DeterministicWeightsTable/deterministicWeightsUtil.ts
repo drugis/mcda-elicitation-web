@@ -20,6 +20,7 @@ export function buildDeterministicWeights(
     partOfInterval,
     referenceWeight
   );
+
   return {
     importances,
     weights,
@@ -63,6 +64,7 @@ export function getDeterministicEquivalentChangeLabel(
   equivalentChange: IChangeableValue,
   usePercentage: boolean
 ): string {
+  if (!equivalentChange) return '';
   if (
     significantDigits(equivalentChange.currentValue) !==
     significantDigits(equivalentChange.originalValue)

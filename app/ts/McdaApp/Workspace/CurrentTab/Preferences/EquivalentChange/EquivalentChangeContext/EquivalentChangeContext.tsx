@@ -1,6 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
 import React, {
   createContext,
@@ -38,8 +39,6 @@ export function EquivalentChangeContextProviderComponent({
     updateEquivalentChange
   } = useContext(CurrentScenarioContext);
 
-  const [isEquivalentChangeUpdating, setIsEquivalentChangeUpdating] =
-    useState<boolean>(false);
   const [otherCriteria, setOtherCriteria] = useState<ICriterion[]>();
   const referenceWeight: number =
     currentScenario.state.weights?.mean[
@@ -110,10 +109,14 @@ export function EquivalentChangeContextProviderComponent({
   function updateReferenceCriterion(newId: string): void {
     if (canShowEquivalentChange) {
       const newReferenceCriterion = _.find(filteredCriteria, ['id', newId]);
-      const newEquivalentChange = getEquivalentChange(newReferenceCriterion, [
-        lowerBound,
-        upperBound
-      ]);
+      const newEquivalentChange = getEquivalentChange(
+        newReferenceCriterion,
+        getBounds(
+          newReferenceCriterion.dataSources[0].id,
+          currentSubproblem.definition.ranges,
+          observedRanges
+        )
+      );
 
       updateEquivalentChange(newEquivalentChange);
     }
@@ -145,7 +148,14 @@ export function EquivalentChangeContextProviderComponent({
         updateReferenceCriterion
       }}
     >
-      {children}
+      <ShowIf
+        condition={
+          !canCalculateEquivalentChanges ||
+          (canCalculateEquivalentChanges && canShowEquivalentChange)
+        }
+      >
+        {children}
+      </ShowIf>
     </EquivalentChangeContext.Provider>
   );
 }

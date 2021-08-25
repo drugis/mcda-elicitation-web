@@ -5,6 +5,7 @@ import {ScenariosContext} from 'app/ts/McdaApp/Workspace/ScenariosContext/Scenar
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import React, {useContext} from 'react';
+import {EquivalentChangeContextProviderComponent} from '../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {DeterministicResultsContextProviderComponent} from '../DeterministicResultsContext/DeterministicResultsContext';
 import {DeterministicWeightsContextProviderComponent} from './DeterministicWeightsTable/DeterministicWeightsContext';
 import DeterministicWeightsTable from './DeterministicWeightsTable/DeterministicWeightsTable';
@@ -41,9 +42,11 @@ export default function DeterministicResults(): JSX.Element {
             </SensitivityMeasurementsContextProviderComponent>
           </Grid>
           <Grid item xs={12}>
-            <DeterministicWeightsContextProviderComponent>
-              <DeterministicWeightsTable />
-            </DeterministicWeightsContextProviderComponent>
+            <EquivalentChangeContextProviderComponent>
+              <DeterministicWeightsContextProviderComponent>
+                <DeterministicWeightsTable />
+              </DeterministicWeightsContextProviderComponent>
+            </EquivalentChangeContextProviderComponent>
           </Grid>
           <Grid item xs={12}>
             <ValueProfiles />
