@@ -41,6 +41,15 @@ export function DeterministicWeightsContextProviderComponent({
       )
     );
 
+  useEffect(resetWeightsTable, [
+    currentScenario.state.weights.mean,
+    equivalentChange,
+    pvfs,
+    referenceWeight,
+    setRecalculatedTotalValues,
+    setRecalculatedValueProfiles
+  ]);
+
   function setImportance(criterionId: string, value: number) {
     const importances: Record<string, IChangeableValue> = {
       ...deterministicChangeableWeights.importances,
@@ -107,15 +116,6 @@ export function DeterministicWeightsContextProviderComponent({
     setRecalculatedTotalValues(undefined);
     setRecalculatedValueProfiles(undefined);
   }
-
-  useEffect(resetWeightsTable, [
-    currentScenario.state.weights.mean,
-    equivalentChange,
-    pvfs,
-    referenceWeight,
-    setRecalculatedTotalValues,
-    setRecalculatedValueProfiles
-  ]);
 
   return (
     <DeterministicWeightsContext.Provider
