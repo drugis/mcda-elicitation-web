@@ -4,7 +4,7 @@ export default function ShowIf({
   condition,
   children
 }: {
-  condition: boolean;
+  condition: Boolean;
   children: any;
 }): JSX.Element {
   return condition ? children : <></>;

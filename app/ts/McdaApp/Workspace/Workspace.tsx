@@ -8,7 +8,6 @@ import {ErrorContext} from '../../Error/ErrorContext';
 import {CurrentScenarioContextProviderComponent} from './CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContextProviderComponent} from './CurrentSubproblemContext/CurrentSubproblemContext';
 import CurrentTab from './CurrentTab/CurrentTab';
-import {EquivalentChangeContextProviderComponent} from './CurrentTab/Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {ScenariosContextProviderComponent} from './ScenariosContext/ScenariosContext';
 import {SettingsContextProviderComponent} from './SettingsContext/SettingsContext';
 import {SubproblemsContextProviderComponent} from './SubproblemsContext/SubproblemsContext';
@@ -51,16 +50,14 @@ export default function Workspace() {
             <CurrentSubproblemContextProviderComponent>
               <ScenariosContextProviderComponent>
                 <CurrentScenarioContextProviderComponent>
-                  <EquivalentChangeContextProviderComponent>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <TabBar />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <CurrentTab />
-                      </Grid>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <TabBar />
                     </Grid>
-                  </EquivalentChangeContextProviderComponent>
+                    <Grid item xs={12}>
+                      <CurrentTab />
+                    </Grid>
+                  </Grid>
                 </CurrentScenarioContextProviderComponent>
               </ScenariosContextProviderComponent>
             </CurrentSubproblemContextProviderComponent>
