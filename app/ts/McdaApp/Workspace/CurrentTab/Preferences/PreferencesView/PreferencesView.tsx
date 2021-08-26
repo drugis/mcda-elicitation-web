@@ -2,7 +2,7 @@ import {Grid, Typography} from '@material-ui/core';
 import ScenarioSelection from 'app/ts/McdaApp/Workspace/CurrentTab/ScenarioSelection/ScenarioSelection';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from '../../../CurrentSubproblemContext/CurrentSubproblemContext';
 import {ScenariosContext} from '../../../ScenariosContext/ScenariosContext';

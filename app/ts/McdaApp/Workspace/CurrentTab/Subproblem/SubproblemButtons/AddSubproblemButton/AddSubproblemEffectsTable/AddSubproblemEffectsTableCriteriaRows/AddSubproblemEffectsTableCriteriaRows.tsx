@@ -4,7 +4,7 @@ import TableWithFavourability from 'app/ts/EffectsTable/EffectsTableCriteriaRows
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import AddSubproblemEffectsTableDataSourceRow from './AddSubproblemEffectsTableDataSourceRow/AddSubproblemEffectsTableDataSourceRow';
 
 export default function AddSubproblemEffectsTableCriteriaRows() {

@@ -1,7 +1,6 @@
 import {Grid, Typography} from '@material-ui/core';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import {InlineHelp} from 'help-popup';
-import React from 'react';
 import PreferencesSensitivitySelector from './PreferencesSensitivitySelector/PreferencesSensitivitySelector';
 import PreferencesSensitivityPlot from './PreferencesSensitivtyPlot/PreferencesSensitivityPlot';
 

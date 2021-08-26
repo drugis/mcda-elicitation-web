@@ -1,14 +1,15 @@
+import IWeights from '@shared/interface/IWeights';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {ISmaaResultsCommand} from '@shared/interface/Patavi/ISmaaResultsCommand';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
+import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
-import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,
@@ -20,7 +21,6 @@ import {
   hasStochasticWeights
 } from '../SmaaResults/SmaaResultsUtil';
 import {ISmaaResultsContext} from './ISmaaResultsContext';
-import IWeights from '@shared/interface/IWeights';
 
 export const SmaaResultsContext = createContext<ISmaaResultsContext>(
   {} as ISmaaResultsContext

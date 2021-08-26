@@ -2,7 +2,6 @@ import Box from '@material-ui/core/Box';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
 
 export default function FavourabilityHeader({
   numberOfColumns,

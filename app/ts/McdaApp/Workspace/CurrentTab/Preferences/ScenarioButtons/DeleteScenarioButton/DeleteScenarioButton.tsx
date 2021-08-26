@@ -11,7 +11,7 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {ScenariosContext} from 'app/ts/McdaApp/Workspace/ScenariosContext/ScenariosContext';
 import _ from 'lodash';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 
 export default function DeleteScenarioButton() {
   const {deleteScenario, scenarios} = useContext(ScenariosContext);

@@ -1,23 +1,22 @@
 import {
-  Grid,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow
 } from '@material-ui/core';
-import React, {useContext} from 'react';
-import _ from 'lodash';
-import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
-import EffectsTableAlternativeHeaders from 'app/ts/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
-import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 import IDataSource from '@shared/interface/IDataSource';
-import OverviewDataSourceRow from '../OverviewDataSourceRow/OverviewDataSourceRow';
-import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
+import EffectsTableAlternativeHeaders from 'app/ts/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
-import {OverviewDataSourceContextProviderComponent} from './OverviewDataSourceContext/OverviewDataSourceContext';
-import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
+import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
 import {OverviewCriterionContext} from 'app/ts/McdaApp/Workspace/CurrentTab/Overview/OverviewCriteria/OverviewCriterionContext/OverviewCriterionContext';
+import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
+import _ from 'lodash';
+import {useContext} from 'react';
+import OverviewDataSourceRow from '../OverviewDataSourceRow/OverviewDataSourceRow';
+import {OverviewDataSourceContextProviderComponent} from './OverviewDataSourceContext/OverviewDataSourceContext';
 
 export default function OverviewDataSourceTable() {
   const {alternatives} = useContext(WorkspaceContext);

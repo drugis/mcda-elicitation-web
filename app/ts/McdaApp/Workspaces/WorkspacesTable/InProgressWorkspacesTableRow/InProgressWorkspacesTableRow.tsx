@@ -1,7 +1,6 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import dateFormat from 'dateformat';
-import React from 'react';
 import {Link} from 'react-router-dom';
 import DeleteWorkspaceButton from '../DeleteWorkspaceButton/DeleteWorkspaceButton';
 

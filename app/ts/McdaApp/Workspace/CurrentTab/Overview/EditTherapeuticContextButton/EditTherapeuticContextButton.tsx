@@ -9,18 +9,15 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import React, {ChangeEvent, useContext, useState} from 'react';
+import {ChangeEvent, useContext, useState} from 'react';
 import {WorkspaceContext} from '../../../WorkspaceContext/WorkspaceContext';
 
 export default function EditTherapeuticContextButton() {
-  const {therapeuticContext, editTherapeuticContext} = useContext(
-    WorkspaceContext
-  );
+  const {therapeuticContext, editTherapeuticContext} =
+    useContext(WorkspaceContext);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [
-    localTherapeuticContext,
-    setLocalTherapeuticContext
-  ] = useState<string>('');
+  const [localTherapeuticContext, setLocalTherapeuticContext] =
+    useState<string>('');
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
 
   const handleKey = createEnterHandler(handleButtonClick, () => {

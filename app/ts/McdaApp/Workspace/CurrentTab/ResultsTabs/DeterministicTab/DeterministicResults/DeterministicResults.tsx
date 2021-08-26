@@ -4,7 +4,7 @@ import ScenarioSelection from 'app/ts/McdaApp/Workspace/CurrentTab/ScenarioSelec
 import {ScenariosContext} from 'app/ts/McdaApp/Workspace/ScenariosContext/ScenariosContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {EquivalentChangeContextProviderComponent} from '../../../Preferences/EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {DeterministicResultsContextProviderComponent} from '../DeterministicResultsContext/DeterministicResultsContext';
 import {DeterministicWeightsContextProviderComponent} from './DeterministicWeightsTable/DeterministicWeightsContext';

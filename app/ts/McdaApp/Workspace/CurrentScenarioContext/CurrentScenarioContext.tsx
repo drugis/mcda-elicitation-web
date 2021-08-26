@@ -13,7 +13,7 @@ import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {getWeightsPataviProblem} from 'app/ts/util/PataviUtil';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,

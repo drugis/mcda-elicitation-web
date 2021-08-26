@@ -1,6 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {CurrentScenarioContext} from '../../McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from '../../McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {ILegendContext} from './ILegendContext';
@@ -13,9 +13,8 @@ export function LegendContextProviderComponent({children}: {children: any}) {
   const {currentScenario, updateScenario} = useContext(CurrentScenarioContext);
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
 
-  const [legendByAlternativeId, setLegendByAlternativeId] = useState<
-    Record<string, string>
-  >();
+  const [legendByAlternativeId, setLegendByAlternativeId] =
+    useState<Record<string, string>>();
 
   useEffect(() => {
     if (currentScenario.state.legend) {

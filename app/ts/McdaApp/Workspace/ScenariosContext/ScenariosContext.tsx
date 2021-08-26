@@ -3,7 +3,7 @@ import IScenarioCommand from '@shared/interface/Scenario/IScenarioCommand';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {AxiosResponse, default as axios, default as Axios} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,

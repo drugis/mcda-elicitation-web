@@ -6,7 +6,7 @@ import ShowIf from 'app/ts/ShowIf/ShowIf';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {getScaleRangeWarnings} from './ScaleRangesUtil';
 import ScalesTable from './ScalesTable/ScalesTable';
 

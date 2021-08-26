@@ -9,7 +9,7 @@ import {
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import useSorting from 'app/ts/McdaApp/Workspaces/workspacesUtil/useSorting';
 import _ from 'lodash';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {WorkspacesContext} from '../WorkspacesContext/WorkspacesContext';
 import InProgressWorkspacesTableRow from '../WorkspacesTable/InProgressWorkspacesTableRow/InProgressWorkspacesTableRow';
 import WorkspacesTableBody from '../WorkspacesTable/WorkspacesTableBody';

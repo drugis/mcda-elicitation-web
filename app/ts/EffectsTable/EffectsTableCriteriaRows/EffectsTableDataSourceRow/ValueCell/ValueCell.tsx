@@ -7,7 +7,7 @@ import {
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import DistributionValueCell from './DistributionValueCell/DistributionValueCell';
 import EffectValueCell from './EffectValueCell/EffectValueCell';
 import NMACell from './NMACell/NMACell';

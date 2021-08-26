@@ -4,7 +4,7 @@ import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 import {getEquivalentChangeValue} from '../equivalentChangeUtil';
 

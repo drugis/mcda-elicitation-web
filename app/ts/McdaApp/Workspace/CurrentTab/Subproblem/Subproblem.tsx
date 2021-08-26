@@ -1,5 +1,5 @@
 import {Grid} from '@material-ui/core';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import EffectsTable from '../../../../EffectsTable/EffectsTable';
 import {EffectsTableContextProviderComponent} from '../../../../EffectsTable/EffectsTableContext';
 import {SettingsContext} from '../../SettingsContext/SettingsContext';

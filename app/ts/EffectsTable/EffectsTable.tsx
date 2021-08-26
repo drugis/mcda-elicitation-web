@@ -4,7 +4,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import ClipboardButton from '../ClipboardButton/ClipboardButton';
 import {CurrentSubproblemContext} from '../McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {WorkspaceContext} from '../McdaApp/Workspace/WorkspaceContext/WorkspaceContext';

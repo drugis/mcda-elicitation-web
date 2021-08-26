@@ -1,6 +1,6 @@
 import {Checkbox, FormControlLabel, Grid} from '@material-ui/core';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {
   getBetaAlphaError,
   getBetaBetaError
@@ -12,9 +12,8 @@ import EventsInput from './EventsInput/EventsInput';
 import SampleSizeInput from './SampleSizeInput/SampleSizeInput';
 
 export default function BetaInput() {
-  const {useDirectBetaInput, setUseDirectBetaInput} = useContext(
-    InputCellContext
-  );
+  const {useDirectBetaInput, setUseDirectBetaInput} =
+    useContext(InputCellContext);
 
   function handleUseDirectBetaInputChanged() {
     setUseDirectBetaInput(!useDirectBetaInput);

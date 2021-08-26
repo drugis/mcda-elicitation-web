@@ -4,7 +4,7 @@ import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {
   extractUniqueAlternatives,
   extractUniqueCriteria,

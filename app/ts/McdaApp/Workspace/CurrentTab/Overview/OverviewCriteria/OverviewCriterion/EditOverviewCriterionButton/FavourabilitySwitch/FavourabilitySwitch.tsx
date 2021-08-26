@@ -8,7 +8,7 @@ import {
 import ICriterion from '@shared/interface/ICriterion';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import {InlineHelp} from 'help-popup';
-import React, {ChangeEvent, useContext, useState} from 'react';
+import {ChangeEvent, useContext, useState} from 'react';
 
 export default function FavourabilitySwitch({
   criterion,

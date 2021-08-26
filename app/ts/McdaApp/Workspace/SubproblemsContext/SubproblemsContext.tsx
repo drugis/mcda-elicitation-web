@@ -6,7 +6,7 @@ import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,
@@ -31,9 +31,8 @@ export function SubproblemsContextProviderComponent({
   const {setError} = useContext(ErrorContext);
   const {workspaceId} = useContext(WorkspaceContext);
 
-  const [subproblems, setSubproblems] = useState<
-    Record<string, IOldSubproblem>
-  >();
+  const [subproblems, setSubproblems] =
+    useState<Record<string, IOldSubproblem>>();
 
   useEffect(() => {
     axios

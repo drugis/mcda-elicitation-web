@@ -15,7 +15,7 @@ import {
 import {getUpperBound} from 'app/ts/McdaApp/Workspace/CurrentTab/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabelNullsafe} from 'app/ts/util/getUnitLabel';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import {createMarks} from '../AddSubproblemScaleRangesUtil';
 import {calculateRestrictedAreaWidthPercentage} from './ScalesSliderUtil';

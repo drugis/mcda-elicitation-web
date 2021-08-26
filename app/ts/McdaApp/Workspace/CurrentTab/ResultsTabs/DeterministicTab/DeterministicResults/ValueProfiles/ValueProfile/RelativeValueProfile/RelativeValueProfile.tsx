@@ -5,7 +5,7 @@ import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {TProfileCase} from 'app/ts/type/profileCase';
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {DeterministicResultsContext} from '../../../../DeterministicResultsContext/DeterministicResultsContext';
 import {pataviResultToRelativeValueProfile} from '../../../../DeterministicResultsUtil';
 import TotalValueTable from '../AbsoluteValueProfile/TotalValueTable/TotalValueTable';

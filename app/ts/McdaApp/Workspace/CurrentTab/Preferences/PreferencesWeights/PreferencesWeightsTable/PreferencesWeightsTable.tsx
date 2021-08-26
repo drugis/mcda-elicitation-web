@@ -9,7 +9,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext, useMemo} from 'react';
+import {useContext, useMemo} from 'react';
 import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
 import {

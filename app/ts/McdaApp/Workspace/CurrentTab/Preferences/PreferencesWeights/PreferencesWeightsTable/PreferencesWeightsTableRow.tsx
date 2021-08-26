@@ -6,7 +6,7 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import EquivalentChangeCell from '../../EquivalentChange/EquivalentChangeCell/EquivalentChangeCell';
 import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {

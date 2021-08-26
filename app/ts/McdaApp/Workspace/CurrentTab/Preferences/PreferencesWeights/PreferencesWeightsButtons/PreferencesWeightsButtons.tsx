@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function PreferencesWeightsButtons() {
   const {

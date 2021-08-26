@@ -8,7 +8,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {InlineQuestionMark} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {DUMMY_ID} from '../../manualInputConstants';
 import {ManualInputContext} from '../../ManualInputContext';
 import AddCriterionButton from './AddCriterionButton/AddCriterionButton';

@@ -3,7 +3,7 @@ import IAlternative from '@shared/interface/IAlternative';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {TProfileCase} from 'app/ts/type/profileCase';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {DeterministicResultsContext} from '../../../../DeterministicResultsContext/DeterministicResultsContext';
 
 export default function RelativeAlternativeSelect({
@@ -30,13 +30,13 @@ export default function RelativeAlternativeSelect({
     );
   }
 
-  function handleReferenceChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleReferenceChange(event: ChangeEvent<HTMLSelectElement>) {
     const selectedId = event.target.value;
     const newReference = _.find(filteredAlternatives, ['id', selectedId]);
     setReference(profileCase, newReference);
   }
 
-  function handleComparatorChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleComparatorChange(event: ChangeEvent<HTMLSelectElement>) {
     const selectedId = event.target.value;
     const newComparator = _.find(filteredAlternatives, ['id', selectedId]);
     setComparator(profileCase, newComparator);

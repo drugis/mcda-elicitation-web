@@ -12,7 +12,7 @@ import {ScenariosContext} from 'app/ts/McdaApp/Workspace/ScenariosContext/Scenar
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {ChangeEvent, useContext, useEffect, useState} from 'react';
 
 export default function ScenarioActionButton({
   action,

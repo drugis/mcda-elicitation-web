@@ -4,7 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {ManualInputContext} from 'app/ts/McdaApp/ManualInput/ManualInputContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import InlineEditor from '../../../../InlineEditor/InlineEditor';
 
 export default function SoEUncertaintyCell({

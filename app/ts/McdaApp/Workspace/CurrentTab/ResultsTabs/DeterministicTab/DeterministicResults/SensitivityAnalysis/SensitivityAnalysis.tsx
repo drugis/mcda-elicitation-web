@@ -1,7 +1,7 @@
 import {Grid, Typography} from '@material-ui/core';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import MeasurementSensitivity from './MeasurementSensitivity/MeasurementSensitivity';
 import PreferencesSensitivity from './PreferencesSensitivity/PreferencesSensitivity';
 import {SensitivityAnalysisContext} from './SensitivityAnalysisContext';

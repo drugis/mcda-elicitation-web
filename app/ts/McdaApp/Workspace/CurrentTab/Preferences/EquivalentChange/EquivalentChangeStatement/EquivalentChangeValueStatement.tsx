@@ -4,7 +4,7 @@ import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioCo
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import _ from 'lodash';
-import React, {useContext, useState} from 'react';
+import {MouseEvent, useContext, useState} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 import EquivalentChangeValueInput from './EquivalentChangeInput/EquivalentChangeValueInput';
 
@@ -21,7 +21,7 @@ export default function EquivalentChangeValueStatement() {
     'reference-value-by'
   ) as HTMLButtonElement;
 
-  function openDialog(_event: React.MouseEvent<HTMLButtonElement>): void {
+  function openDialog(_event: MouseEvent<HTMLButtonElement>): void {
     setDialogOpen(true);
   }
 

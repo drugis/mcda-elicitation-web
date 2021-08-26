@@ -2,7 +2,7 @@ import {Distribution, distributionType} from '@shared/interface/IDistribution';
 import {Effect, effectType} from '@shared/interface/IEffect';
 import IInputCellContext from '@shared/interface/IInputCellContext';
 import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 
 export const InputCellContext = createContext<IInputCellContext>(
@@ -37,12 +37,10 @@ export function InputCellContextProviderComponent({
   const [isValidBeta, setIsValidBeta] = useState(false);
   const [isValidEvents, setIsValidEvents] = useState(false);
   const [isValidSampleSize, setIsValidSampleSize] = useState(false);
-  const [isNotEstimableLowerBound, setIsNotEstimableLowerBound] = useState(
-    false
-  );
-  const [isNotEstimableUpperBound, setIsNotEstimableUpperBound] = useState(
-    false
-  );
+  const [isNotEstimableLowerBound, setIsNotEstimableLowerBound] =
+    useState(false);
+  const [isNotEstimableUpperBound, setIsNotEstimableUpperBound] =
+    useState(false);
   const [events, setEvents] = useState<string>('0');
   const [sampleSize, setSampleSize] = useState<string>('1');
 

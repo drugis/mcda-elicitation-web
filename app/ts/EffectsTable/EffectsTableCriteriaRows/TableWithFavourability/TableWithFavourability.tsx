@@ -3,7 +3,6 @@ import ICriterion from '@shared/interface/ICriterion';
 import FavourabilityHeader from 'app/ts/EffectsTable/EffectsTableCriteriaRows/FavourabilityHeader/FavourabilityHeader';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
-import React from 'react';
 
 export default function TableWithFavourability({
   criteria,

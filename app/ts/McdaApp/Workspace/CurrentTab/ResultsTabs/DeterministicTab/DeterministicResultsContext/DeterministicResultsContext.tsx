@@ -13,7 +13,7 @@ import {TProfileCase} from 'app/ts/type/profileCase';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,

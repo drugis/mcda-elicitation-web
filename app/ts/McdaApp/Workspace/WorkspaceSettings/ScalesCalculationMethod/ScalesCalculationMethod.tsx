@@ -6,7 +6,7 @@ import {
   Typography
 } from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
 export default function ScalesCalculationMethod(): JSX.Element {

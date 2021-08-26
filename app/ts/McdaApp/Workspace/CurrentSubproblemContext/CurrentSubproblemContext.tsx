@@ -5,7 +5,7 @@ import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {calculateObservedRanges} from 'app/ts/McdaApp/Workspace/CurrentTab/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router';
 import {SubproblemsContext} from '../SubproblemsContext/SubproblemsContext';
 import {WorkspaceContext} from '../WorkspaceContext/WorkspaceContext';

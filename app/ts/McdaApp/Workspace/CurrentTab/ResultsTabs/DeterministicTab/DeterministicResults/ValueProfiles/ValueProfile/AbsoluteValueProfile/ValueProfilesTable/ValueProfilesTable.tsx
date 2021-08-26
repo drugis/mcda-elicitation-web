@@ -11,7 +11,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {calcImportances} from '../../../../../DeterministicResultsUtil';
 
 export default function ValueProfilesTable({

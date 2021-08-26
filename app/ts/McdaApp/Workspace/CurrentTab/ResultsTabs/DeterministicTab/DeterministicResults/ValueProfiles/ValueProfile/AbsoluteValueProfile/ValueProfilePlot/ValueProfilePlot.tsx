@@ -1,7 +1,7 @@
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {generateValuePlotSettings} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsUtil';
 import {ChartConfiguration, generate} from 'c3';
-import React, {useContext, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 
 export default function ValueProfilePlot({
   profileCase,

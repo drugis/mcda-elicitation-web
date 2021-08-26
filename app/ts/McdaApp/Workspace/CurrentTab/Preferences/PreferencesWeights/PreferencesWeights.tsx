@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
 import PreferencesWeightsButtons from './PreferencesWeightsButtons/PreferencesWeightsButtons';
 import PreferencesWeightsTable from './PreferencesWeightsTable/PreferencesWeightsTable';

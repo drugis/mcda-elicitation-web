@@ -3,7 +3,7 @@ import Select from '@material-ui/core/Select';
 import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {ChangeEvent} from 'react';
+import {ChangeEvent} from 'react';
 import {useHistory, useParams} from 'react-router';
 import {TTab} from '../../TabBar/TTab';
 

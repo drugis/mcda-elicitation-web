@@ -10,7 +10,7 @@ import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import IAlternative from '@shared/interface/IAlternative';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, KeyboardEvent, useContext} from 'react';
 
 export default function LegendTable({
   newTitles,
@@ -18,7 +18,7 @@ export default function LegendTable({
   handleLegendChange
 }: {
   newTitles: Record<string, string>;
-  handleKey: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  handleKey: (event: KeyboardEvent<HTMLDivElement>) => void;
   handleLegendChange: (
     alternativeId: string,
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -9,7 +9,7 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import {isLinkValid} from 'app/ts/McdaApp/ManualInput/ManualInputUtil/ManualInputUtil';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import keycode from 'keycode';
-import React, {ChangeEvent, KeyboardEvent, useContext, useState} from 'react';
+import {ChangeEvent, KeyboardEvent, useContext, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 
 export default function ReferenceDialog({

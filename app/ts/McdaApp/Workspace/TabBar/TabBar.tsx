@@ -1,7 +1,7 @@
 import {AppBar, Tab, Tabs, Tooltip, Typography} from '@material-ui/core';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {TTab} from 'app/ts/McdaApp/Workspace/TabBar/TTab';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {CurrentSubproblemContext} from '../CurrentSubproblemContext/CurrentSubproblemContext';
 import {

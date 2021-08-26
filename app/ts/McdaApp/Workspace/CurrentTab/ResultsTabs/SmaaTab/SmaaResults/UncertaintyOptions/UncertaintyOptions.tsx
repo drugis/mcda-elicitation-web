@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {InlineQuestionMark} from 'help-popup';
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 import {getSmaaWarnings} from '../SmaaResultsUtil';
 

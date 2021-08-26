@@ -1,6 +1,6 @@
 import {Typography} from '@material-ui/core';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function AdvancedPvfStatements() {

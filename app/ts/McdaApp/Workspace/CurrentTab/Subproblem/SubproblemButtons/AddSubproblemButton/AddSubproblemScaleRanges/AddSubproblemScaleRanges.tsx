@@ -1,9 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import ICriterion from '@shared/interface/ICriterion';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import _ from 'lodash';
-import React, {useCallback, useContext} from 'react';
+import {useCallback, useContext} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
 import {
   decreaseSliderLowerBound,

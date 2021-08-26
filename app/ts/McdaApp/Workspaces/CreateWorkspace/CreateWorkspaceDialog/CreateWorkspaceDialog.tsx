@@ -14,7 +14,7 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import _ from 'lodash';
-import React, {ChangeEvent, useCallback, useContext} from 'react';
+import {ChangeEvent, useCallback, useContext} from 'react';
 import IWorkspaceExample from '../../../../../../shared/interface/Workspace/IWorkspaceExample';
 import {CreateWorkspaceContext} from '../CreateWorkspaceContext';
 import {TWorkspaceCreationMethod} from '../TWorkspaceCreationMethod';

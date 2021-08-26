@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import {OurError} from '@shared/interface/IError';
 import IWorkspaceInfo from '@shared/interface/IWorkspaceInfo';
 import Axios, {AxiosResponse} from 'axios';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 import {ErrorContext} from '../../../Error/ErrorContext';
 import {ManualInputContext} from '../ManualInputContext';

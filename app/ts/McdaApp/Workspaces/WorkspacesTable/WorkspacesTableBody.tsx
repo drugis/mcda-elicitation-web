@@ -1,7 +1,7 @@
 import {TableBody} from '@material-ui/core';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import _ from 'lodash';
-import React from 'react';
+import {ElementType} from 'react';
 
 export default function WorkspacesTableBody<
   T extends IInProgressWorkspaceProperties
@@ -11,7 +11,7 @@ export default function WorkspacesTableBody<
   deleteLocalWorkspace
 }: {
   workspaces: T[];
-  RowComponent: React.ElementType;
+  RowComponent: ElementType;
   deleteLocalWorkspace: (id: string) => void;
 }): JSX.Element {
   return (

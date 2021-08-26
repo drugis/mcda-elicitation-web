@@ -7,7 +7,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import {SubproblemsContext} from 'app/ts/McdaApp/Workspace/SubproblemsContext/SubproblemsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,
@@ -42,9 +42,8 @@ export const AddSubproblemContext = createContext<IAddSubproblemContext>(
 );
 
 export function AddSubproblemContextProviderComponent(props: {children: any}) {
-  const {alternatives, workspace, criteria, scales} = useContext(
-    WorkspaceContext
-  );
+  const {alternatives, workspace, criteria, scales} =
+    useContext(WorkspaceContext);
   const {observedRanges: initialObservedRanges, currentSubproblem} = useContext(
     CurrentSubproblemContext
   );
@@ -400,7 +399,8 @@ export function AddSubproblemContextProviderComponent(props: {children: any}) {
         addSubproblem: addSubproblemWrapper,
         getIncludedDataSourceForCriterion,
         getSliderRangeForDS,
-        isAlternativeDeselectionDisabled: isAlternativeDeselectionDisabledWrapper,
+        isAlternativeDeselectionDisabled:
+          isAlternativeDeselectionDisabledWrapper,
         isAlternativeExcluded,
         isCriterionExcluded,
         isDataSourceDeselectionDisabled: isDataSourceDeselectionDisabledWrapper,

@@ -1,15 +1,19 @@
 import TextField from '@material-ui/core/TextField';
 import _ from 'lodash';
-import React, {useCallback, useContext, useRef, useState} from 'react';
+import {
+  MutableRefObject,
+  useCallback,
+  useContext,
+  useRef,
+  useState
+} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function ManualInputTherapeuticContext() {
-  const {therapeuticContext, updateTherapeuticContext} = useContext(
-    ManualInputContext
-  );
-  const [localTherapeuticContext, setLocalTherapeuticContext] = useState(
-    therapeuticContext
-  );
+  const {therapeuticContext, updateTherapeuticContext} =
+    useContext(ManualInputContext);
+  const [localTherapeuticContext, setLocalTherapeuticContext] =
+    useState(therapeuticContext);
 
   function handleContextChange(event: {target: {value: string}}) {
     setLocalTherapeuticContext(event.target.value);
@@ -25,7 +29,7 @@ export default function ManualInputTherapeuticContext() {
     []
   );
 
-  const debouncedFunctionRef: React.MutableRefObject<
+  const debouncedFunctionRef: MutableRefObject<
     (newTherapeuticContext: string) => void
   > = useRef((newTherapeuticContext: string) =>
     updateTherapeuticContext(newTherapeuticContext)

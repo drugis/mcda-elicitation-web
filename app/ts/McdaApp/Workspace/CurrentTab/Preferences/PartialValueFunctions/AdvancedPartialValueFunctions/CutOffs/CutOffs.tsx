@@ -6,7 +6,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
-import React, {ElementType, useContext} from 'react';
+import {ChangeEvent, ElementType, useContext} from 'react';
 import {getColorForIndex} from '../../PartialValueFunctionUtil';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
@@ -37,7 +37,7 @@ export default function CutOffs(): JSX.Element {
   };
 
   function handleSliderChanged(
-    event: React.ChangeEvent<any>,
+    _event: ChangeEvent<any>,
     newValue: [number, number, number]
   ) {
     setCutoffs(_.sortBy(newValue) as [number, number, number]);

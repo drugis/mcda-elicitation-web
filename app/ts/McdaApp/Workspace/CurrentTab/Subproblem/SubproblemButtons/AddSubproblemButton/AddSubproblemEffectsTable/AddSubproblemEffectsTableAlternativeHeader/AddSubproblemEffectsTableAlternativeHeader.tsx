@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import TableCell from '@material-ui/core/TableCell';
 import IAlternative from '@shared/interface/IAlternative';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 import InclusionCell from '../InclusionCell/InclusionCell';
 

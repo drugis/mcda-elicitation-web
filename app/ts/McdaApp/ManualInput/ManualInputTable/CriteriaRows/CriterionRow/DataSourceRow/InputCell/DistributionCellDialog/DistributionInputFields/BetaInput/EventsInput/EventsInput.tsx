@@ -1,12 +1,11 @@
 import {Grid, TextField, Typography} from '@material-ui/core';
 import {getEventsError} from 'app/ts/McdaApp/ManualInput/CellValidityService/CellValidityService';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {InputCellContext} from '../../../../InputCellContext/InputCellContext';
 
 export default function EventsInput(): JSX.Element {
-  const {events, sampleSize, setEvents, setIsValidEvents} = useContext(
-    InputCellContext
-  );
+  const {events, sampleSize, setEvents, setIsValidEvents} =
+    useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
 
   useEffect(validateInput, [events, sampleSize]);

@@ -2,7 +2,7 @@ import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import EffectsTableCriterionDescriptionCell from './EffectsTableCriterionDescriptionCell/EffectsTableCriterionDescriptionCell';
 import EffectsTableCriterionTitleCell from './EffectsTableCriterionTitleCell/EffectsTableCriterionTitleCell';
 import EffectTableDataSourceCells from './EffectTableDataSourceCells/EffectTableDataSourceCells';

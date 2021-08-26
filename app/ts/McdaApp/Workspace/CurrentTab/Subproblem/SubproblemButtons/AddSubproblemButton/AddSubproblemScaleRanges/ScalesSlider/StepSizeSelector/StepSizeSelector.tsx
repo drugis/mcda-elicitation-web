@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {AddSubproblemContext} from '../../../AddSubproblemContext';
 
 export default function StepSizeSelector({criterion}: {criterion: ICriterion}) {

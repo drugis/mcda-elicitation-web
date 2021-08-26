@@ -4,7 +4,7 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function EffectsTableUnitOfMeasurementCell({
   dataSource,

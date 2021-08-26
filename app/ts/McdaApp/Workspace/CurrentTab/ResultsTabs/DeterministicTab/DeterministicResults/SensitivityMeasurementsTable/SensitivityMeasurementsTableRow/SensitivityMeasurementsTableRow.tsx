@@ -7,7 +7,7 @@ import EffectsTableStrengthsAndUncertainties from 'app/ts/EffectsTable/EffectsTa
 import EffectsTableUnitOfMeasurementCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/EffectsTableUnitOfMeasurementCell/EffectsTableUnitOfMeasurementCell';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import SensitivityMeasurementsTableCell from './SensitivityMeasurementsTableCell/SensitivityMeasurementsTableCell';
 
 export default function SensitivityMeasurementsTableRow({

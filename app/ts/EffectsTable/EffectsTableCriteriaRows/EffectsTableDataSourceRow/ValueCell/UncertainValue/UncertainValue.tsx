@@ -1,5 +1,4 @@
 import {textCenterStyle, uncertainStyle} from 'app/ts/McdaApp/styles';
-import React from 'react';
 
 export default function UncertainValue({
   value,

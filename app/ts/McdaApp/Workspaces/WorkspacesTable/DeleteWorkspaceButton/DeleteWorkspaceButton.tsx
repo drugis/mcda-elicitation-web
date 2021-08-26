@@ -16,7 +16,7 @@ import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {alertStyle} from 'app/ts/McdaApp/styles';
 import {TWorkspaceType} from 'app/ts/McdaApp/Workspaces/TWorkspaceType';
 import Axios from 'axios';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 
 export default function DeleteWorkspaceButton({
   type,

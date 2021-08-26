@@ -3,7 +3,6 @@ import IScale from '@shared/interface/IScale';
 import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import React from 'react';
 import UncertainValue from '../UncertainValue/UncertainValue';
 
 export default function NMACell({

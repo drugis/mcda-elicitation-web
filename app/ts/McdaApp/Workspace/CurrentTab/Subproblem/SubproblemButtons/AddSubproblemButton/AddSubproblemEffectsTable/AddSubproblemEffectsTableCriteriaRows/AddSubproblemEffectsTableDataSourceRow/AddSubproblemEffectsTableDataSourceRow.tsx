@@ -2,7 +2,6 @@ import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import React from 'react';
 import AddSubproblemCriterionCells from './AddSubproblemCriterionCells/AddSubproblemCriterionCells';
 import AddSubproblemDataSourceCells from './AddSubproblemDataSourceCells/AddSubproblemDataSourceCells';
 

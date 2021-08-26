@@ -12,7 +12,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import IUser from '@shared/interface/User/IUser';
 import Cookies from 'js-cookie';
-import React, {CSSProperties} from 'react';
+import {cloneElement, CSSProperties} from 'react';
 import {Link} from 'react-router-dom';
 
 const menuItemStyle: CSSProperties = {
@@ -28,7 +28,7 @@ function ElevationScroll({children}: {children: any}) {
     threshold: 0
   });
 
-  return React.cloneElement(children, {
+  return cloneElement(children, {
     elevation: trigger ? 4 : 0
   });
 }

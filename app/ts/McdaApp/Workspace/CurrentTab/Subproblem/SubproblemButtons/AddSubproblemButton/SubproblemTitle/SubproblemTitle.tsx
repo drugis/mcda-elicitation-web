@@ -1,5 +1,5 @@
 import TextField from '@material-ui/core/TextField';
-import React, {ChangeEvent, KeyboardEvent, useContext} from 'react';
+import {ChangeEvent, KeyboardEvent, useContext} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
 
 export default function SubproblemTitle({

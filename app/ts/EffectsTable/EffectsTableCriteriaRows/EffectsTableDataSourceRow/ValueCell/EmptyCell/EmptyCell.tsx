@@ -1,7 +1,6 @@
 import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import React from 'react';
 
 export default function EmptyCell({
   dataSourceId,

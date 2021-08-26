@@ -8,7 +8,7 @@ import {
 import {TValueProfile} from '@shared/types/TValueProfile';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 import ValueProfile from './ValueProfile/ValueProfile';
 

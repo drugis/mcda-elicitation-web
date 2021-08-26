@@ -1,5 +1,4 @@
 import {Button} from '@material-ui/core';
-import React from 'react';
 // @ts-ignore
 import {downloadPng} from 'svg-crowbar';
 

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';
 import CentralWeights from '../CentralWeights/CentralWeights';
 import RankAcceptabilities from '../RankAcceptabilities/RankAcceptabilities';

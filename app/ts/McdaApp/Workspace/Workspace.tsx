@@ -2,7 +2,7 @@ import {Grid} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {ErrorContext} from '../../Error/ErrorContext';
 import {CurrentScenarioContextProviderComponent} from './CurrentScenarioContext/CurrentScenarioContext';

@@ -3,7 +3,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import TrendingUp from '@material-ui/icons/TrendingUp';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function PartialValueFunctionButtons({
   criterionId

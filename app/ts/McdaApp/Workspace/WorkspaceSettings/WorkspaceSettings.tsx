@@ -1,6 +1,6 @@
 import {Button, Tooltip} from '@material-ui/core';
 import Settings from '@material-ui/icons/Settings';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {WorkspaceSettingsContextProviderComponent} from './WorkspaceSettingsContext/WorkspaceSettingsContext';
 import WorkspaceSettingsDialog from './WorkspaceSettingsDialog/WorkspaceSettingsDialog';
 

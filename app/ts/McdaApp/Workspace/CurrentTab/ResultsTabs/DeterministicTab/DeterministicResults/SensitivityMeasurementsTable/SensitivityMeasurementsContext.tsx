@@ -3,7 +3,7 @@ import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import _ from 'lodash';
-import React, {createContext, useContext, useState} from 'react';
+import {createContext, useContext, useState} from 'react';
 import {DeterministicResultsContext} from '../../DeterministicResultsContext/DeterministicResultsContext';
 import {getInitialSensitivityValues} from '../../DeterministicResultsUtil';
 import ISensitivityMeasurementsContext from './ISensitivityMeasurementsContext';

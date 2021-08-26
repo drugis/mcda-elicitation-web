@@ -1,13 +1,12 @@
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {InlineQuestionMark} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function Favourability() {
-  const {useFavourability, updateUseFavourability} = useContext(
-    ManualInputContext
-  );
+  const {useFavourability, updateUseFavourability} =
+    useContext(ManualInputContext);
 
   function handleChangeFavourability() {
     updateUseFavourability(!useFavourability);

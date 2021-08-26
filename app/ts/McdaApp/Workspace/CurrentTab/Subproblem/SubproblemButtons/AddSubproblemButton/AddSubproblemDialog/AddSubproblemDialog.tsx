@@ -9,7 +9,7 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {InlineHelp} from 'help-popup';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {EffectsTableContextProviderComponent} from '../../../../../../../EffectsTable/EffectsTableContext';
 import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTable from '../AddSubproblemEffectsTable/AddSubproblemEffectsTable';

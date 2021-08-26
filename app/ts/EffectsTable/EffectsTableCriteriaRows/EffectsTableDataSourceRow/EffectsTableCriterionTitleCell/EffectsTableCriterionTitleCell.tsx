@@ -1,7 +1,6 @@
 import TableCell from '@material-ui/core/TableCell';
 import ICriterion from '@shared/interface/ICriterion';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import React from 'react';
 
 export default function EffectsTableCriterionTitleCell({
   criterion,

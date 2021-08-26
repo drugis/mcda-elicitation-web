@@ -8,7 +8,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
 import _ from 'lodash';
-import React, {useContext, useMemo} from 'react';
+import {useContext, useMemo} from 'react';
 import {SensitivityMeasurementsContext} from '../../SensitivityMeasurementsContext';
 
 export default function SensitivityMeasurementsTableCell({

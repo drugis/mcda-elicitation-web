@@ -2,15 +2,14 @@ import ISettings from '@shared/interface/Settings/ISettings';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getDefaultSettings} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsUtil';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import IWorkspaceSettingsContext, {
   TSettings,
   TTogglableColumns
 } from './IWorkspaceSettingsContext';
 
-export const WorkspaceSettingsContext = createContext<IWorkspaceSettingsContext>(
-  {} as IWorkspaceSettingsContext
-);
+export const WorkspaceSettingsContext =
+  createContext<IWorkspaceSettingsContext>({} as IWorkspaceSettingsContext);
 
 export function WorkspaceSettingsContextProviderComponent({
   children,
@@ -28,13 +27,10 @@ export function WorkspaceSettingsContextProviderComponent({
   } = useContext(SettingsContext);
 
   const [localSettings, setLocalSettings] = useState<ISettings>(settings);
-  const [
-    localToggledColumns,
-    setLocalToggledColumns
-  ] = useState<IToggledColumns>(toggledColumns);
-  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState<boolean>(
-    false
-  );
+  const [localToggledColumns, setLocalToggledColumns] =
+    useState<IToggledColumns>(toggledColumns);
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (isDialogOpen) {

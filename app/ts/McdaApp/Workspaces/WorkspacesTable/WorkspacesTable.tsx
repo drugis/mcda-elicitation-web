@@ -9,7 +9,7 @@ import {
 import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import useSorting from 'app/ts/McdaApp/Workspaces/workspacesUtil/useSorting';
 import _ from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {WorkspacesContext} from '../WorkspacesContext/WorkspacesContext';
 import WorkspacesTableBody from './WorkspacesTableBody';
 import WorkspacesTableRow from './WorkspacesTableRow/WorkspacesTableRow';

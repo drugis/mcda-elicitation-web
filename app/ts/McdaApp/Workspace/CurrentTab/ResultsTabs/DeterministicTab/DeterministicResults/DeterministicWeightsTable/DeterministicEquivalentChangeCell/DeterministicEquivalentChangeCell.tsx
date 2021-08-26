@@ -7,7 +7,7 @@ import {
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
-import React, {MouseEvent, useContext, useState} from 'react';
+import {MouseEvent, useContext, useState} from 'react';
 import {DeterministicWeightsContext} from '../DeterministicWeightsContext';
 import {getDeterministicEquivalentChangeLabel} from '../deterministicWeightsUtil';
 import DeterministicEquivalentChangePopover from './DeterministicEquivalentChangePopover';

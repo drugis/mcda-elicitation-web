@@ -1,5 +1,5 @@
 import Checkbox from '@material-ui/core/Checkbox';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 export default function InclusionCell({
   itemId,

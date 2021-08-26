@@ -1,10 +1,10 @@
 import Grid from '@material-ui/core/Grid';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {ChartConfiguration, generate} from 'c3';
 import {selectAll} from 'd3';
-import React, {useContext, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {
   generatePlotSettings,
   getPvfCoordinates

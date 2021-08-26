@@ -2,7 +2,6 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUp from '@material-ui/icons/ArrowDropUp';
-import React from 'react';
 import {DUMMY_ID} from '../ManualInput/manualInputConstants';
 
 export default function MoveUpDownButtons({

@@ -1,5 +1,5 @@
 import {Grid, Popover, Slider, TextField, Typography} from '@material-ui/core';
-import React, {ChangeEvent, CSSProperties, useState} from 'react';
+import {ChangeEvent, CSSProperties, useState} from 'react';
 
 export default function ClickableSliderPopover({
   anchorEl,

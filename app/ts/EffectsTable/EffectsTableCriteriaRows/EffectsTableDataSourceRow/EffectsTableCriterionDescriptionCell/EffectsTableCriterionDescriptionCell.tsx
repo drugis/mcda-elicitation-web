@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function EffectsTableCriterionDescriptionCell({
   criterion,

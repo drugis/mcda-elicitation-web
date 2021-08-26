@@ -8,7 +8,7 @@ import {updateProblemToCurrentSchema} from '@shared/SchemaUtil/SchemaUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,

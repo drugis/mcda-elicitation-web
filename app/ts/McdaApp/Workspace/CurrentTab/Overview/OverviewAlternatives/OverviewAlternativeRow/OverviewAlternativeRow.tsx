@@ -1,8 +1,8 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
-import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import MoveUpDownButtons from 'app/ts/McdaApp/MoveUpDownButtons/MoveUpDownButtons';
-import React, {useContext} from 'react';
+import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import {useContext} from 'react';
 import EditOverviewAlternativeButton from './EditOverviewAlternativeButton/EditOverviewAlternativeButton';
 
 export default function OverviewAlternativeRow({

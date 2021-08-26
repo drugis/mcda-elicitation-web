@@ -1,7 +1,6 @@
 import IAlternative from '@shared/interface/IAlternative';
 import IDataSource from '@shared/interface/IDataSource';
 import _ from 'lodash';
-import React from 'react';
 import EffectsTableReferenceCell from '../EffectsTableReferenceCell/EffectsTableReferenceCell';
 import EffectsTableStrengthsAndUncertainties from '../EffectsTableStrengthsAndUncertainties/EffectsTableStrengthsAndUncertainties';
 import EffectsTableUnitOfMeasurementCell from '../EffectsTableUnitOfMeasurementCell/EffectsTableUnitOfMeasurementCell';
