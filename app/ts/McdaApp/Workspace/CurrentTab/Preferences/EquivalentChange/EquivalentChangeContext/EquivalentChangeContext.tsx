@@ -3,7 +3,7 @@ import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioCo
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,

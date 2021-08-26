@@ -10,7 +10,7 @@ import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {swapItems} from 'app/ts/util/swapUtil';
 import Axios from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {generateUuid} from 'shared/util';
 import {ErrorContext} from '../../Error/ErrorContext';
 import {TableInputMode} from '../../type/tableInputMode';
