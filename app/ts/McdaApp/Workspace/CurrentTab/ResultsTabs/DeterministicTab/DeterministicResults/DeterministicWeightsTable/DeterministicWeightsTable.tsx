@@ -30,7 +30,7 @@ import {DeterministicWeightsContext} from './DeterministicWeightsContext';
 
 export default function DeterministicWeightsTable(): JSX.Element {
   const {resetWeightsTable} = useContext(DeterministicWeightsContext);
-  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
+  const {canShowEquivalentChange} = useContext(EquivalentChangeContext);
 
   return (
     <Grid container>
@@ -47,7 +47,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
           <TableHead>
             <TableRow>
               <ColumnHeaders
-                canShowEquivalentChanges={canShowEquivalentChanges}
+                canShowEquivalentChange={canShowEquivalentChange}
               />
             </TableRow>
           </TableHead>
@@ -68,7 +68,7 @@ export default function DeterministicWeightsTable(): JSX.Element {
 
 function WeightRows(): JSX.Element {
   const {getUsePercentage} = useContext(SettingsContext);
-  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
+  const {canShowEquivalentChange} = useContext(EquivalentChangeContext);
   const {deterministicChangeableWeights, setImportance} = useContext(
     DeterministicWeightsContext
   );
@@ -111,7 +111,7 @@ function WeightRows(): JSX.Element {
                 setImportance(criterion.id, newValue)
               }
             />
-            <ShowIf condition={canShowEquivalentChanges}>
+            <ShowIf condition={canShowEquivalentChange}>
               <DeterministicEquivalentChangeCell criterion={criterion} />
             </ShowIf>
           </TableRow>
@@ -122,9 +122,9 @@ function WeightRows(): JSX.Element {
 }
 
 function ColumnHeaders({
-  canShowEquivalentChanges
+  canShowEquivalentChange
 }: {
-  canShowEquivalentChanges: boolean;
+  canShowEquivalentChange: boolean;
 }): JSX.Element {
   return (
     <>
@@ -134,7 +134,7 @@ function ColumnHeaders({
       <TableCell>Worst</TableCell>
       <TableCell>Weight</TableCell>
       <TableCell>Importance (worst → best)</TableCell>
-      <ShowIf condition={canShowEquivalentChanges}>
+      <ShowIf condition={canShowEquivalentChange}>
         <TableCell>Equivalent change</TableCell>
       </ShowIf>
     </>

@@ -1,5 +1,6 @@
 import {TPreferences} from '@shared/types/preferences';
 import IWeights from '../IWeights';
+import IEquivalentChange from './IEquivalentChange';
 import IScenarioProblem from './IScenarioProblem';
 
 export default interface IScenarioState {
@@ -9,4 +10,5 @@ export default interface IScenarioState {
   uncertaintyOptions?: Record<string, boolean>;
   weights?: IWeights;
   thresholdValuesByCriterion: Record<string, number>;
+  equivalentChange?: IEquivalentChange;
 }

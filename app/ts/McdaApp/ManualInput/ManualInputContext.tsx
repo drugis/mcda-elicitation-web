@@ -10,10 +10,10 @@ import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {swapItems} from 'app/ts/util/swapUtil';
 import Axios from 'axios';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {generateUuid} from 'shared/util';
 import {ErrorContext} from '../../Error/ErrorContext';
-import {TableInputMode} from '../../type/TableInputMode';
+import {TableInputMode} from '../../type/tableInputMode';
 import {
   createDistributions,
   createWarnings,
@@ -49,9 +49,8 @@ export function ManualInputContextProviderComponent({
   const [useFavourability, setUseFavourability] = useState<boolean>(
     message.workspace.useFavourability
   );
-  const [tableInputMode, setTableInputMode] = useState<TableInputMode>(
-    'effect'
-  );
+  const [tableInputMode, setTableInputMode] =
+    useState<TableInputMode>('effect');
   const [criteria, setCriteria] = useState<ICriterion[]>(
     replaceUndefinedBounds(message.criteria)
   );
@@ -430,9 +429,8 @@ export function ManualInputContextProviderComponent({
     if (!distributionsCopy[distribution.dataSourceId]) {
       distributionsCopy[distribution.dataSourceId] = {};
     }
-    distributionsCopy[distribution.dataSourceId][
-      distribution.alternativeId
-    ] = distribution;
+    distributionsCopy[distribution.dataSourceId][distribution.alternativeId] =
+      distribution;
     updateCell(distribution, 'distribution');
     setDistributions(distributionsCopy);
   }

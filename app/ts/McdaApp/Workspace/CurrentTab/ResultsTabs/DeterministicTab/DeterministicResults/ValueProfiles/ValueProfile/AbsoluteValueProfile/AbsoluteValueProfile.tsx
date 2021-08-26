@@ -4,7 +4,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import {TProfileCase} from 'app/ts/type/ProfileCase';
+import {TProfileCase} from 'app/ts/type/profileCase';
 import React, {useContext, useEffect, useState} from 'react';
 import {pataviResultToAbsoluteValueProfile} from '../../../../DeterministicResultsUtil';
 import TotalValueTable from './TotalValueTable/TotalValueTable';

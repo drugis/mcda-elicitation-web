@@ -1,4 +1,4 @@
-import {TProfileCase} from 'app/ts/type/ProfileCase';
+import {TProfileCase} from 'app/ts/type/profileCase';
 import React, {useContext} from 'react';
 import {DeterministicResultsContext} from '../../../DeterministicResultsContext/DeterministicResultsContext';
 import AbsoluteValueProfile from './AbsoluteValueProfile/AbsoluteValueProfile';

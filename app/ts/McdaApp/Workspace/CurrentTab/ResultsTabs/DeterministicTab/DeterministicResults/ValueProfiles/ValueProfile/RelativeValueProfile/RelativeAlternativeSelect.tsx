@@ -1,7 +1,7 @@
 import {Grid, Select, Typography} from '@material-ui/core';
 import IAlternative from '@shared/interface/IAlternative';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import {TProfileCase} from 'app/ts/type/ProfileCase';
+import {TProfileCase} from 'app/ts/type/profileCase';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import {DeterministicResultsContext} from '../../../../DeterministicResultsContext/DeterministicResultsContext';
