@@ -6,10 +6,7 @@ import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
 import {
   getEquivalentChange,
   getEquivalentChangeValue,
-  getEquivalentRangeValue,
   getPartOfInterval,
-  getReferenceValueFrom,
-  getReferenceValueTo,
   getTheoreticalRange
 } from './equivalentChangeUtil';
 
@@ -23,76 +20,9 @@ describe('equivalentChangeUtil', () => {
     });
   });
 
-  describe('getInitialReferenceValueFrom', () => {
-    it('should return an inital value at 45% of the interval for an increasing pvf', () => {
-      const pvf: ILinearPvf = {
-        range: [0, 1],
-        direction: 'increasing',
-        type: 'linear'
-      };
-      const result = getReferenceValueFrom(0, 1, pvf);
-      expect(result).toEqual(0.25);
-    });
-
-    it('should return an inital value at 55% of the interval for a decreasing pvf', () => {
-      const pvf: ILinearPvf = {
-        range: [0, 1],
-        direction: 'decreasing',
-        type: 'linear'
-      };
-      const result = getReferenceValueFrom(0, 1, pvf);
-      expect(result).toEqual(0.75);
-    });
-  });
-
-  describe('getInitialReferenceValueTo', () => {
-    it('should return an inital value at 55% of the interval for an increasing pvf', () => {
-      const pvf: ILinearPvf = {
-        range: [0, 1],
-        direction: 'increasing',
-        type: 'linear'
-      };
-      const result = getReferenceValueTo(0, 1, pvf);
-      expect(result).toEqual(0.75);
-    });
-
-    it('should return an inital value at 45% of the interval for a decreasing pvf', () => {
-      const pvf: ILinearPvf = {
-        range: [0, 1],
-        direction: 'decreasing',
-        type: 'linear'
-      };
-      const result = getReferenceValueTo(0, 1, pvf);
-      expect(result).toEqual(0.25);
-    });
-  });
-
   const criterionWeight = 0.1;
   const partOfInterval = 0.5;
   const referenceWeight = 0.4;
-  describe('getEquivalentRangeValue', () => {
-    it('should return an improved value given a worst value, considering the weights, and ratio to the reference criterion, for an increasing pvf', () => {
-      const pvf = {range: [0, 1], direction: 'increasing'} as TPvf;
-      const result = getEquivalentRangeValue(
-        criterionWeight,
-        pvf,
-        partOfInterval,
-        referenceWeight
-      );
-      expect(result).toEqual(2);
-    });
-
-    it('should return an improved value given a worst value, considering the weights, and ratio to the reference criterion, for a decreasing pvf', () => {
-      const pvf = {range: [0, 1], direction: 'decreasing'} as TPvf;
-      const result = getEquivalentRangeValue(
-        criterionWeight,
-        pvf,
-        partOfInterval,
-        referenceWeight
-      );
-      expect(result).toEqual(-1);
-    });
-  });
 
   describe('getEquivalentChangeValue', () => {
     it('should return the equivalent change for a second criterion, based on its pvf, a reference change and the relative weights of the criteria, for increasing pvf', () => {

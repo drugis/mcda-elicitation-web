@@ -57,10 +57,7 @@ export function EquivalentChangeContextProviderComponent({
     [areAllPvfsSet, currentScenario.state?.weights, observedRanges, pvfs]
   );
 
-  const canShowEquivalentChange: boolean = useMemo(
-    () => Boolean(equivalentChange),
-    [equivalentChange]
-  );
+  const canShowEquivalentChange: boolean = Boolean(equivalentChange);
 
   const [lowerBound, upperBound]: [number, number] = useMemo(() => {
     return getBounds(

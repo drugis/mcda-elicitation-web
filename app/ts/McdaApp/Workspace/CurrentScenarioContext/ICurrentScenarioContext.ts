@@ -24,6 +24,9 @@ export default interface ICurrentScenarioContext {
   updateEquivalentChange: (
     newEquivalentChange: IEquivalentChange
   ) => Promise<void>;
-  setLinearPvf: (criterionId: string, direction: TPvfDirection) => void;
-  setPvf: (criterionId: string, pvf: TPvf) => void;
+  setLinearPvf: (
+    criterionId: string,
+    direction: TPvfDirection
+  ) => Promise<void>;
+  setPvf: (criterionId: string, pvf: TPvf) => Promise<void>;
 }

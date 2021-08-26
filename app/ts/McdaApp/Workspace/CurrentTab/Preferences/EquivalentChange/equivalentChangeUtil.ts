@@ -20,43 +20,6 @@ export function getReferenceValueBy(
   return (upperBound - lowerBound) / 2;
 }
 
-export function getReferenceValueFrom(
-  lowerBound: number,
-  upperBound: number,
-  pvf: TPvf
-): number {
-  const multiplier = pvf.direction === 'increasing' ? 0.25 : 0.75;
-  return (upperBound - lowerBound) * multiplier + lowerBound;
-}
-
-export function getReferenceValueTo(
-  lowerBound: number,
-  upperBound: number,
-  pvf: TPvf
-): number {
-  const multiplier = pvf.direction === 'increasing' ? 0.75 : 0.25;
-  return (upperBound - lowerBound) * multiplier + lowerBound;
-}
-
-export function getEquivalentRangeValue(
-  criterionWeight: number,
-  pvf: TPvf,
-  partOfInterval: number,
-  referenceWeight: number
-): number {
-  const change = getEquivalentChangeValue(
-    criterionWeight,
-    pvf,
-    partOfInterval,
-    referenceWeight
-  );
-  if (pvf.direction === 'increasing') {
-    return pvf.range[0] + change;
-  } else {
-    return pvf.range[1] - change;
-  }
-}
-
 export function getEquivalentChangeValue(
   criterionWeight: number,
   pvf: TPvf,
@@ -65,25 +28,6 @@ export function getEquivalentChangeValue(
 ): number {
   const interval = pvf.range[1] - pvf.range[0];
   return (referenceWeight / criterionWeight) * partOfInterval * interval;
-}
-
-export function increaseSliderRange(
-  currentUpperValue: number,
-  stepSize: number,
-  unit: IUnitOfMeasurement
-): number {
-  const theoreticalUpper = unit.type === 'custom' ? unit.upperBound : 1;
-  const limit = _.isNull(theoreticalUpper) ? Infinity : theoreticalUpper;
-  const newTo = significantDigits(currentUpperValue + stepSize * 10);
-  return Math.min(newTo, limit);
-}
-
-export function isSliderExtenderDisabled(
-  currentUpperValue: number,
-  unit: IUnitOfMeasurement
-): boolean {
-  const theoreticalUpper = unit.type === 'custom' ? unit.upperBound : 1;
-  return currentUpperValue === theoreticalUpper;
 }
 
 export function getTheoreticalRange(
