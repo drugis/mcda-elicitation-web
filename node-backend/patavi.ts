@@ -36,6 +36,7 @@ export function postAndHandleResults(
       const client = new WebSocketClient();
       client.on('connectFailed', _.partial(failedConnectionCallback, callback));
       client.on('connect', _.partial(successfullConnectionCallback, callback));
+      logger.debug('connecting to websocket at ' + updatesUrl);
       client.connect(updatesUrl);
     })
     .catch((error: AxiosError) => {
@@ -95,6 +96,8 @@ function handleMessage(
     Axios.get(messageData.eventData.href).then((resultsResponse: any) => {
       callback(null, resultsResponse.data);
     });
+  } else if (messageData.eventType.startsWith('progres')) {
+    // ignore progress messages
   } else {
     errorHandler(
       `Patavi returned event type: ${messageData.eventType}`,
