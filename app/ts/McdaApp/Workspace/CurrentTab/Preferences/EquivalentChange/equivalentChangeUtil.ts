@@ -2,7 +2,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
-import significantDigits from 'app/ts/util/significantDigits';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
 import _ from 'lodash';
 import {hasNoRange} from '../../../CurrentSubproblemContext/SubproblemUtil';
 
@@ -73,4 +73,17 @@ export function getBounds(
   } else {
     return configuredRanges[dataSourceId];
   }
+}
+
+export function getEquivalentChangeByThreshold(
+  scenario: IMcdaScenario,
+  bounds: [number, number]
+): IEquivalentChange {
+  const referenceCriterionId = scenario.state.prefs[0].criteria[0];
+  const by = scenario.state.thresholdValuesByCriterion[referenceCriterionId];
+  return {
+    by,
+    referenceCriterionId: referenceCriterionId,
+    partOfInterval: getPartOfInterval(by, bounds)
+  };
 }
