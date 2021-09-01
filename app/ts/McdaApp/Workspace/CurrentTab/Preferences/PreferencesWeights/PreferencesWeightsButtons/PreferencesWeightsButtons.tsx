@@ -88,7 +88,13 @@ export default function PreferencesWeightsButtons() {
           Imprecise Swing Weighting
         </Button>
       </Tooltip>
-      <Tooltip title="Saving this preference will reset all criteria trade-off preferences">
+      <Tooltip
+        title={
+          isThresholdElicitationDisabled
+            ? ''
+            : 'Saving this preference will reset all criteria trade-off preferences'
+        }
+      >
         <Button
           id="threshold-button"
           onClick={handleThresholdClick}
