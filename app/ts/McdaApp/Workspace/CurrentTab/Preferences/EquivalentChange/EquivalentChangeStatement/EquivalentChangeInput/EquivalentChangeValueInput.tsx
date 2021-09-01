@@ -1,8 +1,10 @@
 import {Grid, InputAdornment, Popover, TextField} from '@material-ui/core';
+import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
+import significantDigits from 'app/ts/util/significantDigits';
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {EquivalentChangeContext} from '../../EquivalentChangeContext/EquivalentChangeContext';
 import {getTheoreticalRange} from '../../equivalentChangeUtil';
@@ -32,15 +34,16 @@ export default function EquivalentChangeValueInput({
       : stepSizesByCriterion[referenceCriterion.id]
   );
   const [localValue, setLocalValue] = useState<number>(
-    usePercentage ? equivalentChange.by * 100 : equivalentChange.by
+    getPercentifiedValue(equivalentChange.by, usePercentage)
   );
   const [minValue, maxValue] = getTheoreticalRange(unit, usePercentage);
 
   useEffect(() => {
     setStepSize(
-      usePercentage
-        ? stepSizesByCriterion[referenceCriterion.id] * 100
-        : stepSizesByCriterion[referenceCriterion.id]
+      getPercentifiedValue(
+        stepSizesByCriterion[referenceCriterion.id],
+        usePercentage
+      )
     );
   }, [referenceCriterion.id, stepSizesByCriterion, usePercentage]);
 
@@ -58,12 +61,14 @@ export default function EquivalentChangeValueInput({
     } else {
       setInputError('');
     }
-    setLocalValue(newValue);
+    setLocalValue(significantDigits(newValue));
   }
 
   function handleCloseDialog() {
     if (!inputError) {
-      updateReferenceValueBy(usePercentage ? localValue / 100 : localValue);
+      updateReferenceValueBy(
+        significantDigits(usePercentage ? localValue / 100 : localValue)
+      );
     }
     closeDialog();
   }
