@@ -101,6 +101,8 @@ jobs:
           MCDAWEB_COOKIE_SECRET: abc
           MCDA_HOST: localhost
           PATAVI_HOST: localhost
+          PATAVI_PORT: 3000
+          SECURE_TRAFFIC: false
           PATAVI_API_KEY: ${{ secrets.pataviApiKeyTest }}
 
       - name: run nightwatch tests
