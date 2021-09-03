@@ -14,6 +14,7 @@ import {
 import {
   getBounds,
   getEquivalentChange,
+  getEquivalentChangeByThreshold,
   getPartOfInterval
 } from '../equivalentChangeUtil';
 import IEquivalentChangeContext from './IEquivalentChangeContext';
@@ -30,7 +31,9 @@ export function EquivalentChangeContextProviderComponent({
   const {filteredCriteria, observedRanges} = useContext(
     CurrentSubproblemContext
   );
-  const {currentSubproblem} = useContext(CurrentSubproblemContext);
+  const {currentSubproblem, getCriterion} = useContext(
+    CurrentSubproblemContext
+  );
   const {
     currentScenario,
     equivalentChange,
@@ -71,14 +74,43 @@ export function EquivalentChangeContextProviderComponent({
     referenceCriterion.dataSources
   ]);
 
+  const getThresholdDefault = useCallback(() => {
+    const dataSourceId = getCriterion(
+      currentScenario.state.prefs[0].criteria[0]
+    ).dataSources[0].id;
+    const bounds = getBounds(
+      dataSourceId,
+      currentSubproblem.definition.ranges,
+      observedRanges
+    );
+    return getEquivalentChangeByThreshold(currentScenario, bounds);
+  }, [
+    currentScenario,
+    currentSubproblem.definition.ranges,
+    getCriterion,
+    observedRanges
+  ]);
+
   const setDefaultEquivalentChange = useCallback(() => {
-    const newReferenceCriterion = filteredCriteria[0];
-    const defaultEquivalentChange = getEquivalentChange(newReferenceCriterion, [
-      lowerBound,
-      upperBound
-    ]);
-    updateEquivalentChange(defaultEquivalentChange);
-  }, [filteredCriteria, lowerBound, updateEquivalentChange, upperBound]);
+    if (currentScenario.state.prefs[0]?.elicitationMethod === 'threshold') {
+      const thresholdEquivalentChange = getThresholdDefault();
+      updateEquivalentChange(thresholdEquivalentChange);
+    } else {
+      const newReferenceCriterion = filteredCriteria[0];
+      const defaultEquivalentChange = getEquivalentChange(
+        newReferenceCriterion,
+        [lowerBound, upperBound]
+      );
+      updateEquivalentChange(defaultEquivalentChange);
+    }
+  }, [
+    currentScenario.state.prefs,
+    filteredCriteria,
+    getThresholdDefault,
+    lowerBound,
+    updateEquivalentChange,
+    upperBound
+  ]);
 
   const initialise = useCallback(() => {
     const initialOtherCriteria = _.reject(filteredCriteria, [
@@ -120,7 +152,7 @@ export function EquivalentChangeContextProviderComponent({
   }
 
   function reset(): void {
-    updateReferenceCriterion(filteredCriteria[0].id);
+    setDefaultEquivalentChange();
   }
 
   function updateReferenceValueBy(newValue: number) {

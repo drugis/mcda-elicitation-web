@@ -82,16 +82,18 @@ export function buildScenarioWithPreferences(
   preferences: TPreferences,
   thresholdValuesByCriterion: Record<string, number>
 ): IMcdaScenario {
+  const currentState = scenario.state;
   const newState: IScenarioState = {
-    ..._.omit(scenario.state, [
-      'weights',
-      'prefs',
-      'thresholdValuesByCriterion'
-    ]),
+    problem: currentState.problem,
+    legend: currentState.legend,
+    uncertaintyOptions: currentState.uncertaintyOptions,
     prefs: preferences,
     thresholdValuesByCriterion: _.isEmpty(thresholdValuesByCriterion)
       ? {}
-      : thresholdValuesByCriterion
+      : thresholdValuesByCriterion,
+    equivalentChange: _.isEmpty(thresholdValuesByCriterion)
+      ? currentState.equivalentChange
+      : undefined
   };
   return {..._.omit(scenario, ['state']), state: newState};
 }
@@ -213,6 +215,7 @@ export function calculateWeightsFromPreferences(
     throw 'Cannot calculate weights from set preferences';
   }
 }
+
 function isRankingPreferences(
   preferences: TPreferences
 ): preferences is IRanking[] {

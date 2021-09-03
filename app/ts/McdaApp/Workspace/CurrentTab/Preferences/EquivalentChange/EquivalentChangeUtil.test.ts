@@ -1,10 +1,14 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import {TPvf} from '@shared/interface/Problem/IPvf';
-import {ILinearPvf} from '@shared/interface/Pvfs/ILinearPvf';
 import IEquivalentChange from '@shared/interface/Scenario/IEquivalentChange';
+import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
+import IMcdaScenario from '@shared/interface/Scenario/IMcdaScenario';
+import IScenarioState from '@shared/interface/Scenario/IScenarioState';
+import {TPreferences} from '@shared/types/preferences';
 import {
   getEquivalentChange,
+  getEquivalentChangeByThreshold,
   getEquivalentChangeValue,
   getPartOfInterval,
   getTheoreticalRange
@@ -130,6 +134,31 @@ describe('equivalentChangeUtil', () => {
         referenceCriterionId: 'crit1',
         by: 0.5,
         partOfInterval: 0.5
+      };
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('getEquivalentChangeByThreshold', () => {
+    it('should return equivalent change initialized using threshold values', () => {
+      const thresholdValuesByCriterion: Record<string, number> = {
+        refId: 1,
+        notRefId: 15
+      };
+      const prefs: TPreferences = [
+        {criteria: ['refId', 'notRefId']} as IExactSwingRatio
+      ];
+      const state = {
+        thresholdValuesByCriterion,
+        prefs
+      } as IScenarioState;
+      const scenario = {state} as IMcdaScenario;
+      const bounds: [number, number] = [5, 15];
+      const result = getEquivalentChangeByThreshold(scenario, bounds);
+      const expectedResult: IEquivalentChange = {
+        by: 1,
+        partOfInterval: 0.1,
+        referenceCriterionId: 'refId'
       };
       expect(result).toEqual(expectedResult);
     });
