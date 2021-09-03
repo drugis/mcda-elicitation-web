@@ -6,7 +6,8 @@ export = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Equivalent value changes': equivalentValueChangeTest,
-  'Changing reference criterion': changeReferenceCriterion
+  'Changing reference criterion': changeReferenceCriterion,
+  'Use threshold elicitation for default': threshold
 };
 
 function beforeEach(browser: NightwatchBrowser) {
@@ -37,6 +38,7 @@ function equivalentValueChangeTest(browser: NightwatchBrowser) {
     .click('#reference-value-by')
     .waitForElementVisible('#value-input')
     .clearValue('#value-input')
+    .pause(1000)
     .setValue('#value-input', '10')
     .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
@@ -87,4 +89,23 @@ function performEqualSwing(browser: NightwatchBrowser) {
     .click('#next-button')
     .click('#save-button')
     .waitForElementVisible('#equivalent-change-basis');
+}
+
+function threshold(browser: NightwatchBrowser) {
+  browser
+    .waitForElementVisible('#threshold-button')
+    .click('#threshold-button')
+    .waitForElementVisible('#threshold-elicitation-title-header')
+    .click('#threshold-reference-criterion-selector')
+    .click('#threshold-reference-criterion-selector > option[value=Nausea]')
+    .click('#worsening')
+    .waitForElementVisible('#improvement-or-worsening-radio')
+    .waitForElementVisible('#input-reference-value')
+    .click('#next-button')
+    .waitForElementVisible('#threshold-elicitation-statement')
+    .click('#save-button')
+    .waitForElementVisible('#reference-value-by > span:nth-child(1)')
+    .expect.element('#reference-value-by > span:nth-child(1)')
+    .text.to.equal('10');
+  checkEqualValueValues(browser, 10);
 }

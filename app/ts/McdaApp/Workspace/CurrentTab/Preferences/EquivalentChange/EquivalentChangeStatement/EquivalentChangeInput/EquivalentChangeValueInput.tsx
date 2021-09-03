@@ -61,7 +61,7 @@ export default function EquivalentChangeValueInput({
     } else {
       setInputError('');
     }
-    setLocalValue(significantDigits(newValue));
+    setLocalValue(newValue);
   }
 
   function handleCloseDialog() {

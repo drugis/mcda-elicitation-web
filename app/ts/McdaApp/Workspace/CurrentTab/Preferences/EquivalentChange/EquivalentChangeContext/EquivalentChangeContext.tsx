@@ -92,7 +92,7 @@ export function EquivalentChangeContextProviderComponent({
   ]);
 
   const setDefaultEquivalentChange = useCallback(() => {
-    if (currentScenario.state.prefs[0].elicitationMethod === 'threshold') {
+    if (currentScenario.state.prefs[0]?.elicitationMethod === 'threshold') {
       const thresholdEquivalentChange = getThresholdDefault();
       updateEquivalentChange(thresholdEquivalentChange);
     } else {
