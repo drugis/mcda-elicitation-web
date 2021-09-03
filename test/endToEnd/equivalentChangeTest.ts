@@ -38,7 +38,6 @@ function equivalentValueChangeTest(browser: NightwatchBrowser) {
     .click('#reference-value-by')
     .waitForElementVisible('#value-input')
     .clearValue('#value-input')
-    .pause(1000)
     .setValue('#value-input', '10')
     .sendKeys('.MuiPopover-root > div:nth-child(3)', browser.Keys.ESCAPE) // 3rd child is the actual popover
     .waitForElementNotPresent('.MuiPopover-root');
