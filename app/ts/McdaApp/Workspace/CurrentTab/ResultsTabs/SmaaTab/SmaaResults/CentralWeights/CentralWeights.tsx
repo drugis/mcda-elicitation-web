@@ -4,7 +4,6 @@ import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
-import React from 'react';
 import CentralWeightsPlot from './CentralWeightsPlot/CentralWeightsPlot';
 import CentralWeightsTable from './CentralWeightsTable/CentralWeightsTable';
 

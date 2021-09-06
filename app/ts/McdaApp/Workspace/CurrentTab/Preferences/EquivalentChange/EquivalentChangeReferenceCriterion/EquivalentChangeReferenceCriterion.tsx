@@ -2,7 +2,7 @@ import {Grid, Select, Typography} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import _ from 'lodash';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
 
 export default function EquivalentChangeReferenceCriterion(): JSX.Element {

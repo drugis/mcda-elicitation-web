@@ -104,18 +104,18 @@ function recalculatedWeights(browser: NightwatchBrowser) {
 
   browser.expect
     .element('#equivalent-change-treatmentRespondersId')
-    .text.to.equal('11 (17.5) %');
+    .text.to.equal('27.8 (17.5) %');
   browser.waitForElementNotPresent('.MuiPopover-root');
   setCellValue(browser, '#equivalent-change-anxietyId', '10');
   browser.expect
     .element('#importance-treatmentRespondersId-cell')
-    .text.to.equal('53% (100%)');
+    .text.to.equal('63% (100%)');
   browser
     .waitForElementNotPresent('.MuiPopover-root')
     .click('#weights-recalculate-button')
     .waitForElementVisible('#recalculated-profile-plot')
     .expect.element('#total-value-alternative-value-0-recalculated')
-    .text.to.equal('0.771');
+    .text.to.equal('0.754');
 }
 
 function modifyMeasurementsPlot(browser: NightwatchBrowser) {

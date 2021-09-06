@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import React from 'react';
 
 export default function SelectOptions<T extends {id: string; title: string}>({
   items

@@ -1,7 +1,7 @@
 import {generateAdvancedPvfPlotSettings} from 'app/ts/McdaApp/Workspace/CurrentTab/Preferences/PartialValueFunctions/PartialValueFunctionUtil';
 import {ChartConfiguration, generate} from 'c3';
 import {selectAll} from 'd3';
-import React, {useContext, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 
 export default function AdvancedPvfPlot() {

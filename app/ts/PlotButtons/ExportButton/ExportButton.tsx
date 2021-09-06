@@ -1,11 +1,12 @@
-import { Button } from '@material-ui/core';
-import React from 'react';
+import {Button} from '@material-ui/core';
 // @ts-ignore
-import { downloadPng } from 'svg-crowbar';
+import {downloadPng} from 'svg-crowbar';
 
 export default function ExportButton({plotId}: {plotId: string}): JSX.Element {
   function handleClick() {
-    downloadPng(document.querySelector(`#${plotId} > svg`), plotId, {downloadPNGOptions:{pngScale: 4}});
+    downloadPng(document.querySelector(`#${plotId} > svg`), plotId, {
+      downloadPNGOptions: {scale: 4}
+    });
   }
 
   return (

@@ -43,9 +43,9 @@ Create the schema (shell script)
 
 ## Building the image (optional)
 
-You can build a new local image by executing the `build-docker.sh` script. This would be required for example if you wish to change the default SSL keys. Note that this script assumes that your keys are present in an `ssl` subdirectory of the main mcda directory. Also note that, if your patavi server presents a certificate that is not trusted by default, there should be a CA certificate for the signing certificate authority of your patavi container in this directory. The default patavi server image presents a certificate signed by the Drugis [self-signed certificate authority](https://drugis.org/files/ca-crt.pem)
+You can build a new local image by executing the `build-docker.sh` script.
 
-The `build-docker.sh` script also lets you specify the signin method via command line argument. The current options are Google OAuth 2.0 (`GOOGLE`) and username/password (`LOCAL`). The default signin method is Google OAuth 2.0.
+The `build-docker.sh` script lets you specify the signin method via command line argument. The current options are Google OAuth 2.0 (`GOOGLE`) and username/password (`LOCAL`). The default signin method is Google OAuth 2.0.
 
 For local signin, there are several further dependencies (assuming a version of NodeJS of 10.x) to generate the users and passwords:
 
@@ -68,9 +68,7 @@ e.g.:
 ./run-mcda-docker.sh LOCAL
 ```
 
-**Note** that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers, and the names of the certificate files match those in your `ssl` directory if you built your own image). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/mcda` image, which will be pulled from docker hub by default. The default image comes with SSL keys which assume `localhost` or `localdocker` CNs, and which are signed by our [self-signed certificate authority](https://drugis.org/files/ca-crt.pem).
-
-Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
+**Note** that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers, and whether the Patavi API key is correct). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/mcda` image, which will be pulled from docker hub by default.
 
 # Running as standalone application
 
@@ -95,9 +93,8 @@ export MCDAWEB_COOKIE_SECRET=<some-random-string>
 export MCDA_HOST=localhost
 export PATAVI_HOST=localhost
 export PATAVI_PORT=3000
-export PATAVI_CLIENT_KEY=path/to/key
-export PATAVI_CLIENT_CRT=/path/to/crt
-export PATAVI_CA=/path/to/ca
+export PATAVI_API_KEY=somekeyvalue
+export SECURE_TRAFFIC=false
 ```
 
 Getting the dependencies:

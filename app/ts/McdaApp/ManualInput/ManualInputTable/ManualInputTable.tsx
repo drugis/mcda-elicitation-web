@@ -6,7 +6,7 @@ import TableRow from '@material-ui/core/TableRow';
 import IAlternative from '@shared/interface/IAlternative';
 import {InlineHelp, InlineQuestionMark} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 import AddAlternativeButton from './AddAlternativeButton/AddAlternativeButton';
 import AlternativeHeader from './AlternativeHeader/AlternativeHeader';

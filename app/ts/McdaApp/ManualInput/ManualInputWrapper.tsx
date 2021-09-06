@@ -1,7 +1,7 @@
 import IInProgressMessage from '@shared/interface/IInProgressMessage';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import Axios, {AxiosResponse} from 'axios';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import ManualInput from './ManualInput';
 import {ManualInputContextProviderComponent} from './ManualInputContext';
 

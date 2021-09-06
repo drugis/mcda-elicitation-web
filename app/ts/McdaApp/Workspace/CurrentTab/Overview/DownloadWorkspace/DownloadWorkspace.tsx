@@ -2,7 +2,7 @@ import {Button} from '@material-ui/core';
 import GetApp from '@material-ui/icons/GetApp';
 import IProblem from '@shared/interface/Problem/IProblem';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {WorkspaceContext} from '../../../WorkspaceContext/WorkspaceContext';
 
 export default function DownloadWorkspace() {

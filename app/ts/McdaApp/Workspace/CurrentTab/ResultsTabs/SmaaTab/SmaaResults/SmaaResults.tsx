@@ -5,7 +5,7 @@ import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioCo
 import ScenarioSelection from 'app/ts/McdaApp/Workspace/CurrentTab/ScenarioSelection/ScenarioSelection';
 import {ScenariosContext} from 'app/ts/McdaApp/Workspace/ScenariosContext/ScenariosContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {SmaaResultsContextProviderComponent} from '../SmaaResultsContext/SmaaResultsContext';
 import SmaaResultsDisplay from './SmaaResultsDisplay/SmaaResultsDisplay';
 import UncertaintyOptions from './UncertaintyOptions/UncertaintyOptions';

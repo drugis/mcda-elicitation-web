@@ -5,7 +5,7 @@ const common = require('./webpack.common.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 let fs = require('fs');
 
-let config = merge(common, {
+let config = merge(common.config, {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'signin.html',

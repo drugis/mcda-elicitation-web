@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import keycode from 'keycode';
-import React, {KeyboardEvent, useContext} from 'react';
+import {KeyboardEvent, useContext} from 'react';
 import RangeInput from '../../EffectCellDialog/EffectInputFields/RangeInput/RangeInput';
 import TextInput from '../../EffectCellDialog/EffectInputFields/TextInput/TextInput';
 import ValueInput from '../../EffectCellDialog/EffectInputFields/ValueInput/ValueInput';

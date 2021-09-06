@@ -17,7 +17,7 @@ import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function SmaaWeightsTable({
   smaaWeights

@@ -6,7 +6,7 @@ import {
   Grid
 } from '@material-ui/core';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import DisplayMode from '../DisplayMode/DisplayMode';
 import RandomSeed from '../RandomSeed/RandomSeed';
 import ScalesCalculationMethod from '../ScalesCalculationMethod/ScalesCalculationMethod';

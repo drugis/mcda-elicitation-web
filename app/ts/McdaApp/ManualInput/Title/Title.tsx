@@ -1,6 +1,12 @@
 import TextField from '@material-ui/core/TextField';
 import _ from 'lodash';
-import React, {useCallback, useContext, useRef, useState} from 'react';
+import {
+  MutableRefObject,
+  useCallback,
+  useContext,
+  useRef,
+  useState
+} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function Title() {
@@ -20,9 +26,8 @@ export default function Title() {
     []
   );
 
-  const debouncedFunctionRef: React.MutableRefObject<(
-    newTitle: string
-  ) => void> = useRef((newTitle: string) => updateTitle(newTitle));
+  const debouncedFunctionRef: MutableRefObject<(newTitle: string) => void> =
+    useRef((newTitle: string) => updateTitle(newTitle));
 
   return (
     <TextField

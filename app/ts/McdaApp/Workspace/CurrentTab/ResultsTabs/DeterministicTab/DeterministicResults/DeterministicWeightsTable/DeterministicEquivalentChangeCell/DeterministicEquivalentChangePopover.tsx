@@ -1,5 +1,5 @@
 import {Grid, InputAdornment, Popover, TextField} from '@material-ui/core';
-import React, {ChangeEvent, useState} from 'react';
+import {ChangeEvent, useState} from 'react';
 
 export default function DeterministicEquivalentChangePopover({
   anchorEl,

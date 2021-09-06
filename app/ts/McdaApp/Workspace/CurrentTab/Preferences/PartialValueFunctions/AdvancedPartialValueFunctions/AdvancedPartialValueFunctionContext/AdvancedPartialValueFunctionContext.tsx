@@ -3,7 +3,7 @@ import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioCo
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import _ from 'lodash';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState} from 'react';
 import {getCutoffsByValue} from '../../PartialValueFunctionUtil';
 import {IAdvancedPartialValueFunctionContext} from './IAdvancedPartialValueFunctionContext';
 

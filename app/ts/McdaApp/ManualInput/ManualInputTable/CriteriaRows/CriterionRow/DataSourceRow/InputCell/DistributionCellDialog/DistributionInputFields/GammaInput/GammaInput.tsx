@@ -1,10 +1,9 @@
-import React from 'react';
-import AlphaValueInput from '../AlphaValueInput/AlphaValueInput';
-import BetaValueInput from '../BetaValueInput/BetaValueInput';
 import {
   getGammaAlphaError,
   getGammaBetaError
 } from '../../../../../../../../CellValidityService/CellValidityService';
+import AlphaValueInput from '../AlphaValueInput/AlphaValueInput';
+import BetaValueInput from '../BetaValueInput/BetaValueInput';
 
 export default function GammaInput() {
   return (

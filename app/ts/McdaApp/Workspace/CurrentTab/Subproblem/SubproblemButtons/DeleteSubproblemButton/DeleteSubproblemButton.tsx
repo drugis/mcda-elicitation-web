@@ -11,7 +11,7 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SubproblemsContext} from 'app/ts/McdaApp/Workspace/SubproblemsContext/SubproblemsContext';
 import _ from 'lodash';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 
 export default function DeleteSubproblemButton() {
   const {subproblems, deleteSubproblem} = useContext(SubproblemsContext);

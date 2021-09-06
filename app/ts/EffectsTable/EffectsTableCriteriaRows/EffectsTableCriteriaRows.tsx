@@ -1,18 +1,15 @@
 import TableBody from '@material-ui/core/TableBody';
 import ICriterion from '@shared/interface/ICriterion';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import EffectsTableDataSourceRow from './EffectsTableDataSourceRow/EffectsTableDataSourceRow';
 import TableWithFavourability from './TableWithFavourability/TableWithFavourability';
 
 export default function EffectsTableCriteriaRows() {
-  const {
-    filteredWorkspace,
-    filteredCriteria,
-    filteredAlternatives
-  } = useContext(CurrentSubproblemContext);
+  const {filteredWorkspace, filteredCriteria, filteredAlternatives} =
+    useContext(CurrentSubproblemContext);
   const {numberOfToggledColumns} = useContext(SettingsContext);
   const useFavourability = filteredWorkspace.properties.useFavourability;
   const numberOfColumns = numberOfToggledColumns + _.size(filteredAlternatives);

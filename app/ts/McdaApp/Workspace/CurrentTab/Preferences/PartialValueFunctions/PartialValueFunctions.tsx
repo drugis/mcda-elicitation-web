@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
 import PartialValueFunctionButtons from './PartialValueFunctionButtons/PartialValueFunctionButtons';
 import PartialValueFunctionPlot from './PartialValueFunctionPlot/PartialValueFunctionPlot';

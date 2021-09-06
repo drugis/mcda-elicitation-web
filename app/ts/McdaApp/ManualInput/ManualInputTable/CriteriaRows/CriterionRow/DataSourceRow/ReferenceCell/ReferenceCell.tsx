@@ -3,7 +3,7 @@ import TableCell from '@material-ui/core/TableCell';
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import {ManualInputContext} from 'app/ts/McdaApp/ManualInput/ManualInputContext';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import ReferenceDialog from './ReferenceDialog/ReferenceDialog';
 

@@ -1,7 +1,7 @@
 import {Grid} from '@material-ui/core';
 import {EffectsTableContextProviderComponent} from 'app/ts/EffectsTable/EffectsTableContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {WorkspaceContext} from '../../WorkspaceContext/WorkspaceContext';
 import OverviewAlternatives from './OverviewAlternatives/OverviewAlternatives';
 import OverviewCriteria from './OverviewCriteria/OverviewCriteria';

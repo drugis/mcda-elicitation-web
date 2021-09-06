@@ -2,7 +2,6 @@ import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Warning from '@material-ui/icons/Warning';
 import _ from 'lodash';
-import React from 'react';
 
 export default function DisplayWarnings({
   warnings,

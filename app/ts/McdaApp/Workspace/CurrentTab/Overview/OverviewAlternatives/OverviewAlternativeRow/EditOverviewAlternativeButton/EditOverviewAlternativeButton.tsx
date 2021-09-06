@@ -13,7 +13,7 @@ import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/Worksp
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {ChangeEvent, useContext, useEffect, useState} from 'react';
 
 export default function EditOverviewAlternativeButton({
   alternative

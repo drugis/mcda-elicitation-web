@@ -6,7 +6,7 @@ import {
   Typography
 } from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
-import React, {useContext, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {AdvancedPartialValueFunctionContext} from './AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import AdvancedPvfButtons from './AdvancedPvfButtons/AdvancedPvfButtons';
 import AdvancedPvfPlot from './AdvancedPvfPlot/AdvancedPvfPlot';

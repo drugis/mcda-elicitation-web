@@ -4,7 +4,7 @@ import ISettingsMessage from '@shared/interface/Settings/ISettingsMessage';
 import IToggledColumns from '@shared/interface/Settings/IToggledColumns';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,
@@ -38,9 +38,8 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
       hasNoDistributions
   );
 
-  const [numberOfToggledColumns, setNumberOfToggledColumns] = useState<number>(
-    5
-  );
+  const [numberOfToggledColumns, setNumberOfToggledColumns] =
+    useState<number>(5);
   const {defaultSettings, defaultToggledColumns} = getDefaultSettings(
     isRelativeProblem,
     hasNoEffects

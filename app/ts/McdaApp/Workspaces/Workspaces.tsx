@@ -1,6 +1,5 @@
 import {Grid, Typography} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
-import React from 'react';
 import CreateWorkspace from './CreateWorkspace/CreateWorkspace';
 import InProgressWorkspacesTable from './InProgressWorkspacesTable/InProgressWorkspacesTable';
 import {WorkspacesContextProviderComponent} from './WorkspacesContext/WorkspacesContext';

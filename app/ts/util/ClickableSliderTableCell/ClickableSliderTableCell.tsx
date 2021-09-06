@@ -1,7 +1,7 @@
 import {Button, TableCell} from '@material-ui/core';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
-import React, {MouseEvent, useState} from 'react';
+import {MouseEvent, useState} from 'react';
 import significantDigits from '../significantDigits';
 import ClickableSliderPopover from './ClickableSliderPopover';
 

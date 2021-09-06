@@ -1,6 +1,6 @@
 import {Grid, TextField} from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {WorkspacesContext} from '../WorkspacesContext/WorkspacesContext';
 
 export default function WorkspacesFilter(): JSX.Element {

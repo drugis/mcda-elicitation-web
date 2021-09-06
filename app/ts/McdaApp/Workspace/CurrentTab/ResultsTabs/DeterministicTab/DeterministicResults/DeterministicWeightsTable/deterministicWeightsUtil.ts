@@ -4,7 +4,7 @@ import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import IDeterministicChangeableWeights from 'app/ts/interface/IDeterministicChangeableWeights';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
-import {getEquivalentChange} from '../../../../Preferences/EquivalentChange/equivalentChangeUtil';
+import {getEquivalentChangeValue} from '../../../../Preferences/EquivalentChange/equivalentChangeUtil';
 import {buildImportances} from '../../../../Preferences/PreferencesWeights/PreferencesWeightsTable/preferencesWeightsTableUtil';
 
 export function buildDeterministicWeights(
@@ -20,6 +20,7 @@ export function buildDeterministicWeights(
     partOfInterval,
     referenceWeight
   );
+
   return {
     importances,
     weights,
@@ -46,7 +47,7 @@ export function getDeterministicEquivalentChanges(
   referenceWeight: number
 ) {
   return _.mapValues(weights, (weight, criterionId): IChangeableValue => {
-    const equivalentChange = getEquivalentChange(
+    const equivalentChange = getEquivalentChangeValue(
       weight,
       pvfs[criterionId],
       partOfInterval,
@@ -63,6 +64,7 @@ export function getDeterministicEquivalentChangeLabel(
   equivalentChange: IChangeableValue,
   usePercentage: boolean
 ): string {
+  if (!equivalentChange) return '';
   if (
     significantDigits(equivalentChange.currentValue) !==
     significantDigits(equivalentChange.originalValue)
@@ -89,8 +91,8 @@ export function calculateNewDeterministicEquivalentChanges(
   return _.mapValues(importances, (importance, criterionId: string) => {
     const equivalentChange = equivalentChanges[criterionId];
     const newValue =
-      (equivalentChange.originalValue * importance.currentValue) /
-      importance.originalValue;
+      (importance.originalValue / importance.currentValue) *
+      equivalentChange.originalValue;
     return {...equivalentChange, currentValue: significantDigits(newValue)};
   });
 }

@@ -3,7 +3,7 @@ import {getSensitivityLineChartSettings} from 'app/ts/McdaApp/Workspace/CurrentT
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import {ChartConfiguration, generate} from 'c3';
-import React, {useContext, useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import {SensitivityAnalysisContext} from '../../SensitivityAnalysisContext';
 
 export default function MeasurementSensitivityPlot(): JSX.Element {

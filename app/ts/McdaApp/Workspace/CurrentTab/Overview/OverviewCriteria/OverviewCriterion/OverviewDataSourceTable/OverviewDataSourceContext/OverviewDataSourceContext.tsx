@@ -1,10 +1,9 @@
 import IDataSource from '@shared/interface/IDataSource';
-import React, {createContext} from 'react';
+import {createContext} from 'react';
 import IOverviewDataSourceContext from './IOverviewDataSourceContext';
 
-export const OverviewDataSourceContext = createContext<IOverviewDataSourceContext>(
-  {} as IOverviewDataSourceContext
-);
+export const OverviewDataSourceContext =
+  createContext<IOverviewDataSourceContext>({} as IOverviewDataSourceContext);
 
 export function OverviewDataSourceContextProviderComponent({
   children,

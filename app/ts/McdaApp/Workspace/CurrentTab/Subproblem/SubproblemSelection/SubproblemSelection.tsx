@@ -6,7 +6,7 @@ import {SubproblemsContext} from 'app/ts/McdaApp/Workspace/SubproblemsContext/Su
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 
 export default function SubproblemSelection() {
   const {subproblems} = useContext(SubproblemsContext);

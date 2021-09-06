@@ -1,7 +1,7 @@
 import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {InputCellContext} from '../../../InputCellContext/InputCellContext';
 
 export default function TextInput() {

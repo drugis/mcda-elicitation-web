@@ -2,7 +2,7 @@ import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import {ChartConfiguration, generate} from 'c3';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {generateCentralWeightsPlotSettings} from '../../SmaaResultsUtil';
 
 export default function CentralWeightsPlot({

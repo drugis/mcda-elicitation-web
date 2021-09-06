@@ -3,7 +3,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {Effect} from '@shared/interface/IEffect';
 import {ManualInputContext} from 'app/ts/McdaApp/ManualInput/ManualInputContext';
 import {renderInputEffect} from 'app/ts/McdaApp/ManualInput/ManualInputUtil/ManualInputUtil';
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import EffectCellDialog from '../EffectCellDialog/EffectCellDialog';
 import {InputCellContextProviderComponent} from '../InputCellContext/InputCellContext';

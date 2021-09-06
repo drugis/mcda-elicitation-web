@@ -1,5 +1,4 @@
 import Tooltip from '@material-ui/core/Tooltip';
-import React from 'react';
 
 export default function CriterionTooltip({
   title,

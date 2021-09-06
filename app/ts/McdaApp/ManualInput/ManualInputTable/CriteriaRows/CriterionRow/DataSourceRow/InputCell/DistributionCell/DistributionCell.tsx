@@ -2,7 +2,7 @@ import TableCell from '@material-ui/core/TableCell';
 import Tooltip from '@material-ui/core/Tooltip';
 import {Distribution} from '@shared/interface/IDistribution';
 import {ManualInputContext} from 'app/ts/McdaApp/ManualInput/ManualInputContext';
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import DistributionCellDialog from '../DistributionCellDialog/DistributionCellDialog';
 import {InputCellContextProviderComponent} from '../InputCellContext/InputCellContext';
@@ -13,9 +13,8 @@ export default function DistributionCell({
 }: {
   alternativeId: string;
 }) {
-  const {getDistribution, setDistribution, distributions} = useContext(
-    ManualInputContext
-  );
+  const {getDistribution, setDistribution, distributions} =
+    useContext(ManualInputContext);
   const {dataSource, criterion} = useContext(DataSourceRowContext);
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);

@@ -19,12 +19,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.deployPrivateKey }}
 
-      - name: create ssl files
-        run: |
-          mkdir ssl
-          echo "${{ secrets.pataviClientCrt }}" > ssl/crt.pem 
-          echo "${{ secrets.pataviClientKey }}" > ssl/key.pem
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -85,9 +79,8 @@ jobs:
            -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaLiveGoogleKey }} \
            -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaLiveGoogleSecret }} \
            -e PATAVI_HOST=patavi.drugis.org \
-           -e PATAVI_PORT=443 \
-           -e PATAVI_CLIENT_KEY=/var/lib/mcda/ssl/key.pem \
-           -e PATAVI_CLIENT_CRT=/var/lib/mcda/ssl/crt.pem \
+           -e PATAVI_API_KEY=${{ secrets.pataviApiKeyLive }} \
+           -e SECURE_TRAFFIC=true \
            -d --name=mcda -p 8080:3002 \
            addis/mcda:live'
 

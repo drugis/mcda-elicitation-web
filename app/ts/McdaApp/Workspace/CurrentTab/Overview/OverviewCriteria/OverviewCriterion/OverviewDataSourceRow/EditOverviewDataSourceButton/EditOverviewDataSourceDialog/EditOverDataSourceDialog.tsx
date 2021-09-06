@@ -14,13 +14,7 @@ import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/Worksp
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import _ from 'lodash';
-import React, {
-  ChangeEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
+import {ChangeEvent, useCallback, useContext, useEffect, useState} from 'react';
 import {OverviewDataSourceContext} from '../../../OverviewDataSourceTable/OverviewDataSourceContext/OverviewDataSourceContext';
 
 export default function EditOverviewDataSourceDialog({

@@ -1,5 +1,4 @@
 import {Grid} from '@material-ui/core';
-import React from 'react';
 import ExportButton from './ExportButton/ExportButton';
 import LegendButton from './Legend/LegendButton/LegendButton';
 

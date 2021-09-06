@@ -1,7 +1,7 @@
 import {IconButton, Tooltip} from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import {OverviewCriterionContext} from 'app/ts/McdaApp/Workspace/CurrentTab/Overview/OverviewCriteria/OverviewCriterionContext/OverviewCriterionContext';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import EditOverviewCriterionDialog from './EditOverviewCriterionDialog/EditOverviewCriterionDialog';
 
 export default function EditOverviewCriterionButton() {

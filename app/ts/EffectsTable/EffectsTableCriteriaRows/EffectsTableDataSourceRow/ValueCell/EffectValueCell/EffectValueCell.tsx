@@ -5,7 +5,7 @@ import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import EmptyCell from '../EmptyCell/EmptyCell';
 import {
   renderEnteredValues,

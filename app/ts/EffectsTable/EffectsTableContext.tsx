@@ -1,5 +1,5 @@
 import {TDisplayMode} from '@shared/interface/Settings/TDisplayMode';
-import React, {createContext} from 'react';
+import {createContext} from 'react';
 import IEffectsTableContext from './IEffectsTableContext';
 
 export const EffectsTableContext = createContext<IEffectsTableContext>(

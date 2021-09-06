@@ -1,10 +1,9 @@
 import ICriterion from '@shared/interface/ICriterion';
-import React, {createContext} from 'react';
+import {createContext} from 'react';
 import IOverviewCriterionContext from './IOverviewCriterionContext';
 
-export const OverviewCriterionContext = createContext<IOverviewCriterionContext>(
-  {} as IOverviewCriterionContext
-);
+export const OverviewCriterionContext =
+  createContext<IOverviewCriterionContext>({} as IOverviewCriterionContext);
 
 export function OverviewCriterionContextProviderComponent({
   children,

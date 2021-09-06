@@ -9,11 +9,11 @@ import {TValueProfile} from '@shared/types/TValueProfile';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import {TProfileCase} from 'app/ts/type/ProfileCase';
+import {TProfileCase} from 'app/ts/type/profileCase';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,

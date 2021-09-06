@@ -78,10 +78,10 @@ function getNewImportances(
     (equivalentChange, criterionId: string) => {
       const importance = importances[criterionId];
       const newValue = Math.round(
-        (importance.originalValue * equivalentChange.currentValue) /
-          equivalentChange.originalValue
+        (equivalentChange.originalValue / equivalentChange.currentValue) *
+          importance.originalValue
       );
-      return {...importance, currentValue: Math.round(newValue)};
+      return {...importance, currentValue: newValue};
     }
   );
 }

@@ -9,7 +9,8 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext, useMemo} from 'react';
+import {useContext, useMemo} from 'react';
+import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import PreferencesWeightsTableRow from './PreferencesWeightsTableRow';
 import {
   buildImportances,
@@ -18,9 +19,8 @@ import {
 
 export default function PreferencesWeightsTable() {
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {filteredCriteria, observedRanges} = useContext(
-    CurrentSubproblemContext
-  );
+  const {filteredCriteria} = useContext(CurrentSubproblemContext);
+  const {canShowEquivalentChange} = useContext(EquivalentChangeContext);
 
   const importances: Record<string, number> = useMemo(
     () => buildImportances(currentScenario.state.weights.mean),
@@ -30,12 +30,6 @@ export default function PreferencesWeightsTable() {
   const rankings: Record<string, number> = useMemo(() => {
     return calculateRankings(currentScenario.state.weights.mean);
   }, [currentScenario.state.weights.mean]);
-
-  const areAllPvfsLinear = _.every(pvfs, ['type', 'linear']);
-  const canShowEquivalentChanges =
-    areAllPvfsLinear &&
-    currentScenario.state.weights &&
-    !_.isEmpty(observedRanges);
 
   return (
     <Table id="preferences-weights-table">
@@ -56,7 +50,7 @@ export default function PreferencesWeightsTable() {
           <TableCell>
             <InlineHelp helpId="representative-weights">Weight</InlineHelp>
           </TableCell>
-          <ShowIf condition={canShowEquivalentChanges}>
+          <ShowIf condition={canShowEquivalentChange}>
             <TableCell>
               <InlineHelp helpId="equivalent-change-basis">
                 Equivalent change

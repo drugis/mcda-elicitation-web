@@ -1,6 +1,6 @@
 import {Button, ButtonGroup} from '@material-ui/core';
 import {DeterministicResultsContext} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsContext/DeterministicResultsContext';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function SensitivityTableButtons({
   resetter,

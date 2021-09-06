@@ -6,7 +6,7 @@ import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import Delete from '@material-ui/icons/Delete';
 import IAlternative from '@shared/interface/IAlternative';
-import React, {CSSProperties, useContext} from 'react';
+import {CSSProperties, useContext} from 'react';
 import {ManualInputContext} from '../../ManualInputContext';
 import InlineEditor from '../InlineEditor/InlineEditor';
 
@@ -24,9 +24,8 @@ export default function AlternativeHeader({
   nextAlternative: IAlternative;
   previousAlternative: IAlternative;
 }) {
-  const {deleteAlternative, setAlternative, swapAlternatives} = useContext(
-    ManualInputContext
-  );
+  const {deleteAlternative, setAlternative, swapAlternatives} =
+    useContext(ManualInputContext);
 
   function handleDelete() {
     deleteAlternative(alternative.id);

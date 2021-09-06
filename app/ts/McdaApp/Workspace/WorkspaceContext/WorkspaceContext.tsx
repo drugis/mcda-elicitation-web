@@ -11,7 +11,7 @@ import {getScalesCommand} from 'app/ts/util/PataviUtil';
 import {swapItems} from 'app/ts/util/swapUtil';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
-import React, {
+import {
   createContext,
   useCallback,
   useContext,
@@ -42,16 +42,14 @@ export function WorkspaceContextProviderComponent({
   const history = useHistory();
   const {setError} = useContext(ErrorContext);
 
-  const [oldWorkspace, setOldWorkspace] = useState<IOldWorkspace>(
-    originalWorkspace
-  );
+  const [oldWorkspace, setOldWorkspace] =
+    useState<IOldWorkspace>(originalWorkspace);
   const [workspace, setWorkspace] = useState<IWorkspace>(
     buildWorkspace(oldWorkspace)
   );
   const [ordering, setOrdering] = useState<IOrdering>();
-  const [scales, setScales] = useState<
-    Record<string, Record<string, IScale>>
-  >();
+  const [scales, setScales] =
+    useState<Record<string, Record<string, IScale>>>();
   const [isLoading, setIsLoading] = useState(true);
 
   const getScales = useCallback(() => {

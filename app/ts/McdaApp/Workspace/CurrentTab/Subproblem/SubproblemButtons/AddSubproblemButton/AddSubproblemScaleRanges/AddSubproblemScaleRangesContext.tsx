@@ -1,9 +1,10 @@
-import React, {createContext} from 'react';
+import {createContext} from 'react';
 import IAddSubproblemScaleRangesContext from './IAddSubproblemScaleRangesContext';
 
-export const AddSubproblemScaleRangesContext = createContext<IAddSubproblemScaleRangesContext>(
-  {} as IAddSubproblemScaleRangesContext
-);
+export const AddSubproblemScaleRangesContext =
+  createContext<IAddSubproblemScaleRangesContext>(
+    {} as IAddSubproblemScaleRangesContext
+  );
 
 export function AddSubproblemScaleRangesContextProviderComponent(props: {
   children: any;

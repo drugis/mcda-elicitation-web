@@ -13,9 +13,8 @@ docker run -d \
  -e MCDAWEB_DB_USER=mcda \
  -e MCDAWEB_AUTHENTICATION_METHOD=$ATHENTICATION_METHOD \
  -e MCDA_HOST=http://localhost:3002 \
- -e PATAVI_CLIENT_CRT=ssl/crt.pem \
- -e PATAVI_CLIENT_KEY=ssl/key.pem \
- -e PATAVI_CA=ssl/ca-crt.pem \
+ -e SECURE_TRAFFIC=false \
+ -e PATAVI_API_KEY=cooltokenbro \
  -e PATAVI_HOST=localdocker \
  -e PATAVI_PORT=3000 \
   addis/mcda

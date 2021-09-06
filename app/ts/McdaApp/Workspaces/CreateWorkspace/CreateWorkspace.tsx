@@ -1,7 +1,7 @@
 import {Button} from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {CreateWorkspaceContextProviderComponent} from './CreateWorkspaceContext';
 import CreateWorkspaceDialog from './CreateWorkspaceDialog/CreateWorkspaceDialog';
 

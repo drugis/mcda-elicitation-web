@@ -1,7 +1,6 @@
 import {ThemeProvider} from '@material-ui/core';
 import 'c3/c3.css';
 import {HelpContextProviderComponent} from 'help-popup';
-import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';

@@ -28,7 +28,6 @@ cp -Rf public docker
 cp -Rf app docker
 cp -Rf examples docker
 cp -Rf schema docker
-cp -Rf ssl docker
 cp -Rf shared docker
 cp -Rf tutorials docker
 cp -f webpack* docker

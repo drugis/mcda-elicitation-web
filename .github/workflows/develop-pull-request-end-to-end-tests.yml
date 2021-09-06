@@ -28,14 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: create ssl files
-        run: |
-          echo "${{ secrets.pataviClientCrt }}" > crt.pem 
-          echo "${{ secrets.pataviClientKey }}" > key.pem
-          echo "${{ secrets.certificateAuthority }}" > ca.pem
-          echo "${{ secrets.pataviServerCertificate }}" > server-crt.pem
-          echo "${{ secrets.pataviServerKey }}" > server-key.pem
-
       - name: fetch schema
         run: curl https://raw.githubusercontent.com/drugis/patavi/master/server/schema.sql -o patavi.schema.sql
 
@@ -54,12 +46,7 @@ jobs:
 
       - name: run patavi server
         run: |
-          docker run -d --name patavi-server --network host -e PATAVI_BROKER_HOST=guest:guest@localhost -p 3000:3000 -e PATAVI_SELF=//localhost:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop addis/patavi-server
-
-      - name: copy certificates to patavi server
-        run: |
-          docker cp server-crt.pem patavi-server:/var/lib/patavi/ssl/
-          docker cp server-key.pem patavi-server:/var/lib/patavi/ssl/
+          docker run -d --name patavi-server --network host -e PATAVI_BROKER_HOST=guest:guest@localhost -p 3000:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop -e SECURE_TRAFFIC=false -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} addis/patavi-server:test
 
       - name: build and run patavi worker
         run: |
@@ -115,9 +102,8 @@ jobs:
           MCDA_HOST: localhost
           PATAVI_HOST: localhost
           PATAVI_PORT: 3000
-          PATAVI_CLIENT_KEY: key.pem
-          PATAVI_CLIENT_CRT: crt.pem
-          PATAVI_CA: ca.pem
+          SECURE_TRAFFIC: false
+          PATAVI_API_KEY: ${{ secrets.pataviApiKeyTest }}
 
       - name: run nightwatch tests
         id: nightwatch

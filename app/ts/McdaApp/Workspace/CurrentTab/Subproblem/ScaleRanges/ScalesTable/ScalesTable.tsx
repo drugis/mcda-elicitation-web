@@ -8,7 +8,7 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import ScalesTableRow from './ScalesTableRow/ScalesTableRow';
 
 export default function ScalesTable({}: {}) {

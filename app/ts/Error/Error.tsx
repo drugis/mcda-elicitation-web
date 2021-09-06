@@ -1,6 +1,6 @@
 import {Grid, IconButton, Paper, Typography} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import React, {CSSProperties, useContext} from 'react';
+import {CSSProperties, useContext} from 'react';
 import {ErrorContext} from './ErrorContext';
 
 const errorStyle: CSSProperties = {

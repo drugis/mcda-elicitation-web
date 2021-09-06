@@ -6,7 +6,7 @@ import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {WorkspaceContext} from '../../../WorkspaceContext/WorkspaceContext';
 import OverviewCriterion from './OverviewCriterion/OverviewCriterion';
 import {OverviewCriterionContextProviderComponent} from './OverviewCriterionContext/OverviewCriterionContext';

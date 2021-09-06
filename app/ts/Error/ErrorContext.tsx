@@ -1,6 +1,6 @@
 import {OurError} from '@shared/interface/IError';
 import IErrorContext from '@shared/interface/IErrorContext';
-import React, {createContext, useCallback, useState} from 'react';
+import {createContext, useCallback, useState} from 'react';
 
 export const ErrorContext = createContext<IErrorContext>({} as IErrorContext);
 

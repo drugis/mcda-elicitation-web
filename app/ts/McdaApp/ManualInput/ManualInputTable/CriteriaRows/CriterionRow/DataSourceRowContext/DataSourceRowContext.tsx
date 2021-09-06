@@ -1,7 +1,7 @@
 import ICriterion from '@shared/interface/ICriterion';
 import IDataSource from '@shared/interface/IDataSource';
 import IDataSourceRowContext from '@shared/interface/IDataSourceRowContext';
-import React, {createContext} from 'react';
+import {createContext} from 'react';
 
 export const DataSourceRowContext = createContext<IDataSourceRowContext>(
   {} as IDataSourceRowContext

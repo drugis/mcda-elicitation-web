@@ -6,7 +6,7 @@ import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/Settings
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import EquivalentChangeCell from '../../EquivalentChange/EquivalentChangeCell/EquivalentChangeCell';
 import {EquivalentChangeContext} from '../../EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import {
@@ -25,7 +25,7 @@ export default function PreferencesWeightsTableRow({
 }): JSX.Element {
   const {showPercentages, getUsePercentage} = useContext(SettingsContext);
   const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {canShowEquivalentChanges} = useContext(EquivalentChangeContext);
+  const {canShowEquivalentChange} = useContext(EquivalentChangeContext);
 
   const unit = criterion.dataSources[0].unitOfMeasurement;
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
@@ -54,7 +54,7 @@ export default function PreferencesWeightsTableRow({
       <TableCell id={`weight-criterion-${criterion.id}`}>
         {significantDigits(currentScenario.state.weights.mean[criterion.id])}
       </TableCell>
-      <ShowIf condition={canShowEquivalentChanges}>
+      <ShowIf condition={canShowEquivalentChange}>
         <EquivalentChangeCell criterion={criterion} />
       </ShowIf>
     </TableRow>

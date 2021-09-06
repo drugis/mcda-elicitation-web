@@ -1,4 +1,4 @@
-import {TableInputMode} from '../../app/ts/type/TableInputMode';
+import {TableInputMode} from '../../app/ts/type/tableInputMode';
 import {distributionType} from './IDistribution';
 import {effectType} from './IEffect';
 

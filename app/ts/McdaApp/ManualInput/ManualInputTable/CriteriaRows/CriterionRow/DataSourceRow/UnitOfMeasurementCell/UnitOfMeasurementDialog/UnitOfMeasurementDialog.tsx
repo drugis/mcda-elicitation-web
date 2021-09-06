@@ -15,7 +15,7 @@ import {ManualInputContext} from 'app/ts/McdaApp/ManualInput/ManualInputContext'
 import DisplayErrors from 'app/ts/util/DisplayErrors';
 import keycode from 'keycode';
 import _ from 'lodash';
-import React, {
+import {
   ChangeEvent,
   KeyboardEvent,
   useContext,

@@ -1,6 +1,6 @@
 import {IconButton, Tooltip} from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import {OverviewDataSourceContext} from '../../OverviewDataSourceTable/OverviewDataSourceContext/OverviewDataSourceContext';
 import EditOverviewDataSourceDialog from './EditOverviewDataSourceDialog/EditOverDataSourceDialog';
 

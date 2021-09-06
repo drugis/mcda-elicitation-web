@@ -4,13 +4,14 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import {PreferenceElicitation} from 'preference-elicitation';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {CurrentScenarioContext} from '../../CurrentScenarioContext/CurrentScenarioContext';
 import {
   buildScenarioWithPreferences,
   isElicitationView
 } from '../../ScenariosContext/preferencesUtil';
 import {TPreferencesView} from '../../ScenariosContext/TPreferencesView';
+import {EquivalentChangeContextProviderComponent} from './EquivalentChange/EquivalentChangeContext/EquivalentChangeContext';
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import PreferencesView from './PreferencesView/PreferencesView';
@@ -73,7 +74,11 @@ export default function Preferences() {
     setDocumentTitle(activeView);
 
     if (activeView === 'preferences') {
-      return <PreferencesView />;
+      return (
+        <EquivalentChangeContextProviderComponent>
+          <PreferencesView />
+        </EquivalentChangeContextProviderComponent>
+      );
     } else if (activeView === 'advancedPvf') {
       return (
         <AdvancedPartialValueFunctionContextProviderComponent>

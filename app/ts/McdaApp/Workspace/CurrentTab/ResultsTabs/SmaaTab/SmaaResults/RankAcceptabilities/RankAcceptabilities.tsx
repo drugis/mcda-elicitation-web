@@ -3,7 +3,6 @@ import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
-import React from 'react';
 import RankAcceptabilitiesPlot from './RankAcceptabilitiesPlot/RankAcceptabilitiesPlot';
 import RankAcceptabilitiesTable from './RankAcceptabilitiesTable/RankAcceptabilitiesTable';
 

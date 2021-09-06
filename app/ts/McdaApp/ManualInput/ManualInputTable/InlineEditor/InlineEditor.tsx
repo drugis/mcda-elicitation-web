@@ -1,7 +1,7 @@
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import keycode from 'keycode';
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {ChangeEvent, KeyboardEvent, useState} from 'react';
 import InlineTooltip from '../CriteriaRows/CriterionRow/DataSourceRow/InlineTooltip/InlineTooltip';
 
 export default function InlineEditor({

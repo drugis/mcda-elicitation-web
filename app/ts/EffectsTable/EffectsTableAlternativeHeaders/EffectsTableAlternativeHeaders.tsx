@@ -1,7 +1,6 @@
-import React from 'react';
-import _ from 'lodash';
-import IAlternative from '@shared/interface/IAlternative';
 import {TableCell} from '@material-ui/core';
+import IAlternative from '@shared/interface/IAlternative';
+import _ from 'lodash';
 
 export default function EffectsTableAlternativeHeaders({
   alternatives

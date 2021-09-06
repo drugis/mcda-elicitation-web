@@ -1,7 +1,7 @@
 import {Grid, Select, Typography} from '@material-ui/core';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {InlineHelp} from 'help-popup';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
 export default function DisplayMode(): JSX.Element {
@@ -9,9 +9,8 @@ export default function DisplayMode(): JSX.Element {
     localSettings: {displayMode},
     setSetting
   } = useContext(WorkspaceSettingsContext);
-  const {isRelativeProblem, hasNoEffects, hasNoDistributions} = useContext(
-    SettingsContext
-  );
+  const {isRelativeProblem, hasNoEffects, hasNoDistributions} =
+    useContext(SettingsContext);
 
   function handleSelectionChanged(event: ChangeEvent<HTMLInputElement>): void {
     setSetting('displayMode', event.target.value);

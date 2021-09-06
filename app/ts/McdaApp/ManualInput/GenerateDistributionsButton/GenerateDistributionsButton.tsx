@@ -3,15 +3,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Tooltip from '@material-ui/core/Tooltip';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import DialogTitleWithCross from '../../../DialogTitleWithCross/DialogTitleWithCross';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function GenerateDistributionsButton() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const {generateDistributions, setTableInputMode} = useContext(
-    ManualInputContext
-  );
+  const {generateDistributions, setTableInputMode} =
+    useContext(ManualInputContext);
 
   const tooltip = `Generate distribution parameters for SMAA using effect values.
    Any existing distributions will be overwritten.`;

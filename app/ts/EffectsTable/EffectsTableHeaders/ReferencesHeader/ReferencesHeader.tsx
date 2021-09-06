@@ -1,7 +1,7 @@
 import TableCell from '@material-ui/core/TableCell';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function ReferencesHeader() {
   const {

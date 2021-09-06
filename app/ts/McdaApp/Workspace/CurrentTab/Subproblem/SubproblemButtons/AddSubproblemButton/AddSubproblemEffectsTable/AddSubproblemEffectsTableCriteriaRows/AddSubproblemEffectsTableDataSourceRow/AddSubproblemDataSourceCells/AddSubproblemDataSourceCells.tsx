@@ -9,7 +9,7 @@ import EffectsTableUnitOfMeasurementCell from 'app/ts/EffectsTable/EffectsTableC
 import ValueCell from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/ValueCell';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import _ from 'lodash';
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {deselectedCellStyle} from '../../../../../../../../../../Styles/deselectedCellStyle';
 import {AddSubproblemContext} from '../../../../AddSubproblemContext';
 

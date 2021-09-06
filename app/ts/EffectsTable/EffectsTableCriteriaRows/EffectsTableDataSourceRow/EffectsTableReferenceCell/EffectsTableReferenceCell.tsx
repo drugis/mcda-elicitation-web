@@ -3,7 +3,7 @@ import IDataSource from '@shared/interface/IDataSource';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 
 export default function EffectsTableReferenceCell({
   dataSource,

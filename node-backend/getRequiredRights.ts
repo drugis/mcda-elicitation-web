@@ -208,7 +208,7 @@ export default function getRequiredRights(
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId',
-      'POST',
+      'PUT',
       'write',
       workspaceOwnerRightsNeeded
     ),

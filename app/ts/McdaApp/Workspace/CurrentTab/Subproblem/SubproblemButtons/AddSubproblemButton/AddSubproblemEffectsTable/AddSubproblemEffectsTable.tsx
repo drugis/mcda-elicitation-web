@@ -9,11 +9,11 @@ import DescriptionHeader from 'app/ts/EffectsTable/EffectsTableHeaders/Descripti
 import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
 import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
 import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
+import DisplayWarnings from 'app/ts/util/DisplayWarnings';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';
 import AddSubproblemEffectsTableAlternativeHeader from './AddSubproblemEffectsTableAlternativeHeader/AddSubproblemEffectsTableAlternativeHeader';
 import AddSubproblemEffectsTableCriteriaRows from './AddSubproblemEffectsTableCriteriaRows/AddSubproblemEffectsTableCriteriaRows';

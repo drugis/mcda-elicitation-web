@@ -8,7 +8,7 @@ import IUnitOfMeasurement, {
 } from '@shared/interface/IUnitOfMeasurement';
 import {ManualInputContext} from 'app/ts/McdaApp/ManualInput/ManualInputContext';
 import {normalizeCells} from 'app/ts/McdaApp/ManualInput/ManualInputUtil/ManualInputUtil';
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import InlineTooltip from '../InlineTooltip/InlineTooltip';
 import UnitOfMeasurementDialog from './UnitOfMeasurementDialog/UnitOfMeasurementDialog';
 

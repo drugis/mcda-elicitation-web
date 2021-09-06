@@ -1,6 +1,5 @@
 import TableCell from '@material-ui/core/TableCell';
 import {InlineHelp} from 'help-popup';
-import React from 'react';
 
 export default function CriteriaHeader({colSpan}: {colSpan: number}) {
   return (

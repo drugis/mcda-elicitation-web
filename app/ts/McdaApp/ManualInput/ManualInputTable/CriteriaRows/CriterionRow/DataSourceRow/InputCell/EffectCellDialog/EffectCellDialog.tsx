@@ -13,7 +13,7 @@ import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
 import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {normalizeInputValue} from 'app/ts/McdaApp/ManualInput/ManualInputUtil/ManualInputUtil';
-import React, {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import {InputCellContext} from '../InputCellContext/InputCellContext';
 import EffectInputFields from './EffectInputFields/EffectInputFields';

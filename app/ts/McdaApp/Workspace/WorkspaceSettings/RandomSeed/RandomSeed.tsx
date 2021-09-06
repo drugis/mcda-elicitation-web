@@ -1,6 +1,6 @@
 import {Grid, TextField, Typography} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
-import React, {ChangeEvent, useContext, useState} from 'react';
+import {ChangeEvent, useContext, useState} from 'react';
 import {WorkspaceSettingsContext} from '../WorkspaceSettingsContext/WorkspaceSettingsContext';
 
 export default function RandomSeed(): JSX.Element {

@@ -8,7 +8,7 @@ import {
   Tooltip
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import React, {ChangeEvent, useContext, useState} from 'react';
+import {ChangeEvent, useContext, useState} from 'react';
 import DialogTitleWithCross from '../../../DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from '../../../util/createEnterHandler';
 import DisplayErrors from '../../../util/DisplayErrors';

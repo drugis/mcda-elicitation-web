@@ -1,6 +1,6 @@
 import {Grid, Typography} from '@material-ui/core';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {WorkspaceContext} from '../../../WorkspaceContext/WorkspaceContext';
 import EditTherapeuticContextButton from '../EditTherapeuticContextButton/EditTherapeuticContextButton';
 

@@ -1,8 +1,8 @@
 import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
-import React, {ChangeEvent, useContext} from 'react';
-import {TableInputMode} from '../../../type/TableInputMode';
+import {ChangeEvent, useContext} from 'react';
+import {TableInputMode} from '../../../type/tableInputMode';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function EffectOrDistribution() {

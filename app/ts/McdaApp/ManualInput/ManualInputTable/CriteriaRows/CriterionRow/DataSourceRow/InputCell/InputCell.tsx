@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {ManualInputContext} from '../../../../../ManualInputContext';
 import DistributionCell from './DistributionCell/DistributionCell';
 import EffectCell from './EffectCell/EffectCell';

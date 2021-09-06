@@ -5,7 +5,7 @@ import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCro
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
 import DisplayErrors from 'app/ts/util/DisplayErrors';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {ChangeEvent, MouseEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
 import LegendButtons from './LegendButtons/LegendButtons';
 import LegendTable from './LegendTable/LegendTable';
@@ -36,7 +36,7 @@ export default function LegendButton({
 
   const handleKey = createEnterHandler(handleLegendSave, isDisabled);
 
-  function openDialog(event: React.MouseEvent<HTMLButtonElement>): void {
+  function openDialog(_event: MouseEvent<HTMLButtonElement>): void {
     setDialogOpen(true);
   }
 

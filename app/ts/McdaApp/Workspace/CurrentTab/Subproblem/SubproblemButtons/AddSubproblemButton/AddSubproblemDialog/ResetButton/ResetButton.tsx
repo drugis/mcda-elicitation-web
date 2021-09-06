@@ -1,5 +1,5 @@
 import Button from '@material-ui/core/Button';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {AddSubproblemContext} from '../../AddSubproblemContext';
 
 export default function ResetButton() {

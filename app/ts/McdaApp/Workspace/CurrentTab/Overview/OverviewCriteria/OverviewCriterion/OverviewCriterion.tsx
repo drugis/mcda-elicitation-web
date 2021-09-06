@@ -5,7 +5,7 @@ import MoveUpDownButtons from 'app/ts/McdaApp/MoveUpDownButtons/MoveUpDownButton
 import {OverviewCriterionContext} from 'app/ts/McdaApp/Workspace/CurrentTab/Overview/OverviewCriteria/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import {InlineHelp} from 'help-popup';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import EditOverviewCriterionButton from './EditOverviewCriterionButton/EditOverviewCriterionButton';
 import OverviewDataSourceTable from './OverviewDataSourceTable/OverviewDataSourceTable';
 

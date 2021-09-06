@@ -2,7 +2,7 @@ import {IconButton, Tooltip} from '@material-ui/core';
 import FileCopy from '@material-ui/icons/FileCopy';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import Axios, {AxiosResponse} from 'axios';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {useHistory} from 'react-router';
 
 export default function CopyWorkspaceButton({

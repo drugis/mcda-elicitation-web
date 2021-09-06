@@ -1,6 +1,6 @@
 import IUser from '@shared/interface/User/IUser';
 import Cookies from 'js-cookie';
-import React, {createContext} from 'react';
+import {createContext} from 'react';
 import IUserContext from './IUserContext';
 
 export const UserContext = createContext<IUserContext>({} as IUserContext);

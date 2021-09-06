@@ -2,11 +2,11 @@ import {Grid, Typography} from '@material-ui/core';
 import ScenarioSelection from 'app/ts/McdaApp/Workspace/CurrentTab/ScenarioSelection/ScenarioSelection';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {CurrentScenarioContext} from '../../../CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from '../../../CurrentSubproblemContext/CurrentSubproblemContext';
 import {ScenariosContext} from '../../../ScenariosContext/ScenariosContext';
-import EquivalentChange from '../EquivalentChange/Equivalentchange';
+import EquivalentChange from '../EquivalentChange/EquivalentChange';
 import PartialValueFunctions from '../PartialValueFunctions/PartialValueFunctions';
 import PreferencesWeights from '../PreferencesWeights/PreferencesWeights';
 import ScenarioButtons from '../ScenarioButtons/ScenarioButtons';
@@ -15,6 +15,7 @@ export default function PreferencesView() {
   const {observedRanges} = useContext(CurrentSubproblemContext);
   const {scenarios} = useContext(ScenariosContext);
   const {currentScenario, areAllPvfsSet} = useContext(CurrentScenarioContext);
+
   const canShow =
     areAllPvfsSet &&
     currentScenario?.state?.weights &&

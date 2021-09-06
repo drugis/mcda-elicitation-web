@@ -3,12 +3,10 @@ import ICriterion from '@shared/interface/ICriterion';
 import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import React, {useContext} from 'react';
+import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import {useContext} from 'react';
 import {EquivalentChangeContext} from '../EquivalentChangeContext/EquivalentChangeContext';
-import {
-  getEquivalentChange,
-  getEquivalentChangeLabel
-} from '../equivalentChangeUtil';
+import {getEquivalentChangeValue} from '../equivalentChangeUtil';
 
 export default function EquivalentChangeCell({
   criterion
@@ -18,44 +16,32 @@ export default function EquivalentChangeCell({
   const {getUsePercentage} = useContext(SettingsContext);
   const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
-  const {pvfs, currentScenario} = useContext(CurrentScenarioContext);
-  const {
-    equivalentChangeType,
-    referenceWeight,
-    partOfInterval,
-    referenceCriterion,
-    referenceValueFrom,
-    referenceValueTo
-  } = useContext(EquivalentChangeContext);
+  const {pvfs, currentScenario, equivalentChange, isScenarioUpdating} =
+    useContext(CurrentScenarioContext);
+  const {referenceWeight, referenceCriterion} = useContext(
+    EquivalentChangeContext
+  );
 
-  const equivalentChange = getEquivalentChange(
+  const equivalentChangeValue = getEquivalentChangeValue(
     currentScenario.state.weights.mean[criterion.id],
     pvfs[criterion.id],
-    partOfInterval,
+    equivalentChange.partOfInterval,
     referenceWeight
   );
 
+  function getLabel(): string {
+    if (!referenceCriterion) {
+      return '';
+    } else {
+      return getPercentifiedValueLabel(equivalentChangeValue, usePercentage);
+    }
+  }
+
   return (
     <TableCell id={`equivalent-change-${criterion.id}`}>
-      {criterion.id === referenceCriterion.id && equivalentChangeType == 'range'
-        ? getReferenceLabel(referenceValueFrom, referenceValueTo, usePercentage)
-        : getEquivalentChangeLabel(
-            equivalentChangeType,
-            equivalentChange,
-            pvfs[criterion.id],
-            usePercentage
-          )}
+      <LoadingSpinner showSpinnerCondition={isScenarioUpdating}>
+        {getLabel()}
+      </LoadingSpinner>
     </TableCell>
   );
-}
-
-function getReferenceLabel(
-  referenceValueFrom: number,
-  referenceValueTo: number,
-  usePercentage: boolean
-): string {
-  return `${getPercentifiedValueLabel(
-    referenceValueFrom,
-    usePercentage
-  )} to ${getPercentifiedValueLabel(referenceValueTo, usePercentage)}`;
 }

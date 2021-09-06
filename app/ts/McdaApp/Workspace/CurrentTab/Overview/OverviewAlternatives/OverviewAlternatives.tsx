@@ -11,7 +11,7 @@ import IAlternative from '@shared/interface/IAlternative';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {WorkspaceContext} from '../../../WorkspaceContext/WorkspaceContext';
 import OverviewAlternativeRow from './OverviewAlternativeRow/OverviewAlternativeRow';
 

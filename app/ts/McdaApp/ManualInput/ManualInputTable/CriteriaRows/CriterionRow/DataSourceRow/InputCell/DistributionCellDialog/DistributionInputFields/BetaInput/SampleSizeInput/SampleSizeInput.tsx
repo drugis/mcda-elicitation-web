@@ -1,12 +1,11 @@
 import {Grid, TextField, Typography} from '@material-ui/core';
 import {getSampleSizeError} from 'app/ts/McdaApp/ManualInput/CellValidityService/CellValidityService';
-import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
+import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {InputCellContext} from '../../../../InputCellContext/InputCellContext';
 
 export default function SampleSizeInput(): JSX.Element {
-  const {sampleSize, events, setSampleSize, setIsValidSampleSize} = useContext(
-    InputCellContext
-  );
+  const {sampleSize, events, setSampleSize, setIsValidSampleSize} =
+    useContext(InputCellContext);
   const [inputError, setInputError] = useState<string>('');
 
   useEffect(validateInput, [sampleSize, events]);
