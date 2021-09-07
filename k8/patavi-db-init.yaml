@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: patavi-db-init
-  namespace: mcda
+  namespace: drugis
   labels:
     app: patavi-db-init
 spec:

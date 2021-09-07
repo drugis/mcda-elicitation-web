@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: patavi-server
-  namespace: mcda
+  namespace: drugis
 spec:
   type: Service
   ports:
@@ -14,7 +14,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: patavi-server
-  namespace: mcda
+  namespace: drugis
 spec:
   replicas: 1
   selector:
@@ -37,11 +37,11 @@ spec:
                 secretKeyRef:
                   name: db-credentials
                   key: PATAVI_DB_PASSWORD
-            - name: PATAVI_AUTHORISED_TOKEN
+            - name: PATAVI_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: passwords
-                  key: PATAVI_AUTHORISED_TOKEN
+                  key: PATAVI_API_KEY
           ports:
             - name: patavi-server
               containerPort: 3000

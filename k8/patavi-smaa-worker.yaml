@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: patavi-smaa-worker
-  namespace: mcda
+  namespace: drugis
   labels:
     app: patavi-smaa-worker
 spec:

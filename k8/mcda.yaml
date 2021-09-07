@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mcda
-  namespace: mcda
+  namespace: drugis
 spec:
   type: Service
   ports:
@@ -14,7 +14,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mcda
-  namespace: mcda
+  namespace: drugis
 spec:
   replicas: 1
   selector:
@@ -53,7 +53,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: passwords
-                  key: PATAVI_AUTHORISED_TOKEN
+                  key: PATAVI_API_KEY
           envFrom:
             - configMapRef:
                 name: mcda-settings
