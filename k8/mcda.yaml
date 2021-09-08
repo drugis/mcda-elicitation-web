@@ -4,7 +4,7 @@ metadata:
   name: mcda
   namespace: drugis
 spec:
-  type: Service
+  type: NodePort
   ports:
     - port: 3002
   selector:
@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: mcda
-          image: addis/mcda:k8s2
+          image: addis/mcda:k8s3
           env:
             - name: MCDAWEB_DB_PASSWORD
               valueFrom:

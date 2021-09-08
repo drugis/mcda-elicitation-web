@@ -45,7 +45,7 @@ rancher kubectl create configmap patavi-settings \
   --from-literal=SECURE_TRAFFIC=true \
   --from-literal=PATAVI_PROXY_HOST=patavi.edge.molgenis.org 
 
-rancher kubectl apply -f postgres.yaml #not 100%, does not include pv and pv claim, those were done manually
+rancher kubectl apply -f postgres.yaml #not 100%, does not include pv and pv claim (postgres volume), those were done manually
 rancher kubectl apply -f rabbitmq.yaml
 rancher kubectl apply -f patavi-server.yaml
 rancher kubectl apply -f patavi-db-init.yaml
