@@ -13,7 +13,6 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt install -y nodejs git
 
 RUN npm install -g yarn
-RUN npm install -g forever
 
 RUN useradd --create-home --home /var/lib/mcda mcda
 
@@ -35,4 +34,4 @@ RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm 
 
 EXPOSE 3002
 
-CMD ["forever", "tscomp/index.js"]
+CMD ["node", "tscomp/index.js"]
