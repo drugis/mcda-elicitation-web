@@ -3,6 +3,7 @@
 rancher kubectl delete secret mcda-secrets -n drugis
 rancher kubectl create secret generic mcda-secrets \
   -n drugis \
+  --from-literal=MCDAWEB_DB_PASSWORD=develop \
   --from-literal=MCDAWEB_COOKIE_SECRET=GDFBDF#$%*asdfg098 \
   --from-literal=MCDAWEB_GOOGLE_SECRET=WFU_VvlxrsyNLVUDkkTVgvfQ \
   --from-literal=MCDAWEB_GOOGLE_KEY=290619536014-abnf3o5knc423o0n25939ql4ga0m0809.apps.googleusercontent.com
@@ -21,7 +22,6 @@ rancher kubectl create configmap mcda-settings \
   --from-literal=MCDA_HOST=https://mcda.edge.molgenis.org \
   --from-literal=MCDAWEB_DB_HOST=postgres \
   --from-literal=MCDAWEB_DB_NAME=mcda \
-  --from-literal=MCDAWEB_DB_PASSWORD=develop \
   --from-literal=PATAVI_HOST=patavi.edge.molgenis.org \
   --from-literal=SECURE_TRAFFIC=true
 
