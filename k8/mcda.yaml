@@ -32,7 +32,7 @@ spec:
             - name: MCDAWEB_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db-credentials
+                  name: mcda-settings
                   key: MCDAWEB_DB_PASSWORD
             - name: MCDAWEB_COOKIE_SECRET
               valueFrom:

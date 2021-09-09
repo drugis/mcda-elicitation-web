@@ -11,8 +11,7 @@ rancher kubectl delete secret db-credentials -n drugis
 rancher kubectl create secret generic db-credentials \
   -n drugis \
   --from-literal=POSTGRES_PASSWORD=develop \
-  --from-literal=PATAVI_DB_PASSWORD=develop \
-  --from-literal=MCDAWEB_DB_PASSWORD=develop
+  --from-literal=PATAVI_DB_PASSWORD=develop 
 
 rancher kubectl delete configmap mcda-settings -n drugis
 rancher kubectl create configmap mcda-settings \
@@ -22,6 +21,7 @@ rancher kubectl create configmap mcda-settings \
   --from-literal=MCDA_HOST=https://mcda.edge.molgenis.org \
   --from-literal=MCDAWEB_DB_HOST=postgres \
   --from-literal=MCDAWEB_DB_NAME=mcda \
+  --from-literal=MCDAWEB_DB_PASSWORD=develop \
   --from-literal=PATAVI_HOST=patavi.edge.molgenis.org \
   --from-literal=SECURE_TRAFFIC=true
 
