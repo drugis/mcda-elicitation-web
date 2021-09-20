@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcda-test
+  namespace: drugis-test
+spec:
+  type: NodePort
+  ports:
+    - port: 3002
+  selector:
+    app: mcda-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcda-test
+  namespace: drugis-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcda-test
+  template:
+    metadata:
+      labels:
+        app: mcda-test
+    spec:
+      containers:
+        - name: mcda-test
+          image: addis/mcda:k8s3
+          env:
+            - name: MCDAWEB_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mcda-test-secrets
+                  key: MCDAWEB_DB_PASSWORD
+            - name: MCDAWEB_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mcda-test-secrets
+                  key: MCDAWEB_COOKIE_SECRET
+            - name: MCDAWEB_GOOGLE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: mcda-test-secrets
+                  key: MCDAWEB_GOOGLE_SECRET
+            - name: MCDAWEB_GOOGLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mcda-test-secrets
+                  key: MCDAWEB_GOOGLE_KEY
+            - name: PATAVI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: PATAVI_API_KEY
+          envFrom:
+            - configMapRef:
+                name: mcda-test-settings
+          ports:
+            - name: mcda-test
+              containerPort: 3002

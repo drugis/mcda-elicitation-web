@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mcda-db-init
-  namespace: drugis
+  name: mcda-test-db-init
+  namespace: drugis-test
   labels:
-    app: mcda-db-init
+    app: mcda-test-db-init
 spec:
   initContainers:
     - name: wait-for-db
@@ -20,18 +20,18 @@ spec:
       command: ['sh', '-c']
       args:
         - until psql -h postgres -c  "select version();"; do echo waiting for postgres; sleep 2; done;
-    - name: get-mcda-schema
+    - name: get-mcda-test-schema
       image: busybox:1.28
       command:
         [
           'sh',
           '-c',
-          'wget -O /schema-data/mcda-schema.sql https://raw.githubusercontent.com/drugis/mcda-elicitation-web/master/database.pg.sql'
+          'wget -O /schema-data/mcda-schema.sql https://raw.githubusercontent.com/drugis/mcda-elicitation-web/develop/database.pg.sql'
         ]
       volumeMounts:
         - name: schema-data
           mountPath: /schema-data
-    - name: create-mcda-user
+    - name: create-mcda-test-user
       image: postgres:10.8
       env:
         - name: PGUSER
@@ -44,24 +44,38 @@ spec:
         - name: MCDAWEB_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-credentials
+              name: mcda-test-secrets
               key: MCDAWEB_DB_PASSWORD
       command: ['sh', '-c']
       args:
-        - psql -h postgres -c  "CREATE USER mcda WITH PASSWORD '$(MCDAWEB_DB_PASSWORD)'" -c  "CREATE database mcda encoding 'utf-8'"
+        - psql -h postgres -c  "DO \$\$ BEGIN CREATE ROLE mcdatest LOGIN PASSWORD '$(MCDAWEB_DB_PASSWORD)'; EXCEPTION WHEN DUPLICATE_OBJECT THEN RAISE NOTICE 'not creating role mcdatest -- it already exists'; END \$\$"
+    - name: create-mcda-database
+      image: postgres:10.8
+      env:
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: POSTGRES_PASSWORD
+
+      command: ['sh', '-c']
+      args:
+        - psql -h postgres -c "SELECT 1 FROM pg_database WHERE datname = 'mcdatest'" | grep -q 1 || psql -h postgres -c "CREATE DATABASE mcdatest"
   restartPolicy: Never
   containers:
     - name: run-liquibase
       image: webdevops/liquibase:postgres
       env:
         - name: LIQUIBASE_URL
-          value: 'jdbc:postgresql://postgres:5432/mcda'
+          value: 'jdbc:postgresql://postgres:5432/mcdatest'
         - name: LIQUIBASE_USERNAME
-          value: 'mcda'
+          value: 'mcdatest'
         - name: LIQUIBASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-credentials
+              name: mcda-test-secrets
               key: MCDAWEB_DB_PASSWORD
         - name: LIQUIBASE_CHANGELOG
           value: '/schema-data/mcda-schema.sql'
