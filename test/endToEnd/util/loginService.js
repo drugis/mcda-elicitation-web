@@ -2,7 +2,7 @@
 
 const TEST_URL = require('./constants').TEST_URL;
 const USER_NAME = 'user';
-const CORRECT_PASSWORD = 'test';
+const CORRECT_PASSWORD = 'password';
 
 function login(browser, username = USER_NAME, password = CORRECT_PASSWORD) {
   browser

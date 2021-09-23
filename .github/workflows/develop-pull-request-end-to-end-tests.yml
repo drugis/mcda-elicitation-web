@@ -67,8 +67,8 @@ jobs:
 
       - name: add local users
         run: |
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user2', 'user2', 'user2', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$HOkkgYW2IqzPc6ryCbi/9OWUpJPxh2mu7IzDpLvxShBcZRtwb/1F.')"
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user2', 'user2', 'user2', '\$2a\$10\$HOkkgYW2IqzPc6ryCbi/9OWUpJPxh2mu7IzDpLvxShBcZRtwb/1F.')"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
