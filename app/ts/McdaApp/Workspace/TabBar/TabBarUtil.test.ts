@@ -8,7 +8,8 @@ import IPvf from '@shared/interface/Problem/IPvf';
 import {
   findCriterionWithTooManyDataSources,
   findMissingPvfs,
-  findMissingValue
+  findMissingValue,
+  isAnyObservableRangeWidthZero
 } from './TabBarUtil';
 
 describe('TabBarUtil', () => {
@@ -299,6 +300,24 @@ describe('TabBarUtil', () => {
         {dataSources: [{id: 'ds2Id'}, {id: 'ds3Id'}]} as ICriterion
       ];
       expect(findCriterionWithTooManyDataSources(criteria)).toBeTruthy();
+    });
+  });
+
+  describe('isAnyObservableRangeWidthZero', () => {
+    it('should return false if all ranges have a width greater than zero', () => {
+      const observedRanges: Record<string, [number, number]> = {
+        crit1Id: [0, 1],
+        crit2Id: [0, 1]
+      };
+      expect(isAnyObservableRangeWidthZero(observedRanges)).toBeFalsy();
+    });
+
+    it('should return true if any range has a width of zero', () => {
+      const observedRanges: Record<string, [number, number]> = {
+        crit1Id: [0, 1],
+        crit2Id: [1, 1]
+      };
+      expect(isAnyObservableRangeWidthZero(observedRanges)).toBeTruthy();
     });
   });
 });

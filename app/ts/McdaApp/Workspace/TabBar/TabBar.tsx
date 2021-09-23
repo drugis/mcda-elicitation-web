@@ -8,6 +8,7 @@ import {
   findCriterionWithTooManyDataSources,
   findMissingPvfs,
   findMissingValue,
+  isAnyObservableRangeWidthZero,
   isTTab
 } from './TabBarUtil';
 
@@ -15,7 +16,7 @@ export default function TabBar() {
   const {selectedTab} = useParams<{selectedTab: TTab}>();
   const activeTab = isTTab(selectedTab) ? selectedTab : 'overview';
 
-  const {filteredCriteria, filteredWorkspace} = useContext(
+  const {filteredCriteria, filteredWorkspace, observedRanges} = useContext(
     CurrentSubproblemContext
   );
   const {pvfs} = useContext(CurrentScenarioContext);
@@ -25,9 +26,13 @@ export default function TabBar() {
     findCriterionWithTooManyDataSources(filteredCriteria);
   const hasMissingValues = findMissingValue(filteredWorkspace);
   const hasMissingPvfs = findMissingPvfs(pvfs, filteredCriteria);
+  const hasIdenticalValuesRow = isAnyObservableRangeWidthZero(observedRanges);
 
   const arePreferencesDisabled =
-    hasTooManyCriteria || hasMissingValues || hasTooManyDataSources;
+    hasTooManyCriteria ||
+    hasMissingValues ||
+    hasTooManyDataSources ||
+    hasIdenticalValuesRow;
 
   const areResultsDisabled = arePreferencesDisabled || hasMissingPvfs;
 
@@ -38,6 +43,8 @@ export default function TabBar() {
       return 'Cannot perform analysis because the problem has multiple datasources per criterion.';
     } else if (hasMissingValues) {
       return 'Cannot elicit preferences because the effects table contains missing values.';
+    } else if (hasIdenticalValuesRow) {
+      return 'Cannot elicit preferences because the effects table contains row(s) with identical values';
     } else return '';
   }
 
