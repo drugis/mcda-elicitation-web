@@ -127,3 +127,12 @@ export function isTTab(tab: string): tab is TTab {
     tab === 'smaa-results'
   );
 }
+
+export function isAnyObservableRangeWidthZero(
+  observedRanges: Record<string, [number, number]>
+): boolean {
+  return _.some(
+    observedRanges,
+    (observedRange) => observedRange[0] === observedRange[1]
+  );
+}

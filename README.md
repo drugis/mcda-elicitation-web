@@ -103,7 +103,7 @@ Getting the dependencies:
 
 Building the application:
 
-    npm run build-prod
+    yarn build-prod
 
 Running the application:
 
@@ -131,7 +131,7 @@ Executing tests (front-end unit tests, back-end, and R unit tests):
 
 Executing end-to-end tests:
 
-    npm run test-end-to-end
+    yarn test-end-to-end
 
 Requirements for end-to-end tests:
 
@@ -142,15 +142,15 @@ Requirements for end-to-end tests:
 
 Building the frontend with inline source maps for faster debugging:
 
-    npm run build-dev
+    yarn build-dev
 
 Continually rebuilding while you develop:
 
-    npm run dev
+    yarn dev
 
 Building a local login version:
 
-    npm run build-local-login
+    yarn build-local-login
 
 ## Initialize submodules (only needed for CSS rebuilding)
 
