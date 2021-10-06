@@ -6,6 +6,7 @@ import IScale from '@shared/interface/IScale';
 import IWorkspace from '@shared/interface/IWorkspace';
 import {buildWorkspace} from '@shared/workspaceService';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {getScalesCommand} from 'app/ts/util/PataviUtil';
 import {swapItems} from 'app/ts/util/swapUtil';
@@ -18,7 +19,6 @@ import {
   useEffect,
   useState
 } from 'react';
-import {useHistory} from 'react-router';
 import {transformCriterionToOldCriterion} from '../transformUtil';
 import IWorkspaceContext from './IWorkspaceContext';
 import {
@@ -39,8 +39,7 @@ export function WorkspaceContextProviderComponent({
   originalWorkspace: IOldWorkspace;
 }) {
   const workspaceId = originalWorkspace.id;
-  const history = useHistory();
-  const {setError} = useContext(ErrorContext);
+  const {setError, setErrorMessage} = useContext(ErrorContext);
 
   const [oldWorkspace, setOldWorkspace] =
     useState<IOldWorkspace>(originalWorkspace);
@@ -59,7 +58,8 @@ export function WorkspaceContextProviderComponent({
       newWorkspace.criteria,
       newWorkspace.alternatives
     );
-    return Axios.post(`/api/v2/patavi/scales`, scalesCommand)
+
+    return Axios.post(`/api/v2/patavi/scales`, scalesCommand, {timeout: 10000})
       .then((result: AxiosResponse<Record<string, Record<string, IScale>>>) => {
         setScales(result.data);
       })
@@ -209,7 +209,7 @@ export function WorkspaceContextProviderComponent({
       }}
     >
       <LoadingSpinner showSpinnerCondition={isLoading}>
-        {children}
+        <ShowIf condition={Boolean(scales)}>{children}</ShowIf>
       </LoadingSpinner>
     </WorkspaceContext.Provider>
   );
