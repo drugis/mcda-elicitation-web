@@ -21,6 +21,7 @@ export default function MeasurementSensitivityPlot(): JSX.Element {
     );
     const settings: ChartConfiguration = getSensitivityLineChartSettings(
       measurementsSensitivityResults,
+      'weight',
       filteredAlternatives,
       legendByAlternativeId,
       measurementSensitivityCriterion.title,

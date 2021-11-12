@@ -8,6 +8,7 @@ import {IPreferencesSensitivityResults} from '@shared/interface/Patavi/IPreferen
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityParameter';
 import {getPataviProblem} from 'app/ts/util/PataviUtil';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
@@ -47,6 +48,16 @@ export function SensitivityAnalysisContextProviderComponent({
     useState<ICriterion>(filteredCriteria[0]);
   const [preferencesSensitivityResults, setPreferencesSensitivityResults] =
     useState<Record<string, Record<number, number>>>();
+  const [preferencesSensitivityParameter, setPreferencesSensitivityParameter] =
+    useState<PreferenceSensitivityParameter>('importance');
+  const [
+    preferencesSensitivityLowestValue,
+    setPreferencesSensitivityLowestValue
+  ] = useState<number>(0.1);
+  const [
+    preferencesSensitivityHighestValue,
+    setPreferencesSensitivityHighestValue
+  ] = useState<number>(0.9);
 
   const getMeasurementsSensitivityResults = useCallback(
     (pataviProblem: IPataviProblem): void => {
@@ -138,10 +149,16 @@ export function SensitivityAnalysisContextProviderComponent({
         measurementSensitivityCriterion,
         measurementsSensitivityResults,
         preferencesSensitivityCriterion,
+        preferencesSensitivityHighestValue,
+        preferencesSensitivityLowestValue,
+        preferencesSensitivityParameter,
         preferencesSensitivityResults,
         setMeasurementSensitivityAlternative,
         setMeasurementSensitivityCriterion,
-        setPreferencesSensitivityCriterion
+        setPreferencesSensitivityCriterion,
+        setPreferencesSensitivityHighestValue,
+        setPreferencesSensitivityLowestValue,
+        setPreferencesSensitivityParameter
       }}
     >
       {children}

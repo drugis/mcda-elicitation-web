@@ -2,6 +2,7 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
+import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityParameter';
 import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
@@ -192,6 +193,7 @@ function getValueData(
 
 export function getSensitivityLineChartSettings(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
+  parameter: PreferenceSensitivityParameter,
   alternatives: IAlternative[],
   legend: Record<string, string>,
   Xlabel: string,
@@ -201,6 +203,7 @@ export function getSensitivityLineChartSettings(
 ): ChartConfiguration {
   const plotValues = pataviResultToLineValues(
     measurementsSensitivityResults,
+    parameter,
     alternatives,
     legend,
     usePercentage
@@ -255,18 +258,25 @@ export function getSensitivityLineChartSettings(
 
 export function pataviResultToLineValues(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
+  parameter: PreferenceSensitivityParameter,
   alternatives: IAlternative[],
   legend: Record<string, string>,
   usePercentage: boolean
 ): [string, ...(string | number)[]][] {
   return [
-    getLineXValues(measurementsSensitivityResults, alternatives, usePercentage),
+    getLineXValues(
+      measurementsSensitivityResults,
+      parameter,
+      alternatives,
+      usePercentage
+    ),
     ...getLineYValues(measurementsSensitivityResults, alternatives, legend)
   ];
 }
 
 function getLineXValues(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
+  parameter: PreferenceSensitivityParameter,
   alternatives: IAlternative[],
   usePercentage: boolean
 ): ['x', ...string[]] {
@@ -274,11 +284,21 @@ function getLineXValues(
     'x',
     ..._(measurementsSensitivityResults[alternatives[0].id])
       .keys()
-      .map((value: string): string =>
-        getPercentifiedValueLabel(parseFloat(value), usePercentage)
-      )
+      .map((value: string): string => {
+        const valueAsNumber = getXValue(value, parameter);
+        return getPercentifiedValueLabel(valueAsNumber, usePercentage);
+      })
       .value()
   ];
+}
+
+function getXValue(
+  value: string,
+  parameter: PreferenceSensitivityParameter
+): number {
+  return parameter === 'importance'
+    ? parseFloat(value) * 100
+    : parseFloat(value);
 }
 
 function getLineYValues(
