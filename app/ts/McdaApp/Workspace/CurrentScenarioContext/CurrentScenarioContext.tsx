@@ -73,8 +73,7 @@ export function CurrentScenarioContextProviderComponent({
   );
   const [advancedPvfCriterionId, setAdvancedPvfCriterionId] =
     useState<string>();
-  const [isThresholdElicitationDisabled, setIsThresholdElicitationDisabled] =
-    useState(true);
+  const [containsNonLinearPvf, setContainsNonLinearPvf] = useState(true);
   const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
   const getWeightsFromPatavi = useCallback(
@@ -137,7 +136,7 @@ export function CurrentScenarioContextProviderComponent({
         configuredRanges
       );
       setPvfs(newPvfs);
-      setIsThresholdElicitationDisabled(hasNonLinearPvf(newPvfs));
+      setContainsNonLinearPvf(hasNonLinearPvf(newPvfs));
       if (
         areAllPvfsSet(filteredCriteria, newPvfs) &&
         !currentScenario.state.weights
@@ -240,7 +239,7 @@ export function CurrentScenarioContextProviderComponent({
         elicitationMethod,
         equivalentChange: currentScenario.state.equivalentChange,
         isScenarioUpdating,
-        isThresholdElicitationDisabled,
+        containsNonLinearPvf,
         pvfs,
         setCurrentScenario,
         updateScenario,

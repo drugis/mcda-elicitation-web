@@ -1,39 +1,41 @@
 import {Grid, Select, TextField, Typography} from '@material-ui/core';
+import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import SelectOptions from 'app/ts/SelectOptions/SelectOptions';
+import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityParameter';
 import _ from 'lodash';
 import {ChangeEvent, useContext} from 'react';
-import {SensitivityAnalysisContext} from '../../SensitivityAnalysisContext';
+import {PreferencesSensitivityContext} from '../PreferencesSensitivityContext';
 
 export default function PreferencesSensitivitySelector(): JSX.Element {
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
   const {
-    preferencesSensitivityCriterion,
-    preferencesSensitivityHighestValue,
-    preferencesSensitivityLowestValue,
-    preferencesSensitivityParameter,
-    setPreferencesSensitivityCriterion,
-    setPreferencesSensitivityParameter,
-    setPreferencesSensitivityLowestValue,
-    setPreferencesSensitivityHighestValue
-  } = useContext(SensitivityAnalysisContext);
+    criterion,
+    highestValue,
+    lowestValue,
+    parameter,
+    setCriterion,
+    setParameter,
+    setLowestValue,
+    setHighestValue
+  } = useContext(PreferencesSensitivityContext);
+
+  const {containsNonLinearPvf} = useContext(CurrentScenarioContext);
 
   function handleCriterionChanged(event: ChangeEvent<{value: string}>): void {
     const newCriterion = _.find(filteredCriteria, ['id', event.target.value]);
-    setPreferencesSensitivityCriterion(newCriterion);
+    setCriterion(newCriterion);
   }
 
   function handleParameterChanged(event: ChangeEvent<{value: string}>): void {
-    setPreferencesSensitivityParameter(
-      event.target.value as PreferenceSensitivityParameter
-    );
+    setParameter(event.target.value as PreferenceSensitivityParameter);
   }
 
   function handleLowestValueChanged(event: ChangeEvent<{value: string}>): void {
     const parsed = parseFloat(event.target.value);
     if (!isNaN(parsed)) {
-      setPreferencesSensitivityLowestValue(parsed);
+      setLowestValue(parsed);
     }
   }
 
@@ -42,7 +44,7 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
   ): void {
     const parsed = parseFloat(event.target.value);
     if (!isNaN(parsed)) {
-      setPreferencesSensitivityHighestValue(parsed);
+      setHighestValue(parsed);
     }
   }
 
@@ -55,7 +57,7 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
         <Select
           native
           id="preferences-criterion-selector"
-          value={preferencesSensitivityCriterion.id}
+          value={criterion.id}
           onChange={handleCriterionChanged}
           style={{minWidth: 220}}
         >
@@ -69,45 +71,49 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
         <Select
           native
           id="preferences-parameter-selector"
-          value={preferencesSensitivityParameter}
+          value={parameter}
           onChange={handleParameterChanged}
           style={{minWidth: 220}}
         >
           <option value="importance">Importance</option>
           <option value="weight">Weight</option>
-          <option value="equivalentChange">Equivalent Change</option>
+          {!containsNonLinearPvf && (
+            <option value="equivalentChange">Equivalent Change</option>
+          )}
         </Select>
       </Grid>
-      <Grid item xs={3}>
-        <Typography>Lowest value:</Typography>
-      </Grid>
-      <Grid item xs={9}>
-        <TextField
-          id="preferences-sensitivity-lowest-value"
-          type="number"
-          value={preferencesSensitivityLowestValue}
-          onChange={handleLowestValueChanged}
-          style={{minWidth: 220}}
-          inputProps={{
-            min: 0.1
-          }}
-        />
-      </Grid>
-      <Grid item xs={3}>
-        <Typography>Highest value:</Typography>
-      </Grid>
-      <Grid item xs={9}>
-        <TextField
-          id="preferences-sensitivity-highest-value"
-          type="number"
-          value={preferencesSensitivityHighestValue}
-          onChange={handleHighestValueChanged}
-          style={{minWidth: 220}}
-          inputProps={{
-            min: 0.1
-          }}
-        />
-      </Grid>
+      <ShowIf condition={parameter === 'equivalentChange'}>
+        <Grid item xs={3}>
+          <Typography>Lowest value:</Typography>
+        </Grid>
+        <Grid item xs={9}>
+          <TextField
+            id="preferences-sensitivity-lowest-value"
+            type="number"
+            value={lowestValue}
+            onChange={handleLowestValueChanged}
+            style={{minWidth: 220}}
+            inputProps={{
+              min: 0.1
+            }}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <Typography>Highest value:</Typography>
+        </Grid>
+        <Grid item xs={9}>
+          <TextField
+            id="preferences-sensitivity-highest-value"
+            type="number"
+            value={highestValue}
+            onChange={handleHighestValueChanged}
+            style={{minWidth: 220}}
+            inputProps={{
+              min: 0.1
+            }}
+          />
+        </Grid>
+      </ShowIf>
     </Grid>
   );
 }

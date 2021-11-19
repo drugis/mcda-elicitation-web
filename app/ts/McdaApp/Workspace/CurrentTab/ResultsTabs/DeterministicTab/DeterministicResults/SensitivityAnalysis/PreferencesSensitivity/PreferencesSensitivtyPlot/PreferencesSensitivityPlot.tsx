@@ -1,45 +1,44 @@
 import ICriterion from '@shared/interface/ICriterion';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {getSensitivityLineChartSettings} from 'app/ts/McdaApp/Workspace/CurrentTab/ResultsTabs/DeterministicTab/DeterministicResultsUtil';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityParameter';
 import {ChartConfiguration, generate} from 'c3';
 import {useContext, useEffect} from 'react';
-import {SensitivityAnalysisContext} from '../../SensitivityAnalysisContext';
+import {PreferencesSensitivityContext} from '../PreferencesSensitivityContext';
 
 export default function PreferencesSensitivityPlot(): JSX.Element {
+  const {criterion, results, parameter} = useContext(
+    PreferencesSensitivityContext
+  );
+  const {getUsePercentage} = useContext(SettingsContext);
   const {filteredAlternatives} = useContext(CurrentSubproblemContext);
   const {legendByAlternativeId} = useContext(LegendContext);
-  const {
-    preferencesSensitivityCriterion,
-    preferencesSensitivityResults,
-    preferencesSensitivityParameter
-  } = useContext(SensitivityAnalysisContext);
   const width = '400px';
   const height = '400px';
 
   useEffect(() => {
-    const xLabel = getXLabel(
-      preferencesSensitivityCriterion,
-      preferencesSensitivityParameter
-    );
+    const xLabel = getXLabel(criterion, parameter);
     const settings: ChartConfiguration = getSensitivityLineChartSettings(
-      preferencesSensitivityResults,
-      preferencesSensitivityParameter,
+      results,
+      parameter,
       filteredAlternatives,
       legendByAlternativeId,
       xLabel,
       true,
       '#preferences-sensitivity-plot',
-      false
+      parameter === 'equivalentChange'
+        ? getUsePercentage(criterion.dataSources[0])
+        : false
     );
     generate(settings);
   }, [
     filteredAlternatives,
     legendByAlternativeId,
-    preferencesSensitivityCriterion,
-    preferencesSensitivityParameter,
-    preferencesSensitivityResults
+    criterion,
+    parameter,
+    results
   ]);
 
   return (

@@ -285,20 +285,11 @@ function getLineXValues(
     ..._(measurementsSensitivityResults[alternatives[0].id])
       .keys()
       .map((value: string): string => {
-        const valueAsNumber = getXValue(value, parameter);
+        const valueAsNumber = parseFloat(value);
         return getPercentifiedValueLabel(valueAsNumber, usePercentage);
       })
       .value()
   ];
-}
-
-function getXValue(
-  value: string,
-  parameter: PreferenceSensitivityParameter
-): number {
-  return parameter === 'importance'
-    ? parseFloat(value) * 100
-    : parseFloat(value);
 }
 
 function getLineYValues(

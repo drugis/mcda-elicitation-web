@@ -16,7 +16,7 @@ getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
   measurements <- genMedianMeasurements(params)
   weights <- genRepresentativeWeights(params)
 
-  if (params$sensitivityAnalysis["parameter"]=="weight") {
+  if (params$sensitivityAnalysis$parameter == "weight") {
     xRange <- seq(0, 1, length.out = 101)
     criterionIndex <- which(names(weights) == criterion)
     totalValue <- c()
@@ -26,25 +26,26 @@ getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
     }
   }
   
-  if (params$sensitivityAnalysis["parameter"]=="importance") {
+  if (params$sensitivityAnalysis$parameter == "importance") {
     xRange <- seq(1, 100, length.out = 100)
     criterionIndex <- which(names(weights) == criterion)
     importances <- weights/max(weights)*100
     totalValue <- c()
     for (value in xRange) {
       importances[criterionIndex] <- value
-      currentWeights <- importance/ssum(importances)
+      currentWeights <- importances/sum(importances)
       valueProfiles <- calculateValueProfiles(params, measurements, currentWeights)
       totalValue <- cbind(totalValue, rowSums(valueProfiles))
     }
   }
 
-  if (params$sensitivityAnalysis["parameter"]=="equivalentChange") {
-    xRange <- seq(params$sensitivityAnalysis["lowestValue"], params$sensitivityAnalysis["highestValue"], length.out = 100)
+  if (params$sensitivityAnalysis$parameter == "equivalentChange") {
+    xRange <- seq(params$sensitivityAnalysis$lowestValue,
+                  params$sensitivityAnalysis$highestValue, length.out = 100)
     criterionIndex <- which(names(weights) == criterion)
     totalValue <- c()
-    newEquivalentChanges <- params$sensitivityAnalysis["equivalentChanges"]
-    oldEquivalentChanges <- params$sensitivityAnalysis["equivalentChanges"]
+    newEquivalentChanges <- params$sensitivityAnalysis$equivalentChanges
+    oldEquivalentChanges <- params$sensitivityAnalysis$equivalentChanges
     for (value in xRange) {
       importances <- weights/max(weights)*100
       newEquivalentChanges[criterionIndex] <- value
@@ -55,7 +56,7 @@ getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
     }
   }
 
-  colnames(totalValue) <- weightRange
+  colnames(totalValue) <- xRange
   return(wrapMatrix(totalValue))
 }
 
