@@ -26,7 +26,7 @@ describe('getPvfCoordinates', () => {
     const result = getPvfCoordinates(pvf, usePercentage);
     const expectedResult: [['x', ...number[]], [string, 1, ...number[]]] = [
       ['x', 100, 10],
-      ['crit', 1, 0]
+      ['y', 1, 0]
     ];
     expect(result).toEqual(expectedResult);
   });
@@ -43,7 +43,7 @@ describe('getPvfCoordinates', () => {
     const result = getPvfCoordinates(pvf, usePercentage);
     const expectedResult: [['x', ...number[]], [string, 1, ...number[]]] = [
       ['x', 90, 50, 10],
-      ['crit', 1, 0.5, 0]
+      ['y', 1, 0.5, 0]
     ];
     expect(result).toEqual(expectedResult);
   });
@@ -60,7 +60,7 @@ describe('getPvfCoordinates', () => {
     const result = getPvfCoordinates(pvf, usePercentage);
     const expectedResult: [['x', ...number[]], [string, 1, ...number[]]] = [
       ['x', 90, 50, 10],
-      ['crit', 1, 0.5, 0]
+      ['y', 1, 0.5, 0]
     ];
     expect(result).toEqual(expectedResult);
   });
@@ -141,7 +141,7 @@ describe('generatePlotSettings', () => {
     const criterionId = 'critId';
     const values: [['x', ...number[]], [string, 1, ...number[]]] = [
       ['x', 100, 80, 70, 60, 10],
-      ['crit', 1, 0.9, 0.8, 0.7, 0]
+      ['y', 1, 0.9, 0.8, 0.7, 0]
     ];
     const result: ChartConfiguration = generatePlotSettings(
       criterionId,
