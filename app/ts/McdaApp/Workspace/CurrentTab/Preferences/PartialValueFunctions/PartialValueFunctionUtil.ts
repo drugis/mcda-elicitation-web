@@ -9,10 +9,9 @@ import _ from 'lodash';
 
 export function getPvfCoordinates(
   pvf: TPvf,
-  criterionTitle: string,
   usePercentage: boolean
 ): [['x', ...number[]], [string, 1, ...number[]]] {
-  return [getXValues(pvf, usePercentage), getYValues(pvf, criterionTitle)];
+  return [getXValues(pvf, usePercentage), getYValues(pvf)];
 }
 
 function getXValues(pvf: TPvf, usePercentage: boolean): ['x', ...number[]] {
@@ -34,11 +33,8 @@ function intermediateX(pvf: TPvf, usePercentage: boolean): number[] {
   }
 }
 
-function getYValues(
-  pvf: TPvf,
-  criterionTitle: string
-): [string, 1, ...number[]] {
-  return [criterionTitle, 1, ...intermediateY(pvf), 0];
+function getYValues(pvf: TPvf): [string, 1, ...number[]] {
+  return ['y', 1, ...intermediateY(pvf), 0];
 }
 
 function intermediateY(pvf: TPvf): number[] {

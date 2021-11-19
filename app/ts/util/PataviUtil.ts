@@ -139,11 +139,17 @@ function buildPataviTableEntries(
   return _.reduce(
     sourceEntries,
     (accum: EntriesRecord, entry: Effect): EntriesRecord => {
+      let performance;
+      try {
+        performance = fn(entry);
+      } catch (e) {
+        return accum;
+      }
       return {
         ...accum,
         [entry.criterionId]: {
           ...accum[entry.criterionId],
-          [entry.alternativeId]: fn(entry)
+          [entry.alternativeId]: performance
         }
       };
     },

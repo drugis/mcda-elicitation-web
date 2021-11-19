@@ -157,7 +157,7 @@ describe('PataviUtil', () => {
       ];
       expect(result).toEqual(expectedResult);
     });
-    it('should throw an error if there is an invalid performance', () => {
+    it('should omit invalid performances', () => {
       const workspace: IWorkspace = {
         distributions: [
           {
@@ -168,11 +168,7 @@ describe('PataviUtil', () => {
           }
         ]
       } as IWorkspace;
-      expect(() => {
-        buildPataviPerformanceTable(workspace, false);
-      }).toThrow(
-        'Attempt to create invalid performance table entry for Patavi'
-      );
+      expect(buildPataviPerformanceTable(workspace, false)).toEqual([]);
     });
   });
   describe('getScalesCommand', () => {
