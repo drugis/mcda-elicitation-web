@@ -23,8 +23,7 @@ describe('getPvfCoordinates', () => {
       direction: 'increasing',
       type: 'linear'
     };
-    const criterionTitle = 'crit';
-    const result = getPvfCoordinates(pvf, criterionTitle, usePercentage);
+    const result = getPvfCoordinates(pvf, usePercentage);
     const expectedResult: [['x', ...number[]], [string, 1, ...number[]]] = [
       ['x', 100, 10],
       ['crit', 1, 0]
@@ -41,8 +40,7 @@ describe('getPvfCoordinates', () => {
       cutoffs: [50],
       values: [0.5]
     };
-    const criterionTitle = 'crit';
-    const result = getPvfCoordinates(pvf, criterionTitle, usePercentage);
+    const result = getPvfCoordinates(pvf, usePercentage);
     const expectedResult: [['x', ...number[]], [string, 1, ...number[]]] = [
       ['x', 90, 50, 10],
       ['crit', 1, 0.5, 0]
@@ -59,8 +57,7 @@ describe('getPvfCoordinates', () => {
       cutoffs: [0.5],
       values: [0.5]
     };
-    const criterionTitle = 'crit';
-    const result = getPvfCoordinates(pvf, criterionTitle, usePercentage);
+    const result = getPvfCoordinates(pvf, usePercentage);
     const expectedResult: [['x', ...number[]], [string, 1, ...number[]]] = [
       ['x', 90, 50, 10],
       ['crit', 1, 0.5, 0]
