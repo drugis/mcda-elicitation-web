@@ -10,24 +10,22 @@ import PreferencesSensitivityPlot from './PreferencesSensitivtyPlot/PreferencesS
 export default function PreferencesSensitivity(): JSX.Element {
   const {results} = useContext(PreferencesSensitivityContext);
   return (
-    <LoadingSpinner showSpinnerCondition={!results}>
-      <Grid container item xs={12}>
-        <Grid item xs={12}>
-          <Typography variant="h5">
-            <InlineHelp helpId="sensitivity-preferences">
-              Preferences
-            </InlineHelp>
-          </Typography>
-        </Grid>
-        <Grid item xs={12} style={{minHeight: '64px'}}>
-          <PreferencesSensitivitySelector />
-        </Grid>
-        <Grid item xs={12}>
+    <Grid container item xs={12}>
+      <Grid item xs={12}>
+        <Typography variant="h5">
+          <InlineHelp helpId="sensitivity-preferences">Preferences</InlineHelp>
+        </Typography>
+      </Grid>
+      <Grid item xs={12} style={{minHeight: '64px'}}>
+        <PreferencesSensitivitySelector />
+      </Grid>
+      <Grid item xs={12}>
+        <LoadingSpinner showSpinnerCondition={!results}>
           <PlotButtons plotId="preferences-sensitivity-plot">
             <PreferencesSensitivityPlot />
           </PlotButtons>
-        </Grid>
+        </LoadingSpinner>
       </Grid>
-    </LoadingSpinner>
+    </Grid>
   );
 }

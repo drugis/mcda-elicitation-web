@@ -4,8 +4,10 @@ import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubprobl
 import SelectOptions from 'app/ts/SelectOptions/SelectOptions';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityParameter';
+import {useDebouncedUpdate} from 'app/ts/util/useDebouncedUpdate';
 import _ from 'lodash';
-import {ChangeEvent, useContext} from 'react';
+import {ChangeEvent, useContext, useState} from 'react';
+import {calcInitialEquivalentChangeRange} from '../../../../DeterministicResultsUtil';
 import {PreferencesSensitivityContext} from '../PreferencesSensitivityContext';
 
 export default function PreferencesSensitivitySelector(): JSX.Element {
@@ -22,10 +24,19 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
   } = useContext(PreferencesSensitivityContext);
 
   const {containsNonLinearPvf} = useContext(CurrentScenarioContext);
+  const [localLowest, setLocalLowest] = useState(lowestValue);
+  const debouncedSetLowestValue = useDebouncedUpdate(setLowestValue, 500);
+  const [localHighest, setLocalHighest] = useState(highestValue);
+  const debouncedSetHighestValue = useDebouncedUpdate(setHighestValue, 500);
 
   function handleCriterionChanged(event: ChangeEvent<{value: string}>): void {
     const newCriterion = _.find(filteredCriteria, ['id', event.target.value]);
     setCriterion(newCriterion);
+    if (parameter === 'equivalentChange') {
+      const [newLowest, newHighest] = calcInitialEquivalentChangeRange();
+      setLowestValue(newLowest);
+      setHighestValue(newHighest);
+    }
   }
 
   function handleParameterChanged(event: ChangeEvent<{value: string}>): void {
@@ -35,7 +46,8 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
   function handleLowestValueChanged(event: ChangeEvent<{value: string}>): void {
     const parsed = parseFloat(event.target.value);
     if (!isNaN(parsed)) {
-      setLowestValue(parsed);
+      setLocalLowest(parsed);
+      debouncedSetLowestValue(parsed);
     }
   }
 
@@ -44,7 +56,8 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
   ): void {
     const parsed = parseFloat(event.target.value);
     if (!isNaN(parsed)) {
-      setHighestValue(parsed);
+      setLocalHighest(parsed);
+      debouncedSetHighestValue(parsed);
     }
   }
 
@@ -90,7 +103,7 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
           <TextField
             id="preferences-sensitivity-lowest-value"
             type="number"
-            value={lowestValue}
+            value={localLowest}
             onChange={handleLowestValueChanged}
             style={{minWidth: 220}}
             inputProps={{
@@ -105,7 +118,7 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
           <TextField
             id="preferences-sensitivity-highest-value"
             type="number"
-            value={highestValue}
+            value={localHighest}
             onChange={handleHighestValueChanged}
             style={{minWidth: 220}}
             inputProps={{

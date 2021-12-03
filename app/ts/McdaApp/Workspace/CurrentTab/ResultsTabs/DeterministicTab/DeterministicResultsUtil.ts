@@ -321,3 +321,7 @@ export function calcImportances(
   const largestDiff = _.max(_.map(_.values(diffs), (diff) => Math.abs(diff)));
   return _.mapValues(diffs, (diff) => (100 * Math.abs(diff)) / largestDiff);
 }
+
+export function calcInitialEquivalentChangeRange(): [number, number] {
+  return [0.1, 0.9];
+}
