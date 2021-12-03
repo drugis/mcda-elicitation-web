@@ -1,12 +1,6 @@
 import TextField from '@material-ui/core/TextField';
-import _ from 'lodash';
-import {
-  MutableRefObject,
-  useCallback,
-  useContext,
-  useRef,
-  useState
-} from 'react';
+import {useDebouncedUpdate} from 'app/ts/util/useDebouncedUpdate';
+import {useContext, useState} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function Title() {
@@ -18,16 +12,10 @@ export default function Title() {
     debouncedUpdateTitle(event.target.value);
   }
 
-  const debouncedUpdateTitle = useCallback(
-    _.debounce(
-      (newTitle: string) => debouncedFunctionRef.current(newTitle),
-      500
-    ),
-    []
+  const debouncedUpdateTitle = useDebouncedUpdate(
+    (newTitle: string) => updateTitle(newTitle),
+    500
   );
-
-  const debouncedFunctionRef: MutableRefObject<(newTitle: string) => void> =
-    useRef((newTitle: string) => updateTitle(newTitle));
 
   return (
     <TextField

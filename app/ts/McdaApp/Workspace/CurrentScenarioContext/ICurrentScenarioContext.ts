@@ -14,7 +14,7 @@ export default interface ICurrentScenarioContext {
   elicitationMethod: string;
   equivalentChange: IEquivalentChange;
   isScenarioUpdating: boolean;
-  isThresholdElicitationDisabled: boolean;
+  containsNonLinearPvf: boolean;
   setCurrentScenario: (currentScenario: IMcdaScenario) => void;
   updateScenario: (newScenario: IMcdaScenario) => Promise<void>;
   getPvf: (criterionId: string) => TPvf;

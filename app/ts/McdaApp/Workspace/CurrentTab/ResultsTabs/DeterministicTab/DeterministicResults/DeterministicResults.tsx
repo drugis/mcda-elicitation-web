@@ -29,34 +29,34 @@ export default function DeterministicResults(): JSX.Element {
   return (
     <ShowIf condition={Boolean(pvfs)}>
       <DeterministicResultsContextProviderComponent>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <ScenarioSelection
-              scenarios={scenariosWithPvfs}
-              currentScenario={currentScenario}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <SensitivityMeasurementsContextProviderComponent>
-              <SensitivityMeasurementsTable />
-            </SensitivityMeasurementsContextProviderComponent>
-          </Grid>
-          <Grid item xs={12}>
-            <EquivalentChangeContextProviderComponent>
-              <DeterministicWeightsContextProviderComponent>
+        <EquivalentChangeContextProviderComponent>
+          <DeterministicWeightsContextProviderComponent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <ScenarioSelection
+                  scenarios={scenariosWithPvfs}
+                  currentScenario={currentScenario}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <SensitivityMeasurementsContextProviderComponent>
+                  <SensitivityMeasurementsTable />
+                </SensitivityMeasurementsContextProviderComponent>
+              </Grid>
+              <Grid item xs={12}>
                 <DeterministicWeightsTable />
-              </DeterministicWeightsContextProviderComponent>
-            </EquivalentChangeContextProviderComponent>
-          </Grid>
-          <Grid item xs={12}>
-            <ValueProfiles />
-          </Grid>
-          <Grid item xs={12}>
-            <SensitivityAnalysisContextProviderComponent>
-              <SensitivityAnalysis />
-            </SensitivityAnalysisContextProviderComponent>
-          </Grid>
-        </Grid>
+              </Grid>
+              <Grid item xs={12}>
+                <ValueProfiles />
+              </Grid>
+              <Grid item xs={12}>
+                <SensitivityAnalysisContextProviderComponent>
+                  <SensitivityAnalysis />
+                </SensitivityAnalysisContextProviderComponent>
+              </Grid>
+            </Grid>
+          </DeterministicWeightsContextProviderComponent>
+        </EquivalentChangeContextProviderComponent>
       </DeterministicResultsContextProviderComponent>
     </ShowIf>
   );

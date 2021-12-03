@@ -1,12 +1,6 @@
 import TextField from '@material-ui/core/TextField';
-import _ from 'lodash';
-import {
-  MutableRefObject,
-  useCallback,
-  useContext,
-  useRef,
-  useState
-} from 'react';
+import {useDebouncedUpdate} from 'app/ts/util/useDebouncedUpdate';
+import {useContext, useState} from 'react';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function ManualInputTherapeuticContext() {
@@ -20,19 +14,10 @@ export default function ManualInputTherapeuticContext() {
     debouncedUpdateTherapeuticContext(event.target.value);
   }
 
-  const debouncedUpdateTherapeuticContext = useCallback(
-    _.debounce(
-      (newTherapeuticContext: string) =>
-        debouncedFunctionRef.current(newTherapeuticContext),
-      500
-    ),
-    []
-  );
-
-  const debouncedFunctionRef: MutableRefObject<
-    (newTherapeuticContext: string) => void
-  > = useRef((newTherapeuticContext: string) =>
-    updateTherapeuticContext(newTherapeuticContext)
+  const debouncedUpdateTherapeuticContext = useDebouncedUpdate(
+    (newTherapeuticContext: string) =>
+      updateTherapeuticContext(newTherapeuticContext),
+    500
   );
 
   return (

@@ -189,6 +189,7 @@ describe('DeterministicResultsUtil', () => {
       const usePercentage = false;
       const result = pataviResultToLineValues(
         measurementsSensitivityResults,
+        'weight',
         alternatives,
         legend,
         usePercentage
@@ -212,6 +213,7 @@ describe('DeterministicResultsUtil', () => {
       const usePercentage = true;
       const result = pataviResultToLineValues(
         measurementsSensitivityResults,
+        'weight',
         alternatives,
         legend,
         usePercentage
@@ -235,6 +237,7 @@ describe('DeterministicResultsUtil', () => {
       const usePercentage = false;
       const result = pataviResultToLineValues(
         measurementsSensitivityResults,
+        'weight',
         alternatives,
         legend,
         usePercentage
