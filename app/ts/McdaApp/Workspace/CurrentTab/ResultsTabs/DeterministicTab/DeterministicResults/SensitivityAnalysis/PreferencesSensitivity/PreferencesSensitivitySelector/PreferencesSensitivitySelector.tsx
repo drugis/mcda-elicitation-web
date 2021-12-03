@@ -35,7 +35,9 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
     if (parameter === 'equivalentChange') {
       const [newLowest, newHighest] = calcInitialEquivalentChangeRange();
       setLowestValue(newLowest);
+      setLocalLowest(newLowest);
       setHighestValue(newHighest);
+      setLocalHighest(newHighest);
     }
   }
 
