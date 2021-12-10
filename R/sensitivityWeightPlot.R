@@ -44,8 +44,10 @@ getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
                   params$sensitivityAnalysis$highestValue, length.out = 100)
     criterionIndex <- which(names(weights) == criterion)
     totalValue <- c()
-    newEquivalentChanges <- params$sensitivityAnalysis$equivalentChanges
-    oldEquivalentChanges <- params$sensitivityAnalysis$equivalentChanges
+    
+    newEquivalentChanges <- params$sensitivityAnalysis$equivalentChanges[names(weights)]
+    oldEquivalentChanges <- params$sensitivityAnalysis$equivalentChanges[names(weights)]
+
     for (value in xRange) {
       importances <- weights/max(weights)*100
       newEquivalentChanges[criterionIndex] <- value

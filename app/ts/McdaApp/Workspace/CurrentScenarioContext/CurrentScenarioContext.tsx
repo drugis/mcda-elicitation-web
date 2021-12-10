@@ -125,7 +125,16 @@ export function CurrentScenarioContextProviderComponent({
   );
 
   useEffect(() => {
-    setCurrentScenario(getScenario(scenarioId));
+    const scenario = getScenario(scenarioId);
+
+    setCurrentScenario({
+      ...scenario,
+      state: {
+        ...scenario.state,
+        thresholdValuesByCriterion:
+          scenario.state.thresholdValuesByCriterion || {}
+      }
+    });
   }, [getScenario, scenarioId]);
 
   useEffect(() => {
