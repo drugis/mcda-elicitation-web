@@ -9,11 +9,11 @@ import {
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
 import IWeights from '@shared/interface/IWeights';
-import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import UncertainValue from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import ClipboardButton from 'app/ts/util/SharedComponents/ClipboardButton/ClipboardButton';
+import UncertainValue from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/UncertainValue/UncertainValue';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import significantDigits from 'app/ts/util/significantDigits';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';

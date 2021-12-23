@@ -5,7 +5,7 @@ import {
   DialogContent,
   Grid
 } from '@material-ui/core';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import {useContext} from 'react';
 import DisplayMode from '../DisplayMode/DisplayMode';
 import RandomSeed from '../RandomSeed/RandomSeed';

@@ -1,7 +1,7 @@
 import {Slider, ValueLabelProps, withStyles} from '@material-ui/core';
 //@ts-ignore
 import ValueLabel from '@material-ui/core/Slider/ValueLabel';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import significantDigits from 'app/ts/util/significantDigits';

@@ -9,8 +9,8 @@ import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {getWeightsPataviProblem} from 'app/ts/util/PataviUtil';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import {
@@ -73,8 +73,7 @@ export function CurrentScenarioContextProviderComponent({
   );
   const [advancedPvfCriterionId, setAdvancedPvfCriterionId] =
     useState<string>();
-  const [isThresholdElicitationDisabled, setIsThresholdElicitationDisabled] =
-    useState(true);
+  const [containsNonLinearPvf, setContainsNonLinearPvf] = useState(true);
   const [isScenarioUpdating, setIsScenarioUpdating] = useState(false);
 
   const getWeightsFromPatavi = useCallback(
@@ -126,7 +125,18 @@ export function CurrentScenarioContextProviderComponent({
   );
 
   useEffect(() => {
-    setCurrentScenario(getScenario(scenarioId));
+    const scenario = getScenario(scenarioId);
+
+    if (scenario) {
+      setCurrentScenario({
+        ...scenario,
+        state: {
+          ...scenario.state,
+          thresholdValuesByCriterion:
+            scenario.state.thresholdValuesByCriterion || {}
+        }
+      });
+    }
   }, [getScenario, scenarioId]);
 
   useEffect(() => {
@@ -137,7 +147,7 @@ export function CurrentScenarioContextProviderComponent({
         configuredRanges
       );
       setPvfs(newPvfs);
-      setIsThresholdElicitationDisabled(hasNonLinearPvf(newPvfs));
+      setContainsNonLinearPvf(hasNonLinearPvf(newPvfs));
       if (
         areAllPvfsSet(filteredCriteria, newPvfs) &&
         !currentScenario.state.weights
@@ -240,7 +250,7 @@ export function CurrentScenarioContextProviderComponent({
         elicitationMethod,
         equivalentChange: currentScenario.state.equivalentChange,
         isScenarioUpdating,
-        isThresholdElicitationDisabled,
+        containsNonLinearPvf,
         pvfs,
         setCurrentScenario,
         updateScenario,

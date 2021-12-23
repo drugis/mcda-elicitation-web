@@ -1,5 +1,5 @@
 import {Grid} from '@material-ui/core';
-import {EffectsTableContextProviderComponent} from 'app/ts/EffectsTable/EffectsTableContext';
+import {EffectsTableContextProviderComponent} from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {useContext} from 'react';
 import {WorkspaceContext} from '../../WorkspaceContext/WorkspaceContext';

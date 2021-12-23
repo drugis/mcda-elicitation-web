@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
+import DisplayWarnings from 'app/ts/util/SharedComponents/DisplayWarnings';
 import {InlineQuestionMark} from 'help-popup';
 import {useContext, useEffect, useState} from 'react';
 import {SmaaResultsContext} from '../../SmaaResultsContext/SmaaResultsContext';

@@ -1,9 +1,9 @@
-import {EffectsTableContext} from 'app/ts/EffectsTable/EffectsTableContext';
+import {EffectsTableContext} from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableContext';
 import {
   canDSBePercentage,
   findScale,
   findValue
-} from 'app/ts/EffectsTable/EffectsTableUtil';
+} from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableUtil';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';

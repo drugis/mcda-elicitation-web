@@ -1,8 +1,7 @@
 import {Grid, InputAdornment, Popover, TextField} from '@material-ui/core';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import {getPercentifiedValue} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
@@ -10,10 +9,12 @@ import {EquivalentChangeContext} from '../../EquivalentChangeContext/EquivalentC
 import {getTheoreticalRange} from '../../equivalentChangeUtil';
 
 export default function EquivalentChangeValueInput({
+  usePercentage,
   anchorElement,
   isDialogOpen,
   closeDialog
 }: {
+  usePercentage: boolean;
   anchorElement: HTMLButtonElement;
   closeDialog: () => void;
   isDialogOpen: boolean;
@@ -23,11 +24,9 @@ export default function EquivalentChangeValueInput({
   );
   const {equivalentChange} = useContext(CurrentScenarioContext);
   const {stepSizesByCriterion} = useContext(CurrentSubproblemContext);
-  const {getUsePercentage} = useContext(SettingsContext);
   const [inputError, setInputError] = useState<string>('');
 
   const unit = referenceCriterion.dataSources[0].unitOfMeasurement;
-  const usePercentage = getUsePercentage(referenceCriterion.dataSources[0]);
   const [stepSize, setStepSize] = useState<number>(
     usePercentage
       ? stepSizesByCriterion[referenceCriterion.id] * 100

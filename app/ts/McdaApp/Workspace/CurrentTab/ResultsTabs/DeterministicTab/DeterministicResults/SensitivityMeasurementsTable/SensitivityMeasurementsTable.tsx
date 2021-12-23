@@ -7,15 +7,15 @@ import {
   Typography
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
-import EffectsTableAlternativeHeaders from 'app/ts/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
-import CriteriaHeader from 'app/ts/EffectsTable/EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
-import DescriptionHeader from 'app/ts/EffectsTable/EffectsTableHeaders/DescriptionHeader/DescriptionHeader';
-import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
-import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
-import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import ClipboardButton from 'app/ts/util/SharedComponents/ClipboardButton/ClipboardButton';
+import EffectsTableAlternativeHeaders from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
+import CriteriaHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/CriteriaHeader/CriteriaHeader';
+import DescriptionHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/DescriptionHeader/DescriptionHeader';
+import ReferencesHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
+import SoEUncHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
+import UnitsHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import {useContext} from 'react';

@@ -3,8 +3,6 @@ import ICriterion from '@shared/interface/ICriterion';
 import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
 import {IMeasurementsSensitivityResults} from '@shared/interface/Patavi/IMeasurementsSensitivityResults';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
-import {IPreferencesSensitivityCommand} from '@shared/interface/Patavi/IPreferencesSensitivityCommand';
-import {IPreferencesSensitivityResults} from '@shared/interface/Patavi/IPreferencesSensitivityResults';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
@@ -43,11 +41,6 @@ export function SensitivityAnalysisContextProviderComponent({
   const [measurementsSensitivityResults, setMeasurementsSensitivityResults] =
     useState<Record<string, Record<number, number>>>();
 
-  const [preferencesSensitivityCriterion, setPreferencesSensitivityCriterion] =
-    useState<ICriterion>(filteredCriteria[0]);
-  const [preferencesSensitivityResults, setPreferencesSensitivityResults] =
-    useState<Record<string, Record<number, number>>>();
-
   const getMeasurementsSensitivityResults = useCallback(
     (pataviProblem: IPataviProblem): void => {
       const pataviCommand: IMeasurementsSensitivityCommand = {
@@ -73,26 +66,6 @@ export function SensitivityAnalysisContextProviderComponent({
     ]
   );
 
-  const getPreferencesSensitivityResults = useCallback(
-    (pataviProblem: IPataviProblem): void => {
-      const pataviCommand: IPreferencesSensitivityCommand = {
-        ...pataviProblem,
-        method: 'sensitivityWeightPlot',
-        sensitivityAnalysis: {
-          criterion: preferencesSensitivityCriterion.id
-        }
-      };
-      setPreferencesSensitivityResults(undefined);
-      axios
-        .post('/api/v2/patavi/preferencesSensitivity', pataviCommand)
-        .then((result: AxiosResponse<IPreferencesSensitivityResults>) => {
-          setPreferencesSensitivityResults(result.data.total);
-        })
-        .catch(setError);
-    },
-    [preferencesSensitivityCriterion.id, setError]
-  );
-
   useEffect(() => {
     if (!_.isEmpty(pvfs)) {
       const pataviProblem = getPataviProblem(
@@ -105,26 +78,7 @@ export function SensitivityAnalysisContextProviderComponent({
       getMeasurementsSensitivityResults(pataviProblem);
     }
   }, [
-    getMeasurementsSensitivityResults, // memo: 2 useEffects because transitive dependency
-    currentScenario.state.prefs,
-    currentScenario.state.weights,
-    filteredWorkspace,
-    pvfs
-  ]);
-
-  useEffect(() => {
-    if (!_.isEmpty(pvfs)) {
-      const pataviProblem = getPataviProblem(
-        filteredWorkspace,
-        currentScenario.state.prefs,
-        pvfs,
-        currentScenario.state.weights,
-        true
-      );
-      getPreferencesSensitivityResults(pataviProblem);
-    }
-  }, [
-    getPreferencesSensitivityResults, // memo: 2 useEffects because transitive dependency
+    getMeasurementsSensitivityResults,
     currentScenario.state.prefs,
     currentScenario.state.weights,
     filteredWorkspace,
@@ -137,11 +91,8 @@ export function SensitivityAnalysisContextProviderComponent({
         measurementSensitivityAlternative,
         measurementSensitivityCriterion,
         measurementsSensitivityResults,
-        preferencesSensitivityCriterion,
-        preferencesSensitivityResults,
         setMeasurementSensitivityAlternative,
-        setMeasurementSensitivityCriterion,
-        setPreferencesSensitivityCriterion
+        setMeasurementSensitivityCriterion
       }}
     >
       {children}

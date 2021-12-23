@@ -3,7 +3,7 @@ import Select from '@material-ui/core/Select';
 import IOldSubproblem from '@shared/interface/IOldSubproblem';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SubproblemsContext} from 'app/ts/McdaApp/Workspace/SubproblemsContext/SubproblemsContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import {ChangeEvent, useContext} from 'react';

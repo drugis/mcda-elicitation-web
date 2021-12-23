@@ -1,10 +1,10 @@
 import {Dialog, DialogActions, DialogContent, Tooltip} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import DisplayErrors from 'app/ts/util/DisplayErrors';
+import DisplayErrors from 'app/ts/util/SharedComponents/DisplayErrors';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import {ChangeEvent, MouseEvent, useContext, useEffect, useState} from 'react';
 import {LegendContext} from '../LegendContext';
 import LegendButtons from './LegendButtons/LegendButtons';

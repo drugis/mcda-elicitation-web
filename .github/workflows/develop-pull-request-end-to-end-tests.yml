@@ -45,8 +45,20 @@ jobs:
         run: docker run -d --hostname my-rabbit --name my-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
       - name: run patavi server
-        run: |
-          docker run -d --name patavi-server --network host -e PATAVI_BROKER_HOST=guest:guest@localhost -p 3000:3000 -e PATAVI_PORT=3000 -e PATAVI_DB_HOST=localhost -e PATAVI_DB_NAME=patavi -e PATAVI_DB_USER=patavi -e PATAVI_DB_PASSWORD=develop -e SECURE_TRAFFIC=false -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} addis/patavi-server:test
+        run: >-
+          docker run -d --name patavi-server 
+          --network host 
+          -e PATAVI_BROKER_HOST=guest:guest@localhost 
+          -p 3000:3000 
+          -e PATAVI_HOST=localhost
+          -e PATAVI_PORT=3000 
+          -e PATAVI_DB_HOST=localhost 
+          -e PATAVI_DB_NAME=patavi 
+          -e PATAVI_DB_USER=patavi 
+          -e PATAVI_DB_PASSWORD=develop
+          -e SECURE_TRAFFIC=false 
+          -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} 
+          addis/patavi-server:test
 
       - name: build and run patavi worker
         run: |
@@ -67,8 +79,8 @@ jobs:
 
       - name: add local users
         run: |
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
-          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user2', 'user2', 'user2', '\$2a\$10\$TmvbK5.HpkoPGDV5ykycsOFIJbvDHAtgwW.JfyLNGPrBCSABAq9Na')"
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'user', 'user', '\$2a\$10\$HOkkgYW2IqzPc6ryCbi/9OWUpJPxh2mu7IzDpLvxShBcZRtwb/1F.')"
+          docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user2', 'user2', 'user2', '\$2a\$10\$HOkkgYW2IqzPc6ryCbi/9OWUpJPxh2mu7IzDpLvxShBcZRtwb/1F.')"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1

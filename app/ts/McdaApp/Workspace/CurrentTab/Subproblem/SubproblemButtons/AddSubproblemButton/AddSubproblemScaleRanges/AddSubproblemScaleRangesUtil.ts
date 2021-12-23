@@ -1,6 +1,6 @@
 import {Mark} from '@material-ui/core/Slider';
 import IDataSource from '@shared/interface/IDataSource';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/util/significantDigits';
 import _ from 'lodash';
 
@@ -8,15 +8,11 @@ export function getSliderLimits(
   observedRange: [number, number],
   configuredRange: [number, number]
 ): [number, number] {
-  const [
-    localObservedLower,
-    localObservedUpper
-  ] = preventOverlappingObservedRanges(observedRange);
+  const [localObservedLower, localObservedUpper] =
+    preventOverlappingObservedRanges(observedRange);
 
-  const [
-    localConfiguredLower,
-    localConfiguredUpper
-  ] = preventOverlappingConfiguredRanges(configuredRange);
+  const [localConfiguredLower, localConfiguredUpper] =
+    preventOverlappingConfiguredRanges(configuredRange);
 
   const floor = getFloor(localConfiguredLower, localObservedLower);
   const ceil = getCeil(localConfiguredUpper, localObservedUpper);

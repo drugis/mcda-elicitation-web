@@ -1,5 +1,5 @@
 import {Grid, Typography} from '@material-ui/core';
-import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
+import ClipboardButton from 'app/ts/util/SharedComponents/ClipboardButton/ClipboardButton';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {LegendContext} from 'app/ts/PlotButtons/Legend/LegendContext';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';

@@ -1,6 +1,6 @@
 import TableCell from '@material-ui/core/TableCell';
 import IScale from '@shared/interface/IScale';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {deselectedCellStyle} from 'app/ts/Styles/deselectedCellStyle';
 import UncertainValue from '../UncertainValue/UncertainValue';

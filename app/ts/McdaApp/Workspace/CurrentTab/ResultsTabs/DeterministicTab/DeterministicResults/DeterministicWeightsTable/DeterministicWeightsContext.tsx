@@ -112,6 +112,7 @@ export function DeterministicWeightsContextProviderComponent({
           referenceWeight
         )
       );
+      setSensitivityWeights(currentScenario.state.weights.mean);
     }
     setRecalculatedTotalValues(undefined);
     setRecalculatedValueProfiles(undefined);

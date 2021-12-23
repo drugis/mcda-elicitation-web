@@ -2,7 +2,7 @@ import {Button, ButtonGroup, Grid} from '@material-ui/core';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
+import DisplayWarnings from 'app/ts/util/SharedComponents/DisplayWarnings';
 import {useContext} from 'react';
 import {AdvancedPartialValueFunctionContext} from '../AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 

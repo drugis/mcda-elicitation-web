@@ -1,7 +1,7 @@
 import {Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import _ from 'lodash';
-import {alertStyle} from '../McdaApp/styles';
+import {alertStyle} from '../../McdaApp/styles';
 
 export default function DisplayErrors({
   errors,

@@ -2,7 +2,7 @@ import {Distribution} from '@shared/interface/IDistribution';
 import INormalDistribution from '@shared/interface/INormalDistribution';
 import IRangeEffect from '@shared/interface/IRangeEffect';
 import IStudentsTDistribution from '@shared/interface/IStudentsTDistribution';
-import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
+import {valueToString} from 'app/ts/util/DisplayUtil/DisplayUtil';
 
 export function renderDistribution(
   distribution: Distribution,

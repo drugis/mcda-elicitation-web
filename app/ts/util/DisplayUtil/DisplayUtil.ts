@@ -1,5 +1,5 @@
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
-import significantDigits from '../util/significantDigits';
+import significantDigits from '../significantDigits';
 
 export function getPercentifiedValue(
   value: number,

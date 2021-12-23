@@ -7,7 +7,7 @@ import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
 import IUnitOfMeasurement from '@shared/interface/IUnitOfMeasurement';
 import IWorkspace from '@shared/interface/IWorkspace';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/util/significantDigits';
 import {hasScale} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContextUtil';
 import _ from 'lodash';

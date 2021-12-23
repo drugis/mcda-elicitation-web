@@ -3,7 +3,7 @@ import IRangeEffect from '@shared/interface/IRangeEffect';
 import IScale from '@shared/interface/IScale';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
-import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
+import {valueToString} from 'app/ts/util/DisplayUtil/DisplayUtil';
 
 export function renderEnteredValues(
   effect: Effect,

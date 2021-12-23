@@ -1,7 +1,7 @@
 import {Distribution, distributionType} from '@shared/interface/IDistribution';
 import {Effect, effectType} from '@shared/interface/IEffect';
 import IInputCellContext from '@shared/interface/IInputCellContext';
-import {valueToString} from 'app/ts/DisplayUtil/DisplayUtil';
+import {valueToString} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {createContext, useContext, useEffect, useState} from 'react';
 import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 

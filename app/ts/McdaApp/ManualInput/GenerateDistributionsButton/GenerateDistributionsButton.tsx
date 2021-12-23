@@ -4,7 +4,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Tooltip from '@material-ui/core/Tooltip';
 import {useContext, useState} from 'react';
-import DialogTitleWithCross from '../../../DialogTitleWithCross/DialogTitleWithCross';
+import DialogTitleWithCross from '../../../util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import {ManualInputContext} from '../ManualInputContext';
 
 export default function GenerateDistributionsButton() {

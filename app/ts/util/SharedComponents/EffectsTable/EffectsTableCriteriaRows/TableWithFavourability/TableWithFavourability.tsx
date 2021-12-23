@@ -1,6 +1,6 @@
 import TableBody from '@material-ui/core/TableBody';
 import ICriterion from '@shared/interface/ICriterion';
-import FavourabilityHeader from 'app/ts/EffectsTable/EffectsTableCriteriaRows/FavourabilityHeader/FavourabilityHeader';
+import FavourabilityHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableCriteriaRows/FavourabilityHeader/FavourabilityHeader';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import _ from 'lodash';
 

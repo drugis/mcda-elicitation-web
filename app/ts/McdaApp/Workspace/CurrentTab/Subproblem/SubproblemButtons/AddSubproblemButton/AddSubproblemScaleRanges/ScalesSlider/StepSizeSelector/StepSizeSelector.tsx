@@ -1,6 +1,6 @@
 import Select from '@material-ui/core/Select';
 import ICriterion from '@shared/interface/ICriterion';
-import {canBePercentage} from 'app/ts/DisplayUtil/DisplayUtil';
+import {canBePercentage} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import _ from 'lodash';
 import {useContext} from 'react';

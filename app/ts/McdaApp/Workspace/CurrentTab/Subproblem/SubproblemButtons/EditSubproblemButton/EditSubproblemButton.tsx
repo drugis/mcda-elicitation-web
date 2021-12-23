@@ -7,12 +7,12 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SubproblemsContext} from 'app/ts/McdaApp/Workspace/SubproblemsContext/SubproblemsContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import DisplayErrors from 'app/ts/util/DisplayErrors';
+import DisplayErrors from 'app/ts/util/SharedComponents/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
 
 export default function EditSubproblemButton() {

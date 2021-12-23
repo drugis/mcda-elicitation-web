@@ -8,11 +8,11 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Edit from '@material-ui/icons/Edit';
 import IAlternative from '@shared/interface/IAlternative';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import DisplayErrors from 'app/ts/util/DisplayErrors';
+import DisplayErrors from 'app/ts/util/SharedComponents/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
 
 export default function EditOverviewAlternativeButton({

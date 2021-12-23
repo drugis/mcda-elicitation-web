@@ -9,7 +9,7 @@ export default function PreferencesWeightsButtons() {
     resetPreferences,
     currentScenario,
     setActiveView,
-    isThresholdElicitationDisabled
+    containsNonLinearPvf
   } = useContext(CurrentScenarioContext);
 
   function handleResetClick() {
@@ -90,7 +90,7 @@ export default function PreferencesWeightsButtons() {
       </Tooltip>
       <Tooltip
         title={
-          isThresholdElicitationDisabled
+          containsNonLinearPvf
             ? ''
             : 'Saving this preference will reset all criteria trade-off preferences'
         }
@@ -100,7 +100,7 @@ export default function PreferencesWeightsButtons() {
           onClick={handleThresholdClick}
           color="primary"
           variant="contained"
-          disabled={isThresholdElicitationDisabled}
+          disabled={containsNonLinearPvf}
         >
           Threshold
         </Button>

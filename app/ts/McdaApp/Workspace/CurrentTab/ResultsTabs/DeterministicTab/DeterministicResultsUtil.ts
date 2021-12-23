@@ -2,14 +2,15 @@ import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
 import {Effect} from '@shared/interface/IEffect';
 import IScale from '@shared/interface/IScale';
+import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityParameter';
 import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
-import {getPercentifiedValueLabel} from '../../../../../DisplayUtil/DisplayUtil';
+import {getPercentifiedValueLabel} from '../../../../../util/DisplayUtil/DisplayUtil';
 import {
   findScale,
   findValue
-} from '../../../../../EffectsTable/EffectsTableUtil';
+} from '../../../../../util/SharedComponents/EffectsTable/EffectsTableUtil';
 import IChangeableValue from '../../../../../interface/IChangeableValue';
 import significantDigits from '../../../../../util/significantDigits';
 
@@ -192,6 +193,7 @@ function getValueData(
 
 export function getSensitivityLineChartSettings(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
+  parameter: PreferenceSensitivityParameter,
   alternatives: IAlternative[],
   legend: Record<string, string>,
   Xlabel: string,
@@ -201,6 +203,7 @@ export function getSensitivityLineChartSettings(
 ): ChartConfiguration {
   const plotValues = pataviResultToLineValues(
     measurementsSensitivityResults,
+    parameter,
     alternatives,
     legend,
     usePercentage
@@ -255,18 +258,25 @@ export function getSensitivityLineChartSettings(
 
 export function pataviResultToLineValues(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
+  parameter: PreferenceSensitivityParameter,
   alternatives: IAlternative[],
   legend: Record<string, string>,
   usePercentage: boolean
 ): [string, ...(string | number)[]][] {
   return [
-    getLineXValues(measurementsSensitivityResults, alternatives, usePercentage),
+    getLineXValues(
+      measurementsSensitivityResults,
+      parameter,
+      alternatives,
+      usePercentage
+    ),
     ...getLineYValues(measurementsSensitivityResults, alternatives, legend)
   ];
 }
 
 function getLineXValues(
   measurementsSensitivityResults: Record<string, Record<number, number>>,
+  parameter: PreferenceSensitivityParameter,
   alternatives: IAlternative[],
   usePercentage: boolean
 ): ['x', ...string[]] {
@@ -274,9 +284,10 @@ function getLineXValues(
     'x',
     ..._(measurementsSensitivityResults[alternatives[0].id])
       .keys()
-      .map((value: string): string =>
-        getPercentifiedValueLabel(parseFloat(value), usePercentage)
-      )
+      .map((value: string): string => {
+        const valueAsNumber = parseFloat(value);
+        return getPercentifiedValueLabel(valueAsNumber, usePercentage);
+      })
       .value()
   ];
 }
@@ -309,4 +320,8 @@ export function calcImportances(
   );
   const largestDiff = _.max(_.map(_.values(diffs), (diff) => Math.abs(diff)));
   return _.mapValues(diffs, (diff) => (100 * Math.abs(diff)) / largestDiff);
+}
+
+export function calcInitialEquivalentChangeRange(): [number, number] {
+  return [0.1, 0.9];
 }

@@ -1,5 +1,5 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
-import {getPercentifiedValueLabel} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValueLabel} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import IDeterministicChangeableWeights from 'app/ts/interface/IDeterministicChangeableWeights';
 import significantDigits from 'app/ts/util/significantDigits';

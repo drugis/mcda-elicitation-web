@@ -1,7 +1,7 @@
 import {Button, Typography} from '@material-ui/core';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
+import {getPercentifiedValue} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import _ from 'lodash';
 import {MouseEvent, useContext, useState} from 'react';
@@ -41,6 +41,7 @@ export default function EquivalentChangeValueStatement() {
         equivalent changes in the table below.
       </Typography>
       <EquivalentChangeValueInput
+        usePercentage={usePercentage}
         anchorElement={anchorElement}
         isDialogOpen={isDialogOpen}
         closeDialog={closeDialog}

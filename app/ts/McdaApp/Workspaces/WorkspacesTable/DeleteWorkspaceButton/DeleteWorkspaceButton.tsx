@@ -11,10 +11,10 @@ import {
 import Delete from '@material-ui/icons/Delete';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {alertStyle} from 'app/ts/McdaApp/styles';
 import {TWorkspaceType} from 'app/ts/McdaApp/Workspaces/TWorkspaceType';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import Axios from 'axios';
 import {useContext, useState} from 'react';
 
