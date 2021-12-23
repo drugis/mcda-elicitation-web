@@ -1,7 +1,7 @@
 import {Grid, Typography} from '@material-ui/core';
-import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import ClipboardButton from 'app/ts/util/SharedComponents/ClipboardButton/ClipboardButton';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import RankAcceptabilitiesPlot from './RankAcceptabilitiesPlot/RankAcceptabilitiesPlot';
 import RankAcceptabilitiesTable from './RankAcceptabilitiesTable/RankAcceptabilitiesTable';

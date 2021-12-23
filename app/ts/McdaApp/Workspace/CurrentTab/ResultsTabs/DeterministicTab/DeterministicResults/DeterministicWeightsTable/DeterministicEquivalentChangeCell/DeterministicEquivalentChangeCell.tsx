@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {
   getDepercentifiedValue,
   getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {textCenterStyle} from 'app/ts/McdaApp/styles';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';

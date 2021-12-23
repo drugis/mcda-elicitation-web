@@ -9,8 +9,8 @@ import {TPvfDirection} from '@shared/types/TPvfDirection';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
 import {getWeightsPataviProblem} from 'app/ts/util/PataviUtil';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import Axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import {

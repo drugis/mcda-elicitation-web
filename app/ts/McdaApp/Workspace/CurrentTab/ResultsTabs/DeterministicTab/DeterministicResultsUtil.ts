@@ -6,11 +6,11 @@ import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityP
 import {ChartConfiguration} from 'c3';
 import {format} from 'd3';
 import _ from 'lodash';
-import {getPercentifiedValueLabel} from '../../../../../DisplayUtil/DisplayUtil';
+import {getPercentifiedValueLabel} from '../../../../../util/DisplayUtil/DisplayUtil';
 import {
   findScale,
   findValue
-} from '../../../../../EffectsTable/EffectsTableUtil';
+} from '../../../../../util/SharedComponents/EffectsTable/EffectsTableUtil';
 import IChangeableValue from '../../../../../interface/IChangeableValue';
 import significantDigits from '../../../../../util/significantDigits';
 

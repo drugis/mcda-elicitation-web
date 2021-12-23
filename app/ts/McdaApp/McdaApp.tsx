@@ -4,7 +4,7 @@ import {HelpContextProviderComponent} from 'help-popup';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {ErrorContextProviderComponent} from '../Error/ErrorContext';
 import ErrorHandler from '../Error/ErrorHandler';
-import {lexicon} from '../InlineHelp/lexicon';
+import {lexicon} from '../util/SharedComponents/InlineHelp/lexicon';
 import ManualInputWrapper from './ManualInput/ManualInputWrapper';
 import NavigationBar from './NavigationBar/NavigationBar';
 import PageNotFound from './PageNotFound/PageNotFound';

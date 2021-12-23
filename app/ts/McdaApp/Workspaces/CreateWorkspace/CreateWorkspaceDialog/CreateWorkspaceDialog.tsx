@@ -10,9 +10,9 @@ import {
   Select,
   Typography
 } from '@material-ui/core';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import DisplayErrors from 'app/ts/util/DisplayErrors';
+import DisplayErrors from 'app/ts/util/SharedComponents/DisplayErrors';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import _ from 'lodash';
 import {ChangeEvent, useCallback, useContext} from 'react';
 import IWorkspaceExample from '../../../../../../shared/interface/Workspace/IWorkspaceExample';

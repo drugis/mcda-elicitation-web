@@ -6,10 +6,10 @@ import {
   TableRow
 } from '@material-ui/core';
 import IDataSource from '@shared/interface/IDataSource';
-import EffectsTableAlternativeHeaders from 'app/ts/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
-import ReferencesHeader from 'app/ts/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
-import SoEUncHeader from 'app/ts/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
-import UnitsHeader from 'app/ts/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
+import EffectsTableAlternativeHeaders from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableAlternativeHeaders/EffectsTableAlternativeHeaders';
+import ReferencesHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/ReferencesHeader/ReferencesHeader';
+import SoEUncHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/SoEUncHeader/SoEUncHeader';
+import UnitsHeader from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableHeaders/UnitsHeader/UnitsHeader';
 import {OverviewCriterionContext} from 'app/ts/McdaApp/Workspace/CurrentTab/Overview/OverviewCriteria/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import {getNextId, getPreviousId} from 'app/ts/util/swapUtil';

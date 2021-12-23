@@ -17,6 +17,7 @@ export default function PreferencesSensitivityPlot(): JSX.Element {
   const {legendByAlternativeId} = useContext(LegendContext);
   const width = '400px';
   const height = '400px';
+  const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
   useEffect(() => {
     const xLabel = getXLabel(criterion, parameter);
@@ -28,9 +29,7 @@ export default function PreferencesSensitivityPlot(): JSX.Element {
       xLabel,
       true,
       '#preferences-sensitivity-plot',
-      parameter === 'equivalentChange'
-        ? getUsePercentage(criterion.dataSources[0])
-        : false
+      parameter === 'equivalentChange' ? usePercentage : false
     );
     generate(settings);
   }, [
@@ -38,7 +37,8 @@ export default function PreferencesSensitivityPlot(): JSX.Element {
     legendByAlternativeId,
     criterion,
     parameter,
-    results
+    results,
+    usePercentage
   ]);
 
   return (

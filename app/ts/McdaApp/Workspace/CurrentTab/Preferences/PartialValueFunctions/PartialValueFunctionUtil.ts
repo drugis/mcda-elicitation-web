@@ -1,7 +1,7 @@
 import {TPvf} from '@shared/interface/Problem/IPvf';
 import {IPieceWiseLinearPvf} from '@shared/interface/Pvfs/IPieceWiseLinearPvf';
 import {TPvfDirection} from '@shared/types/TPvfDirection';
-import {getPercentifiedValue} from 'app/ts/DisplayUtil/DisplayUtil';
+import {getPercentifiedValue} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import significantDigits from 'app/ts/util/significantDigits';
 import {ChartConfiguration, DataPoint} from 'c3';
 import {format} from 'd3';

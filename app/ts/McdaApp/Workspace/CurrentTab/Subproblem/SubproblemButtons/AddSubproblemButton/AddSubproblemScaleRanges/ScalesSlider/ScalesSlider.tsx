@@ -11,7 +11,7 @@ import IDataSource from '@shared/interface/IDataSource';
 import {
   canBePercentage,
   getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import {getUpperBound} from 'app/ts/McdaApp/Workspace/CurrentTab/Subproblem/ScaleRanges/ScalesTable/ScalesTableUtil';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {getUnitLabelNullsafe} from 'app/ts/util/getUnitLabel';

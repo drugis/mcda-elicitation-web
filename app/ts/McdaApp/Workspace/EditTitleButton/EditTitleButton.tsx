@@ -9,9 +9,9 @@ import {
 } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import {ChangeEvent, useContext, useState} from 'react';
-import DialogTitleWithCross from '../../../DialogTitleWithCross/DialogTitleWithCross';
 import createEnterHandler from '../../../util/createEnterHandler';
-import DisplayErrors from '../../../util/DisplayErrors';
+import DisplayErrors from '../../../util/SharedComponents/DisplayErrors';
+import DialogTitleWithCross from '../../../util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import {WorkspaceContext} from '../WorkspaceContext/WorkspaceContext';
 
 export default function EditTitleButton() {

@@ -7,12 +7,12 @@ import {
   TextField
 } from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {OverviewCriterionContext} from 'app/ts/McdaApp/Workspace/CurrentTab/Overview/OverviewCriteria/OverviewCriterionContext/OverviewCriterionContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import createEnterHandler from 'app/ts/util/createEnterHandler';
-import DisplayErrors from 'app/ts/util/DisplayErrors';
+import DisplayErrors from 'app/ts/util/SharedComponents/DisplayErrors';
 import {getTitleError} from 'app/ts/util/getTitleError';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import _ from 'lodash';
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import FavourabilitySwitch from '../FavourabilitySwitch/FavourabilitySwitch';

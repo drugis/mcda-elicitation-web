@@ -1,9 +1,9 @@
 import {TableCell, TableRow} from '@material-ui/core';
 import ICriterion from '@shared/interface/ICriterion';
-import CriterionTooltip from 'app/ts/CriterionTooltip/CriterionTooltip';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
+import CriterionTooltip from 'app/ts/util/SharedComponents/CriterionTooltip/CriterionTooltip';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
 import {useContext} from 'react';

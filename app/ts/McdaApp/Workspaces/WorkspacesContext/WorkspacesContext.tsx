@@ -1,7 +1,7 @@
 import IInProgressWorkspaceProperties from '@shared/interface/Workspace/IInProgressWorkspaceProperties';
 import IWorkspaceSummary from '@shared/interface/Workspace/IWorkspaceSummary';
 import {ErrorContext} from 'app/ts/Error/ErrorContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import {createContext, useContext, useEffect, useState} from 'react';

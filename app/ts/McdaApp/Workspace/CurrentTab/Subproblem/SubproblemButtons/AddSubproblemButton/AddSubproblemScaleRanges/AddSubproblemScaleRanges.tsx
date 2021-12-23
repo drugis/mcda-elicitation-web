@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import ICriterion from '@shared/interface/ICriterion';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
-import DisplayWarnings from 'app/ts/util/DisplayWarnings';
+import DisplayWarnings from 'app/ts/util/SharedComponents/DisplayWarnings';
 import _ from 'lodash';
 import {useCallback, useContext} from 'react';
 import {AddSubproblemContext} from '../AddSubproblemContext';

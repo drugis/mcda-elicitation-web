@@ -5,7 +5,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import ICriterion from '@shared/interface/ICriterion';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import {useContext} from 'react';

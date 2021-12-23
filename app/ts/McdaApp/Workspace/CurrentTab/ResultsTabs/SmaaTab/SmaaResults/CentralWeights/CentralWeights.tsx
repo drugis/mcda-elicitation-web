@@ -1,8 +1,8 @@
 import {Grid, Typography} from '@material-ui/core';
 import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
-import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import PlotButtons from 'app/ts/PlotButtons/PlotButtons';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import ClipboardButton from 'app/ts/util/SharedComponents/ClipboardButton/ClipboardButton';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import CentralWeightsPlot from './CentralWeightsPlot/CentralWeightsPlot';
 import CentralWeightsTable from './CentralWeightsTable/CentralWeightsTable';

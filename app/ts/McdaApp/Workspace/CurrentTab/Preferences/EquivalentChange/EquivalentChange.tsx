@@ -1,6 +1,6 @@
 import {Button, Grid, Typography} from '@material-ui/core';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import {useContext} from 'react';

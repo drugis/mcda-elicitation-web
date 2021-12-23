@@ -7,9 +7,9 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
-import ClipboardButton from 'app/ts/ClipboardButton/ClipboardButton';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
+import ClipboardButton from 'app/ts/util/SharedComponents/ClipboardButton/ClipboardButton';
 import {InlineHelp} from 'help-popup';
 import _ from 'lodash';
 import {useContext} from 'react';
@@ -62,7 +62,7 @@ function WeightRows(): JSX.Element {
   return (
     <>
       {_.map(filteredCriteria, (criterion) => (
-        <DeterministicWeightsRow criterion={criterion} />
+        <DeterministicWeightsRow key={criterion.id} criterion={criterion} />
       ))}
     </>
   );

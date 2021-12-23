@@ -3,7 +3,7 @@ import ICriterion from '@shared/interface/ICriterion';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
-import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
+import ClickableSliderTableCell from 'app/ts/util/SharedComponents/ClickableSliderTableCell/ClickableSliderTableCell';
 import {getUnitLabel} from 'app/ts/util/getUnitLabel';
 import significantDigits from 'app/ts/util/significantDigits';
 import {useContext} from 'react';

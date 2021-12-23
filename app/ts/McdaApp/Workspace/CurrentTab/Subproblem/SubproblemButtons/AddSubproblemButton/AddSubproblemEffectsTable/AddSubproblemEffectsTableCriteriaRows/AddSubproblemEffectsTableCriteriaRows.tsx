@@ -1,6 +1,6 @@
 import TableBody from '@material-ui/core/TableBody';
 import ICriterion from '@shared/interface/ICriterion';
-import TableWithFavourability from 'app/ts/EffectsTable/EffectsTableCriteriaRows/TableWithFavourability/TableWithFavourability';
+import TableWithFavourability from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableCriteriaRows/TableWithFavourability/TableWithFavourability';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import {WorkspaceContext} from 'app/ts/McdaApp/Workspace/WorkspaceContext/WorkspaceContext';
 import _ from 'lodash';

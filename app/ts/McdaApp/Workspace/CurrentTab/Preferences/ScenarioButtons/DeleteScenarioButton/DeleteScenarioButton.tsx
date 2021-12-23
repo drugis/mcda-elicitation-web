@@ -7,9 +7,9 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Delete from '@material-ui/icons/Delete';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {ScenariosContext} from 'app/ts/McdaApp/Workspace/ScenariosContext/ScenariosContext';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import _ from 'lodash';
 import {useContext, useState} from 'react';
 

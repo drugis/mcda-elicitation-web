@@ -11,7 +11,7 @@ import {
   useEffect,
   useState
 } from 'react';
-import {canBePercentage} from '../../../DisplayUtil/DisplayUtil';
+import {canBePercentage} from '../../../util/DisplayUtil/DisplayUtil';
 import {ErrorContext} from '../../../Error/ErrorContext';
 import {WorkspaceContext} from '../WorkspaceContext/WorkspaceContext';
 import ISettingsContext from './ISettingsContext';

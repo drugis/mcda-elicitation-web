@@ -7,7 +7,7 @@ import INormalDistribution from '@shared/interface/INormalDistribution';
 import {UnitOfMeasurementType} from '@shared/interface/IUnitOfMeasurement';
 import IValueCIEffect from '@shared/interface/IValueCIEffect';
 import IValueEffect from '@shared/interface/IValueEffect';
-import {renderEnteredValues} from 'app/ts/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellUtil';
+import {renderEnteredValues} from 'app/ts/util/SharedComponents/EffectsTable/EffectsTableCriteriaRows/EffectsTableDataSourceRow/ValueCell/EffectValueCell/EffectValueCellUtil';
 import _ from 'lodash';
 import {hasInvalidCell} from '../CellValidityService/CellValidityService';
 import significantDigits from '../../../util/significantDigits';

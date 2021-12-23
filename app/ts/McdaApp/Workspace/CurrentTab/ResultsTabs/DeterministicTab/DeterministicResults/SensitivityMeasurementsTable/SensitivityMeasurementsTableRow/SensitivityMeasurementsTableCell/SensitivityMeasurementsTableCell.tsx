@@ -2,11 +2,11 @@ import ICriterion from '@shared/interface/ICriterion';
 import {
   getDepercentifiedValue,
   getPercentifiedValue
-} from 'app/ts/DisplayUtil/DisplayUtil';
+} from 'app/ts/util/DisplayUtil/DisplayUtil';
 import IChangeableValue from 'app/ts/interface/IChangeableValue';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
 import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
-import ClickableSliderTableCell from 'app/ts/util/ClickableSliderTableCell/ClickableSliderTableCell';
+import ClickableSliderTableCell from 'app/ts/util/SharedComponents/ClickableSliderTableCell/ClickableSliderTableCell';
 import _ from 'lodash';
 import {useContext, useMemo} from 'react';
 import {SensitivityMeasurementsContext} from '../../SensitivityMeasurementsContext';

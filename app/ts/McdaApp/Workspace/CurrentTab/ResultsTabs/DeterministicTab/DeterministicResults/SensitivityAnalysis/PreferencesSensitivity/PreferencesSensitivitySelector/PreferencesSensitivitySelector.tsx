@@ -1,9 +1,12 @@
-import {Grid, Select, TextField, Typography} from '@material-ui/core';
+import {Grid, Select, Typography} from '@material-ui/core';
 import {CurrentScenarioContext} from 'app/ts/McdaApp/Workspace/CurrentScenarioContext/CurrentScenarioContext';
 import {CurrentSubproblemContext} from 'app/ts/McdaApp/Workspace/CurrentSubproblemContext/CurrentSubproblemContext';
+import {SettingsContext} from 'app/ts/McdaApp/Workspace/SettingsContext/SettingsContext';
 import SelectOptions from 'app/ts/SelectOptions/SelectOptions';
 import ShowIf from 'app/ts/ShowIf/ShowIf';
 import {PreferenceSensitivityParameter} from 'app/ts/type/preferenceSensitivityParameter';
+import PercentAwareInput from 'app/ts/util/SharedComponents/PercentAwareInput';
+import significantDigits from 'app/ts/util/significantDigits';
 import {useDebouncedUpdate} from 'app/ts/util/useDebouncedUpdate';
 import _ from 'lodash';
 import {ChangeEvent, useContext, useState} from 'react';
@@ -12,6 +15,8 @@ import {PreferencesSensitivityContext} from '../PreferencesSensitivityContext';
 
 export default function PreferencesSensitivitySelector(): JSX.Element {
   const {filteredCriteria} = useContext(CurrentSubproblemContext);
+  const {getUsePercentage} = useContext(SettingsContext);
+
   const {
     criterion,
     highestValue,
@@ -28,6 +33,7 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
   const debouncedSetLowestValue = useDebouncedUpdate(setLowestValue, 500);
   const [localHighest, setLocalHighest] = useState(highestValue);
   const debouncedSetHighestValue = useDebouncedUpdate(setHighestValue, 500);
+  const usePercentage = getUsePercentage(criterion.dataSources[0]);
 
   function handleCriterionChanged(event: ChangeEvent<{value: string}>): void {
     const newCriterion = _.find(filteredCriteria, ['id', event.target.value]);
@@ -45,22 +51,18 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
     setParameter(event.target.value as PreferenceSensitivityParameter);
   }
 
-  function handleLowestValueChanged(event: ChangeEvent<{value: string}>): void {
-    const parsed = parseFloat(event.target.value);
-    if (!isNaN(parsed)) {
-      setLocalLowest(parsed);
-      debouncedSetLowestValue(parsed);
-    }
+  function handleLowestValueChanged(newValue: number): void {
+    setLocalLowest(newValue);
+    debouncedSetLowestValue(newValue);
   }
 
-  function handleHighestValueChanged(
-    event: ChangeEvent<{value: string}>
-  ): void {
-    const parsed = parseFloat(event.target.value);
-    if (!isNaN(parsed)) {
-      setLocalHighest(parsed);
-      debouncedSetHighestValue(parsed);
-    }
+  function handleHighestValueChanged(newValue: number): void {
+    setLocalHighest(newValue);
+    debouncedSetHighestValue(newValue);
+  }
+
+  function normalise(value: number, usePercentage: boolean): number {
+    return significantDigits(usePercentage ? value / 100 : value);
   }
 
   return (
@@ -102,11 +104,11 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
           <Typography>Lowest value:</Typography>
         </Grid>
         <Grid item xs={9}>
-          <TextField
+          <PercentAwareInput
             id="preferences-sensitivity-lowest-value"
-            type="number"
             value={localLowest}
-            onChange={handleLowestValueChanged}
+            usePercentage={usePercentage}
+            handleChange={handleLowestValueChanged}
             style={{minWidth: 220}}
             inputProps={{
               min: 0.1
@@ -117,11 +119,12 @@ export default function PreferencesSensitivitySelector(): JSX.Element {
           <Typography>Highest value:</Typography>
         </Grid>
         <Grid item xs={9}>
-          <TextField
+          <PercentAwareInput
             id="preferences-sensitivity-highest-value"
             type="number"
             value={localHighest}
-            onChange={handleHighestValueChanged}
+            usePercentage={usePercentage}
+            handleChange={handleHighestValueChanged}
             style={{minWidth: 220}}
             inputProps={{
               min: 0.1

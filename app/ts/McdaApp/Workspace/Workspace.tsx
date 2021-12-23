@@ -1,6 +1,6 @@
 import {Grid} from '@material-ui/core';
 import IOldWorkspace from '@shared/interface/IOldWorkspace';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import axios, {AxiosResponse} from 'axios';
 import {useContext, useEffect, useState} from 'react';
 import {useParams} from 'react-router';

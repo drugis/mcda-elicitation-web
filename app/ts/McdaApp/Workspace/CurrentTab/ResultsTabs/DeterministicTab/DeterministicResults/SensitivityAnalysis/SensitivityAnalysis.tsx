@@ -1,5 +1,5 @@
 import {Grid, Typography} from '@material-ui/core';
-import LoadingSpinner from 'app/ts/util/LoadingSpinner';
+import LoadingSpinner from 'app/ts/util/SharedComponents/LoadingSpinner';
 import {InlineHelp} from 'help-popup';
 import {useContext} from 'react';
 import MeasurementSensitivity from './MeasurementSensitivity/MeasurementSensitivity';

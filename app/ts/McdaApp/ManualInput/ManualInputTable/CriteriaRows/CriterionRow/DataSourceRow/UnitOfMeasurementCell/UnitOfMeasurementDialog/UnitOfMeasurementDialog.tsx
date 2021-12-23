@@ -9,10 +9,10 @@ import TextField from '@material-ui/core/TextField';
 import IUnitOfMeasurement, {
   UnitOfMeasurementType
 } from '@shared/interface/IUnitOfMeasurement';
-import DialogTitleWithCross from 'app/ts/DialogTitleWithCross/DialogTitleWithCross';
 import {getOutOfBoundsError} from 'app/ts/McdaApp/ManualInput/CellValidityService/CellValidityService';
 import {ManualInputContext} from 'app/ts/McdaApp/ManualInput/ManualInputContext';
-import DisplayErrors from 'app/ts/util/DisplayErrors';
+import DisplayErrors from 'app/ts/util/SharedComponents/DisplayErrors';
+import DialogTitleWithCross from 'app/ts/util/SharedComponents/DialogTitleWithCross/DialogTitleWithCross';
 import keycode from 'keycode';
 import _ from 'lodash';
 import {
