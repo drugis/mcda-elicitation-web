@@ -1,13 +1,13 @@
 import IAlternative from '@shared/interface/IAlternative';
 import ICriterion from '@shared/interface/ICriterion';
-import {Distribution} from '@shared/interface/IDistribution';
-import {ICentralWeight} from '@shared/interface/Patavi/ICentralWeight';
+import { Distribution } from '@shared/interface/IDistribution';
+import { ICentralWeight } from '@shared/interface/Patavi/ICentralWeight';
 import IExactSwingRatio from '@shared/interface/Scenario/IExactSwingRatio';
 import IRanking from '@shared/interface/Scenario/IRanking';
 import IRatioBoundConstraint from '@shared/interface/Scenario/IRatioBoundConstraint';
-import {TPreferences} from '@shared/types/preferences';
-import {ChartConfiguration} from 'c3';
-import {format} from 'd3';
+import { TPreferences } from '@shared/types/preferences';
+import { ChartConfiguration } from 'c3';
+import { format } from 'd3';
 import _ from 'lodash';
 
 export function hasStochasticMeasurements(
@@ -115,7 +115,7 @@ export function getRankPlotData(
   return [...titleRow, ...getRankPlotValues(ranks, alternatives)];
 }
 
-function getPlotTitles<T extends {id: string; title: string}>(
+function getPlotTitles<T extends { id: string; title: string }>(
   items: T[],
   legend: Record<string, string>
 ): [[string, ...string[]]] {
@@ -134,7 +134,17 @@ function getRankPlotValues(
   alternatives: IAlternative[]
 ): [string, ...number[]][] {
   return _.map(alternatives, (alternative: IAlternative, rankIndex: number) => {
-    return [`Rank ${rankIndex + 1}`, ..._.values(ranks[alternative.id])];
+    return [`Rank ${rankIndex + 1}`, ...getSortedRankPlotValues(ranks, rankIndex, alternatives)];
+  });
+}
+
+function getSortedRankPlotValues(
+  ranks: Record<string, number[]>,
+  rankIndex: number,
+  alternatives: IAlternative[]
+): number[] {
+  return _.map(alternatives, (alternative: IAlternative) => {
+    return ranks[alternative.id][rankIndex];
   });
 }
 

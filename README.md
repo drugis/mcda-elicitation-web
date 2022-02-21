@@ -179,6 +179,6 @@ node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.c
 mcda-elicitation-web is open source, and licensed under [GPLv3][gpl-3].
 See [LICENSE.txt](LICENSE.txt) for more information.
 
-[patavi]: https://github.com/joelkuiper/patavi
+[patavi]: https://github.com/drugis/patavi
 [gpl-3]: http://gplv3.fsf.org/
 [drugis]: http://drugis.org/
