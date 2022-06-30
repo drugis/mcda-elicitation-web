@@ -64,7 +64,7 @@ export function CurrentSubproblemContextProviderComponent({
       const criteriaWithScales = _.filter(
         newFilteredWorkspace.criteria,
         (criterion: ICriterion) => {
-          return Boolean(newObservedRanges[criterion.id]);
+          return Boolean(newObservedRanges[criterion.dataSources[0].id]);
         }
       );
       setConfiguredRanges(
