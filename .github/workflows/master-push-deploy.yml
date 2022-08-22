@@ -78,7 +78,7 @@ jobs:
            -e MCDAWEB_COOKIE_SECRET=${{ secrets.mcdaLiveCookieSecret }} \
            -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaLiveGoogleKey }} \
            -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaLiveGoogleSecret }} \
-           -e PATAVI_HOST=patavi-test.drugis.org \
+           -e PATAVI_HOST=patavi.dev.molgenis.org \
            -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} \
            -e SECURE_TRAFFIC=true \
            -d --name=mcda -p 8080:3002 \
