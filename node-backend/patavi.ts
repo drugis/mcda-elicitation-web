@@ -4,6 +4,7 @@ import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {TPataviCommands} from '@shared/types/PataviCommands';
 import {TPataviResults} from '@shared/types/PataviResults';
 import Axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {IncomingMessage} from 'http';
 import _ from 'lodash';
 import {
   client as WebSocketClient,
@@ -36,12 +37,25 @@ export function postAndHandleResults(
       const client = new WebSocketClient();
       client.on('connectFailed', _.partial(failedConnectionCallback, callback));
       client.on('connect', _.partial(successfullConnectionCallback, callback));
+      client.on('httpResponse', handleHttpResponse);
       logger.debug('connecting to websocket at ' + updatesUrl);
       client.connect(updatesUrl);
     })
     .catch((error: AxiosError) => {
       errorHandler(error.message, callback);
     });
+}
+
+function handleHttpResponse(
+  response: IncomingMessage,
+  client: WebSocketClient
+): void {
+  console.log('Received http response with status: ' + response.statusCode);
+  if (response.statusCode === 302) {
+    console.log('Http response url: '+ response.url)
+    console.log('Http response headers: '+ JSON.stringify(response.headers), null, 2)
+    client.connect(response.url);
+  }
 }
 
 function handleUpdateResponse(
