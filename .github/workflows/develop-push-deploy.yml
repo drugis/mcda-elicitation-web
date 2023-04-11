@@ -96,7 +96,7 @@ jobs:
           "podman  run --rm -v $(pwd):/liquibase/ \
              --network host \
              -e "LIQUIBASE_URL=jdbc:postgresql://localhost:5432/mcda" \
-             -e "LIQUIBASE_USERNAME=${{ secrest.mcdaTestDbUser }}" \
+             -e "LIQUIBASE_USERNAME=${{ secrets.mcdaTestDbUser }}" \
              -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" \
              -e "LIQUIBASE_CHANGELOG=git/mcda-elicitation-web/liquibase/liquibase-changelog.sql" \
              webdevops/liquibase:postgres"
@@ -106,7 +106,7 @@ jobs:
           ssh -J jumphost internalserver \
           "run \
             --network="slirp4netns:allow_host_loopback=true" \
-            -e MCDAWEB_DB_USER=${{ secrest.mcdaTestDbUser }}" \
+            -e MCDAWEB_DB_USER=${{ secrets.mcdaTestDbUser }}" \
             -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaTestDbPassword }}" \
             -e MCDA_HOST=https://mcda.dev.drugis.org \
             -e MCDAWEB_DB_HOST=10.0.2.2 \
