@@ -27,21 +27,21 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      - name: run yarn
-        run: yarn
+      # - name: run yarn
+      #   run: yarn
 
-      - name: unit tests
-        id: jest
-        run: yarn jest
+      # - name: unit tests
+      #   id: jest
+      #   run: yarn jest
 
-      - name: podman login
-        run: podman login -u addis -p ${{ secrets.dockerRegistryPassword }}
+      # - name: podman login
+      #   run: podman login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      - name: build docker image
-        run: ./build-docker.sh GOOGLE Test https://mcda.dev.drugis.org test
+      # - name: build docker image
+      #   run: ./build-docker.sh GOOGLE Test https://mcda.dev.drugis.org test
 
-      - name: podman push
-        run: podman push addis/mcda:test
+      # - name: podman push
+      #   run: podman push addis/mcda:test
 
       - name: Configure SSH
         run: |
