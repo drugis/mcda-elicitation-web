@@ -38,10 +38,10 @@ jobs:
         run: podman login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       - name: build docker image
-        run: ./build-docker.sh GOOGLE Test https://mcda.dev.drugis.org test
+        run: ./build-docker.sh GOOGLE Test https://mcda.dev.drugis.org test && podman push addis/mcda:test
 
-      - name: podman push
-        run: podman push addis/mcda:test
+      # - name: podman push
+      #   run: podman push addis/mcda:test
 
       - name: Configure SSH
         run: |
