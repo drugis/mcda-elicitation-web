@@ -34,17 +34,17 @@ jobs:
         id: jest
         run: yarn jest
 
-      - name: podman login
-        run: podman login -u addis -p ${{ secrets.dockerRegistryPassword }}
+      - name: docker login
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
       - name: build docker image
         run: ./build-docker.sh GOOGLE Test https://mcda.dev.drugis.org test
 
       - name: bla
-        run: podman image ls
+        run: docker image ls
 
-      - name: podman push
-        run: podman push addis/mcda:test
+      - name: docker push
+        run: docker push addis/mcda:test
 
       - name: Configure SSH
         run: |
