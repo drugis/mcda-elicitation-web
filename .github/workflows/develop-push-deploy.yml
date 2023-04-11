@@ -37,8 +37,8 @@ jobs:
       - name: podman login
         run: podman login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      - name: build podman image
-        run: ./build-podman.sh GOOGLE Test https://mcda-test.drugis.org test
+      - name: build docker image
+        run: ./build-docker.sh GOOGLE Test https://mcda.dev.drugis.org test
 
       - name: podman push
         run: podman push addis/mcda:test
