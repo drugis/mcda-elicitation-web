@@ -4,13 +4,9 @@ import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {TPataviCommands} from '@shared/types/PataviCommands';
 import {TPataviResults} from '@shared/types/PataviResults';
 import Axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {IncomingMessage} from 'http';
 import _ from 'lodash';
-import {
-  client as WebSocketClient,
-  connection,
-  IUtf8Message,
-  Message
-} from 'websocket';
+import {RawData, WebSocket, MessageEvent} from 'ws';
 import logger from './logger';
 
 const {PATAVI_API_KEY} = process.env;
@@ -33,11 +29,14 @@ export function postAndHandleResults(
       return handleUpdateResponse(pataviResponse, callback);
     })
     .then((updatesUrl) => {
-      const client = new WebSocketClient();
-      client.on('connectFailed', _.partial(failedConnectionCallback, callback));
-      client.on('connect', _.partial(successfullConnectionCallback, callback));
+      const options = {followRedirects: true};
+      const client = new WebSocket(updatesUrl, ['ws'], options);
+      client.on(
+        'open',
+        _.partial(successfullConnectionCallback, callback, client)
+      );
+      client.on('error', _.partial(failedConnectionCallback, callback));
       logger.debug('connecting to websocket at ' + updatesUrl);
-      client.connect(updatesUrl);
     })
     .catch((error: AxiosError) => {
       errorHandler(error.message, callback);
@@ -70,39 +69,35 @@ function failedConnectionCallback(
 
 function successfullConnectionCallback(
   callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void,
-  connection: connection
+  client: WebSocket
 ) {
-  connection.on('message', (message: Message) => {
-    if (isUtf8Message(message)) {
-      const data = JSON.parse(message.utf8Data);
-      handleMessage(connection, data, callback);
-    } else {
-      errorHandler('Malformed response from Patavi', callback);
-    }
+  client.on('message', (message: MessageEvent) => {
+    handleMessage(client, message, callback);
   });
 }
 
-function isUtf8Message(message: Message): message is IUtf8Message {
-  return (message as IUtf8Message).utf8Data !== undefined;
+interface IPataviTask {
+  eventType: string;
+  eventData: {
+    href: string;
+  };
+  taskId: string;
 }
-
 function handleMessage(
-  connection: connection,
-  messageData: {eventType: string; eventData: {href: string}},
+  client: WebSocket,
+  message: MessageEvent,
   callback: (error: AxiosError, result?: IWeights | ISmaaResults) => void
 ) {
-  if (messageData.eventType === 'done') {
-    connection.close();
-    Axios.get(messageData.eventData.href).then((resultsResponse: any) => {
+  const data: IPataviTask = JSON.parse(message.toString());
+  if (data.eventType === 'done') {
+    client.close();
+    Axios.get(data.eventData.href).then((resultsResponse: any) => {
       callback(null, resultsResponse.data);
     });
-  } else if (messageData.eventType.startsWith('progres')) {
+  } else if (data.eventType.startsWith('progres')) {
     // ignore progress messages
   } else {
-    errorHandler(
-      `Patavi returned event type: ${messageData.eventType}`,
-      callback
-    );
+    errorHandler(`Patavi returned event type: ${data.eventType}`, callback);
   }
 }
 

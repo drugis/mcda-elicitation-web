@@ -61,14 +61,20 @@ export function CurrentSubproblemContextProviderComponent({
         newFilteredWorkspace
       );
       setObservedRanges(newObservedRanges);
+      const criteriaWithScales = _.filter(
+        newFilteredWorkspace.criteria,
+        (criterion: ICriterion) => {
+          return Boolean(newObservedRanges[criterion.dataSources[0].id]);
+        }
+      );
       setConfiguredRanges(
         getConfiguredRanges(
-          newFilteredWorkspace.criteria,
+          criteriaWithScales,
           newObservedRanges,
           currentSubproblem.definition.ranges
         )
       );
-      const stepSizes = _(newFilteredWorkspace.criteria)
+      const stepSizes = _(criteriaWithScales)
         .keyBy('id')
         .mapValues((criterion: ICriterion): number =>
           getStepSizeForCriterion(
