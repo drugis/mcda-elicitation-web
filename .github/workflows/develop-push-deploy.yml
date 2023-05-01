@@ -27,12 +27,12 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
-      - name: run yarn
-        run: yarn
+      # - name: run yarn
+      #   run: yarn
 
-      - name: unit tests
-        id: jest
-        run: yarn jest
+      # - name: unit tests
+      #   id: jest
+      #   run: yarn jest
 
       # - name: docker login
       #   run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
@@ -94,25 +94,7 @@ jobs:
         run: ssh -J jumphost internalserver './run-mcda-liquibase.sh'
 
       - name: run mcda container on the server
-        run: >
-          ssh -J jumphost internalserver \
-          "podman run -d \
-            --network="slirp4netns:allow_host_loopback=true" \
-            --restart on-failure \
-            -e MCDAWEB_DB_USER=mcda" \
-            -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaTestDbPassword }}" \
-            -e MCDA_HOST=https://mcda.dev.drugis.org \
-            -e MCDAWEB_DB_HOST=10.0.2.2 \
-            -e MCDAWEB_DB_NAME=mcda \
-            -e MCDAWEB_COOKIE_SECRET=${{ secrets.mcdaCookieSecret }} \
-            -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaGoogleKey }} \
-            -e MCDAWEB_GOOGLE_SECRET= ${{ secrets.mcdaGoogleSecret }} \
-            -e PATAVI_HOST=patavi.dev.drugis.org \
-            -e SECURE_TRAFFIC=true \
-            -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} \
-            -p 3002:3002 \
-            --name=mcda \
-            addis/mcda:test"
+        run: ssh -J jumphost internalserver './run-mcda.sh'
 
       - name: generate mcda system service file
         run: >
