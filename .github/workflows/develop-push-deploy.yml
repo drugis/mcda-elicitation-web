@@ -67,10 +67,7 @@ jobs:
           SSH_INTERNAL_HOST: ${{ secrets.devInternalServer }}
           SSH_INTERNAL_USER: ${{ secrets.devInternalUser }}
 
-      - name: pull latest from drugis on the server
-        run: ssh -J jumphost internalserver 'ls'
-
-      - name: pull latest from drugis on the server
+      - name: pull latest from github on the server
         run: ssh -J jumphost internalserver 'cd git/mcda-elicitation-web && git checkout develop && git pull'
 
       - name: pull image on server
@@ -94,20 +91,12 @@ jobs:
           "cd git/mcda-elicitation-web/liquibase && git pull && rm liquibase-changelog.sql && cp ../database.pg.sql liquibase-changelog.sql"
 
       - name: run liquibase
-        run: >
-          ssh -J jumphost internalserver \
-          "podman  run --rm -v $(pwd):/liquibase/ \
-             --network host \
-             -e "LIQUIBASE_URL=jdbc:postgresql://localhost:5432/mcda" \
-             -e "LIQUIBASE_USERNAME=mcda" \
-             -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaTestDbPassword }}" \
-             -e "LIQUIBASE_CHANGELOG=git/mcda-elicitation-web/liquibase/liquibase-changelog.sql" \
-             webdevops/liquibase:postgres"
+        run: ssh -J jumphost internalserver './run-mcda-liquibase'
 
       - name: run mcda container on the server
         run: >
           ssh -J jumphost internalserver \
-          "run \
+          "podman run \
             --network="slirp4netns:allow_host_loopback=true" \
             -e MCDAWEB_DB_USER=mcda" \
             -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaTestDbPassword }}" \
