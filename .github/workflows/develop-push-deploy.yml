@@ -73,17 +73,17 @@ jobs:
       - name: pull image on server
         run: ssh -J jumphost internalserver 'podman pull addis/mcda:test'
 
-      - name: remove container on the server
-        run: >
-          ssh -J jumphost internalserver \
-          "if  systemctl list-unit-files | grep mcda
-            then
-            systemctl stop mcda
-            systemctl disable mcda
-            rm -f /etc/systemd/system/mcda.service
-            systemctl daemon-reload
-            podman rm mcda
-            fi"
+      # - name: remove container on the server
+      #   run: >
+      #     ssh -J jumphost internalserver \
+      #     "if  systemctl list-unit-files | grep mcda
+      #       then
+      #       systemctl stop mcda
+      #       systemctl disable mcda
+      #       rm -f /etc/systemd/system/mcda.service
+      #       systemctl daemon-reload
+      #       podman rm mcda
+      #       fi"
 
       - name: update database
         run: >
