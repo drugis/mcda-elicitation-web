@@ -96,8 +96,9 @@ jobs:
       - name: run mcda container on the server
         run: >
           ssh -J jumphost internalserver \
-          "podman run \
+          "podman run -d \
             --network="slirp4netns:allow_host_loopback=true" \
+            --restart on-failure \
             -e MCDAWEB_DB_USER=mcda" \
             -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaTestDbPassword }}" \
             -e MCDA_HOST=https://mcda.dev.drugis.org \
@@ -110,7 +111,7 @@ jobs:
             -e SECURE_TRAFFIC=true \
             -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} \
             -p 3002:3002 \
-            -d --name=mcda \
+            --name=mcda \
             addis/mcda:test"
 
       - name: generate mcda system service file
