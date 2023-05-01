@@ -40,9 +40,6 @@ jobs:
       - name: build docker image
         run: ./build-docker.sh GOOGLE Test https://mcda.dev.drugis.org test
 
-      - name: bla
-        run: docker image ls
-
       - name: docker push
         run: docker push addis/mcda:test
 
@@ -71,7 +68,7 @@ jobs:
           SSH_INTERNAL_USER: ${{ secrets.devInternalUser }}
 
       - name: pull latest from drugis on the server
-        run: ssh -J jumphost internalserver 'cd mcda-elicitation-web && git checkout develop && git pull'
+        run: ssh -J jumphost internalserver 'cd git/mcda-elicitation-web && git checkout develop && git pull'
 
       - name: pull image on server
         run: ssh -J jumphost internalserver 'podman pull addis/mcda:test'
