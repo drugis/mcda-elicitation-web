@@ -35,7 +35,7 @@
     "@types/node": "^14.0.19",
     "@types/passport": "^1.0.4",
     "@types/pg": "^7.14.11",
-    "@types/websocket": "^1.0.4",
+    "@types/ws": "^8.5.3",
     "async": "~3.2.0",
     "chai": "^4.2.0",
     "connect-pg-simple": "^6.0.1",
@@ -54,8 +54,8 @@
     "signin": "drugis/signin#0.1.11",
     "startup-diagnostics": "drugis/startup-diagnostics#1.2.2",
     "ts-mock-imports": "^1.3.0",
-    "websocket": "^1.0.34",
-    "winston": "~3.2.1"
+    "winston": "~3.2.1",
+    "ws": "^8.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -121,7 +121,7 @@
     "typescript": "^4.3.5",
     "url-loader": "^4.1.1",
     "vanilla-back-to-top": "^7.2.1",
-    "webpack": "^5.37.1",
+    "webpack": "^5.76.0",
     "webpack-cli": "^4.4.0",
     "webpack-merge": "^5.7.3"
   },

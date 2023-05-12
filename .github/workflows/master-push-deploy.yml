@@ -10,22 +10,19 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['12']
-        os: [ubuntu-20.04]
+        node-version: ['18']
+        os: [ubuntu-22.04]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: webfactory/ssh-agent@v0.4.1
-        with:
-          ssh-private-key: ${{ secrets.deployPrivateKey }}
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
@@ -46,53 +43,75 @@ jobs:
       - name: docker push
         run: docker push addis/mcda:live
 
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519.key
+          chmod 600 ~/.ssh/id_ed25519.key
+          cat >>~/.ssh/config <<END
+          Host jumphost
+            HostName $SSH_JUMP_HOST
+            User $SSH_JUMP_USER
+            IdentityFile ~/.ssh/id_ed25519.key
+            StrictHostKeyChecking no
+          Host internalserver
+            HostName $SSH_INTERNAL_HOST
+            User $SSH_INTERNAL_USER  
+            IdentityFile ~/.ssh/id_ed25519.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_JUMP_USER: ${{ secrets.liveJumpHostUser }}
+          SSH_KEY: ${{ secrets.deployPrivateKey }}
+          SSH_JUMP_HOST: ${{ secrets.liveJumpHost }}
+          SSH_INTERNAL_HOST: ${{ secrets.liveInternalServer }}
+          SSH_INTERNAL_USER: ${{ secrets.liveInternalUser }}
+
       - name: pull latest from drugis on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'cd mcda-elicitation-web && git pull'
+        run: ssh -J jumphost internalserver 'cd git/mcda-elicitation-web && git pull'
 
       - name: pull image on server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker pull addis/mcda:live'
+        run: ssh -J jumphost internalserver 'docker pull addis/mcda:live'
+
+      - name: remove service on the server
+        run: >
+          ssh -J jumphost internalserver \
+          "if  systemctl list-unit-files | grep mcda
+            then
+            systemctl stop mcda
+            systemctl disable mcda
+            rm -f /etc/systemd/system/mcda.service
+            systemctl daemon-reload
+            fi"
 
       - name: remove container
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker rm -f mcda || true'
+        run: ssh -J jumphost internalserver 'podman rm -f mcda || true'
 
       - name: update database
-        run: |
-          cd liquibase
-          cp ../database.pg.sql liquibase-changelog.sql
-          docker run --rm -v $(pwd):/liquibase/ --network host \
-           -e "LIQUIBASE_URL=jdbc:postgresql://psql.drugis.org:5432/mcdaweb" \
-           -e "LIQUIBASE_USERNAME=mcdaweb" \
-           -e "LIQUIBASE_PASSWORD=${{ secrets.mcdaLiveDbPassword }}" \
-           -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
-           webdevops/liquibase:postgres update
-
-      - name: run docker container on remote server
         run: >
-          ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org \
-          'docker run \
-           -e MCDAWEB_DB_USER=mcdaweb \
-           -e MCDAWEB_DB_PASSWORD=${{ secrets.mcdaLiveDbPassword }} \
-           -e MCDA_HOST=https://mcda.drugis.org \
-           -e MCDAWEB_DB_HOST=psql.drugis.org \
-           -e MCDAWEB_DB_NAME=mcdaweb \
-           -e MCDAWEB_COOKIE_SECRET=${{ secrets.mcdaLiveCookieSecret }} \
-           -e MCDAWEB_GOOGLE_KEY=${{ secrets.mcdaLiveGoogleKey }} \
-           -e MCDAWEB_GOOGLE_SECRET=${{ secrets.mcdaLiveGoogleSecret }} \
-           -e PATAVI_HOST=patavi.dev.molgenis.org \
-           -e PATAVI_API_KEY=${{ secrets.pataviApiKeyTest }} \
-           -e SECURE_TRAFFIC=true \
-           -d --name=mcda -p 8080:3002 \
-           addis/mcda:live'
+          ssh -J jumphost internalserver \
+          "cd git/mcda-elicitation-web/liquibase && git pull && rm liquibase-changelog.sql && cp ../database.pg.sql liquibase-changelog.sql"
 
-      # Without sleep, prune will remove the container.
-      - name: Sleep for 30 seconds
-        run: sleep 30
+      - name: run liquibase
+        run: ssh -J jumphost internalserver './run-mcda-liquibase.sh'
 
-      - name: prune docker on the server
-        run: ssh -o StrictHostKeyChecking=no deploy@mcda.drugis.org 'docker system prune -f'
+      - name: run mcda container on the server
+        run: ssh -J jumphost internalserver './run-mcda.sh'
 
-      - name: docker registry garbage collection
-        run: ssh -o StrictHostKeyChecking=no deploy@registry.drugis.org './garbage-collect-registry.sh'
+      - name: generate mcda system service file
+        run: >
+          ssh -J jumphost internalserver \
+          'podman generate systemd --name mcda > /etc/systemd/system/mcda.service'
+
+      - name: stop mcda container
+        run: ssh -J jumphost internalserver 'podman stop mcda'
+
+      - name: start mcda service
+        run: >
+          ssh -J jumphost internalserver \
+          "systemctl daemon-reload && \
+            systemctl enable mcda && \
+            systemctl start mcda"
 
       - name: notify on slack channel on failure
         if: failure()
