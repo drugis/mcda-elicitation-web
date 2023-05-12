@@ -85,7 +85,7 @@ jobs:
             fi"
 
       - name: remove container on the server
-        run: ssh -J jumphost internalserver "podman rm -f mcda"
+        run: ssh -J jumphost internalserver "podman rm -f mcda || true"
 
       - name: update database
         run: >
