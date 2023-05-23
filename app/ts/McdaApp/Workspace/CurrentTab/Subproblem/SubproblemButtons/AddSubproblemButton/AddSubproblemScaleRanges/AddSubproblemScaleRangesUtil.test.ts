@@ -56,6 +56,19 @@ describe('addSubproblemScaleRangesUtil', () => {
       );
       expect(result).toEqual(result);
     });
+
+    it('should not break when the step size is 0 (x%0===NaN)', () => {
+      const stepSize = 0;
+      const configuredRange: [number, number] = [1.04, 1.41];
+      const observedRange: [number, number] = [1.05, 1.4];
+      const result = adjustConfiguredRangeForStepSize(
+        stepSize,
+        configuredRange,
+        observedRange
+      );
+      const expectedResult: [number, number] = [1.04, 1.41];
+      expect(result).toEqual(expectedResult);
+    });
   });
 
   describe('createMarks', () => {

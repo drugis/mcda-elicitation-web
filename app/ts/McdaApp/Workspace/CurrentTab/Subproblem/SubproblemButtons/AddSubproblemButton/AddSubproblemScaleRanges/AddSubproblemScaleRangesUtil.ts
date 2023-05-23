@@ -190,7 +190,7 @@ export function adjustConfiguredRangeForStepSize(
 
 function getAdjustedLowerBound(value: number, stepSize: number): number {
   const remainder = value % stepSize;
-  if (remainder === 0) {
+  if (isNaN(remainder) || remainder === 0) {
     return value;
   } else {
     return significantDigits(value - remainder - stepSize);
@@ -199,7 +199,7 @@ function getAdjustedLowerBound(value: number, stepSize: number): number {
 
 function getAdjustedUpperBound(value: number, stepSize: number): number {
   const remainder = value % stepSize;
-  if (remainder === 0) {
+  if (isNaN(remainder) || remainder === 0) {
     return value;
   } else {
     return significantDigits(value - remainder + stepSize);
