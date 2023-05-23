@@ -34,14 +34,14 @@ jobs:
         id: jest
         run: yarn jest
 
-      # - name: build docker image
-      #   run: ./build-docker.sh GOOGLE Live https://mcda.drugis.org live
+      - name: build docker image
+        run: ./build-docker.sh GOOGLE Live https://mcda.drugis.org live
 
-      # - name: docker login
-      #   run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
+      - name: docker login
+        run: docker login -u addis -p ${{ secrets.dockerRegistryPassword }}
 
-      # - name: docker push
-      #   run: docker push addis/mcda:live
+      - name: docker push
+        run: docker push addis/mcda:live
 
       - name: Configure SSH
         run: |
@@ -90,7 +90,7 @@ jobs:
       - name: update database
         run: >
           ssh -J jumphost internalserver \
-          "cd git/mcda-elicitation-web/liquibase && git pull && rm liquibase-changelog.sql && cp ../database.pg.sql liquibase-changelog.sql"
+          "cd git/mcda-elicitation-web/liquibase && git pull && cp ../database.pg.sql liquibase-changelog.sql"
 
       - name: run liquibase
         run: ssh -J jumphost internalserver './run-mcda-liquibase.sh'
