@@ -90,7 +90,7 @@ jobs:
       - name: update database
         run: >
           ssh -J jumphost internalserver \
-          "cd git/mcda-elicitation-web/liquibase && git pull && rm liquibase-changelog.sql && cp ../database.pg.sql liquibase-changelog.sql"
+          "cd git/mcda-elicitation-web/liquibase && git pull && cp ../database.pg.sql liquibase-changelog.sql"
 
       - name: run liquibase
         run: ssh -J jumphost internalserver './run-mcda-liquibase.sh'

@@ -10,22 +10,19 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['12']
-        os: [ubuntu-20.04]
+        node-version: ['18']
+        os: [ubuntu-22.04]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: webfactory/ssh-agent@v0.4.1
-        with:
-          ssh-private-key: ${{ secrets.deployPrivateKey }}
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
@@ -93,7 +90,7 @@ jobs:
       - name: update database
         run: >
           ssh -J jumphost internalserver \
-          "cd git/mcda-elicitation-web/liquibase && git pull && rm liquibase-changelog.sql && cp ../database.pg.sql liquibase-changelog.sql"
+          "cd git/mcda-elicitation-web/liquibase && git pull && cp ../database.pg.sql liquibase-changelog.sql"
 
       - name: run liquibase
         run: ssh -J jumphost internalserver './run-mcda-liquibase.sh'
