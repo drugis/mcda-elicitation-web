@@ -101,7 +101,11 @@ Getting the dependencies:
 
     yarn
 
-Building the application:
+Building the backend application (**Warning**: this command also deletes the frontend build artefacts):
+
+    yarn build-backend
+
+Building the frontend application:
 
     yarn build-prod
 
