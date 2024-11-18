@@ -4,4 +4,6 @@ export type TPreferencesView =
   | 'precise'
   | 'imprecise'
   | 'matching'
-  | 'choice';
+  | 'choice'
+  | 'threshold'
+  | 'advancedPvf';
