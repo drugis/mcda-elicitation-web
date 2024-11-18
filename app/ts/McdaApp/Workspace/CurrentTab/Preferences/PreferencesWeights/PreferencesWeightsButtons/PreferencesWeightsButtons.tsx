@@ -32,6 +32,9 @@ export default function PreferencesWeightsButtons() {
     setActiveView('imprecise');
   }
 
+  function handleChoiceBasedClick() {
+    setActiveView('choice');
+  }
   function handleThresholdClick() {
     setActiveView('threshold');
   }
@@ -86,6 +89,22 @@ export default function PreferencesWeightsButtons() {
           variant="contained"
         >
           Imprecise Swing Weighting
+        </Button>
+      </Tooltip>
+      <Tooltip
+        title={
+          containsNonLinearPvf
+            ? ''
+            : 'Saving this preference will reset all criteria trade-off preferences'
+        }
+      >
+        <Button
+          id="choice-based-matching-button"
+          onClick={handleChoiceBasedClick}
+          color="primary"
+          variant="contained"
+        >
+          Choice-based Matching
         </Button>
       </Tooltip>
       <Tooltip
