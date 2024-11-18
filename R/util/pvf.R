@@ -1,5 +1,4 @@
 # import sample form sampler.R
-# import createPvf from pvf.R
 
 createPvf <- function(criterion) {
   pvf <- criterion$pvf
