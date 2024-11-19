@@ -26,6 +26,11 @@ export const lexicon: Record<string, IHelpInfo> = {
     text: 'Table with the central weights and confidence factors for each alternative. For alternatives with empty rows, there was not a single combination of sampled weights and criteria measurements that made this alternative the preferered treatment. These alternatives therefore do not have a central weight vector.',
     link: '#mcda-central-weights'
   },
+  'choice-based-matching': {
+    title: 'Choice-based matching',
+    text: "The choice-based matching elicitation method uses an automatically-generated series of questions to approximate the user's preferences.",
+    link: '#mcda-choice-based-matching-elicitation'
+  },
   'confidence-factor': {
     title: 'Confidence factor',
     text: "The probability that an alternative is the highest ranked treatment if that alternative's central weight vector is used to rank the alternatives.",

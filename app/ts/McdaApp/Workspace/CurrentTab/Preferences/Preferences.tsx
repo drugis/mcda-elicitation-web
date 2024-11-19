@@ -64,6 +64,9 @@ export default function Preferences() {
       case 'ranking':
         document.title = 'Ranking';
         break;
+      case 'choice':
+        document.title = 'Choice-based matching';
+        break;
       case 'threshold':
         document.title = 'Threshold technique elicitation';
         break;

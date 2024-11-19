@@ -127,6 +127,8 @@ export function determineElicitationMethod(preferences: TPreferences): string {
         return 'Matching';
       case 'imprecise':
         return 'Imprecise Swing Weighting';
+      case 'choice':
+        return 'Choice-based Matching';
       case 'threshold':
         return 'Threshold';
     }
