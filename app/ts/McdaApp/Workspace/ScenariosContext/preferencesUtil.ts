@@ -188,7 +188,8 @@ export function isElicitationView(activeView: TPreferencesView): boolean {
     activeView === 'imprecise' ||
     activeView === 'matching' ||
     activeView === 'ranking' ||
-    activeView === 'threshold'
+    activeView === 'threshold' ||
+    activeView === 'choice'
   );
 }
 

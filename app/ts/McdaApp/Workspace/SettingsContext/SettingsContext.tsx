@@ -111,6 +111,7 @@ export function SettingsContextProviderComponent({children}: {children: any}) {
         numberOfToggledColumns,
         settings,
         showPercentages: settings.showPercentages === 'percentage',
+        showCbmPieChart: settings.showCbmPieChart,
         toggledColumns,
         getUsePercentage,
         updateSettings

@@ -46,7 +46,8 @@ export function getDefaultSettings(
     displayMode: getInitialDisplayMode(isRelativeProblem, hasNoEffects),
     randomSeed: 1234,
     calculationMethod: 'median',
-    showPercentages: 'percentage'
+    showPercentages: 'percentage',
+    showCbmPieChart: false
   };
 
   const defaultToggledColumns: IToggledColumns = {

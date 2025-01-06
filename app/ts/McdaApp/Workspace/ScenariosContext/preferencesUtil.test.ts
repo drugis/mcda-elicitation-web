@@ -545,6 +545,10 @@ describe('PreferencesUtil', () => {
       expect(isElicitationView('threshold')).toBeTruthy();
     });
 
+    it('should return true if the view is choice', () => {
+      expect(isElicitationView('choice')).toBeTruthy();
+    });
+
     it('should return false if the view is advancedPvf', () => {
       expect(isElicitationView('advancedPvf')).toBeFalsy();
     });

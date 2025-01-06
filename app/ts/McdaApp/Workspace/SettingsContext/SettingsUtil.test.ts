@@ -87,7 +87,8 @@ describe('SettingsUtil', () => {
           displayMode: 'enteredEffects',
           randomSeed: 1234,
           calculationMethod: 'median',
-          showPercentages: 'percentage'
+          showPercentages: 'percentage',
+          showCbmPieChart: false
         },
         defaultToggledColumns: {
           references: true,
