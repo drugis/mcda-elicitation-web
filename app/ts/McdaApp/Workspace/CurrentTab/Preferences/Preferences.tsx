@@ -15,6 +15,7 @@ import {EquivalentChangeContextProviderComponent} from './EquivalentChange/Equiv
 import AdvancedPartialValueFunction from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunction';
 import {AdvancedPartialValueFunctionContextProviderComponent} from './PartialValueFunctions/AdvancedPartialValueFunctions/AdvancedPartialValueFunctionContext/AdvancedPartialValueFunctionContext';
 import PreferencesView from './PreferencesView/PreferencesView';
+import {ErrorContext} from 'app/ts/Error/ErrorContext';
 
 export default function Preferences() {
   const {filteredCriteria, stepSizesByCriterion} = useContext(
@@ -22,7 +23,9 @@ export default function Preferences() {
   );
   const {setActiveView, currentScenario, activeView, pvfs, updateScenario} =
     useContext(CurrentScenarioContext);
-  const {showPercentages} = useContext(SettingsContext);
+  const {showPercentages, showCbmPieChart} = useContext(SettingsContext);
+  const {setErrorMessage} = useContext(ErrorContext);
+
   const {
     workspace: {
       properties: {title}
@@ -64,6 +67,9 @@ export default function Preferences() {
       case 'ranking':
         document.title = 'Ranking';
         break;
+      case 'choice':
+        document.title = 'Choice-based matching';
+        break;
       case 'threshold':
         document.title = 'Threshold technique elicitation';
         break;
@@ -98,6 +104,8 @@ export default function Preferences() {
           manualLexicon={lexicon}
           manualHost={'@MCDA_HOST'}
           manualPath="/manual.html"
+          showCbmPieChart={showCbmPieChart}
+          setErrorMessage={setErrorMessage}
         />
       );
     } else {

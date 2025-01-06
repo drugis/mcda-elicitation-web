@@ -1,6 +1,15 @@
 import IRights, {requiredRightType} from '@shared/interface/IRights';
 import {Response} from 'express';
 
+const GET = 'GET';
+const POST = 'POST';
+const PUT = 'PUT';
+const DELETE = 'DELETE';
+const NONE = 'none';
+const READ = 'read';
+const WRITE = 'write';
+const OWNER = 'owner';
+
 export default function getRequiredRights(
   workspaceOwnerRightsNeeded: (
     response: Response,
@@ -16,206 +25,207 @@ export default function getRequiredRights(
   ) => void
 ): IRights[] {
   return [
-    makeRights('/v2/patavi', 'POST', 'none'),
-    makeRights('/v2/patavi/weights', 'POST', 'none'),
-    makeRights('/v2/patavi/scales', 'POST', 'none'),
-    makeRights('/v2/patavi/smaaResults', 'POST', 'none'),
-    makeRights('/v2/patavi/deterministicResults', 'POST', 'none'),
-    makeRights('/v2/patavi/recalculateDeterministicResults', 'POST', 'none'),
-    makeRights('/v2/patavi/measurementsSensitivity', 'POST', 'none'),
-    makeRights('/v2/patavi/preferencesSensitivity', 'POST', 'none'),
+    makeRights('/v2/patavi', POST, NONE),
+    makeRights('/v2/patavi/choice-based-matching-state', POST, NONE),
+    makeRights('/v2/patavi/weights', POST, NONE),
+    makeRights('/v2/patavi/scales', POST, NONE),
+    makeRights('/v2/patavi/smaaResults', POST, NONE),
+    makeRights('/v2/patavi/deterministicResults', POST, NONE),
+    makeRights('/v2/patavi/recalculateDeterministicResults', POST, NONE),
+    makeRights('/v2/patavi/measurementsSensitivity', POST, NONE),
+    makeRights('/v2/patavi/preferencesSensitivity', POST, NONE),
 
-    makeRights('/v2/workspaces', 'GET', 'none'),
-    makeRights('/v2/workspaces', 'POST', 'none'),
+    makeRights('/v2/workspaces', GET, NONE),
+    makeRights('/v2/workspaces', POST, NONE),
 
-    makeRights('/v2/premades', 'GET', 'none'),
-    makeRights('/v2/workspaces/createPremade', 'POST', 'none'),
+    makeRights('/v2/premades', GET, NONE),
+    makeRights('/v2/workspaces/createPremade', POST, NONE),
 
     makeRights(
       '/v2/workspaces/:workspaceId',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId',
-      'POST',
-      'write',
+      POST,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId',
-      'DELETE',
-      'owner',
+      DELETE,
+      OWNER,
       workspaceOwnerRightsNeeded
     ),
 
-    makeRights('/v2/inProgress', 'GET', 'none', inProgressOwnerRightsNeeded),
-    makeRights('/v2/inProgress', 'POST', 'none', inProgressOwnerRightsNeeded),
+    makeRights('/v2/inProgress', GET, NONE, inProgressOwnerRightsNeeded),
+    makeRights('/v2/inProgress', POST, NONE, inProgressOwnerRightsNeeded),
     makeRights(
       '/v2/inProgress/:inProgressId',
-      'GET',
-      'none',
+      GET,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId',
-      'DELETE',
-      'none',
+      DELETE,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId',
-      'PUT',
-      'none',
+      PUT,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/criteria/:criterionId',
-      'PUT',
-      'none',
+      PUT,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/criteria/:criterionId',
-      'DELETE',
-      'none',
+      DELETE,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/criteria/:criterionId/dataSources/:dataSourceId',
-      'PUT',
-      'none',
+      PUT,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/criteria/:criterionId/dataSources/:dataSourceId',
-      'DELETE',
-      'none',
+      DELETE,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/alternatives/:alternativeId',
-      'PUT',
-      'none',
+      PUT,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/alternatives/:alternativeId',
-      'DELETE',
-      'none',
+      DELETE,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/cells',
-      'PUT',
-      'none',
+      PUT,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/:inProgressId/doCreateWorkspace',
-      'POST',
-      'none',
+      POST,
+      NONE,
       inProgressOwnerRightsNeeded
     ),
     makeRights(
       '/v2/inProgress/createCopy',
-      'POST',
-      'none',
+      POST,
+      NONE,
       workspaceOwnerRightsNeeded
     ),
 
     makeRights(
       '/v2/workspaces/:workspaceId/ordering',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/ordering',
-      'PUT',
-      'write',
+      PUT,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
 
     makeRights(
       '/v2/workspaces/:workspaceId/workspaceSettings',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/workspaceSettings',
-      'PUT',
-      'write',
+      PUT,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
 
     makeRights(
       '/v2/workspaces/:workspaceId/problems',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems',
-      'POST',
-      'write',
+      POST,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId',
-      'POST',
-      'write',
+      POST,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId',
-      'DELETE',
-      'write',
+      DELETE,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
 
     makeRights(
       '/v2/workspaces/:workspaceId/scenarios',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId/scenarios',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId',
-      'GET',
-      'read',
+      GET,
+      READ,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId/scenarios',
-      'POST',
-      'write',
+      POST,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId',
-      'PUT',
-      'write',
+      PUT,
+      WRITE,
       workspaceOwnerRightsNeeded
     ),
     makeRights(
       '/v2/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId',
-      'DELETE',
-      'write',
+      DELETE,
+      WRITE,
       workspaceOwnerRightsNeeded
     )
   ];

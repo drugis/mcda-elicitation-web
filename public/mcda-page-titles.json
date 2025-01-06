@@ -12,5 +12,6 @@
   "smaa-results": "SmaaResultsController",
   "swing-weighting": "SwingWeightingController",
   "matching": "MatchingElicitationController",
-  "partial-value-function": "PartialValueFunctionController"
+  "partial-value-function": "PartialValueFunctionController",
+  "choice-based-matching": "ChoiceBasedMatchingController"
 }

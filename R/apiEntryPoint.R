@@ -4,6 +4,7 @@ library(hitandrun)
 
 smaa_v2 <- function(params) {
   allowed <- c(
+    'choiceBasedMatching',
     'deterministic',
     'indifferenceCurve',
     'matchingElicitationCurve',
