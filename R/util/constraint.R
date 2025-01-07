@@ -9,6 +9,8 @@ genHARconstraint <- function(statement, criteria) {
     return(getRatioBoundConstraint(statement$bounds, numberOfCriteria, index1, index2))
   } else if (statement$type == "exact swing") {
     return(getRatioConstraint(numberOfCriteria, index1, index2, statement$ratio))
+  } else if (statement$type == "upper ratio") {
+    return(upperRatioConstraint(numberOfCriteria,  index1,  index2, statement$bound))
   }
 }
 

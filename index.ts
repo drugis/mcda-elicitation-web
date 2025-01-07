@@ -173,7 +173,7 @@ function initApp(): void {
 
 function errorHandler(
   error: OurError,
-  request: Request,
+  _request: Request,
   response: Response,
   next: any
 ): void {

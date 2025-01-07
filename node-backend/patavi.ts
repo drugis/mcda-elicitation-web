@@ -4,9 +4,8 @@ import {ISmaaResults} from '@shared/interface/Patavi/ISmaaResults';
 import {TPataviCommands} from '@shared/types/PataviCommands';
 import {TPataviResults} from '@shared/types/PataviResults';
 import Axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
-import {IncomingMessage} from 'http';
 import _ from 'lodash';
-import {RawData, WebSocket, MessageEvent} from 'ws';
+import {MessageEvent, WebSocket} from 'ws';
 import logger from './logger';
 
 const {PATAVI_API_KEY} = process.env;

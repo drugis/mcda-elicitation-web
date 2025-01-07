@@ -191,6 +191,20 @@ describe('PreferencesUtil', () => {
     });
   });
 
+  describe('hasNonLinearPvf', () => {
+    it('should return true if there is a nonlinear pvf', () => {
+      const pvfs = {
+        crit1Id: {
+          type: 'linear'
+        } as TPvf,
+        crit2Id: {
+          type: 'piecewise-linear'
+        } as TPvf
+      };
+      expect(hasNonLinearPvf(pvfs)).toBe(true);
+    });
+  });
+
   describe('filterScenariosWithPvfs', () => {
     it('should filter out all the scenarios without pvfs for every criterion', () => {
       const scenarios = {
@@ -280,7 +294,7 @@ describe('PreferencesUtil', () => {
       expect(result).toEqual('None');
     });
 
-    it('should return "Ranking"', () => {
+    it('should return "Ranking" if elicitation method is ranking', () => {
       const preferences: TPreferences = [
         {elicitationMethod: 'ranking'} as IRanking
       ];
@@ -288,7 +302,7 @@ describe('PreferencesUtil', () => {
       expect(result).toEqual('Ranking');
     });
 
-    it('should return "Precise Swing Weighting"', () => {
+    it('should return "Precise Swing Weighting" if elicitation method is precise swing weighting', () => {
       const preferences: TPreferences = [
         {elicitationMethod: 'precise'} as IRanking
       ];
@@ -296,7 +310,7 @@ describe('PreferencesUtil', () => {
       expect(result).toEqual('Precise Swing Weighting');
     });
 
-    it('should return "Matching"', () => {
+    it('should return "Matching" if elicitation method is matcing', () => {
       const preferences: TPreferences = [
         {elicitationMethod: 'matching'} as IRanking
       ];
@@ -304,12 +318,28 @@ describe('PreferencesUtil', () => {
       expect(result).toEqual('Matching');
     });
 
-    it('should return "Imprecise Swing Weighting"', () => {
+    it('should return "Imprecise Swing Weighting" if elicitation method is imprecise swing weighting', () => {
       const preferences: TPreferences = [
         {elicitationMethod: 'imprecise'} as IRanking
       ];
       const result = determineElicitationMethod(preferences);
       expect(result).toEqual('Imprecise Swing Weighting');
+    });
+
+    it('should return "Threshold" if elicitation method is threshold', () => {
+      const preferences: TPreferences = [
+        {elicitationMethod: 'threshold'} as IRanking
+      ];
+      const result = determineElicitationMethod(preferences);
+      expect(result).toEqual('Threshold');
+    });
+
+    it('should return "Choice-based Matching" if elicitation method is chioce-based matching', () => {
+      const preferences: TPreferences = [
+        {elicitationMethod: 'choice'} as IRanking
+      ];
+      const result = determineElicitationMethod(preferences);
+      expect(result).toEqual('Choice-based Matching');
     });
   });
 
@@ -513,6 +543,10 @@ describe('PreferencesUtil', () => {
 
     it('should return true if the view is threshold', () => {
       expect(isElicitationView('threshold')).toBeTruthy();
+    });
+
+    it('should return true if the view is choice', () => {
+      expect(isElicitationView('choice')).toBeTruthy();
     });
 
     it('should return false if the view is advancedPvf', () => {

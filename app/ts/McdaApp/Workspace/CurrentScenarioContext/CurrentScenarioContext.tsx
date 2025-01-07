@@ -115,7 +115,10 @@ export function CurrentScenarioContextProviderComponent({
 
   const getWeights = useCallback(
     (scenario: IMcdaScenario, pvfs: Record<string, TPvf>): void => {
-      if (scenario.state.prefs[0]?.elicitationMethod === 'imprecise') {
+      if (
+        scenario.state.prefs[0]?.elicitationMethod === 'imprecise' ||
+        scenario.state.prefs[0]?.elicitationMethod === 'choice'
+      ) {
         getWeightsFromPatavi(scenario, pvfs);
       } else {
         getWeightsThroughCalculation(scenario);

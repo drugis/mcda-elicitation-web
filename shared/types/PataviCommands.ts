@@ -1,3 +1,4 @@
+import IChoiceBasedMatchingCommand from '@shared/interface/Patavi/IChoiceBasedMatchingCommand';
 import {IDeterministicResultsCommand} from '@shared/interface/Patavi/IDeterministicResultsCommand';
 import {IMeasurementsSensitivityCommand} from '@shared/interface/Patavi/IMeasurementsSensitivityCommand';
 import {IPataviProblem} from '@shared/interface/Patavi/IPataviProblem';
@@ -15,4 +16,5 @@ export type TPataviCommands =
   | IRecalculatedDeterministicResultsCommand
   | IMeasurementsSensitivityCommand
   | IPreferencesSensitivityCommand
-  | IScalesCommand;
+  | IScalesCommand
+  | IChoiceBasedMatchingCommand;

@@ -53,7 +53,7 @@ applyMeasurementUncertainty <- function(params, criteria, measurements) {
   for (criterion in criteria) {
     medianMeasurements[, criterion] <- pvf[[criterion]](medianMeasurements[, criterion])
   }
-  for (i in 1:hitAndRunSamples) {
+  for (i in 1:dim(measurements)[1]) {
     measurements[i,,] <- medianMeasurements
   }
   return(measurements)

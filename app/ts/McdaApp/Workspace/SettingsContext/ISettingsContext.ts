@@ -9,6 +9,7 @@ export default interface ISettingsContext {
   settings: ISettings;
   numberOfToggledColumns: number;
   showPercentages: boolean;
+  showCbmPieChart: boolean;
   toggledColumns: IToggledColumns;
   getUsePercentage: (dataSource: IDataSource) => boolean;
   updateSettings: (

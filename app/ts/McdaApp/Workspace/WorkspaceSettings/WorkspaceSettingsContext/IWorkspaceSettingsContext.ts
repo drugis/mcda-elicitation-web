@@ -11,7 +11,8 @@ export type TSettings =
   | 'calculationMethod'
   | 'displayMode'
   | 'randomSeed'
-  | 'showPercentages';
+  | 'showPercentages'
+  | 'showCbmPieChart';
 
 export default interface IWorkspaceSettingsContext {
   isSaveButtonDisabled: boolean;

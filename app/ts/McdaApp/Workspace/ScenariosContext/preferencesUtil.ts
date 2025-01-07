@@ -127,6 +127,8 @@ export function determineElicitationMethod(preferences: TPreferences): string {
         return 'Matching';
       case 'imprecise':
         return 'Imprecise Swing Weighting';
+      case 'choice':
+        return 'Choice-based Matching';
       case 'threshold':
         return 'Threshold';
     }
@@ -186,7 +188,8 @@ export function isElicitationView(activeView: TPreferencesView): boolean {
     activeView === 'imprecise' ||
     activeView === 'matching' ||
     activeView === 'ranking' ||
-    activeView === 'threshold'
+    activeView === 'threshold' ||
+    activeView === 'choice'
   );
 }
 

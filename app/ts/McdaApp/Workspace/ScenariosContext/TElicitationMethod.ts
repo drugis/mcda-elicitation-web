@@ -3,5 +3,6 @@ export type TElicitationMethod =
   | 'precise'
   | 'matching'
   | 'imprecise'
+  | 'choice'
   | 'threshold'
   | 'none';
