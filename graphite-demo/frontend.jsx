@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-const TaskSearch = () => {
+const TaskAndUserSearch = () => {
   const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,14 +17,15 @@ const TaskSearch = () => {
         return response.json();
       })
       .then(data => {
-        setTasks(data);
+        setTasks(data.tasks);
+        setUsers(data.users);
         setLoading(false);
       })
       .catch(error => {
         setError(error.message);
         setLoading(false);
       });
-  }, [searchQuery]); // Depend on searchQuery
+  }, [searchQuery]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -40,10 +42,11 @@ const TaskSearch = () => {
       <p>General Kenobi</p>
       <input
         type="text"
-        placeholder="Search tasks..."
+        placeholder="Search tasks and users..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      <h3>Tasks</h3>
       <ul>
         {tasks.map(task => (
           <li key={task.id}>
@@ -51,8 +54,16 @@ const TaskSearch = () => {
           </li>
         ))}
       </ul>
+      <h3>Users</h3>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>
+            <p>{user.name}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default TaskSearch;
+export default TaskAndUserSearch;
