@@ -13,7 +13,6 @@ RUN R -e 'install.packages("abind", repos="http://cran.rstudio.com/"); if (!requ
 
 ADD *.R /tmp/
 ADD util/*.R /tmp/
-RUN rm  /tmp/apiEntryPoint.R
 
 RUN cat /tmp/*.R > /var/lib/patavi/smaa_service.R
 

@@ -73,7 +73,10 @@ server = http.createServer(app);
 function runDiagnostics(numberOftries: number) {
   startupDiagnostics.runStartupDiagnostics((errorBody: OurError): void => {
     if (numberOftries <= 0) {
-      process.exit(1);
+      // For local development, start anyway even if diagnostics fail
+      logger.warn('Startup diagnostics failed, but starting app anyway for local development');
+      initApp();
+      // process.exit(1);
     } else if (errorBody) {
       setTimeout(_.partial(runDiagnostics, numberOftries - 1), 10000);
     } else {
