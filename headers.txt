@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+X-DNS-Prefetch-Control: off
+X-Frame-Options: SAMEORIGIN
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Download-Options: noopen
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Set-Cookie: XSRF-TOKEN=BBhTOkIf-hGdqWBpsk06-DYSCVeYjVzfN4h4; Max-Age=3600; Path=/; Expires=Wed, 08 Oct 2025 23:26:16 GMT; SameSite=Lax
+Set-Cookie: connect.sid=s%3AWn2X3-qxYtHZereLyLdFNEJUcAZL4oxa.XGExLovGksgvs54YkN6y1rXYYAyXZS5MMrzmgSVze8Y; Path=/; Expires=Wed, 08 Oct 2025 23:26:16 GMT; HttpOnly; SameSite=Lax
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 08 Oct 2025 22:20:22 GMT
+ETag: W/"8a0-199c5e94070"
+Content-Type: text/html; charset=UTF-8
+Content-Length: 2208
+Date: Wed, 08 Oct 2025 22:26:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

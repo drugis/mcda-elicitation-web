@@ -1,0 +1,120 @@
+{
+  "timestamp": "2025-10-08T22:22:52.031Z",
+  "kind": "request",
+  "payload": {
+    "performanceTable": [
+      {
+        "alternative": "alt1",
+        "criterion": "dsOS",
+        "performance": {
+          "type": "exact",
+          "value": 0.6,
+          "input": {
+            "scale": "percentage",
+            "value": 0.6
+          }
+        },
+        "dataSource": "dsOS"
+      },
+      {
+        "alternative": "alt2",
+        "criterion": "dsOS",
+        "performance": {
+          "type": "exact",
+          "value": 0.5,
+          "input": {
+            "scale": "percentage",
+            "value": 0.5
+          }
+        },
+        "dataSource": "dsOS"
+      },
+      {
+        "alternative": "alt1",
+        "criterion": "dsSevere",
+        "performance": {
+          "type": "exact",
+          "value": 0.6,
+          "input": {
+            "scale": "percentage",
+            "value": 0.6
+          }
+        },
+        "dataSource": "dsSevere"
+      },
+      {
+        "alternative": "alt2",
+        "criterion": "dsSevere",
+        "performance": {
+          "type": "exact",
+          "value": 0.2,
+          "input": {
+            "scale": "percentage",
+            "value": 0.2
+          }
+        },
+        "dataSource": "dsSevere"
+      },
+      {
+        "alternative": "alt1",
+        "criterion": "dsModerate",
+        "performance": {
+          "type": "exact",
+          "value": 0.35,
+          "input": {
+            "scale": "percentage",
+            "value": 0.35
+          }
+        },
+        "dataSource": "dsModerate"
+      },
+      {
+        "alternative": "alt2",
+        "criterion": "dsModerate",
+        "performance": {
+          "type": "exact",
+          "value": 0.05,
+          "input": {
+            "scale": "percentage",
+            "value": 0.05
+          }
+        },
+        "dataSource": "dsModerate"
+      }
+    ],
+    "alternatives": {
+      "alt1": {
+        "id": "alt1",
+        "title": "New treatment"
+      },
+      "alt2": {
+        "id": "alt2",
+        "title": "Control"
+      }
+    },
+    "criteria": {
+      "dsOS": {
+        "id": "dsOS",
+        "scale": [
+          0,
+          1
+        ]
+      },
+      "dsSevere": {
+        "id": "dsSevere",
+        "scale": [
+          0,
+          1
+        ]
+      },
+      "dsModerate": {
+        "id": "dsModerate",
+        "scale": [
+          0,
+          1
+        ]
+      }
+    },
+    "method": "scales"
+  }
+}

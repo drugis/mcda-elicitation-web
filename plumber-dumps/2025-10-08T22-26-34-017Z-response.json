@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-10-08T22:26:34.018Z",
+  "kind": "response",
+  "payload": {
+    "cw": {
+      "alt1": {
+        "cf": 0,
+        "w": {
+          "OS": 0,
+          "severe": 0,
+          "moderate": 0
+        }
+      },
+      "alt2": {
+        "cf": 1,
+        "w": {
+          "OS": 0.2793,
+          "severe": 0.6086,
+          "moderate": 0.1121
+        }
+      }
+    },
+    "ranks": {
+      "alt1": [
+        0,
+        1
+      ],
+      "alt2": [
+        1,
+        0
+      ]
+    },
+    "weightsQuantiles": {
+      "2.5%": {
+        "OS": 0.0681,
+        "severe": 0.3845,
+        "moderate": 0.0044
+      },
+      "mean": {
+        "OS": 0.2793,
+        "severe": 0.6086,
+        "moderate": 0.1121
+      },
+      "97.5%": {
+        "OS": 0.4529,
+        "severe": 0.9052,
+        "moderate": 0.283
+      }
+    }
+  }
+}

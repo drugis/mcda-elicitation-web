@@ -85,7 +85,13 @@ function runDiagnostics(numberOftries: number) {
   });
 }
 
-runDiagnostics(6);
+// Skip Patavi diagnostics when using Plumber API
+if (process.env.USE_PLUMBER === 'true') {
+  logger.info('Using Plumber API - skipping Patavi diagnostics');
+  initApp();
+} else {
+  runDiagnostics(6);
+}
 
 function initApp(): void {
   rightsManagement.setRequiredRights(
