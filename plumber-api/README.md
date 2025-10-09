@@ -70,7 +70,7 @@ docker run -p 8000:8000 mcda-plumber-api
 ```
 
 ### With Docker Compose
-The Plumber API is integrated into the main docker-compose.yml file.
+The Plumber API is integrated into the main docker-compose-plumber.yml file.
 
 ## Testing
 
