@@ -34,6 +34,10 @@ source_files("/app/R/util")
 #* @apiTitle MCDA SMAA API
 #* @apiDescription Simple REST API for SMAA calculations, replacing Patavi
 
+## NOTE: we will return pre-serialized JSON strings directly from handlers
+## by setting res$body and Content-Type. Avoid registering custom @serializer
+## annotations which must be known to plumber at parse-time.
+
 #* Health check endpoint
 #* @get /health
 function() {
@@ -56,7 +60,6 @@ function(req) {
 
 #* Main SMAA calculation endpoint
 #* @post /smaa
-#* @serializer json
 function(req, res) {
   start_time <- Sys.time()
   
@@ -116,7 +119,7 @@ function(req, res) {
     }
     
     result <- do.call(function_name, list(params))
-    
+
     # Debug logging for SMAA results
     if (method == "smaa") {
       message(paste("DEBUG SMAA result structure:", toString(names(result))))
@@ -124,19 +127,26 @@ function(req, res) {
         message(paste("DEBUG SMAA results names:", toString(names(result$results))))
       }
     }
-    
+
     # Calculate execution time
     execution_time <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-    
-    # Return results with metadata
-    return(list(
+
+    # Build payload and serialize using RJSONIO so format matches old Patavi worker
+    payload <- list(
       results = result,
       metadata = list(
         method = method,
         execution_time_seconds = round(execution_time, 3),
         timestamp = as.character(Sys.time())
       )
-    ))
+    )
+
+  # Return pre-serialized JSON string directly in the response body so Plumber
+  # does not re-serialize the structure (ensures old Patavi-shaped JSON).
+  res$setHeader('Content-Type', 'application/json')
+  res$status <- 200
+  res$body <- RJSONIO::toJSON(payload, digits = 10)
+  return(res)
     
   }, error = function(e) {
     res$status <- 500
@@ -151,7 +161,6 @@ function(req, res) {
 #* Legacy endpoint for compatibility (returns task-like structure)
 #* This mimics the old Patavi response format
 #* @post /task
-#* @serializer json
 function(req, res, service = "smaa_v2") {
   start_time <- Sys.time()
   
@@ -202,13 +211,24 @@ function(req, res, service = "smaa_v2") {
     message(paste("Calling function:", function_name))
     
     result <- do.call(function_name, list(params))
-    
+
     # Calculate execution time
     execution_time <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-    
-    # Return results (plumber handles synchronous response)
-    res$status <- 200
-    return(result)
+
+    payload <- list(
+      results = result,
+      metadata = list(
+        service = service,
+        method = method,
+        execution_time_seconds = round(execution_time, 3),
+        timestamp = as.character(Sys.time())
+      )
+    )
+
+  res$status <- 200
+  res$setHeader('Content-Type', 'application/json')
+  res$body <- RJSONIO::toJSON(payload, digits = 10)
+  return(res)
     
   }, error = function(e) {
     res$status <- 500
