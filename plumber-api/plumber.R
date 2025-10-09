@@ -42,7 +42,7 @@ source_files("/app/R/util")
 #* @get /health
 function() {
   list(
-    status = "healthy", 
+    status = "healthy",
     timestamp = as.character(Sys.time()),
     version = "1.0.0-plumber"
   )
@@ -62,14 +62,14 @@ function(req) {
 #* @post /smaa
 function(req, res) {
   start_time <- Sys.time()
-  
+
   tryCatch({
     # Parse JSON body using RJSONIO (same as old Patavi worker)
     params <- fromJSON(req$postBody)
-    
+
     # Log the method being requested
     message(paste("Received /smaa request with method:", params$method))
-    
+
     # Validate method
     allowed_methods <- c(
       'choiceBasedMatching',
@@ -83,7 +83,7 @@ function(req, res) {
       'sensitivityWeightPlot',
       'smaa'
     )
-    
+
     method <- params$method
     if (is.null(method)) {
       res$status <- 400
@@ -92,7 +92,7 @@ function(req, res) {
         allowed_methods = allowed_methods
       ))
     }
-    
+
     if (!(method %in% allowed_methods)) {
       res$status <- 400
       return(list(
@@ -100,24 +100,24 @@ function(req, res) {
         allowed_methods = allowed_methods
       ))
     }
-    
+
     # Set random seed
     if (!is.null(params$seed)) {
       set.seed(params$seed)
     } else {
       set.seed(1234)
     }
-    
+
     # Call the appropriate R function
     function_name <- paste("run", method, sep = "_")
     message(paste("Calling function:", function_name))
-    
+
     # Debug logging
     if (!is.null(params$sensitivityAnalysis)) {
       message(paste("DEBUG sensitivityAnalysis:", toString(params$sensitivityAnalysis)))
       message(paste("DEBUG names:", toString(names(params$sensitivityAnalysis))))
     }
-    
+
     result <- do.call(function_name, list(params))
 
     # Debug logging for SMAA results
@@ -141,13 +141,13 @@ function(req, res) {
       )
     )
 
-  # Return pre-serialized JSON string directly in the response body so Plumber
-  # does not re-serialize the structure (ensures old Patavi-shaped JSON).
-  res$setHeader('Content-Type', 'application/json')
-  res$status <- 200
-  res$body <- RJSONIO::toJSON(payload, digits = 10)
-  return(res)
-    
+    # Return pre-serialized JSON string directly in the response body so Plumber
+    # does not re-serialize the structure (ensures old Patavi-shaped JSON).
+    res$setHeader('Content-Type', 'application/json')
+    res$status <- 200
+    res$body <- RJSONIO::toJSON(payload, digits = 10)
+    return(res)
+
   }, error = function(e) {
     res$status <- 500
     message(paste("Error in SMAA calculation:", e$message))
@@ -163,11 +163,11 @@ function(req, res) {
 #* @post /task
 function(req, res, service = "smaa_v2") {
   start_time <- Sys.time()
-  
+
   tryCatch({
     # Parse JSON body using RJSONIO (same as old Patavi worker)
     params <- fromJSON(req$postBody)
-    
+
     # Validate method
     allowed_methods <- c(
       'choiceBasedMatching',
@@ -181,7 +181,7 @@ function(req, res, service = "smaa_v2") {
       'sensitivityWeightPlot',
       'smaa'
     )
-    
+
     method <- params$method
     if (is.null(method)) {
       res$status <- 400
@@ -190,7 +190,7 @@ function(req, res, service = "smaa_v2") {
         allowed_methods = allowed_methods
       ))
     }
-    
+
     if (!(method %in% allowed_methods)) {
       res$status <- 400
       return(list(
@@ -198,18 +198,18 @@ function(req, res, service = "smaa_v2") {
         allowed_methods = allowed_methods
       ))
     }
-    
+
     # Set random seed
     if (!is.null(params$seed)) {
       set.seed(params$seed)
     } else {
       set.seed(1234)
     }
-    
+
     # Call the appropriate R function
     function_name <- paste("run", method, sep = "_")
     message(paste("Calling function:", function_name))
-    
+
     result <- do.call(function_name, list(params))
 
     # Calculate execution time
@@ -225,11 +225,11 @@ function(req, res, service = "smaa_v2") {
       )
     )
 
-  res$status <- 200
-  res$setHeader('Content-Type', 'application/json')
-  res$body <- RJSONIO::toJSON(payload, digits = 10)
-  return(res)
-    
+    res$status <- 200
+    res$setHeader('Content-Type', 'application/json')
+    res$body <- RJSONIO::toJSON(payload, digits = 10)
+    return(res)
+
   }, error = function(e) {
     res$status <- 500
     message(paste("Error in SMAA calculation:", e$message))

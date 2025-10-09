@@ -64,9 +64,9 @@ services:
       MCDAWEB_DB_NAME: ${POSTGRES_DB}
       
       # Plumber API configuration (replaces Patavi)
-    PLUMBER_API_URL: http://plumber-api:8000
-    PATAVI_API_KEY: ${PATAVI_API_KEY}
-    USE_PLUMBER: "true"
+      PLUMBER_API_URL: http://plumber-api:8000
+      PATAVI_API_KEY: ${PATAVI_API_KEY}
+      USE_PLUMBER: "true"
       
       # Authentication configuration
       MCDAWEB_AUTHENTICATION_METHOD: ${AUTH_MODE}
