@@ -58,9 +58,8 @@ function(req) {
   )
 }
 
-#* Main SMAA calculation endpoint
-#* @post /smaa
-function(req, res) {
+# Internal handler implementing SMAA logic (used by multiple routes)
+handle_smaa <- function(req, res, service = NULL) {
   start_time <- Sys.time()
 
   tryCatch({
@@ -68,7 +67,7 @@ function(req, res) {
     params <- fromJSON(req$postBody)
 
     # Log the method being requested
-    message(paste("Received /smaa request with method:", params$method))
+    message(paste("Received SMAA request with method:", params$method))
 
     # Validate method
     allowed_methods <- c(
@@ -135,6 +134,7 @@ function(req, res) {
     payload <- list(
       results = result,
       metadata = list(
+        service = ifelse(is.null(service), NA, service),
         method = method,
         execution_time_seconds = round(execution_time, 3),
         timestamp = as.character(Sys.time())
@@ -158,84 +158,8 @@ function(req, res) {
   })
 }
 
-#* Legacy endpoint for compatibility (returns task-like structure)
-#* This mimics the old Patavi response format
-#* @post /task
-function(req, res, service = "smaa_v2") {
-  start_time <- Sys.time()
-
-  tryCatch({
-    # Parse JSON body using RJSONIO (same as old Patavi worker)
-    params <- fromJSON(req$postBody)
-
-    # Validate method
-    allowed_methods <- c(
-      'choiceBasedMatching',
-      'deterministic',
-      'indifferenceCurve',
-      'matchingElicitationCurve',
-      'representativeWeights',
-      'scales',
-      'sensitivityMeasurements',
-      'sensitivityMeasurementsPlot',
-      'sensitivityWeightPlot',
-      'smaa'
-    )
-
-    method <- params$method
-    if (is.null(method)) {
-      res$status <- 400
-      return(list(
-        error = "Missing 'method' parameter",
-        allowed_methods = allowed_methods
-      ))
-    }
-
-    if (!(method %in% allowed_methods)) {
-      res$status <- 400
-      return(list(
-        error = paste("Method", method, "not allowed"),
-        allowed_methods = allowed_methods
-      ))
-    }
-
-    # Set random seed
-    if (!is.null(params$seed)) {
-      set.seed(params$seed)
-    } else {
-      set.seed(1234)
-    }
-
-    # Call the appropriate R function
-    function_name <- paste("run", method, sep = "_")
-    message(paste("Calling function:", function_name))
-
-    result <- do.call(function_name, list(params))
-
-    # Calculate execution time
-    execution_time <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
-
-    payload <- list(
-      results = result,
-      metadata = list(
-        service = service,
-        method = method,
-        execution_time_seconds = round(execution_time, 3),
-        timestamp = as.character(Sys.time())
-      )
-    )
-
-    res$status <- 200
-    res$setHeader('Content-Type', 'application/json')
-    res$body <- RJSONIO::toJSON(payload, digits = 10)
-    return(res)
-
-  }, error = function(e) {
-    res$status <- 500
-    message(paste("Error in SMAA calculation:", e$message))
-    return(list(
-      error = e$message,
-      traceback = as.character(sys.calls())
-    ))
-  })
+#* Canonical SMAA endpoint (Patavi compatibility)
+#* @post /smaa_v2
+function(req, res) {
+  handle_smaa(req, res, service = "smaa_v2")
 }

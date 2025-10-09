@@ -20,10 +20,10 @@ export function postAndHandleResults(
   problem: TPataviCommands,
   callback: (error: OurError, result?: TPataviResults) => void
 ) {
-  logger.debug(`Posting to Plumber API: ${PLUMBER_API_URL}/smaa`);
+  logger.debug(`Posting to Plumber API: ${PLUMBER_API_URL}/smaa_v2`);
   
-  // Make direct HTTP POST to Plumber API
-  Axios.post(`${PLUMBER_API_URL}/smaa`, problem, {
+  // Make direct HTTP POST to Plumber API (canonical endpoint)
+  Axios.post(`${PLUMBER_API_URL}/smaa_v2`, problem, {
     headers: {
       'Content-Type': 'application/json',
       'X-api-key': PATAVI_API_KEY || '',

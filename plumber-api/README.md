@@ -34,9 +34,9 @@ Returns:
 }
 ```
 
-### Main SMAA Endpoint
+### Main SMAA Endpoint (canonical)
 ```bash
-POST /smaa
+POST /smaa_v2
 Content-Type: application/json
 
 {
@@ -46,21 +46,6 @@ Content-Type: application/json
   "performanceTable": [...]
 }
 ```
-
-Returns calculation results directly (synchronous).
-
-### Legacy Endpoint (Patavi-compatible)
-```bash
-POST /task?service=smaa_v2
-Content-Type: application/json
-
-{
-  "method": "smaa",
-  ...
-}
-```
-
-Returns results in the same format as the old Patavi system for backwards compatibility.
 
 ## Supported Methods
 
@@ -94,7 +79,7 @@ The Plumber API is integrated into the main docker-compose.yml file.
 curl http://localhost:8000/health
 
 # Test scales calculation
-curl -X POST http://localhost:8000/smaa \
+curl -X POST http://localhost:8000/smaa_v2 \
   -H "Content-Type: application/json" \
   -d @test-request.json
 ```

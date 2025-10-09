@@ -31,7 +31,7 @@ if (dir.exists('R/util')) {
 }
 
 ## Read sample request
-request_file <- 'tmp/smaa-request.json'
+request_file <- 'test/fixtures/smaa-request.json'
 if (!file.exists(request_file)) {
   stop(paste('Request file not found:', request_file))
 }
