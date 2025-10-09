@@ -12,7 +12,7 @@ import path from 'path';
 import logger from './logger';
 
 const PLUMBER_API_URL = process.env.PLUMBER_API_URL || 'http://plumber-api:8000';
-const {PATAVI_API_KEY, PLUMBER_DUMP_DIR, PLUMBER_DUMP_IO} = process.env;
+const {PATAVI_API_KEY} = process.env;
 
 logger.info(`Plumber API URL: ${PLUMBER_API_URL}`);
 
@@ -21,7 +21,6 @@ export function postAndHandleResults(
   callback: (error: OurError, result?: TPataviResults) => void
 ) {
   logger.debug(`Posting to Plumber API: ${PLUMBER_API_URL}/smaa`);
-  dumpPlumberIo('request', problem);
   
   // Make direct HTTP POST to Plumber API
   Axios.post(`${PLUMBER_API_URL}/smaa`, problem, {
@@ -37,9 +36,8 @@ export function postAndHandleResults(
       // Plumber returns results directly in response.data.results
       // or just response.data depending on endpoint
       const results = (response.data.results || response.data) as TPataviResults;
-      const normalizedResults = normalizeResults(problem, results);
-      const sanitizedResults = deepNormalizeNumericFields(normalizedResults) as TPataviResults;
-      dumpPlumberIo('response', sanitizedResults);
+  const normalizedResults = normalizeResults(problem, results);
+  const sanitizedResults = deepNormalizeNumericFields(normalizedResults) as TPataviResults;
       
       if (response.data.metadata) {
         logger.info(`Calculation completed in ${response.data.metadata.execution_time_seconds}s`);
@@ -234,25 +232,3 @@ export function deepNormalizeNumericFields<T>(value: T): T {
 
 type TDumpKind = 'request' | 'response';
 
-function dumpPlumberIo(kind: TDumpKind, payload: unknown): void {
-  if (PLUMBER_DUMP_IO !== 'true') {
-    return;
-  }
-
-  const directory = PLUMBER_DUMP_DIR || '/tmp/plumber-dumps';
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filePath = path.join(directory, `${timestamp}-${kind}.json`);
-
-  fsPromises
-    .mkdir(directory, {recursive: true})
-    .then(() =>
-      fsPromises.writeFile(
-        filePath,
-        JSON.stringify({timestamp: new Date().toISOString(), kind, payload}, null, 2),
-        'utf-8'
-      )
-    )
-    .catch((error: Error) => {
-      logger.warn(`Failed to dump Plumber ${kind} payload to ${filePath}: ${error.message}`);
-    });
-}

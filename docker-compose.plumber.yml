@@ -64,11 +64,9 @@ services:
       MCDAWEB_DB_NAME: ${POSTGRES_DB}
       
       # Plumber API configuration (replaces Patavi)
-      PLUMBER_API_URL: http://plumber-api:8000
-      PATAVI_API_KEY: ${PATAVI_API_KEY}
-      USE_PLUMBER: "true"
-      PLUMBER_DUMP_IO: "true"
-      PLUMBER_DUMP_DIR: "/var/lib/mcda/plumber-dumps"
+    PLUMBER_API_URL: http://plumber-api:8000
+    PATAVI_API_KEY: ${PATAVI_API_KEY}
+    USE_PLUMBER: "true"
       
       # Authentication configuration
       MCDAWEB_AUTHENTICATION_METHOD: ${AUTH_MODE}
@@ -80,8 +78,7 @@ services:
       HOST: "0.0.0.0"
       PORT: "3002"
       MCDA_HOST: "0.0.0.0"
-    volumes:
-      - ./plumber-dumps:/var/lib/mcda/plumber-dumps
+    # no plumber-dumps volume in production deployment
     ports:
       - "3000:3002"
 
