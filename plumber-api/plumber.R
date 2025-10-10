@@ -31,6 +31,37 @@ source_files("/app/R")
 # Source utility R files
 source_files("/app/R/util")
 
+
+#* Simple API key filter — require X-api-key for production endpoints
+#* @filter apiKey
+function(req, res) {
+  # Allow open health and docs endpoints
+  path <- req$PATH_INFO
+  if (!is.null(path) && (path == "/health" || startsWith(path, "/__docs__/"))) {
+    return(forward())
+  }
+
+  expected <- Sys.getenv('PATAVI_API_KEY', '')
+  if (identical(expected, '')) {
+    # Fail fast: treat missing configuration as a server error so deployments don't accidentally expose the API
+    message('Error: PATAVI_API_KEY is not set in Plumber; rejecting requests')
+    res$status <- 500
+    return(list(error = 'Server misconfiguration: PATAVI_API_KEY not set'))
+  }
+
+  # Try common header locations
+  provided <- NULL
+  if (!is.null(req$HTTP_X_API_KEY)) provided <- req$HTTP_X_API_KEY
+  if (is.null(provided) && !is.null(req$HEADERS[['x-api-key']])) provided <- req$HEADERS[['x-api-key']]
+
+  if (is.null(provided) || provided != expected) {
+    res$status <- 401
+    return(list(error = 'Unauthorized: invalid or missing API key'))
+  }
+
+  forward()
+}
+
 #* @apiTitle MCDA SMAA API
 #* @apiDescription Simple REST API for SMAA calculations, replacing Patavi
 

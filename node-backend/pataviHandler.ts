@@ -8,19 +8,12 @@ import {Request, Response} from 'express';
 import _ from 'lodash';
 import IDB from './interface/IDB';
 import logger from './logger';
-import {postAndHandleResults as pataviPostAndHandleResults} from './patavi';
 import {postAndHandleResults as plumberPostAndHandleResults} from './plumber';
 import ScenarioRepository from './scenarioRepository';
 
-// Choose which backend to use based on environment variable
-const USE_PLUMBER = process.env.USE_PLUMBER === 'true';
-const postAndHandleResults = USE_PLUMBER ? plumberPostAndHandleResults : pataviPostAndHandleResults;
-
-if (USE_PLUMBER) {
-  logger.info('Using Plumber API for SMAA calculations');
-} else {
-  logger.info('Using Patavi for SMAA calculations');
-}
+// Use the Plumber API unconditionally in this branch
+const postAndHandleResults = plumberPostAndHandleResults;
+logger.info('Using Plumber API for SMAA calculations');
 
 export default function PataviHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
