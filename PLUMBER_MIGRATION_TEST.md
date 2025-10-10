@@ -1,7 +1,8 @@
 # Plumber API Migration - Test Results
 
 ## Summary
-Successfully migrated from complex Patavi architecture to simple Plumber REST API.
+Plumber is now the canonical replacement for the older Patavi architecture.
+This document records the migration steps and how to run the new, simpler stack locally.
 
 ## Architecture Change
 
@@ -87,22 +88,19 @@ New file: `docker-compose.yml`
    - No need to understand Patavi internals
    - Standard REST API patterns
 
-## Next Steps to Complete Migration
+## Next Steps (post-migration)
 
-1. **Test SMAA Calculations**
+1. **Verify locally**
    - Login to http://localhost:3000
-   - Try scales feature
-   - Test other SMAA methods
+   - Try the scales feature and other SMAA methods to confirm behavior
 
-2. **If Tests Pass**
-   - Replace old compose with `docker-compose.yml`
-   - Update documentation
-   - Remove Patavi-related code
+2. **Finalize migration**
+   - Remove Patavi-related code and deployment artifacts (patavi-server, patavi-worker, run scripts)
+   - Update any remaining docs that reference Patavi to point to Plumber
 
-3. **Production Deployment**
-   - Test with real workloads
-   - Monitor performance
-   - Scale plumber-api horizontally if needed
+3. **Production deployment**
+   - Test with representative workloads
+   - Monitor performance and scale `plumber-api` horizontally if needed
 
 ## Files Created/Modified
 
