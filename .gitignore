@@ -15,6 +15,9 @@ ssl
 liquibase/liquibase-changelog.sql
 tests_output/
 
+# Local environment file (do NOT commit real secrets)
+.env
+
 # Numerous always-ignore extensions
 *.diff
 *.err
