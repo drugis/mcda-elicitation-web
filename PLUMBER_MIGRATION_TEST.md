@@ -58,7 +58,7 @@ PLUMBER_API_URL=http://plumber-api:8000
 ```
 
 ### Docker Compose
-New file: `docker-compose.plumber.yml`
+New file: `docker-compose.yml`
 - Only 3 services (vs 6 with Patavi)
 - Simpler configuration
 - No certificates needed
@@ -95,7 +95,7 @@ New file: `docker-compose.plumber.yml`
    - Test other SMAA methods
 
 2. **If Tests Pass**
-   - Replace docker-compose.yml with docker-compose.plumber.yml
+   - Replace old compose with `docker-compose.yml`
    - Update documentation
    - Remove Patavi-related code
 
@@ -111,7 +111,7 @@ New file: `docker-compose.plumber.yml`
 - `plumber-api/Dockerfile` - Container build file
 - `plumber-api/README.md` - Documentation
 - `node-backend/plumber.ts` - Plumber integration
-- `docker-compose.plumber.yml` - New compose file
+- `docker-compose.yml` - New compose file
 
 ### Modified Files  
 - `node-backend/pataviHandler.ts` - Added Plumber/Patavi switch
@@ -126,7 +126,7 @@ New file: `docker-compose.plumber.yml`
 docker-compose down
 
 # Start new Plumber-based services
-docker-compose -f docker-compose.plumber.yml up -d
+docker-compose up -d
 
 # Check logs
 docker logs mcda-plumber-api
