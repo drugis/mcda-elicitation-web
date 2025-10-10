@@ -32,8 +32,6 @@ services:
     environment:
       R_MAX_VSIZE: 16Gb
       PATAVI_API_KEY: ${PATAVI_API_KEY}
-    ports:
-      - "8000:8000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
