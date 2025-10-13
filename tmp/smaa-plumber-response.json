@@ -1,0 +1,48 @@
+{
+ "results": {
+ "cw": {
+ "alt1": {
+ "cf": null,
+"w": {
+ "OS": null,
+"severe": null,
+"moderate": null 
+} 
+},
+"alt2": {
+ "cf":           1,
+"w": {
+ "OS": 0.2793379184,
+"severe": 0.6085854056,
+"moderate": 0.112076676 
+} 
+} 
+},
+"ranks": {
+ "alt1": [           0,           1 ],
+"alt2": [           1,           0 ] 
+},
+"weightsQuantiles": {
+ "2.5%": {
+ "OS": 0.06809135762,
+"severe": 0.3844790143,
+"moderate": 0.004447004826 
+},
+"mean": {
+ "OS": 0.2793379184,
+"severe": 0.6085854056,
+"moderate": 0.112076676 
+},
+"97.5%": {
+ "OS": 0.4528930296,
+"severe": 0.9052430859,
+"moderate": 0.283016633 
+} 
+} 
+},
+"metadata": {
+ "method": "smaa",
+"execution_time_seconds":       0.059,
+"timestamp": "2025-10-09 09:32:09.785891" 
+} 
+}

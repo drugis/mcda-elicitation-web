@@ -15,6 +15,9 @@ ssl
 liquibase/liquibase-changelog.sql
 tests_output/
 
+# Local environment file (do NOT commit real secrets)
+.env
+
 # Numerous always-ignore extensions
 *.diff
 *.err
@@ -73,3 +76,8 @@ test/endToEnd/util/util.js
 *.fdb_latexmk
 *.toc
 *.gz
+
+# Dev Patavi certs (do not commit private keys)
+client-crt.pem
+client-key.pem
+ca-crt.pem

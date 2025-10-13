@@ -8,8 +8,12 @@ import {Request, Response} from 'express';
 import _ from 'lodash';
 import IDB from './interface/IDB';
 import logger from './logger';
-import {postAndHandleResults} from './patavi';
+import {postAndHandleResults as plumberPostAndHandleResults} from './plumber';
 import ScenarioRepository from './scenarioRepository';
+
+// Use the Plumber API unconditionally in this branch
+const postAndHandleResults = plumberPostAndHandleResults;
+logger.info('Using Plumber API for SMAA calculations');
 
 export default function PataviHandler(db: IDB) {
   const scenarioRepository = ScenarioRepository(db);
@@ -59,6 +63,9 @@ export default function PataviHandler(db: IDB) {
     response: Response,
     next: any
   ): void {
+    const method = (request.body as any)?.method ?? (request.body as any)?.problem?.method ?? 'unknown';
+    logger.debug(`Received Patavi results request for method: ${method}`);
+
     postAndHandleResults(
       request.body,
       (error: Error, results: TPataviResults) => {

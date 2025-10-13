@@ -1,38 +1,51 @@
-FROM phusion/baseimage:18.04-1.0.0
+# Use a modern Node so modern syntax works
+FROM node:20-bullseye
 
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    DEBIAN_FRONTEND=noninteractive
 
-RUN apt update
-RUN apt upgrade -y -f -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" 
+# Optional: update base and install git (if build needs it)
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 
-# Install nodejs
-RUN apt install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
-RUN apt install -y nodejs git
+# Yarn: Node 20 includes corepack; enable it so `yarn` works
+RUN corepack enable
 
-RUN npm install -g yarn
-RUN npm install -g forever
-
+# Create app user + dir
 RUN useradd --create-home --home /var/lib/mcda mcda
+WORKDIR /var/lib/mcda
 
+# Copy sources and set ownership
 COPY . /var/lib/mcda
-RUN chown -R mcda.mcda /var/lib/mcda
+RUN chown -R mcda:mcda /var/lib/mcda
 
 USER mcda
-WORKDIR /var/lib/mcda
-ENV HOME /var/lib/mcda
+ENV HOME=/var/lib/mcda
 
+# Install deps and build
 RUN yarn
 RUN yarn build-backend
+
+# Build frontend (the original Dockerfile used build args; keep them)
+ARG AUTH
 ARG WEBPACK_COMMAND
 ARG MATOMO_VERSION
 ARG MCDA_HOST
-RUN export MCDA_HOST=$MCDA_HOST
-RUN if [ "$MATOMO_VERSION" != "" ] ; then export MATOMO_VERSION=$MATOMO_VERSION ; else export MATOMO_VERSION='None' ; fi
-RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm run build-prod ; fi
+ENV MCDA_HOST=${MCDA_HOST}
 
+# Set webpack command based on AUTH mode
+RUN if [ "$AUTH" = "LOCAL" ]; then export WEBPACK_COMMAND="build-local-login"; fi; \
+    if [ -z "$MATOMO_VERSION" ]; then export MATOMO_VERSION='None'; fi; \
+    if [ -n "$WEBPACK_COMMAND" ]; then npm run "$WEBPACK_COMMAND"; else npm run build-prod; fi
+
+# The original EXPOSE was 3002
+ENV HOST=0.0.0.0 \
+    PORT=3002
 EXPOSE 3002
 
-CMD ["forever", "tscomp/index.js"]
+# You can keep "forever" if you want; Node 20 will handle its deps fine.
+# Simpler (and fewer moving parts) is to just run Node directly:
+CMD ["node", "tscomp/index.js"]
+# If you prefer forever, uncomment these two lines instead:
+# RUN npm install -g forever
+# CMD ["forever", "tscomp/index.js"]
